@@ -4,7 +4,7 @@ from typing import Callable, Dict, List, Optional, Tuple, Union
 
 from smac.configspace import Configuration
 from smac.constants import MAXINT
-from smac.runhistory import StatusType, RunInfo, RunValue
+from smac.runhistory import RunInfo, RunValue, StatusType
 from smac.runner import Runner
 from smac.utils.stats import Stats
 

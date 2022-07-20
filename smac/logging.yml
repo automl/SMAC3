@@ -1,4 +1,5 @@
 version: 1
+disable_existing_loggers: false
 formatters:
   simple:
     # format: '\x1b[33;20m %(levelname)s: %(message)s (in %(name)s)\x1b[0m'
@@ -7,14 +8,14 @@ formatters:
 handlers:
   console:
     class: logging.StreamHandler
-    level: DEBUG
+    level: INFO
     formatter: simple
     stream: ext://sys.stdout
-loggers:
-  werkzeug:
-    level: ERROR
-    handlers: [ console ]
-    propagate: no
+#loggers:
+#  werkzeug:
+#    level: ERROR
+#    handlers: [ console ]
+#    propagate: no
 root:
-  level: DEBUG
+  level: INFO
   handlers: [console]

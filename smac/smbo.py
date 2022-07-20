@@ -20,10 +20,10 @@ from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory_transformer import AbstractRunhistoryTransformer
 from smac.runner import (
     FirstRunCrashedException,
+    Runner,
     StatusType,
     TargetAlgorithmAbortException,
 )
-from smac.runner import Runner
 from smac.utils.logging import get_logger
 from smac.utils.stats import Stats
 from smac.utils.validate import Validator

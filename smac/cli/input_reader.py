@@ -1,7 +1,9 @@
 from typing import Any, Dict, List, Optional, Tuple
 
-import numpy as np
 import logging
+
+import numpy as np
+
 from smac.configspace import ConfigurationSpace
 from smac.configspace import json as pcs_json
 from smac.configspace import pcs, pcs_new

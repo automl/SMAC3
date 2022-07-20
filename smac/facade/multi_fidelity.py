@@ -1,10 +1,10 @@
 from __future__ import annotations
-from smac.config import Config
 
+from smac.config import Config
+from smac.configspace import Configuration
 from smac.facade.hyperparameter import HyperparameterFacade
 from smac.initial_design.random_configuration_design import RandomInitialDesign
 from smac.intensification.hyperband import Hyperband
-from smac.configspace import Configuration
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"

@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from smac.smbo import SMBO
+
 from smac.runhistory import RunInfo, RunValue
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

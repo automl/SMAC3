@@ -14,8 +14,8 @@ from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.runner import StatusType
 from smac.runner.serial_runner import SerialRunner
-from smac.utils.stats import Stats
 from smac.utils.logging import get_logger
+from smac.utils.stats import Stats
 
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
@@ -47,17 +47,10 @@ class AbstractTargetAlgorithmRunner(SerialRunner):
     cost_for_crash : float
         cost that is used in case of crashed runs (including runs
         that returned NaN or inf)
-    use_pynisher: bool
-        use pynisher to limit resources;
-        if disabled
-          * TA func can use as many resources
-          as it wants (time and memory) --- use with caution
-          * all runs will be returned as SUCCESS if returned value is not None
 
     Attributes
     ----------
     memory_limit
-    use_pynisher
     """
 
     def __init__(
@@ -69,7 +62,6 @@ class AbstractTargetAlgorithmRunner(SerialRunner):
         par_factor: int = 1,
         cost_for_crash: float = float(MAXINT),
         abort_on_first_run_crash: bool = True,
-        use_pynisher: bool = True,
     ):
 
         super().__init__(
@@ -99,7 +91,6 @@ class AbstractTargetAlgorithmRunner(SerialRunner):
         if memory_limit is not None:
             memory_limit = int(math.ceil(memory_limit))
         self.memory_limit = memory_limit
-        self.use_pynisher = use_pynisher
 
     def run(
         self,
@@ -155,26 +146,31 @@ class AbstractTargetAlgorithmRunner(SerialRunner):
 
         cost = self.cost_for_crash  # type: Union[float, List[float]]
 
-        if self.use_pynisher:
-            # walltime for pynisher has to be a rounded up integer
+        use_pynisher = self.memory_limit is not None or algorithm_walltime_limit is not None
+
+        if use_pynisher:
+            # Walltime for pynisher has to be a rounded up integer
             if algorithm_walltime_limit is not None:
                 algorithm_walltime_limit = int(math.ceil(algorithm_walltime_limit))
+                # TODO: That should be inside pynisher and not here
                 # if algorithm_walltime_limit > MAX_algorithm_walltime_limit:
                 #    raise ValueError(
                 #        "%d is outside the legal range of [0, 65535] "
                 #        "for algorithm_walltime_limit (when using pynisher, due to OS limitations)" % algorithm_walltime_limit
                 #    )
 
-            arguments = {
-                "logger": logger,
-                "wall_time_in_s": algorithm_walltime_limit,
-                "mem_in_mb": self.memory_limit,
+            pynisher_kwargs = {
+                "wall_time": algorithm_walltime_limit,
+                "memory": self.memory_limit,
             }
 
-            # call ta
+            # Call target algorithm
             try:
-                obj = pynisher.enforce_limits(**arguments)(self._target_algorithm)
-                rval = self._call_ta(obj, config, obj_kwargs)
+                with pynisher.limit(self._target_algorithm, **pynisher_kwargs) as ta:
+                    rval = self._call_ta(ta, config, obj_kwargs)
+
+                # obj = pynisher.enforce_limits(**arguments)(self._target_algorithm)
+                # rval = self._call_ta(obj, config, obj_kwargs)
             except Exception as e:
                 cost = np.asarray(cost).squeeze().tolist()
                 exception_traceback = traceback.format_exc()

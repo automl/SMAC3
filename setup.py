@@ -21,12 +21,7 @@ def read_file(filepath: str) -> str:
 
 
 extras_require = {
-    "gpytorch": [
-        "torch>=1.9.0",
-        "gpytorch>=1.5.0",
-        "pyro-ppl>=1.7.0",
-        "botorch>=0.5.0"
-    ],
+    "gpytorch": ["torch>=1.9.0", "gpytorch>=1.5.0", "pyro-ppl>=1.7.0", "botorch>=0.5.0"],
     "dev": [
         "setuptools",
         "types-setuptools",
@@ -60,13 +55,15 @@ setuptools.setup(
     version=version,
     packages=setuptools.find_packages(exclude=["tests"]),
     include_package_data=True,
-    python_requires=">=3.7",
+    python_requires=">=3.8",
     install_requires=[
         "numpy>=1.7.1",
         "scipy>=1.7.0",
         "psutil",
-        "pynisher<1.0.0",
-        "ConfigSpace>=0.5.0",
+        # "pynisher<1.0.0",
+        "pynisher @ git+https://github.com/automl/pynisher.git@main#egg=pynisher",
+        # "ConfigSpace>=0.5.0",
+        "ConfigSpace @ git+https://github.com/automl/ConfigSpace.git@easy_api#egg=ConfigSpace",
         "joblib",
         "scikit-learn>=0.22.0",
         "pyrfr>=0.8.3",
@@ -74,7 +71,7 @@ setuptools.setup(
         "distributed",
         "emcee>=3.0.0",
         "regex",
-        "pyyaml"
+        "pyyaml",
     ],
     extras_require=extras_require,
     test_suite="pytest",
@@ -83,7 +80,6 @@ setuptools.setup(
         "console_scripts": ["smac = smac.smac_cli:cmd_line_call"],
     },
     classifiers=[
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",

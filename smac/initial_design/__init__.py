@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Any, List, Optional
 
 import logging
@@ -13,6 +14,7 @@ from ConfigSpace.hyperparameters import (
     OrdinalHyperparameter,
 )
 from ConfigSpace.util import ForbiddenValueError, deactivate_inactive_hyperparameters
+
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2019, AutoML"

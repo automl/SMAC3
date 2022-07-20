@@ -3,6 +3,8 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import Any, Callable
 
+from pathlib import Path
+
 import joblib
 import numpy as np
 
@@ -18,13 +20,13 @@ from smac.model.base_model import BaseModel
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.random_forest.rfr_imputator import RFRImputator
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
-from smac.smbo import SMBO
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory_transformer import RunhistoryTransformer
-from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.runner import Runner
 from smac.runner.dask_runner import DaskParallelRunner
-from smac.utils.logging import get_logger
+from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
+from smac.smbo import SMBO
+from smac.utils.logging import get_logger, setup_logging
 from smac.utils.others import recursively_compare_dicts
 from smac.utils.stats import Stats
 
@@ -44,7 +46,11 @@ class Facade:
         random_configuration_chooser: RandomChooser | None = None,
         intensifier: AbstractRacer | None = None,
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
+        # Level of logging; if path passed: yaml file expected; if none: use default logging from logging.yml
+        logging_level: int | Path | None = None,
     ):
+        setup_logging(logging_level)
+
         if model is None:
             model = self.get_model(config)
 

@@ -2,10 +2,13 @@ from typing import Any, Dict, Mapping, Optional, Tuple, Type
 
 from smac.configspace import Configuration
 from smac.runner import StatusType
-from smac.runner.target_algorithm_runner import TargetAlgorithmRunner, ExecuteTAFuncArray
 from smac.runner.old.execute_ta_run_aclib import ExecuteTARunAClib
 from smac.runner.old.execute_ta_run_old import ExecuteTARunOld
 from smac.runner.serial_runner import SerialRunner
+from smac.runner.target_algorithm_runner import (
+    ExecuteTAFuncArray,
+    TargetAlgorithmRunner,
+)
 
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"

@@ -1,10 +1,13 @@
+from __future__ import annotations
+
+from typing import Iterable, List, Union
+
 import logging
 import logging.config
-from pathlib import Path
-import numpy as np
 import os
-from typing import Union, List, Iterable
+from pathlib import Path
 
+import numpy as np
 import yaml
 
 import smac
@@ -13,9 +16,21 @@ __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-path = Path() / smac.__file__
-with (path.parent / "logging.yml").open("r") as stream:
-    config = yaml.load(stream, Loader=yaml.FullLoader)
+def setup_logging(level: int | Path | None = None) -> None:
+    if isinstance(level, Path):
+        log_filename = level
+    else:
+        path = Path() / smac.__file__
+        log_filename = path.parent / "logging.yml"
+
+    with (log_filename).open("r") as stream:
+        config = yaml.load(stream, Loader=yaml.FullLoader)
+
+    if isinstance(level, int):
+        config["root"]["level"] = level
+        config["handlers"]["console"]["level"] = level
+
+    logging.config.dictConfig(config)
 
 
 class CustomFormatter(logging.Formatter):
@@ -29,9 +44,6 @@ class CustomFormatter(logging.Formatter):
             record.pathname = filename
 
         return super(CustomFormatter, self).format(record)
-
-
-logging.config.dictConfig(config)
 
 
 def get_logger(logger_name: str) -> logging.Logger:

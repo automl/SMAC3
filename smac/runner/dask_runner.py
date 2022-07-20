@@ -8,7 +8,7 @@ import dask
 from dask.distributed import Client, Future, wait
 
 from smac.configspace import Configuration
-from smac.runhistory import StatusType, RunInfo, RunValue
+from smac.runhistory import RunInfo, RunValue, StatusType
 from smac.runner import Runner
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

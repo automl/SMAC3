@@ -25,7 +25,15 @@ import numpy as np
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.multi_objective.utils import normalize_costs
-from smac.runhistory import RunKey, RunValue, StatusType, DataOrigin, EnumEncoder, InstSeedBudgetKey, InstSeedKey
+from smac.runhistory import (
+    DataOrigin,
+    EnumEncoder,
+    InstSeedBudgetKey,
+    InstSeedKey,
+    RunKey,
+    RunValue,
+    StatusType,
+)
 from smac.utils.logging import get_logger
 
 logger = get_logger(__name__)
