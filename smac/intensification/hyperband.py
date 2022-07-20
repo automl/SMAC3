@@ -4,7 +4,7 @@ import logging
 
 import numpy as np
 
-from smac.chooser.configuration_chooser import ConfigurationChooser
+from smac.chooser import Chooser
 from smac.configspace import Configuration
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.intensification.parallel_scheduling import ParallelScheduler
@@ -166,7 +166,7 @@ class _Hyperband(_SuccessiveHalving):
         self,
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: Optional[ConfigurationChooser],
+        chooser: Optional[Chooser],
         runhistory: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,

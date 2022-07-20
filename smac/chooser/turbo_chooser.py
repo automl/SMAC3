@@ -4,7 +4,7 @@ import numpy as np
 
 from smac.acquisition_function import TS, AbstractAcquisitionFunction
 from smac.acquisition_optimizer.maximizer import AbstractAcquisitionOptimizer
-from smac.chooser.configuration_chooser import ConfigurationChooser
+from smac.chooser import Chooser
 from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration
@@ -16,7 +16,7 @@ from smac.runhistory.runhistory_transformer import AbstractRunhistoryTransformer
 from smac.utils.stats import Stats
 
 
-class TurBOChooser(ConfigurationChooser):
+class TurBOChooser(Chooser):
     """
     Interface to train the EPM and generate next configurations with TurBO:
         D. Eriksson et al. Scalable Global Optimization via Local Bayesian Optimization

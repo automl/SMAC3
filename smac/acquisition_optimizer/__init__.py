@@ -1,33 +1,21 @@
 from __future__ import annotations
 
 import abc
-from typing import Callable, Iterator, List, Optional, Set, Tuple, Union
+from typing import Callable, Iterator, List, Optional, Tuple
 
 import copy
-import itertools
 import logging
-import time
 
 import numpy as np
 
 from smac.acquisition_function import AbstractAcquisitionFunction
 from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
-from smac.configspace import (
-    Configuration,
-    ConfigurationSpace,
-    ForbiddenValueError,
-    convert_configurations_to_array,
-    get_one_exchange_neighbourhood,
-)
+from smac.configspace import Configuration, ConfigurationSpace
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.stats import Stats
 
-__author__ = "Aaron Klein, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
-__maintainer__ = "Aaron Klein"
-__email__ = "kleinaa@cs.uni-freiburg.de"
-__version__ = "0.0.1"
 
 
 class AbstractAcquisitionOptimizer(object, metaclass=abc.ABCMeta):
@@ -66,7 +54,7 @@ class AbstractAcquisitionOptimizer(object, metaclass=abc.ABCMeta):
         runhistory: RunHistory,
         stats: Stats,
         num_points: int | None = None,
-        random_configuration_chooser: Optional[RandomChooser] = None,
+        random_configuration_chooser: RandomChooser | None = None,
     ) -> Iterator[Configuration]:
         """Maximize acquisition function using ``_maximize``.
 

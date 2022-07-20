@@ -1,25 +1,9 @@
 from __future__ import annotations
 
-import abc
-from typing import Callable, Iterator, List, Optional, Set, Tuple, Union
+from typing import List, Tuple
 
-import copy
-import itertools
-import logging
-import time
-
-import numpy as np
-
-from smac.acquisition_function import AbstractAcquisitionFunction
 from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
-from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
-from smac.configspace import (
-    Configuration,
-    ConfigurationSpace,
-    ForbiddenValueError,
-    convert_configurations_to_array,
-    get_one_exchange_neighbourhood,
-)
+from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.stats import Stats
 

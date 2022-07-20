@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Callable, Dict, List, Optional, Type
+from typing import Callable, Type
 
 import time
 
@@ -8,7 +8,7 @@ import numpy as np
 from smac.acquisition_function import AbstractAcquisitionFunction
 from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
 from smac.callbacks.callbacks import IncorporateRunResultCallback
-from smac.chooser.configuration_chooser import ConfigurationChooser
+from smac.chooser import Chooser
 from smac.chooser.random_chooser import RandomChooser
 from smac.config import Config
 from smac.configspace import Configuration
@@ -106,12 +106,12 @@ class SMBO:
         model: BaseModel,
         acquisition_optimizer: AbstractAcquisitionOptimizer,
         acquisition_function: AbstractAcquisitionFunction,
-        configuration_chooser: ConfigurationChooser,
+        configuration_chooser: Chooser,
         random_configuration_chooser: RandomChooser,
         seed: int = 0,
     ):
         # Changed in 2.0: We don't restore the incumbent anymore but derive it directly from
-        # the stats object.
+        # the stats object when the run is started.
         self.incumbent = None
 
         self.config = config
@@ -278,7 +278,7 @@ class SMBO:
 
                 # The budget can be exhausted  for 2 reasons: number of ta runs or
                 # time. If the number of ta runs is reached, but there is still budget,
-                # wait for the runs to finish
+                # wait for the runs to finish.
                 while self.runner.pending_runs():
 
                     self.runner.wait()
@@ -288,11 +288,10 @@ class SMBO:
                         # Additionally check for new incumbent
                         self._incorporate_run_results(run_info, result, time_left)
 
-                # Break from the intensification loop,
-                # as there are no more resources
+                # Break from the intensification loop, as there are no more resources.
                 break
 
-            # print stats at the end of each intensification iteration
+            # Print stats at the end of each intensification iteration.
             if self.intensifier.iteration_done:
                 self.stats.print()
 
@@ -300,6 +299,7 @@ class SMBO:
 
     '''
     # TODO: Is this still needed?
+    # I think it is important when using instances
     def validate(
         self,
         config_mode: Union[str, List[Configuration]] = "inc",
@@ -470,8 +470,9 @@ class SMBO:
 
         for callback in self._callbacks["_incorporate_run_results"]:
             response = callback(smbo=self, run_info=run_info, result=result, time_left=time_left)
+
             # If a callback returns False, the optimization loop should be interrupted
-            # the other callbacks are still being called
+            # the other callbacks are still being called.
             if response is False:
                 logger.debug("An IncorporateRunResultCallback returned False, requesting abort.")
                 self._stop = True

@@ -2,7 +2,7 @@ from typing import Any, Dict, List, Mapping, Optional, Tuple
 
 import numpy as np
 
-from smac.chooser.configuration_chooser import ConfigurationChooser
+from smac.chooser import Chooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
@@ -117,7 +117,7 @@ class SimpleIntensifier(AbstractRacer):
         self,
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: Optional[ConfigurationChooser],
+        chooser: Optional[Chooser],
         runhistory: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,

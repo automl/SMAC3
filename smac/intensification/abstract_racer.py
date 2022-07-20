@@ -9,7 +9,7 @@ from enum import Enum
 
 import numpy as np
 
-from smac.chooser.configuration_chooser import ConfigurationChooser
+from smac.chooser import Chooser
 from smac.configspace import Configuration
 from smac.runhistory import RunInfo, RunValue
 from smac.runhistory.runhistory import RunHistory
@@ -130,7 +130,7 @@ class AbstractRacer(object):
         self,
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: Optional[ConfigurationChooser],
+        chooser: Optional[Chooser],
         runhistory: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
@@ -207,7 +207,7 @@ class AbstractRacer(object):
     def _next_challenger(
         self,
         challengers: Optional[List[Configuration]],
-        chooser: Optional[ConfigurationChooser],
+        chooser: Optional[Chooser],
         runhistory: RunHistory,
         repeat_configs: bool = True,
     ) -> Optional[Configuration]:
@@ -241,7 +241,7 @@ class AbstractRacer(object):
         elif chooser:
             # generating challengers on-the-fly if optimizer is given
             logger.debug("Generating new challenger from optimizer")
-            chall_gen = chooser.choose_next()
+            chall_gen = chooser.ask()
         else:
             raise ValueError("No configurations/chooser provided. Cannot generate challenger!")
 

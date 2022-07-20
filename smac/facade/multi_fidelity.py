@@ -1,4 +1,5 @@
 from __future__ import annotations
+from smac.chooser import Chooser
 
 from smac.config import Config
 from smac.configspace import Configuration
@@ -12,13 +13,6 @@ __license__ = "3-clause BSD"
 
 
 class MultiFidelityFacade(HyperparameterFacade):
-    def _update_dependencies(self) -> None:
-        super()._update_dependencies()
-
-        # MultiFidelityFacade requires at least D+1 number of samples to build a model
-        min_samples_model = len(self.config.configspace.get_hyperparameters()) + 1
-        self.optimizer.epm_chooser.min_samples_model = min_samples_model
-
     @staticmethod
     def get_intensifier(
         config: Config, *, eta: int = 3, min_challenger=1, min_config_calls=1, max_config_calls=3
@@ -55,3 +49,9 @@ class MultiFidelityFacade(HyperparameterFacade):
             max_config_ratio=max_config_ratio,
             seed=config.seed,
         )
+
+    @staticmethod
+    def get_configuration_chooser(config: Config) -> Chooser:
+        # MultiFidelityFacade requires at least D+1 number of samples to build a model
+        min_samples_model = len(config.configspace.get_hyperparameters()) + 1
+        return Chooser(min_samples_model=min_samples_model)

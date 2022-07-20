@@ -80,6 +80,13 @@ class Config:
         # Set hashes
         object.__setattr__(self, "_meta", {})
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Config):
+            # When using __dict__, we make sure to include the meta data
+            return self.__dict__ == other.__dict__
+
+        raise RuntimeError("Can only compare config objects.")
+
     def _change_output_directory(self) -> None:
         # Create output directory
         if self.name is not None:
@@ -156,10 +163,3 @@ class Config:
         config._set_meta(meta)
 
         return config
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, Config):
-            # When using __dict__, we make sure to include the meta data
-            return self.__dict__ == other.__dict__
-
-        raise RuntimeError("Can only compare config objects.")

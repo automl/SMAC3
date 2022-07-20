@@ -8,7 +8,7 @@ from ConfigSpace.hyperparameters import NumericalHyperparameter
 
 from smac.acquisition_function import EI, TS, AbstractAcquisitionFunction
 from smac.acquisition_optimizer.maximizer import AbstractAcquisitionOptimizer
-from smac.chooser.configuration_chooser import ConfigurationChooser
+from smac.chooser import Chooser
 from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration
@@ -24,7 +24,7 @@ from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4CostWithRaw
 from smac.utils.stats import Stats
 
 
-class BOinGChooser(ConfigurationChooser):
+class BOinGChooser(Chooser):
     """
     Interface to train the EPM and generate next configurations with both global and local models.
 

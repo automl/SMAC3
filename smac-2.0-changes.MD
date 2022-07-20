@@ -1,5 +1,8 @@
 # Unified transformation guide
 
+- Please use grammarly in docstrings/text in general (let's say if 3 sentences or more). Often,
+punctuations, spelling, and so on can be easily removed.
+- Please see `examples/svm_cv.py` how to write a clean example with configspace 0.6.
 - Use future annotations: `from __future__ import annotations`. For example:
     ```
     def test_func(value: int | None = None) -> int | None:

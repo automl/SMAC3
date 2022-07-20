@@ -8,7 +8,7 @@ from enum import Enum
 
 import numpy as np
 
-from smac.chooser.configuration_chooser import ConfigurationChooser
+from smac.chooser import Chooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_racer import (
@@ -178,7 +178,7 @@ class Intensifier(AbstractRacer):
         self,
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: Optional[ConfigurationChooser],
+        chooser: Optional[Chooser],
         runhistory: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
@@ -822,7 +822,7 @@ class Intensifier(AbstractRacer):
     def get_next_challenger(
         self,
         challengers: Optional[List[Configuration]],
-        chooser: Optional[ConfigurationChooser],
+        chooser: Optional[Chooser],
     ) -> Tuple[Optional[Configuration], bool]:
         """This function returns the next challenger, that should be exercised though lines 8-17.
 
@@ -886,7 +886,7 @@ class Intensifier(AbstractRacer):
     def _generate_challengers(
         self,
         challengers: Optional[List[Configuration]],
-        chooser: Optional[ConfigurationChooser],
+        chooser: Optional[Chooser],
     ) -> _config_to_run_type:
         """Retuns a sequence of challengers to use in intensification If challengers are not
         provided, then optimizer will be used to generate the challenger list.
@@ -910,7 +910,7 @@ class Intensifier(AbstractRacer):
         elif chooser:
             # generating challengers on-the-fly if optimizer is given
             logger.debug("Generating new challenger from optimizer...")
-            chall_gen = chooser.choose_next()
+            chall_gen = chooser.ask()
         else:
             raise ValueError("No configurations/chooser provided. Can not generate challenger!")
 
