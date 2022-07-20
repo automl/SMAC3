@@ -12,7 +12,7 @@ from smac.acquisition_function import AbstractAcquisitionFunction
 from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
 from smac.chooser import Chooser
 from smac.chooser.random_chooser import RandomChooser
-from smac.config import Config
+from smac.scenario import Scenario
 from smac.configspace import Configuration
 from smac.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
@@ -37,7 +37,7 @@ logger = get_logger(__name__)
 class Facade:
     def __init__(
         self,
-        config: Config,
+        scenario: Scenario,
         target_algorithm: Runner | Callable,
         *,
         model: BaseModel | None = None,
@@ -54,35 +54,35 @@ class Facade:
         setup_logging(logging_level)
 
         if model is None:
-            model = self.get_model(config)
+            model = self.get_model(scenario)
 
         if acquisition_function is None:
-            acquisition_function = self.get_acquisition_function(config)
+            acquisition_function = self.get_acquisition_function(scenario)
 
         if acquisition_optimizer is None:
-            acquisition_optimizer = self.get_acquisition_optimizer(config)
+            acquisition_optimizer = self.get_acquisition_optimizer(scenario)
 
         if initial_design is None:
-            initial_design = self.get_initial_design(config)
+            initial_design = self.get_initial_design(scenario)
 
         if configuration_chooser is None:
-            configuration_chooser = self.get_configuration_chooser(config)
+            configuration_chooser = self.get_configuration_chooser(scenario)
 
         if random_configuration_chooser is None:
-            random_configuration_chooser = self.get_random_configuration_chooser(config)
+            random_configuration_chooser = self.get_random_configuration_chooser(scenario)
 
         if intensifier is None:
-            intensifier = self.get_intensifier(config)
+            intensifier = self.get_intensifier(scenario)
 
         if multi_objective_algorithm is None:
-            multi_objective_algorithm = self.get_multi_objective_algorithm(config)
+            multi_objective_algorithm = self.get_multi_objective_algorithm(scenario)
 
         # Initialize empty stats and runhistory object
-        stats = Stats(config)
+        stats = Stats(scenario)
         runhistory = RunHistory()
 
         # Set the seed for configuration space
-        config.configspace.seed(config.seed)
+        scenario.configspace.seed(scenario.seed)
 
         # Prepare the algorithm executer
         runner: Runner
@@ -97,7 +97,7 @@ class Facade:
             raise NotImplementedError
 
         # In case of multiple jobs, we need to wrap the runner again using `DaskParallelRunner`
-        if (n_workers := config.n_workers) > 1:
+        if (n_workers := scenario.n_workers) > 1:
             available_workers = joblib.cpu_count()
             if n_workers > available_workers:
                 logger.info(f"Workers are reduced to {n_workers}.")
@@ -107,12 +107,12 @@ class Facade:
             runner = DaskParallelRunner(
                 runner,
                 n_workers=n_workers,
-                output_directory=str(config.output_directory),
+                output_directory=str(scenario.output_directory),
             )
 
         # Set variables globally
-        self.config = config
-        self.configspace = config.configspace
+        self.scenario = scenario
+        self.configspace = scenario.configspace
         self.runner = runner
         self.model = model
         self.acquisition_function = acquisition_function
@@ -123,13 +123,13 @@ class Facade:
         self.intensifier = intensifier
         self.multi_objective_algorithm = multi_objective_algorithm
         self.runhistory = runhistory
-        self.runhistory_transformer = self.get_runhistory_transformer(config)
+        self.runhistory_transformer = self.get_runhistory_transformer(scenario)
         self.stats = stats
-        self.seed = config.seed
+        self.seed = scenario.seed
 
         # Create optimizer using the previously defined objects
         self.optimizer = SMBO(
-            config=self.config,
+            scenario=self.scenario,
             stats=self.stats,
             runner=self.runner,
             initial_design=self.initial_design,
@@ -148,21 +148,21 @@ class Facade:
         self._update_dependencies()
 
         # We have to update our meta data (basically arguments of the components)
-        self.config._set_meta(self.get_meta())
+        self.scenario._set_meta(self.get_meta())
 
         # We have to validate if the object compositions are correct and actually make sense
         self._validate()
 
         # Here we actually check whether the run should be continued or not.
         # More precisely, we update our stats and runhistory object if all kwargs
-        # and config/stats object are the same. For doing so, we create a specific hash.
+        # and scenario/stats object are the same. For doing so, we create a specific hash.
         # SMBO recognizes that stats is not empty and hence does not run initial design anymore.
         # Since the runhistory is already updated, the model uses previous data directly.
         self._continue()
 
-        # And now we save our config object.
+        # And now we save our scenario object.
         # Runhistory and stats are saved by `SMBO` as they change over time.
-        self.config.save()
+        self.scenario.save()
 
     def _update_dependencies(self) -> None:
         # We add some more dependencies.
@@ -185,24 +185,24 @@ class Facade:
 
     def _continue(self) -> None:
         """Update the runhistory and stats object if configs (inclusive meta data) are the same."""
-        old_output_directory = self.config.output_directory
-        old_runhistory_filename = self.config.output_directory / "runhistory.json"
-        old_stats_filename = self.config.output_directory / "stats.json"
+        old_output_directory = self.scenario.output_directory
+        old_runhistory_filename = self.scenario.output_directory / "runhistory.json"
+        old_stats_filename = self.scenario.output_directory / "stats.json"
 
         if old_output_directory.exists() and old_runhistory_filename.exists() and old_stats_filename.exists():
-            old_config = Config.load(old_output_directory)
+            old_scenario = Scenario.load(old_output_directory)
 
-            if self.config == old_config:
+            if self.scenario == old_scenario:
                 logger.info("Continuing from previous run.")
 
                 # We update the runhistory and stats in-place.
                 # Stats use the output directory from the config directly.
-                self.runhistory.load_json(str(old_runhistory_filename), cs=self.config.configspace)
+                self.runhistory.load_json(str(old_runhistory_filename), cs=self.scenario.configspace)
                 self.stats.load()
             else:
-                diff = recursively_compare_dicts(self.config.__dict__, old_config.__dict__, level="config")
+                diff = recursively_compare_dicts(self.config.__dict__, old_scenario.__dict__, level="scenario")
                 logger.info(
-                    f"Found old run in `{self.config.output_directory}` but it is not the same as the current one:\n"
+                    f"Found old run in `{self.scenario.output_directory}` but it is not the same as the current one:\n"
                     f"{diff}"
                 )
 
@@ -219,26 +219,28 @@ class Facade:
                 elif feedback == "2":
                     # We overwrite runhistory and stats.
                     # However, we should ensure that we use the same configspace.
-                    assert self.config.configspace == old_config.configspace
+                    assert self.scenario.configspace == old_scenario.configspace
 
-                    self.runhistory.load_json(str(old_runhistory_filename), cs=self.config.configspace)
+                    self.runhistory.load_json(str(old_runhistory_filename), cs=self.scenario.configspace)
                     self.stats.load()
                 else:
                     raise RuntimeError("SMAC run was stopped by the user.")
 
     def _get_imputer(self) -> BaseImputor | None:
         assert self.model is not None
-        assert self.config
+        assert self.scenario
 
         # TODO: Can anyone tell me what the `par_factor` does?
         par_factor = 10.0
 
         if isinstance(self.model, RandomForestWithInstances):
             if self.model.log_y:
-                algorithm_walltime_limit = np.log(np.nanmin([np.inf, np.float_(self.config.algorithm_walltime_limit)]))
+                algorithm_walltime_limit = np.log(
+                    np.nanmin([np.inf, np.float_(self.scenario.algorithm_walltime_limit)])
+                )
                 threshold = algorithm_walltime_limit + np.log(par_factor)
             else:
-                algorithm_walltime_limit = np.nanmin([np.inf, np.float_(self.config.algorithm_walltime_limit)])
+                algorithm_walltime_limit = np.nanmin([np.inf, np.float_(self.scenario.algorithm_walltime_limit)])
                 threshold = algorithm_walltime_limit * par_factor
 
             return RFRImputator(
@@ -267,7 +269,7 @@ class Facade:
 
         return meta
 
-    def optimize(self, save_instantly: bool = True) -> Configuration:
+    def optimize(self) -> Configuration:
         """
         Optimizes the algorithm.
 
@@ -296,44 +298,44 @@ class Facade:
 
     @staticmethod
     @abstractmethod
-    def get_model(config: Config) -> BaseModel:
+    def get_model(scenario: Scenario) -> BaseModel:
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
-    def get_acquisition_function(config: Config) -> AbstractAcquisitionFunction:
+    def get_acquisition_function(scenario: Scenario) -> AbstractAcquisitionFunction:
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
-    def get_acquisition_optimizer(config: Config) -> AbstractAcquisitionOptimizer:
+    def get_acquisition_optimizer(scenario: Scenario) -> AbstractAcquisitionOptimizer:
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
-    def get_intensifier(config: Config) -> AbstractRacer:
+    def get_intensifier(scenario: Scenario) -> AbstractRacer:
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
-    def get_initial_design(config: Config) -> InitialDesign:
+    def get_initial_design(scenario: Scenario) -> InitialDesign:
         raise NotImplementedError
 
     @staticmethod
-    def get_configuration_chooser(config: Config) -> Chooser:
+    def get_configuration_chooser(scenario: Scenario) -> Chooser:
         return Chooser()
 
     @staticmethod
     @abstractmethod
-    def get_random_configuration_chooser(config: Config) -> RandomChooser:
+    def get_random_configuration_chooser(scenario: Scenario) -> RandomChooser:
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
-    def get_multi_objective_algorithm(config: Config) -> AbstractMultiObjectiveAlgorithm | None:
+    def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm | None:
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
-    def get_runhistory_transformer(config: Config) -> RunhistoryTransformer:
+    def get_runhistory_transformer(scenario: Scenario) -> RunhistoryTransformer:
         raise NotImplementedError

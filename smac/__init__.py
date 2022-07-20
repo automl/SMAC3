@@ -28,17 +28,17 @@ version = "2.0.0"
 if os.name != "posix":
     warnings.warn(
         f"Detected unsupported operating system: {sys.platform}."
-        "Please be aware, that SMAC might not run on this system."
+        "Please be aware that SMAC might not run on this system."
     )
 
 
 try:
-    from smac.config import Config
+    from smac.scenario import Scenario
     from smac.facade.black_box import BlackBoxFacade
     from smac.facade.hyperparameter import HyperparameterFacade
     from smac.facade.multi_fidelity import MultiFidelityFacade
     from smac.runhistory.runhistory import RunHistory
 
-    __all__ = ["Config", "RunHistory", "BlackBoxFacade", "HyperparameterFacade", "MultiFidelityFacade"]
+    __all__ = ["Scenario", "RunHistory", "BlackBoxFacade", "HyperparameterFacade", "MultiFidelityFacade"]
 except ModuleNotFoundError:
     pass

@@ -1,7 +1,7 @@
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 # Import SMAC-utilities
-from smac import Config
+from smac import Scenario
 
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
@@ -21,7 +21,7 @@ if __name__ == "__main__":
     cs.add_hyperparameters([x])
 
     # Scenario object
-    config = Config(cs, n_runs=60)
+    config = Scenario(cs, n_runs=60)
     # smac = BlackBoxFacade(config, quadratic)
 
     smac = HyperparameterFacade(config, quadratic, logging_level=0)

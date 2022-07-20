@@ -1,9 +1,4 @@
 from __future__ import annotations
-
-__copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "3-clause BSD"
-
-
 from typing import Any, Dict, Optional
 
 import collections
@@ -12,6 +7,9 @@ from enum import Enum
 
 from smac.configspace import Configuration
 from smac.utils.logging import get_logger
+
+__copyright__ = "Copyright 2015, ML4AAD"
+__license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
 

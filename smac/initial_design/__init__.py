@@ -71,8 +71,6 @@ class InitialDesign:
         self.rng = np.random.RandomState(seed)
         self.configs = configs
 
-        logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
-
         n_params = len(self.configspace.get_hyperparameters())
         if init_budget is not None:
             self.init_budget = init_budget

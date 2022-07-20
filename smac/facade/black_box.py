@@ -10,7 +10,7 @@ from smac.acquisition_optimizer.local_and_random_search import (
     LocalAndSortedRandomSearch,
 )
 from smac.chooser.random_chooser import ChooserProb, RandomChooser
-from smac.config import Config
+from smac.scenario import Scenario
 from smac.configspace import Configuration
 from smac.facade import Facade
 from smac.initial_design import InitialDesign
@@ -43,7 +43,7 @@ class BlackBoxFacade(Facade):
         # # activate predict incumbent
         # self.solver.epm_chooser.predict_x_best = True
 
-        if self.config.instance_features is not None and len(self.config.instance_features) > 0:
+        if self.scenario.instance_features is not None and len(self.scenario.instance_features) > 0:
             raise NotImplementedError("The Black-Box GP cannot handle instances.")
 
         if not isinstance(self.model, BaseGaussianProcess):
@@ -55,20 +55,20 @@ class BlackBoxFacade(Facade):
 
     @staticmethod
     def get_model(
-        config: Config, *, model_type: str = "gp", kernel: kernels.Kernel | None = None
+        scenario: Scenario, *, model_type: str = "gp", kernel: kernels.Kernel | None = None
     ) -> BaseGaussianProcess:
         available_model_types = ["gp", "gp_mcmc"]
         if model_type not in available_model_types:
             raise ValueError(f"model_type {model_type} not in available model types")
 
         if kernel is None:
-            kernel = BlackBoxFacade.get_kernel(config=config)
+            kernel = BlackBoxFacade.get_kernel(scenario=scenario)
 
-        rng = np.random.default_rng(seed=config.seed)
-        types, bounds = get_types(config.configspace, instance_features=None)
+        rng = np.random.default_rng(seed=scenario.seed)
+        types, bounds = get_types(scenario.configspace, instance_features=None)
         if model_type == "gp":
             model = GaussianProcess(
-                configspace=config.configspace,
+                configspace=scenario.configspace,
                 types=types,
                 bounds=bounds,
                 kernel=kernel,
@@ -81,7 +81,7 @@ class BlackBoxFacade(Facade):
                 n_mcmc_walkers += 1
 
             model = MCMCGaussianProcess(
-                configspace=config.configspace,
+                configspace=scenario.configspace,
                 types=types,
                 bounds=bounds,
                 kernel=kernel,
@@ -97,16 +97,16 @@ class BlackBoxFacade(Facade):
         return model
 
     @staticmethod
-    def get_kernel(config: Config) -> kernels.Kernel:
-        types, bounds = get_types(config.configspace, instance_features=None)
+    def get_kernel(scenario: Scenario) -> kernels.Kernel:
+        types, bounds = get_types(scenario.configspace, instance_features=None)
         cont_dims = np.where(np.array(types) == 0)[0]
         cat_dims = np.where(np.array(types) != 0)[0]
 
-        if (len(cont_dims) + len(cat_dims)) != len(config.configspace.get_hyperparameters()):
+        if (len(cont_dims) + len(cat_dims)) != len(scenario.configspace.get_hyperparameters()):
             raise ValueError(
                 "The inferred number of continuous and categorical hyperparameters "
                 "must equal the total number of hyperparameters. Got "
-                f"{(len(cont_dims) + len(cat_dims))} != {len(config.configspace.get_hyperparameters())}."
+                f"{(len(cont_dims) + len(cat_dims))} != {len(scenario.configspace.get_hyperparameters())}."
             )
 
         # Constant Kernel
@@ -114,7 +114,7 @@ class BlackBoxFacade(Facade):
             2.0,
             constant_value_bounds=(np.exp(-10), np.exp(2)),
             prior=LognormalPrior(
-                mean=0.0, sigma=1.0, seed=config.seed
+                mean=0.0, sigma=1.0, seed=scenario.seed
             ),  # TODO convert expected arg RandomState -> Generator
         )
 
@@ -138,7 +138,7 @@ class BlackBoxFacade(Facade):
         noise_kernel = WhiteKernel(
             noise_level=1e-8,
             noise_level_bounds=(np.exp(-25), np.exp(2)),
-            prior=HorseshoePrior(scale=0.1, seed=config.seed),
+            prior=HorseshoePrior(scale=0.1, seed=scenario.seed),
         )
 
         # Continuous and categecorical HPs
@@ -159,93 +159,93 @@ class BlackBoxFacade(Facade):
         return kernel
 
     @staticmethod
-    def get_acquisition_function(config: Config, par: float = 0.0) -> AbstractAcquisitionFunction:
+    def get_acquisition_function(scenario: Scenario, par: float = 0.0) -> AbstractAcquisitionFunction:
         return EI(par=par)
 
     @staticmethod
     def get_acquisition_optimizer(
-        config: Config,
+        scenario: Scenario,
         *,
         local_search_iterations: int = 10,
         challengers: int = 1000,
     ) -> AbstractAcquisitionOptimizer:
         optimizer = LocalAndSortedRandomSearch(
-            configspace=config.configspace,
+            configspace=scenario.configspace,
             local_search_iterations=local_search_iterations,
             challengers=challengers,
-            seed=config.seed,
+            seed=scenario.seed,
         )
         return optimizer
 
     @staticmethod
     def get_intensifier(
-        config: Config,
+        scenario: Scenario,
         *,
         min_challenger: int = 1,
         min_config_calls: int = 1,
         max_config_calls: int = 3,
     ) -> Intensifier:
         # Only 1 configuration per SMBO iteration
-        if config.deterministic:
+        if scenario.deterministic:
             min_challenger = 1
 
         intensifier = Intensifier(
-            instances=config.instances,
-            instance_specifics=config.instance_specifics,  # What is that?
-            algorithm_walltime_limit=config.algorithm_walltime_limit,
-            deterministic=config.deterministic,
+            instances=scenario.instances,
+            instance_specifics=scenario.instance_specifics,  # What is that?
+            algorithm_walltime_limit=scenario.algorithm_walltime_limit,
+            deterministic=scenario.deterministic,
             min_challenger=min_challenger,
-            race_against=config.configspace.get_default_configuration(),
+            race_against=scenario.configspace.get_default_configuration(),
             min_config_calls=min_config_calls,
             max_config_calls=max_config_calls,
-            seed=config.seed,
+            seed=scenario.seed,
         )
 
         return intensifier
 
     @staticmethod
     def get_initial_design(
-        config: Config,
+        scenario: Scenario,
         *,
         initial_configs: list[Configuration] | None = None,
         n_configs_per_hyperparameter: int = 1,
         max_config_ratio: float = 0.25,
     ) -> InitialDesign:
-        if len(config.configspace.get_hyperparameters()) > 21201:
+        if len(scenario.configspace.get_hyperparameters()) > 21201:
             raise ValueError(
                 'The default initial design "Sobol sequence" can only handle up to 21201 dimensions. '
                 'Please use a different initial design, such as the "Latin Hypercube design".',
             )
         initial_design = SobolInitialDesign(
-            configspace=config.configspace,
-            n_runs=config.n_runs,
+            configspace=scenario.configspace,
+            n_runs=scenario.n_runs,
             configs=initial_configs,
             n_configs_per_hyperparameter=n_configs_per_hyperparameter,
             max_config_ratio=max_config_ratio,
-            seed=config.seed,
+            seed=scenario.seed,
         )
         return initial_design
 
     @staticmethod
     def get_random_configuration_chooser(
-        config: Config, *, random_probability: float = 0.08447232371720552
+        scenario: Scenario, *, random_probability: float = 0.08447232371720552
     ) -> RandomChooser:
-        return ChooserProb(seed=config.seed, prob=random_probability)
+        return ChooserProb(seed=scenario.seed, prob=random_probability)
 
     @staticmethod
-    def get_multi_objective_algorithm(config: Config) -> AbstractMultiObjectiveAlgorithm | None:
-        if len(config.objectives) <= 1:
+    def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm | None:
+        if len(scenario.objectives) <= 1:
             return None
 
-        return MeanAggregationStrategy(config.seed)
+        return MeanAggregationStrategy(scenario.seed)
 
     @staticmethod
-    def get_runhistory_transformer(config: Config):
+    def get_runhistory_transformer(scenario: Scenario):
         transformer = RunhistoryTransformer(
-            config=config,
-            n_params=len(config.configspace.get_hyperparameters()),
+            scenario=scenario,
+            n_params=len(scenario.configspace.get_hyperparameters()),
             scale_percentage=5,
-            seed=config.seed,
+            seed=scenario.seed,
         )
 
         return transformer

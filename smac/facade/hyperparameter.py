@@ -5,7 +5,7 @@ from smac.acquisition_optimizer.local_and_random_search import (
     LocalAndSortedRandomSearch,
 )
 from smac.chooser.random_chooser import ChooserProb
-from smac.config import Config
+from smac.scenario import Scenario
 from smac.configspace import Configuration
 from smac.facade import Facade
 from smac.initial_design.sobol_design import SobolInitialDesign
@@ -23,7 +23,7 @@ __license__ = "3-clause BSD"
 class HyperparameterFacade(Facade):
     @staticmethod
     def get_model(
-        config: Config,
+        scenario: Scenario,
         *,
         n_trees: int = 10,
         bootstrapping: bool = True,
@@ -32,7 +32,7 @@ class HyperparameterFacade(Facade):
         min_samples_leaf: int = 1,
         max_depth: int = 2**20,
     ) -> RandomForestWithInstances:
-        types, bounds = get_types(config.configspace)
+        types, bounds = get_types(scenario.configspace)
 
         return RandomForestWithInstances(
             types=types,
@@ -44,78 +44,78 @@ class HyperparameterFacade(Facade):
             min_samples_split=min_samples_split,
             min_samples_leaf=min_samples_leaf,
             max_depth=max_depth,
-            configspace=config.configspace,
-            seed=config.seed,
+            configspace=scenario.configspace,
+            seed=scenario.seed,
         )
 
     @staticmethod
-    def get_acquisition_function(config: Config, *, par: float = 0.0) -> EI:
+    def get_acquisition_function(scenario: Scenario, *, par: float = 0.0) -> EI:
         return EI(par=par, log=True)
 
     @staticmethod
     def get_acquisition_optimizer(
-        config: Config,
+        scenario: Scenario,
         *,
         local_search_iterations: int = 10,
         challengers: int = 10000,
     ) -> LocalAndSortedRandomSearch:
         optimizer = LocalAndSortedRandomSearch(
-            config.configspace,
+            scenario.configspace,
             local_search_iterations=local_search_iterations,
             challengers=challengers,
-            seed=config.seed,
+            seed=scenario.seed,
         )
 
         return optimizer
 
     @staticmethod
-    def get_intensifier(config: Config, *, min_challenger=1, min_config_calls=1, max_config_calls=3) -> Intensifier:
+    def get_intensifier(scenario: Scenario, *, min_challenger=1, min_config_calls=1, max_config_calls=3) -> Intensifier:
         intensifier = Intensifier(
-            instances=config.instances,
-            instance_specifics=config.instance_specifics,
-            algorithm_walltime_limit=config.algorithm_walltime_limit,
-            deterministic=config.deterministic,
+            instances=scenario.instances,
+            instance_specifics=scenario.instance_specifics,
+            algorithm_walltime_limit=scenario.algorithm_walltime_limit,
+            deterministic=scenario.deterministic,
             min_challenger=min_challenger,
-            race_against=config.configspace.get_default_configuration(),
+            race_against=scenario.configspace.get_default_configuration(),
             min_config_calls=min_config_calls,
             max_config_calls=max_config_calls,
-            seed=config.seed,
+            seed=scenario.seed,
         )
 
         return intensifier
 
     @staticmethod
     def get_initial_design(
-        config: Config,
+        scenario: Scenario,
         *,
         initial_configs: list[Configuration] | None = None,
         n_configs_per_hyperparamter: int = 10,
         max_config_ratio: float = 0.25,  # Use at most X*budget in the initial design
     ) -> SobolInitialDesign:
         return SobolInitialDesign(
-            configspace=config.configspace,
-            n_runs=config.n_runs,
+            configspace=scenario.configspace,
+            n_runs=scenario.n_runs,
             configs=initial_configs,
             n_configs_per_hyperparameter=n_configs_per_hyperparamter,
             max_config_ratio=max_config_ratio,
-            seed=config.seed,
+            seed=scenario.seed,
         )
 
     @staticmethod
-    def get_random_configuration_chooser(config: Config, *, probability: float = 0.2) -> ChooserProb:
+    def get_random_configuration_chooser(scenario: Scenario, *, probability: float = 0.2) -> ChooserProb:
         return ChooserProb(prob=probability)
 
     @staticmethod
-    def get_multi_objective_algorithm(config: Config) -> AbstractMultiObjectiveAlgorithm | None:
-        if len(config.objectives) <= 1:
+    def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm | None:
+        if len(scenario.objectives) <= 1:
             return None
 
-        return MeanAggregationStrategy(config.seed)
+        return MeanAggregationStrategy(scenario.seed)
 
     @staticmethod
-    def get_runhistory_transformer(config: Config) -> RunhistoryLogScaledTransformer:
+    def get_runhistory_transformer(scenario: Scenario) -> RunhistoryLogScaledTransformer:
         return RunhistoryLogScaledTransformer(
-            config,
-            n_params=len(config.configspace.get_hyperparameters()),
-            seed=config.seed,
+            scenario,
+            n_params=len(scenario.configspace.get_hyperparameters()),
+            seed=scenario.seed,
         )

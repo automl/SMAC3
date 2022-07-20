@@ -6,7 +6,7 @@ from typing import Dict, List, Mapping, Optional, Tuple
 import numpy as np
 
 from smac import constants
-from smac.config import Config
+from smac.scenario import Scenario
 from smac.configspace import convert_configurations_to_array
 from smac.model.base_imputor import BaseImputor
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
@@ -29,7 +29,7 @@ class AbstractRunhistoryTransformer(object):
 
     Parameters
     ----------
-    config: config Object
+    scenario: config Object
         Algorithm Configuration config
     n_params : int
         number of parameters in config space
@@ -76,7 +76,7 @@ class AbstractRunhistoryTransformer(object):
 
     def __init__(
         self,
-        config: Config,
+        scenario: Scenario,
         n_params: int,
         success_states: List[StatusType] = [
             StatusType.SUCCESS,
@@ -96,16 +96,16 @@ class AbstractRunhistoryTransformer(object):
         seed: int = 0,
     ) -> None:
         # General arguments
-        self.config = config
+        self.scenario = scenario
         self.rng = np.random.RandomState(seed)
         self.n_params = n_params
 
         self.scale_percentage = scale_percentage
-        self.n_objectives = config.count_objectives()
+        self.n_objectives = scenario.count_objectives()
 
         # Configuration
         self.impute_censored_data = impute_censored_data
-        self.algorithm_walltime_limit = self.config.algorithm_walltime_limit  # type: ignore[attr-defined] # noqa F821
+        self.algorithm_walltime_limit = self.scenario.algorithm_walltime_limit  # type: ignore[attr-defined] # noqa F821
 
         if impute_state is None and impute_censored_data:
             raise TypeError("No `impute_state` is given.")
@@ -124,7 +124,7 @@ class AbstractRunhistoryTransformer(object):
             raise TypeError("success_states not given")
 
         self.success_states = success_states
-        self.instance_features = config.instance_features
+        self.instance_features = scenario.instance_features
 
         if self.instance_features is None:
             self.n_feats = 0
@@ -134,7 +134,7 @@ class AbstractRunhistoryTransformer(object):
         self.n_params = n_params
 
         # Sanity checks
-        # if impute_censored_data and config.run_obj != "runtime":
+        # if impute_censored_data and scenario.run_obj != "runtime":
         #    # So far we don't know how to handle censored quality data
         #    logger.critical("Cannot impute censored data when not " "optimizing runtime")
         #    raise NotImplementedError("Cannot impute censored data when not " "optimizing runtime")
@@ -408,8 +408,8 @@ class AbstractRunhistoryTransformer(object):
         X = []
         y = []
         cen = []
-        feature_dict = self.config.feature_dict
-        params = self.config.cs.get_hyperparameters()  # type: ignore[attr-defined] # noqa F821
+        feature_dict = self.scenario.feature_dict
+        params = self.scenario.configspace.get_hyperparameters()  # type: ignore[attr-defined] # noqa F821
         for k, v in runhistory.data.items():
             config = runhistory.ids_config[k.config_id]
             x = [config.get(p.name) for p in params]

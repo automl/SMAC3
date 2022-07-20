@@ -5,7 +5,7 @@ from typing import Any, Mapping
 import hashlib
 import json
 import random
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 
 import ConfigSpace
@@ -13,13 +13,12 @@ import numpy as np
 from ConfigSpace.read_and_write import json as cs_json
 
 from smac.utils.logging import get_logger
-from smac.utils.others import recursively_compare_dicts
 
 logger = get_logger(__name__)
 
 
 @dataclass(frozen=True)
-class Config:
+class Scenario:
     """
     Replaces the scenario class in the original code.
     """
@@ -80,11 +79,11 @@ class Config:
         object.__setattr__(self, "_meta", {})
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, Config):
+        if isinstance(other, Scenario):
             # When using __dict__, we make sure to include the meta data
             return self.__dict__ == other.__dict__
 
-        raise RuntimeError("Can only compare config objects.")
+        raise RuntimeError("Can only compare scenario objects.")
 
     def _change_output_directory(self) -> None:
         # Create output directory
@@ -130,7 +129,7 @@ class Config:
         data["output_directory"] = str(self.output_directory)
 
         # Save everything
-        filename = self.output_directory / "config.json"
+        filename = self.output_directory / "scenario.json"
         with open(filename, "w") as fh:
             json.dump(data, fh, indent=4)
 
@@ -140,8 +139,8 @@ class Config:
             f.write(cs_json.write(self.configspace))
 
     @staticmethod
-    def load(path: Path) -> Config:
-        filename = path / "config.json"
+    def load(path: Path) -> Scenario:
+        filename = path / "scenario.json"
         with open(filename, "r") as fh:
             data = json.load(fh)
 
@@ -158,7 +157,7 @@ class Config:
 
         data["configspace"] = configspace
 
-        config = Config(**data)
-        config._set_meta(meta)
+        scenario = Scenario(**data)
+        scenario._set_meta(meta)
 
-        return config
+        return scenario

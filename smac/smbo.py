@@ -10,7 +10,7 @@ from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
 from smac.callbacks.callbacks import IncorporateRunResultCallback
 from smac.chooser import Chooser
 from smac.chooser.random_chooser import RandomChooser
-from smac.config import Config
+from smac.scenario import Scenario
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.initial_design import InitialDesign
@@ -42,8 +42,8 @@ class SMBO:
 
     Parameters
     ----------
-    config: smac.config.config.config
-        config object
+    scenario: smac.config.config.config
+        scenario object
     stats: Stats
         statistics object with configuration budgets
     initial_design: InitialDesign
@@ -96,7 +96,7 @@ class SMBO:
 
     def __init__(
         self,
-        config: Config,
+        scenario: Scenario,
         stats: Stats,
         runner: Runner,
         initial_design: InitialDesign,
@@ -114,8 +114,8 @@ class SMBO:
         # the stats object when the run is started.
         self.incumbent = None
 
-        self.config = config
-        self.configspace = config.configspace
+        self.scenario = scenario
+        self.configspace = scenario.configspace
         self.stats = stats
         self.initial_design = initial_design
         self.runhistory = runhistory
@@ -178,7 +178,7 @@ class SMBO:
         self.incumbent = self.stats.get_incumbent()
 
         self.start()
-        n_objectives = self.config.count_objectives()
+        n_objectives = self.scenario.count_objectives()
 
         # Main BO loop
         while True:
@@ -376,7 +376,7 @@ class SMBO:
     def _get_timebound_for_intensification(self, time_spent: float, update: bool) -> float:
         """Calculate time left for intensify from the time spent on choosing challengers using the
         fraction of time intended for intensification (which is specified in
-        config.intensification_percentage).
+        scenario.intensification_percentage).
 
         Parameters
         ----------
@@ -389,7 +389,7 @@ class SMBO:
         -------
         time_left : float
         """
-        frac_intensify = self.config.intensify_percentage
+        frac_intensify = self.scenario.intensify_percentage
         total_time = time_spent / (1 - frac_intensify)
         time_left = frac_intensify * total_time
 
@@ -487,6 +487,6 @@ class SMBO:
         """Saves the current stats and runhistory."""
         self.stats.save()
 
-        path = self.config.output_directory
+        path = self.scenario.output_directory
         if path is not None:
             self.runhistory.save_json(fn=str(path / "runhistory.json"))

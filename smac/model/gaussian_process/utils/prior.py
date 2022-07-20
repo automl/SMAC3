@@ -1,3 +1,4 @@
+from __future__ import annotations
 import math
 import warnings
 
@@ -10,7 +11,7 @@ __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class Prior(object):
+class Prior:
     """Abstract base class to define the interface for priors of GP hyperparameter.
 
     This class is adapted from RoBO:

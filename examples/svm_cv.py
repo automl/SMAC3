@@ -16,7 +16,7 @@ from ConfigSpace.conditions import InCondition
 from sklearn import datasets, svm
 from sklearn.model_selection import cross_val_score
 
-from smac import Config, HyperparameterFacade
+from smac import Scenario, HyperparameterFacade
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -76,7 +76,7 @@ if __name__ == "__main__":
     configspace.add_conditions([use_degree, use_coef, use_gamma, use_gamma_value])
 
     # Next, we create an object, holding general information about the run
-    config = Config(
+    config = Scenario(
         configspace,
         n_runs=50,  # We want 50 target algorithm evaluations
     )

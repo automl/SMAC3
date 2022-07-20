@@ -17,7 +17,7 @@ from ConfigSpace.hyperparameters import (
     IntegerHyperparameter,
 )
 
-from smac.config import Config
+from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -50,8 +50,8 @@ class Stats:
     All statistics collected during run.
     """
 
-    def __init__(self, config: Config):
-        self.config = config
+    def __init__(self, scenario: Scenario):
+        self.scenario = scenario
 
         self.submitted = 0
         self.finished = 0
@@ -91,7 +91,7 @@ class Stats:
 
         # Transform dictionary to configuration
         incumbent = self.trajectory[-1].incumbent
-        return Configuration(self.config.configspace, values=incumbent)
+        return Configuration(self.scenario.configspace, values=incumbent)
 
     def start_timing(self) -> None:
         """Starts the timer (for the runtime configuration budget).
@@ -106,18 +106,18 @@ class Stats:
 
     def get_remaing_time_budget(self) -> float:
         """Subtracts the runtime configuration budget with the used wallclock time."""
-        if self.config:
-            return self.config.walltime_limit - (time.time() - self._start_time)
+        if self.scenario:
+            return self.scenario.walltime_limit - (time.time() - self._start_time)
         else:
             raise ValueError("Scenario is missing")
 
     def get_remaining_target_algorithm_runs(self) -> int:
         """Subtract the target algorithm runs in the scenario with the used ta runs."""
-        return self.config.n_runs - self.submitted
+        return self.scenario.n_runs - self.submitted
 
     def get_remaining_target_algorithm_budget(self) -> float:
         """Subtracts the ta running budget with the used time."""
-        return self.config.cputime_limit - self.target_algorithm_walltime_used
+        return self.scenario.cputime_limit - self.target_algorithm_walltime_used
 
     def is_budget_exhausted(self) -> bool:
         """Check whether the configuration budget for time budget, ta_budget and submitted
@@ -161,11 +161,11 @@ class Stats:
             "\n"
             f"--- STATISTICS -------------------------------------\n"
             f"--- Incumbent changed: {self.incumbent_changed - 1}\n"
-            f"--- Submitted target algorithm runs: {self.submitted} / {self.config.n_runs}\n"
-            f"--- Finished target algorithm runs: {self.finished} / {self.config.n_runs}\n"
+            f"--- Submitted target algorithm runs: {self.submitted} / {self.scenario.n_runs}\n"
+            f"--- Finished target algorithm runs: {self.finished} / {self.scenario.n_runs}\n"
             f"--- Configurations: {self.n_configs}\n"
-            f"--- Used wallclock time: {round(self.get_used_walltime())} / {round(self.config.walltime_limit, 2)} sec\n"
-            f"--- Used target algorithm runtime: {round(self.target_algorithm_walltime_used, 2)} / {round(self.config.cputime_limit, 2)} sec\n"
+            f"--- Used wallclock time: {round(self.get_used_walltime())} / {round(self.scenario.walltime_limit, 2)} sec\n"
+            f"--- Used target algorithm runtime: {round(self.target_algorithm_walltime_used, 2)} / {round(self.scenario.cputime_limit, 2)} sec\n"
             f"----------------------------------------------------"
         )
 
@@ -192,8 +192,8 @@ class Stats:
             "trajectory": [dataclasses.asdict(item) for item in self.trajectory],
         }
 
-        assert self.config.output_directory
-        filename = self.config.output_directory / "stats.json"
+        assert self.scenario.output_directory
+        filename = self.scenario.output_directory / "stats.json"
         logger.debug(f"Saving stats to `{filename}`")
 
         with open(filename, "w") as fh:
@@ -201,8 +201,8 @@ class Stats:
 
     def load(self) -> None:
         """Load all attributes from dictionary in file into stats-object."""
-        assert self.config.output_directory
-        filename = self.config.output_directory / "stats.json"
+        assert self.scenario.output_directory
+        filename = self.scenario.output_directory / "stats.json"
 
         with open(filename, "r") as fh:
             data = json.load(fh)

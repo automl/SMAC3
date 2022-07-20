@@ -11,7 +11,7 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
 """
 
 from ConfigSpace import ConfigurationSpace, Configuration, Float
-from smac import Config, BlackBoxFacade
+from smac import Scenario, BlackBoxFacade
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     configspace.add_hyperparameters([x0, x1])
 
     # Scenario object
-    config = Config(configspace, n_runs=100)
+    config = Scenario(configspace, n_runs=100)
 
     # Example call of the target algorithm
     default_value = rosenbrock_2d(configspace.get_default_configuration())
