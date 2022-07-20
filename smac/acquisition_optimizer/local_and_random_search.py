@@ -73,10 +73,10 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionOptimizer):
         )
         self.local_search_iterations = local_search_iterations
 
-    def set_acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
+    def _set_acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
         self.acquisition_function = acquisition_function
-        self.random_search.set_acquisition_function(acquisition_function)
-        self.local_search.set_acquisition_function(acquisition_function)
+        self.random_search._set_acquisition_function(acquisition_function)
+        self.local_search._set_acquisition_function(acquisition_function)
 
     def _maximize(
         self,

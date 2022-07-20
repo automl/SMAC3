@@ -12,7 +12,6 @@ from smac.utils.logging import get_logger
 
 logger = get_logger(__name__)
 
-__author__ = "Aaron Klein, Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
 __license__ = "3-clause BSD"
 
@@ -35,7 +34,7 @@ class AbstractAcquisitionFunction(metaclass=abc.ABCMeta):
         self.model: BaseModel | None = None
         self._required_updates = ("model",)  # type: Tuple[str, ...]
 
-    def set_model(self, model) -> None:
+    def _set_model(self, model) -> None:
         self.model = model
 
     def update(self, **kwargs: Any) -> None:

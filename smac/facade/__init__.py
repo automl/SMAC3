@@ -10,6 +10,7 @@ import numpy as np
 
 from smac.acquisition_function import AbstractAcquisitionFunction
 from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
+from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.chooser.random_chooser import RandomChooser
 from smac.config import Config
 from smac.configspace import Configuration
@@ -43,6 +44,7 @@ class Facade:
         acquisition_function: AbstractAcquisitionFunction | None = None,
         acquisition_optimizer: AbstractAcquisitionOptimizer | None = None,
         initial_design: InitialDesign | None = None,
+        configuration_chooser: ConfigurationChooser | None = None,
         random_configuration_chooser: RandomChooser | None = None,
         intensifier: AbstractRacer | None = None,
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
@@ -62,6 +64,9 @@ class Facade:
 
         if initial_design is None:
             initial_design = self.get_initial_design(config)
+
+        if configuration_chooser is None:
+            configuration_chooser = self.get_configuration_chooser(config)
 
         if random_configuration_chooser is None:
             random_configuration_chooser = self.get_random_configuration_chooser(config)
@@ -113,6 +118,7 @@ class Facade:
         self.acquisition_function = acquisition_function
         self.acquisition_optimizer = acquisition_optimizer
         self.initial_design = initial_design
+        self.configuration_chooser = configuration_chooser
         self.random_configuration_chooser = random_configuration_chooser
         self.intensifier = intensifier
         self.multi_objective_algorithm = multi_objective_algorithm
@@ -133,6 +139,7 @@ class Facade:
             model=self.model,
             acquisition_function=self.acquisition_function,
             acquisition_optimizer=self.acquisition_optimizer,
+            configuration_chooser=self.configuration_chooser,
             random_configuration_chooser=self.random_configuration_chooser,
             seed=self.seed,
         )
@@ -160,11 +167,12 @@ class Facade:
     def _update_dependencies(self) -> None:
         # We add some more dependencies.
         # This is the easiest way to incorporate dependencies, although it might be a bit hacky.
-        self.intensifier.set_stats(self.stats)
-        self.runhistory_transformer.set_multi_objective_algorithm(self.multi_objective_algorithm)
-        self.runhistory_transformer.set_imputer(self._get_imputer())
-        self.acquisition_function.set_model(self.model)
-        self.acquisition_optimizer.set_acquisition_function(self.acquisition_function)
+        self.intensifier._set_stats(self.stats)
+        self.runhistory_transformer._set_multi_objective_algorithm(self.multi_objective_algorithm)
+        self.runhistory_transformer._set_imputer(self._get_imputer())
+        self.acquisition_function._set_model(self.model)
+        self.acquisition_optimizer._set_acquisition_function(self.acquisition_function)
+        self.configuration_chooser._set_smbo(self.optimizer)
 
         # TODO: self.runhistory_transformer.set_success_states etc. for different intensifier?
 
@@ -310,6 +318,10 @@ class Facade:
     @abstractmethod
     def get_initial_design(config: Config) -> InitialDesign:
         raise NotImplementedError
+
+    @staticmethod
+    def get_configuration_chooser(config: Config) -> ConfigurationChooser:
+        return ConfigurationChooser()
 
     @staticmethod
     @abstractmethod

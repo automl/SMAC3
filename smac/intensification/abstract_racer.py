@@ -123,7 +123,7 @@ class AbstractRacer(object):
         # to mark the end of an iteration
         self.iteration_done = False
 
-    def set_stats(self, stats: Stats) -> None:
+    def _set_stats(self, stats: Stats) -> None:
         self.stats = stats
 
     def get_next_run(

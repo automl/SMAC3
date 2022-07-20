@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Callable, Dict, List, Optional, Type
 
 import time
@@ -8,7 +9,7 @@ from smac.acquisition_function import AbstractAcquisitionFunction
 from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
 from smac.callbacks.callbacks import IncorporateRunResultCallback
 from smac.chooser.configuration_chooser import ConfigurationChooser
-from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
+from smac.chooser.random_chooser import RandomChooser
 from smac.config import Config
 from smac.configspace import Configuration
 from smac.constants import MAXINT
@@ -75,7 +76,7 @@ class SMBO:
         Choose x_best for computing the acquisition function via the model instead of via the observations.
     min_samples_model: int
         Minimum number of samples to build a model.
-    epm_chooser_kwargs: typing.Optional[typing.Dict]
+    configuration_chooser_kwargs: typing.Optional[typing.Dict]
         Additional arguments passed to epmchooser
 
     Attributes
@@ -89,7 +90,7 @@ class SMBO:
     intensifier
     rng
     initial_design_configs
-    epm_chooser
+    configuration_chooser
     runner
     """
 
@@ -97,6 +98,7 @@ class SMBO:
         self,
         config: Config,
         stats: Stats,
+        runner: Runner,
         initial_design: InitialDesign,
         runhistory: RunHistory,
         runhistory_transformer: AbstractRunhistoryTransformer,
@@ -104,13 +106,8 @@ class SMBO:
         model: BaseModel,
         acquisition_optimizer: AbstractAcquisitionOptimizer,
         acquisition_function: AbstractAcquisitionFunction,
-        runner: Runner,
-        # restore_incumbent: Configuration = None,
-        random_configuration_chooser: RandomChooser = ChooserNoCoolDown(modulus=2.0),
-        predict_x_best: bool = True,
-        min_samples_model: int = 1,
-        epm_chooser: Type[ConfigurationChooser] = ConfigurationChooser,
-        epm_chooser_kwargs: Optional[Dict] = None,
+        configuration_chooser: ConfigurationChooser,
+        random_configuration_chooser: RandomChooser,
         seed: int = 0,
     ):
         # Changed in 2.0: We don't restore the incumbent anymore but derive it directly from
@@ -118,46 +115,34 @@ class SMBO:
         self.incumbent = None
 
         self.config = config
-        self.configspace = config.configspace  # type: ignore[attr-defined] # noqa F821
+        self.configspace = config.configspace
         self.stats = stats
         self.initial_design = initial_design
         self.runhistory = runhistory
+        self.runhistory_transformer = runhistory_transformer
         self.intensifier = intensifier
-        self.rng = np.random.RandomState(seed)
-        self._min_time = 10**-5
+        self.model = model
+        self.acquisition_optimizer = acquisition_optimizer
+        self.acquisition_function = acquisition_function
+        self.configuration_chooser = configuration_chooser
+        self.random_configuration_chooser = random_configuration_chooser
         self.runner = runner
 
-        self.initial_design_configs = []  # type: List[Configuration]
+        self.seed = seed
+        self.rng = np.random.RandomState(seed)
 
-        if epm_chooser_kwargs is None:
-            epm_chooser_kwargs = {}
-
-        # TODO: consider if we need an additional EPMChooser for multi-objective optimization
-        self.epm_chooser = epm_chooser(
-            config=config,
-            stats=stats,
-            runhistory=runhistory,
-            runhistory_transformer=runhistory_transformer,
-            model=model,  # type: ignore
-            acquisition_optimizer=acquisition_optimizer,
-            acquisition_function=acquisition_function,
-            # restore_incumbent=restore_incumbent,
-            random_configuration_chooser=random_configuration_chooser,
-            predict_x_best=predict_x_best,
-            min_samples_model=min_samples_model,
-            **epm_chooser_kwargs,
-            seed=seed,
-        )
-
-        # Internal variable - if this is set to True it will gracefully stop SMAC
-        self._stop = False
+        self.initial_design_configs: list[Configuration] = []
 
         # Callbacks. All known callbacks have a key. If something does not have a key here, there is
         # no callback available.
-        self._callbacks = {"_incorporate_run_results": list()}  # type: Dict[str, List[Callable]]
-        self._callback_to_key = {
+        self._callbacks: dict[str, list[Callable]] = {"_incorporate_run_results": list()}
+        self._callback_to_key: dict[Type, str] = {
             IncorporateRunResultCallback: "_incorporate_run_results",
-        }  # type: Dict[Type, str]
+        }
+
+        # Internal variable - if this is set to True it will gracefully stop SMAC
+        self._stop = False
+        self._min_time = 10**-5
 
     def start(self) -> None:
         """Starts the Bayesian Optimization loop.
@@ -204,7 +189,7 @@ class SMBO:
             intent, run_info = self.intensifier.get_next_run(
                 challengers=self.initial_design_configs,
                 incumbent=self.incumbent,
-                chooser=self.epm_chooser,
+                chooser=self.configuration_chooser,
                 runhistory=self.runhistory,
                 repeat_configs=self.intensifier.repeat_configs,
                 num_workers=self.runner.num_workers(),

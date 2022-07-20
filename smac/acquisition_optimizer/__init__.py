@@ -58,7 +58,7 @@ class AbstractAcquisitionOptimizer(object, metaclass=abc.ABCMeta):
         self.challengers = challengers
         self.rng = np.random.RandomState(seed=seed)
 
-    def set_acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
+    def _set_acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
         self.acquisition_function = acquisition_function
 
     def maximize(

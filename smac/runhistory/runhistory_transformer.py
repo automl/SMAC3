@@ -153,10 +153,10 @@ class AbstractRunhistoryTransformer(object):
         self.max_y = np.array([np.NaN] * self.n_objectives)
         self.perc = np.array([np.NaN] * self.n_objectives)
 
-    def set_imputer(self, imputer: BaseImputor | None) -> None:
+    def _set_imputer(self, imputer: BaseImputor | None) -> None:
         self.imputer = imputer
 
-    def set_multi_objective_algorithm(self, multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None) -> None:
+    def _set_multi_objective_algorithm(self, multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None) -> None:
         self.multi_objective_algorithm = multi_objective_algorithm
 
     @abc.abstractmethod

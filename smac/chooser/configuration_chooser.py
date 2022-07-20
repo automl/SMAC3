@@ -1,21 +1,14 @@
 from __future__ import annotations
 
-from typing import Any, Iterator, List, Optional, Tuple
+from typing import Iterator, List, Optional, Tuple
 
 import numpy as np
 
-from smac.acquisition_function import AbstractAcquisitionFunction
-from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
 from smac.acquisition_optimizer.random_search import RandomSearch
-from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
-from smac.config import Config
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
-from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
-from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory_transformer import AbstractRunhistoryTransformer
 from smac.utils.logging import get_logger
-from smac.utils.stats import Stats
+import smac
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -59,35 +52,11 @@ class ConfigurationChooser:
 
     def __init__(
         self,
-        config: Config,
-        stats: Stats,
-        runhistory: RunHistory,
-        runhistory_transformer: AbstractRunhistoryTransformer,
-        model: RandomForestWithInstances,
-        acquisition_optimizer: AbstractAcquisitionOptimizer,
-        acquisition_function: AbstractAcquisitionFunction,
-        # restore_incumbent: Configuration = None,
-        random_configuration_chooser: RandomChooser = ChooserNoCoolDown(modulus=2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
-        seed: int = 0,
-        **epm_chooser_kwargs: Any,
     ):
-        self.config = config
-        self.stats = stats
-        self.runhistory = runhistory
-        self.rh2EPM = runhistory_transformer
-        self.model = model
-        self.acquisition_optimizer = acquisition_optimizer
-        self.acquisition_function = acquisition_function
-        self.rng = np.random.RandomState(seed)
-        self.random_configuration_chooser = random_configuration_chooser
-
-        self._random_search = RandomSearch(
-            self.config.configspace,
-            acquisition_function=acquisition_function,
-            seed=seed,
-        )
+        self.smbo: smac.SMBO | None = None
+        self._random_search: RandomSearch | None = None
 
         self.initial_design_configs: list[Configuration] = []
         self.predict_x_best = predict_x_best
@@ -96,10 +65,21 @@ class ConfigurationChooser:
             0.0,
         ]
 
+    def _set_smbo(self, smbo: smac.SMBO) -> None:
+        self.smbo = smbo
+        self._random_search = RandomSearch(
+            self.smbo.configspace,
+            acquisition_function=self.smbo.acquisition_function,
+            seed=self.smbo.seed,
+        )
+
     def _collect_data_to_train_model(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        assert self.smbo is not None
+        assert self._random_search is not None
+
         # if we use a float value as a budget, we want to train the model only on the highest budget
         available_budgets = []
-        for run_key in self.runhistory.data.keys():
+        for run_key in self.smbo.runhistory.data.keys():
             available_budgets.append(run_key.budget)
 
         # Sort available budgets from highest to lowest budget
@@ -107,8 +87,8 @@ class ConfigurationChooser:
 
         # Get #points per budget and if there are enough samples, then build a model
         for b in available_budgets:
-            X, Y = self.rh2EPM.transform(
-                self.runhistory,
+            X, Y = self.smbo.runhistory_transformer.transform(
+                self.smbo.runhistory,
                 budget_subset=[
                     b,
                 ],
@@ -117,8 +97,8 @@ class ConfigurationChooser:
                 self.currently_considered_budgets = [
                     b,
                 ]
-                configs_array = self.rh2EPM.get_configurations(
-                    self.runhistory, budget_subset=self.currently_considered_budgets
+                configs_array = self.smbo.runhistory_transformer.get_configurations(
+                    self.smbo.runhistory, budget_subset=self.currently_considered_budgets
                 )
                 return X, Y, configs_array
 
@@ -133,54 +113,7 @@ class ConfigurationChooser:
         )
 
     def _get_evaluated_configs(self) -> List[Configuration]:
-        return self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
-
-    def choose_next(self, incumbent_value: float = None) -> Iterator[Configuration]:
-        """Choose next candidate solution with Bayesian optimization. The suggested configurations
-        depend on the argument ``acquisition_optimizer`` to the ``SMBO`` class.
-
-        Parameters
-        ----------
-        incumbent_value: float
-            Cost value of incumbent configuration (required for acquisition function);
-            If not given, it will be inferred from runhistory or predicted;
-            if not given and runhistory is empty, it will raise a ValueError.
-
-        Returns
-        -------
-        Iterator
-        """
-        logger.debug("Search for next configuration...")
-        X, Y, X_configurations = self._collect_data_to_train_model()
-
-        if X.shape[0] == 0:
-            # Only return a single point to avoid an overly high number of
-            # random search iterations
-            return self._random_search.maximize(runhistory=self.runhistory, stats=self.stats, num_points=1)
-        self.model.train(X, Y)
-
-        if incumbent_value is not None:
-            best_observation = incumbent_value
-            x_best_array = None  # type: Optional[np.ndarray]
-        else:
-            if self.runhistory.empty():
-                raise ValueError("Runhistory is empty and the cost value of " "the incumbent is unknown.")
-            x_best_array, best_observation = self._get_x_best(self.predict_x_best, X_configurations)
-
-        self.acquisition_function.update(
-            model=self.model,
-            eta=best_observation,
-            incumbent_array=x_best_array,
-            num_data=len(self._get_evaluated_configs()),
-            X=X_configurations,
-        )
-
-        challengers = self.acquisition_optimizer.maximize(
-            runhistory=self.runhistory,
-            stats=self.stats,
-            random_configuration_chooser=self.random_configuration_chooser,
-        )
-        return challengers
+        return self.smbo.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
 
     def _get_x_best(self, predict: bool, X: np.ndarray) -> Tuple[np.ndarray, float]:
         """Get value, configuration, and array representation of the "best" configuration.
@@ -200,11 +133,14 @@ class ConfigurationChooser:
         np.ndarry
         Configuration
         """
+        assert self.smbo is not None
+        assert self._random_search is not None
+
         if predict:
             costs = list(
                 map(
                     lambda x: (
-                        self.model.predict_marginalized_over_instances(x.reshape((1, -1)))[0][0][0],
+                        self.smbo.model.predict_marginalized_over_instances(x.reshape((1, -1)))[0][0][0],
                         x,
                     ),
                     X,
@@ -215,14 +151,65 @@ class ConfigurationChooser:
             best_observation = costs[0][0]
             # won't need log(y) if EPM was already trained on log(y)
         else:
-            all_configs = self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
-            x_best = self.incumbent
+            all_configs = self.smbo.runhistory.get_all_configs_per_budget(
+                budget_subset=self.currently_considered_budgets
+            )
+            x_best = self.smbo.incumbent
             x_best_array = convert_configurations_to_array(all_configs)
-            best_observation = self.runhistory.get_cost(x_best)
+            best_observation = self.smbo.runhistory.get_cost(x_best)
             best_observation_as_array = np.array(best_observation).reshape((1, 1))
             # It's unclear how to do this for inv scaling and potential future scaling.
             # This line should be changed if necessary
-            best_observation = self.rh2EPM.transform_response_values(best_observation_as_array)
+            best_observation = self.smbo.runhistory_transformer.transform_response_values(best_observation_as_array)
             best_observation = best_observation[0][0]
 
         return x_best_array, best_observation
+
+    def choose_next(self, incumbent_value: float = None) -> Iterator[Configuration]:
+        """Choose next candidate solution with Bayesian optimization. The suggested configurations
+        depend on the argument `acquisition_optimizer` to the `SMBO` class.
+
+        Parameters
+        ----------
+        incumbent_value: float
+            Cost value of incumbent configuration (required for acquisition function);
+            If not given, it will be inferred from runhistory or predicted;
+            if not given and runhistory is empty, it will raise a ValueError.
+
+        Returns
+        -------
+        Iterator
+        """
+        assert self.smbo is not None
+        logger.debug("Search for next configuration...")
+        X, Y, X_configurations = self._collect_data_to_train_model()
+
+        if X.shape[0] == 0:
+            # Only return a single point to avoid an overly high number of
+            # random search iterations
+            return self._random_search.maximize(runhistory=self.smbo.runhistory, stats=self.smbo.stats, num_points=1)
+        self.smbo.model.train(X, Y)
+
+        if incumbent_value is not None:
+            best_observation = incumbent_value
+            x_best_array = None  # type: Optional[np.ndarray]
+        else:
+            if self.smbo.runhistory.empty():
+                raise ValueError("Runhistory is empty and the cost value of " "the incumbent is unknown.")
+            x_best_array, best_observation = self._get_x_best(self.predict_x_best, X_configurations)
+
+        self.smbo.acquisition_function.update(
+            model=self.smbo.model,
+            eta=best_observation,
+            incumbent_array=x_best_array,
+            num_data=len(self._get_evaluated_configs()),
+            X=X_configurations,
+        )
+
+        challengers = self.smbo.acquisition_optimizer.maximize(
+            runhistory=self.smbo.runhistory,
+            stats=self.smbo.stats,
+            random_configuration_chooser=self.smbo.random_configuration_chooser,
+        )
+
+        return challengers

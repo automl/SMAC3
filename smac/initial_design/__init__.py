@@ -67,6 +67,7 @@ class InitialDesign:
     ):
         # TODO: Change init_budget to n_configs?
         self.configspace = configspace
+        self.seed = seed
         self.rng = np.random.RandomState(seed)
         self.configs = configs
 
@@ -95,7 +96,11 @@ class InitialDesign:
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
-        return {"init_budget": self.init_budget}
+        return {
+            "name": self.__class__.__name__,
+            "init_budget": self.init_budget,
+            "seed": self.seed,
+        }
 
     def select_configurations(self) -> List[Configuration]:
         """Selects the initial configurations."""
