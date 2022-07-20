@@ -1,0 +1,30 @@
+smac.utils.stats
+================
+
+.. automodule:: smac.utils.stats
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Stats
+      TrajectoryItem
+   
+   
+
+   
+   
+   
+
+
+

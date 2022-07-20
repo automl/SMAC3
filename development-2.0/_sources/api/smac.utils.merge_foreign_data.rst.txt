@@ -1,0 +1,30 @@
+smac.utils.merge\_foreign\_data
+===============================
+
+.. automodule:: smac.utils.merge_foreign_data
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      merge_foreign_data
+      merge_foreign_data_from_file
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

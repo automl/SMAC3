@@ -1,0 +1,31 @@
+﻿smac.callbacks
+==============
+
+.. automodule:: smac.callbacks
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   smac.callbacks.callbacks
+

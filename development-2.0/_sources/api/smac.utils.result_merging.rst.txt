@@ -1,0 +1,36 @@
+smac.utils.result\_merging
+==========================
+
+.. automodule:: smac.utils.result_merging
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      get_rundirs
+      glob_re
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ResultMerger
+   
+   
+
+   
+   
+   
+
+
+

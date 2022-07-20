@@ -1,0 +1,54 @@
+:orphan:
+
+
+
+.. _sphx_glr_examples:
+
+Examples
+========
+
+We provide several examples of how to use SMAC with Python. Practical use-cases were chosen to show the
+variety of SMAC. We refer to the documentation to use SMAC with the command line.
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of optimizing a simple support vector machine on the IRIS benchmark. We use the hype...">
+
+.. only:: html
+
+ .. figure:: /examples/images/thumb/sphx_glr_svm_cv_thumb.png
+     :alt: Support Vector Machine with Cross-Validation
+
+     :ref:`sphx_glr_examples_svm_cv.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/svm_cv
+.. raw:: html
+
+    <div class="sphx-glr-clear"></div>
+
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-gallery
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+    :download:`Download all examples in Python source code: examples_python.zip </examples/examples_python.zip>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+    :download:`Download all examples in Jupyter notebooks: examples_jupyter.zip </examples/examples_jupyter.zip>`
