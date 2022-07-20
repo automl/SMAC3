@@ -40,14 +40,14 @@ if __name__ == "__main__":
     configspace.add_hyperparameters([x0, x1])
 
     # Scenario object
-    config = Scenario(configspace, n_runs=100)
+    scenario = Scenario(configspace, n_runs=100)
 
     # Example call of the target algorithm
     default_value = rosenbrock_2d(configspace.get_default_configuration())
     print(f"Default value: {round(default_value, 2)}")
 
     # Now we use SMAC to find the best hyperparameters
-    smac = BlackBoxFacade(config, rosenbrock_2d)
+    smac = BlackBoxFacade(scenario, rosenbrock_2d)
     incumbent = smac.optimize()
 
     incumbent_value = rosenbrock_2d(incumbent)

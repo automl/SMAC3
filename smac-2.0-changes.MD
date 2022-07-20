@@ -1,4 +1,4 @@
-# Unified transformation guide
+# Unified Transformation Guide
 
 - Please only push new examples/tests (when converting from -old) when they pass (it gets too messy otherwise).
 - Please use grammarly in docstrings/text in general (let's say if 3 sentences or more). Often,
@@ -18,7 +18,7 @@ punctuations, spelling, and so on can be easily removed.
     
     Please change if you see the old style.
 
-- Remove `self.logger` in all classes. Create on top a global logger:
+- Remove `self.logger` in all classes. Create a global logger at top:
 logger = get_logger(__name__) (from smac.utils.logging import get_logger)
 
 - Remove `rng` from init and replace it with `seed: int = 0`. Create new `rng = np.random.RandomState(seed)` if needed.
@@ -30,23 +30,57 @@ If multiple sentences are used, use punctuation. For example: `# This is one sen
 upper-case.
 
     ```
-    """
-    First a general comment.
+    def your_func() -> None:
+        """First a general comment.
 
-    Note
-    ----
-    This could be a note here. Can also be a warning.
+        Note
+        ----
+        This could be a note here. Can also be a warning.
 
-    Parameters
-    ----------
-    X : np.ndarray | None, defaults to None
-        Explain what this parameter does.
+        Parameters
+        ----------
+        X : np.ndarray | None, defaults to None
+            Explain what this parameter does.
 
-    Returns
-    -------
-    optional_a_name_here : np.ndarray(N,1)
-        Acquisition function values wrt X.
-    """
+        Returns
+        -------
+        optional_a_name_here : np.ndarray(N,1)
+            Acquisition function values wrt X.
+        """
+    ```
+
+    Also, a paragraph consists of min two sentences.
+
+    ```
+    def your_func() -> None:
+        """Here is one sentence.
+
+        This is another sentence.
+
+        Parameters
+        ----------
+        ...
+        """
+    ```
+
+    should be converted to
+
+    ```
+    def your_func() -> None:
+        """Here is one sentence. This is another sentence.
+        
+        Parameters
+        ----------
+        ...
+        """
+    ```
+
+    Sometimes, you can leave out parameters/returns if it is clear. Then you can just describe the function
+    with a few words:
+
+    ```
+    def your_func() -> None:
+        """This is a short explanation."""
     ```
 
 - Everytime you see a variable you don't know, look it up and replace it with the variable provided
@@ -58,10 +92,10 @@ is bounded to `runtime`, you can remove that too.
 
 - Please always check whether the docstrings are still correct. If not, correct them accordingly. Sometimes the ordering has changed.
 
-- Get rid of `# type: ignore`.
+- Get rid of `# type: ignore`. Mostly it was used in context with the old scenario object.
 
 
-# Variable renaming
+# Variable Renaming
 
 We removed run_obj == runtime COMPLETELY
 => no adaptive capping
@@ -89,15 +123,19 @@ runhistory2epm => runhistory_transformer
 Runhistory2EPM => RunhistoryTransformer
 num_obj => n_objectives (use `count_objectives` from the config object)
 
-## Initial design
+#### Initial design
 n_configs_x_params => n_configs_per_hyperparameter
 max_config_fracs => max_config_ratio
 
-## Algorithm Configuration
+#### Algorithm Configuration
 feature_array => instance_features
 train_insts/train_instances => instances
 
-## Intensification
+#### Intensification
 min_chall => min_challenger
 minR => min_config_calls
 maxR => max_config_calls
+
+
+# Known Issues
+- HyperparameterFacade starts a local search when continue a run. However, the limit already was exceeded.

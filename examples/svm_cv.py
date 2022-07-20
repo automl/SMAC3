@@ -76,7 +76,7 @@ if __name__ == "__main__":
     configspace.add_conditions([use_degree, use_coef, use_gamma, use_gamma_value])
 
     # Next, we create an object, holding general information about the run
-    config = Scenario(
+    scenario = Scenario(
         configspace,
         n_runs=50,  # We want 50 target algorithm evaluations
     )
@@ -86,7 +86,7 @@ if __name__ == "__main__":
     print(f"Default value: {round(default_value, 2)}")
 
     # Now we use SMAC to find the best hyperparameters
-    smac = HyperparameterFacade(config, target_algorithm)
+    smac = HyperparameterFacade(scenario, target_algorithm)
     incumbent = smac.optimize()
 
     incumbent_value = target_algorithm(incumbent)
