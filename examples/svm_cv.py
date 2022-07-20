@@ -40,7 +40,6 @@ def target_algorithm(config: Configuration, seed: int = 0) -> float:
     --------
     A cross-validated mean score for the SVM on the loaded dataset.
     """
-    # For gamma, we set it to a fixed value or to "auto" (if used)
     config_dict = config.get_dictionary()
     if "gamma" in config:
         config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
@@ -79,7 +78,7 @@ if __name__ == "__main__":
     # Next, we create an object, holding general information about the run
     config = Config(
         configspace,
-        n_runs=100,  # We want 50 target algorithm evaluations
+        n_runs=50,  # We want 50 target algorithm evaluations
     )
 
     # Example call of the target algorithm

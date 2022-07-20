@@ -16,6 +16,7 @@ options = {
     "ignore_pattern": ".*pcs$|.*scenario.txt$|.*spear_qcp$",
     "sphinx_gallery_conf": {
         "plot_gallery": True,
+        "filename_pattern": "",
     },
 }
 

@@ -34,7 +34,6 @@ class Config:
 
     objectives: str | list[str] = "cost"
     crash_cost: float = np.inf
-    # transform_y: str | None = None  # Whether y should be transformed (different runhistory2epm)
 
     # Limitations
     walltime_limit: float = np.inf
