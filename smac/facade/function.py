@@ -17,7 +17,7 @@ __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-def fmin_smac(
+def optimize(
     target_algorithm: Callable,
     x0: List[float],
     bounds: List[Iterable[float]],
