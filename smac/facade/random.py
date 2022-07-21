@@ -1,155 +1,147 @@
-from typing import Callable, Dict, List, Optional, Type, Union
+from __future__ import annotations
 
-import logging
-
-import dask.distributed  # type: ignore
-import numpy as np
-
-from smac.acquisition_optimizer.maximizer import (
+from smac.acquisition_function.expected_improvement import EI
+from smac.acquisition_optimizer.random_search import (
     AbstractAcquisitionOptimizer,
     RandomSearch,
 )
-from smac.cli.scenario import Scenario
+from smac.chooser.random_chooser import ChooserProb, RandomChooser
 from smac.configspace import Configuration
-from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
-from smac.initial_design.initial_design import InitialDesign
-from smac.intensification.abstract_racer import AbstractRacer
+from smac.facade import Facade
+from smac.initial_design import InitialDesign
+from smac.initial_design.default_configuration_design import DefaultInitialDesign
+from smac.intensification.intensification import Intensifier
 from smac.model.random_model import RandomModel
-from smac.multi_objective.abstract_multi_objective_algorithm import (
-    AbstractMultiObjectiveAlgorithm,
-)
-from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory_transformer import (
-    AbstractRunhistoryTransformer,
-    RunhistoryLogTransformer,
-    RunhistoryTransformer,
-)
-from smac.runner.base import Runner
-from smac.utils.stats import Stats
+from smac.model.utils import get_types
+from smac.multi_objective import AbstractMultiObjectiveAlgorithm
+from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
+from smac.runhistory.runhistory_transformer import RunhistoryTransformer
+from smac.scenario import Scenario
 
-__author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class ROAR(AlgorithmConfigurationFacade):
-    """Facade to use ROAR mode.
+class ROAR(Facade):  # TODO inherit from Algorithm Configuration facade?
+    """
+    Facade to use ROAR (Random Online Aggressive Racing) mode.
 
-    Parameters
+    Aggressive Racing
+    -----------------
+    When we have a new configuration θ we want to compare it to the current best
+    configuration, the incumbent θ*.
+    ROAR uses the 'racing' approach, where we run few times for unpromising θ and many
+    times for promising configurations. Once we are confident enough that θ is better
+    than θ*, we update the incumbent θ* ⟵ θ.
+    'Aggressive' means rejecting low-performing configurations very early, often after
+    a single run.
+    This together is called 'aggressive racing'.
+
+    ROAR Loop
+    ---------
+    The main ROAR loop looks as follows:
+        1. Select a configuration θ uniformly at random.
+        2. Compare θ to incumbent θ* online (one θ at a time):
+            - Reject/accept θ with 'aggressive racing'.
+
+    ROAR Setup
     ----------
-    scenario: smac.scenario.scenario.Scenario
-        Scenario object
-    tae_runner: smac.tae.base.BaseRunner or callable
-        Callable or implementation of
-        :class:`~smac.tae.base.BaseRunner`. In case a
-        callable is passed it will be wrapped by
-        :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
-        If not set, it will be initialized with the
-        :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.
-    tae_runner_kwargs: Optional[Dict]
-        arguments passed to constructor of '~tae_runner'
-    runhistory: RunHistory
-        Runhistory to store all algorithm runs
-    intensifier: AbstractRacer
-        intensification object to issue a racing to decide the current incumbent
-    intensifier_kwargs: Optional[Dict]
-        arguments passed to the constructor of '~intensifier'
-    acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
-        Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.
-        Will use :class:`smac.optimizer.ei_optimization.RandomSearch` if not set. Can be used
-        to perform random search over a fixed set of configurations.
-    acquisition_function_optimizer_kwargs: Optional[dict]
-        Arguments passed to constructor of `~acquisition_function_optimizer`
-    multi_objective_algorithm: Optional[Type["AbstractMultiObjectiveAlgorithm"]]
-        Class that implements multi objective logic. If None, will use:
-    smac.optimizer.multi_objective.aggregation_strategy.MeanAggregationStrategy
-        Multi objective only becomes active if the objective
-        specified in `~scenario.run_obj` is a List[str] with at least two entries.
-    multi_objective_kwargs: Optional[Dict]
-        Arguments passed to `~multi_objective_algorithm`.
-    initial_design : InitialDesign
-        initial sampling design
-    initial_design_kwargs: Optional[dict]
-        arguments passed to constructor of `~initial_design`
-    initial_configurations: List[Configuration]
-        list of initial configurations for initial design --
-        cannot be used together with initial_design
-    stats: Stats
-        optional stats object
-    rng: Optional[int, np.random.RandomState]
-        Random number generator
-    run_id: Optional[int]
-        Run ID will be used as subfolder for output_dir.
-    dask_client : dask.distributed.Client
-        User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
-    n_jobs : int, optional
-        Number of jobs. If > 1 or -1, this creates a dask client if ``dask_client`` is ``None``. Will
-        be ignored if ``dask_client`` is not ``None``.
-        If ``None``, this value will be set to 1, if ``-1``, this will be set to the number of cpu cores.
+    Use a random model and random search for the optimization of the acquisition function.
 
-    Attributes
-    ----------
-    logger
-
-    See Also
-    --------
-    :class:`~smac.facade.smac_ac_facade.SMAC4AC`
+    Following defaults from :class:`~smac.facade.algorithm_configuration.AlgorithmConfigurationFacade` are used:
+    - get_acquisition_function
+    - get_intensifier
+    - get_initial_design
+    - get_random_configuration_chooser
+    - get_multi_objective_algorithm
     """
 
-    def __init__(
-        self,
+    @staticmethod
+    def get_acquisition_function(scenario: Scenario, par: float = 0.0) -> EI:
+        return EI(par=par)
+        # TODO if we use EI, do we still select a configuration with random search?
+        #   As far as I understood it, EI won't be used anyway and the acquisition
+        #   function optimizer directly samples from the configspace.
+
+    @staticmethod
+    def get_intensifier(
         scenario: Scenario,
-        tae_runner: Optional[Union[Type[Runner], Callable]] = None,
-        tae_runner_kwargs: Optional[Dict] = None,
-        runhistory: RunHistory = None,
-        intensifier: Optional[Type[AbstractRacer]] = None,
-        intensifier_kwargs: Optional[Dict] = None,
-        acquisition_function_optimizer: Optional[Type[AbstractAcquisitionOptimizer]] = None,
-        acquisition_function_optimizer_kwargs: Optional[dict] = None,
-        multi_objective_algorithm: Optional[Type[AbstractMultiObjectiveAlgorithm]] = None,
-        multi_objective_kwargs: Optional[Dict] = None,
-        initial_design: Optional[Type[InitialDesign]] = None,
-        initial_design_kwargs: Optional[dict] = None,
-        initial_configurations: List[Configuration] = None,
-        stats: Stats = None,
-        rng: Optional[Union[int, np.random.RandomState]] = None,
-        run_id: Optional[int] = None,
-        dask_client: Optional[dask.distributed.Client] = None,
-        n_jobs: Optional[int] = 1,
-    ):
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
+        *,
+        min_challenger: int = 1,
+        min_config_calls: int = 1,
+        max_config_calls: int = 2000,
+    ) -> Intensifier:
+        if scenario.deterministic:
+            min_challenger = 1
 
-        scenario.acq_opt_challengers = 1  # type: ignore[attr-defined] # noqa F821
-
-        if acquisition_function_optimizer is None:
-            acquisition_function_optimizer = RandomSearch
-
-        if scenario.run_obj == "runtime":
-            # We need to do this to be on the same scale for imputation (although we only impute with a Random EPM)
-            runhistory2epm = RunhistoryLogTransformer  # type: Type[AbstractRunhistoryTransformer]
-        else:
-            runhistory2epm = RunhistoryTransformer
-
-        # use SMAC facade
-        super().__init__(
-            scenario=scenario,
-            tae_runner=tae_runner,
-            tae_runner_kwargs=tae_runner_kwargs,
-            runhistory=runhistory,
-            intensifier=intensifier,
-            intensifier_kwargs=intensifier_kwargs,
-            runhistory2epm=runhistory2epm,
-            multi_objective_algorithm=multi_objective_algorithm,
-            multi_objective_kwargs=multi_objective_kwargs,
-            initial_design=initial_design,
-            initial_design_kwargs=initial_design_kwargs,
-            initial_configurations=initial_configurations,
-            run_id=run_id,
-            acquisition_function_optimizer=acquisition_function_optimizer,
-            acquisition_function_optimizer_kwargs=acquisition_function_optimizer_kwargs,
-            model=RandomModel,
-            rng=rng,
-            stats=stats,
-            dask_client=dask_client,
-            n_jobs=n_jobs,
+        intensifier = Intensifier(
+            instances=scenario.instances,
+            instance_specifics=scenario.instance_specifics,  # What is that?
+            algorithm_walltime_limit=scenario.algorithm_walltime_limit,
+            deterministic=scenario.deterministic,
+            min_challenger=min_challenger,
+            race_against=scenario.configspace.get_default_configuration(),
+            min_config_calls=min_config_calls,
+            max_config_calls=max_config_calls,
+            seed=scenario.seed,
         )
+
+        return intensifier
+
+    @staticmethod
+    def get_initial_design(scenario: Scenario, *, initial_configs: list[Configuration] | None = None) -> InitialDesign:
+        return DefaultInitialDesign(
+            configspace=scenario.configspace,
+            n_runs=scenario.n_runs,
+            configs=initial_configs,
+            n_configs_per_hyperparameter=0,
+            seed=scenario.seed,
+        )
+
+    @staticmethod
+    def get_random_configuration_chooser(scenario: Scenario, *, random_probability: float = 0.5) -> RandomChooser:
+        return ChooserProb(prob=random_probability, seed=scenario.seed)
+
+    @staticmethod
+    def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm | None:
+        if len(scenario.objectives) <= 1:
+            return None
+
+        return MeanAggregationStrategy(scenario.seed)
+
+    @staticmethod
+    def get_model(
+        scenario: Scenario,
+        *,
+        pca_components: int = 4,
+    ) -> RandomModel:
+        types, bounds = get_types(scenario.configspace, scenario.instance_features)
+
+        return RandomModel(
+            configspace=scenario.configspace,
+            types=types,
+            bounds=bounds,
+            seed=scenario.seed,
+            instance_features=scenario.instance_features,
+            pca_components=pca_components,
+        )
+
+    @staticmethod
+    def get_acquisition_optimizer(scenario: Scenario) -> AbstractAcquisitionOptimizer:
+        optimizer = RandomSearch(
+            scenario.configspace,
+            seed=scenario.seed,
+        )
+
+        return optimizer
+
+    @staticmethod
+    def get_runhistory_transformer(scenario: Scenario) -> RunhistoryTransformer:
+        transformer = RunhistoryTransformer(
+            scenario=scenario,
+            n_params=len(scenario.configspace.get_hyperparameters()),
+            scale_percentage=5,
+            seed=scenario.seed,
+        )
+
+        return transformer

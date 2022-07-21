@@ -1,71 +1,66 @@
-from typing import Any, Callable, Dict, Iterable, List, Mapping, Optional, Tuple, Union
+from __future__ import annotations
+
+from typing import Any, Callable, Iterable, List, Mapping, Tuple, Union
 
 import logging
 
 import numpy as np
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter  # type: ignore
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
-from smac.cli.scenario import Scenario
 from smac.configspace import Configuration, ConfigurationSpace
-from smac.facade.hyperparameter import SMAC4HPO
+from smac.facade.hyperparameter import HyperparameterFacade
 from smac.runhistory.runhistory import RunKey
-from smac.runner.target_algorithm_runner import ExecuteTAFuncArray
+from smac.scenario import Scenario
 
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-def fmin_smac(
-    func: Callable,
+def optimize(
+    target_algorithm: Callable,
     x0: List[float],
     bounds: List[Iterable[float]],
-    maxfun: int = -1,
-    rng: Optional[Union[np.random.RandomState, int]] = None,
-    scenario_args: Optional[Mapping[str, Any]] = None,
-    tae_runner_kwargs: Optional[Dict[str, Any]] = None,
-    **kwargs: Any,
-) -> Tuple[Configuration, Union[np.ndarray, float], SMAC4HPO]:
-    """Minimize a function func using the SMAC4HPO facade (i.e., a modified version of SMAC). This
-    function is a convenience wrapper for the SMAC4HPO class.
+    n_runs: int = 20,
+    seed: int = -1,
+) -> Tuple[Configuration, Union[np.ndarray, float], HyperparameterFacade]:
+    """
+    Minimize a target_algorithmtion target_algorithm using the HyperparameterFacade facade
+
+    The HyperparameterFacade is a version of SMAC with a random forest as a surrogate
+    model. This target_algorithmtion is a convenience wrapper for the HyperparameterFacade class.
 
     Parameters
     ----------
-    func : Callable
+    target_algorithm : Callable
         Function to minimize.
     x0 : List[float]
         Initial guess/default configuration.
-    bounds : List[List[float]]
+    bounds : List[Iterable[float]]
         ``(min, max)`` pairs for each element in ``x``, defining the bound on
         that parameters.
-    maxfun : int, optional
-        Maximum number of function evaluations.
-    rng : np.random.RandomState, optional
-            Random number generator used by SMAC.
-    scenario_args: Mapping[str,Any]
-        Arguments passed to the scenario
-        See smac.scenario.scenario.Scenario
-    **kwargs:
-        Arguments passed to the optimizer class
-        See ~smac.facade.smac_facade.SMAC
+    n_runs : int
+        Maximum number of target_algorithmtion evaluations.
+    seed : int = -1
+        Seed to initialize random generators. If <0, use random seed.
 
     Returns
     -------
     x : list
         Estimated position of the minimum.
     f : Union[np.ndarray, float]
-        Value of `func` at the minimum. Depending on the scenario_args, it could be a scalar value
+        Value of `target_algorithm` at the minimum. Depending on the scenario_args, it could be a scalar value
         (for single objective problems) or a np.ndarray (for multi objective problems).
-    s : :class:`smac.facade.smac_hpo_facade.SMAC4HPO`
-        SMAC objects which enables the user to get
-        e.g., the trajectory and runhistory.
+    s : :class:`smac.facade.hyperparameter.HyperparameterFacade`
+        SMAC objects which enables the user to get e.g., the trajectory and runhistory.
     """
-    # create configuration space
-    cs = ConfigurationSpace()
+    # Create configuration space.
+    configspace = ConfigurationSpace()
 
-    # Adjust zero padding
+    # Template for hyperparameter name, adjust zero padding.
     tmplt = "x{0:0" + str(len(str(len(bounds)))) + "d}"
 
+    # Create hyperparameters and add to configuration space.
     for idx, (lower_bound, upper_bound) in enumerate(bounds):
         parameter = UniformFloatHyperparameter(
             name=tmplt.format(idx + 1),
@@ -73,43 +68,24 @@ def fmin_smac(
             upper=upper_bound,
             default_value=x0[idx],
         )
-        cs.add_hyperparameter(parameter)
+        configspace.add_hyperparameter(parameter)
 
-    # create scenario
-    scenario_dict = {
-        "run_obj": "quality",
-        "cs": cs,
-        "deterministic": True,
-        "initial_incumbent": "DEFAULT",
-    }
-
-    if scenario_args is not None:
-        scenario_dict.update(scenario_args)
-
-    if maxfun > 0:
-        scenario_dict["runcount_limit"] = maxfun
-    scenario = Scenario(scenario_dict)
-
-    # Handle optional tae  arguments
-    if tae_runner_kwargs is not None:
-        if "ta" not in tae_runner_kwargs:
-            tae_runner_kwargs.update({"ta": func})
-    else:
-        tae_runner_kwargs = {"ta": func}
-
-    smac = SMAC4HPO(
-        scenario=scenario,
-        tae_runner=ExecuteTAFuncArray,
-        tae_runner_kwargs=tae_runner_kwargs,
-        rng=rng,
-        **kwargs,
+    # Create scenario.
+    scenario = Scenario(
+        configspace=configspace,
+        n_runs=n_runs,
+        seed=seed,
     )
 
-    smac.logger = logging.getLogger(smac.__module__ + "." + smac.__class__.__name__)
+    smac = HyperparameterFacade(
+        scenario=scenario,
+        target_algorithm=target_algorithm,
+    )
+
     incumbent = smac.optimize()
-    config_id = smac.solver.runhistory.config_ids[incumbent]
+    config_id = smac.optimizer.runhistory.config_ids[incumbent]
     run_key = RunKey(config_id, None, 0)
-    incumbent_performance = smac.solver.runhistory.data[run_key]
+    incumbent_performance = smac.optimizer.runhistory.data[run_key]
     incumbent = np.array([incumbent[tmplt.format(idx + 1)] for idx in range(len(bounds))], dtype=float)
 
     return incumbent, incumbent_performance.cost, smac

@@ -1,8 +1,11 @@
-from typing import Any
+from __future__ import annotations
 
+from smac.configspace import Configuration
 from smac.facade.random import ROAR
+from smac.initial_design import InitialDesign
 from smac.initial_design.random_configuration_design import RandomInitialDesign
 from smac.intensification.hyperband import Hyperband
+from smac.scenario import Scenario
 
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
@@ -10,40 +13,44 @@ __license__ = "3-clause BSD"
 
 
 class HB4AC(ROAR):
-    """Facade to use model-free Hyperband for algorithm configuration.
+    """
+    Facade to use model-free Hyperband [1]_ for algorithm configuration.
 
-    This facade overwrites options available via the SMAC facade.
+    Use ROAR (Random Aggressive Online Racing) to compare configurations, a random
+    initial design and the Hyperband intensifier.
 
-    See Also
-    --------
-    :class:`~smac.facade.smac_ac_facade.SMAC4AC` for documentation of parameters.
+    .. [1] Lisha Li, Kevin G. Jamieson, Giulia DeSalvo, Afshin Rostamizadeh, Ameet Talwalkar:
+        Hyperband: A Novel Bandit-Based Approach to Hyperparameter Optimization.
+        J. Mach. Learn. Res. 18: 185:1-185:52 (2017)
+        https://jmlr.org/papers/v18/16-558.html
 
-    Attributes
-    ----------
-    logger
-    stats : Stats
-    solver : SMBO
-    runhistory : RunHistory
-        List with information about previous runs
-    trajectory : list
-        List of all incumbents
     """
 
-    def __init__(self, **kwargs: Any):
-        kwargs["initial_design"] = kwargs.get("initial_design", RandomInitialDesign)
+    @staticmethod
+    def get_initial_design(scenario: Scenario, *, initial_configs: list[Configuration] | None = None) -> InitialDesign:
+        return RandomInitialDesign(
+            configspace=scenario.configspace,
+            n_runs=scenario.n_runs,
+            configs=initial_configs,
+            n_configs_per_hyperparameter=0,
+            seed=scenario.seed,
+        )
 
-        # Intensification parameters
-        # select Hyperband as the intensifier ensure respective parameters are provided
-        kwargs["intensifier"] = Hyperband
-
-        # set Hyperband parameters if not given
-        intensifier_kwargs = kwargs.get("intensifier_kwargs", dict())
-        intensifier_kwargs["min_chall"] = 1
-        if intensifier_kwargs.get("eta") is None:
-            intensifier_kwargs["eta"] = 3
-        if intensifier_kwargs.get("instance_order") is None:
-            intensifier_kwargs["instance_order"] = "shuffle_once"
-        kwargs["intensifier_kwargs"] = intensifier_kwargs
-
-        super().__init__(**kwargs)
-        self.logger.info(self.__class__)
+    @staticmethod
+    def get_intensifier(
+        scenario: Scenario,
+        *,
+        min_challenger: int = 1,
+        instance_order: str = "shuffle_once",
+    ) -> Hyperband:
+        return Hyperband(
+            instances=scenario.instances,
+            instance_specifics=scenario.instance_specifics,
+            algorithm_walltime_limit=scenario.algorithm_walltime_limit,
+            deterministic=scenario.deterministic,
+            initial_budget=scenario.initial_budget,
+            max_budget=scenario.max_budget,
+            eta=scenario.eta,
+            min_challenger=min_challenger,
+            seed=scenario.seed,
+        )

@@ -3,7 +3,7 @@ import unittest
 
 from scipy.optimize import fmin_l_bfgs_b
 
-from smac.facade.function import fmin_smac
+from smac.facade.function import optimize
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -27,7 +27,7 @@ class TestSMACFacade(unittest.TestCase):
         x0 = [-3, -4]
         bounds = [(-5, 5), (-5, 5)]
 
-        x, f, smac = fmin_smac(func, x0, bounds, maxfun=10)
+        x, f, smac = optimize(func, x0, bounds, maxfun=10)
         x_s, f_s, _ = fmin_l_bfgs_b(func, x0, bounds, maxfun=10, approx_grad=True)
 
         self.assertEqual(type(x), type(x_s))
@@ -44,7 +44,7 @@ class TestSMACFacade(unittest.TestCase):
         default = [i - 0.5 for i in range(10)]
         bounds = [(i - 1, i) for i in range(10)]
         print(default, bounds)
-        _, _, smac = fmin_smac(func=func, x0=default, bounds=bounds, maxfun=1)
+        _, _, smac = optimize(func=func, x0=default, bounds=bounds, maxfun=1)
 
         self.output_dirs.append(smac.scenario.output_dir)
 
