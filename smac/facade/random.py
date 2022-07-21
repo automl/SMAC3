@@ -13,6 +13,7 @@ class ROAR(AlgorithmConfigurationFacade):
     """
     Facade to use ROAR mode.
     """
+
     @staticmethod
     def get_model(
         scenario: Scenario,
