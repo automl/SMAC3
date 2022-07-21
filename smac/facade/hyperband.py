@@ -41,8 +41,6 @@ class HB4AC(ROAR):
         scenario: Scenario,
         *,
         min_challenger: int = 1,
-        min_config_calls: int = 1,
-        max_config_calls: int = 2000,
         instance_order: str = "shuffle_once",
     ) -> Hyperband:
         return Hyperband(

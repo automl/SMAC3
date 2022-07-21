@@ -1,11 +1,11 @@
 from __future__ import annotations
-from smac.chooser import Chooser
 
-from smac.scenario import Scenario
+from smac.chooser import Chooser
 from smac.configspace import Configuration
 from smac.facade.hyperparameter import HyperparameterFacade
 from smac.initial_design.random_configuration_design import RandomInitialDesign
 from smac.intensification.hyperband import Hyperband
+from smac.scenario import Scenario
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -15,23 +15,22 @@ __license__ = "3-clause BSD"
 class MultiFidelityFacade(HyperparameterFacade):
     @staticmethod
     def get_intensifier(
-        scenario: Scenario, *, eta: int = 3, min_challenger=1, min_config_calls=1, max_config_calls=3
+        scenario: Scenario,
+        *,
+        min_challenger: int = 1,
+        instance_order: str = "shuffle_once",
     ) -> Hyperband:
-        intensifier = Hyperband(
+        return Hyperband(
             instances=scenario.instances,
             instance_specifics=scenario.instance_specifics,
             algorithm_walltime_limit=scenario.algorithm_walltime_limit,
             deterministic=scenario.deterministic,
+            initial_budget=scenario.initial_budget,
+            max_budget=scenario.max_budget,
+            eta=scenario.eta,
             min_challenger=min_challenger,
-            race_against=scenario.configspace.get_default_configuration(),
-            min_config_calls=min_config_calls,
-            max_config_calls=max_config_calls,
-            instance_order="shuffle_once",
-            eta=eta,
             seed=scenario.seed,
         )
-
-        return intensifier
 
     @staticmethod
     def get_initial_design(
