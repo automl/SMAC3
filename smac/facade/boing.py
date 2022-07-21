@@ -1,6 +1,6 @@
-from typing import Any
+from __future__ import annotations
 
-import warnings
+from typing import Dict, Type, Union
 
 import numpy as np
 from botorch.models.kernels.categorical import CategoricalKernel
@@ -9,13 +9,20 @@ from gpytorch.kernels import MaternKernel, ScaleKernel
 from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
 from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
+from smac.acquisition_function import AbstractAcquisitionFunction
+from smac.acquisition_function.expected_improvement import EI
+from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition_optimizer.local_and_random_search import LocalAndSortedRandomSearch
 from smac.chooser.boing_chooser import BOinGChooser
-from smac.facade.hyperparameter import SMAC4HPO
+from smac.chooser.random_chooser import ChooserProb
+from smac.facade.hyperparameter import HyperparameterFacade
+from smac.model.base_model import BaseModel
 from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
-from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4ScaledLogCostWithRaw
+from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4ScaledLogCostWithRaw, RunHistory2EPM4CostWithRaw
+from smac.scenario import Scenario
 
 
-class SMAC4BOING(SMAC4HPO):
+class BOinGFacade(HyperparameterFacade):
     """
     SMAC wrapper for BO inside Grove(BOinG):
         Deng and Lindauer, Searching in the Forest for Local Bayesian Optimization
@@ -31,81 +38,130 @@ class SMAC4BOING(SMAC4HPO):
     DSO workshop 2019 (https://arxiv.org/abs/1908.06674).
     """
 
-    def __init__(self, **kwargs: Any):
-        kwargs["runhistory2epm"] = kwargs.get("runhistory2epm", RunHistory2EPM4ScaledLogCostWithRaw)
-        smbo_kwargs = kwargs.get("smbo_kwargs", {})
-        if smbo_kwargs is None:
-            smbo_kwargs = {"epm_chooser", BOinGChooser}
-        epm_chooser = smbo_kwargs.get("epm_chooser", BOinGChooser)
-        if epm_chooser != BOinGChooser:
-            warnings.warn("BOinG must have BOinGChooser as its EPM chooser!")
-            epm_chooser = BOinGChooser
-        smbo_kwargs["epm_chooser"] = epm_chooser
-        epm_chooser_kwargs = smbo_kwargs.get("epm_chooser_kwargs", None)
+    @staticmethod
+    def get_runhistory_transformer(scenario: Scenario) -> RunHistory2EPM4CostWithRaw:
+        transformer = RunHistory2EPM4ScaledLogCostWithRaw(
+            scenario=scenario,
+            n_params=len(scenario.configspace.get_hyperparameters()),
+            scale_percentage=5,
+            seed=scenario.seed,
+        )
 
-        if epm_chooser_kwargs is None or epm_chooser_kwargs.get("model_local") is None:
-            # The lower bound and upper bounds are set to be identical as SMAC4BB
-            cont_kernel_kwargs = {
-                "lengthscale_constraint": Interval(
-                    np.exp(-6.754111155189306), np.exp(0.0858637988771976), transform=None, initial_value=1.0
-                ),
-            }
-            cat_kernel_kwargs = {
-                "lengthscale_constraint": Interval(
-                    np.exp(-6.754111155189306), np.exp(0.0858637988771976), transform=None, initial_value=1.0
-                ),
-            }
-            scale_kernel_kwargs = {
-                "outputscale_constraint": Interval(np.exp(-10.0), np.exp(2.0), transform=None, initial_value=2.0),
-                "outputscale_prior": LogNormalPrior(0.0, 1.0),
-            }
+        return transformer
 
-            kernel_kwargs = {
-                "cont_kernel": MaternKernel,
-                "cont_kernel_kwargs": cont_kernel_kwargs,
-                "cat_kernel": CategoricalKernel,
-                "cat_kernel_kwargs": cat_kernel_kwargs,
-                "scale_kernel": ScaleKernel,
-                "scale_kernel_kwargs": scale_kernel_kwargs,
-            }
+    @staticmethod
+    def get_random_configuration_chooser(scenario: Scenario, *,
+                                         probability: float = 0.08447232371720552) -> ChooserProb:
+        return ChooserProb(prob=probability)
 
-            # by setting lower bound of noise_constraint we could make it more stable
-            noise_prior = HorseshoePrior(0.1)
-            likelihood = GaussianLikelihood(
-                noise_prior=noise_prior, noise_constraint=Interval(1e-5, np.exp(2), transform=None)
-            ).double()
+    @staticmethod
+    def get_acquisition_optimizer(
+            scenario: Scenario,
+            *,
+            local_search_iterations: int = 10,
+            challengers: int = 1000,
+    ) -> AbstractAcquisitionOptimizer:
+        optimizer = LocalAndSortedRandomSearch(
+            configspace=scenario.configspace,
+            local_search_iterations=local_search_iterations,
+            challengers=challengers,
+            seed=scenario.seed,
+        )
+        return optimizer
 
-            if epm_chooser_kwargs is None:
-                smbo_kwargs["epm_chooser_kwargs"] = {
-                    "model_local": GloballyAugmentedLocalGaussianProcess,
-                    "model_local_kwargs": dict(kernel_kwargs=kernel_kwargs, likelihood=likelihood),
+    @staticmethod
+    def get_configuration_chooser(predict_x_best: bool = True,
+                                  min_samples_model: int = 1,
+                                  model_local: Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
+                                  model_local_kwargs: Dict | None = None,
+                                  acquisition_func_local: Union[
+                                      AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = EI,
+                                  acquisition_func_local_kwargs: Dict | None = None,
+                                  acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
+                                  acq_optimizer_local_kwargs: Dict | None = None,
+                                  max_configs_local_fracs: float = 0.5,
+                                  min_configs_local: int | None = None,
+                                  do_switching: bool = False,
+                                  turbo_kwargs: Dict | None = None,
+                                  ):
+        """
+        Parameters
+        ----------
+        model_local: Type[BaseModel],
+            local empirical performance model, used in subspace. Since the subspace might have different amount of
+            hyperparameters compared to the search space. We only instantiate them under the subspace.
+        model_local_kwargs: Optional[Dict] = None,
+            parameters for initializing a local model
+        acquisition_func_local: AbstractAcquisitionFunction,
+            local acquisition function,  used in subspace
+        acquisition_func_local_kwargs: Optional[Dict] = None,
+            parameters for initializing a local acquisition function optimizer
+        acq_optimizer_local: Optional[AcquisitionFunctionMaximizer] = None,
+            Optimizer of acquisition function of local models, same as above, since an acquisition function optimizer
+            requries
+        acq_optimizer_local_kwargs: typing: Optional[Dict] = None,
+            parameters for the optimizer of acquisition function of local models
+        max_configs_local_fracs : float
+            The maximal number of fractions of samples to be included in the subspace. If the number of samples in the
+            subspace is greater than this value and n_min_config_inner, the subspace will be cropped to fit the requirement
+        min_configs_local: int,
+            Minimum number of samples included in the inner loop model
+        do_switching: bool
+           if we want to switch between turbo and boing or do a pure BOinG search
+        turbo_kwargs: Optional[Dict] = None
+           parameters for building a turbo optimizer. For details, please refer to smac.utils.subspace.turbo
+        """
+        if model_local_kwargs is None and model_local.__name__ == "GloballyAugmentedLocalGaussianProcess":
+            model_local_kwargs = SMAC4BOING.get_lgpga_local_components()
+
+        return BOinGChooser(predict_x_best=predict_x_best,
+                            min_samples_model=min_samples_model,
+                            model_local=model_local,
+                            model_local_kwargs=model_local_kwargs,
+                            acquisition_func_local=acquisition_func_local,
+                            acq_optimizer_local_kwargs=acquisition_func_local_kwargs,
+                            max_configs_local_fracs=max_configs_local_fracs,
+                            min_configs_local=min_configs_local,
+                            do_switching=do_switching,
+                            turbo_kwargs=turbo_kwargs,
+                            )
+
+    @staticmethod
+    def get_lgpga_local_components() -> Dict:
+        """
+        A function to construct the required components that could be implemented to construct a LGPGA model
+        """
+        # The lower bound and upper bounds are set to be identical as SMAC4BB
+        cont_kernel_kwargs = {
+            "lengthscale_constraint": Interval(
+                np.exp(-6.754111155189306), np.exp(0.0858637988771976), transform=None, initial_value=1.0
+            ),
+        }
+        cat_kernel_kwargs = {
+            "lengthscale_constraint": Interval(
+                np.exp(-6.754111155189306), np.exp(0.0858637988771976), transform=None, initial_value=1.0
+            ),
+        }
+        scale_kernel_kwargs = {
+            "outputscale_constraint": Interval(np.exp(-10.0), np.exp(2.0), transform=None, initial_value=2.0),
+            "outputscale_prior": LogNormalPrior(0.0, 1.0),
+        }
+
+        kernel_kwargs = {
+            "cont_kernel": MaternKernel,
+            "cont_kernel_kwargs": cont_kernel_kwargs,
+            "cat_kernel": CategoricalKernel,
+            "cat_kernel_kwargs": cat_kernel_kwargs,
+            "scale_kernel": ScaleKernel,
+            "scale_kernel_kwargs": scale_kernel_kwargs,
+        }
+
+        # by setting lower bound of noise_constraint we could make it more stable
+        noise_prior = HorseshoePrior(0.1)
+        likelihood = GaussianLikelihood(
+            noise_prior=noise_prior, noise_constraint=Interval(1e-5, np.exp(2), transform=None)
+        ).double()
+        return {"model_local": GloballyAugmentedLocalGaussianProcess,
+                "model_local_kwargs": dict(kernel_kwargs=kernel_kwargs, likelihood=likelihood),
                 }
-            else:
-                smbo_kwargs["epm_chooser_kwargs"].update(
-                    {
-                        "model_local": GloballyAugmentedLocalGaussianProcess,
-                        "model_local_kwargs": dict(kernel_kwargs=kernel_kwargs, likelihood=likelihood),
-                    }
-                )
-        kwargs["smbo_kwargs"] = smbo_kwargs
 
-        if kwargs.get("random_configuration_chooser") is None:
-            # follows SMAC4BB
-            random_config_chooser_kwargs = (
-                kwargs.get(
-                    "random_configuration_chooser_kwargs",
-                    dict(),
-                )
-                or dict()
-            )
-            random_config_chooser_kwargs["prob"] = random_config_chooser_kwargs.get("prob", 0.08447232371720552)
-            kwargs["random_configuration_chooser_kwargs"] = random_config_chooser_kwargs
-
-        super().__init__(**kwargs)
-
-        if self.solver.scenario.n_features > 0:
-            raise NotImplementedError("BOinG cannot handle instances")
-
-        self.solver.scenario.acq_opt_challengers = 1000  # type: ignore[attr-defined] # noqa F821
-        # activate predict incumbent
-        self.solver.epm_chooser.predict_x_best = True

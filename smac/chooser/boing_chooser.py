@@ -7,8 +7,10 @@ from itertools import chain
 import numpy as np
 from ConfigSpace.hyperparameters import NumericalHyperparameter
 
-from smac.acquisition_function import EI, TS, AbstractAcquisitionFunction
-from smac.acquisition_optimizer.maximizer import AbstractAcquisitionOptimizer
+from smac.acquisition_function import AbstractAcquisitionFunction
+from smac.acquisition_function.expected_improvement import EI
+from smac.acquisition_function.thompson import TS
+from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
 from smac.chooser import Chooser
 from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.cli.scenario import Scenario
@@ -18,8 +20,8 @@ from smac.model.base_model import BaseModel
 from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.utils import get_types
-from smac.optimizer.subspaces.boing_subspace import BOinGSubspace
-from smac.optimizer.subspaces.turbo_subspace import TuRBOSubSpace
+from smac.utils.subspaces.boing_subspace import BOinGSubspace
+from smac.utils.subspaces.turbo_subspace import TuRBOSubSpace
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4CostWithRaw
 from smac.utils.stats import Stats
@@ -38,8 +40,9 @@ class BOinGChooser(Chooser):
         empirical performance model (right now, we support only RandomForestWithInstances) as a global model
     acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
         Optimizer of acquisition function of global models
-    model_local: BaseEPM,
-        local empirical performance model, used in subspace
+    model_local: Type[BaseModel],
+        local empirical performance model, used in subspace. Since the subspace might have different amount of
+        hyperparameters compared to the search space. We only instantiate them under the subspace.
     model_local_kwargs: Optional[Dict] = None,
         parameters for initializing a local model
     acquisition_func_local: AbstractAcquisitionFunction,
@@ -47,7 +50,8 @@ class BOinGChooser(Chooser):
     acquisition_func_local_kwargs: Optional[Dict] = None,
         parameters for initializing a local acquisition function optimizer
     acq_optimizer_local: Optional[AcquisitionFunctionMaximizer] = None,
-        Optimizer of acquisition function of local models
+        Optimizer of acquisition function of local models, same as above, since an acquisition function optimizer
+        requries
     acq_optimizer_local_kwargs: typing: Optional[Dict] = None,
         parameters for the optimizer of acquisition function of local models
     max_configs_local_fracs : float
@@ -63,19 +67,9 @@ class BOinGChooser(Chooser):
 
     def __init__(
         self,
-        scenario: Scenario,
-        stats: Stats,
-        runhistory: RunHistory,
-        runhistory2epm: RunHistory2EPM4CostWithRaw,
-        model: RandomForestWithInstances,
-        acq_optimizer: AbstractAcquisitionOptimizer,
-        acquisition_func: AbstractAcquisitionFunction,
-        rng: np.random.RandomState,
-        restore_incumbent: Configuration = None,
-        random_configuration_chooser: RandomChooser = ChooserNoCoolDown(2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
-        model_local: Union[BaseModel, Type[BaseModel]] = GloballyAugmentedLocalGaussianProcess,
+        model_local: Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
         acquisition_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = EI,
         model_local_kwargs: Optional[Dict] = None,
         acquisition_func_local_kwargs: Optional[Dict] = None,
@@ -88,22 +82,12 @@ class BOinGChooser(Chooser):
     ):
         # initialize the original EPM_Chooser
         super(BOinGChooser, self).__init__(
-            scenario=scenario,
-            stats=stats,
-            runhistory=runhistory,
-            runhistory2epm=runhistory2epm,
-            model=model,
-            acq_optimizer=acq_optimizer,
-            acquisition_func=acquisition_func,
-            rng=rng,
-            restore_incumbent=restore_incumbent,
-            random_configuration_chooser=random_configuration_chooser,
             predict_x_best=predict_x_best,
             min_samples_model=min_samples_model,
         )
-        if not isinstance(self.model, RandomForestWithInstances):
+        if not isinstance(self.smbo.model, RandomForestWithInstances):
             raise ValueError("BOinG only supports RandomForestWithInstances as its global optimizer")
-        if not isinstance(self.rh2EPM, RunHistory2EPM4CostWithRaw):
+        if not isinstance(self.smbo.rh2EPM, RunHistory2EPM4CostWithRaw):
             raise ValueError("BOinG only supports RunHistory2EPM4CostWithRaw as its rh transformer")
 
         cs = self.scenario.cs  # type: ignore
@@ -154,7 +138,7 @@ class BOinGChooser(Chooser):
                 model_local=turbo_model,
                 model_local_kwargs=copy.deepcopy(model_local_kwargs),
                 acq_func_local=turbo_acq,
-                rng=rng,
+                rng=self.smbo.rng,
                 length_min=2e-4,
             )
             self.turbo_kwargs = turbo_opt_kwargs
@@ -189,7 +173,7 @@ class BOinGChooser(Chooser):
             union_bounds_cont, _, ss_data_indices = subspace_extraction(
                 X=X,
                 challenger=sample_array,
-                model=self.model,
+                model=self.smbo.model,
                 num_min=self.min_configs_local,
                 num_max=MAXINT,
                 bounds=self.bounds,
