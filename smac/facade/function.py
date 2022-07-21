@@ -23,7 +23,6 @@ def fmin_smac(
     bounds: List[Iterable[float]],
     n_runs: int = 20,
     seed: int = -1,
-    scenario_args: Mapping[str, Any] | None = None,
 ) -> Tuple[Configuration, Union[np.ndarray, float], HyperparameterFacade]:
     """
     Minimize a target_algorithmtion target_algorithm using the HyperparameterFacade facade
