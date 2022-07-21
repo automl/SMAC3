@@ -1,20 +1,22 @@
 from __future__ import annotations
 
-from smac.acquisition_optimizer.random_search import RandomSearch, AbstractAcquisitionOptimizer
-from smac.chooser.random_chooser import RandomChooser
-from smac.initial_design import InitialDesign
-from smac.multi_objective import AbstractMultiObjectiveAlgorithm
-from smac.scenario import Scenario
-from smac.facade import Facade
-from smac.model.random_model import RandomModel
-from smac.runhistory.runhistory_transformer import RunhistoryTransformer
-from smac.model.utils import get_types
 from smac.acquisition_function.expected_improvement import EI
-from smac.intensification.intensification import Intensifier
+from smac.acquisition_optimizer.random_search import (
+    AbstractAcquisitionOptimizer,
+    RandomSearch,
+)
+from smac.chooser.random_chooser import ChooserProb, RandomChooser
 from smac.configspace import Configuration
+from smac.facade import Facade
+from smac.initial_design import InitialDesign
 from smac.initial_design.default_configuration_design import DefaultInitialDesign
-from smac.chooser.random_chooser import ChooserProb
+from smac.intensification.intensification import Intensifier
+from smac.model.random_model import RandomModel
+from smac.model.utils import get_types
+from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
+from smac.runhistory.runhistory_transformer import RunhistoryTransformer
+from smac.scenario import Scenario
 
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
@@ -53,6 +55,7 @@ class ROAR(Facade):
     - get_random_configuration_chooser
     - get_multi_objective_algorithm
     """
+
     @staticmethod
     def get_acquisition_function(scenario: Scenario, par: float = 0.0) -> EI:
         return EI(par=par)
@@ -64,9 +67,9 @@ class ROAR(Facade):
     def get_intensifier(
         scenario: Scenario,
         *,
-        min_challenger=1,
-        min_config_calls=1,
-        max_config_calls=2000,
+        min_challenger: int = 1,
+        min_config_calls: int = 1,
+        max_config_calls: int = 2000,
     ) -> Intensifier:
         if scenario.deterministic:
             min_challenger = 1
