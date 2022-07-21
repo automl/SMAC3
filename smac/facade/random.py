@@ -22,7 +22,7 @@ __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class ROAR(Facade):
+class ROAR(Facade):  # TODO inherit from Algorithm Configuration facade?
     """
     Facade to use ROAR (Random Online Aggressive Racing) mode.
 
