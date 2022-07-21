@@ -5,6 +5,13 @@ from typing import Any, List, Tuple
 
 import numpy as np
 
+from acquisition_function.confidence_bound import LCB
+from acquisition_function.expected_improvement import EI, EIPS
+from acquisition_function.thompson import TS
+from acquisition_function.prior import PriorAcquisitionFunction
+from acquisition_function.integrated import IntegratedAcquisitionFunction
+from acquisition_function.probability_improvement import PI
+
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
 from smac.model.base_model import BaseModel
@@ -14,6 +21,18 @@ logger = get_logger(__name__)
 
 __copyright__ = "Copyright 2017, ML4AAD"
 __license__ = "3-clause BSD"
+
+
+__all__ = [
+    'LCB',
+    'PI',
+    'EI',
+    'EIPS',
+    'TS',
+    'PriorAcquisitionFunction',
+    'IntegratedAcquisitionFunction',
+    'AbstractAcquisitionFunction'
+]
 
 
 class AbstractAcquisitionFunction(metaclass=abc.ABCMeta):
