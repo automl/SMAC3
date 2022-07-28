@@ -63,8 +63,7 @@ class LocalSearch(AbstractAcquisitionOptimizer):
 
     def _maximize(
         self,
-        runhistory: RunHistory,
-        stats: Stats,
+        configs_previous_runs: List[Configuration],
         num_points: int,
         additional_start_points: Optional[List[Tuple[float, Configuration]]] = None,
     ) -> List[Tuple[float, Configuration]]:
@@ -73,10 +72,10 @@ class LocalSearch(AbstractAcquisitionOptimizer):
 
         Parameters
         ----------
-        runhistory: ~smac.runhistory.runhistory.RunHistory
-            runhistory object
-        stats: ~smac.stats.stats.Stats
-            current stats object
+        configs_previous_runs: List[Configuration]
+            previously evaluated configurations
+        response_values: np.ndarray | List[float]
+            response values of the configurations
         num_points: int
             number of points to be sampled
         additional_start_points : Optional[List[Tuple[float, Configuration]]]
@@ -86,7 +85,7 @@ class LocalSearch(AbstractAcquisitionOptimizer):
         -------
         List
         """
-        init_points = self._get_initial_points(num_points, runhistory, additional_start_points)
+        init_points = self._get_initial_points(num_points, configs_previous_runs, additional_start_points)
         configs_acq = self._do_search(init_points)
 
         # shuffle for random tie-break
@@ -102,16 +101,13 @@ class LocalSearch(AbstractAcquisitionOptimizer):
     def _get_initial_points(
         self,
         num_points: int,
-        runhistory: RunHistory,
+        configs_previous_runs: List[Configuration],
         additional_start_points: Optional[List[Tuple[float, Configuration]]],
     ) -> List[Configuration]:
 
-        if runhistory.empty():
+        if len(configs_previous_runs) == 0:
             init_points = self.configspace.sample_configuration(size=num_points)
         else:
-            # initiate local search
-            configs_previous_runs = runhistory.get_all_configs()
-
             init_points = self._get_init_points_from_previous_configs(
                 num_points, configs_previous_runs, additional_start_points
             )

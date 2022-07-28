@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import List, Tuple
+import numpy as np
 
 from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
 from smac.configspace import Configuration
@@ -22,8 +23,7 @@ class RandomSearch(AbstractAcquisitionOptimizer):
 
     def _maximize(
         self,
-        runhistory: RunHistory,
-        stats: Stats,
+        configs_previous_runs: List[Configuration],
         num_points: int,
         _sorted: bool = False,
     ) -> List[Tuple[float, Configuration]]:

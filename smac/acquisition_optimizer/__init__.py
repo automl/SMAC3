@@ -63,8 +63,7 @@ class AbstractAcquisitionOptimizer(object, metaclass=abc.ABCMeta):
 
     def maximize(
         self,
-        runhistory: RunHistory,
-        stats: Stats,
+        configs_previous_runs: List[Configuration],
         num_points: int | None = None,
         random_configuration_chooser: RandomChooser | None = None,
     ) -> Iterator[Configuration]:
@@ -72,10 +71,8 @@ class AbstractAcquisitionOptimizer(object, metaclass=abc.ABCMeta):
 
         Parameters
         ----------
-        runhistory: ~smac.runhistory.runhistory.RunHistory
-            runhistory object
-        stats: ~smac.stats.stats.Stats
-            current stats object
+        configs_previous_runs: List[Configuration]
+            previous evaluated configurations
         num_points: int
             Number of points to be sampled. If `num_points` is not specified, `self.challengers` is used.
         random_configuration_chooser: ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser, optional
@@ -95,7 +92,7 @@ class AbstractAcquisitionOptimizer(object, metaclass=abc.ABCMeta):
 
         def next_configs_by_acq_value() -> List[Configuration]:
             assert num_points is not None
-            return [t[1] for t in self._maximize(runhistory, stats, num_points)]
+            return [t[1] for t in self._maximize(configs_previous_runs, num_points)]
 
         challengers = ChallengerList(next_configs_by_acq_value, self.configspace, random_configuration_chooser)
 
@@ -106,8 +103,7 @@ class AbstractAcquisitionOptimizer(object, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def _maximize(
         self,
-        runhistory: RunHistory,
-        stats: Stats,
+        configs_previous_runs: List[Configuration],
         num_points: int,
     ) -> List[Tuple[float, Configuration]]:
         """Implements acquisition function maximization.
@@ -118,10 +114,8 @@ class AbstractAcquisitionOptimizer(object, metaclass=abc.ABCMeta):
 
         Parameters
         ----------
-        runhistory: ~smac.runhistory.runhistory.RunHistory
-            runhistory object
-        stats: ~smac.stats.stats.Stats
-            current stats object
+        configs_previous_runs: List[Configuration]
+            previously evaluated configurations
         num_points: int
             number of points to be sampled
 

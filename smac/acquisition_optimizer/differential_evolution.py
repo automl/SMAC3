@@ -38,8 +38,7 @@ class DifferentialEvolution(AbstractAcquisitionOptimizer):
 
     def _maximize(
         self,
-        runhistory: RunHistory,
-        stats: Stats,
+        configs_previous_runs: List[Configuration],
         num_points: int,
         _sorted: bool = False,
     ) -> List[Tuple[float, Configuration]]:
@@ -47,10 +46,8 @@ class DifferentialEvolution(AbstractAcquisitionOptimizer):
 
         Parameters
         ----------
-        runhistory: ~smac.runhistory.runhistory.RunHistory
-            runhistory object
-        stats: ~smac.stats.stats.Stats
-            current stats object
+        configs_previous_runs: List[Configuration]
+            previously evaluated configurations
         num_points: int
             number of points to be sampled
         _sorted: bool

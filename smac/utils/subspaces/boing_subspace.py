@@ -130,8 +130,7 @@ class BOinGSubspace(LocalSubspace):
 
         if isinstance(self.acq_optimizer_local, LocalAndSortedRandomSearch):
             next_configs_random = self.acq_optimizer_local.random_search._maximize(
-                runhistory=None,  # type: ignore
-                stats=None,  # type: ignore
+                configs_previous_runs=[],
                 num_points=num_points_rs,
                 _sorted=True,
             )
@@ -169,4 +168,4 @@ class BOinGSubspace(LocalSubspace):
             )
             return next_configs_by_acq_value
         else:
-            return self.acq_optimizer_local._maximize(None, None, num_points_rs)  # type: ignore
+            return self.acq_optimizer_local._maximize([], num_points_rs)  # type: ignore
