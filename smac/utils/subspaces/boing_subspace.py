@@ -13,6 +13,7 @@ from smac.model.base_model import BaseModel
 from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.utils.subspaces import LocalSubspace
 
+
 class BOinGSubspace(LocalSubspace):
     """
     Subspace for BOinG optimizer. Each time we create a new epm model for the subspace and optimize to maximize the
@@ -130,8 +131,7 @@ class BOinGSubspace(LocalSubspace):
 
         if isinstance(self.acq_optimizer_local, LocalAndSortedRandomSearch):
             next_configs_random = self.acq_optimizer_local.random_search._maximize(
-                runhistory=None,  # type: ignore
-                stats=None,  # type: ignore
+                previous_configs=[],
                 num_points=num_points_rs,
                 _sorted=True,
             )
@@ -169,4 +169,4 @@ class BOinGSubspace(LocalSubspace):
             )
             return next_configs_by_acq_value
         else:
-            return self.acq_optimizer_local._maximize(None, None, num_points_rs)  # type: ignore
+            return self.acq_optimizer_local._maximize([], num_points_rs)  # type: ignore

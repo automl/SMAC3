@@ -76,7 +76,7 @@ class RunInfo(
             "instance_specific",
             "seed",
             "algorithm_walltime_limit",
-            "capped",
+            # "capped",
             "budget",
             "source_id",
         ],
@@ -91,8 +91,8 @@ class RunInfo(
         instance: Optional[str],
         instance_specific: str,
         seed: int,
-        algorithm_walltime_limit: Optional[float],
-        capped: bool,
+        algorithm_walltime_limit: float | None = None,
+        # capped: bool,
         budget: float = 0.0,
         # In the context of parallel runs, one will have multiple suppliers of
         # configurations. source_id is a new mechanism to track what entity launched
@@ -107,7 +107,7 @@ class RunInfo(
             instance_specific,
             seed,
             algorithm_walltime_limit,
-            capped,
+            # capped,
             budget,
             source_id,
         )

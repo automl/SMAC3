@@ -80,22 +80,19 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionOptimizer):
 
     def _maximize(
         self,
-        runhistory: RunHistory,
-        stats: Stats,
+        previous_configs: List[Configuration],
         num_points: int,
     ) -> List[Tuple[float, Configuration]]:
 
         # Get configurations sorted by EI
         next_configs_by_random_search_sorted = self.random_search._maximize(
-            runhistory,
-            stats,
+            previous_configs,
             num_points,
             _sorted=True,
         )
 
         next_configs_by_local_search = self.local_search._maximize(
-            runhistory,
-            stats,
+            previous_configs,
             self.local_search_iterations,
             additional_start_points=next_configs_by_random_search_sorted,
         )
@@ -187,23 +184,20 @@ class LocalAndSortedPriorRandomSearch(AbstractAcquisitionOptimizer):
 
     def _maximize(
         self,
-        runhistory: RunHistory,
-        stats: Stats,
+        previous_configs: List[Configuration],
         num_points: int,
     ) -> List[Tuple[float, Configuration]]:
 
         # Get configurations sorted by EI
         next_configs_by_prior_random_search_sorted = self.prior_random_search._maximize(
-            runhistory,
-            stats,
+            previous_configs,
             round(num_points * self.prior_sampling_fraction),
             _sorted=True,
         )
 
         # Get configurations sorted by EI
         next_configs_by_uniform_random_search_sorted = self.uniform_random_search._maximize(
-            runhistory,
-            stats,
+            previous_configs,
             round(num_points * (1 - self.prior_sampling_fraction)),
             _sorted=True,
         )
@@ -212,8 +206,7 @@ class LocalAndSortedPriorRandomSearch(AbstractAcquisitionOptimizer):
         next_configs_by_random_search_sorted.extend(next_configs_by_uniform_random_search_sorted)
 
         next_configs_by_local_search = self.local_search._maximize(
-            runhistory,
-            stats,
+            previous_configs,
             self.local_search_iterations,
             additional_start_points=next_configs_by_random_search_sorted,
         )

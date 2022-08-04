@@ -278,11 +278,11 @@ class BOinGChooser(Chooser):
                 self.turbo_optimizer.add_new_observations(X[-num_new_bservations:], Y_raw[-num_new_bservations:])
 
                 return self.turbo_optimizer.generate_challengers()
-
+        previous_configs = self.smbo.runhistory.get_all_configs()
         if X.shape[0] == 0:
             # Only return a single point to avoid an overly high number of
             # random search iterations
-            return self._random_search.maximize(runhistory=self.runhistory, stats=self.stats, num_points=1)
+            return self._random_search.maximize(previous_configs, num_points=1)
         # if the number of points is not big enough, we simply build one subspace (the raw configuration space) and
         # the local model becomes global model
         if X.shape[0] < (self.min_configs_local / self.frac_to_start_bi):
@@ -360,8 +360,7 @@ class BOinGChooser(Chooser):
                     self.restart_TuRBOinG(X=X, Y=Y, Y_raw=Y_raw, train_model=False)
 
         challengers_global = self.acq_optimizer.maximize(
-            runhistory=self.runhistory,
-            stats=self.stats,
+            previous_configs,
             num_points=self.scenario.acq_opt_challengers,  # type: ignore[attr-defined] # noqa F821
             random_configuration_chooser=self.random_configuration_chooser,
         )
