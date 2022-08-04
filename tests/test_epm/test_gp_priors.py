@@ -34,7 +34,7 @@ class TestTophatPrior(unittest.TestCase):
         prior = TophatPrior(
             lower_bound=np.exp(-10),
             upper_bound=np.exp(2),
-            rng=np.random.RandomState(1),
+            seed=1,
         )
 
         # Legal scalar
@@ -53,7 +53,7 @@ class TestTophatPrior(unittest.TestCase):
             self.assertEqual(prior.gradient(val), 0)
 
     def test_sample_from_prior(self):
-        prior = TophatPrior(lower_bound=np.exp(-10), upper_bound=np.exp(2), rng=np.random.RandomState(1))
+        prior = TophatPrior(lower_bound=np.exp(-10), upper_bound=np.exp(2), seed=1)
         samples = prior.sample_from_prior(10)
         np.testing.assert_array_equal(samples >= -10, True)
         np.testing.assert_array_equal(samples <= 2, True)
@@ -67,7 +67,7 @@ class TestTophatPrior(unittest.TestCase):
         prior = TophatPrior(
             lower_bound=lower_bound,
             upper_bound=upper_bound,
-            rng=np.random.RandomState(1),
+            seed=1,
         )
         sample = prior.sample_from_prior(1)
         self.assertEqual(sample.shape, (1,))
@@ -83,7 +83,7 @@ class TestTophatPrior(unittest.TestCase):
 
 class TestHorseshoePrior(unittest.TestCase):
     def test_lnprob_and_grad_scalar(self):
-        prior = HorseshoePrior(scale=1, rng=np.random.RandomState(1))
+        prior = HorseshoePrior(scale=1, seed=1)
 
         # Legal scalar
         self.assertEqual(prior.lnprob(-1), 1.1450937952919953)
@@ -94,7 +94,7 @@ class TestHorseshoePrior(unittest.TestCase):
         self.assertTrue(np.isinf(prior._gradient(0)))
 
     def test_sample_from_prior(self):
-        prior = HorseshoePrior(scale=1, rng=np.random.RandomState(1))
+        prior = HorseshoePrior(scale=1, seed=1)
         samples = prior.sample_from_prior(10)
         # Test that the rng is set
         self.assertAlmostEqual(samples[0], 1.0723988839129437)
@@ -106,7 +106,7 @@ class TestHorseshoePrior(unittest.TestCase):
         prior = TophatPrior(
             lower_bound=lower_bound,
             upper_bound=upper_bound,
-            rng=np.random.RandomState(1),
+            seed=1,
         )
         sample = prior.sample_from_prior(1)
         self.assertEqual(sample.shape, (1,))
@@ -121,7 +121,7 @@ class TestHorseshoePrior(unittest.TestCase):
 
     def test_gradient(self):
         for scale in (0.1, 0.5, 1.0, 2.0):
-            prior = HorseshoePrior(scale=scale, rng=np.random.RandomState(1))
+            prior = HorseshoePrior(scale=scale, seed=1)
             # The function appears to be unstable above 15
             for theta in range(-20, 15):
                 if theta == 0:
@@ -141,7 +141,7 @@ class TestHorseshoePrior(unittest.TestCase):
 
 class TestGammaPrior(unittest.TestCase):
     def test_lnprob_and_grad_scalar(self):
-        prior = GammaPrior(a=0.5, scale=1 / 2, loc=0, rng=np.random.RandomState(1))
+        prior = GammaPrior(a=0.5, scale=1 / 2, loc=0, seed=1)
 
         # Legal scalar
         x = -1
@@ -149,7 +149,7 @@ class TestGammaPrior(unittest.TestCase):
         self.assertEqual(prior.gradient(x), -1.2357588823428847)
 
     def test_lnprob_and_grad_array(self):
-        prior = GammaPrior(a=0.5, scale=1 / 2, loc=0, rng=np.random.RandomState(1))
+        prior = GammaPrior(a=0.5, scale=1 / 2, loc=0, seed=1)
         val = np.array([-1, -1])
         with self.assertRaises(NotImplementedError):
             prior.lnprob(val)
@@ -158,7 +158,7 @@ class TestGammaPrior(unittest.TestCase):
 
     def test_gradient(self):
         for scale in (0.5, 1.0, 2.0):
-            prior = GammaPrior(a=2, scale=scale, loc=0, rng=np.random.RandomState(1))
+            prior = GammaPrior(a=2, scale=scale, loc=0, seed=1)
             # The function appears to be unstable above 10
             for theta in np.arange(1e-15, 10, 0.01):
                 if theta == 0:
@@ -179,7 +179,7 @@ class TestGammaPrior(unittest.TestCase):
 class TestLogNormalPrior(unittest.TestCase):
     def test_gradient(self):
         for sigma in (0.5, 1.0, 2.0):
-            prior = LognormalPrior(mean=0, sigma=sigma, rng=np.random.RandomState(1))
+            prior = LognormalPrior(mean=0, sigma=sigma, seed=1)
             # The function appears to be unstable above 15
             for theta in range(0, 15):
                 # Gradient approximation becomes unstable when going closer to zero
@@ -203,7 +203,7 @@ class TestSoftTopHatPrior(unittest.TestCase):
             lower_bound=np.exp(-5),
             upper_bound=np.exp(5),
             exponent=2,
-            rng=np.random.RandomState(1),
+            seed=1,
         )
 
         # Legal values
@@ -224,7 +224,7 @@ class TestSoftTopHatPrior(unittest.TestCase):
             lower_bound=np.exp(-5),
             upper_bound=np.exp(5),
             exponent=2,
-            rng=np.random.RandomState(1),
+            seed=1,
         )
 
         # Legal values

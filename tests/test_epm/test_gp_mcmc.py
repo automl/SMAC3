@@ -12,13 +12,13 @@ __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False, n_iter=50):
+def get_gp(n_dimensions, seed, noise=1e-3, normalize_y=True, average_samples=False, n_iter=50):
     from smac.model.gaussian_process.kernels import ConstantKernel, Matern, WhiteKernel
 
     cov_amp = ConstantKernel(
         2.0,
         constant_value_bounds=(1e-10, 2),
-        prior=LognormalPrior(mean=0.0, sigma=1.0, rng=rs),
+        prior=LognormalPrior(mean=0.0, sigma=1.0, seed=seed),
     )
     exp_kernel = Matern(
         np.ones([n_dimensions]),
@@ -29,7 +29,7 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False
     noise_kernel = WhiteKernel(
         noise_level=noise,
         noise_level_bounds=(1e-10, 2),
-        prior=HorseshoePrior(scale=0.1, rng=rs),
+        prior=HorseshoePrior(scale=0.1, seed=seed),
     )
     kernel = cov_amp * exp_kernel + noise_kernel
 
@@ -44,6 +44,7 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False
     for i in range(n_dimensions):
         configspace.add_hyperparameter(UniformFloatHyperparameter("x%d" % i, 0, 1))
 
+    rs = np.random.RandomState(seed)
     model = MCMCGaussianProcess(
         configspace=configspace,
         types=types,
@@ -62,8 +63,9 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False
 
 class TestGPMCMC(unittest.TestCase):
     def test_predict_wrong_X_dimensions(self):
-        rs = np.random.RandomState(1)
-        model = get_gp(10, rs)
+        seed = 1
+        rs = np.random.RandomState(seed)
+        model = get_gp(10, seed)
 
         X = rs.rand(10)
         self.assertRaisesRegex(ValueError, "Expected 2d array, got 1d array!", model.predict, X)
@@ -74,13 +76,14 @@ class TestGPMCMC(unittest.TestCase):
         self.assertRaisesRegex(ValueError, "Rows in X should have 10 entries " "but have 5!", model.predict, X)
 
     def test_gp_train(self):
-        rs = np.random.RandomState(1)
+        seed = 1
+        rs = np.random.RandomState(seed)
         X = rs.rand(20, 10)
         Y = rs.rand(10, 1)
 
         fixture = np.array([0.693147, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -6.907755])
 
-        model = get_gp(10, rs)
+        model = get_gp(10, seed)
         np.testing.assert_array_almost_equal(model.kernel.theta, fixture)
         model.train(X[:10], Y[:10])
         self.assertEqual(len(model.models), 36)
@@ -94,13 +97,14 @@ class TestGPMCMC(unittest.TestCase):
             self.assertFalse(np.any(theta_ == fixture))
 
     def test_gp_train_posterior_mean(self):
-        rs = np.random.RandomState(1)
+        seed = 1
+        rs = np.random.RandomState(seed)
         X = rs.rand(20, 10)
         Y = rs.rand(10, 1)
 
         fixture = np.array([0.693147, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -6.907755])
 
-        model = get_gp(10, rs, average_samples=True)
+        model = get_gp(10, seed, average_samples=True)
         np.testing.assert_array_almost_equal(model.kernel.theta, fixture)
         model.train(X[:10], Y[:10])
 
@@ -115,10 +119,11 @@ class TestGPMCMC(unittest.TestCase):
         self.assertEqual(len(model.models), 1)
 
     def test_predict(self):
-        rs = np.random.RandomState(1)
+        seed = 1
+        rs = np.random.RandomState(seed)
         X = rs.rand(20, 10)
         Y = rs.rand(10, 1)
-        model = get_gp(10, rs)
+        model = get_gp(10, seed)
         model.train(X[:10], Y[:10])
         m_hat, v_hat = model.predict(X[10:])
         self.assertEqual(m_hat.shape, (10, 1))
@@ -127,11 +132,11 @@ class TestGPMCMC(unittest.TestCase):
     @unittest.mock.patch.object(MCMCGaussianProcess, "predict")
     def test_predict_marginalized_over_instances_no_features(self, rf_mock):
         """The GP should fall back to the regular predict() method."""
-
-        rs = np.random.RandomState(1)
+        seed = 1
+        rs = np.random.RandomState(seed)
         X = rs.rand(20, 10)
         Y = rs.rand(10, 1)
-        model = get_gp(10, rs)
+        model = get_gp(10, seed)
         model.train(X[:10], Y[:10])
         model.predict(X[10:])
         self.assertEqual(rf_mock.call_count, 1)
@@ -151,8 +156,8 @@ class TestGPMCMC(unittest.TestCase):
             dtype=np.float64,
         )
         y = np.array([[0.1], [0.2], [9], [9.2], [100.0], [100.2], [109.0], [109.2]], dtype=np.float64)
-        rs = np.random.RandomState(1)
-        model = get_gp(3, rs, noise=1e-10, n_iter=200)
+        seed = 1
+        model = get_gp(3, seed, noise=1e-10, n_iter=200)
         model.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
 
         y_hat, var_hat = model.predict(X)
@@ -176,11 +181,12 @@ class TestGPMCMC(unittest.TestCase):
         X, y = sklearn.datasets.load_boston(return_X_y=True)
         # Normalize such that the bounds in get_gp hold
         X = X / X.max(axis=0)
-        rs = np.random.RandomState(1)
-        model = get_gp(X.shape[1], rs, noise=1e-10, normalize_y=True)
+        seed = 1
+        rs = np.random.RandomState(seed)
+        model = get_gp(X.shape[1], seed, noise=1e-10, normalize_y=True)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [6.841565457149357281, 7.4943401900804902144]
+        maes = [7.1383486992745653755, 7.453042020795519766]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]
@@ -196,13 +202,13 @@ class TestGPMCMC(unittest.TestCase):
         X = np.arange(-5, 5, 0.1).reshape((-1, 1))
         X_test = np.arange(-5.05, 5.05, 0.1).reshape((-1, 1))
         y = np.sin(X)
-        rng = np.random.RandomState(1)
-        gp = get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=False)
+        seed = 1
+        gp = get_gp(n_dimensions=1, seed=seed, noise=1e-10, normalize_y=False)
         gp._train(X, y, do_optimize=False)
         self.assertFalse(gp.models[0].normalize_y)
         self.assertFalse(hasattr(gp.models[0], "mean_y_"))
         mu_hat, var_hat = gp.predict(X_test)
-        gp_norm = get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=True)
+        gp_norm = get_gp(n_dimensions=1, seed=seed, noise=1e-10, normalize_y=True)
         gp_norm._train(X, y, do_optimize=False)
         self.assertTrue(gp_norm.models[0].normalize_y)
         self.assertTrue(hasattr(gp_norm.models[0], "mean_y_"))
