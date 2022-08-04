@@ -8,7 +8,7 @@ from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
 from smac.configspace import ConfigurationSpace
 from smac.initial_design.default_configuration_design import DefaultInitialDesign
-from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design import InitialDesign
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.stats import Stats
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
@@ -38,10 +38,9 @@ class TestSingleInitialDesign(unittest.TestCase):
         tj = TrajLogger(output_dir=None, stats=self.stats)
 
         dc = DefaultInitialDesign(
-            cs=self.cs,
-            traj_logger=tj,
-            rng=np.random.RandomState(seed=12345),
-            ta_run_limit=self.scenario.ta_run_limit,
+            configspace=self.cs,
+            seed=12345,
+            n_runs=self.scenario.ta_run_limit,
         )
 
         # should return only the default config
@@ -51,7 +50,6 @@ class TestSingleInitialDesign(unittest.TestCase):
 
     def test_multi_config_design(self):
         self.stats.start_timing()
-        tj = TrajLogger(output_dir=None, stats=self.stats)
         _ = np.random.RandomState(seed=12345)
 
         configs = [
@@ -59,10 +57,9 @@ class TestSingleInitialDesign(unittest.TestCase):
             Configuration(configuration_space=self.cs, values={"x1": 2}),
         ]
         dc = InitialDesign(
-            cs=self.cs,
-            traj_logger=tj,
-            rng=np.random.RandomState(seed=12345),
-            ta_run_limit=self.scenario.ta_run_limit,
+            configspace=self.cs,
+            seed=12345,
+            n_runs=self.scenario.ta_run_limit,
             configs=configs,
         )
 
@@ -74,14 +71,12 @@ class TestSingleInitialDesign(unittest.TestCase):
 
     def test_init_budget(self):
         self.stats.start_timing()
-        tj = TrajLogger(output_dir=None, stats=self.stats)
         _ = np.random.RandomState(seed=12345)
 
         kwargs = dict(
-            cs=self.cs,
-            traj_logger=tj,
-            rng=np.random.RandomState(seed=12345),
-            ta_run_limit=self.scenario.ta_run_limit,
+            configspace=self.cs,
+            seed=12345,
+            n_runs=self.scenario.ta_run_limit,
         )
 
         configs = [
@@ -124,21 +119,20 @@ class TestSingleInitialDesign(unittest.TestCase):
 
         with self.assertRaisesRegex(
             ValueError,
-            "Need to provide either argument `init_budget`, `configs` or `n_configs_x_params`, "
+            "Need to provide either argument `init_budget`, `configs` or `n_configs_per_hyperparameter`, "
             "but provided none of them.",
         ):
-            InitialDesign(**kwargs, n_configs_x_params=None)
+            InitialDesign(**kwargs, n_configs_per_hyperparameter=None)
 
     def test__select_configurations(self):
         kwargs = dict(
-            cs=self.cs,
-            rng=np.random.RandomState(1),
-            traj_logger=unittest.mock.Mock(),
-            ta_run_limit=1000,
+            configspace=self.cs,
+            n_runs=1000,
             configs=None,
-            n_configs_x_params=None,
-            max_config_fracs=0.25,
+            n_configs_per_hyperparameter=None,
+            max_config_ratio=0.25,
             init_budget=1,
+            seed=1,
         )
         init_design = InitialDesign(**kwargs)
         with self.assertRaises(NotImplementedError):

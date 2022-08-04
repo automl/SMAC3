@@ -17,19 +17,18 @@ class TestSobol(unittest.TestCase):
         cs.add_hyperparameters(hyperparameters)
 
         sobol_kwargs = dict(
-            rng=np.random.RandomState(1),
-            traj_logger=unittest.mock.Mock(),
-            ta_run_limit=1000,
+            n_runs=1000,
             configs=None,
-            n_configs_x_params=None,
-            max_config_fracs=0.25,
+            n_configs_per_hyperparameter=None,
+            max_config_ratio=0.25,
             init_budget=1,
+            seed=1,
         )
-        SobolInitialDesign(cs=cs, **sobol_kwargs).select_configurations()
+        SobolInitialDesign(configspace=cs, **sobol_kwargs).select_configurations()
 
         cs.add_hyperparameter(UniformFloatHyperparameter("x21202", 0, 1))
         with self.assertRaisesRegex(
             Exception,
             "Maximum supported dimensionality is 21201.",
         ):
-            SobolInitialDesign(cs=cs, **sobol_kwargs).select_configurations()
+            SobolInitialDesign(configspace=cs, **sobol_kwargs).select_configurations()
