@@ -25,20 +25,11 @@ from smac.utils.stats import Stats
 
 
 class DifferentialEvolution(AbstractAcquisitionOptimizer):
-    """Get candidate solutions via DifferentialEvolutionSolvers.
-
-    Parameters
-    ----------
-    acquisition_function : ~smac.acquisition.AbstractAcquisitionFunction
-
-    configspace : ~smac.configspace.ConfigurationSpace
-
-    rng : np.random.RandomState or int, optional
-    """
+    """Get candidate solutions via DifferentialEvolutionSolvers."""
 
     def _maximize(
         self,
-        configs_previous_runs: List[Configuration],
+        previous_configs: List[Configuration],
         num_points: int,
         _sorted: bool = False,
     ) -> List[Tuple[float, Configuration]]:
@@ -46,18 +37,17 @@ class DifferentialEvolution(AbstractAcquisitionOptimizer):
 
         Parameters
         ----------
-        configs_previous_runs: List[Configuration]
-            previously evaluated configurations
+        previous_configs: List[Configuration]
+            Previously evaluated configurations.
         num_points: int
-            number of points to be sampled
+            Number of points to be sampled.
         _sorted: bool
             whether random configurations are sorted according to acquisition function
 
         Returns
         -------
-        iterable
-            An iterable consistng of
-            tuple(acqusition_value, :class:`smac.configspace.Configuration`).
+        challengers : List[Tuple[float, Configuration]]
+            A list consisting of Tuple(acquisition_value, :class:`smac.configspace.Configuration`).
         """
         from scipy.optimize._differentialevolution import DifferentialEvolutionSolver
 

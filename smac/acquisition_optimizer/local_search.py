@@ -63,7 +63,7 @@ class LocalSearch(AbstractAcquisitionOptimizer):
 
     def _maximize(
         self,
-        configs_previous_runs: List[Configuration],
+        previous_configs: List[Configuration],
         num_points: int,
         additional_start_points: Optional[List[Tuple[float, Configuration]]] = None,
     ) -> List[Tuple[float, Configuration]]:
@@ -72,8 +72,8 @@ class LocalSearch(AbstractAcquisitionOptimizer):
 
         Parameters
         ----------
-        configs_previous_runs: List[Configuration]
-            previously evaluated configurations
+        previous_configs: List[Configuration]
+            Previously evaluated configurations.
         response_values: np.ndarray | List[float]
             response values of the configurations
         num_points: int
@@ -85,7 +85,7 @@ class LocalSearch(AbstractAcquisitionOptimizer):
         -------
         List
         """
-        init_points = self._get_initial_points(num_points, configs_previous_runs, additional_start_points)
+        init_points = self._get_initial_points(num_points, previous_configs, additional_start_points)
         configs_acq = self._do_search(init_points)
 
         # shuffle for random tie-break
@@ -101,22 +101,22 @@ class LocalSearch(AbstractAcquisitionOptimizer):
     def _get_initial_points(
         self,
         num_points: int,
-        configs_previous_runs: List[Configuration],
+        previous_configs: List[Configuration],
         additional_start_points: Optional[List[Tuple[float, Configuration]]],
     ) -> List[Configuration]:
 
-        if len(configs_previous_runs) == 0:
+        if len(previous_configs) == 0:
             init_points = self.configspace.sample_configuration(size=num_points)
         else:
             init_points = self._get_init_points_from_previous_configs(
-                num_points, configs_previous_runs, additional_start_points
+                num_points, previous_configs, additional_start_points
             )
         return init_points
 
     def _get_init_points_from_previous_configs(
         self,
         num_points: int,
-        configs_previous_runs: List[Configuration],
+        previous_configs: List[Configuration],
         additional_start_points: Optional[List[Tuple[float, Configuration]]],
     ) -> List[Configuration]:
         """
@@ -128,8 +128,8 @@ class LocalSearch(AbstractAcquisitionOptimizer):
         ----------
         num_points: int
             Number of initial points to be generated
-        configs_previous_runs: List[Configuration]
-            previous configuration from runhistory
+        previous_configs: List[Configuration]
+            Previous configuration from runhistory
         additional_start_points: Optional[List[Tuple[float, Configuration]]]
             if we want to specify another set of points as initial points
 
@@ -141,12 +141,12 @@ class LocalSearch(AbstractAcquisitionOptimizer):
         assert self.acquisition_function is not None
 
         # configurations with the highest previous EI
-        configs_previous_runs_sorted = self._sort_configs_by_acq_value(configs_previous_runs)
+        configs_previous_runs_sorted = self._sort_configs_by_acq_value(previous_configs)
         configs_previous_runs_sorted = [conf[1] for conf in configs_previous_runs_sorted[:num_points]]
 
         # configurations with the lowest predictive cost, check for None to make unit tests work
         if self.acquisition_function.model is not None:
-            conf_array = convert_configurations_to_array(configs_previous_runs)
+            conf_array = convert_configurations_to_array(previous_configs)
             costs = self.acquisition_function.model.predict_marginalized_over_instances(conf_array)[0]
             assert len(conf_array) == len(costs), (conf_array.shape, costs.shape)
 
@@ -166,9 +166,9 @@ class LocalSearch(AbstractAcquisitionOptimizer):
 
             # Cannot use zip here because the indices array cannot index the
             # rand_configs list, because the second is a pure python list
-            configs_previous_runs_sorted_by_cost = [configs_previous_runs[ind] for ind in indices][:num_points]
+            previous_configs_sorted_by_cost = [previous_configs[ind] for ind in indices][:num_points]
         else:
-            configs_previous_runs_sorted_by_cost = []
+            previous_configs_sorted_by_cost = []
 
         if additional_start_points is not None:
             additional_start_points = [asp[1] for asp in additional_start_points[:num_points]]
@@ -179,7 +179,7 @@ class LocalSearch(AbstractAcquisitionOptimizer):
         init_points_as_set = set()  # type: Set[Configuration]
         for cand in itertools.chain(
             configs_previous_runs_sorted,
-            configs_previous_runs_sorted_by_cost,
+            previous_configs_sorted_by_cost,
             additional_start_points,
         ):
             if cand not in init_points_as_set:

@@ -23,26 +23,26 @@ __license__ = "3-clause BSD"
 
 
 __all__ = [
-    'AbstractAcquisitionOptimizer',
-    'DifferentialEvolution',
-    'LocalAndSortedRandomSearch',
-    'LocalSearch',
-    'RandomSearch',
+    "AbstractAcquisitionOptimizer",
+    "DifferentialEvolution",
+    "LocalAndSortedRandomSearch",
+    "LocalSearch",
+    "RandomSearch",
 ]
 
-class AbstractAcquisitionOptimizer(object, metaclass=abc.ABCMeta):
-    """Abstract class for acquisition maximization.
+
+class AbstractAcquisitionOptimizer(metaclass=abc.ABCMeta):
+    """Abstract class for the acquisition maximization.
 
     In order to use this class it has to be subclassed and the method
     ``_maximize`` must be implemented.
 
     Parameters
     ----------
-    acquisition_function : ~smac.acquisition.AbstractAcquisitionFunction
-
-    configspace : ~smac.configspace.ConfigurationSpace
-
-    rng : np.random.RandomState or int, optional
+    configspace : ConfigurationSpace
+    acquisition_function : AbstractAcquisitionFunction
+    challengers : int, defaults to 0
+    seed : int, defaults to 0
     """
 
     def __init__(
@@ -63,7 +63,7 @@ class AbstractAcquisitionOptimizer(object, metaclass=abc.ABCMeta):
 
     def maximize(
         self,
-        configs_previous_runs: List[Configuration],
+        previous_configs: List[Configuration],
         num_points: int | None = None,
         random_configuration_chooser: RandomChooser | None = None,
     ) -> Iterator[Configuration]:
@@ -71,8 +71,8 @@ class AbstractAcquisitionOptimizer(object, metaclass=abc.ABCMeta):
 
         Parameters
         ----------
-        configs_previous_runs: List[Configuration]
-            previous evaluated configurations
+        previous_configs: List[Configuration]
+            Previous evaluated configurations.
         num_points: int
             Number of points to be sampled. If `num_points` is not specified, `self.challengers` is used.
         random_configuration_chooser: ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser, optional
@@ -84,7 +84,7 @@ class AbstractAcquisitionOptimizer(object, metaclass=abc.ABCMeta):
 
         Returns
         -------
-        iterable
+        challengers : Iterator[Configuration]
             An iterable consisting of :class:`smac.configspace.Configuration`.
         """
         if num_points is None:
@@ -92,18 +92,19 @@ class AbstractAcquisitionOptimizer(object, metaclass=abc.ABCMeta):
 
         def next_configs_by_acq_value() -> List[Configuration]:
             assert num_points is not None
-            return [t[1] for t in self._maximize(configs_previous_runs, num_points)]
+            return [t[1] for t in self._maximize(previous_configs, num_points)]
 
         challengers = ChallengerList(next_configs_by_acq_value, self.configspace, random_configuration_chooser)
 
         if random_configuration_chooser is not None:
             random_configuration_chooser.next_smbo_iteration()
+
         return challengers
 
     @abc.abstractmethod
     def _maximize(
         self,
-        configs_previous_runs: List[Configuration],
+        previous_configs: List[Configuration],
         num_points: int,
     ) -> List[Tuple[float, Configuration]]:
         """Implements acquisition function maximization.
@@ -114,16 +115,15 @@ class AbstractAcquisitionOptimizer(object, metaclass=abc.ABCMeta):
 
         Parameters
         ----------
-        configs_previous_runs: List[Configuration]
-            previously evaluated configurations
+        previous_configs: List[Configuration]
+            Previously evaluated configurations.
         num_points: int
-            number of points to be sampled
+            Number of points to be sampled.
 
         Returns
         -------
-        iterable
-            An iterable consistng of
-            tuple(acqusition_value, :class:`smac.configspace.Configuration`).
+        challengers : List[Tuple[float, Configuration]]
+            A list consisting of Tuple(acquisition_value, :class:`smac.configspace.Configuration`).
         """
         raise NotImplementedError()
 
@@ -136,8 +136,8 @@ class AbstractAcquisitionOptimizer(object, metaclass=abc.ABCMeta):
 
         Returns
         -------
-        list: (acquisition value, Candidate solutions),
-                ordered by their acquisition function value
+        challengers : List[Tuple[float, Configuration]]
+            Candidates ordered by their acquisition value.
         """
         assert self.acquisition_function is not None
         acq_values = self.acquisition_function(configs)

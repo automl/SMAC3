@@ -165,13 +165,13 @@ class Chooser:
 
         logger.debug("Search for next configuration...")
         X, Y, X_configurations = self._collect_data()
-        configs_previous_runs = self.smbo.runhistory.get_all_configs()
+        previous_configs = self.smbo.runhistory.get_all_configs()
 
         if X.shape[0] == 0:
             # Only return a single point to avoid an overly high number of
             # random search iterations
 
-            return self._random_search.maximize(configs_previous_runs, num_points=1)
+            return self._random_search.maximize(previous_configs, num_points=1)
         self.smbo.model.train(X, Y)
 
         if incumbent_value is not None:
@@ -191,7 +191,7 @@ class Chooser:
         )
 
         challengers = self.smbo.acquisition_optimizer.maximize(
-            configs_previous_runs,
+            previous_configs,
             random_configuration_chooser=self.smbo.random_configuration_chooser,
         )
 
