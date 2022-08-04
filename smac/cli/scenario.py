@@ -7,6 +7,7 @@ import numpy as np
 
 from smac.cli.cmd_reader import CMDReader
 from smac.cli.input_reader import InputReader
+
 # from smac.cli.output_writer import OutputWriter
 
 __author__ = "Marius Lindauer, Matthias Feurer, Aaron Kimmig"
@@ -163,6 +164,6 @@ class Scenario(object):
             self.logger.warning("All instances were casted to str.")
         return list_
 
-    #def write(self) -> None:
+    # def write(self) -> None:
     #    """Write scenario to self.output_dir/scenario.txt."""
     #    self.out_writer.write_scenario_file(self)

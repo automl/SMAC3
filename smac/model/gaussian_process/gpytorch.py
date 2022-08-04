@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import List, Optional, Tuple
 
 import warnings
+import logging
 from collections import OrderedDict
 
 import gpytorch
@@ -25,6 +26,8 @@ from smac.constants import VERY_SMALL_NUMBER
 from smac.model.gaussian_process import BaseGaussianProcess
 
 warnings.filterwarnings("ignore", module="gpytorch")
+
+logger = logging.getLogger(__name__)
 
 
 class ExactGPModel(ExactGP):
@@ -243,7 +246,7 @@ class GPyTorchGaussianProcess(BaseGaussianProcess):
                 p0.append(sample.astype(np.float64))
             except Exception as e:
                 if i == n_tries - 1:
-                    self.logger.debug(f"Fails to sample new hyperparameters because of {e}")
+                    logger.debug(f"Fails to sample new hyperparameters because of {e}")
                     raise e
                 continue
             if len(p0) == self.n_opt_restarts:
@@ -263,7 +266,7 @@ class GPyTorchGaussianProcess(BaseGaussianProcess):
                     bounds=bounds,
                 )
             except NotPSDError as e:
-                self.logger.warning(f"Fail to optimize the GP hyperparameters as an Error occurs: {e}")
+                logger.warning(f"Fail to optimize the GP hyperparameters as an Error occurs: {e}")
                 f_opt = np.inf
                 theta = start_point
             if f_opt < f_opt_star:

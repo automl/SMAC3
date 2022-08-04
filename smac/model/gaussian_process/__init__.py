@@ -123,7 +123,7 @@ class BaseGaussianProcess(BaseModel):
                                 smac.model.gaussian_process.utils.prior.SoftTopHatPrior(
                                     lower_bound=bounds[i][0],
                                     upper_bound=bounds[i][1],
-                                    rng=self.rng,
+                                    seed=self.rng.randint(0, 2**20),
                                     exponent=2,
                                 )
                             )
@@ -132,7 +132,7 @@ class BaseGaussianProcess(BaseModel):
                                 smac.model.gaussian_process.utils.prior.TophatPrior(
                                     lower_bound=bounds[i][0],
                                     upper_bound=bounds[i][1],
-                                    rng=self.rng,
+                                    seed=self.rng.randint(0, 2**20),
                                 )
                             )
                     all_priors.append(priors_for_hp)

@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Dict, List, Optional, Tuple, Union
 
+import logging
 from collections import OrderedDict
 
 import gpytorch
@@ -25,6 +26,8 @@ from smac.model.gaussian_process.kernels.boing import FITCKernel, FITCMean
 from smac.model.utils import check_subspace_points
 
 gpytorch.settings.debug.off()
+
+logger = logging.getLogger(__name__)
 
 
 class AugmentedLocalGaussianProcess(ExactGP):
@@ -420,7 +423,7 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
                             f_opt_star = f_opt
                             theta_star = theta
                     except Exception as e:
-                        self.logger.warning(f"An exception {e} occurs during the optimizaiton")
+                        logger.warning(f"An exception {e} occurs during the optimizaiton")
 
                 start_idx = 0
                 # modification on botorch.optim.numpy_converter.set_params_with_array as we only need to extract the
