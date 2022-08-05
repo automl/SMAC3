@@ -10,15 +10,18 @@ from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
 from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
 from smac.acquisition_function import AbstractAcquisitionFunction
-from smac.acquisition_function.expected_improvement import EI
+from smac.acquisition_function import EI
 from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
-from smac.acquisition_optimizer.local_and_random_search import LocalAndSortedRandomSearch
+from smac.acquisition_optimizer import LocalAndSortedRandomSearch
 from smac.chooser.boing_chooser import BOinGChooser
 from smac.chooser.random_chooser import ChooserProb
 from smac.facade.hyperparameter import HyperparameterFacade
 from smac.model.base_model import BaseModel
 from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
-from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4ScaledLogCostWithRaw, RunHistory2EPM4CostWithRaw
+from smac.runhistory.runhistory2epm_boing import (
+    RunHistory2EPM4CostWithRaw,
+    RunHistory2EPM4ScaledLogCostWithRaw,
+)
 from smac.scenario import Scenario
 
 
@@ -50,16 +53,17 @@ class BOinGFacade(HyperparameterFacade):
         return transformer
 
     @staticmethod
-    def get_random_configuration_chooser(scenario: Scenario, *,
-                                         probability: float = 0.08447232371720552) -> ChooserProb:
+    def get_random_configuration_chooser(
+        scenario: Scenario, *, probability: float = 0.08447232371720552
+    ) -> ChooserProb:
         return ChooserProb(prob=probability)
 
     @staticmethod
     def get_acquisition_optimizer(
-            scenario: Scenario,
-            *,
-            local_search_iterations: int = 10,
-            challengers: int = 1000,
+        scenario: Scenario,
+        *,
+        local_search_iterations: int = 10,
+        challengers: int = 1000,
     ) -> AbstractAcquisitionOptimizer:
         optimizer = LocalAndSortedRandomSearch(
             configspace=scenario.configspace,
@@ -70,20 +74,20 @@ class BOinGFacade(HyperparameterFacade):
         return optimizer
 
     @staticmethod
-    def get_configuration_chooser(predict_x_best: bool = True,
-                                  min_samples_model: int = 1,
-                                  model_local: Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
-                                  model_local_kwargs: Dict | None = None,
-                                  acquisition_func_local: Union[
-                                      AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = EI,
-                                  acquisition_func_local_kwargs: Dict | None = None,
-                                  acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
-                                  acq_optimizer_local_kwargs: Dict | None = None,
-                                  max_configs_local_fracs: float = 0.5,
-                                  min_configs_local: int | None = None,
-                                  do_switching: bool = False,
-                                  turbo_kwargs: Dict | None = None,
-                                  ):
+    def get_configuration_chooser(
+        predict_x_best: bool = True,
+        min_samples_model: int = 1,
+        model_local: Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
+        model_local_kwargs: Dict | None = None,
+        acquisition_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = EI,
+        acquisition_func_local_kwargs: Dict | None = None,
+        acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
+        acq_optimizer_local_kwargs: Dict | None = None,
+        max_configs_local_fracs: float = 0.5,
+        min_configs_local: int | None = None,
+        do_switching: bool = False,
+        turbo_kwargs: Dict | None = None,
+    ):
         """
         Parameters
         ----------
@@ -114,17 +118,18 @@ class BOinGFacade(HyperparameterFacade):
         if model_local_kwargs is None and model_local.__name__ == "GloballyAugmentedLocalGaussianProcess":
             model_local_kwargs = SMAC4BOING.get_lgpga_local_components()
 
-        return BOinGChooser(predict_x_best=predict_x_best,
-                            min_samples_model=min_samples_model,
-                            model_local=model_local,
-                            model_local_kwargs=model_local_kwargs,
-                            acquisition_func_local=acquisition_func_local,
-                            acq_optimizer_local_kwargs=acquisition_func_local_kwargs,
-                            max_configs_local_fracs=max_configs_local_fracs,
-                            min_configs_local=min_configs_local,
-                            do_switching=do_switching,
-                            turbo_kwargs=turbo_kwargs,
-                            )
+        return BOinGChooser(
+            predict_x_best=predict_x_best,
+            min_samples_model=min_samples_model,
+            model_local=model_local,
+            model_local_kwargs=model_local_kwargs,
+            acquisition_func_local=acquisition_func_local,
+            acq_optimizer_local_kwargs=acquisition_func_local_kwargs,
+            max_configs_local_fracs=max_configs_local_fracs,
+            min_configs_local=min_configs_local,
+            do_switching=do_switching,
+            turbo_kwargs=turbo_kwargs,
+        )
 
     @staticmethod
     def get_lgpga_local_components() -> Dict:
@@ -161,7 +166,7 @@ class BOinGFacade(HyperparameterFacade):
         likelihood = GaussianLikelihood(
             noise_prior=noise_prior, noise_constraint=Interval(1e-5, np.exp(2), transform=None)
         ).double()
-        return {"model_local": GloballyAugmentedLocalGaussianProcess,
-                "model_local_kwargs": dict(kernel_kwargs=kernel_kwargs, likelihood=likelihood),
-                }
-
+        return {
+            "model_local": GloballyAugmentedLocalGaussianProcess,
+            "model_local_kwargs": dict(kernel_kwargs=kernel_kwargs, likelihood=likelihood),
+        }

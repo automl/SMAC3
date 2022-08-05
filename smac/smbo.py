@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Callable, Type
 
 import time
@@ -10,7 +11,6 @@ from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
 from smac.callbacks.callbacks import IncorporateRunResultCallback
 from smac.chooser import Chooser
 from smac.chooser.random_chooser import RandomChooser
-from smac.scenario import Scenario
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.initial_design import InitialDesign
@@ -25,6 +25,7 @@ from smac.runner import (
     StatusType,
     TargetAlgorithmAbortException,
 )
+from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 from smac.utils.stats import Stats
 from smac.utils.validate import Validator

@@ -37,7 +37,7 @@ class Scenario:
     # Limitations
     walltime_limit: float = np.inf
     cputime_limit: float = np.inf
-    memory_limit: float | None = None
+    memory_limit: int | None = None
     algorithm_walltime_limit: float | None = None
     n_runs: int = 20
 

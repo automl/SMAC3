@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Dict, List, Mapping, Optional, Set, Tuple, Union
 
 import logging
@@ -510,8 +511,6 @@ class _SuccessiveHalving(AbstractRacer):
                 instance=None,
                 instance_specific="0",
                 seed=0,
-                algorithm_walltime_limit=self.algorithm_walltime_limit,
-                capped=False,
                 budget=0.0,
                 source_id=self.identifier,
             )
@@ -560,8 +559,6 @@ class _SuccessiveHalving(AbstractRacer):
                         instance=None,
                         instance_specific="0",
                         seed=0,
-                        algorithm_walltime_limit=self.algorithm_walltime_limit,
-                        capped=False,
                         budget=0.0,
                         source_id=self.identifier,
                     )
@@ -582,8 +579,6 @@ class _SuccessiveHalving(AbstractRacer):
                         instance=None,
                         instance_specific="0",
                         seed=0,
-                        algorithm_walltime_limit=self.algorithm_walltime_limit,
-                        capped=False,
                         budget=0.0,
                         source_id=self.identifier,
                     )
@@ -627,19 +622,14 @@ class _SuccessiveHalving(AbstractRacer):
 
         # selecting algorithm_walltime_limit if running adaptive capping
         algorithm_walltime_limit = self.algorithm_walltime_limit
-        self.logger.debug("algorithm_walltime_limit for challenger: %s" % str(algorithm_walltime_limit))
+        self.logger.debug(f"Algorithm walltime limit for challenger: {str(algorithm_walltime_limit)}.")
 
         # For testing purposes, this attribute highlights whether a
         # new challenger is proposed or not. Not required from a functional
         # perspective
         self.new_challenger = new_challenger
 
-        capped = False
-        if (self.algorithm_walltime_limit is not None) and (algorithm_walltime_limit < self.algorithm_walltime_limit):  # type: ignore[operator] # noqa F821
-            capped = True
-
         budget = 0.0 if self.instance_as_budget else curr_budget
-
         self.run_tracker[(challenger, instance, seed, budget)] = False
 
         # self.curr_inst_idx Tell us our current instance to be run. The upcoming return
@@ -652,8 +642,6 @@ class _SuccessiveHalving(AbstractRacer):
             instance=instance,
             instance_specific=self.instance_specifics.get(instance, "0"),
             seed=seed,
-            algorithm_walltime_limit=algorithm_walltime_limit,
-            capped=capped,
             budget=budget,
             source_id=self.identifier,
         )

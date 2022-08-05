@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Dict, Iterator, List, Optional, Tuple, Type, Union
 
 import copy
@@ -20,11 +21,11 @@ from smac.model.base_model import BaseModel
 from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.utils import get_types
-from smac.utils.subspaces.boing_subspace import BOinGSubspace
-from smac.utils.subspaces.turbo_subspace import TuRBOSubSpace
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4CostWithRaw
 from smac.utils.stats import Stats
+from smac.utils.subspaces.boing_subspace import BOinGSubspace
+from smac.utils.subspaces.turbo_subspace import TuRBOSubSpace
 
 
 class BOinGChooser(Chooser):

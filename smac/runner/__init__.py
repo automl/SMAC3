@@ -148,46 +148,35 @@ class Runner(ABC):
         self,
         config: Configuration,
         instance: str | None = None,
-        algorithm_walltime_limit: float | None = None,
         seed: int = 0,
         budget: float | None = None,
         instance_specific: str = "0",
     ) -> Tuple[StatusType, float | list[float], float, Dict]:
-        """Runs target algorithm <self.target_algorithm> with configuration <config> on instance <instance> with
-        instance specifics.
-
-        <specifics> for at most.
-
-        <algorithm_walltime_limit> seconds and random seed <seed>
-
-        This method exemplifies how to defined the run() method
+        """Runs the target algorithm with a configuration on a single instance with instance specifics.
 
         Parameters
         ----------
         config : Configuration
-            dictionary param -> value
-        instance : string
-            problem instance
-        algorithm_walltime_limit : float, optional
-            Wallclock time limit of the target algorithm. If no value is
-            provided no limit will be enforced.
-        seed : int
-            random seed
-        budget : float, optional
-            A positive, real-valued number representing an arbitrary limit to the target
-            algorithm. Handled by the target algorithm internally
-        instance_specific: str
-            instance specific information (e.g., domain file or solution)
+            Configuration to be passed to the target algorithm.
+        instance : str, defaults to None
+            The Problem instance.
+        seed : int, defaults to 0
+            Random seed.
+        budget : float, defaults to None
+            A positive, real-valued number representing an arbitrary limit to the target algorithm
+            Handled by the target algorithm internally.
+        instance_specific : str, defaults to "0"
+            Instance specific information (e.g., domain file or solution).
 
         Returns
         -------
-        status: enum of StatusType (int)
-            {SUCCESS, TIMEOUT, CRASHED, ABORT}
-        cost: float
-            cost/regret/quality (float) (None, if not returned by TA).
-        runtime: float
-            Runtime (None if not returned by TA).
-        additional_info: dict
+        status : StatusType
+            Status of the run.
+        cost : float | list[float]
+            Cost, regret, quality, etc. of the run.
+        runtime : float
+            The time the target algorithm took to run.
+        additional_info : dict
             All further additional run information.
         """
         pass
@@ -216,15 +205,10 @@ class Runner(ABC):
         """
         start = time.time()
 
-        algorithm_walltime_limit = None
-        if run_info.algorithm_walltime_limit is not None:
-            algorithm_walltime_limit = int(math.ceil(run_info.algorithm_walltime_limit))
-
         try:
             status, cost, runtime, additional_info = self.run(
                 config=run_info.config,
                 instance=run_info.instance,
-                algorithm_walltime_limit=algorithm_walltime_limit,
                 seed=run_info.seed,
                 budget=run_info.budget,
                 instance_specific=run_info.instance_specific,

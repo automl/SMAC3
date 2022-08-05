@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Dict, List, Optional, Tuple, Type, Union
 
 import math
@@ -9,7 +10,7 @@ from ConfigSpace.hyperparameters import NumericalHyperparameter
 from ConfigSpace.util import deactivate_inactive_hyperparameters
 from scipy.stats.qmc import LatinHypercube, Sobol
 
-from smac.acquisition_function import AbstractAcquisitionFunction, TS
+from smac.acquisition_function import TS, AbstractAcquisitionFunction
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.model.base_model import BaseModel
 from smac.model.gaussian_process import GaussianProcess

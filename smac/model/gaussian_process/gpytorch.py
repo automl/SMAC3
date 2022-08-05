@@ -1,8 +1,9 @@
 from __future__ import annotations
+
 from typing import List, Optional, Tuple
 
-import warnings
 import logging
+import warnings
 from collections import OrderedDict
 
 import gpytorch

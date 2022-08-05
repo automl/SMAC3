@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Any, Dict, List, Mapping, Optional, Tuple
 
 import numpy as np
@@ -170,8 +171,6 @@ class SimpleIntensifier(AbstractRacer):
                 instance=None,
                 instance_specific="0",
                 seed=0,
-                algorithm_walltime_limit=self.algorithm_walltime_limit,
-                capped=False,
                 budget=0.0,
             )
 
@@ -180,8 +179,6 @@ class SimpleIntensifier(AbstractRacer):
             instance=self.instances[-1],
             instance_specific="0",
             seed=0 if self.deterministic else int(self.rng.randint(low=0, high=MAXINT, size=1)[0]),
-            algorithm_walltime_limit=self.algorithm_walltime_limit,
-            capped=False,
             budget=0.0,
         )
 

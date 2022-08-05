@@ -6,13 +6,13 @@ from typing import Dict, List, Mapping, Optional, Tuple
 import numpy as np
 
 from smac import constants
-from smac.scenario import Scenario
 from smac.configspace import convert_configurations_to_array
 from smac.model.base_imputor import BaseImputor
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.utils import normalize_costs
 from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
 from smac.runner import StatusType
+from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2015, ML4AAD"

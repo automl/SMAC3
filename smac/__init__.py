@@ -1,7 +1,4 @@
 import datetime
-import os
-import sys
-import warnings
 
 name = "SMAC3"
 package_name = "smac"
@@ -25,19 +22,12 @@ copyright = f"""
 version = "2.0.0"
 
 
-if os.name != "posix":
-    warnings.warn(
-        f"Detected unsupported operating system: {sys.platform}."
-        "Please be aware that SMAC might not run on this system."
-    )
-
-
 try:
-    from smac.scenario import Scenario
     from smac.facade.black_box import BlackBoxFacade
     from smac.facade.hyperparameter import HyperparameterFacade
     from smac.facade.multi_fidelity import MultiFidelityFacade
     from smac.runhistory.runhistory import RunHistory
+    from smac.scenario import Scenario
 
     __all__ = ["Scenario", "RunHistory", "BlackBoxFacade", "HyperparameterFacade", "MultiFidelityFacade"]
 except ModuleNotFoundError:

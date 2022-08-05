@@ -267,7 +267,7 @@ class Intensifier(AbstractRacer):
             available_insts = self._get_inc_available_inst(incumbent, runhistory)
             if available_insts and len(inc_runs) < self.max_config_calls:
                 # Lines 5-6-7
-                instance, seed, algorithm_walltime_limit = self._get_next_inc_run(available_insts)
+                instance, seed = self._get_next_inc_run(available_insts)
 
                 instance_specific = "0"
                 if instance is not None:
@@ -278,8 +278,6 @@ class Intensifier(AbstractRacer):
                     instance=instance,
                     instance_specific=instance_specific,
                     seed=seed,
-                    algorithm_walltime_limit=algorithm_walltime_limit,
-                    capped=False,
                     budget=0.0,
                 )
             else:
@@ -318,8 +316,6 @@ class Intensifier(AbstractRacer):
                 instance=None,
                 instance_specific="0",
                 seed=0,
-                algorithm_walltime_limit=self.algorithm_walltime_limit,
-                capped=False,
                 budget=0.0,
             )
 
@@ -332,8 +328,6 @@ class Intensifier(AbstractRacer):
                 instance=None,
                 instance_specific="0",
                 seed=0,
-                algorithm_walltime_limit=self.algorithm_walltime_limit,
-                capped=False,
                 budget=0.0,
             )
 
@@ -373,8 +367,6 @@ class Intensifier(AbstractRacer):
                     instance=None,
                     instance_specific="0",
                     seed=0,
-                    algorithm_walltime_limit=self.algorithm_walltime_limit,
-                    capped=False,
                     budget=0.0,
                 )
 
@@ -400,8 +392,6 @@ class Intensifier(AbstractRacer):
                     instance=instance,
                     instance_specific=instance_specific,
                     seed=seed,
-                    algorithm_walltime_limit=algorithm_walltime_limit,
-                    capped=capped,
                     budget=0.0,
                 )
         else:
@@ -534,8 +524,6 @@ class Intensifier(AbstractRacer):
             Next instance to evaluate
         seed: float
             Seed in which to evaluate the instance
-        algorithm_walltime_limit: Optional[float]
-            Max time for a given instance/seed pair
         """
         # Line 5 - and avoid https://github.com/numpy/numpy/issues/10791
         _idx = self.rng.choice(len(available_insts))
@@ -554,7 +542,7 @@ class Intensifier(AbstractRacer):
         else:
             self.stage = IntensifierStage.PROCESS_INCUMBENT_RUN
 
-        return next_instance, next_seed, self.algorithm_walltime_limit
+        return next_instance, next_seed
 
     def _get_inc_available_inst(
         self,

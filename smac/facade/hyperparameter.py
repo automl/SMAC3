@@ -5,7 +5,6 @@ from smac.acquisition_optimizer.local_and_random_search import (
     LocalAndSortedRandomSearch,
 )
 from smac.chooser.random_chooser import ChooserProb
-from smac.scenario import Scenario
 from smac.configspace import Configuration
 from smac.facade import Facade
 from smac.initial_design.sobol_design import SobolInitialDesign
@@ -15,6 +14,7 @@ from smac.model.utils import get_types
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.runhistory.runhistory_transformer import RunhistoryLogScaledTransformer
+from smac.scenario import Scenario
 
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"

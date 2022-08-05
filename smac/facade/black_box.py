@@ -10,7 +10,6 @@ from smac.acquisition_optimizer.local_and_random_search import (
     LocalAndSortedRandomSearch,
 )
 from smac.chooser.random_chooser import ChooserProb, RandomChooser
-from smac.scenario import Scenario
 from smac.configspace import Configuration
 from smac.facade import Facade
 from smac.initial_design import InitialDesign
@@ -29,6 +28,7 @@ from smac.model.utils import get_types
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.runhistory.runhistory_transformer import RunhistoryTransformer
+from smac.scenario import Scenario
 
 __author__ = "Marius Lindauer"  # TODO leave author as is?
 __copyright__ = "Copyright 2018, ML4AAD"

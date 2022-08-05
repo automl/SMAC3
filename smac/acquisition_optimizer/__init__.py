@@ -8,10 +8,7 @@ import logging
 
 import numpy as np
 
-from acquisition_optimizer.differential_evolution import DifferentialEvolution
-from acquisition_optimizer.local_and_random_search import LocalAndSortedRandomSearch
-from acquisition_optimizer.local_search import LocalSearch
-from acquisition_optimizer.random_search import RandomSearch
+import smac
 from smac.acquisition_function import AbstractAcquisitionFunction
 from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.configspace import Configuration, ConfigurationSpace
@@ -20,15 +17,6 @@ from smac.utils.stats import Stats
 
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
-
-
-__all__ = [
-    "AbstractAcquisitionOptimizer",
-    "DifferentialEvolution",
-    "LocalAndSortedRandomSearch",
-    "LocalSearch",
-    "RandomSearch",
-]
 
 
 class AbstractAcquisitionOptimizer(metaclass=abc.ABCMeta):
@@ -247,3 +235,19 @@ class FixedSet(AbstractAcquisitionOptimizer):
         for config in configurations:
             config.origin = "Fixed Set"
         return self._sort_configs_by_acq_value(configurations)
+
+
+try:
+    from acquisition_optimizer.differential_evolution import DifferentialEvolution
+    from acquisition_optimizer.local_and_random_search import LocalAndSortedRandomSearch
+    from acquisition_optimizer.local_search import LocalSearch
+    from acquisition_optimizer.random_search import RandomSearch
+
+    __all__ = [
+        "DifferentialEvolution",
+        "LocalAndSortedRandomSearch",
+        "LocalSearch",
+        "RandomSearch",
+    ]
+except ModuleNotFoundError:
+    pass

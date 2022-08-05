@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import List, Mapping, Optional, Tuple
 
 import logging
@@ -196,9 +197,9 @@ class _Hyperband(_SuccessiveHalving):
         Returns
         -------
         intent: RunInfoIntent
-               Indicator of how to consume the RunInfo object
+            Indicator of how to consume the RunInfo object
         run_info: RunInfo
-               An object that encapsulates necessary information for a config run
+            An object that encapsulates necessary information for a config run
         """
         if num_workers > 1:
             raise ValueError(

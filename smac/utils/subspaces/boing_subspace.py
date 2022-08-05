@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Dict, List, Optional, Tuple, Type, Union
 
 import inspect
@@ -6,8 +7,11 @@ import inspect
 import numpy as np
 from ConfigSpace import ConfigurationSpace
 
-from smac.acquisition_function import AbstractAcquisitionFunction, EI
-from smac.acquisition_optimizer import AbstractAcquisitionOptimizer, LocalAndSortedRandomSearch
+from smac.acquisition_function import EI, AbstractAcquisitionFunction
+from smac.acquisition_optimizer import (
+    AbstractAcquisitionOptimizer,
+    LocalAndSortedRandomSearch,
+)
 from smac.configspace import Configuration
 from smac.model.base_model import BaseModel
 from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess

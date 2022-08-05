@@ -12,7 +12,6 @@ from smac.acquisition_function import AbstractAcquisitionFunction
 from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
 from smac.chooser import Chooser
 from smac.chooser.random_chooser import RandomChooser
-from smac.scenario import Scenario
 from smac.configspace import Configuration
 from smac.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
@@ -26,6 +25,7 @@ from smac.runhistory.runhistory_transformer import RunhistoryTransformer
 from smac.runner import Runner
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
+from smac.scenario import Scenario
 from smac.smbo import SMBO
 from smac.utils.logging import get_logger, setup_logging
 from smac.utils.others import recursively_compare_dicts
@@ -87,9 +87,20 @@ class Facade:
         # Prepare the algorithm executer
         runner: Runner
         if callable(target_algorithm):
+            if isinstance(scenario.objectives, str):
+                objectives = [scenario.objectives]
+            else:
+                objectives = scenario.objectives
+
             # We wrap our algorithm with the AlgorithmExecuter to use pynisher
             # and to catch exceptions
-            runner = TargetAlgorithmRunner(target_algorithm, stats=stats)
+            runner = TargetAlgorithmRunner(
+                target_algorithm,
+                stats=stats,
+                objectives=objectives,
+                memory_limit=scenario.memory_limit,
+                algorithm_walltime_limit=scenario.algorithm_walltime_limit,
+            )
         elif isinstance(target_algorithm, Runner):
             runner = target_algorithm
         else:
@@ -200,7 +211,7 @@ class Facade:
                 self.runhistory.load_json(str(old_runhistory_filename), cs=self.scenario.configspace)
                 self.stats.load()
             else:
-                diff = recursively_compare_dicts(self.config.__dict__, old_scenario.__dict__, level="scenario")
+                diff = recursively_compare_dicts(self.scenario.__dict__, old_scenario.__dict__, level="scenario")
                 logger.info(
                     f"Found old run in `{self.scenario.output_directory}` but it is not the same as the current one:\n"
                     f"{diff}"

@@ -125,41 +125,10 @@ class SerialRunner(Runner):
         self,
         config: Configuration,
         instance: str | None = None,
-        algorithm_walltime_limit: float | None = None,
         seed: int = 0,
         budget: float | None = None,
         instance_specific: str = "0",
     ) -> Tuple[StatusType, float | list[float], float, Dict]:
-        """Runs the target algorithm with a configuration on a single instance with instance specifics.
-
-        Parameters
-        ----------
-        config : Configuration
-            Configuration to be passed to the target algorithm.
-        instance : str, defaults to None
-            The Problem instance.
-        algorithm_walltime_limit : float, defaults to None
-            Walltime limit of the target algorithm. If no value is
-            provided no limit will be enforced. It is casted to integer internally.
-        seed : int, defaults to 0
-            Random seed.
-        budget : float, defaults to None
-            A positive, real-valued number representing an arbitrary limit to the target algorithm
-            Handled by the target algorithm internally.
-        instance_specific : str, defaults to "0"
-            Instance specific information (e.g., domain file or solution).
-
-        Returns
-        -------
-        status : StatusType
-            Status of the run.
-        cost : float | list[float]
-            cost/regret/quality/runtime (float) (None, if not returned by TA)
-        runtime : float
-            The time the target algorithm took to run.
-        additional_info : dict
-            All further additional run information.
-        """
         pass
 
     def num_workers(self) -> int:

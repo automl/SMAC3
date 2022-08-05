@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from ConfigSpace.configuration_space import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 

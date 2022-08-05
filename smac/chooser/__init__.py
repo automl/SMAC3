@@ -4,11 +4,11 @@ from typing import Iterator, List, Optional, Tuple
 
 import numpy as np
 
+import smac
+import smac.acquisition_optimizer as acquisition_optimizer
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
 from smac.utils.logging import get_logger
-import smac
-import smac.acquisition_optimizer as acquisition_optimizer
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

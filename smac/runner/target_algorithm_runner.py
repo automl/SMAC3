@@ -2,14 +2,13 @@ from __future__ import annotations
 
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union, cast
 
-from pynisher import limit, MemoryLimitException, WallTimeoutException
 import inspect
 import math
 import time
 import traceback
 
 import numpy as np
-import pynisher
+from pynisher import MemoryLimitException, WallTimeoutException, limit
 
 from smac.configspace import Configuration
 from smac.constants import MAXINT
@@ -37,10 +36,11 @@ class AbstractTargetAlgorithmRunner(SerialRunner):
         target_algorithm: Callable,
         stats: Stats,
         objectives: list[str] = ["cost"],
-        memory_limit: int | None = None,
         par_factor: int = 1,
         crash_cost: float | list[float] = float(MAXINT),
         abort_on_first_run_crash: bool = True,
+        memory_limit: int | None = None,
+        algorithm_walltime_limit: float | None = None,
     ):
         super().__init__(
             target_algorithm=target_algorithm,
@@ -67,54 +67,25 @@ class AbstractTargetAlgorithmRunner(SerialRunner):
             raise TypeError(f"Argument `target_algorithm` must be a callable but is type `{type(target_algorithm)}`.")
         self._target_algorithm = cast(Callable, target_algorithm)
 
+        # Pynisher limitations
         if memory_limit is not None:
             memory_limit = int(math.ceil(memory_limit))
+
+        if algorithm_walltime_limit is not None:
+            algorithm_walltime_limit = int(math.ceil(algorithm_walltime_limit))
+
         self.memory_limit = memory_limit
+        self.algorithm_walltime_limit = algorithm_walltime_limit
 
     def run(
         self,
         config: Configuration,
         instance: str | None = None,
-        algorithm_walltime_limit: float | None = None,
         seed: int = 0,
         budget: float | None = None,
         instance_specific: str = "0",
     ) -> Tuple[StatusType, float | list[float], float, Dict]:
-        """Runs target algorithm <self._target_algorithm> with configuration <config> for at most <algorithm_walltime_limit>
-        seconds, allowing it to use at most <memory_limit> RAM.
-
-        Whether the target algorithm is called with the <instance> and
-        <seed> depends on the subclass implementing the actual call to
-        the target algorithm.
-
-        Parameters
-        ----------
-        config : Configuration
-            Configuration to be passed to the target algorithm.
-        instance : str, defaults to None
-            The Problem instance.
-        algorithm_walltime_limit : float, defaults to None
-            Walltime limit of the target algorithm. If no value is
-            provided no limit will be enforced. It is casted to integer internally.
-        seed : int, defaults to 0
-            Random seed.
-        budget : float, defaults to None
-            A positive, real-valued number representing an arbitrary limit to the target algorithm
-            Handled by the target algorithm internally.
-        instance_specific : str, defaults to "0"
-            Instance specific information (e.g., domain file or solution).
-
-        Returns
-        -------
-        status : StatusType
-            Status of the run.
-        cost : float | list[float]
-            cost/regret/quality/runtime (float) (None, if not returned by TA)
-        runtime : float
-            The time the target algorithm took to run.
-        additional_info : dict
-            All further additional run information.
-        """
+        """Calls the target algorithm with pynisher (if algorithm walltime limit or memory limit is set) or without."""
 
         # The kwargs are passed to the target algorithm.
         kwargs: Dict[str, Any] = {}
@@ -125,78 +96,53 @@ class AbstractTargetAlgorithmRunner(SerialRunner):
         if self._accepts_budget:
             kwargs["budget"] = budget
 
-        cost = self.crash_cost
-        use_pynisher = self.memory_limit is not None or algorithm_walltime_limit is not None
-
         # Presetting
+        cost = self.crash_cost
+        runtime = 0.0
         additional_info = {}
         status = StatusType.CRASHED
 
-        start_time = time.time()
-        if use_pynisher:
-            # Walltime for pynisher has to be a rounded up integer
-            if algorithm_walltime_limit is not None:
-                algorithm_walltime_limit = int(math.ceil(algorithm_walltime_limit))
-
+        # If memory limit or walltime limit is set, we wanna use pynisher
+        if self.memory_limit is not None or self.algorithm_walltime_limit is not None:
             target_algorithm = limit(
                 self._target_algorithm,
                 memory=self.memory_limit,
-                wall_time=algorithm_walltime_limit,
+                wall_time=self.algorithm_walltime_limit,
+                wrap_errors=True,  # Hard to describe; see https://github.com/automl/pynisher
             )
-
-            # Call target algorithm
-            try:
-                rval = self._call_target_algorithm(target_algorithm, config, kwargs)
-                status = StatusType.SUCCESS
-            except WallTimeoutException:
-                status = StatusType.TIMEOUT
-            except MemoryLimitException:
-                status = StatusType.MEMOUT
-            except Exception as e:
-                cost = np.asarray(cost).squeeze().tolist()
-                exception_traceback = traceback.format_exc()
-                error_message = repr(e)
-                additional_info = {
-                    "traceback": exception_traceback,
-                    "error": error_message,
-                }
-
-                return StatusType.CRASHED, cost, 0.0, additional_info
-
-            if isinstance(rval, tuple):
-                result = rval[0]
-                additional_info = rval[1]
-            else:
-                result = rval
-                additional_info = {}
-
-            if status == StatusType.SUCCESS:
-                cost = result
-
         else:
-            # Call the target algorithm
-            try:
-                rval = self._call_target_algorithm(self._target_algorithm, config, kwargs)
+            target_algorithm = self._target_algorithm
 
-                if isinstance(rval, tuple):
-                    result = rval[0]
-                    additional_info = rval[1]
-                else:
-                    result = rval
-                    additional_info = {}
+        # Call target algorithm
+        try:
+            start_time = time.time()
+            rval = self._call_target_algorithm(target_algorithm, config, kwargs)
+            runtime = time.time() - start_time
+            status = StatusType.SUCCESS
+        except WallTimeoutException:
+            status = StatusType.TIMEOUT
+        except MemoryLimitException:
+            status = StatusType.MEMOUT
+        except Exception as e:
+            cost = np.asarray(cost).squeeze().tolist()
+            additional_info = {
+                "traceback": traceback.format_exc(),
+                "error": repr(e),
+            }
+            status = StatusType.CRASHED
 
-                status = StatusType.SUCCESS
-                cost = result
-            except Exception as e:
-                status = StatusType.CRASHED
-                exception_traceback = traceback.format_exc()
-                error_message = repr(e)
-                additional_info = {
-                    "traceback": exception_traceback,
-                    "error": error_message,
-                }
+        if status != StatusType.SUCCESS:
+            return status, cost, runtime, additional_info
 
-        runtime = time.time() - start_time
+        if isinstance(rval, tuple):
+            result = rval[0]
+            additional_info = rval[1]
+        else:
+            result = rval
+            additional_info = {}
+
+        # We update cost based on our result
+        cost = result
 
         # Do some sanity checking (for multi objective)
         if len(self.objectives) > 1:
@@ -219,7 +165,7 @@ class AbstractTargetAlgorithmRunner(SerialRunner):
             if isinstance(cost, float):
                 raise RuntimeError(error)
 
-        if cost is None or status == StatusType.CRASHED:
+        if cost is None:
             status = StatusType.CRASHED
             cost = self.crash_cost
 

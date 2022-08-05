@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Dict, List, Optional, Tuple
 
 import os
@@ -230,46 +231,16 @@ class DaskParallelRunner(Runner):
         self,
         config: Configuration,
         instance: str | None = None,
-        algorithm_walltime_limit: float | None = None,
         seed: int = 0,
         budget: float | None = None,
         instance_specific: str = "0",
     ) -> Tuple[StatusType, float | list[float], float, Dict]:
         """This method only complies with the abstract parent class. In the parallel case, we call
         the single worker run() method.
-
-        Parameters
-        ----------
-        config : Configuration
-            dictionary param -> value
-        instance : string
-            problem instance
-        algorithm_walltime_limit : float, optional
-            Wallclock time limit of the target algorithm. If no value is
-            provided no limit will be enforced.
-        seed : int
-            random seed
-        budget : float, optional
-            A positive, real-valued number representing an arbitrary limit to the target
-            algorithm. Handled by the target algorithm internally
-        instance_specific: str
-            instance specific information (e.g., domain file or solution)
-
-        Returns
-        -------
-        status: enum of StatusType (int)
-            {SUCCESS, TIMEOUT, CRASHED, ABORT}
-        cost: float
-            cost/regret/quality (float) (None, if not returned by TA)
-        runtime: float
-            runtime (None if not returned by TA)
-        additional_info: dict
-            all further additional run information
         """
         return self.single_worker.run(
             config=config,
             instance=instance,
-            algorithm_walltime_limit=algorithm_walltime_limit,
             seed=seed,
             budget=budget,
             instance_specific=instance_specific,
