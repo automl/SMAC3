@@ -24,6 +24,10 @@ def target_delayed(x, seed, instance):
     return x**2, {"key": seed, "instance": instance}
 
 
+def target_failed(x, seed, instance):
+    raise RuntimeError("Failed.")
+
+
 class TestTargetAlgorithmRunner(unittest.TestCase):
     def setUp(self):
         self.cs = ConfigurationSpace()
@@ -57,7 +61,6 @@ class TestTargetAlgorithmRunner(unittest.TestCase):
         self.assertEqual(run_values[0][1].status, StatusType.SUCCESS)
 
     def test_serial_runs(self):
-
         # We use the funcdict as a mechanism to test SerialRunner
         runner = TargetAlgorithmRunner(target_algorithm=target_delayed, stats=self.stats)
         self.assertIsInstance(runner, SerialRunner)
@@ -92,6 +95,29 @@ class TestTargetAlgorithmRunner(unittest.TestCase):
 
         # The run takes a second, so 0.5 is sufficient
         self.assertLess(time.time() - start, 0.5)
+
+    def test_failed(self):
+        runner = TargetAlgorithmRunner(target_algorithm=target_failed, stats=self.stats)
+        self.assertIsInstance(runner, SerialRunner)
+
+        run_info = RunInfo(
+            config=2,
+            instance="test",
+            instance_specific="0",
+            seed=0,
+            budget=0.0,
+        )
+        runner.submit_run(run_info)
+        run_info, result = runner.get_finished_runs()[0]
+
+        # Make sure the traceback message is included
+        self.assertIn("traceback", result.additional_info)
+        self.assertIn(
+            # We expect the problem to occur in the run wrapper
+            # So traceback should show this!
+            "RuntimeError",
+            result.additional_info["traceback"],
+        )
 
 
 if __name__ == "__main__":

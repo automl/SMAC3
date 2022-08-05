@@ -28,7 +28,7 @@ class SerialRunner(Runner):
     stats
     run_obj
     par_factor
-    cost_for_crash
+    crash_cost
     abort_i_first_run_crash
 
     Parameters
@@ -37,15 +37,14 @@ class SerialRunner(Runner):
         target algorithm command line as list of arguments
     stats: Stats()
          stats object to collect statistics about runtime and so on
-    multi_objectives: List[str]
+    objectives: list[str]
         names of the objectives, by default it is a single objective parameter "cost"
     run_obj: str
         run objective of SMAC
     par_factor: int
         penalization factor
-    cost_for_crash : float
-        cost that is used in case of crashed runs (including runs
-        that returned NaN or inf)
+    crash_cost : float | list[float]
+        Cost that is used in case of crashed runs (including runs that returned NaN or inf).
     abort_on_first_run_crash: bool
         if true and first run crashes, raise FirstRunCrashedException
     """
@@ -54,17 +53,17 @@ class SerialRunner(Runner):
         self,
         target_algorithm: list[str] | Callable,
         stats: Stats,
-        multi_objectives: list[str] = ["cost"],
+        objectives: list[str] = ["cost"],
         par_factor: int = 1,
-        cost_for_crash: float | list[float] = float(MAXINT),
+        crash_cost: float | list[float] = float(MAXINT),
         abort_on_first_run_crash: bool = True,
     ):
         super(SerialRunner, self).__init__(
             target_algorithm=target_algorithm,
             stats=stats,
-            multi_objectives=multi_objectives,
+            objectives=objectives,
             par_factor=par_factor,
-            cost_for_crash=cost_for_crash,
+            crash_cost=crash_cost,
             abort_on_first_run_crash=abort_on_first_run_crash,
         )
 
@@ -125,48 +124,41 @@ class SerialRunner(Runner):
     def run(
         self,
         config: Configuration,
-        instance: str,
-        algorithm_walltime_limit: Optional[float] = None,
-        seed: int = 12345,
-        budget: Optional[float] = None,
+        instance: str | None = None,
+        algorithm_walltime_limit: float | None = None,
+        seed: int = 0,
+        budget: float | None = None,
         instance_specific: str = "0",
-    ) -> Tuple[StatusType, float, float, Dict]:
-        """Runs target algorithm <self.target_algorithm> with configuration <config> on instance <instance> with
-        instance specifics.
-
-        <specifics> for at most.
-
-        <algorithm_walltime_limit> seconds and random seed <seed>
-
-        This method exemplifies how to defined the run() method
+    ) -> Tuple[StatusType, float | list[float], float, Dict]:
+        """Runs the target algorithm with a configuration on a single instance with instance specifics.
 
         Parameters
         ----------
-            config : Configuration
-                dictionary param -> value
-            instance : string
-                problem instance
-            algorithm_walltime_limit : float, optional
-                Wallclock time limit of the target algorithm. If no value is
-                provided no limit will be enforced.
-            seed : int
-                random seed
-            budget : float, optional
-                A positive, real-valued number representing an arbitrary limit to the target
-                algorithm. Handled by the target algorithm internally
-            instance_specific: str
-                instance specific information (e.g., domain file or solution)
+        config : Configuration
+            Configuration to be passed to the target algorithm.
+        instance : str, defaults to None
+            The Problem instance.
+        algorithm_walltime_limit : float, defaults to None
+            Walltime limit of the target algorithm. If no value is
+            provided no limit will be enforced. It is casted to integer internally.
+        seed : int, defaults to 0
+            Random seed.
+        budget : float, defaults to None
+            A positive, real-valued number representing an arbitrary limit to the target algorithm
+            Handled by the target algorithm internally.
+        instance_specific : str, defaults to "0"
+            Instance specific information (e.g., domain file or solution).
 
         Returns
         -------
-            status: enum of StatusType (int)
-                {SUCCESS, TIMEOUT, CRASHED, ABORT}
-            cost: float
-                cost/regret/quality (float) (None, if not returned by TA)
-            runtime: float
-                runtime (None if not returned by TA)
-            additional_info: dict
-                all further additional run information
+        status : StatusType
+            Status of the run.
+        cost : float | list[float]
+            cost/regret/quality/runtime (float) (None, if not returned by TA)
+        runtime : float
+            The time the target algorithm took to run.
+        additional_info : dict
+            All further additional run information.
         """
         pass
 

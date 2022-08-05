@@ -68,7 +68,7 @@ class DaskParallelRunner(Runner):
     stats
     run_obj
     par_factor
-    cost_for_crash
+    crash_cost
     abort_i_first_run_crash
     n_workers
     futures
@@ -86,9 +86,9 @@ class DaskParallelRunner(Runner):
         super(DaskParallelRunner, self).__init__(
             target_algorithm=single_worker.target_algorithm,
             stats=single_worker.stats,
-            multi_objectives=single_worker.multi_objectives,
+            objectives=single_worker.objectives,
             par_factor=single_worker.par_factor,
-            cost_for_crash=single_worker.cost_for_crash,
+            crash_cost=single_worker.crash_cost,
             abort_on_first_run_crash=single_worker.abort_on_first_run_crash,
         )
 
@@ -162,7 +162,7 @@ class DaskParallelRunner(Runner):
 
         # At this point we can submit the job
         # For `pure=False`, see
-        #   http://distributed.dask.org/en/stable/client.html#pure-functions-by-default
+        # http://distributed.dask.org/en/stable/client.html#pure-functions-by-default
         self.futures.append(self.client.submit(self.single_worker.run_wrapper, run_info, pure=False))
 
     def get_finished_runs(self) -> List[Tuple[RunInfo, RunValue]]:
@@ -173,9 +173,8 @@ class DaskParallelRunner(Runner):
 
         Returns
         -------
-            List[RunInfo, RunValue]: A list of RunValues (and respective RunInfo), that is,
-                the results of executing a run_info
-            a submitted configuration
+        List[Tuple[RunInfo, RunValue]]
+            A list of RunValues and RunInfo, which are the results of executing the submitted configurations.
         """
         # Proactively see if more configs have finished
         self._extract_completed_runs_from_futures()
@@ -183,6 +182,7 @@ class DaskParallelRunner(Runner):
         results_list = []
         while self.results:
             results_list.append(self.results.pop())
+
         return results_list
 
     def _extract_completed_runs_from_futures(self) -> None:
@@ -194,7 +194,7 @@ class DaskParallelRunner(Runner):
         # In code check to make sure we don;t exceed resource allocation
         if len(self.futures) > sum(self.client.nthreads().values()):
             warnings.warn(
-                "More running jobs than resources available "
+                "More running jobs than resources available. "
                 "Should not have more futures/runs in remote workers "
                 "than the number of workers. This could mean a worker "
                 "crashed and was not able to be recovered by dask. "
@@ -229,12 +229,12 @@ class DaskParallelRunner(Runner):
     def run(
         self,
         config: Configuration,
-        instance: str,
-        algorithm_walltime_limit: Optional[float] = None,
-        seed: int = 12345,
-        budget: Optional[float] = None,
+        instance: str | None = None,
+        algorithm_walltime_limit: float | None = None,
+        seed: int = 0,
+        budget: float | None = None,
         instance_specific: str = "0",
-    ) -> Tuple[StatusType, float, float, Dict]:
+    ) -> Tuple[StatusType, float | list[float], float, Dict]:
         """This method only complies with the abstract parent class. In the parallel case, we call
         the single worker run() method.
 

@@ -32,7 +32,7 @@ class Scenario:
     deterministic: bool = True  # Whether the target algorithm is determinstic or not.
 
     objectives: str | list[str] = "cost"
-    crash_cost: float = np.inf
+    crash_cost: float | list[float] = np.inf
 
     # Limitations
     walltime_limit: float = np.inf

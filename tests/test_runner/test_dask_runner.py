@@ -1,18 +1,18 @@
 # Add below as a WA for
 # https://github.com/dask/distributed/issues/4168
-import multiprocessing.popen_spawn_posix  # noqa
+# import multiprocessing.popen_spawn_posix  # noqa
 import os
 import tempfile
 import time
 import unittest
 import unittest.mock
 
-import dask  # noqa
+# import dask  # noqa
 from dask.distributed import Client
 
-from smac.cli.scenario import Scenario
+from smac.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.runhistory.runhistory import RunInfo, RunValue
+from smac.runhistory import RunInfo, RunValue
 from smac.utils.stats import Stats
 from smac.runner import StatusType
 from smac.runner.dask_runner import DaskParallelRunner
@@ -34,7 +34,7 @@ def target_delayed(x, seed, instance):
 class TestDaskRunner(unittest.TestCase):
     def setUp(self):
         self.cs = ConfigurationSpace()
-        self.scenario = Scenario({"cs": self.cs, "run_obj": "quality", "output_dir": ""})
+        self.scenario = Scenario(configspace=self.cs)
         self.stats = Stats(scenario=self.scenario)
 
     def test_run(self):
@@ -42,7 +42,7 @@ class TestDaskRunner(unittest.TestCase):
         return the expected values/types"""
 
         # We use the funcdict as a mechanism to test Parallel Runner
-        runner = TargetAlgorithmRunner(ta=target, stats=self.stats, run_obj="quality")
+        runner = TargetAlgorithmRunner(target_algorithm=target, stats=self.stats)
         runner = DaskParallelRunner(runner, n_workers=2)
         self.assertIsInstance(runner, DaskParallelRunner)
 
@@ -51,8 +51,6 @@ class TestDaskRunner(unittest.TestCase):
             instance="test",
             instance_specific="0",
             seed=0,
-            cutoff=None,
-            capped=False,
             budget=0.0,
         )
 
@@ -75,7 +73,7 @@ class TestDaskRunner(unittest.TestCase):
         closely in time together"""
 
         # We use the funcdict as a mechanism to test Runner
-        runner = TargetAlgorithmRunner(ta=target_delayed, stats=self.stats, run_obj="quality")
+        runner = TargetAlgorithmRunner(target_algorithm=target_delayed, stats=self.stats)
         runner = DaskParallelRunner(runner, n_workers=2)
 
         run_info = RunInfo(
@@ -83,8 +81,6 @@ class TestDaskRunner(unittest.TestCase):
             instance="test",
             instance_specific="0",
             seed=0,
-            cutoff=None,
-            capped=False,
             budget=0.0,
         )
         runner.submit_run(run_info)
@@ -93,8 +89,6 @@ class TestDaskRunner(unittest.TestCase):
             instance="test",
             instance_specific="0",
             seed=0,
-            cutoff=None,
-            capped=False,
             budget=0.0,
         )
         runner.submit_run(run_info)
@@ -131,7 +125,7 @@ class TestDaskRunner(unittest.TestCase):
         """Make sure we can properly return the number of workers"""
 
         # We use the funcdict as a mechanism to test Runner
-        runner = TargetAlgorithmRunner(ta=target_delayed, stats=self.stats, run_obj="quality")
+        runner = TargetAlgorithmRunner(target_algorithm=target_delayed, stats=self.stats)
         runner = DaskParallelRunner(runner, n_workers=2)
         self.assertEqual(runner.num_workers(), 2)
 
@@ -180,11 +174,10 @@ class TestDaskRunner(unittest.TestCase):
         want to make sure we capture dask exceptions
         """
 
-        def target_nonpickable(x, seed, instance):
-            return x**2, {"key": seed, "instance": instance}
+        def target_failed(x, seed, instance):
+            raise RuntimeError("Failed.")
 
-        runner = TargetAlgorithmRunner(ta=target_nonpickable, stats=self.stats, run_obj="quality")
-
+        runner = TargetAlgorithmRunner(target_algorithm=target_failed, stats=self.stats)
         runner = DaskParallelRunner(runner, n_workers=2)
 
         run_info = RunInfo(
@@ -192,8 +185,6 @@ class TestDaskRunner(unittest.TestCase):
             instance="test",
             instance_specific="0",
             seed=0,
-            cutoff=None,
-            capped=False,
             budget=0.0,
         )
         runner.submit_run(run_info)
@@ -205,13 +196,12 @@ class TestDaskRunner(unittest.TestCase):
         self.assertIn(
             # We expect the problem to occur in the run wrapper
             # So traceback should show this!
-            "target_nonpickable",
+            "RuntimeError",
             result.additional_info["traceback"],
         )
 
         # Make sure the error message is included
         self.assertIn("error", result.additional_info)
-        self.assertIn("Can't pickle local object", result.additional_info["error"])
 
 
 if __name__ == "__main__":

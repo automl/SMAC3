@@ -73,18 +73,17 @@ class Runner(ABC):
         target algorithm
     stats: Stats
          stats object to collect statistics about runtime/additional info
-    multi_objectives: List[str]
+    objectives: List[str]
         names of the objectives, by default it is a single objective parameter "cost"
     run_obj: str
         run objective of SMAC
     par_factor: int
         penalization factor
-    cost_for_crash : float
+    crash_cost : float
         cost that is used in case of crashed runs (including runs
         that returned NaN or inf)
     abort_on_first_run_crash: bool
         if true and first run crashes, raise FirstRunCrashedException
-
 
     Attributes
     ----------
@@ -92,7 +91,7 @@ class Runner(ABC):
     ta
     stats
     par_factor
-    cost_for_crash
+    crash_cost
     abort_on_first_run_crash
     """
 
@@ -100,9 +99,9 @@ class Runner(ABC):
         self,
         target_algorithm: list[str] | Callable,
         stats: Stats,
-        multi_objectives: list[str] = ["cost"],
+        objectives: list[str] = ["cost"],
         par_factor: int = 1,
-        cost_for_crash: float | list[float] = float(MAXINT),
+        crash_cost: float | list[float] = float(MAXINT),
         abort_on_first_run_crash: bool = True,
     ):
         # The results is a FIFO structure, implemented via a list
@@ -114,9 +113,9 @@ class Runner(ABC):
         # implements a ta
         self.target_algorithm = target_algorithm
         self.stats = stats
-        self.multi_objectives = multi_objectives
+        self.objectives = objectives
         self.par_factor = par_factor
-        self.cost_for_crash = cost_for_crash
+        self.crash_cost = crash_cost
         self.abort_on_first_run_crash = abort_on_first_run_crash
         self._supports_memory_limit = False
 
@@ -148,12 +147,12 @@ class Runner(ABC):
     def run(
         self,
         config: Configuration,
-        instance: str,
-        algorithm_walltime_limit: Optional[float] = None,
-        seed: int = 12345,
-        budget: Optional[float] = None,
+        instance: str | None = None,
+        algorithm_walltime_limit: float | None = None,
+        seed: int = 0,
+        budget: float | None = None,
         instance_specific: str = "0",
-    ) -> Tuple[StatusType, float, float, Dict]:
+    ) -> Tuple[StatusType, float | list[float], float, Dict]:
         """Runs target algorithm <self.target_algorithm> with configuration <config> on instance <instance> with
         instance specifics.
 
@@ -217,21 +216,6 @@ class Runner(ABC):
         """
         start = time.time()
 
-        # if run_info.algorithm_walltime_limit is None and self.run_obj == "runtime":
-        #    raise RuntimeError("DEPRECATED. REMOVE!")
-        #
-        #    if logger:
-        #        logger.critical(
-        #            "For scenarios optimizing running time "
-        #            "(run objective), a algorithm_walltime_limit time is required, "
-        #            "but not given to this call."
-        #        )
-        #    raise ValueError(
-        #        "For scenarios optimizing running time "
-        #        "(run objective), a algorithm_walltime_limit time is required, "
-        #        "but not given to this call."
-        #    )
-
         algorithm_walltime_limit = None
         if run_info.algorithm_walltime_limit is not None:
             algorithm_walltime_limit = int(math.ceil(run_info.algorithm_walltime_limit))
@@ -247,7 +231,7 @@ class Runner(ABC):
             )
         except Exception as e:
             status = StatusType.CRASHED
-            cost = self.cost_for_crash  # type: ignore
+            cost = self.crash_cost
             runtime = time.time() - start
 
             # Add context information to the error message
@@ -264,33 +248,12 @@ class Runner(ABC):
         if not np.all(np.isfinite(cost)):
             logger.warning(
                 f"Target algorithm returned infinity or nothing at all. Result is treated as CRASHED "
-                f"and cost is set to {self.cost_for_crash}."
+                f"and cost is set to {self.crash_cost}."
             )
             status = StatusType.CRASHED
 
-        # if self.run_obj == "runtime":
-        #    # The following line pleases mypy - we already check for algorithm_walltime_limit not being none above,
-        #    # prior to calling run. However, mypy assumes that the data type of algorithm_walltime_limit
-        #    # is still Optional[int]
-        #    assert algorithm_walltime_limit is not None
-        #    if runtime > self.par_factor * algorithm_walltime_limit:
-        #        logger.warning(
-        #            "Returned running time is larger "
-        #            "than {0} times the passed algorithm_walltime_limit time. "
-        #            "Clamping to {0} x algorithm_walltime_limit.".format(self.par_factor)
-        #        )
-        #        runtime = algorithm_walltime_limit * self.par_factor
-        #        status = StatusType.TIMEOUT
-        #    if status == StatusType.SUCCESS:
-        #        cost = runtime
-        #    else:
-        #        cost = algorithm_walltime_limit * self.par_factor
-        #    if status == StatusType.TIMEOUT and run_info.capped:
-        #        status = StatusType.CAPPED
-        # else:
-
         if status == StatusType.CRASHED:
-            cost = self.cost_for_crash  # type: ignore
+            cost = self.crash_cost
 
         return run_info, RunValue(
             status=status,
