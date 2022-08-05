@@ -145,25 +145,27 @@ class AbstractTargetAlgorithmRunner(SerialRunner):
         cost = result
 
         # Do some sanity checking (for multi objective)
-        if len(self.objectives) > 1:
-            error = f"Returned costs {cost} does not match the number of objectives {len(self.objectives)}."
+        error = f"Returned costs {cost} does not match the number of objectives {self.objectives}."
 
-            # If dict convert to array make sure the ordering is correct.
-            if isinstance(cost, dict):
-                ordered_cost = []
-                for name in self.objectives:
-                    if name not in cost:
-                        raise RuntimeError(f"Objective {name} was not found in the returned costs.")
-
-                    ordered_cost.append(cost[name])
-                cost = ordered_cost
-
-            if isinstance(cost, list):
-                if len(cost) != len(self.objectives):
-                    raise RuntimeError(error)
-
-            if isinstance(cost, float):
+        # If dict convert to array make sure the ordering is correct.
+        if isinstance(cost, dict):
+            if len(cost) != len(self.objectives):
                 raise RuntimeError(error)
+
+            ordered_cost = []
+            for name in self.objectives:
+                if name not in cost:
+                    raise RuntimeError(f"Objective {name} was not found in the returned costs.")
+
+                ordered_cost.append(cost[name])
+            cost = ordered_cost
+
+        if isinstance(cost, list):
+            if len(cost) != len(self.objectives):
+                raise RuntimeError(error)
+
+        if isinstance(cost, float):
+            raise RuntimeError(error)
 
         if cost is None:
             status = StatusType.CRASHED

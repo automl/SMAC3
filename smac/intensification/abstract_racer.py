@@ -77,8 +77,8 @@ class AbstractRacer(object):
     def __init__(
         self,
         instances: List[str],
-        instance_specifics: Optional[Mapping[str, str]] = None,
-        algorithm_walltime_limit: Optional[float] = None,
+        instance_specifics: Mapping[str, str] | None = None,
+        algorithm_walltime_limit: float | None = None,
         deterministic: bool = False,
         min_config_calls: int = 1,
         max_config_calls: int = 2000,
