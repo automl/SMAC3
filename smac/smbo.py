@@ -419,7 +419,16 @@ class SMBO:
         time_left: float
             time in [sec] available to perform intensify
         """
-        # update SMAC stats
+        # We removed `abort_on_first_run_crash` and therefore we expect the first
+        # run to always succeed.
+        if self.stats.finished == 0 and result.status == StatusType.CRASHED:
+            additional_info = ""
+            if "traceback" in result.additional_info:
+                additional_info = "\n\n" + result.additional_info["traceback"]
+
+            raise FirstRunCrashedException("The first run crashed. Please check your setup again." + additional_info)
+
+        # Update SMAC stats
         self.stats.target_algorithm_walltime_used += float(result.time)
         self.stats.finished += 1
 
@@ -451,15 +460,6 @@ class SMBO:
             self._stop = True
             return
 
-        # We removed `abort_on_first_run_crash` and therefore we expect the first
-        # run to always succeed.
-        if self.stats.finished == 1 and result.status == StatusType.CRASHED:
-            additional_info = ""
-            if "traceback" in result.additional_info:
-                additional_info = "\n\n" + result.additional_info["traceback"]
-
-            raise FirstRunCrashedException("The first run crashed. Please check your setup again" + additional_info)
-
         # Update the intensifier with the result of the runs
         self.incumbent, _ = self.intensifier.process_results(
             run_info=run_info,
@@ -475,7 +475,7 @@ class SMBO:
             # If a callback returns False, the optimization loop should be interrupted
             # the other callbacks are still being called.
             if response is False:
-                logger.debug("An IncorporateRunResultCallback returned False, requesting abort.")
+                logger.debug("An IncorporateRunResultCallback returned False. Abort is requested.")
                 self._stop = True
 
         # We always save immediately
