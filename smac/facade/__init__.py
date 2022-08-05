@@ -50,6 +50,8 @@ class Facade:
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
         # Level of logging; if path passed: yaml file expected; if none: use default logging from logging.yml
         logging_level: int | Path | None = None,
+        # Overwrites the results if they are already given; otherwise, the user is asked
+        overwrite: bool = False,
     ):
         setup_logging(logging_level)
 
@@ -92,11 +94,12 @@ class Facade:
             else:
                 objectives = scenario.objectives
 
-            # We wrap our algorithm with the AlgorithmExecuter to use pynisher
+            # We wrap our algorithm with the AlgorithmExecuter to (potentially) use pynisher
             # and to catch exceptions
             runner = TargetAlgorithmRunner(
                 target_algorithm,
                 stats=stats,
+                crash_cost=scenario.crash_cost,
                 objectives=objectives,
                 memory_limit=scenario.memory_limit,
                 algorithm_walltime_limit=scenario.algorithm_walltime_limit,
@@ -169,7 +172,7 @@ class Facade:
         # and scenario/stats object are the same. For doing so, we create a specific hash.
         # SMBO recognizes that stats is not empty and hence does not run initial design anymore.
         # Since the runhistory is already updated, the model uses previous data directly.
-        self._continue()
+        self._continue(overwrite)
 
         # And now we save our scenario object.
         # Runhistory and stats are saved by `SMBO` as they change over time.
@@ -194,8 +197,11 @@ class Facade:
         # We have to check that if we use transform_y it's done everywhere
         # For example, if we have LogEI, we also need to transform the data inside RunhistoryTransformer
 
-    def _continue(self) -> None:
+    def _continue(self, overwrite: bool = False) -> None:
         """Update the runhistory and stats object if configs (inclusive meta data) are the same."""
+        if overwrite:
+            return
+
         old_output_directory = self.scenario.output_directory
         old_runhistory_filename = self.scenario.output_directory / "runhistory.json"
         old_stats_filename = self.scenario.output_directory / "stats.json"

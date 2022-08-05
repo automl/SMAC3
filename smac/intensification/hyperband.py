@@ -279,7 +279,6 @@ class _Hyperband(_SuccessiveHalving):
             _all_budgets=self.all_budgets[(-self.s - 1) :],
             _n_configs_in_stage=n_configs_in_stage,
             num_initial_challengers=n_challengers,
-            run_obj_time=self.run_obj_time,
             n_seeds=self.n_seeds,
             instance_order=self.instance_order,
             inst_seed_pairs=self.inst_seed_pairs,  # additional argument to avoid
@@ -346,7 +345,6 @@ class Hyperband(ParallelScheduler):
         initial_budget: Optional[float] = None,
         max_budget: Optional[float] = None,
         eta: float = 3,
-        run_obj_time: bool = True,
         n_seeds: Optional[int] = None,
         instance_order: str = "shuffle_once",
         min_challenger: int = 1,
@@ -359,7 +357,6 @@ class Hyperband(ParallelScheduler):
             instance_specifics=instance_specifics,
             algorithm_walltime_limit=algorithm_walltime_limit,
             deterministic=deterministic,
-            run_obj_time=run_obj_time,
             min_challenger=min_challenger,
             seed=seed,
         )

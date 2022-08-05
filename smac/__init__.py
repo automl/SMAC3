@@ -26,9 +26,17 @@ try:
     from smac.facade.black_box import BlackBoxFacade
     from smac.facade.hyperparameter import HyperparameterFacade
     from smac.facade.multi_fidelity import MultiFidelityFacade
+    from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
     from smac.runhistory.runhistory import RunHistory
     from smac.scenario import Scenario
 
-    __all__ = ["Scenario", "RunHistory", "BlackBoxFacade", "HyperparameterFacade", "MultiFidelityFacade"]
+    __all__ = [
+        "Scenario",
+        "RunHistory",
+        "BlackBoxFacade",
+        "HyperparameterFacade",
+        "MultiFidelityFacade",
+        "AlgorithmConfigurationFacade",
+    ]
 except ModuleNotFoundError:
     pass
