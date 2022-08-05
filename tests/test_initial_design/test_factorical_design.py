@@ -10,14 +10,14 @@ from ConfigSpace import (
     UniformFloatHyperparameter,
 )
 
-from smac.initial_design.random_configuration_design import RandomInitialDesign
+from smac.initial_design.factorial_design import FactorialInitialDesign
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class TestRandomConfigurationDesign(unittest.TestCase):
-    def setUp(self):
+class TestFactorial(unittest.TestCase):
+    def test_factorial(self):
         def get_uniform_param(name: str):
             return UniformFloatHyperparameter(name, 0, 1)
 
@@ -37,22 +37,20 @@ class TestRandomConfigurationDesign(unittest.TestCase):
             get_ordinal_param,
         ]
 
-        self.cs = ConfigurationSpace()
-        for j, get_param in enumerate(get_params):
-            param_name = f"x{j}"
-            self.cs.add_hyperparameter(get_param(param_name))
+        dims = np.arange(1, 5)
+        for n_dim in dims:
+            cs = ConfigurationSpace()
+            for i in range(n_dim):
+                for j, get_param in enumerate(get_params):
+                    param_name = f"x{i+1}_{j}"
+                    cs.add_hyperparameter(get_param(param_name))
 
-        for i in range(5):
-            self.cs.add_hyperparameter(UniformFloatHyperparameter("x%d" % (i + len(get_params)), 0, 1))
-
-    def test_random_configurations(self):
-        kwargs = dict(
-            rng=np.random.RandomState(1),
-            traj_logger=unittest.mock.Mock(),
-            ta_run_limit=1000,
-            configs=None,
-            n_configs_x_params=None,
-            max_config_fracs=0.25,
-            init_budget=1,
-        )
-        RandomInitialDesign(cs=self.cs, **kwargs).select_configurations()
+            factorial_kwargs = dict(
+                n_runs=1000,
+                configs=None,
+                n_configs_per_hyperparameter=None,
+                max_config_ratio=0.25,
+                init_budget=1,
+                seed=1,
+            )
+            FactorialInitialDesign(configspace=cs, **factorial_kwargs).select_configurations()

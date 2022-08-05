@@ -19,13 +19,13 @@ __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True) -> GaussianProcess:
+def get_gp(n_dimensions, seed, noise=1e-3, normalize_y=True) -> GaussianProcess:
     from smac.model.gaussian_process.kernels import ConstantKernel, Matern, WhiteKernel
 
     cov_amp = ConstantKernel(
         2.0,
         constant_value_bounds=(1e-10, 2),
-        prior=LognormalPrior(mean=0.0, sigma=1.0, rng=rs),
+        prior=LognormalPrior(mean=0.0, sigma=1.0, seed=seed),
     )
     exp_kernel = Matern(
         np.ones([n_dimensions]),
@@ -35,7 +35,7 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True) -> GaussianProcess:
     noise_kernel = WhiteKernel(
         noise_level=noise,
         noise_level_bounds=(1e-10, 2),
-        prior=HorseshoePrior(scale=0.1, rng=rs),
+        prior=HorseshoePrior(scale=0.1, seed=seed),
     )
     kernel = cov_amp * exp_kernel + noise_kernel
 
@@ -45,6 +45,8 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True) -> GaussianProcess:
     configspace = ConfigurationSpace()
     for i in range(n_dimensions):
         configspace.add_hyperparameter(UniformFloatHyperparameter("x%d" % i, 0, 1))
+
+    rs = np.random.RandomState(seed)
 
     model = GaussianProcess(
         configspace=configspace,
@@ -75,7 +77,7 @@ def get_cat_data(rs):
     return X, Y, cat_dims, cont_dims
 
 
-def get_mixed_gp(cat_dims, cont_dims, rs, noise=1e-3, normalize_y=True):
+def get_mixed_gp(cat_dims, cont_dims, seed, noise=1e-3, normalize_y=True):
     from smac.model.gaussian_process.kernels import (
         ConstantKernel,
         HammingKernel,
@@ -89,7 +91,7 @@ def get_mixed_gp(cat_dims, cont_dims, rs, noise=1e-3, normalize_y=True):
     cov_amp = ConstantKernel(
         2.0,
         constant_value_bounds=(1e-10, 2),
-        prior=LognormalPrior(mean=0.0, sigma=1.0, rng=rs),
+        prior=LognormalPrior(mean=0.0, sigma=1.0, seed=seed),
     )
 
     exp_kernel = Matern(
@@ -107,7 +109,7 @@ def get_mixed_gp(cat_dims, cont_dims, rs, noise=1e-3, normalize_y=True):
     noise_kernel = WhiteKernel(
         noise_level=noise,
         noise_level_bounds=(1e-10, 2),
-        prior=HorseshoePrior(scale=0.1, rng=rs),
+        prior=HorseshoePrior(scale=0.1, seed=seed),
     )
     kernel = cov_amp * (exp_kernel * ham_kernel) + noise_kernel
 
@@ -125,6 +127,8 @@ def get_mixed_gp(cat_dims, cont_dims, rs, noise=1e-3, normalize_y=True):
     for c in cat_dims:
         cs.add_hyperparameter(CategoricalHyperparameter("X%d" % c, [0, 1, 2, 3]))
 
+    rs = np.random.RandomState(seed)
+
     model = GaussianProcess(
         configspace=cs,
         bounds=bounds,
@@ -138,14 +142,15 @@ def get_mixed_gp(cat_dims, cont_dims, rs, noise=1e-3, normalize_y=True):
 
 class TestGP(unittest.TestCase):
     def test_predict_wrong_X_dimensions(self):
-        rs = np.random.RandomState(1)
+        seed = 1
+        rs = np.random.RandomState(seed)
 
         # cont
         X, Y, n_dims = get_cont_data(rs)
         # cat
         X, Y, cat_dims, cont_dims = get_cat_data(rs)
 
-        for model in (get_gp(n_dims, rs), get_mixed_gp(cat_dims, cont_dims, rs)):
+        for model in (get_gp(n_dims, seed), get_mixed_gp(cat_dims, cont_dims, seed=1)):
             X = rs.rand(10)
             self.assertRaisesRegex(ValueError, "Expected 2d array, got 1d array!", model.predict, X)
             X = rs.rand(10, 10, 10)
@@ -155,14 +160,15 @@ class TestGP(unittest.TestCase):
             self.assertRaisesRegex(ValueError, "Rows in X should have 10 entries " "but have 5!", model.predict, X)
 
     def test_predict(self):
-        rs = np.random.RandomState(1)
+        seed = 1
+        rs = np.random.RandomState(seed)
 
         # cont
         X, Y, n_dims = get_cont_data(rs)
         # cat
         X, Y, cat_dims, cont_dims = get_cat_data(rs)
 
-        for model in (get_gp(n_dims, rs), get_mixed_gp(cat_dims, cont_dims, rs)):
+        for model in (get_gp(n_dims, seed), get_mixed_gp(cat_dims, cont_dims, seed)):
             model.train(X[:10], Y[:10])
             m_hat, v_hat = model.predict(X[10:])
             self.assertEqual(m_hat.shape, (10, 1))
@@ -170,11 +176,11 @@ class TestGP(unittest.TestCase):
 
     def test_train_do_optimize(self):
         # Check that do_optimize does not mess with the kernel hyperparameters given to the Gaussian process!
-
-        rs = np.random.RandomState(1)
+        seed = 1
+        rs = np.random.RandomState(seed)
         X, Y, n_dims = get_cont_data(rs)
 
-        model = get_gp(n_dims, rs)
+        model = get_gp(n_dims, seed)
         model._train(X[:10], Y[:10], do_optimize=False)
         theta = model.gp.kernel.theta
         theta_ = model.gp.kernel_.theta
@@ -207,10 +213,11 @@ class TestGP(unittest.TestCase):
 
         fit_mock.side_effect = Dummy()
 
-        rs = np.random.RandomState(1)
+        seed = 1
+        rs = np.random.RandomState(seed)
         X, Y, n_dims = get_cont_data(rs)
 
-        model = get_gp(n_dims, rs)
+        model = get_gp(n_dims, seed)
         fixture = np.exp(model.kernel.theta[-1])
         model._train(X[:10], Y[:10], do_optimize=False)
         self.assertAlmostEqual(np.exp(model.gp.kernel.theta[-1]), fixture + 10)
@@ -232,10 +239,11 @@ class TestGP(unittest.TestCase):
 
         fit_mock.side_effect = Dummy()
 
-        rs = np.random.RandomState(1)
+        seed = 1
+        rs = np.random.RandomState(seed)
         X, Y, n_dims = get_cont_data(rs)
 
-        model = get_gp(n_dims, rs)
+        model = get_gp(n_dims, seed)
         _ = model.kernel.theta
         model._train(X[:10], Y[:10], do_optimize=True)
         np.testing.assert_array_almost_equal(
@@ -246,14 +254,15 @@ class TestGP(unittest.TestCase):
     @unittest.mock.patch.object(GaussianProcess, "predict")
     def test_predict_marginalized_over_instances_no_features(self, rf_mock):
         """The GP should fall back to the regular predict() method."""
-        rs = np.random.RandomState(1)
+        seed = 1
+        rs = np.random.RandomState(seed)
 
         # cont
         X, Y, n_dims = get_cont_data(rs)
         # cat
         X, Y, cat_dims, cont_dims = get_cat_data(rs)
 
-        for ct, model in enumerate((get_gp(n_dims, rs), get_mixed_gp(cat_dims, cont_dims, rs))):
+        for ct, model in enumerate((get_gp(n_dims, seed), get_mixed_gp(cat_dims, cont_dims, seed))):
             model.train(X[:10], Y[:10])
             model.predict(X[10:])
             self.assertEqual(rf_mock.call_count, ct + 1)
@@ -273,15 +282,16 @@ class TestGP(unittest.TestCase):
             dtype=np.float64,
         )
         y = np.array([[0.1], [0.2], [9], [9.2], [100.0], [100.2], [109.0], [109.2]], dtype=np.float64)
-        rs = np.random.RandomState(1)
-        model = get_gp(3, rs)
+        seed = 1
+        rs = np.random.RandomState(seed)
+        model = get_gp(3, seed)
         model.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
 
         mu_hat, var_hat = model.predict(X)
         for y_i, y_hat_i, mu_hat_i in zip(
-            y.reshape((1, -1)).flatten(),
-            mu_hat.reshape((1, -1)).flatten(),
-            var_hat.reshape((1, -1)).flatten(),
+                y.reshape((1, -1)).flatten(),
+                mu_hat.reshape((1, -1)).flatten(),
+                var_hat.reshape((1, -1)).flatten(),
         ):
             self.assertAlmostEqual(y_hat_i, y_i, delta=2)
             self.assertAlmostEqual(mu_hat_i, 0, delta=2)
@@ -309,11 +319,12 @@ class TestGP(unittest.TestCase):
         X, y = sklearn.datasets.load_boston(return_X_y=True)
         # Normalize such that the bounds in get_gp (10) hold
         X = X / X.max(axis=0)
-        rs = np.random.RandomState(1)
-        model = get_gp(X.shape[1], rs)
+        seed = 1
+        rs = np.random.RandomState(seed)
+        model = get_gp(X.shape[1], seed)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [8.712875586609810299, 8.7608419489812271634]
+        maes = [8.886514052493349145, 8.868823494592284107]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]
@@ -326,8 +337,9 @@ class TestGP(unittest.TestCase):
             self.assertAlmostEqual(mae, maes[i])
 
     def test_nll(self):
-        rs = np.random.RandomState(1)
-        gp = get_gp(1, rs)
+        seed = 1
+        rs = np.random.RandomState(seed)
+        gp = get_gp(seed, seed)
         gp.train(np.array([[0], [1]]), np.array([0, 1]))
         n_above_1 = 0
         for i in range(1000):
@@ -349,10 +361,11 @@ class TestGP(unittest.TestCase):
             else:
                 y = np.sin(X).reshape(shape)
 
-            rng = np.random.RandomState(1)
+            seed = 1
+            rng = np.random.RandomState(seed)
             for gp in (
-                get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=False),
-                get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=True),
+                    get_gp(n_dimensions=1, seed=seed, noise=1e-10, normalize_y=False),
+                    get_gp(n_dimensions=1, seed=seed, noise=1e-10, normalize_y=True),
             ):
                 gp._train(X, y)
                 func = gp.sample_functions(X_test=X_test, n_funcs=1)
@@ -364,11 +377,12 @@ class TestGP(unittest.TestCase):
         X = np.arange(-5, 5, 0.1).reshape((-1, 1))
         X_test = np.arange(-5.05, 5.05, 0.1).reshape((-1, 1))
         y = np.sin(X)
+        seed = 1
         rng = np.random.RandomState(1)
-        gp = get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=False)
+        gp = get_gp(n_dimensions=1, seed=seed, noise=1e-10, normalize_y=False)
         gp._train(X, y, do_optimize=False)
         mu_hat, var_hat = gp.predict(X_test)
-        gp_norm = get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=True)
+        gp_norm = get_gp(n_dimensions=1, seed=seed, noise=1e-10, normalize_y=True)
         gp_norm._train(X, y, do_optimize=False)
         mu_hat_prime, var_hat_prime = gp_norm.predict(X_test)
         np.testing.assert_array_almost_equal(mu_hat, mu_hat_prime, decimal=4)
@@ -395,7 +409,7 @@ class TestGP(unittest.TestCase):
             elif line[0] == 1:
                 self.assertTrue(np.isnan(line[2]))
 
-        gp = get_gp(3, np.random.RandomState(1))
+        gp = get_gp(3, 1)
         config_array = gp._impute_inactive(config_array)
         for line in config_array:
             if line[0] == 0:

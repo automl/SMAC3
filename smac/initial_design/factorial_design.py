@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import itertools
 
 import numpy as np
@@ -12,7 +13,6 @@ from ConfigSpace.hyperparameters import (
 from ConfigSpace.util import deactivate_inactive_hyperparameters
 
 from smac.initial_design import InitialDesign
-
 
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
@@ -59,7 +59,6 @@ class FactorialInitialDesign(InitialDesign):
 
         factorial_design = itertools.product(*values)
 
-        self.logger.debug("Initial Design")
         configs = [self.configspace.get_default_configuration()]
         # add middle point in space
         conf_dict = dict([(p.name, v) for p, v in zip(params, mid)])
@@ -72,8 +71,5 @@ class FactorialInitialDesign(InitialDesign):
             conf = deactivate_inactive_hyperparameters(conf_dict, self.configspace)
             conf.origin = "Factorial Design"
             configs.append(conf)
-            self.logger.debug(conf)
-
-        self.logger.debug("Size of factorial design: %d" % (len(configs)))
 
         return configs
