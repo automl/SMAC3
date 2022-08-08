@@ -5,11 +5,11 @@ import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
-from smac.scenario import Scenario
 from smac.intensification.abstract_racer import AbstractRacer
 from smac.runhistory.runhistory import RunHistory
-from smac.utils.stats import Stats
 from smac.runner import StatusType
+from smac.scenario import Scenario
+from smac.utils.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

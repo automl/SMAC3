@@ -3,8 +3,8 @@ MLP with Multi-Fidelity
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets.
-Since we want to take advantage of Multi-Fidelity, the SMAC4MF facade is a good choice. By default,
-SMAC4MF internally runs with `hyperband <https://arxiv.org/abs/1603.06560>`_, which is a combination of an
+Since we want to take advantage of Multi-Fidelity, the multi-fidelity facade is a good choice. By default,
+``MultiFidelityFacade`` internally runs with `hyperband <https://arxiv.org/abs/1603.06560>`_, which is a combination of an
 aggressive racing mechanism and successive halving.
 
 MLP is a deep neural network, and therefore, we choose epochs as fidelity type. The digits dataset
@@ -12,7 +12,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. note::
 
-    This example uses the ``SMAC4MF`` facade, which is the closest implementation to
+    This example uses the ``MultiFidelityFacade`` facade, which is the closest implementation to
     `BOHB <https://github.com/automl/HpBandSter>`_.
 """
 
@@ -22,15 +22,21 @@ logging.basicConfig(level=logging.INFO)
 
 import warnings
 
-from ConfigSpace import ConfigurationSpace, Int, Float, Categorical, EqualsCondition, InCondition
 import numpy as np
-
+from ConfigSpace import (
+    Categorical,
+    ConfigurationSpace,
+    EqualsCondition,
+    Float,
+    InCondition,
+    Int,
+)
 from sklearn.datasets import load_digits
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.neural_network import MLPClassifier
 
-from smac import Scenario, MultiFidelityFacade
+from smac import MultiFidelityFacade, Scenario
 from smac.configspace import ConfigurationSpace
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -120,10 +126,10 @@ if __name__ == "__main__":
     # Define our environment variables
     scenario = Scenario(
         mlp.configspace,
-        walltime_limit=100,  # After 100 seconds, we stop the optimization.
-        n_runs=100,  # We want to evaluate maximum 100 different configurations.
-        min_budget=5,  # We want to train the MLP for at least 5 epochs.
-        max_budget=25,  # We want to train the MLP for at most 25 epochs.
+        walltime_limit=100,  # After 100 seconds, we stop the optimization
+        n_runs=100,  # Evaluate max 100 different configurations
+        min_budget=5,  # Train the MLP for at least 5 epochs
+        max_budget=25,  # Train the MLP for at most 25 epochs
     )
 
     # We want to run five random configurations before starting the optimization.

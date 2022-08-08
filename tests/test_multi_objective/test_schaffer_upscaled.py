@@ -6,10 +6,14 @@ import unittest
 import numpy as np
 from ConfigSpace import ConfigurationSpace, Float
 
-from smac import Scenario, BlackBoxFacade, HyperparameterFacade, AlgorithmConfigurationFacade, multi_objective
+from smac import (
+    AlgorithmConfigurationFacade,
+    BlackBoxFacade,
+    HyperparameterFacade,
+    Scenario,
+    multi_objective,
+)
 from smac.configspace import ConfigurationSpace
-
-
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.multi_objective.parego import ParEGO
 

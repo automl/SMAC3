@@ -4,7 +4,6 @@ from typing import Dict, List, Optional, Tuple
 
 import warnings
 
-
 from smac.chooser import Chooser
 from smac.configspace import Configuration
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent

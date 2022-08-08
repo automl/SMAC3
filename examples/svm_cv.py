@@ -16,7 +16,7 @@ from ConfigSpace.conditions import InCondition
 from sklearn import datasets, svm
 from sklearn.model_selection import cross_val_score
 
-from smac import Scenario, HyperparameterFacade
+from smac import HyperparameterFacade, Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

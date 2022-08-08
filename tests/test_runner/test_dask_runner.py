@@ -10,13 +10,13 @@ import unittest.mock
 # import dask  # noqa
 from dask.distributed import Client
 
-from smac.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.runhistory import RunInfo, RunValue
-from smac.utils.stats import Stats
 from smac.runner import StatusType
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
+from smac.scenario import Scenario
+from smac.utils.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

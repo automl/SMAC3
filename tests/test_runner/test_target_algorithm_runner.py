@@ -2,14 +2,14 @@ import time
 import unittest
 import unittest.mock
 
-from smac import Scenario
-
 from ConfigSpace import ConfigurationSpace
+
+from smac import Scenario
 from smac.runhistory import RunInfo, RunValue
-from smac.utils.stats import Stats
 from smac.runner import StatusType
-from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.runner.serial_runner import SerialRunner
+from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
+from smac.utils.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

@@ -2,14 +2,13 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional, Tuple
 
-
-from smac.scenario import Scenario
+from smac import RunHistory
 from smac.chooser import Chooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.runhistory import RunInfo, RunValue
-from smac import RunHistory
+from smac.scenario import Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

@@ -13,8 +13,8 @@ from ConfigSpace.hyperparameters import (
     OrdinalHyperparameter,
 )
 from ConfigSpace.util import ForbiddenValueError, deactivate_inactive_hyperparameters
-from smac.scenario import Scenario
 
+from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2019, AutoML"

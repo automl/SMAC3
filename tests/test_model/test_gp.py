@@ -289,9 +289,9 @@ class TestGP(unittest.TestCase):
 
         mu_hat, var_hat = model.predict(X)
         for y_i, y_hat_i, mu_hat_i in zip(
-                y.reshape((1, -1)).flatten(),
-                mu_hat.reshape((1, -1)).flatten(),
-                var_hat.reshape((1, -1)).flatten(),
+            y.reshape((1, -1)).flatten(),
+            mu_hat.reshape((1, -1)).flatten(),
+            var_hat.reshape((1, -1)).flatten(),
         ):
             self.assertAlmostEqual(y_hat_i, y_i, delta=2)
             self.assertAlmostEqual(mu_hat_i, 0, delta=2)
@@ -364,8 +364,8 @@ class TestGP(unittest.TestCase):
             seed = 1
             rng = np.random.RandomState(seed)
             for gp in (
-                    get_gp(n_dimensions=1, seed=seed, noise=1e-10, normalize_y=False),
-                    get_gp(n_dimensions=1, seed=seed, noise=1e-10, normalize_y=True),
+                get_gp(n_dimensions=1, seed=seed, noise=1e-10, normalize_y=False),
+                get_gp(n_dimensions=1, seed=seed, noise=1e-10, normalize_y=True),
             ):
                 gp._train(X, y)
                 func = gp.sample_functions(X_test=X_test, n_funcs=1)

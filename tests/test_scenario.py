@@ -1,6 +1,8 @@
 from pathlib import Path
+
 import pytest
 from ConfigSpace import ConfigurationSpace
+
 from smac import Scenario
 
 

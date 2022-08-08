@@ -6,13 +6,15 @@ A simple example on how to use multi-objective optimization is shown.
 """
 
 from __future__ import annotations
+
 from typing import Dict, Tuple
+
 import numpy as np
-from ConfigSpace import ConfigurationSpace, Float, Configuration
+from ConfigSpace import Configuration, ConfigurationSpace, Float
 from matplotlib import pyplot as plt
 
+from smac import HyperparameterFacade, Scenario
 from smac.facade import Facade
-from smac import Scenario, HyperparameterFacade
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

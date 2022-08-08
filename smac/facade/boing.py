@@ -9,10 +9,11 @@ from gpytorch.kernels import MaternKernel, ScaleKernel
 from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
 from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
-from smac.acquisition_function import AbstractAcquisitionFunction
-from smac.acquisition_function import EI
-from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
-from smac.acquisition_optimizer import LocalAndSortedRandomSearch
+from smac.acquisition_function import EI, AbstractAcquisitionFunction
+from smac.acquisition_optimizer import (
+    AbstractAcquisitionOptimizer,
+    LocalAndSortedRandomSearch,
+)
 from smac.chooser.boing_chooser import BOinGChooser
 from smac.chooser.random_chooser import ChooserProb
 from smac.facade.hyperparameter import HyperparameterFacade

@@ -10,8 +10,9 @@ The facade works best on numerical hyperparameter configuration space and should
 be applied to problems with large evaluation budgets (up to 1000 evaluations).
 """
 
-from ConfigSpace import ConfigurationSpace, Configuration, Float
-from smac import Scenario, BlackBoxFacade
+from ConfigSpace import Configuration, ConfigurationSpace, Float
+
+from smac import BlackBoxFacade, Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

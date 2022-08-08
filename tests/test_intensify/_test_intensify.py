@@ -13,9 +13,9 @@ from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.intensification.intensification import Intensifier, IntensifierStage
 from smac.runhistory.runhistory import RunHistory, RunInfo
-from smac.utils.stats import Stats
 from smac.runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
+from smac.utils.stats import Stats
 
 
 def eval_challenger(

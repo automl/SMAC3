@@ -1,8 +1,9 @@
 from __future__ import annotations
-from dataclasses import dataclass
 
 from typing import Any, Dict
+
 import json
+from dataclasses import dataclass
 from enum import Enum
 
 from smac.configspace import Configuration
