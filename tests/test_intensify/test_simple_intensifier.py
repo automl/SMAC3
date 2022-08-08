@@ -5,11 +5,10 @@ import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
-from smac.cli.scenario import Scenario
-from smac.cli.traj_logging import TrajLogger
+from smac import RunHistory, Scenario
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.intensification.simple_intensifier import SimpleIntensifier
-from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
+from smac.runhistory import RunInfo, RunValue
 from smac.utils.stats import Stats
 from smac.runner import StatusType
 
@@ -17,7 +16,7 @@ __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-def get_config_space():
+def get_configspace():
     cs = ConfigurationSpace()
     cs.add_hyperparameter(UniformIntegerHyperparameter(name="a", lower=0, upper=100))
     cs.add_hyperparameter(UniformIntegerHyperparameter(name="b", lower=0, upper=100))
@@ -41,25 +40,18 @@ class TestSimpleIntensifier(unittest.TestCase):
         unittest.TestCase.setUp(self)
 
         self.rh = RunHistory()
-        self.cs = get_config_space()
+        self.cs = get_configspace()
         self.config1 = Configuration(self.cs, values={"a": 7, "b": 11})
         self.config2 = Configuration(self.cs, values={"a": 13, "b": 17})
         self.config3 = Configuration(self.cs, values={"a": 0, "b": 7})
         self.config4 = Configuration(self.cs, values={"a": 29, "b": 31})
 
-        self.scen = Scenario({"cutoff_time": 2, "cs": self.cs, "run_obj": "runtime", "output_dir": ""})
-        self.stats = Stats(scenario=self.scen)
-        self.stats.start_timing()
+        scenario = Scenario(self.cs, algorithm_walltime_limit=2, output_directory="smac3_output_test")
+        self.stats = Stats(scenario=scenario)
+        self.intensifier = SimpleIntensifier(scenario=scenario)
+        self.intensifier._set_stats(self.stats)
 
-        # Create the base object
-        self.intensifier = SimpleIntensifier(
-            stats=self.stats,
-            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-            rng=np.random.RandomState(12345),
-            deterministic=True,
-            run_obj_time=False,
-            instances=[1],
-        )
+        self.stats.start_timing()
 
     def test_get_next_run(self):
         """
@@ -180,7 +172,3 @@ class TestSimpleIntensifier(unittest.TestCase):
         )
         self.assertEqual(incumbent, run_info.config)
         self.assertEqual(inc_perf, 1)
-
-
-if __name__ == "__main__":
-    unittest.main()

@@ -17,7 +17,7 @@ from smac.utils.stats import Stats
 from smac.runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 
-from .test_eval_utils import eval_challenger
+from ._test_eval_utils import eval_challenger
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

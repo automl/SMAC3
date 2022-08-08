@@ -1,17 +1,9 @@
-from ConfigSpace import ConfigurationSpace
+from collections import namedtuple
 
-cs = ConfigurationSpace(
-    {
-        "a": (0.1, 1.5),
-        "b": (2, 10),
-        "c": ["cat", "dog", "mouse"],
-    }
-)
+Point = namedtuple("Point", "x y")
+pt1 = Point(1.0, 5.0)
+pt2 = Point(2.5, 1.5)
 
-config = cs.sample_configuration(1)
-print(config)
 
-config_dict = config.get_dictionary()
-config_dict["a"] = 10000
-
-print(config)
+print(2.0 in pt1)
+print(1.0 in pt1)

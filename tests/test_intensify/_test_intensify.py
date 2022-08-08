@@ -1236,9 +1236,3 @@ class TestIntensify(unittest.TestCase):
         # of get next challenger
         self.assertEqual(intensifier.n_iters, 3)
         self.assertEqual(intensifier.num_chall_run, 1)
-
-
-if __name__ == "__main__":
-    t = TestIntensify()
-    t.setUp()
-    t.test_eval_challenger_1()
