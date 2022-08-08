@@ -21,9 +21,9 @@ class RandomInitialDesign(InitialDesign):
         config: Configuration()
             Initial incumbent configuration
         """
-        configs = self.configspace.sample_configuration(size=self.init_budget)
-        if self.init_budget == 1:
+        configs = self.configspace.sample_configuration(size=self.n_configs)
+        if self.n_configs == 1:
             configs = [configs]
         for config in configs:
-            config.origin = "Random initial design."
+            config.origin = "Random Initial Design"
         return configs

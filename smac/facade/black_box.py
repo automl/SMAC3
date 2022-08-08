@@ -185,20 +185,12 @@ class BlackBoxFacade(Facade):
         min_config_calls: int = 1,
         max_config_calls: int = 3,
     ) -> Intensifier:
-        # Only 1 configuration per SMBO iteration
-        if scenario.deterministic:
-            min_challenger = 1
-
         intensifier = Intensifier(
-            instances=scenario.instances,
-            instance_specifics=scenario.instance_specifics,  # What is that?
-            algorithm_walltime_limit=scenario.algorithm_walltime_limit,
-            deterministic=scenario.deterministic,
+            scenario=scenario,
             min_challenger=min_challenger,
             race_against=scenario.configspace.get_default_configuration(),
             min_config_calls=min_config_calls,
             max_config_calls=max_config_calls,
-            seed=scenario.seed,
         )
 
         return intensifier
@@ -207,22 +199,17 @@ class BlackBoxFacade(Facade):
     def get_initial_design(
         scenario: Scenario,
         *,
-        initial_configs: list[Configuration] | None = None,
-        n_configs_per_hyperparameter: int = 1,
-        max_config_ratio: float = 0.25,
-    ) -> InitialDesign:
-        if len(scenario.configspace.get_hyperparameters()) > 21201:
-            raise ValueError(
-                'The default initial design "Sobol sequence" can only handle up to 21201 dimensions. '
-                'Please use a different initial design, such as the "Latin Hypercube design".',
-            )
+        configs: list[Configuration] | None = None,
+        n_configs: int | None = None,
+        n_configs_per_hyperparamter: int = 10,
+        max_config_ratio: float = 0.25,  # Use at most X*budget in the initial design
+    ) -> SobolInitialDesign:
         initial_design = SobolInitialDesign(
-            configspace=scenario.configspace,
-            n_runs=scenario.n_runs,
-            configs=initial_configs,
-            n_configs_per_hyperparameter=n_configs_per_hyperparameter,
+            scenario=scenario,
+            configs=configs,
+            n_configs=n_configs,
+            n_configs_per_hyperparameter=n_configs_per_hyperparamter,
             max_config_ratio=max_config_ratio,
-            seed=scenario.seed,
         )
         return initial_design
 

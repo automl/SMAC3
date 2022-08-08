@@ -53,11 +53,12 @@ class Scenario:
     instances: np.array | None = None
     instance_features: np.array | None = None
     instance_specifics: Mapping[str, str] | None = None
+    instance_order: str = "shuffle_once"
 
     # Hyperband
-    initial_budget: float | None = None
+    min_budget: float | None = None
     max_budget: float | None = None
-    eta: float = 3
+    # eta: float = 3
 
     # Others
     seed: int = 0  # TODO: Document if seed is set to -1, we use a random seed.

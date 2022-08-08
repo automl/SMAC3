@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from typing import Iterator, List, Mapping, Optional, Tuple
+from typing import Any, Iterator, List, Mapping, Optional, Tuple
 
-import logging
 import time
 from collections import OrderedDict
 from enum import Enum
@@ -13,17 +12,14 @@ from smac.chooser import Chooser
 from smac.configspace import Configuration
 from smac.runhistory import RunInfo, RunValue
 from smac.runhistory.runhistory import RunHistory
+from smac.scenario import Scenario
 from smac.utils.logging import format_array, get_logger
 from smac.utils.stats import Stats
 
 _config_to_run_type = Iterator[Optional[Configuration]]
 
-__author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
 __license__ = "3-clause BSD"
-
-
-logger = get_logger(__name__)
 
 
 class RunInfoIntent(Enum):
@@ -38,7 +34,7 @@ class RunInfoIntent(Enum):
     WAIT = 2  # Wait for more configs to be processed
 
 
-class AbstractRacer(object):
+class AbstractRacer:
     """Base class for all racing methods.
 
     The "intensification" is designed to output a RunInfo object with enough information
@@ -76,41 +72,47 @@ class AbstractRacer(object):
 
     def __init__(
         self,
-        instances: List[str],
-        instance_specifics: Mapping[str, str] | None = None,
-        algorithm_walltime_limit: float | None = None,
-        deterministic: bool = False,
+        scenario: Scenario,
+        # instances: List[str],
+        # instance_specifics: Mapping[str, str] | None = None,
         min_config_calls: int = 1,
         max_config_calls: int = 2000,
         min_challenger: int = 1,
-        seed: int = 0,
+        seed: int | None = None,
     ):
+        self.logger = get_logger(__name__)
+        self.scenario = scenario
         self.stats: Stats | None = None
+
+        if seed is None:
+            seed = scenario.seed
+
         self.seed = seed
         self.rng = np.random.RandomState(seed)
-
-        # scenario info
-        self.algorithm_walltime_limit = algorithm_walltime_limit
-        self.deterministic = deterministic
-
+        self.deterministic = scenario.deterministic
         self.min_config_calls = min_config_calls
         self.max_config_calls = max_config_calls
         self.min_challenger = min_challenger
 
-        # instances
-        if instances is None:
+        # Instances
+        instances: list[Any]
+        if scenario.instances is None:
             instances = []
-        # removing duplicates in the user provided instances
+        else:
+            instances = scenario.instances
+
+        # Removing duplicates in the user provided instances
         self.instances = list(OrderedDict.fromkeys(instances))
 
         # Like what the heck...
         if len(self.instances) == 0:
             self.instances = [None]
 
-        if instance_specifics is None:
-            self.instance_specifics = {}  # type: Mapping[str, str]
+        self.instance_specifics: Mapping[str, str]
+        if scenario.instance_specifics is None:
+            self.instance_specifics = {}
         else:
-            self.instance_specifics = instance_specifics
+            self.instance_specifics = scenario.instance_specifics
 
         # general attributes
         self.run_id = 0  # Number of runs done in an iteration so far
@@ -236,16 +238,16 @@ class AbstractRacer(object):
 
         if challengers:
             # iterate over challengers provided
-            logger.debug("Using challengers provided")
+            self.logger.debug("Using challengers provided")
             chall_gen = (c for c in challengers)  # type: _config_to_run_type
         elif chooser:
             # generating challengers on-the-fly if optimizer is given
-            logger.debug("Generating new challenger from optimizer")
+            self.logger.debug("Generating new challenger from optimizer")
             chall_gen = chooser.ask()
         else:
             raise ValueError("No configurations/chooser provided. Cannot generate challenger!")
 
-        logger.debug("Time to select next challenger: %.4f" % (time.time() - start_time))
+        self.logger.debug("Time to select next challenger: %.4f" % (time.time() - start_time))
 
         # select challenger from the generators
         assert chall_gen is not None
@@ -258,7 +260,7 @@ class AbstractRacer(object):
             if challenger not in used_configs:
                 return challenger
 
-        logger.debug("No valid challenger was generated!")
+        self.logger.debug("No valid challenger was generated!")
         return None
 
     def _compare_configs(
@@ -311,7 +313,7 @@ class AbstractRacer(object):
             chal_perf_format = format_array(chal_perf)
             inc_perf_format = format_array(inc_perf)
             # Incumbent beats challenger
-            logger.debug(
+            self.logger.debug(
                 f"Incumbent ({inc_perf_format}) is better than challenger "
                 f"({chal_perf_format}) on {len(chall_runs)} runs."
             )
@@ -324,7 +326,7 @@ class AbstractRacer(object):
                 chal_perf_format = format_array(chal_perf)
                 inc_perf_format = format_array(inc_perf)
 
-                logger.debug(
+                self.logger.debug(
                     f"Incumbent ({inc_perf_format}) is at least as good as the "
                     f"challenger ({chal_perf_format}) on {len(chall_runs)} runs."
                 )
@@ -341,7 +343,7 @@ class AbstractRacer(object):
             chal_perf_format = format_array(chal_perf)
             inc_perf_format = format_array(inc_perf)
 
-            logger.info(
+            self.logger.info(
                 f"Challenger ({chal_perf_format}) is better than incumbent ({inc_perf_format}) " f"on {n_samples} runs."
             )
             self._log_incumbent_changes(incumbent, challenger)
@@ -361,9 +363,9 @@ class AbstractRacer(object):
         challenger: Configuration,
     ) -> None:
         params = sorted([(param, incumbent[param], challenger[param]) for param in challenger.keys()])
-        logger.info("Changes in incumbent:")
+        self.logger.info("Changes in incumbent:")
         for param in params:
             if param[1] != param[2]:
-                logger.info("--- %s: %r -> %r" % param)
+                self.logger.info("--- %s: %r -> %r" % param)
             else:
-                logger.debug("--- %s remains unchanged: %r", param[0], param[1])
+                self.logger.debug("--- %s remains unchanged: %r", param[0], param[1])

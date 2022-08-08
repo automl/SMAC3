@@ -216,6 +216,12 @@ class Facade:
                 # Stats use the output directory from the config directly.
                 self.runhistory.load_json(str(old_runhistory_filename), cs=self.scenario.configspace)
                 self.stats.load()
+
+                # Reset runhistory and stats if first run was not successful
+                if self.stats.submitted == 1 and self.stats.finished == 0:
+                    logger.info("Since the previous run was not successful, SMAC will start from scratch again.")
+                    self.runhistory.reset()
+                    self.stats.reset()
             else:
                 diff = recursively_compare_dicts(self.scenario.__dict__, old_scenario.__dict__, level="scenario")
                 logger.info(

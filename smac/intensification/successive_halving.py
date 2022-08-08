@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from typing import Dict, List, Mapping, Optional, Set, Tuple, Union
+from typing import Dict, List, Optional, Set, Tuple, Union
 
-import logging
 import warnings
 
 import numpy as np
@@ -14,9 +13,200 @@ from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.intensification.parallel_scheduling import ParallelScheduler
 from smac.runhistory import RunInfo, RunValue, StatusType
 from smac.runhistory.runhistory import RunHistory
+from smac.scenario import Scenario
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2019, ML4AAD"
 __license__ = "3-clause BSD"
+
+
+class SuccessiveHalving(ParallelScheduler):
+    """Races multiple challengers against an incumbent using Successive Halving method.
+
+    Implementation following the description in
+    "BOHB: Robust and Efficient Hyperparameter Optimization at Scale" (Falkner et al. 2018)
+    Supplementary reference: http://proceedings.mlr.press/v80/falkner18a/falkner18a-supp.pdf
+
+    Successive Halving intensifier (and Hyperband) can operate on two kinds of budgets:
+    1. **'Instances' as budget**:
+        When multiple instances are provided or when run objective is "runtime", this is the criterion used as budget
+        for successive halving iterations i.e., the budget determines how many instances the challengers are evaluated
+        on at a time. Top challengers for the next iteration are selected based on the combined performance across
+        all instances used.
+
+        If ``min_budget`` and ``max_budget`` are not provided, then they are set to 1 and total number
+        of available instances respectively by default.
+
+    2. **'Real-valued' budget**:
+        This is used when there is only one instance provided and when run objective is "quality",
+        i.e., budget is a positive, real-valued number that can be passed to the target algorithm as an argument.
+        It can be used to control anything by the target algorithm, Eg: number of epochs for training a neural network.
+
+        ``min_budget`` and ``max_budget`` are required parameters for this type of budget.
+
+    Examples for successive halving (and hyperband) can be found here:
+    * Runtime objective and multiple instances *(instances as budget)*: `examples/spear_qcp/SMAC4AC_SH_spear_qcp.py`
+    * Quality objective and multiple instances *(instances as budget)*: `examples/SMAC4MF_sgd_instances.py`
+    * Quality objective and single instance *(real-valued budget)*: `examples/SMAC4MF_mlp.py`
+
+    This class instantiates `_SuccessiveHalving` objects on a need basis, that is, to
+    prevent workers from being idle. The actual logic that implements the Successive halving method
+    lies on the _SuccessiveHalving class.
+
+    Parameters
+    ----------
+    stats: smac.stats.stats.Stats
+        stats object
+    rng : np.random.RandomState
+    instances : List[str]
+        list of all instance ids
+    instance_specifics : Mapping[str, str]
+        mapping from instance name to instance specific string
+    algorithm_walltime_limit : Optional[int]
+        algorithm_walltime_limit of TA runs
+    deterministic : bool
+        whether the TA is deterministic or not
+    min_budget : Optional[float]
+        minimum budget allowed for 1 run of successive halving
+    max_budget : Optional[float]
+        maximum budget allowed for 1 run of successive halving
+    eta : float
+        'halving' factor after each iteration in a successive halving run. Defaults to 3
+    num_initial_challengers : Optional[int]
+        number of challengers to consider for the initial budget. If None, calculated internally
+    n_seeds : Optional[int]
+        Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
+    instance_order : Optional[str]
+        how to order instances. Can be set to: [None, shuffle_once, shuffle]
+        * None - use as is given by the user
+        * shuffle_once - shuffle once and use across all SH run (default)
+        * shuffle - shuffle before every SH run
+    inst_seed_pairs : List[Tuple[str, int]], optional
+        Do not set this argument, it will only be used by hyperband!
+    min_challenger: int
+        minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
+        raise an exception if a value larger than 1 is passed.
+    incumbent_selection: str
+        How to select incumbent in successive halving. Only active for real-valued budgets.
+        Can be set to: [highest_executed_budget, highest_budget, any_budget]
+        * highest_executed_budget - incumbent is the best in the highest budget run so far (default)
+        * highest_budget - incumbent is selected only based on the highest budget
+        * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
+    """
+
+    def __init__(
+        self,
+        scenario: Scenario,
+        # instances: List[str],
+        # instance_specifics: Mapping[str, str] = None,
+        # algorithm_walltime_limit: Optional[float] = None,
+        # deterministic: bool = False,
+        # min_budget: Optional[float] = None,
+        # max_budget: Optional[float] = None,
+        eta: float = 3,
+        num_initial_challengers: Optional[int] = None,
+        # instance_order: Optional[str] = "shuffle_once",
+        instance_seed_pairs: Optional[List[Tuple[str, int]]] = None,
+        min_challenger: int = 1,
+        incumbent_selection: str = "highest_executed_budget",
+        seed: int | None = None,
+        n_seeds: int | None = None,
+    ) -> None:
+        super().__init__(
+            scenario=scenario,
+            # instances=instances,
+            # instance_specifics=instance_specifics,
+            # algorithm_walltime_limit=algorithm_walltime_limit,
+            # deterministic=deterministic,
+            min_challenger=min_challenger,
+            seed=seed,
+        )
+
+        self.logger = get_logger(__name__)
+
+        # Successive Halving Hyperparameters
+        self.n_seeds = n_seeds
+        self.instance_order = scenario.instance_order
+        self.instance_seed_pairs = instance_seed_pairs
+        self.incumbent_selection = incumbent_selection
+        self._instances = scenario.instances
+        self._instance_specifics = scenario.instance_specifics
+        self.min_budget = scenario.min_budget
+        self.max_budget = scenario.max_budget
+        self.eta = eta
+        self.num_initial_challengers = num_initial_challengers
+
+    def _get_intensifier_ranking(self, intensifier: AbstractRacer) -> Tuple[int, int]:
+        """Given a intensifier, returns how advance it is. This metric will be used to determine
+        what priority to assign to the intensifier.
+
+        Parameters
+        ----------
+        intensifier: AbstractRacer
+            Intensifier to rank based on run progress
+
+        Returns
+        -------
+        ranking: int
+            the higher this number, the faster the intensifier will get
+            the running resources. For hyperband we can use the
+            sh_intensifier stage, for example
+        tie_breaker: int
+            The configurations that have been launched to break ties. For
+            example, in the case of Successive Halving it can be the number
+            of configurations launched
+        """
+        # For mypy -- we expect to work with Hyperband instances
+        assert isinstance(intensifier, _SuccessiveHalving)
+
+        # Each row of this matrix is id, stage, configs+instances for stage
+        # We use sh.run_tracker as a cheap way to know how advanced the run is
+        # in case of stage ties among successive halvers. sh.run_tracker is
+        # also emptied each iteration
+        stage = 0
+        if hasattr(intensifier, "stage"):
+            # Newly created _SuccessiveHalving objects have no stage
+            stage = intensifier.stage
+        return stage, len(intensifier.run_tracker)
+
+    def _add_new_instance(self, num_workers: int) -> bool:
+        """Decides if it is possible to add a new intensifier instance, and adds it. If a new
+        intensifier instance is added, True is returned, else False.
+
+        Parameters
+        ----------
+        num_workers: int
+            the maximum number of workers available
+            at a given time.
+
+        Returns
+        -------
+            Whether or not a successive halving instance was added
+        """
+        if len(self.intensifier_instances) >= num_workers:
+            return False
+
+        sh = _SuccessiveHalving(
+            instances=self._instances,
+            instance_specifics=self._instance_specifics,
+            algorithm_walltime_limit=self.algorithm_walltime_limit,
+            deterministic=self.deterministic,
+            min_budget=self.min_budget,
+            max_budget=self.max_budget,
+            eta=self.eta,
+            num_initial_challengers=self.num_initial_challengers,
+            n_seeds=self.n_seeds,
+            instance_order=self.instance_order,
+            inst_seed_pairs=self.instance_seed_pairs,
+            min_challenger=self.min_challenger,
+            incumbent_selection=self.incumbent_selection,
+            identifier=len(self.intensifier_instances),
+            seed=self.seed,
+        )
+        sh._set_stats(self.stats)
+        self.intensifier_instances[len(self.intensifier_instances)] = sh
+
+        return True
 
 
 class _SuccessiveHalving(AbstractRacer):
@@ -42,7 +232,7 @@ class _SuccessiveHalving(AbstractRacer):
        on at a time. Top challengers for the next iteration are selected based
        on the combined performance across all instances used.
 
-       If ``initial_budget`` and ``max_budget`` are not provided, then they are
+       If ``min_budget`` and ``max_budget`` are not provided, then they are
        set to 1 and total number of available instances respectively by default.
 
     2. **'Real-valued' budget**:
@@ -53,7 +243,7 @@ class _SuccessiveHalving(AbstractRacer):
        It can be used to control anything by the target algorithm,
        Eg: number of epochs for training a neural network.
 
-       ``initial_budget`` and ``max_budget`` are required parameters for
+       ``min_budget`` and ``max_budget`` are required parameters for
        this type of budget.
 
     Parameters
@@ -69,7 +259,7 @@ class _SuccessiveHalving(AbstractRacer):
         algorithm_walltime_limit of TA runs
     deterministic : bool
         whether the TA is deterministic or not
-    initial_budget : Optional[float]
+    min_budget : Optional[float]
         minimum budget allowed for 1 run of successive halving
     max_budget : Optional[float]
         maximum budget allowed for 1 run of successive halving
@@ -108,52 +298,54 @@ class _SuccessiveHalving(AbstractRacer):
 
     def __init__(
         self,
-        instances: List[str],
-        instance_specifics: Mapping[str, str] = None,
-        algorithm_walltime_limit: Optional[float] = None,
-        deterministic: bool = False,
-        initial_budget: Optional[float] = None,
-        max_budget: Optional[float] = None,
+        scenario: Scenario,
+        # instances: List[str],
+        # instance_specifics: Mapping[str, str] = None,
+        # algorithm_walltime_limit: Optional[float] = None,
+        # deterministic: bool = False,
+        # min_budget: Optional[float] = None,
+        # max_budget: Optional[float] = None,
         eta: float = 3,
-        _all_budgets: Optional[np.ndarray] = None,
-        _n_configs_in_stage: Optional[np.ndarray] = None,
-        num_initial_challengers: Optional[int] = None,
-        n_seeds: Optional[int] = None,
-        instance_order: Optional[str] = "shuffle_once",
-        inst_seed_pairs: Optional[List[Tuple[str, int]]] = None,
+        num_initial_challengers: int | None = None,
+        # instance_order: Optional[str] = "shuffle_once",
         min_challenger: int = 1,
         incumbent_selection: str = "highest_executed_budget",
+        instance_seed_pairs: list[Tuple[str, int]] | None = None,
         identifier: int = 0,
-        seed: int = 0,
+        seed: int | None = None,
+        n_seeds: int | None = None,
+        _all_budgets: np.ndarray | None = None,
+        _n_configs_in_stage: np.ndarray | None = None,
     ) -> None:
         super().__init__(
-            instances=instances,
-            instance_specifics=instance_specifics,
-            algorithm_walltime_limit=algorithm_walltime_limit,
-            deterministic=deterministic,
+            # instances=instances,
+            # instance_specifics=instance_specifics,
+            # algorithm_walltime_limit=algorithm_walltime_limit,
+            # deterministic=deterministic,
+            scenario=scenario,
             min_challenger=min_challenger,
             seed=seed,
         )
 
         self.identifier = identifier
-        self.logger = logging.getLogger(self.__module__ + "." + str(self.identifier) + "." + self.__class__.__name__)
+        self.logger = get_logger(f"{__name__}.{identifier}")
 
         if self.min_challenger > 1:
             raise ValueError("Successive Halving cannot handle argument `min_challenger` > 1.")
         self.first_run = True
 
-        # INSTANCES
+        # Instances
         self.n_seeds = n_seeds if n_seeds else 1
-        self.instance_order = instance_order
+        self.instance_order = scenario.instance_order
 
-        # NOTE Remove after solving how to handle multiple seeds and 1 instance
+        # NOTE: Remove after solving how to handle multiple seeds and 1 instance
         if len(self.instances) == 1 and self.n_seeds > 1:
-            raise NotImplementedError("This case (multiple seeds and 1 instance) cannot be handled yet!")
+            raise NotImplementedError("The case multiple seeds and one instance can not be handled yet!")
 
-        # if instances are coming from Hyperband, skip the instance preprocessing section
+        # If instances are coming from Hyperband, skip the instance preprocessing section
         # it is already taken care by Hyperband
 
-        if not inst_seed_pairs:
+        if not instance_seed_pairs:
             # set seed(s) for all SH runs
             # - currently user gives the number of seeds to consider
             if self.deterministic:
@@ -168,26 +360,26 @@ class _SuccessiveHalving(AbstractRacer):
                     )
 
             # storing instances & seeds as tuples
-            self.inst_seed_pairs = [(i, s) for s in seeds for i in self.instances]
+            self.instance_seed_pairs = [(i, s) for s in seeds for i in self.instances]
 
             # determine instance-seed pair order
             if self.instance_order == "shuffle_once":
                 # randomize once
-                self.rng.shuffle(self.inst_seed_pairs)  # type: ignore
+                self.rng.shuffle(self.instance_seed_pairs)  # type: ignore
         else:
-            self.inst_seed_pairs = inst_seed_pairs
+            self.instance_seed_pairs = instance_seed_pairs
 
-        # successive halving parameters
+        # Successive halving parameters
         self._init_sh_params(
-            initial_budget=initial_budget,
-            max_budget=max_budget,
+            # min_budget=scenario.min_budget,
+            # max_budget=max_budget,
             eta=eta,
             num_initial_challengers=num_initial_challengers,
             _all_budgets=_all_budgets,
             _n_configs_in_stage=_n_configs_in_stage,
         )
 
-        # challengers can be repeated only if optimizing across multiple seeds or changing instance orders every run
+        # Challengers can be repeated only if optimizing across multiple seeds or changing instance orders every run
         # (this does not include having multiple instances)
         if self.n_seeds > 1 or self.instance_order == "shuffle":
             self.repeat_configs = True
@@ -228,8 +420,8 @@ class _SuccessiveHalving(AbstractRacer):
 
     def _init_sh_params(
         self,
-        initial_budget: Optional[float],
-        max_budget: Optional[float],
+        # min_budget: Optional[float],
+        # max_budget: Optional[float],
         eta: float,
         num_initial_challengers: Optional[int] = None,
         _all_budgets: Optional[np.ndarray] = None,
@@ -239,7 +431,7 @@ class _SuccessiveHalving(AbstractRacer):
 
         Parameters
         ----------
-        initial_budget : Optional[float]
+        min_budget : Optional[float]
             minimum budget allowed for 1 run of successive halving
         max_budget : Optional[float]
             maximum budget allowed for 1 run of successive halving
@@ -256,49 +448,51 @@ class _SuccessiveHalving(AbstractRacer):
             raise ValueError("eta must be greater than 1")
         self.eta = eta
 
-        # BUDGETS
+        # Budgets
+        min_budget = self.scenario.min_budget
+        max_budget = self.scenario.max_budget
 
-        if max_budget is not None and initial_budget is not None and max_budget < initial_budget:
-            raise ValueError("Max budget has to be larger than min budget")
+        if max_budget is not None and min_budget is not None and max_budget < min_budget:
+            raise ValueError("Max budget has to be larger than min budget.")
 
-        # - if only 1 instance was provided & quality objective, then use algorithm_walltime_limit as budget
-        # - else, use instances as budget
-        if len(self.inst_seed_pairs) <= 1:
+        # If only 1 instance was provided & quality objective, then use algorithm_walltime_limit as budget
+        # else, use instances as budget
+        if len(self.instance_seed_pairs) <= 1:
             # budget with algorithm_walltime_limit
-            if initial_budget is None or max_budget is None:
+            if min_budget is None or max_budget is None:
                 raise ValueError(
                     "Successive Halving with real-valued budget (i.e., only 1 instance) "
-                    "requires parameters initial_budget and max_budget for intensification!"
+                    "requires parameters min_budget and max_budget for intensification!"
                 )
 
-            self.initial_budget = initial_budget
+            self.min_budget = min_budget
             self.max_budget = max_budget
             self.instance_as_budget = False
 
         else:
             # Budget with instances
-            self.initial_budget = int(initial_budget) if initial_budget else 1
-            self.max_budget = int(max_budget) if max_budget else len(self.inst_seed_pairs)
+            self.min_budget = int(min_budget) if min_budget else 1
+            self.max_budget = int(max_budget) if max_budget else len(self.instance_seed_pairs)
             self.instance_as_budget = True
 
-            if self.max_budget > len(self.inst_seed_pairs):
-                raise ValueError("Max budget cannot be greater than the number of instance-seed pairs")
-            if self.max_budget < len(self.inst_seed_pairs):
+            if self.max_budget > len(self.instance_seed_pairs):
+                raise ValueError("Max budget cannot be greater than the number of instance-seed pairs.")
+            if self.max_budget < len(self.instance_seed_pairs):
                 self.logger.warning(
-                    "Max budget (%d) does not include all instance-seed pairs (%d)"
-                    % (self.max_budget, len(self.inst_seed_pairs))
+                    "Max budget (%d) does not include all instance-seed pairs (%d)."
+                    % (self.max_budget, len(self.instance_seed_pairs))
                 )
 
         budget_type = "INSTANCES" if self.instance_as_budget else "REAL-VALUED"
         self.logger.info(
             "Successive Halving configuration: budget type = %s, "
             "Initial budget = %.2f, Max. budget = %.2f, eta = %.2f"
-            % (budget_type, self.initial_budget, self.max_budget, self.eta)
+            % (budget_type, self.min_budget, self.max_budget, self.eta)
         )
 
         # precomputing stuff for SH
         # max. no. of SH iterations possible given the budgets
-        max_sh_iter = int(np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta)))
+        max_sh_iter = int(np.floor(np.log(self.max_budget / self.min_budget) / np.log(self.eta)))
         # initial number of challengers to sample
         if num_initial_challengers is None:
             num_initial_challengers = int(self.eta**max_sh_iter)
@@ -358,7 +552,8 @@ class _SuccessiveHalving(AbstractRacer):
 
         # If The incumbent is None and it is the first run, we use the challenger
         if not incumbent and self.first_run:
-            self.logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
+            # We already displayed this message before
+            # self.logger.info("First run and no incumbent provided. Challenger is assumed to be the incumbent.")
             incumbent = run_info.config
             self.first_run = False
 
@@ -434,8 +629,8 @@ class _SuccessiveHalving(AbstractRacer):
             )
         if is_stage_done:
             self.logger.info(
-                "Successive Halving iteration-step: %d-%d with "
-                "budget [%.2f / %d] - evaluated %d challenger(s)"
+                "Finished Successive Halving iteration-step %d-%d with "
+                "budget [%.2f / %d] and %d evaluated challenger(s)."
                 % (
                     self.sh_iters + 1,
                     self.stage + 1,
@@ -525,7 +720,7 @@ class _SuccessiveHalving(AbstractRacer):
             prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
             n_insts = int(curr_budget) - prev_budget
         else:
-            n_insts = len(self.inst_seed_pairs)
+            n_insts = len(self.instance_seed_pairs)
 
         # The instances remaining tell us, per configuration, how many instances we
         # have suggested to SMBO
@@ -601,7 +796,7 @@ class _SuccessiveHalving(AbstractRacer):
         else:
             inc_sum_cost = np.inf
             if self.first_run:
-                self.logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
+                self.logger.info("First run and no incumbent provided. Challenger is assumed to be the incumbent.")
                 incumbent = challenger
 
         assert type(inc_sum_cost) == float
@@ -609,20 +804,16 @@ class _SuccessiveHalving(AbstractRacer):
         # Selecting instance-seed subset for this budget, depending on the kind of budget
         if self.instance_as_budget:
             prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
-            curr_insts = self.inst_seed_pairs[int(prev_budget) : int(curr_budget)]
+            curr_insts = self.instance_seed_pairs[int(prev_budget) : int(curr_budget)]
         else:
-            curr_insts = self.inst_seed_pairs
+            curr_insts = self.instance_seed_pairs
 
-        self.logger.debug(" Running challenger  -  %s" % str(challenger))
+        self.logger.debug("Running challenger - %s" % str(challenger))
 
         # run the next instance-seed pair for the given configuration
         instance, seed = curr_insts[self.curr_inst_idx[challenger]]  # type: ignore[index]
         # At this point self.curr_inst_idx[challenger] will still be an integer and might
         # be marked LATER with np.inf, so ignore mypy error.
-
-        # selecting algorithm_walltime_limit if running adaptive capping
-        algorithm_walltime_limit = self.algorithm_walltime_limit
-        self.logger.debug(f"Algorithm walltime limit for challenger: {str(algorithm_walltime_limit)}.")
 
         # For testing purposes, this attribute highlights whether a
         # new challenger is proposed or not. Not required from a functional
@@ -733,7 +924,7 @@ class _SuccessiveHalving(AbstractRacer):
 
                 # randomize instance-seed pairs per successive halving run, if user specifies
                 if self.instance_order == "shuffle":
-                    self.rng.shuffle(self.inst_seed_pairs)  # type: ignore
+                    self.rng.shuffle(self.instance_seed_pairs)  # type: ignore
 
         # to track configurations for the next stage
         self.success_challengers = set()  # successful configs
@@ -1041,9 +1232,9 @@ class _SuccessiveHalving(AbstractRacer):
         curr_budget = self.all_budgets[self.stage]
         if self.instance_as_budget:
             prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
-            curr_insts = self.inst_seed_pairs[int(prev_budget) : int(curr_budget)]
+            curr_insts = self.instance_seed_pairs[int(prev_budget) : int(curr_budget)]
         else:
-            curr_insts = self.inst_seed_pairs
+            curr_insts = self.instance_seed_pairs
 
         if activate_configuration_being_intensified is None:
             # When a new stage begins, there is no active configuration.
@@ -1062,189 +1253,3 @@ class _SuccessiveHalving(AbstractRacer):
         # If the there are any pending configuration, or instances/seed pending for the
         # active runner, we return a boolean
         return (total_pending_configurations + pending_instances_to_launch) <= 0
-
-
-class SuccessiveHalving(ParallelScheduler):
-    """Races multiple challengers against an incumbent using Successive Halving method.
-
-    Implementation following the description in
-    "BOHB: Robust and Efficient Hyperparameter Optimization at Scale" (Falkner et al. 2018)
-    Supplementary reference: http://proceedings.mlr.press/v80/falkner18a/falkner18a-supp.pdf
-
-    Successive Halving intensifier (and Hyperband) can operate on two kinds of budgets:
-    1. **'Instances' as budget**:
-        When multiple instances are provided or when run objective is "runtime", this is the criterion used as budget
-        for successive halving iterations i.e., the budget determines how many instances the challengers are evaluated
-        on at a time. Top challengers for the next iteration are selected based on the combined performance across
-        all instances used.
-
-        If ``initial_budget`` and ``max_budget`` are not provided, then they are set to 1 and total number
-        of available instances respectively by default.
-
-    2. **'Real-valued' budget**:
-        This is used when there is only one instance provided and when run objective is "quality",
-        i.e., budget is a positive, real-valued number that can be passed to the target algorithm as an argument.
-        It can be used to control anything by the target algorithm, Eg: number of epochs for training a neural network.
-
-        ``initial_budget`` and ``max_budget`` are required parameters for this type of budget.
-
-    Examples for successive halving (and hyperband) can be found here:
-    * Runtime objective and multiple instances *(instances as budget)*: `examples/spear_qcp/SMAC4AC_SH_spear_qcp.py`
-    * Quality objective and multiple instances *(instances as budget)*: `examples/SMAC4MF_sgd_instances.py`
-    * Quality objective and single instance *(real-valued budget)*: `examples/SMAC4MF_mlp.py`
-
-    This class instantiates `_SuccessiveHalving` objects on a need basis, that is, to
-    prevent workers from being idle. The actual logic that implements the Successive halving method
-    lies on the _SuccessiveHalving class.
-
-    Parameters
-    ----------
-    stats: smac.stats.stats.Stats
-        stats object
-    rng : np.random.RandomState
-    instances : List[str]
-        list of all instance ids
-    instance_specifics : Mapping[str, str]
-        mapping from instance name to instance specific string
-    algorithm_walltime_limit : Optional[int]
-        algorithm_walltime_limit of TA runs
-    deterministic : bool
-        whether the TA is deterministic or not
-    initial_budget : Optional[float]
-        minimum budget allowed for 1 run of successive halving
-    max_budget : Optional[float]
-        maximum budget allowed for 1 run of successive halving
-    eta : float
-        'halving' factor after each iteration in a successive halving run. Defaults to 3
-    num_initial_challengers : Optional[int]
-        number of challengers to consider for the initial budget. If None, calculated internally
-    n_seeds : Optional[int]
-        Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
-    instance_order : Optional[str]
-        how to order instances. Can be set to: [None, shuffle_once, shuffle]
-        * None - use as is given by the user
-        * shuffle_once - shuffle once and use across all SH run (default)
-        * shuffle - shuffle before every SH run
-    inst_seed_pairs : List[Tuple[str, int]], optional
-        Do not set this argument, it will only be used by hyperband!
-    min_challenger: int
-        minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
-        raise an exception if a value larger than 1 is passed.
-    incumbent_selection: str
-        How to select incumbent in successive halving. Only active for real-valued budgets.
-        Can be set to: [highest_executed_budget, highest_budget, any_budget]
-        * highest_executed_budget - incumbent is the best in the highest budget run so far (default)
-        * highest_budget - incumbent is selected only based on the highest budget
-        * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
-    """
-
-    def __init__(
-        self,
-        instances: List[str],
-        instance_specifics: Mapping[str, str] = None,
-        algorithm_walltime_limit: Optional[float] = None,
-        deterministic: bool = False,
-        initial_budget: Optional[float] = None,
-        max_budget: Optional[float] = None,
-        eta: float = 3,
-        num_initial_challengers: Optional[int] = None,
-        n_seeds: Optional[int] = None,
-        instance_order: Optional[str] = "shuffle_once",
-        inst_seed_pairs: Optional[List[Tuple[str, int]]] = None,
-        min_challenger: int = 1,
-        incumbent_selection: str = "highest_executed_budget",
-        seed: int = 0,
-    ) -> None:
-
-        super().__init__(
-            instances=instances,
-            instance_specifics=instance_specifics,
-            algorithm_walltime_limit=algorithm_walltime_limit,
-            deterministic=deterministic,
-            min_challenger=min_challenger,
-            seed=seed,
-        )
-
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
-
-        # Successive Halving Hyperparameters
-        self.n_seeds = n_seeds
-        self.instance_order = instance_order
-        self.inst_seed_pairs = inst_seed_pairs
-        self.incumbent_selection = incumbent_selection
-        self._instances = instances
-        self._instance_specifics = instance_specifics
-        self.initial_budget = initial_budget
-        self.max_budget = max_budget
-        self.eta = eta
-        self.num_initial_challengers = num_initial_challengers
-
-    def _get_intensifier_ranking(self, intensifier: AbstractRacer) -> Tuple[int, int]:
-        """Given a intensifier, returns how advance it is. This metric will be used to determine
-        what priority to assign to the intensifier.
-
-        Parameters
-        ----------
-        intensifier: AbstractRacer
-            Intensifier to rank based on run progress
-
-        Returns
-        -------
-        ranking: int
-            the higher this number, the faster the intensifier will get
-            the running resources. For hyperband we can use the
-            sh_intensifier stage, for example
-        tie_breaker: int
-            The configurations that have been launched to break ties. For
-            example, in the case of Successive Halving it can be the number
-            of configurations launched
-        """
-        # For mypy -- we expect to work with Hyperband instances
-        assert isinstance(intensifier, _SuccessiveHalving)
-
-        # Each row of this matrix is id, stage, configs+instances for stage
-        # We use sh.run_tracker as a cheap way to know how advanced the run is
-        # in case of stage ties among successive halvers. sh.run_tracker is
-        # also emptied each iteration
-        stage = 0
-        if hasattr(intensifier, "stage"):
-            # Newly created _SuccessiveHalving objects have no stage
-            stage = intensifier.stage
-        return stage, len(intensifier.run_tracker)
-
-    def _add_new_instance(self, num_workers: int) -> bool:
-        """Decides if it is possible to add a new intensifier instance, and adds it. If a new
-        intensifier instance is added, True is returned, else False.
-
-        Parameters
-        ----------
-        num_workers: int
-            the maximum number of workers available
-            at a given time.
-
-        Returns
-        -------
-            Whether or not a successive halving instance was added
-        """
-        if len(self.intensifier_instances) >= num_workers:
-            return False
-
-        self.intensifier_instances[len(self.intensifier_instances)] = _SuccessiveHalving(
-            instances=self._instances,
-            instance_specifics=self._instance_specifics,
-            algorithm_walltime_limit=self.algorithm_walltime_limit,
-            deterministic=self.deterministic,
-            initial_budget=self.initial_budget,
-            max_budget=self.max_budget,
-            eta=self.eta,
-            num_initial_challengers=self.num_initial_challengers,
-            n_seeds=self.n_seeds,
-            instance_order=self.instance_order,
-            inst_seed_pairs=self.inst_seed_pairs,
-            min_challenger=self.min_challenger,
-            incumbent_selection=self.incumbent_selection,
-            identifier=len(self.intensifier_instances),
-            seed=self.seed,
-        )
-
-        return True

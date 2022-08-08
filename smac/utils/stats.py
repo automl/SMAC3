@@ -52,7 +52,9 @@ class Stats:
 
     def __init__(self, scenario: Scenario):
         self.scenario = scenario
+        self.reset()
 
+    def reset(self) -> None:
         self.submitted = 0
         self.finished = 0
         self.n_configs = 0
@@ -164,8 +166,8 @@ class Stats:
             f"--- Submitted target algorithm runs: {self.submitted} / {self.scenario.n_runs}\n"
             f"--- Finished target algorithm runs: {self.finished} / {self.scenario.n_runs}\n"
             f"--- Configurations: {self.n_configs}\n"
-            f"--- Used wallclock time: {round(self.get_used_walltime())} / {round(self.scenario.walltime_limit, 2)} sec\n"
-            f"--- Used target algorithm runtime: {round(self.target_algorithm_walltime_used, 2)} / {round(self.scenario.cputime_limit, 2)} sec\n"
+            f"--- Used wallclock time: {round(self.get_used_walltime())} / {self.scenario.walltime_limit} sec\n"
+            f"--- Used target algorithm runtime: {round(self.target_algorithm_walltime_used, 2)} / {self.scenario.cputime_limit} sec\n"
             f"----------------------------------------------------"
         )
 

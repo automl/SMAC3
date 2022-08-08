@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union, cast
 
+import copy
 import inspect
 import math
 import time
@@ -113,10 +114,13 @@ class AbstractTargetAlgorithmRunner(SerialRunner):
         else:
             target_algorithm = self._target_algorithm
 
+        # We don't want the user to change the configuration
+        config_copy = copy.deepcopy(config)
+
         # Call target algorithm
         try:
             start_time = time.time()
-            rval = self._call_target_algorithm(target_algorithm, config, kwargs)
+            rval = self._call_target_algorithm(target_algorithm, config_copy, kwargs)
             runtime = time.time() - start_time
             status = StatusType.SUCCESS
         except WallTimeoutException:
@@ -165,7 +169,8 @@ class AbstractTargetAlgorithmRunner(SerialRunner):
                 raise RuntimeError(error)
 
         if isinstance(cost, float):
-            raise RuntimeError(error)
+            if isinstance(self.objectives, list) and len(self.objectives) != 1:
+                raise RuntimeError(error)
 
         if cost is None:
             status = StatusType.CRASHED

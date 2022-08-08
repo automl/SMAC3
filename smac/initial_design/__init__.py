@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, List, Optional
+from typing import Any, List
 
-import logging
 from collections import OrderedDict
 
 import numpy as np
@@ -14,6 +13,7 @@ from ConfigSpace.hyperparameters import (
     OrdinalHyperparameter,
 )
 from ConfigSpace.util import ForbiddenValueError, deactivate_inactive_hyperparameters
+from smac.scenario import Scenario
 
 from smac.utils.logging import get_logger
 
@@ -36,14 +36,14 @@ class InitialDesign:
         Number of iterations allowed for the target algorithm
     configs: Optional[List[Configuration]]
         List of initial configurations. Disables the arguments ``n_configs_per_hyperparameter`` if given.
-        Either this, or ``n_configs_per_hyperparameter`` or ``init_budget`` must be provided.
+        Either this, or ``n_configs_per_hyperparameter`` or ``n_configs`` must be provided.
     n_configs_per_hyperparameter: int
         how many configurations will be used at most in the initial design (X*D). Either
-        this, or ``init_budget`` or ``configs`` must be provided. Disables the argument
+        this, or ``n_configs`` or ``configs`` must be provided. Disables the argument
         ``n_configs_per_hyperparameter`` if given.
     max_config_ratio: float
         use at most X*budget in the initial design. Not active if a time limit is given.
-    init_budget : int, optional
+    n_configs : int, optional
         Maximal initial budget (disables the arguments ``n_configs_per_hyperparameter`` and ``configs``
         if both are given). Either this, or ``n_configs_per_hyperparameter`` or ``configs`` must be
         provided.
@@ -57,52 +57,58 @@ class InitialDesign:
 
     def __init__(
         self,
-        configspace: ConfigurationSpace,
-        n_runs: int,
-        configs: Optional[List[Configuration]] = None,
-        n_configs_per_hyperparameter: Optional[int] = 10,
+        scenario: Scenario,
+        configs: list[Configuration] | None = None,
+        n_configs: int | None = None,
+        n_configs_per_hyperparameter: int | None = 10,
         max_config_ratio: float = 0.25,
-        init_budget: Optional[int] = None,
-        seed: int = 0,
+        # If seed none, then take seed from scenario
+        seed: int | None = None,
     ):
-        # TODO: Change init_budget to n_configs?
-        self.configspace = configspace
+        self.configspace = scenario.configspace
+
+        if seed is None:
+            seed = scenario.seed
+
         self.seed = seed
         self.rng = np.random.RandomState(seed)
         self.configs = configs
 
         n_params = len(self.configspace.get_hyperparameters())
-        if init_budget is not None:
-            self.init_budget = init_budget
-            if n_configs_per_hyperparameter is not None:
-                logger.debug(
-                    "Ignoring argument `n_configs_per_hyperparameter` (value %d).",
-                    n_configs_per_hyperparameter,
-                )
-        elif configs is not None:
-            self.init_budget = len(configs)
+        if configs is not None:
+            logger.info("Ignoring `n_configs` and `n_configs_per_hyperparameter` since `configs` is given.")
+            self.n_configs = len(configs)
+        elif n_configs is not None:
+            logger.info("Ignoring `configs` and `n_configs_per_hyperparameter` since `n_configs` is given.")
+            self.n_configs = n_configs
         elif n_configs_per_hyperparameter is not None:
-            self.init_budget = int(max(1, min(n_configs_per_hyperparameter * n_params, (max_config_ratio * n_runs))))
+            logger.info("Ignoring `configs` and `n_configs` since `n_configs_per_hyperparameter` is given.")
+            self.n_configs = int(
+                max(1, min(n_configs_per_hyperparameter * n_params, (max_config_ratio * scenario.n_runs)))
+            )
         else:
             raise ValueError(
-                "Need to provide either argument `init_budget`, `configs` or "
+                "Need to provide either argument `configs`, `n_configs` or "
                 "`n_configs_per_hyperparameter`, but provided none of them."
             )
-        if self.init_budget > n_runs:
-            raise ValueError("Initial budget %d cannot be higher than the run limit %d." % (self.init_budget, n_runs))
-        logger.info(f"Running initial design for {self.init_budget} configurations.")
+
+        if self.n_configs > scenario.n_runs:
+            raise ValueError(
+                "Initial budget %d cannot be higher than the run limit %d." % (self.n_configs, scenario.n_runs)
+            )
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
-            "init_budget": self.init_budget,
+            "n_configs": self.n_configs,
             "seed": self.seed,
         }
 
     def select_configurations(self) -> List[Configuration]:
         """Selects the initial configurations."""
-        if self.init_budget == 0:
+        logger.info(f"Retrieving {self.n_configs} configurations for the initial design.")
+        if self.n_configs == 0:
             return []
         if self.configs is None:
             self.configs = self._select_configurations()

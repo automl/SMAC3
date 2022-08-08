@@ -69,17 +69,19 @@ class HyperparameterFacade(Facade):
         return optimizer
 
     @staticmethod
-    def get_intensifier(scenario: Scenario, *, min_challenger=1, min_config_calls=1, max_config_calls=3) -> Intensifier:
+    def get_intensifier(
+        scenario: Scenario,
+        *,
+        min_challenger: int = 1,
+        min_config_calls: int = 1,
+        max_config_calls: int = 3,
+    ) -> Intensifier:
         intensifier = Intensifier(
-            instances=scenario.instances,
-            instance_specifics=scenario.instance_specifics,
-            algorithm_walltime_limit=scenario.algorithm_walltime_limit,
-            deterministic=scenario.deterministic,
+            scenario=scenario,
             min_challenger=min_challenger,
             race_against=scenario.configspace.get_default_configuration(),
             min_config_calls=min_config_calls,
             max_config_calls=max_config_calls,
-            seed=scenario.seed,
         )
 
         return intensifier
@@ -88,17 +90,17 @@ class HyperparameterFacade(Facade):
     def get_initial_design(
         scenario: Scenario,
         *,
-        initial_configs: list[Configuration] | None = None,
+        configs: list[Configuration] | None = None,
+        n_configs: int | None = None,
         n_configs_per_hyperparamter: int = 10,
         max_config_ratio: float = 0.25,  # Use at most X*budget in the initial design
     ) -> SobolInitialDesign:
         return SobolInitialDesign(
-            configspace=scenario.configspace,
-            n_runs=scenario.n_runs,
-            configs=initial_configs,
+            scenario=scenario,
+            configs=configs,
+            n_configs=n_configs,
             n_configs_per_hyperparameter=n_configs_per_hyperparamter,
             max_config_ratio=max_config_ratio,
-            seed=scenario.seed,
         )
 
     @staticmethod

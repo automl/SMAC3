@@ -79,35 +79,33 @@ class AlgorithmConfigurationFacade(Facade):
         min_config_calls=1,
         max_config_calls=2000,
     ) -> Intensifier:
-        if scenario.deterministic:
-            min_challenger = 1
-
         intensifier = Intensifier(
-            instances=scenario.instances,
-            instance_specifics=scenario.instance_specifics,  # What is that?
-            algorithm_walltime_limit=scenario.algorithm_walltime_limit,
-            deterministic=scenario.deterministic,
+            scenario=scenario,
             min_challenger=min_challenger,
             race_against=scenario.configspace.get_default_configuration(),
             min_config_calls=min_config_calls,
             max_config_calls=max_config_calls,
-            seed=scenario.seed,
         )
 
         return intensifier
 
     @staticmethod
-    def get_initial_design(scenario: Scenario, *, initial_configs: list[Configuration] | None = None) -> InitialDesign:
+    def get_initial_design(
+        scenario: Scenario,
+        *,
+        configs: list[Configuration] | None = None,
+    ) -> InitialDesign:
         return DefaultInitialDesign(
-            configspace=scenario.configspace,
-            n_runs=scenario.n_runs,
-            configs=initial_configs,
-            n_configs_per_hyperparameter=0,
-            seed=scenario.seed,
+            scenario=scenario,
+            configs=configs,
         )
 
     @staticmethod
-    def get_random_configuration_chooser(scenario: Scenario, *, random_probability: float = 0.5) -> RandomChooser:
+    def get_random_configuration_chooser(
+        scenario: Scenario,
+        *,
+        random_probability: float = 0.5,
+    ) -> RandomChooser:
         return ChooserProb(prob=random_probability, seed=scenario.seed)
 
     @staticmethod

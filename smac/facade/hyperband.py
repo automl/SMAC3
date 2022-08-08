@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from smac.configspace import Configuration
-from smac.facade.random import ROAR
+from smac.facade.random import RandomFacade
 from smac.initial_design import InitialDesign
 from smac.initial_design.random_configuration_design import RandomInitialDesign
 from smac.intensification.hyperband import Hyperband
@@ -12,7 +12,7 @@ __copyright__ = "Copyright 2019, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class HB4AC(ROAR):
+class HyperbandFacade(RandomFacade):
     """
     Facade to use model-free Hyperband [1]_ for algorithm configuration.
 
@@ -27,30 +27,31 @@ class HB4AC(ROAR):
     """
 
     @staticmethod
-    def get_initial_design(scenario: Scenario, *, initial_configs: list[Configuration] | None = None) -> InitialDesign:
+    def get_initial_design(
+        scenario: Scenario,
+        *,
+        configs: list[Configuration] | None = None,
+        n_configs: int | None = None,
+        n_configs_per_hyperparamter: int = 10,
+        max_config_ratio: float = 0.25,  # Use at most X*budget in the initial design
+    ) -> RandomInitialDesign:
         return RandomInitialDesign(
-            configspace=scenario.configspace,
-            n_runs=scenario.n_runs,
-            configs=initial_configs,
-            n_configs_per_hyperparameter=0,
-            seed=scenario.seed,
+            scenario=scenario,
+            configs=configs,
+            n_configs=n_configs,
+            n_configs_per_hyperparameter=n_configs_per_hyperparamter,
+            max_config_ratio=max_config_ratio,
         )
 
     @staticmethod
     def get_intensifier(
         scenario: Scenario,
         *,
+        eta: int = 3,
         min_challenger: int = 1,
-        instance_order: str = "shuffle_once",
     ) -> Hyperband:
         return Hyperband(
-            instances=scenario.instances,
-            instance_specifics=scenario.instance_specifics,
-            algorithm_walltime_limit=scenario.algorithm_walltime_limit,
-            deterministic=scenario.deterministic,
-            initial_budget=scenario.initial_budget,
-            max_budget=scenario.max_budget,
-            eta=scenario.eta,
+            scenario=scenario,
+            eta=eta,
             min_challenger=min_challenger,
-            seed=scenario.seed,
         )

@@ -111,6 +111,7 @@ output_dir => output_directory
 ta_run_limit/ta-run-limit/runcount-limit/runcount_limit => n_runs
 cs/configspace/config_space => configspace
 max_config_fracs => max_config_ratio
+inst_seed_pairs => instance_seed_pairs
 
 AbstractTAFunc => AbstractAlgorithmExecuter
 ExecuteTAFuncArray/ExecuteTAFuncDict => AlgorithmExecuter
@@ -135,6 +136,7 @@ train_insts/train_instances => instances
 min_chall => min_challenger
 minR => min_config_calls
 maxR => max_config_calls
+initial_budget => min_budget
 
 
 # Known Issues

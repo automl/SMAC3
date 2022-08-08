@@ -1,15 +1,15 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Mapping, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
-import numpy as np
 
+from smac.scenario import Scenario
 from smac.chooser import Chooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
-from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
-from smac.utils.stats import Stats
+from smac.runhistory import RunInfo, RunValue
+from smac import RunHistory
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -35,23 +35,24 @@ class SimpleIntensifier(AbstractRacer):
 
     def __init__(
         self,
-        instances: List[str],
-        instance_specifics: Mapping[str, str] = None,
-        algorithm_walltime_limit: Optional[float] = None,
-        deterministic: bool = False,
-        seed: int = 0,
-        **kwargs: Any,
+        scenario: Scenario,
+        # instances: List[str],
+        # instance_specifics: Mapping[str, str] = None,
+        # algorithm_walltime_limit: Optional[float] = None,
+        # deterministic: bool = False,
+        seed: int | None = None,
     ) -> None:
 
         super().__init__(
-            instances=instances,
-            instance_specifics=instance_specifics,
-            algorithm_walltime_limit=algorithm_walltime_limit,
-            deterministic=deterministic,
-            adaptive_capping_slackfactor=1.0,
+            scenario=scenario,
+            # instances=instances,
+            # instance_specifics=instance_specifics,
+            # algorithm_walltime_limit=algorithm_walltime_limit,
+            # deterministic=deterministic,
             min_challenger=1,
             seed=seed,
         )
+
         # We want to control the number of runs that are sent to
         # the workers. At any time, we want to make sure that if there
         # are just W workers, there should be at max W active runs
@@ -152,6 +153,7 @@ class SimpleIntensifier(AbstractRacer):
             An object that encapsulates the minimum information to
             evaluate a configuration
         """
+
         # We always sample from the configs provided or the EPM
         challenger = self._next_challenger(
             challengers=challengers,

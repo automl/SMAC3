@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from typing import List, Mapping, Optional, Tuple, cast
+from typing import List, Optional, Tuple, cast
 
-import logging
 from collections import Counter
 from enum import Enum
 
@@ -18,6 +17,7 @@ from smac.intensification.abstract_racer import (
 )
 from smac.runhistory import InstSeedBudgetKey, RunInfo, RunValue
 from smac.runhistory.runhistory import RunHistory
+from smac.scenario import Scenario
 from smac.utils.logging import format_array, get_logger
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
@@ -119,40 +119,48 @@ class Intensifier(AbstractRacer):
 
     def __init__(
         self,
-        instances: List[str],
-        instance_specifics: Mapping[str, str] = None,
-        algorithm_walltime_limit: float | None = None,
-        deterministic: bool = False,
+        scenario: Scenario,
+        # instances: List[str],
+        # instance_specifics: Mapping[str, str] = None,
+        # algorithm_walltime_limit: float | None = None,
+        # deterministic: bool = False,
         race_against: Configuration | None = None,
         run_limit: int = MAXINT,
         use_ta_time_bound: bool = False,
         min_config_calls: int = 1,
         max_config_calls: int = 2000,
         min_challenger: int = 2,
-        seed: int = 0,
+        seed: int | None = None,
     ):
         super().__init__(
-            instances=instances,
-            instance_specifics=instance_specifics,
-            algorithm_walltime_limit=algorithm_walltime_limit,
-            deterministic=deterministic,
+            scenario=scenario,
+            # instances=instances,
+            # instance_specifics=instance_specifics,
+            # algorithm_walltime_limit=algorithm_walltime_limit,
+            # deterministic=deterministic,
             min_config_calls=min_config_calls,
             max_config_calls=max_config_calls,
             min_challenger=min_challenger,
             seed=seed,
         )
 
-        # general attributes
+        if scenario.deterministic:
+            if min_challenger != 1:
+                self.logger.info("The number of minimal challengers is set to one for deterministic algorithms.")
+
+            min_challenger = 1
+
+        # General attributes
         self.run_limit = run_limit
         self.race_against = race_against
 
         if self.run_limit < 1:
-            raise ValueError("run_limit must be > 1")
+            raise ValueError("The argument `run_limit` must be greather than 1.")
 
         self.use_ta_time_bound = use_ta_time_bound
         self.elapsed_time = 0.0
 
-        # stage variables
+        # Stage variables
         # the intensification procedure is divided into 4 'stages':
         # 0. run 1st configuration (only in the 1st run when incumbent=None)
         # 1. add incumbent run
@@ -161,7 +169,7 @@ class Intensifier(AbstractRacer):
         self.stage = IntensifierStage.RUN_FIRST_CONFIG
         self.n_iters = 0
 
-        # challenger related variables
+        # Challenger related variables
         self._chall_indx = 0
         self.num_chall_run = 0
         self.current_challenger = None
@@ -169,7 +177,7 @@ class Intensifier(AbstractRacer):
         self.configs_to_run = iter([])  # type: _config_to_run_type
         self.update_configs_to_run = True
 
-        # racing related variables
+        # Racing related variables
         self.to_run = []  # type: List[InstSeedBudgetKey]
         self.inc_sum_cost = np.inf
         self.N = -1
@@ -266,7 +274,7 @@ class Intensifier(AbstractRacer):
             # Line 4
             available_insts = self._get_inc_available_inst(incumbent, runhistory)
             if available_insts and len(inc_runs) < self.max_config_calls:
-                # Lines 5-6-7
+                # Lines 5-7
                 instance, seed = self._get_next_inc_run(available_insts)
 
                 instance_specific = "0"
@@ -281,8 +289,7 @@ class Intensifier(AbstractRacer):
                     budget=0.0,
                 )
             else:
-                # This point marks the transitions from lines 3-7
-                # to 8-18.
+                # This point marks the transitions from lines 3-7 to 8-18
                 logger.debug("No further instance-seed pairs for incumbent available.")
 
                 self.stage = IntensifierStage.RUN_CHALLENGER
@@ -372,15 +379,11 @@ class Intensifier(AbstractRacer):
 
             else:
                 # Lines 8-11
-                incumbent, instance, seed, algorithm_walltime_limit = self._get_next_racer(
+                incumbent, instance, seed = self._get_next_racer(
                     challenger=challenger,
                     incumbent=incumbent,
                     runhistory=runhistory,
                 )
-
-                capped = False
-                if (self.algorithm_walltime_limit is not None) and (algorithm_walltime_limit < self.algorithm_walltime_limit):  # type: ignore[operator] # noqa F821
-                    capped = True
 
                 instance_specific = "0"
                 if instance is not None:
@@ -510,7 +513,7 @@ class Intensifier(AbstractRacer):
     def _get_next_inc_run(
         self,
         available_insts: List[str],
-    ) -> Tuple[str, int, Optional[float]]:
+    ) -> Tuple[str, int]:
         """Method to extract the next seed/instance in which a incumbent run most be evaluated.
 
         Parameters
@@ -632,7 +635,7 @@ class Intensifier(AbstractRacer):
         incumbent: Configuration,
         runhistory: RunHistory,
         log_traj: bool = True,
-    ) -> Tuple[Configuration, str, int, Optional[float]]:
+    ) -> Tuple[Configuration, str, int]:
         """Method to return the next config setting to aggressively race challenger against
         incumbent.
 
@@ -655,8 +658,6 @@ class Intensifier(AbstractRacer):
             Next instance to evaluate
         seed: int
             Seed in which to evaluate the instance
-        algorithm_walltime_limit: Optional[float]
-            Max time for a given instance/seed pair
         """
         # By the time this function is called, the run history might
         # have shifted. Re-populate the list if necessary
@@ -668,12 +669,9 @@ class Intensifier(AbstractRacer):
 
         # Run challenger on all <instance, seed> to run
         instance, seed, _ = self.to_run.pop()
-        algorithm_walltime_limit = self.algorithm_walltime_limit
-
-        logger.debug("Algorithm walltime limit for challenger: %s" % str(algorithm_walltime_limit))
 
         # Line 12
-        return incumbent, instance, seed, algorithm_walltime_limit
+        return incumbent, instance, seed
 
     def _process_racer_results(
         self,

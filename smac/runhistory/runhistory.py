@@ -78,35 +78,37 @@ class RunHistory(Mapping[RunKey, RunValue]):
         self,
         overwrite_existing_runs: bool = False,
     ) -> None:
+        self.overwrite_existing_runs = overwrite_existing_runs
+        self.reset()
+
+    def reset(self) -> None:
         # By having the data in a deterministic order we can do useful tests
         # when we serialize the data and can assume it's still in the same
         # order as it was added.
-        self.data = collections.OrderedDict()  # type: Dict[RunKey, RunValue]
+        self.data: dict[RunKey, RunValue] = collections.OrderedDict()
 
         # for fast access, we have also an unordered data structure
         # to get all instance seed pairs of a configuration.
         # This does not include capped runs.
-        self._configid_to_inst_seed_budget = {}  # type: Dict[int, Dict[InstSeedKey, List[float]]]
+        self._configid_to_inst_seed_budget: dict[int, dict[InstSeedKey, list[float]]] = {}
 
-        self.config_ids = {}  # type: Dict[Configuration, int]
-        self.ids_config = {}  # type: Dict[int, Configuration]
+        self.config_ids: dict[Configuration, int] = {}
+        self.ids_config: dict[int, Configuration] = {}
         self._n_id = 0
 
         # Stores cost for each configuration ID
-        self._cost_per_config = {}  # type: Dict[int, float | list[float]]
+        self._cost_per_config: dict[int, float | list[float]] = {}
         # Stores min cost across all budgets for each configuration ID
-        self._min_cost_per_config = {}  # type: Dict[int, float | list[float]]
+        self._min_cost_per_config: dict[int, float | list[float]] = {}
         # runs_per_config maps the configuration ID to the number of runs for that configuration
         # and is necessary for computing the moving average
-        self.num_runs_per_config = {}  # type: Dict[int, int]
+        self.num_runs_per_config: dict[int, int] = {}
 
         # Store whether a datapoint is "external", which means it was read from
         # a JSON file. Can be chosen to not be written to disk
-        self.external = {}  # type: Dict[RunKey, DataOrigin]
-
-        self.overwrite_existing_runs = overwrite_existing_runs
-        self.num_obj = -1  # type: int
-        self.objective_bounds = []  # type: List[Tuple[float, float]]
+        self.external: dict[RunKey, DataOrigin] = {}
+        self.num_obj: int = -1  # type: int
+        self.objective_bounds: list[Tuple[float, float]] = []
 
     def __contains__(self, k: object) -> bool:
         """Dictionary semantics for `k in runhistory`"""
@@ -793,6 +795,11 @@ class RunHistory(Mapping[RunKey, RunValue]):
             return
 
         config_origins = all_data.get("config_origins", {})
+
+        # self.ids_config = {}
+        # for id_, values in all_data["configs"].items():
+        #    print(values)
+        #    self.ids_config[id_] = Configuration(cs, values=values, origin=config_origins.get(id_, None))
 
         self.ids_config = {
             int(id_): Configuration(cs, values=values, origin=config_origins.get(id_, None))

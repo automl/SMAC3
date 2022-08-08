@@ -54,7 +54,9 @@ class BOinGFacade(HyperparameterFacade):
 
     @staticmethod
     def get_random_configuration_chooser(
-        scenario: Scenario, *, probability: float = 0.08447232371720552
+        scenario: Scenario,
+        *,
+        probability: float = 0.08447232371720552,
     ) -> ChooserProb:
         return ChooserProb(prob=probability)
 
@@ -116,7 +118,7 @@ class BOinGFacade(HyperparameterFacade):
            parameters for building a turbo optimizer. For details, please refer to smac.utils.subspace.turbo
         """
         if model_local_kwargs is None and model_local.__name__ == "GloballyAugmentedLocalGaussianProcess":
-            model_local_kwargs = SMAC4BOING.get_lgpga_local_components()
+            model_local_kwargs = BOinGFacade.get_lgpga_local_components()
 
         return BOinGChooser(
             predict_x_best=predict_x_best,
@@ -134,7 +136,7 @@ class BOinGFacade(HyperparameterFacade):
     @staticmethod
     def get_lgpga_local_components() -> Dict:
         """
-        A function to construct the required components that could be implemented to construct a LGPGA model
+        A function to construct the required components that could be implemented to construct a LGPGA model.
         """
         # The lower bound and upper bounds are set to be identical as SMAC4BB
         cont_kernel_kwargs = {

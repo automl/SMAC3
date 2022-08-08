@@ -67,7 +67,7 @@ class RunKey(collections.namedtuple("RunKey", ["config_id", "instance_id", "seed
         return super().__new__(cls, config_id, instance_id, seed, budget)
 
 
-# NOTE class instead of collection to have a default value for budget/source_id in RunInfo
+# NOTE: class instead of collection to have a default value for budget/source_id in RunInfo
 class RunInfo(
     collections.namedtuple(
         "RunInfo",
@@ -76,7 +76,7 @@ class RunInfo(
             "instance",
             "instance_specific",
             "seed",
-            "algorithm_walltime_limit",
+            # "algorithm_walltime_limit",
             # "capped",
             "budget",
             "source_id",
@@ -92,7 +92,7 @@ class RunInfo(
         instance: Optional[str],
         instance_specific: str,
         seed: int,
-        algorithm_walltime_limit: float | None = None,
+        # algorithm_walltime_limit: float | None = None,
         # capped: bool,
         budget: float = 0.0,
         # In the context of parallel runs, one will have multiple suppliers of
@@ -107,7 +107,7 @@ class RunInfo(
             instance,
             instance_specific,
             seed,
-            algorithm_walltime_limit,
+            # algorithm_walltime_limit,
             # capped,
             budget,
             source_id,

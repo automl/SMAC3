@@ -9,6 +9,7 @@ from ConfigSpace.hyperparameters import Constant
 from scipy.stats.qmc import Sobol
 
 from smac.initial_design import InitialDesign
+from smac.scenario import Scenario
 
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
@@ -26,6 +27,30 @@ class SobolInitialDesign(InitialDesign):
         Don't pass configs to the constructor;
         otherwise factorial design is overwritten
     """
+
+    def __init__(
+        self,
+        scenario: Scenario,
+        configs: list[Configuration] | None = None,
+        n_configs_per_hyperparameter: int | None = 10,
+        max_config_ratio: float = 0.25,
+        n_configs: int | None = None,
+        seed: int | None = None,
+    ):
+        if len(scenario.configspace.get_hyperparameters()) > 21201:
+            raise ValueError(
+                'The default initial design "Sobol sequence" can only handle up to 21201 dimensions. '
+                'Please use a different initial design, such as the "Latin Hypercube design".',
+            )
+
+        super().__init__(
+            scenario,
+            configs,
+            n_configs_per_hyperparameter,
+            max_config_ratio,
+            n_configs,
+            seed,
+        )
 
     def _select_configurations(self) -> List[Configuration]:
         """Selects a single configuration to run.
@@ -47,6 +72,8 @@ class SobolInitialDesign(InitialDesign):
 
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            sobol = sobol_gen.random(self.init_budget)
+            sobol = sobol_gen.random(self.n_configs)
 
-        return self._transform_continuous_designs(design=sobol, origin="Sobol", configspace=self.configspace)
+        return self._transform_continuous_designs(
+            design=sobol, origin="Sobol Initial Design", configspace=self.configspace
+        )

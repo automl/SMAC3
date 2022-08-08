@@ -1,16 +1,16 @@
 from __future__ import annotations
 
-from typing import Dict, List, Mapping, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import warnings
 
-import numpy as np
 
 from smac.chooser import Chooser
 from smac.configspace import Configuration
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.runhistory import RunInfo, RunValue
 from smac.runhistory.runhistory import RunHistory
+from smac.scenario import Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -36,7 +36,7 @@ class ParallelScheduler(AbstractRacer):
         algorithm_walltime_limit of TA runs
     deterministic : bool
         whether the TA is deterministic or not
-    initial_budget : Optional[float]
+    min_budget : Optional[float]
         minimum budget allowed for 1 run of successive halving
     max_budget : Optional[float]
         maximum budget allowed for 1 run of successive halving
@@ -66,27 +66,29 @@ class ParallelScheduler(AbstractRacer):
 
     def __init__(
         self,
-        instances: List[str],
-        instance_specifics: Mapping[str, str] = None,
-        algorithm_walltime_limit: Optional[float] = None,
-        deterministic: bool = False,
-        initial_budget: Optional[float] = None,
-        max_budget: Optional[float] = None,
+        scenario: Scenario,
+        # instances: List[str],
+        # instance_specifics: Mapping[str, str] = None,
+        # algorithm_walltime_limit: Optional[float] = None,
+        # deterministic: bool = False,
+        # min_budget: Optional[float] = None,
+        # max_budget: Optional[float] = None,
         eta: float = 3,
-        num_initial_challengers: Optional[int] = None,
-        n_seeds: Optional[int] = None,
-        instance_order: Optional[str] = "shuffle_once",
-        inst_seed_pairs: Optional[List[Tuple[str, int]]] = None,
+        num_initial_challengers: int | None = None,
+        # instance_order: Optional[str] = "shuffle_once",
         min_challenger: int = 1,
         incumbent_selection: str = "highest_executed_budget",
-        seed: int = 0,
+        instance_seed_pairs: list[Tuple[str, int]] | None = None,
+        seed: int | None = None,
+        n_seeds: int | None = None,
     ) -> None:
 
         super().__init__(
-            instances=instances,
-            instance_specifics=instance_specifics,
-            algorithm_walltime_limit=algorithm_walltime_limit,
-            deterministic=deterministic,
+            scenario=scenario,
+            # instances=instances,
+            # instance_specifics=instance_specifics,
+            # algorithm_walltime_limit=algorithm_walltime_limit,
+            # deterministic=deterministic,
             min_challenger=min_challenger,
             seed=seed,
         )
@@ -138,8 +140,8 @@ class ParallelScheduler(AbstractRacer):
             evaluate a configuration
         """
         if num_workers <= 1 and self.print_worker_warning:
-            warnings.warn(
-                f"{self.__class__.__name__} is executed with {num_workers} workers only. "
+            self.logger.warning(
+                f"{self.__class__.__name__} is executed with {num_workers} worker(s) only. "
                 "Consider to use pynisher to use all available workers."
             )
             self.print_worker_warning = False
@@ -187,8 +189,6 @@ class ParallelScheduler(AbstractRacer):
             instance="0",
             instance_specific="0",
             seed=0,
-            algorithm_walltime_limit=None,
-            capped=False,
             budget=0.0,
         )
 

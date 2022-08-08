@@ -39,6 +39,8 @@ class LatinHypercubeInitialDesign(InitialDesign):
             if isinstance(p, Constant):
                 constants += 1
 
-        lhd = LatinHypercube(d=len(params) - constants, seed=self.rng.randint(0, 1000000)).random(n=self.init_budget)
+        lhd = LatinHypercube(d=len(params) - constants, seed=self.rng.randint(0, 1000000)).random(n=self.n_configs)
 
-        return self._transform_continuous_designs(design=lhd, origin="LHD", configspace=self.configspace)
+        return self._transform_continuous_designs(
+            design=lhd, origin="Latin Hypercube Initial Design", configspace=self.configspace
+        )

@@ -1,29 +1,17 @@
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter
+from ConfigSpace import ConfigurationSpace
 
-# Import SMAC-utilities
-from smac import Scenario
+cs = ConfigurationSpace(
+    {
+        "a": (0.1, 1.5),
+        "b": (2, 10),
+        "c": ["cat", "dog", "mouse"],
+    }
+)
 
-# Import ConfigSpace and different types of parameters
-from smac.configspace import ConfigurationSpace
-from smac import BlackBoxFacade, HyperparameterFacade, MultiFidelityFacade
+config = cs.sample_configuration(1)
+print(config)
 
+config_dict = config.get_dictionary()
+config_dict["a"] = 10000
 
-def quadratic(config) -> float:
-    x = config["x"]
-
-    return x * x
-
-
-if __name__ == "__main__":
-    # Build Configuration Space which defines all parameters and their ranges
-    cs = ConfigurationSpace()
-    x = UniformFloatHyperparameter("x", -100, 100, default_value=-100)
-    cs.add_hyperparameters([x])
-
-    # Scenario object
-    config = Scenario(cs, n_runs=60)
-    # smac = BlackBoxFacade(config, quadratic)
-
-    smac = HyperparameterFacade(config, quadratic, logging_level=0)
-
-    smac.optimize()
+print(config)
