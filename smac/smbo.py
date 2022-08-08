@@ -163,7 +163,13 @@ class SMBO:
                 self.initial_design_configs = [self.configspace.get_default_configuration()]
         else:
             # Restoring state!
-            assert self.incumbent is not None
+            if self.incumbent is None:
+                raise RuntimeError(
+                    "It seems like SMAC restored from a previous state which failed.\n"
+                    "Please remove the previous files and try again. "
+                    "Alternatively, you can set `overwrite` to true in the facade."
+                )
+
             logger.info(f"State restored! Starting optimization with incumbent {self.incumbent.get_dictionary()}.")
             self.stats.print()
 
