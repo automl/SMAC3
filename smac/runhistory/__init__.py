@@ -1,8 +1,7 @@
 from __future__ import annotations
+from dataclasses import dataclass
 
-from typing import Any, Dict, Optional
-
-import collections
+from typing import Any, Dict
 import json
 from enum import Enum
 
@@ -51,74 +50,48 @@ class StatusType(Enum):
         return obj
 
 
-# NOTE class instead of collection to have a default value for budget in RunKey
-class RunKey(collections.namedtuple("RunKey", ["config_id", "instance_id", "seed", "budget"])):
-    __slots__ = ()
-
-    def __new__(
-        cls,  # No type annotation because the 1st argument for a namedtuble is always the class type,
-        # see https://docs.python.org/3/reference/datamodel.html#object.__new__
-        config_id: int,
-        instance_id: Optional[str],
-        seed: Optional[int],
-        budget: float = 0.0,
-    ) -> "RunKey":
-        """Creates a new `RunKey` instance."""
-        return super().__new__(cls, config_id, instance_id, seed, budget)
+@dataclass(frozen=True)
+class RunKey:
+    config_id: int
+    instance_id: str | None = None
+    seed: int | None = None
+    budget: float = 0.0
 
 
-# NOTE: class instead of collection to have a default value for budget/source_id in RunInfo
-class RunInfo(
-    collections.namedtuple(
-        "RunInfo",
-        [
-            "config",
-            "instance",
-            "instance_specific",
-            "seed",
-            # "algorithm_walltime_limit",
-            # "capped",
-            "budget",
-            "source_id",
-        ],
-    )
-):
-    __slots__ = ()
-
-    def __new__(
-        cls,  # No type annotation because the 1st argument for a namedtuble is always the class type,
-        # see https://docs.python.org/3/reference/datamodel.html#object.__new__
-        config: Configuration,
-        instance: Optional[str],
-        instance_specific: str,
-        seed: int,
-        # algorithm_walltime_limit: float | None = None,
-        # capped: bool,
-        budget: float = 0.0,
-        # In the context of parallel runs, one will have multiple suppliers of
-        # configurations. source_id is a new mechanism to track what entity launched
-        # this configuration
-        source_id: int = 0,
-    ) -> "RunInfo":
-        """Creates a new `RunInfo` instance."""
-        return super().__new__(
-            cls,
-            config,
-            instance,
-            instance_specific,
-            seed,
-            # algorithm_walltime_limit,
-            # capped,
-            budget,
-            source_id,
-        )
+@dataclass(frozen=True)
+class InstanceSeedKey:
+    instance_id: str
+    seed: int
 
 
-InstSeedKey = collections.namedtuple("InstSeedKey", ["instance", "seed"])
-InstSeedBudgetKey = collections.namedtuple("InstSeedBudgetKey", ["instance", "seed", "budget"])
-RunValue = collections.namedtuple("RunValue", ["cost", "time", "status", "starttime", "endtime", "additional_info"])
+@dataclass(frozen=True)
+class InstanceSeedBudgetKey:
+    instance_id: str
+    seed: int
+    budget: float
 
 
+@dataclass(frozen=True)
+class RunValue:
+    cost: float | list[float]
+    time: float
+    status: StatusType
+    starttime: float
+    endtime: float
+    additional_info: dict[str, Any]
+
+
+@dataclass(frozen=True)
+class RunInfo:
+    config: Configuration
+    instance: str | None
+    instance_specific: str | None
+    seed: int
+    budget: float = 0.0
+    source_id: int = 0
+
+
+# TODO: Do we really need this?
 class EnumEncoder(json.JSONEncoder):
     """Custom encoder for enum-serialization (implemented for StatusType from tae).
 

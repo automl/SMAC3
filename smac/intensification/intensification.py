@@ -15,7 +15,7 @@ from smac.intensification.abstract_racer import (
     RunInfoIntent,
     _config_to_run_type,
 )
-from smac.runhistory import InstSeedBudgetKey, RunInfo, RunValue
+from smac.runhistory import InstanceSeedBudgetKey, RunInfo, RunValue
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.logging import format_array, get_logger
@@ -178,7 +178,7 @@ class Intensifier(AbstractRacer):
         self.update_configs_to_run = True
 
         # Racing related variables
-        self.to_run = []  # type: List[InstSeedBudgetKey]
+        self.to_run = []  # type: List[InstanceSeedBudgetKey]
         self.inc_sum_cost = np.inf
         self.N = -1
 
@@ -570,7 +570,7 @@ class Intensifier(AbstractRacer):
         # Line 4
         # find all instances that have the most runs on the inc
         inc_runs = runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True)
-        inc_inst = [s.instance for s in inc_runs]
+        inc_inst = [s.instance_id for s in inc_runs]
         inc_inst = list(Counter(inc_inst).items())
 
         inc_inst.sort(key=lambda x: x[1], reverse=True)
@@ -668,7 +668,9 @@ class Intensifier(AbstractRacer):
             )
 
         # Run challenger on all <instance, seed> to run
-        instance, seed, _ = self.to_run.pop()
+        instance_seed_budget_key = self.to_run.pop()
+        instance = instance_seed_budget_key.instance_id
+        seed = instance_seed_budget_key.seed
 
         # Line 12
         return incumbent, instance, seed
@@ -761,7 +763,7 @@ class Intensifier(AbstractRacer):
         incumbent: Configuration,
         N: int,
         runhistory: RunHistory,
-    ) -> Tuple[List[InstSeedBudgetKey], float]:
+    ) -> Tuple[List[InstanceSeedBudgetKey], float]:
         """Returns the minimum list of <instance, seed> pairs to run the challenger on before
         comparing it with the incumbent.
 

@@ -24,8 +24,8 @@ from smac.multi_objective.utils import normalize_costs
 from smac.runhistory import (
     DataOrigin,
     EnumEncoder,
-    InstSeedBudgetKey,
-    InstSeedKey,
+    InstanceSeedBudgetKey,
+    InstanceSeedKey,
     RunKey,
     RunValue,
     StatusType,
@@ -90,7 +90,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         # for fast access, we have also an unordered data structure
         # to get all instance seed pairs of a configuration.
         # This does not include capped runs.
-        self._configid_to_inst_seed_budget: dict[int, dict[InstSeedKey, list[float]]] = {}
+        self._configid_to_inst_seed_budget: dict[int, dict[InstanceSeedKey, list[float]]] = {}
 
         self.config_ids: dict[Configuration, int] = {}
         self.ids_config: dict[int, Configuration] = {}
@@ -159,8 +159,9 @@ class RunHistory(Mapping[RunKey, RunValue]):
     def _update_objective_bounds(self) -> None:
         """Update the objective bounds based on the data in the runhistory."""
         all_costs = []
-        for (costs, _, status, _, _, _) in self.data.values():
-            if status == StatusType.SUCCESS:
+        for run_value in self.data.values():
+            costs = run_value.cost
+            if run_value.status == StatusType.SUCCESS:
                 if not isinstance(costs, Iterable):
                     costs = [costs]
 
@@ -201,19 +202,21 @@ class RunHistory(Mapping[RunKey, RunValue]):
             DataOrigin.INTERNAL,
             DataOrigin.EXTERNAL_SAME_INSTANCES,
         ) and status not in [StatusType.CAPPED, StatusType.RUNNING]:
-            # also add to fast data structure
-            is_k = InstSeedKey(k.instance_id, k.seed)
+            # Also add to fast data structure
+            is_k = InstanceSeedKey(k.instance_id, k.seed)
             self._configid_to_inst_seed_budget[k.config_id] = self._configid_to_inst_seed_budget.get(k.config_id, {})
+
             if is_k not in self._configid_to_inst_seed_budget[k.config_id].keys():
-                # add new inst-seed-key with budget to main dict
+                # Add new inst-seed-key with budget to main dict
                 self._configid_to_inst_seed_budget[k.config_id][is_k] = [k.budget]
-            elif k.budget not in is_k:
-                # append new budget to existing inst-seed-key dict
+            # Before it was k.budget not in is_k
+            elif k.budget != is_k.instance_id and k.budget != is_k.seed:
+                # Append new budget to existing inst-seed-key dict
                 self._configid_to_inst_seed_budget[k.config_id][is_k].append(k.budget)
 
-            # if budget is used, then update cost instead of incremental updates
+            # If budget is used, then update cost instead of incremental updates
             if not self.overwrite_existing_runs and k.budget == 0:
-                # assumes an average across runs as cost function aggregation, this is used for
+                # Assumes an average across runs as cost function aggregation, this is used for
                 # algorithm configuration (incremental updates are used to save time as getting the
                 # cost for > 100 instances is high)
                 self.incremental_update_cost(self.ids_config[k.config_id], v.cost)
@@ -227,7 +230,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
     def _cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
+        instance_seed_budget_keys: Optional[Iterable[InstanceSeedBudgetKey]] = None,
     ) -> list[list[float] | list[list[float]]]:
         """Returns a list of all costs for the given config for further calculations.
         The costs are directly taken from the runhistory data.
@@ -254,8 +257,13 @@ class RunHistory(Mapping[RunKey, RunValue]):
             instance_seed_budget_keys = self.get_runs_for_config(config, only_max_observed_budget=True)
 
         costs = []
-        for i, r, b in instance_seed_budget_keys:
-            k = RunKey(id_, i, r, b)
+        for key in instance_seed_budget_keys:
+            k = RunKey(
+                config_id=id_,
+                instance_id=key.instance_id,
+                seed=key.seed,
+                budget=key.budget,
+            )
             costs.append(self.data[k].cost)
 
         return costs
@@ -488,7 +496,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
     def average_cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
+        instance_seed_budget_keys: Optional[Iterable[InstanceSeedBudgetKey]] = None,
         normalize: bool = False,
     ) -> float | list[float]:
         """Return the average cost of a configuration. This is the mean of costs of all instance-
@@ -531,7 +539,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
     def sum_cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
+        instance_seed_budget_keys: Optional[Iterable[InstanceSeedBudgetKey]] = None,
         normalize: bool = False,
     ) -> float | list[float]:
         """Return the sum of costs of a configuration. This is the sum of costs of all instance-seed
@@ -573,7 +581,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
     def min_cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
+        instance_seed_budget_keys: Optional[Iterable[InstanceSeedBudgetKey]] = None,
         normalize: bool = False,
     ) -> float | list[float]:
         """Return the minimum cost of a configuration.
@@ -668,7 +676,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         cost_per_inst = dict([(inst, np.mean(costs)) for inst, costs in cost_per_inst.items()])
         return cost_per_inst
 
-    def get_runs_for_config(self, config: Configuration, only_max_observed_budget: bool) -> List[InstSeedBudgetKey]:
+    def get_runs_for_config(self, config: Configuration, only_max_observed_budget: bool) -> List[InstanceSeedBudgetKey]:
         """Return all runs (instance seed pairs) for a configuration.
 
         Note
@@ -694,7 +702,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
                 runs[k] = [max(v)]
 
         # convert to inst-seed-budget key
-        rval = [InstSeedBudgetKey(k.instance, k.seed, budget) for k, v in runs.items() for budget in v]
+        rval = [InstanceSeedBudgetKey(k.instance_id, k.seed, budget) for k, v in runs.items() for budget in v]
         return rval
 
     def get_all_configs(self) -> List[Configuration]:
@@ -708,24 +716,26 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
     def get_all_configs_per_budget(
         self,
-        budget_subset: Optional[List] = None,
-    ) -> List[Configuration]:
+        budget_subset: list | None = None,
+    ) -> list[Configuration]:
         """Return all configs in this RunHistory object that have been run on one of these budgets.
 
         Parameters
         ----------
-            budget_subset: list
+        budget_subset: list
 
         Returns
         -------
-            parameter configurations: list
+        parameter configurations: list
         """
         if budget_subset is None:
             return self.get_all_configs()
+
         configs = []
-        for c, i, s, b in self.data.keys():
-            if b in budget_subset:
-                configs.append(self.ids_config[c])
+        for key in self.data.keys():
+            if key.budget in budget_subset:
+                configs.append(self.ids_config[key.config_id])
+
         return configs
 
     def save_json(self, fn: str = "runhistory.json", save_external: bool = False) -> None:
@@ -744,7 +754,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
                     int(k.config_id),
                     str(k.instance_id) if k.instance_id is not None else None,
                     int(k.seed),
-                    float(k.budget) if k[3] is not None else 0,
+                    float(k.budget) if k.budget is not None else 0,
                 ],
                 [v.cost, v.time, v.status, v.starttime, v.endtime, v.additional_info],
             )
