@@ -7,8 +7,7 @@ from smac.initial_design.random_configuration_design import RandomInitialDesign
 from smac.intensification.hyperband import Hyperband
 from smac.scenario import Scenario
 
-__author__ = "Marius Lindauer"
-__copyright__ = "Copyright 2018, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 

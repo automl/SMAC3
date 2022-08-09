@@ -11,7 +11,7 @@ from scipy.stats.qmc import Sobol
 from smac.initial_design import InitialDesign
 from smac.scenario import Scenario
 
-__copyright__ = "Copyright 2018, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 

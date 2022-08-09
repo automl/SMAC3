@@ -35,8 +35,7 @@ import numpy as np
 from smac.cli.input_reader import INSTANCE_FEATURES_TYPE, INSTANCE_TYPE, InputReader
 from smac.constants import MAXINT, N_TREES
 
-__author__ = "Marius Lindauer"
-__copyright__ = "Copyright 2018, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 

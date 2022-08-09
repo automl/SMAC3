@@ -8,7 +8,7 @@ from smac.runhistory import RunInfo, RunValue, StatusType
 from smac.runner import Runner
 from smac.utils.stats import Stats
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 

@@ -11,7 +11,7 @@ from smac.model.base_imputor import BaseImputor
 from smac.model.random_forest import BaseRandomForest
 from smac.model.random_forest.rfr_imputator import RFRImputator
 
-__copyright__ = "Copyright 2015, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 

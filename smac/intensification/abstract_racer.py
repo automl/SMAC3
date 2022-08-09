@@ -18,7 +18,7 @@ from smac.utils.stats import Stats
 
 _config_to_run_type = Iterator[Optional[Configuration]]
 
-__copyright__ = "Copyright 2019, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 

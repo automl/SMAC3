@@ -10,7 +10,7 @@ from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 

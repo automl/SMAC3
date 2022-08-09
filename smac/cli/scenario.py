@@ -10,12 +10,8 @@ from smac.cli.input_reader import InputReader
 
 # from smac.cli.output_writer import OutputWriter
 
-__author__ = "Marius Lindauer, Matthias Feurer, Aaron Kimmig"
-__copyright__ = "Copyright 2016, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
-__maintainer__ = "Marius Lindauer"
-__email__ = "lindauer@cs.uni-freiburg.de"
-__version__ = "0.0.2"
 
 
 class Scenario(object):

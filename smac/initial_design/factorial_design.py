@@ -14,7 +14,7 @@ from ConfigSpace.util import deactivate_inactive_hyperparameters
 
 from smac.initial_design import InitialDesign
 
-__copyright__ = "Copyright 2016, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 

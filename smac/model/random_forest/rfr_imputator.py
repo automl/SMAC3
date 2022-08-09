@@ -11,7 +11,7 @@ import smac.model.base_imputor
 from smac.model.base_model import BaseModel
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2015, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 

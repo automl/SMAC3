@@ -6,12 +6,8 @@ from smac.configspace import Configuration
 from smac.runner import StatusType
 from smac.runner.serial_runner import SerialRunner
 
-__author__ = "Marius Lindauer"
-__copyright__ = "Copyright 2015, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
-__maintainer__ = "Marius Lindauer"
-__email__ = "lindauer@cs.uni-freiburg.de"
-__version__ = "0.0.1"
 
 
 class ExecuteTARunOld(SerialRunner):

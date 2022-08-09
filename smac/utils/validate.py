@@ -22,11 +22,8 @@ from smac.runner import Runner
 from smac.runner.old.execute_ta_run_old import ExecuteTARunOld
 from smac.utils.stats import Stats
 
-__author__ = "Joshua Marben"
-__copyright__ = "Copyright 2017, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
-__maintainer__ = "Joshua Marben"
-__email__ = "joshua.marben@neptun.uni-freiburg.de"
 
 
 def _unbound_tae_starter(

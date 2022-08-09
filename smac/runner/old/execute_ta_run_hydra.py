@@ -10,9 +10,8 @@ from smac.runner.target_algorithm_runner import (
     TargetAlgorithmRunner,
 )
 
-__copyright__ = "Copyright 2018, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
-__maintainer__ = "Marius Lindauer"
 
 
 class ExecuteTARunHydra(SerialRunner):

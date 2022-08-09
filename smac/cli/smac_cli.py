@@ -24,12 +24,8 @@ from smac.runner import FirstRunCrashedException, TargetAlgorithmAbortException
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 from smac.utils.stats import Stats
 
-__author__ = "Marius Lindauer"
-__copyright__ = "Copyright 2015, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
-__maintainer__ = "Marius Lindauer"
-__email__ = "lindauer@cs.uni-freiburg.de"
-__version__ = "0.0.1"
 
 
 class SMACCLI(object):

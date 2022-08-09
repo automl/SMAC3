@@ -25,8 +25,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.runner.base import Runner
 from smac.runner.old.execute_ta_run_hydra import ExecuteTARunHydra, ExecuteTARunOld
 
-__author__ = "Marius Lindauer"
-__copyright__ = "Copyright 2017, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 

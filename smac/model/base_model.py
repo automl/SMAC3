@@ -14,7 +14,7 @@ from smac.configspace import ConfigurationSpace
 from smac.constants import VERY_SMALL_NUMBER
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2016, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 

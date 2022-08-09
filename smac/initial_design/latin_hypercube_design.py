@@ -8,8 +8,7 @@ from scipy.stats.qmc import LatinHypercube
 
 from smac.initial_design import InitialDesign
 
-__author__ = "Marius Lindauer"
-__copyright__ = "Copyright 2019, AutoML"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 

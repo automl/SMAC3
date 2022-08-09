@@ -30,8 +30,7 @@ from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.runhistory.runhistory_transformer import RunhistoryTransformer
 from smac.scenario import Scenario
 
-__author__ = "Marius Lindauer"  # TODO leave author as is?
-__copyright__ = "Copyright 2018, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 

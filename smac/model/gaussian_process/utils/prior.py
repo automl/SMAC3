@@ -8,7 +8,7 @@ import scipy.stats as sps
 
 from smac.constants import VERY_SMALL_NUMBER
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 

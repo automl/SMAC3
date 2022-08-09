@@ -10,7 +10,7 @@ from smac.configspace.util import convert_configurations_to_array
 from smac.model.base_model import BaseModel
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2017, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
