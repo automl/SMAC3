@@ -3,7 +3,7 @@ from unittest import mock
 
 import numpy as np
 
-from smac.intensification.abstract_racer import RunInfoIntent
+from smac.intensification import RunInfoIntent
 from smac.intensification.parallel_scheduling import ParallelScheduler
 from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.runner import StatusType

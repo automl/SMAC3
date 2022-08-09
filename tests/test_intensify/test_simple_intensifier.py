@@ -6,7 +6,7 @@ from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac import RunHistory, Scenario
-from smac.intensification.abstract_racer import RunInfoIntent
+from smac.intensification import RunInfoIntent
 from smac.intensification.simple_intensifier import SimpleIntensifier
 from smac.runhistory import RunInfo, RunValue
 from smac.runner import StatusType

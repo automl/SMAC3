@@ -14,7 +14,7 @@ from smac.chooser.random_chooser import RandomChooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.initial_design import InitialDesign
-from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
+from smac.intensification import AbstractIntensifier, RunInfoIntent
 from smac.model.base_model import BaseModel
 from smac.runhistory import RunInfo, RunValue
 from smac.runhistory.runhistory import RunHistory
@@ -102,7 +102,7 @@ class SMBO:
         initial_design: InitialDesign,
         runhistory: RunHistory,
         runhistory_transformer: AbstractRunhistoryTransformer,
-        intensifier: AbstractRacer,
+        intensifier: AbstractIntensifier,
         model: BaseModel,
         acquisition_optimizer: AbstractAcquisitionOptimizer,
         acquisition_function: AbstractAcquisitionFunction,

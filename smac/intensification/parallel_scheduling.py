@@ -6,7 +6,7 @@ import warnings
 
 from smac.chooser import Chooser
 from smac.configspace import Configuration
-from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
+from smac.intensification import AbstractIntensifier, RunInfoIntent
 from smac.runhistory import RunInfo, RunValue
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
@@ -15,7 +15,7 @@ __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class ParallelScheduler(AbstractRacer):
+class ParallelScheduler(AbstractIntensifier):
     """Common Racer class for Intensifiers that will schedule configurations on a parallel fashion.
 
     This class instantiates intensifier objects on a need basis, that is, to
@@ -93,7 +93,7 @@ class ParallelScheduler(AbstractRacer):
         )
 
         # We have a pool of instances that yield configurations ot run
-        self.intensifier_instances = {}  # type: Dict[int, AbstractRacer]
+        self.intensifier_instances = {}  # type: Dict[int, AbstractIntensifier]
         self.print_worker_warning = True
 
     def get_next_run(
@@ -260,7 +260,7 @@ class ParallelScheduler(AbstractRacer):
         """
         raise NotImplementedError()
 
-    def _get_intensifier_ranking(self, intensifier: AbstractRacer) -> Tuple[int, int]:
+    def _get_intensifier_ranking(self, intensifier: AbstractIntensifier) -> Tuple[int, int]:
         """Given a intensifier, returns how advance it is. This metric will be used to determine
         what priority to assign to the intensifier.
 
@@ -282,7 +282,7 @@ class ParallelScheduler(AbstractRacer):
         """
         raise NotImplementedError()
 
-    def _sort_instances_by_stage(self, instances: Dict[int, AbstractRacer]) -> List[int]:
+    def _sort_instances_by_stage(self, instances: Dict[int, AbstractIntensifier]) -> List[int]:
         """This procedure dictates what SH to prioritize in launching jobs. It prioritizes resource
         allocation to SH instances that have higher stages. In case of tie, we prioritize the SH
         instance with more launched configs.

@@ -9,7 +9,7 @@ import numpy as np
 from smac.chooser import Chooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
-from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
+from smac.intensification import AbstractIntensifier, RunInfoIntent
 from smac.intensification.parallel_scheduling import ParallelScheduler
 from smac.runhistory import RunInfo, RunValue, StatusType
 from smac.runhistory.runhistory import RunHistory
@@ -136,7 +136,7 @@ class SuccessiveHalving(ParallelScheduler):
         self.eta = eta
         self.num_initial_challengers = num_initial_challengers
 
-    def _get_intensifier_ranking(self, intensifier: AbstractRacer) -> Tuple[int, int]:
+    def _get_intensifier_ranking(self, intensifier: AbstractIntensifier) -> Tuple[int, int]:
         """Given a intensifier, returns how advance it is. This metric will be used to determine
         what priority to assign to the intensifier.
 
@@ -209,7 +209,7 @@ class SuccessiveHalving(ParallelScheduler):
         return True
 
 
-class _SuccessiveHalving(AbstractRacer):
+class _SuccessiveHalving(AbstractIntensifier):
     """Races multiple challengers against an incumbent using Successive Halving method.
 
     This class contains the logic to implement:

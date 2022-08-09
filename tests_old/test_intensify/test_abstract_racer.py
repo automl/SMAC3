@@ -7,7 +7,7 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
-from smac.intensification.abstract_racer import AbstractRacer
+from smac.intensification.abstract_racer import AbstractIntensifier
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.stats import Stats
 from smac.runner import StatusType
@@ -40,7 +40,7 @@ class TestAbstractRacer(unittest.TestCase):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def test_compare_configs_no_joint_set(self):
-        intensifier = AbstractRacer(
+        intensifier = AbstractIntensifier(
             stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=None,
@@ -91,7 +91,7 @@ class TestAbstractRacer(unittest.TestCase):
         """
         challenger is better
         """
-        intensifier = AbstractRacer(
+        intensifier = AbstractIntensifier(
             stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=None,
@@ -127,7 +127,7 @@ class TestAbstractRacer(unittest.TestCase):
         """
         incumbent is better
         """
-        intensifier = AbstractRacer(
+        intensifier = AbstractIntensifier(
             stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=None,
@@ -164,7 +164,7 @@ class TestAbstractRacer(unittest.TestCase):
         challenger is better but has less runs;
         -> no decision (None)
         """
-        intensifier = AbstractRacer(
+        intensifier = AbstractIntensifier(
             stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=None,
@@ -210,7 +210,7 @@ class TestAbstractRacer(unittest.TestCase):
         """
         test _adapt_cutoff()
         """
-        intensifier = AbstractRacer(
+        intensifier = AbstractIntensifier(
             stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),

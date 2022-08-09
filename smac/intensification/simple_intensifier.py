@@ -6,7 +6,7 @@ from smac import RunHistory
 from smac.chooser import Chooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
-from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
+from smac.intensification import AbstractIntensifier, RunInfoIntent
 from smac.runhistory import RunInfo, RunValue
 from smac.scenario import Scenario
 
@@ -14,7 +14,7 @@ __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class SimpleIntensifier(AbstractRacer):
+class SimpleIntensifier(AbstractIntensifier):
     """Performs the traditional Bayesian Optimization loop, without instance/seed intensification.
 
     Parameters

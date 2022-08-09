@@ -6,7 +6,7 @@ import numpy as np
 
 from smac.chooser import Chooser
 from smac.configspace import Configuration
-from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
+from smac.intensification import AbstractIntensifier, RunInfoIntent
 from smac.intensification.parallel_scheduling import ParallelScheduler
 from smac.intensification.successive_halving import _SuccessiveHalving
 from smac.runhistory import RunInfo, RunValue
@@ -106,7 +106,7 @@ class Hyperband(ParallelScheduler):
         self.max_budget = scenario.max_budget
         self.eta = eta
 
-    def _get_intensifier_ranking(self, intensifier: AbstractRacer) -> Tuple[int, int]:
+    def _get_intensifier_ranking(self, intensifier: AbstractIntensifier) -> Tuple[int, int]:
         """Given a intensifier, returns how advance it is. This metric will be used to determine
         what priority to assign to the intensifier.
 

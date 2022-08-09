@@ -19,7 +19,8 @@ from smac.runhistory import RunInfo, RunKey, RunValue, StatusType
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory_transformer import RunhistoryTransformer
 from smac.runner import Runner
-from smac.runner.old.execute_ta_run_old import ExecuteTARunOld
+
+# from smac.runner.old.execute_ta_run_old import ExecuteTARunOld
 from smac.utils.stats import Stats
 
 __copyright__ = "Copyright 2022, automl.org"

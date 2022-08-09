@@ -14,7 +14,7 @@ from smac.chooser import Chooser
 from smac.chooser.random_chooser import RandomChooser
 from smac.configspace import Configuration
 from smac.initial_design import InitialDesign
-from smac.intensification.abstract_racer import AbstractRacer
+from smac.intensification import AbstractIntensifier
 from smac.model.base_imputor import BaseImputor
 from smac.model.base_model import BaseModel
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
@@ -46,7 +46,7 @@ class Facade:
         initial_design: InitialDesign | None = None,
         configuration_chooser: Chooser | None = None,
         random_configuration_chooser: RandomChooser | None = None,
-        intensifier: AbstractRacer | None = None,
+        intensifier: AbstractIntensifier | None = None,
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
         # Level of logging; if path passed: yaml file expected; if none: use default logging from logging.yml
         logging_level: int | Path | None = None,
@@ -337,7 +337,7 @@ class Facade:
 
     @staticmethod
     @abstractmethod
-    def get_intensifier(scenario: Scenario) -> AbstractRacer:
+    def get_intensifier(scenario: Scenario) -> AbstractIntensifier:
         raise NotImplementedError
 
     @staticmethod

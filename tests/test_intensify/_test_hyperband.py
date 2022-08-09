@@ -9,7 +9,7 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
-from smac.intensification.abstract_racer import RunInfoIntent
+from smac.intensification import RunInfoIntent
 from smac.intensification.hyperband import Hyperband, _Hyperband
 from smac.intensification.successive_halving import _SuccessiveHalving
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue

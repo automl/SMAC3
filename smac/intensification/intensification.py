@@ -10,8 +10,8 @@ import numpy as np
 from smac.chooser import Chooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
-from smac.intensification.abstract_racer import (
-    AbstractRacer,
+from smac.intensification import (
+    AbstractIntensifier,
     RunInfoIntent,
     _config_to_run_type,
 )
@@ -27,10 +27,10 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class NoMoreChallengers(Exception):
-    """Indicates that no more challengers are available for the intensification to proceed."""
+# class NoMoreChallengers(Exception):
+#    """Indicates that no more challengers are available for the intensification to proceed."""
 
-    pass
+#   pass
 
 
 class IntensifierStage(Enum):
@@ -48,7 +48,7 @@ class IntensifierStage(Enum):
     PROCESS_INCUMBENT_RUN = 5
 
 
-class Intensifier(AbstractRacer):
+class Intensifier(AbstractIntensifier):
     r"""Races challengers against an incumbent.
     SMAC's intensification procedure, in detail:
 

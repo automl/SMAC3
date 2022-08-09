@@ -5,7 +5,7 @@ import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
-from smac.intensification.abstract_racer import AbstractRacer
+from smac.intensification import AbstractIntensifier
 from smac.runhistory.runhistory import RunHistory
 from smac.runner import StatusType
 from smac.scenario import Scenario
@@ -34,7 +34,7 @@ class TestAbstractRacer(unittest.TestCase):
 
         scenario = Scenario(self.cs, algorithm_walltime_limit=2, output_directory="smac3_output_test")
         self.stats = Stats(scenario=scenario)
-        self.intensifier = AbstractRacer(scenario=scenario)
+        self.intensifier = AbstractIntensifier(scenario=scenario)
         self.intensifier._set_stats(self.stats)
 
         self.stats.start_timing()
