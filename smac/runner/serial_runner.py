@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Callable, Dict, List, Optional, Tuple, Union
 
+import smac
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.runhistory import RunInfo, RunValue, StatusType
@@ -52,19 +53,21 @@ class SerialRunner(Runner):
     def __init__(
         self,
         target_algorithm: list[str] | Callable,
+        scenario: smac.scenario.Scenario,
         stats: Stats,
-        objectives: list[str] = ["cost"],
-        par_factor: int = 1,
-        crash_cost: float | list[float] = float(MAXINT),
-        abort_on_first_run_crash: bool = True,
+        # objectives: list[str] = ["cost"],
+        # par_factor: int = 1,
+        # crash_cost: float | list[float] = float(MAXINT),
+        # abort_on_first_run_crash: bool = True,
     ):
         super(SerialRunner, self).__init__(
             target_algorithm=target_algorithm,
+            scenario=scenario,
             stats=stats,
-            objectives=objectives,
-            par_factor=par_factor,
-            crash_cost=crash_cost,
-            abort_on_first_run_crash=abort_on_first_run_crash,
+            # objectives=objectives,
+            # par_factor=par_factor,
+            # crash_cost=crash_cost,
+            # abort_on_first_run_crash=abort_on_first_run_crash,
         )
 
     def submit_run(self, run_info: RunInfo) -> None:
@@ -84,7 +87,7 @@ class SerialRunner(Runner):
         """
         self.results.append(self.run_wrapper(run_info))
 
-    def get_finished_runs(self) -> List[Tuple[RunInfo, RunValue]]:
+    def get_finished_runs(self) -> list[tuple[RunInfo, RunValue]]:
         """This method returns any finished configuration, and returns a list with the results of
         exercising the configurations. This class keeps populating results to self.results until a
         call to get_finished runs is done. In this case, the self.results list is emptied and all
@@ -127,7 +130,7 @@ class SerialRunner(Runner):
         instance: str | None = None,
         seed: int = 0,
         budget: float | None = None,
-        instance_specific: str = "0",
+        # instance_specific: str = "0",
     ) -> Tuple[StatusType, float | list[float], float, Dict]:
         pass
 

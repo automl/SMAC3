@@ -4,7 +4,6 @@ from typing import Dict, List, Optional, Tuple
 
 import os
 import time
-import warnings
 
 import dask
 from dask.distributed import Client, Future, wait
@@ -12,9 +11,13 @@ from dask.distributed import Client, Future, wait
 from smac.configspace import Configuration
 from smac.runhistory import RunInfo, RunValue, StatusType
 from smac.runner import Runner
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
+
+
+logger = get_logger(__name__)
 
 
 class DaskParallelRunner(Runner):
@@ -86,11 +89,12 @@ class DaskParallelRunner(Runner):
     ):
         super(DaskParallelRunner, self).__init__(
             target_algorithm=single_worker.target_algorithm,
+            scenario=single_worker.scenario,
             stats=single_worker.stats,
-            objectives=single_worker.objectives,
-            par_factor=single_worker.par_factor,
-            crash_cost=single_worker.crash_cost,
-            abort_on_first_run_crash=single_worker.abort_on_first_run_crash,
+            # objectives=single_worker.objectives,
+            # par_factor=single_worker.par_factor,
+            # crash_cost=single_worker.crash_cost,
+            # abort_on_first_run_crash=single_worker.abort_on_first_run_crash,
         )
 
         # The single worker, which is replicated on a need
@@ -101,6 +105,7 @@ class DaskParallelRunner(Runner):
         # How much time to wait for workers to be available
         self.patience = patience
 
+        # Where to store worker information temporarily
         self.output_directory = output_directory
 
         # Because a run() method can have pynisher, we need to prevent the multiprocessing
@@ -152,7 +157,7 @@ class DaskParallelRunner(Runner):
 
         # In code check to make sure that there are resources
         if not self._workers_available():
-            warnings.warn("No workers are available. This could mean workers crashed" "Waiting for new workers...")
+            logger.warning("No workers are available. This could mean workers crashed. Waiting for new workers...")
             time.sleep(self.patience)
             if not self._workers_available():
                 raise ValueError(
@@ -166,7 +171,7 @@ class DaskParallelRunner(Runner):
         # http://distributed.dask.org/en/stable/client.html#pure-functions-by-default
         self.futures.append(self.client.submit(self.single_worker.run_wrapper, run_info, pure=False))
 
-    def get_finished_runs(self) -> List[Tuple[RunInfo, RunValue]]:
+    def get_finished_runs(self) -> list[tuple[RunInfo, RunValue]]:
         """This method returns any finished configuration, and returns a list with the results of
         exercising the configurations. This class keeps populating results to self.results until a
         call to get_finished runs is done. In this case, the self.results list is emptied and all
@@ -194,7 +199,7 @@ class DaskParallelRunner(Runner):
         """
         # In code check to make sure we don;t exceed resource allocation
         if len(self.futures) > sum(self.client.nthreads().values()):
-            warnings.warn(
+            logger.warning(
                 "More running jobs than resources available. "
                 "Should not have more futures/runs in remote workers "
                 "than the number of workers. This could mean a worker "
@@ -233,7 +238,7 @@ class DaskParallelRunner(Runner):
         instance: str | None = None,
         seed: int = 0,
         budget: float | None = None,
-        instance_specific: str = "0",
+        # instance_specific: str = "0",
     ) -> Tuple[StatusType, float | list[float], float, Dict]:
         """This method only complies with the abstract parent class. In the parallel case, we call
         the single worker run() method.
@@ -243,7 +248,7 @@ class DaskParallelRunner(Runner):
             instance=instance,
             seed=seed,
             budget=budget,
-            instance_specific=instance_specific,
+            # instance_specific=instance_specific,
         )
 
     def num_workers(self) -> int:

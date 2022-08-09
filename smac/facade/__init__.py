@@ -89,20 +89,21 @@ class Facade:
         # Prepare the algorithm executer
         runner: Runner
         if callable(target_algorithm):
-            if isinstance(scenario.objectives, str):
-                objectives = [scenario.objectives]
-            else:
-                objectives = scenario.objectives
+            # if isinstance(scenario.objectives, str):
+            #    objectives = [scenario.objectives]
+            # else:
+            #    objectives = scenario.objectives
 
             # We wrap our algorithm with the AlgorithmExecuter to (potentially) use pynisher
             # and to catch exceptions
             runner = TargetAlgorithmRunner(
                 target_algorithm,
+                scenario=scenario,
                 stats=stats,
-                crash_cost=scenario.crash_cost,
-                objectives=objectives,
-                memory_limit=scenario.memory_limit,
-                algorithm_walltime_limit=scenario.algorithm_walltime_limit,
+                # crash_cost=scenario.crash_cost,
+                # objectives=objectives,
+                # memory_limit=scenario.memory_limit,
+                # algorithm_walltime_limit=scenario.algorithm_walltime_limit,
             )
         elif isinstance(target_algorithm, Runner):
             runner = target_algorithm

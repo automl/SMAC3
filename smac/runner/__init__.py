@@ -14,6 +14,8 @@ from enum import Enum
 
 import numpy as np
 
+
+import smac
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.runhistory import RunInfo, RunValue, StatusType
@@ -77,8 +79,6 @@ class Runner(ABC):
         names of the objectives, by default it is a single objective parameter "cost"
     run_obj: str
         run objective of SMAC
-    par_factor: int
-        penalization factor
     crash_cost : float
         cost that is used in case of crashed runs (including runs
         that returned NaN or inf)
@@ -98,28 +98,34 @@ class Runner(ABC):
     def __init__(
         self,
         target_algorithm: list[str] | Callable,
+        scenario: smac.scenario.Scenario,
         stats: Stats,
-        objectives: list[str] = ["cost"],
-        par_factor: int = 1,
-        crash_cost: float | list[float] = float(MAXINT),
-        abort_on_first_run_crash: bool = True,
+        # objectives: list[str] = ["cost"],
+        # par_factor: int = 1,
+        # crash_cost: float | list[float] = float(MAXINT),
+        # abort_on_first_run_crash: bool = True,
     ):
         # The results is a FIFO structure, implemented via a list
         # (because the Queue lock is not pickable). Finished runs are
         # put in this list and collected via process_finished_runs
-        self.results: list[Tuple[RunInfo, RunValue]] = []
+        self.results: list[tuple[RunInfo, RunValue]] = []
 
         # Below state the support for a Runner algorithm that
         # implements a ta
         self.target_algorithm = target_algorithm
         self.stats = stats
-        self.objectives = objectives
-        self.par_factor = par_factor
-        self.crash_cost = crash_cost
-        self.abort_on_first_run_crash = abort_on_first_run_crash
+        # self.par_factor = par_factor
+        self.crash_cost = scenario.crash_cost
+        # self.abort_on_first_run_crash = abort_on_first_run_crash
         self._supports_memory_limit = False
 
-        super().__init__()
+        if isinstance(scenario.objectives, str):
+            objectives = [scenario.objectives]
+        else:
+            objectives = scenario.objectives
+
+        self.objectives = objectives
+        self.n_objectives = scenario.count_objectives()
 
     @abstractmethod
     def submit_run(self, run_info: RunInfo) -> None:

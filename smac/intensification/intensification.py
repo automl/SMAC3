@@ -569,7 +569,7 @@ class Intensifier(AbstractRacer):
         # Line 4
         # Find all instances that have the most runs on the inc
         inc_runs = runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True)
-        inc_inst = [s.instance_id for s in inc_runs]
+        inc_inst = [s.instance for s in inc_runs]
         inc_inst = list(Counter(inc_inst).items())
 
         inc_inst.sort(key=lambda x: x[1], reverse=True)
@@ -669,7 +669,7 @@ class Intensifier(AbstractRacer):
 
         # Run challenger on all <instance, seed> to run
         instance_seed_budget_key = self.to_run.pop()
-        instance = instance_seed_budget_key.instance_id
+        instance = instance_seed_budget_key.instance
         seed = instance_seed_budget_key.seed
 
         # Line 12

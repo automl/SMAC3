@@ -54,7 +54,7 @@ class Scenario:
     instance_features: dict[
         str, list[int | float]
     ] | None = None  # Each instance can be associated with features. Those features are incorporated in the runhistory transformer.
-    instance_order: str = "shuffle_once"
+    instance_order: str | None = "shuffle_once"  # Can be "shuffle_once", "shuffle" or None
 
     # What we want to have is:
     # instances: dict[str, list[int | float]] | None = None
@@ -62,7 +62,7 @@ class Scenario:
     # instances: list[str] | None = None
     # instance_features: dict[str, list[int | float]] | None = None
 
-    # Hyperband
+    # For multi-fidelity and instance optimization
     min_budget: float | None = None
     max_budget: float | None = None
     # eta: float = 3

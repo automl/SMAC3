@@ -365,7 +365,7 @@ class _SuccessiveHalving(AbstractRacer):
             # determine instance-seed pair order
             if self.instance_order == "shuffle_once":
                 # randomize once
-                self.rng.shuffle(self.instance_seed_pairs)  # type: ignore
+                self.rng.shuffle(self.instance_seed_pairs)
         else:
             self.instance_seed_pairs = instance_seed_pairs
 
