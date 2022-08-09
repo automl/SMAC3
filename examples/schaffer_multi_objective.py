@@ -1,8 +1,8 @@
 """
-Simple Multi-Objective
+Schaffer Multi-Objective
 ^^^^^^^^^^^^^^^^^^^^^^
 
-A simple example on how to use multi-objective optimization is shown.
+A simple example on how to use multi-objective optimization is shown. The `schaffer` function is used.
 """
 
 from __future__ import annotations

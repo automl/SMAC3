@@ -170,7 +170,7 @@ class SimpleIntensifier(AbstractRacer):
             return RunInfoIntent.WAIT, RunInfo(
                 config=None,
                 instance=None,
-                instance_specific="0",
+                # instance_specific="0",
                 seed=0,
                 budget=0.0,
             )
@@ -178,7 +178,7 @@ class SimpleIntensifier(AbstractRacer):
         run_info = RunInfo(
             config=challenger,
             instance=self.instances[-1],
-            instance_specific="0",
+            # instance_specific="0",
             seed=0 if self.deterministic else int(self.rng.randint(low=0, high=MAXINT, size=1)[0]),
             budget=0.0,
         )

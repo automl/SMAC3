@@ -150,7 +150,6 @@ class Runner(ABC):
         instance: str | None = None,
         seed: int = 0,
         budget: float | None = None,
-        instance_specific: str = "0",
     ) -> Tuple[StatusType, float | list[float], float, Dict]:
         """Runs the target algorithm with a configuration on a single instance with instance specifics.
 
@@ -211,7 +210,6 @@ class Runner(ABC):
                 instance=run_info.instance,
                 seed=run_info.seed,
                 budget=run_info.budget,
-                instance_specific=run_info.instance_specific,
             )
         except Exception as e:
             status = StatusType.CRASHED

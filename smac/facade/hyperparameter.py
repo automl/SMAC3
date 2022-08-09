@@ -45,6 +45,7 @@ class HyperparameterFacade(Facade):
             min_samples_leaf=min_samples_leaf,
             max_depth=max_depth,
             configspace=scenario.configspace,
+            instance_features=scenario.instance_features,
             seed=scenario.seed,
         )
 

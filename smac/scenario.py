@@ -39,7 +39,7 @@ class Scenario:
     cputime_limit: float = np.inf
     memory_limit: int | None = None
     algorithm_walltime_limit: float | None = None
-    n_runs: int = 20
+    n_runs: int = 100
 
     # Other time things
     intensify_percentage: float = 0.5
@@ -50,10 +50,17 @@ class Scenario:
     # However, we need an interface to accept instances/test instances in the main python code.
 
     # Algorithm Configuration
-    instances: np.array | None = None
-    instance_features: np.array | None = None
-    instance_specifics: Mapping[str, str] | None = None
+    instances: list[str] | None = None  # e.g. if the algorithm should optimized across multiple datasets, seeds, ...
+    instance_features: dict[
+        str, list[int | float]
+    ] | None = None  # Each instance can be associated with features. Those features are incorporated in the runhistory transformer.
     instance_order: str = "shuffle_once"
+
+    # What we want to have is:
+    # instances: dict[str, list[int | float]] | None = None
+    # or
+    # instances: list[str] | None = None
+    # instance_features: dict[str, list[int | float]] | None = None
 
     # Hyperband
     min_budget: float | None = None
@@ -62,7 +69,7 @@ class Scenario:
 
     # Others
     seed: int = 0  # TODO: Document if seed is set to -1, we use a random seed.
-    n_workers: int = 1
+    n_workers: int = 1  # Parallelization is automatically applied if n_workers > 1 using dask
 
     def __post_init__(self) -> None:
         """Checks whether the config is valid."""
@@ -115,6 +122,22 @@ class Scenario:
             return len(self.objectives)
 
         return 1
+
+    def count_instance_features(self) -> int:
+        # Check whether key of instance features exist
+        n_features = 0
+        if self.instance_features is not None:
+            for k, v in self.instance_features.items():
+                if k not in self.instances:
+                    raise RuntimeError(f"Instance {k} is not specified in instances.")
+
+                if n_features == 0:
+                    n_features = len(v)
+                else:
+                    if len(v) != n_features:
+                        raise RuntimeError("Instances must have the same number of features.")
+
+        return n_features
 
     def save(self) -> None:
         if self.name is None:

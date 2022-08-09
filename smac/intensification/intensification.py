@@ -277,14 +277,14 @@ class Intensifier(AbstractRacer):
                 # Lines 5-7
                 instance, seed = self._get_next_inc_run(available_insts)
 
-                instance_specific = "0"
-                if instance is not None:
-                    instance_specific = self.instance_specifics.get(instance, "0")
+                # instance_specific = "0"
+                # if instance is not None:
+                #    instance_specific = self.instance_specifics.get(instance, "0")
 
                 return RunInfoIntent.RUN, RunInfo(
                     config=incumbent,
                     instance=instance,
-                    instance_specific=instance_specific,
+                    # instance_specific=instance_specific,
                     seed=seed,
                     budget=0.0,
                 )
@@ -385,15 +385,15 @@ class Intensifier(AbstractRacer):
                     runhistory=runhistory,
                 )
 
-                instance_specific = "0"
-                if instance is not None:
-                    instance_specific = self.instance_specifics.get(instance, "0")
+                # instance_specific = "0"
+                # if instance is not None:
+                #    instance_specific = self.instance_specifics.get(instance, "0")
 
                 # Line 12
                 return RunInfoIntent.RUN, RunInfo(
                     config=challenger,
                     instance=instance,
-                    instance_specific=instance_specific,
+                    # instance_specific=instance_specific,
                     seed=seed,
                     budget=0.0,
                 )
@@ -403,7 +403,7 @@ class Intensifier(AbstractRacer):
     def process_results(
         self,
         run_info: RunInfo,
-        incumbent: Optional[Configuration],
+        incumbent: Configuration | None,
         runhistory: RunHistory,
         time_bound: float,
         result: RunValue,
@@ -556,7 +556,7 @@ class Intensifier(AbstractRacer):
         """Implementation of line 4 of Intensification.
 
         This method queries the inc runs in the run history
-        and return the pending instances if any is available
+        and return the pending instances if any is available.
 
         Parameters
         ----------
@@ -568,7 +568,7 @@ class Intensifier(AbstractRacer):
             Whether to log changes of incumbents in trajectory
         """
         # Line 4
-        # find all instances that have the most runs on the inc
+        # Find all instances that have the most runs on the inc
         inc_runs = runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True)
         inc_inst = [s.instance_id for s in inc_runs]
         inc_inst = list(Counter(inc_inst).items())
@@ -579,14 +579,15 @@ class Intensifier(AbstractRacer):
         except IndexError:
             logger.debug("No run for incumbent found.")
             max_runs = 0
-        inc_inst = [x[0] for x in inc_inst if x[1] == max_runs]
 
+        inc_inst = [x[0] for x in inc_inst if x[1] == max_runs]
         available_insts = list(sorted(set(self.instances) - set(inc_inst)))
 
-        # if all instances were used n times, we can pick an instances
+        # If all instances were used n times, we can pick an instances
         # from the complete set again
         if not self.deterministic and not available_insts:
             available_insts = self.instances
+
         return available_insts
 
     def _process_inc_run(

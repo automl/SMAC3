@@ -76,22 +76,27 @@ class BaseModel:
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: List[int],
-        bounds: List[Tuple[float, float]],
+        types: list[int],
+        bounds: list[Tuple[float, float]],
         seed: int,
-        instance_features: Optional[np.ndarray] = None,
-        pca_components: Optional[int] = 7,
+        instance_features: dict[str, list[int | float]] = None,
+        pca_components: int | None = 7,
     ) -> None:
         self.configspace = configspace
         self.seed = seed
         self.instance_features = instance_features
         self.pca_components = pca_components
 
-        if instance_features is not None:
-            self.n_feats = instance_features.shape[1]
-        else:
-            self.n_feats = 0
+        n_features = 0
+        if self.instance_features is not None:
+            for v in self.instance_features.values():
+                if n_features == 0:
+                    n_features = len(v)
+                else:
+                    if len(v) != n_features:
+                        raise RuntimeError("Instances must have the same number of features.")
 
+        self.n_features = n_features
         self.n_params = len(self.configspace.get_hyperparameters())
 
         self.pca = PCA(n_components=self.pca_components)
@@ -123,14 +128,14 @@ class BaseModel:
         """
         if len(X.shape) != 2:
             raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
-        if X.shape[1] != self.n_params + self.n_feats:
+        if X.shape[1] != self.n_params + self.n_features:
             raise ValueError("Feature mismatch: X should have %d features, but has %d" % (self.n_params, X.shape[1]))
         if X.shape[0] != Y.shape[0]:
             raise ValueError("X.shape[0] (%s) != y.shape[0] (%s)" % (X.shape[0], Y.shape[0]))
 
         # reduce dimensionality of features of larger than PCA_DIM
-        if self.pca_components and X.shape[0] > self.pca.n_components and self.n_feats >= self.pca_components:
-            X_feats = X[:, -self.n_feats :]
+        if self.pca_components and X.shape[0] > self.pca.n_components and self.n_features >= self.pca_components:
+            X_feats = X[:, -self.n_features :]
             # scale features
             X_feats = self.scaler.fit_transform(X_feats)
             X_feats = np.nan_to_num(X_feats)  # if features with max == min
@@ -196,14 +201,14 @@ class BaseModel:
         """
         if len(X.shape) != 2:
             raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
-        if X.shape[1] != self.n_params + self.n_feats:
+        if X.shape[1] != self.n_params + self.n_features:
             raise ValueError(
-                "Rows in X should have %d entries but have %d!" % (self.n_params + self.n_feats, X.shape[1])
+                "Rows in X should have %d entries but have %d!" % (self.n_params + self.n_features, X.shape[1])
             )
 
         if self._apply_pca:
             try:
-                X_feats = X[:, -self.n_feats :]
+                X_feats = X[:, -self.n_features :]
                 X_feats = self.scaler.transform(X_feats)
                 X_feats = self.pca.transform(X_feats)
                 X = np.hstack((X[:, : self.n_params], X_feats))
@@ -268,38 +273,39 @@ class BaseModel:
         if X.shape[1] != len(self.bounds):
             raise ValueError("Rows in X should have %d entries but have %d!" % (len(self.bounds), X.shape[1]))
 
-        if self.instance_features is None or len(self.instance_features) == 0:
+        if self.instance_features is None:
             mean, var = self.predict(X)
-            assert var is not None  # please mypy
+            assert var is not None
 
             var[var < self.var_threshold] = self.var_threshold
             var[np.isnan(var)] = self.var_threshold
+
             return mean, var
+        else:
+            n_instances = self.scen
 
-        n_instances = len(self.instance_features)
+            mean = np.zeros(X.shape[0])
+            var = np.zeros(X.shape[0])
+            for i, x in enumerate(X):
+                X_ = np.hstack((np.tile(x, (n_instances, 1)), self.instance_features))
+                means, vars = self.predict(X_)
+                assert vars is not None  # please mypy
+                # VAR[1/n (X_1 + ... + X_n)] =
+                # 1/n^2 * ( VAR(X_1) + ... + VAR(X_n))
+                # for independent X_1 ... X_n
+                var_x = np.sum(vars) / (len(vars) ** 2)
+                if var_x < self.var_threshold:
+                    var_x = self.var_threshold
 
-        mean = np.zeros(X.shape[0])
-        var = np.zeros(X.shape[0])
-        for i, x in enumerate(X):
-            X_ = np.hstack((np.tile(x, (n_instances, 1)), self.instance_features))
-            means, vars = self.predict(X_)
-            assert vars is not None  # please mypy
-            # VAR[1/n (X_1 + ... + X_n)] =
-            # 1/n^2 * ( VAR(X_1) + ... + VAR(X_n))
-            # for independent X_1 ... X_n
-            var_x = np.sum(vars) / (len(vars) ** 2)
-            if var_x < self.var_threshold:
-                var_x = self.var_threshold
+                var[i] = var_x
+                mean[i] = np.mean(means)
 
-            var[i] = var_x
-            mean[i] = np.mean(means)
+            if len(mean.shape) == 1:
+                mean = mean.reshape((-1, 1))
+            if len(var.shape) == 1:
+                var = var.reshape((-1, 1))
 
-        if len(mean.shape) == 1:
-            mean = mean.reshape((-1, 1))
-        if len(var.shape) == 1:
-            var = var.reshape((-1, 1))
-
-        return mean, var
+            return mean, var
 
     def get_configspace(self) -> ConfigurationSpace:
         """

@@ -56,30 +56,29 @@ class TestSimpleIntensifier(unittest.TestCase):
     def test_get_next_run(self):
         """
         Makes sure that sampling a configuration returns a valid
-        configuration
+        configuration.
         """
         intent, run_info = self.intensifier.get_next_run(
             challengers=[self.config1],
             incumbent=None,
-            run_history=self.rh,
+            runhistory=self.rh,
             num_workers=1,
             chooser=None,
         )
-
         self.assertEqual(intent, RunInfoIntent.RUN)
 
-        self.assertEqual(
-            run_info,
-            RunInfo(
-                config=self.config1,
-                instance=1,
-                instance_specific="0",
-                seed=0,
-                cutoff=None,
-                capped=False,
-                budget=0.0,
-            ),
+        run_info2 = RunInfo(
+            config=self.config1,
+            instance=1,
+            instance_specific="0",
+            seed=0,
+            budget=0.0,
         )
+
+        print(run_info)
+        print(run_info2)
+
+        self.assertEqual(run_info, run_info2)
 
     def test_get_next_run_waits_if_no_workers(self):
         """
@@ -90,48 +89,51 @@ class TestSimpleIntensifier(unittest.TestCase):
         intent, run_info = self.intensifier.get_next_run(
             challengers=[self.config1, self.config2],
             incumbent=None,
-            run_history=self.rh,
+            runhistory=self.rh,
             num_workers=1,
             chooser=None,
         )
 
+        run_info2 = RunInfo(
+            config=self.config1,
+            instance=1,
+            instance_specific="0",
+            seed=0,
+            budget=0.0,
+        )
+
+        print(run_info)
+        print(run_info2)
+
         # We can get the configuration 1
         self.assertEqual(intent, RunInfoIntent.RUN)
-        self.assertEqual(
-            run_info,
-            RunInfo(
-                config=self.config1,
-                instance=1,
-                instance_specific="0",
-                seed=0,
-                cutoff=None,
-                capped=False,
-                budget=0.0,
-            ),
-        )
+        self.assertEqual(run_info, run_info2)
 
         # We should not get configuration 2
         # As there is just 1 worker
         intent, run_info = self.intensifier.get_next_run(
             challengers=[self.config2],
             incumbent=None,
-            run_history=self.rh,
+            runhistory=self.rh,
             num_workers=1,
             chooser=None,
         )
         self.assertEqual(intent, RunInfoIntent.WAIT)
-        self.assertEqual(
-            run_info,
-            RunInfo(
-                config=None,
-                instance=None,
-                instance_specific="0",
-                seed=0,
-                cutoff=None,
-                capped=False,
-                budget=0.0,
-            ),
+
+        run_info2 = RunInfo(
+            config=None,
+            instance=None,
+            instance_specific="0",
+            seed=0,
+            cutoff=None,
+            capped=False,
+            budget=0.0,
         )
+
+        print(run_info)
+        print(run_info2)
+
+        self.assertEqual(run_info, run_info2)
 
     def test_process_results(self):
         """
@@ -141,7 +143,7 @@ class TestSimpleIntensifier(unittest.TestCase):
         intent, run_info = self.intensifier.get_next_run(
             challengers=[self.config1, self.config2],
             incumbent=None,
-            run_history=self.rh,
+            runhistory=self.rh,
             num_workers=1,
             chooser=None,
         )
@@ -166,7 +168,7 @@ class TestSimpleIntensifier(unittest.TestCase):
         incumbent, inc_perf = self.intensifier.process_results(
             run_info=run_info,
             incumbent=None,
-            run_history=self.rh,
+            runhistory=self.rh,
             time_bound=np.inf,
             result=result,
         )

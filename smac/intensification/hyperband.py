@@ -101,7 +101,7 @@ class Hyperband(ParallelScheduler):
         self.instance_order = scenario.instance_order
         self.incumbent_selection = incumbent_selection
         self._instances = scenario.instances
-        self._instance_specifics = scenario.instance_specifics
+        # self._instance_specifics = scenario.instance_specifics
         self.min_budget = scenario.min_budget
         self.max_budget = scenario.max_budget
         self.eta = eta

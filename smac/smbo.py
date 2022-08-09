@@ -232,7 +232,7 @@ class SMBO:
                     cost=float(MAXINT) if n_objectives == 1 else np.full(n_objectives, float(MAXINT)),
                     time=0.0,
                     status=StatusType.RUNNING,
-                    instance_id=run_info.instance,
+                    instance=run_info.instance,
                     seed=run_info.seed,
                     budget=run_info.budget,
                 )
@@ -448,7 +448,7 @@ class SMBO:
             cost=result.cost,
             time=result.time,
             status=result.status,
-            instance_id=run_info.instance,
+            instance=run_info.instance,
             seed=run_info.seed,
             budget=run_info.budget,
             starttime=result.starttime,

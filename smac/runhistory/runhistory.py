@@ -90,7 +90,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         # for fast access, we have also an unordered data structure
         # to get all instance seed pairs of a configuration.
         # This does not include capped runs.
-        self._configid_to_inst_seed_budget: dict[int, dict[InstanceSeedKey, list[float]]] = {}
+        self._config_id_to_inst_seed_budget: dict[int, dict[InstanceSeedKey, list[float]]] = {}
 
         self.config_ids: dict[Configuration, int] = {}
         self.ids_config: dict[int, Configuration] = {}
@@ -198,21 +198,25 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
         # Capped data is added above
         # Do not register the cost until the run has completed
-        if origin in (
-            DataOrigin.INTERNAL,
-            DataOrigin.EXTERNAL_SAME_INSTANCES,
-        ) and status not in [StatusType.CAPPED, StatusType.RUNNING]:
+        if (
+            origin
+            in (
+                DataOrigin.INTERNAL,
+                DataOrigin.EXTERNAL_SAME_INSTANCES,
+            )
+            and status != StatusType.RUNNING
+        ):
             # Also add to fast data structure
-            is_k = InstanceSeedKey(k.instance_id, k.seed)
-            self._configid_to_inst_seed_budget[k.config_id] = self._configid_to_inst_seed_budget.get(k.config_id, {})
+            is_k = InstanceSeedKey(k.instance, k.seed)
+            self._config_id_to_inst_seed_budget[k.config_id] = self._config_id_to_inst_seed_budget.get(k.config_id, {})
 
-            if is_k not in self._configid_to_inst_seed_budget[k.config_id].keys():
+            if is_k not in self._config_id_to_inst_seed_budget[k.config_id].keys():
                 # Add new inst-seed-key with budget to main dict
-                self._configid_to_inst_seed_budget[k.config_id][is_k] = [k.budget]
+                self._config_id_to_inst_seed_budget[k.config_id][is_k] = [k.budget]
             # Before it was k.budget not in is_k
-            elif k.budget != is_k.instance_id and k.budget != is_k.seed:
+            elif k.budget != is_k.instance and k.budget != is_k.seed:
                 # Append new budget to existing inst-seed-key dict
-                self._configid_to_inst_seed_budget[k.config_id][is_k].append(k.budget)
+                self._config_id_to_inst_seed_budget[k.config_id][is_k].append(k.budget)
 
             # If budget is used, then update cost instead of incremental updates
             if not self.overwrite_existing_runs and k.budget == 0:
@@ -260,7 +264,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         for key in instance_seed_budget_keys:
             k = RunKey(
                 config_id=id_,
-                instance_id=key.instance_id,
+                instance=key.instance,
                 seed=key.seed,
                 budget=key.budget,
             )
@@ -271,20 +275,20 @@ class RunHistory(Mapping[RunKey, RunValue]):
     def add(
         self,
         config: Configuration,
-        cost: Union[int, float, list, np.ndarray],
+        cost: int | float | list[int | float],
         time: float,
         status: StatusType,
-        instance_id: Optional[str] = None,
-        seed: Optional[int] = None,
+        instance: str | None = None,
+        seed: int | None = None,
         budget: float = 0.0,
         starttime: float = 0.0,
         endtime: float = 0.0,
-        additional_info: Optional[Dict] = None,
+        additional_info: dict[str, Any] | None = None,
         origin: DataOrigin = DataOrigin.INTERNAL,
         force_update: bool = False,
     ) -> None:
         """Adds a data of a new target algorithm (TA) run; it will update data if the same key
-        values are used (config, instance_id, seed)
+        values are used (config, instance, seed)
 
         Parameters
         ----------
@@ -296,7 +300,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
             Runtime of TA run
         status: str
             Status in {SUCCESS, TIMEOUT, CRASHED, ABORT, MEMOUT}
-        instance_id: str
+        instance: str
             String representing an instance (default: None)
         seed: int
             Random seed used by TA (default: None)
@@ -351,14 +355,14 @@ class RunHistory(Mapping[RunKey, RunValue]):
         else:
             c = [float(i) for i in c]
 
-        k = RunKey(config_id, instance_id, seed, budget)
+        k = RunKey(config_id, instance, seed, budget)
         v = RunValue(c, time, status, starttime, endtime, additional_info)
 
         # Construct keys and values for the data dictionary
         for key, value in (
             ("config", config.get_dictionary()),
             ("config_id", config_id),
-            ("instance_id", instance_id),
+            ("instance", instance),
             ("seed", seed),
             ("budget", budget),
             ("cost", c),
@@ -539,7 +543,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
     def sum_cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: Optional[Iterable[InstanceSeedBudgetKey]] = None,
+        instance_seed_budget_keys: Iterable[InstanceSeedBudgetKey] | None = None,
         normalize: bool = False,
     ) -> float | list[float]:
         """Return the sum of costs of a configuration. This is the sum of costs of all instance-seed
@@ -689,20 +693,21 @@ class RunHistory(Mapping[RunKey, RunValue]):
             Parameter configuration
         only_max_observed_budget : bool
             Select only the maximally observed budget run for this configuration
+
         Returns
         -------
         instance_seed_budget_pairs : list<tuples of instance, seed, budget>
         """
         config_id = self.config_ids.get(config)
-        runs = self._configid_to_inst_seed_budget.get(config_id, {}).copy()  # type: ignore[arg-type] # noqa F821
+        runs = self._config_id_to_inst_seed_budget.get(config_id, {}).copy()
 
-        # select only the max budget run if specified
+        # Select only the max budget run if specified
         if only_max_observed_budget:
             for k, v in runs.items():
                 runs[k] = [max(v)]
 
         # convert to inst-seed-budget key
-        rval = [InstanceSeedBudgetKey(k.instance_id, k.seed, budget) for k, v in runs.items() for budget in v]
+        rval = [InstanceSeedBudgetKey(k.instance, k.seed, budget) for k, v in runs.items() for budget in v]
         return rval
 
     def get_all_configs(self) -> List[Configuration]:
@@ -752,7 +757,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
             (
                 [
                     int(k.config_id),
-                    str(k.instance_id) if k.instance_id is not None else None,
+                    str(k.instance) if k.instance is not None else None,
                     int(k.seed),
                     float(k.budget) if k.budget is not None else 0,
                 ],
@@ -838,7 +843,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
                 cost=cost,
                 time=float(v[1]),
                 status=StatusType(v[2]),
-                instance_id=k[1],
+                instance=k[1],
                 seed=int(k[2]),
                 budget=float(k[3]) if len(k) == 4 else 0,
                 starttime=v[3],
@@ -880,7 +885,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
             Runhistory with additional data to be added to self
         origin: DataOrigin
             If set to ``INTERNAL`` or ``EXTERNAL_FULL`` the data will be
-            added to the internal data structure self._configid_to_inst_seed_budget
+            added to the internal data structure self._config_id_to_inst_seed_budget
             and be available :meth:`through get_runs_for_config`.
         """
         # Configurations might be already known, but by a different ID. This
@@ -888,7 +893,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         # correctly by assigning an ID to unknown configurations and re-using
         #  the ID
         for key, value in runhistory.data.items():
-            config_id, instance_id, seed, budget = key
+            config_id, instance, seed, budget = key
             cost, time, status, start, end, additional_info = value
             config = runhistory.ids_config[config_id]
             self.add(
@@ -896,7 +901,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
                 cost=cost,
                 time=time,
                 status=status,
-                instance_id=instance_id,
+                instance=instance,
                 starttime=start,
                 endtime=end,
                 seed=seed,

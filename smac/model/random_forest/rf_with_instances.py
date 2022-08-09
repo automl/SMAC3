@@ -283,7 +283,7 @@ class RandomForestWithInstances(BaseRandomForest):
         """
         if self.instance_features is None or len(self.instance_features) == 0:
             mean_, var = self.predict(X)
-            assert var is not None  # please mypy
+            assert var is not None
 
             var[var < self.var_threshold] = self.var_threshold
             var[np.isnan(var)] = self.var_threshold
@@ -291,6 +291,7 @@ class RandomForestWithInstances(BaseRandomForest):
 
         if len(X.shape) != 2:
             raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
+
         if X.shape[1] != len(self.bounds):
             raise ValueError("Rows in X should have %d entries but have %d!" % (len(self.bounds), X.shape[1]))
 
@@ -299,11 +300,11 @@ class RandomForestWithInstances(BaseRandomForest):
         dat_ = np.zeros((X.shape[0], self.rf_opts.num_trees))  # marginalized predictions for each tree
         for i, x in enumerate(X):
 
-            # marginalize over instances
+            # Marginalize over instances
             # 1. get all leaf values for each tree
-            preds_trees = [[] for i in range(self.rf_opts.num_trees)]  # type: List[List[float]]
+            preds_trees: list[list[float]] = [[] for i in range(self.rf_opts.num_trees)]
 
-            for feat in self.instance_features:
+            for feat in self.instance_features.values():
                 x_ = np.concatenate([x, feat])
                 preds_per_tree = self.rf.all_leaf_values(x_)
                 for tree_id, preds in enumerate(preds_per_tree):

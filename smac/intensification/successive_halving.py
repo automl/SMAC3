@@ -704,7 +704,7 @@ class _SuccessiveHalving(AbstractRacer):
             return RunInfoIntent.WAIT, RunInfo(
                 config=None,
                 instance=None,
-                instance_specific="0",
+                # instance_specific="0",
                 seed=0,
                 budget=0.0,
                 source_id=self.identifier,
@@ -752,7 +752,7 @@ class _SuccessiveHalving(AbstractRacer):
                     return RunInfoIntent.WAIT, RunInfo(
                         config=None,
                         instance=None,
-                        instance_specific="0",
+                        # instance_specific="0",
                         seed=0,
                         budget=0.0,
                         source_id=self.identifier,
@@ -772,7 +772,7 @@ class _SuccessiveHalving(AbstractRacer):
                     return RunInfoIntent.SKIP, RunInfo(
                         config=None,
                         instance=None,
-                        instance_specific="0",
+                        # instance_specific="0",
                         seed=0,
                         budget=0.0,
                         source_id=self.identifier,
@@ -831,7 +831,7 @@ class _SuccessiveHalving(AbstractRacer):
         return RunInfoIntent.RUN, RunInfo(
             config=challenger,
             instance=instance,
-            instance_specific=self.instance_specifics.get(instance, "0"),
+            # instance_specific=self.instance_specifics.get(instance, "0"),
             seed=seed,
             budget=budget,
             source_id=self.identifier,

@@ -54,20 +54,20 @@ class StatusType(Enum):
 @dataclass(frozen=True)
 class RunKey:
     config_id: int
-    instance_id: str | None = None
+    instance: str | None = None
     seed: int | None = None
     budget: float = 0.0
 
 
 @dataclass(frozen=True)
 class InstanceSeedKey:
-    instance_id: str
+    instance: str
     seed: int
 
 
 @dataclass(frozen=True)
 class InstanceSeedBudgetKey:
-    instance_id: str
+    instance: str
     seed: int
     budget: float
 
@@ -86,7 +86,7 @@ class RunValue:
 class RunInfo:
     config: Configuration
     instance: str | None
-    instance_specific: str | None
+    # instance_specific: str | None
     seed: int
     budget: float = 0.0
     source_id: int = 0

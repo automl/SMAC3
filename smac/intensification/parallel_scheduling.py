@@ -186,7 +186,7 @@ class ParallelScheduler(AbstractRacer):
         return RunInfoIntent.WAIT, RunInfo(
             config=None,
             instance="0",
-            instance_specific="0",
+            # instance_specific="0",
             seed=0,
             budget=0.0,
         )

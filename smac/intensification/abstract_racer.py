@@ -95,24 +95,24 @@ class AbstractRacer:
         self.min_challenger = min_challenger
 
         # Instances
-        instances: list[Any]
+        instances: list[str]
         if scenario.instances is None:
             instances = []
         else:
             instances = scenario.instances
 
         # Removing duplicates in the user provided instances
-        self.instances = list(OrderedDict.fromkeys(instances))
+        self.instances = list(set(instances))
 
-        # Like what the heck...
+        # We need at least one instance (we choose none here)
         if len(self.instances) == 0:
             self.instances = [None]
 
-        self.instance_specifics: Mapping[str, str]
-        if scenario.instance_specifics is None:
-            self.instance_specifics = {}
-        else:
-            self.instance_specifics = scenario.instance_specifics
+        # self.instance_specifics: Mapping[str, str]
+        # if scenario.instance_specifics is None:
+        #    self.instance_specifics = {}
+        # else:
+        #    self.instance_specifics = scenario.instance_specifics
 
         # general attributes
         self.run_id = 0  # Number of runs done in an iteration so far

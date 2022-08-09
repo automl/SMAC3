@@ -85,8 +85,9 @@ class AbstractRunhistoryTransformer(object):
             StatusType.DONOTADVANCE,
         ],
         impute_censored_data: bool = False,
-        impute_state: Optional[List[StatusType]] = None,
-        consider_for_higher_budgets_state: Optional[List[StatusType]] = [
+        impute_state: List[StatusType] | None = None,
+        consider_for_higher_budgets_state: List[StatusType]
+        | None = [
             StatusType.DONOTADVANCE,
             StatusType.TIMEOUT,
             StatusType.CRASHED,
@@ -98,7 +99,6 @@ class AbstractRunhistoryTransformer(object):
         # General arguments
         self.scenario = scenario
         self.rng = np.random.RandomState(seed)
-        self.n_params = n_params
 
         self.scale_percentage = scale_percentage
         self.n_objectives = scenario.count_objectives()
@@ -124,13 +124,10 @@ class AbstractRunhistoryTransformer(object):
             raise TypeError("success_states not given")
 
         self.success_states = success_states
+
+        self.instances = scenario.instances
         self.instance_features = scenario.instance_features
-
-        if self.instance_features is None:
-            self.n_feats = 0
-        else:
-            self.n_feats = self.instance_features.shape[1]
-
+        self.n_features = scenario.count_instance_features()
         self.n_params = n_params
 
         # Sanity checks
@@ -413,7 +410,7 @@ class AbstractRunhistoryTransformer(object):
         for k, v in runhistory.data.items():
             config = runhistory.ids_config[k.config_id]
             x = [config.get(p.name) for p in params]
-            features = feature_dict.get(k.instance_id)
+            features = feature_dict.get(k.instance)
             if features:
                 x.extend(features)
             X.append(x)
@@ -454,7 +451,7 @@ class RunhistoryTransformer(AbstractRunhistoryTransformer):
         # First build nan-matrix of size #configs x #params+1
         n_rows = len(run_dict)
         n_cols = self.n_params
-        X = np.ones([n_rows, n_cols + self.n_feats]) * np.nan
+        X = np.ones([n_rows, n_cols + self.n_features]) * np.nan
 
         # For now we keep it as 1
         # TODO: Extend for native multi-objective
@@ -465,9 +462,9 @@ class RunhistoryTransformer(AbstractRunhistoryTransformer):
             # Scaling is automatically done in configSpace
             conf = runhistory.ids_config[key.config_id]
             conf_vector = convert_configurations_to_array([conf])[0]
-            if self.n_feats:
-                feats = self.instance_features[key.instance_id]
-                X[row, :] = np.hstack((conf_vector, feats))  # type: ignore
+            if self.n_features > 0:
+                feats = self.instance_features[key.instance]
+                X[row, :] = np.hstack((conf_vector, feats))
             else:
                 X[row, :] = conf_vector
             # run_array[row, -1] = instances[row]
@@ -568,9 +565,8 @@ class RunhistoryInverseScaledTransformer(RunhistoryTransformer):
 
     def __init__(self, **kwargs):  # type: ignore[no-untyped-def] # noqa F723
         super().__init__(**kwargs)
-        if self.instance_features is not None:
-            if len(self.instance_features) > 1:
-                raise NotImplementedError("Handling more than one instance is not supported for inverse scaled cost.")
+        if self.instances is not None and len(self.instances) > 1:
+            raise NotImplementedError("Handling more than one instance is not supported for inverse scaled cost.")
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
         """Transform function response values. Transform the response values by linearly scaling
@@ -602,9 +598,8 @@ class RunHistory2EPM4SqrtScaledCost(RunhistoryTransformer):
 
     def __init__(self, **kwargs):  # type: ignore[no-untyped-def]  # noqa F723
         super().__init__(**kwargs)
-        if self.instance_features is not None:
-            if len(self.instance_features) > 1:
-                raise NotImplementedError("Handling more than one instance is not supported for sqrt scaled cost.")
+        if self.instances is not None and len(self.instances) > 1:
+            raise NotImplementedError("Handling more than one instance is not supported for sqrt scaled cost.")
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
         """Transform function response values. Transform the response values by linearly scaling
@@ -682,7 +677,7 @@ class RunHistory2EPM4EIPS(AbstractRunhistoryTransformer):
         # First build nan-matrix of size #configs x #params+1
         n_rows = len(run_dict)
         n_cols = self.n_params
-        X = np.ones([n_rows, n_cols + self.n_feats]) * np.nan
+        X = np.ones([n_rows, n_cols + self.n_features]) * np.nan
         y = np.ones([n_rows, 2])
 
         # Then populate matrix
@@ -690,9 +685,9 @@ class RunHistory2EPM4EIPS(AbstractRunhistoryTransformer):
             # Scaling is automatically done in configSpace
             conf = runhistory.ids_config[key.config_id]
             conf_vector = convert_configurations_to_array([conf])[0]
-            if self.n_feats:
-                feats = self.instance_features[key.instance_id]
-                X[row, :] = np.hstack((conf_vector, feats))  # type: ignore
+            if self.n_features > 0:
+                feats = self.instance_features[key.instance]
+                X[row, :] = np.hstack((conf_vector, feats))
             else:
                 X[row, :] = conf_vector
 

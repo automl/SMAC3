@@ -86,7 +86,7 @@ if __name__ == "__main__":
     print(f"Default value: {round(default_value, 2)}")
 
     # Now we use SMAC to find the best hyperparameters
-    smac = HyperparameterFacade(scenario, target_algorithm)
+    smac = HyperparameterFacade(scenario, target_algorithm, overwrite=True)
     incumbent = smac.optimize()
 
     incumbent_value = target_algorithm(incumbent)
