@@ -16,6 +16,7 @@ from smac.configspace import Configuration
 from smac.initial_design import InitialDesign
 from smac.intensification import AbstractIntensifier
 from smac.model.base_imputor import BaseImputor
+from smac.callback import Callback
 from smac.model.base_model import BaseModel
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.random_forest.rfr_imputator import RFRImputator
@@ -50,6 +51,7 @@ class Facade:
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
         # Level of logging; if path passed: yaml file expected; if none: use default logging from logging.yml
         logging_level: int | Path | None = None,
+        callbacks: list[Callback] = [],
         # Overwrites the results if they are already given; otherwise, the user is asked
         overwrite: bool = False,
     ):
@@ -158,6 +160,10 @@ class Facade:
             random_configuration_chooser=self.random_configuration_chooser,
             seed=self.seed,
         )
+
+        # Register callbacks here
+        for callback in callbacks:
+            self.optimizer.register_callback(callback)
 
         # Adding dependencies of the components
         self._update_dependencies()
@@ -315,10 +321,6 @@ class Facade:
                 logger.info(f"Estimated cost: {cost}")
 
         return incumbent
-
-    def register_callback(self, callback: Callable) -> None:
-        """Register a callback function."""
-        raise NotImplementedError
 
     @staticmethod
     @abstractmethod

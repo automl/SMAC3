@@ -7,7 +7,7 @@ import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 import smac.facade.algorithm_configuration
-from smac.callbacks.callbacks import IncorporateRunResultCallback
+from smac.callback import IncorporateRunResultCallback
 from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
 from smac.configspace import ConfigurationSpace

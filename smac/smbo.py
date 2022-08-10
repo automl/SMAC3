@@ -8,7 +8,6 @@ import numpy as np
 
 from smac.acquisition.functions import AbstractAcquisitionFunction
 from smac.acquisition import AbstractAcquisitionOptimizer
-from smac.callbacks.callbacks import IncorporateRunResultCallback
 from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.chooser.random_chooser import RandomChooser
 from smac.configspace import Configuration
@@ -28,6 +27,7 @@ from smac.runner import (
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 from smac.utils.stats import Stats
+from smac.callback import Callback
 from smac.utils.validate import Validator
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -133,16 +133,10 @@ class SMBO:
 
         self.initial_design_configs: list[Configuration] = []
 
-        # Callbacks. All known callbacks have a key. If something does not have a key here, there is
-        # no callback available.
-        self._callbacks: dict[str, list[Callable]] = {"_incorporate_run_results": list()}
-        self._callback_to_key: dict[Type, str] = {
-            IncorporateRunResultCallback: "_incorporate_run_results",
-        }
-
         # Internal variable - if this is set to True it will gracefully stop SMAC
         self._stop = False
         self._min_time = 10**-5
+        self._callbacks: list[Callback] = []
 
     def _start(self) -> None:
         """Starts the Bayesian Optimization loop and detects whether the optimization is restored
@@ -341,13 +335,13 @@ class SMBO:
             result=result,
         )
 
-        for callback in self._callbacks["_incorporate_run_results"]:
-            response = callback(smbo=self, run_info=run_info, result=result, time_left=time_left)
+        for callback in self._callbacks:
+            response = callback.on_iteration_end(smbo=self, info=run_info, value=result)
 
             # If a callback returns False, the optimization loop should be interrupted
             # the other callbacks are still being called.
             if response is False:
-                logger.debug("An IncorporateRunResultCallback returned False. Abort is requested.")
+                logger.debug("An callback returned False. Abort is requested.")
                 self._stop = True
 
         # We always save immediately
@@ -355,6 +349,9 @@ class SMBO:
         self.save()
 
         return
+
+    def register_callback(self, callback: Callback) -> None:
+        self._callbacks += [callback]
 
     def run(self) -> Configuration:
         """Runs the Bayesian optimization loop.
@@ -367,11 +364,17 @@ class SMBO:
         # Make sure we use the right incumbent
         self.incumbent = self.stats.get_incumbent()
 
-        self.start()
+        self._start()
         n_objectives = self.scenario.count_objectives()
+
+        for callback in self._callbacks:
+            callback.on_start(self)
 
         # Main BO loop
         while True:
+            for callback in self._callbacks:
+                callback.on_iteration_start(self)
+
             start_time = time.time()
 
             # Sample next configuration for intensification.
@@ -483,6 +486,9 @@ class SMBO:
             # Print stats at the end of each intensification iteration.
             if self.intensifier.iteration_done:
                 self.stats.print()
+
+        for callback in self._callbacks:
+            callback.on_end(self)
 
         return self.incumbent
 

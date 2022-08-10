@@ -8,7 +8,7 @@ import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from ConfigSpace.util import get_one_exchange_neighbourhood
 
-from smac.callbacks.callbacks import IncorporateRunResultCallback
+from smac.callback import IncorporateRunResultCallback
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.model.random_model import RandomModel
