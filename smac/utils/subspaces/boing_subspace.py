@@ -8,7 +8,7 @@ import numpy as np
 from ConfigSpace import ConfigurationSpace
 
 from smac.acquisition_function import EI, AbstractAcquisitionFunction
-from smac.acquisition_optimizer import (
+from smac.acquisition import (
     AbstractAcquisitionOptimizer,
     LocalAndSortedRandomSearch,
 )

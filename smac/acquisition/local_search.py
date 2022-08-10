@@ -10,8 +10,8 @@ import time
 
 import numpy as np
 
-from smac.acquisition_function import AbstractAcquisitionFunction
-from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition.functions import AbstractAcquisitionFunction
+from smac.acquisition import AbstractAcquisitionOptimizer
 from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.configspace import (
     Configuration,

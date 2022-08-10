@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from smac.chooser import Chooser
+from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.facade.hyperparameter import HyperparameterFacade
 from smac.initial_design.random_configuration_design import RandomInitialDesign
@@ -43,7 +43,7 @@ class MultiFidelityFacade(HyperparameterFacade):
         )
 
     @staticmethod
-    def get_configuration_chooser(scenario: Scenario) -> Chooser:
+    def get_configuration_chooser(scenario: Scenario) -> ConfigurationChooser:
         # MultiFidelityFacade requires at least D+1 number of samples to build a model
         min_samples_model = len(scenario.configspace.get_hyperparameters()) + 1
-        return Chooser(min_samples_model=min_samples_model)
+        return ConfigurationChooser(min_samples_model=min_samples_model)

@@ -8,7 +8,7 @@ from enum import Enum
 
 import numpy as np
 
-from smac.chooser import Chooser
+from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.runhistory import RunInfo, RunValue
 from smac.runhistory.runhistory import RunHistory
@@ -132,7 +132,7 @@ class AbstractIntensifier:
         self,
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: Optional[Chooser],
+        chooser: Optional[ConfigurationChooser],
         runhistory: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
@@ -209,7 +209,7 @@ class AbstractIntensifier:
     def _next_challenger(
         self,
         challengers: Optional[List[Configuration]],
-        chooser: Optional[Chooser],
+        chooser: Optional[ConfigurationChooser],
         runhistory: RunHistory,
         repeat_configs: bool = True,
     ) -> Optional[Configuration]:

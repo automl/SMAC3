@@ -107,12 +107,12 @@ class AbstractAcquisitionFunction(metaclass=abc.ABCMeta):
 
 
 try:
-    from smac.acquisition_function.confidence_bound import LCB
-    from smac.acquisition_function.expected_improvement import EI, EIPS
-    from smac.acquisition_function.integrated import IntegratedAcquisitionFunction
-    from smac.acquisition_function.prior import PriorAcquisitionFunction
-    from smac.acquisition_function.probability_improvement import PI
-    from smac.acquisition_function.thompson import TS
+    from smac.acquisition.functions.confidence_bound import LCB
+    from smac.acquisition.functions.expected_improvement import EI, EIPS
+    from smac.acquisition.functions.integrated import IntegratedAcquisitionFunction
+    from smac.acquisition.functions.prior import PriorAcquisitionFunction
+    from smac.acquisition.functions.probability_improvement import PI
+    from smac.acquisition.functions.thompson import TS
 
     __all__ = [
         "LCB",

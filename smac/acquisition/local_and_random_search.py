@@ -10,10 +10,10 @@ import time
 
 import numpy as np
 
-from smac.acquisition_function import AbstractAcquisitionFunction
-from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
-from smac.acquisition_optimizer.local_search import LocalSearch
-from smac.acquisition_optimizer.random_search import RandomSearch
+from smac.acquisition.functions import AbstractAcquisitionFunction
+from smac.acquisition import AbstractAcquisitionOptimizer
+from smac.acquisition.local_search import LocalSearch
+from smac.acquisition.random_search import RandomSearch
 from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.configspace import (
     Configuration,

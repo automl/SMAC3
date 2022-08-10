@@ -8,9 +8,9 @@ from pathlib import Path
 import joblib
 import numpy as np
 
-from smac.acquisition_function import AbstractAcquisitionFunction
-from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
-from smac.chooser import Chooser
+from smac.acquisition.functions import AbstractAcquisitionFunction
+from smac.acquisition import AbstractAcquisitionOptimizer
+from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.chooser.random_chooser import RandomChooser
 from smac.configspace import Configuration
 from smac.initial_design import InitialDesign
@@ -44,7 +44,7 @@ class Facade:
         acquisition_function: AbstractAcquisitionFunction | None = None,
         acquisition_optimizer: AbstractAcquisitionOptimizer | None = None,
         initial_design: InitialDesign | None = None,
-        configuration_chooser: Chooser | None = None,
+        configuration_chooser: ConfigurationChooser | None = None,
         random_configuration_chooser: RandomChooser | None = None,
         intensifier: AbstractIntensifier | None = None,
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
@@ -346,8 +346,8 @@ class Facade:
         raise NotImplementedError
 
     @staticmethod
-    def get_configuration_chooser(scenario: Scenario) -> Chooser:
-        return Chooser()
+    def get_configuration_chooser(scenario: Scenario) -> ConfigurationChooser:
+        return ConfigurationChooser()
 
     @staticmethod
     @abstractmethod

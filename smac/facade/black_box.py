@@ -3,10 +3,10 @@ from __future__ import annotations
 import numpy as np
 import sklearn.gaussian_process.kernels as kernels
 
-from smac.acquisition_function import AbstractAcquisitionFunction
-from smac.acquisition_function.expected_improvement import EI
-from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
-from smac.acquisition_optimizer.local_and_random_search import (
+from smac.acquisition.functions import AbstractAcquisitionFunction
+from smac.acquisition.functions.expected_improvement import EI
+from smac.acquisition import AbstractAcquisitionOptimizer
+from smac.acquisition.local_and_random_search import (
     LocalAndSortedRandomSearch,
 )
 from smac.chooser.random_chooser import ChooserProb, RandomChooser

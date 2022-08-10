@@ -6,7 +6,7 @@ import warnings
 
 import numpy as np
 
-from smac.chooser import Chooser
+from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification import AbstractIntensifier, RunInfoIntent
@@ -651,7 +651,7 @@ class _SuccessiveHalving(AbstractIntensifier):
         self,
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: Optional[Chooser],
+        chooser: Optional[ConfigurationChooser],
         runhistory: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,

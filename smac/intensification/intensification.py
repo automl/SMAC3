@@ -7,7 +7,7 @@ from enum import Enum
 
 import numpy as np
 
-from smac.chooser import Chooser
+from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification import (
@@ -183,13 +183,13 @@ class Intensifier(AbstractIntensifier):
 
     def get_next_run(
         self,
-        challengers: Optional[List[Configuration]],
+        challengers: list[Configuration] | None,
         incumbent: Configuration,
-        chooser: Optional[Chooser],
+        chooser: ConfigurationChooser | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
-    ) -> Tuple[RunInfoIntent, RunInfo]:
+    ) -> tuple[RunInfoIntent, RunInfo]:
         """This procedure is in charge of generating a RunInfo object to comply with lines 7 (in
         case stage is stage==RUN_INCUMBENT) or line 12 (In case of stage==RUN_CHALLENGER)
 
@@ -809,9 +809,9 @@ class Intensifier(AbstractIntensifier):
 
     def get_next_challenger(
         self,
-        challengers: Optional[List[Configuration]],
-        chooser: Optional[Chooser],
-    ) -> Tuple[Optional[Configuration], bool]:
+        challengers: list[Configuration] | None,
+        chooser: ConfigurationChooser | None,
+    ) -> tuple[Configuration | None, bool]:
         """This function returns the next challenger, that should be exercised though lines 8-17.
 
         It does so by populating configs_to_run, which is a pool of configuration
@@ -873,8 +873,8 @@ class Intensifier(AbstractIntensifier):
 
     def _generate_challengers(
         self,
-        challengers: Optional[List[Configuration]],
-        chooser: Optional[Chooser],
+        challengers: list[Configuration] | None,
+        chooser: ConfigurationChooser | None,
     ) -> _config_to_run_type:
         """Retuns a sequence of challengers to use in intensification If challengers are not
         provided, then optimizer will be used to generate the challenger list.

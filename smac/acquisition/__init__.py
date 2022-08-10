@@ -9,7 +9,7 @@ import logging
 import numpy as np
 
 import smac
-from smac.acquisition_function import AbstractAcquisitionFunction
+from smac.acquisition.functions import AbstractAcquisitionFunction
 from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.runhistory.runhistory import RunHistory

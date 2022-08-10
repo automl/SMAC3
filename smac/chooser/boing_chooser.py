@@ -8,11 +8,11 @@ from itertools import chain
 import numpy as np
 from ConfigSpace.hyperparameters import NumericalHyperparameter
 
-from smac.acquisition_function import AbstractAcquisitionFunction
-from smac.acquisition_function.expected_improvement import EI
-from smac.acquisition_function.thompson import TS
-from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
-from smac.chooser import Chooser
+from smac.acquisition.functions import AbstractAcquisitionFunction
+from smac.acquisition.functions.expected_improvement import EI
+from smac.acquisition.functions.thompson import TS
+from smac.acquisition import AbstractAcquisitionOptimizer
+from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration
@@ -28,7 +28,7 @@ from smac.utils.subspaces.boing_subspace import BOinGSubspace
 from smac.utils.subspaces.turbo_subspace import TuRBOSubSpace
 
 
-class BOinGChooser(Chooser):
+class BOinGChooser(ConfigurationChooser):
     """
     Interface to train the EPM and generate next configurations with both global and local models.
 

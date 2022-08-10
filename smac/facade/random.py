@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from smac.acquisition_function.expected_improvement import EI
-from smac.acquisition_optimizer.random_search import (
+from smac.acquisition.functions.expected_improvement import EI
+from smac.acquisition.random_search import (
     AbstractAcquisitionOptimizer,
     RandomSearch,
 )

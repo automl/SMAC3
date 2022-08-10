@@ -4,7 +4,7 @@ from typing import List, Tuple
 
 import numpy as np
 
-from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition import AbstractAcquisitionOptimizer
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.stats import Stats
