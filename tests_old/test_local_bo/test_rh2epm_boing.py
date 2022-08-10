@@ -1,10 +1,10 @@
 import numpy as np
 
-from smac.runhistory.runhistory_transformer import (
+from smac.runhistory.encoder.encoder import (
     RunhistoryTransformer,
     RunhistoryLogScaledTransformer,
 )
-from smac.runhistory.runhistory2epm_boing import (
+from smac.runhistory.encoder.boing_encoder import (
     RunHistory2EPM4CostWithRaw,
     RunHistory2EPM4ScaledLogCostWithRaw,
 )

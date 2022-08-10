@@ -17,7 +17,7 @@ from smac.model.random_forest.rfr_imputator import RFRImputator
 from smac.model.utils import get_types
 from smac.runhistory import RunInfo, RunKey, RunValue, StatusType
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory_transformer import RunhistoryTransformer
+from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runner import Runner
 
 # from smac.runner.old.execute_ta_run_old import ExecuteTARunOld

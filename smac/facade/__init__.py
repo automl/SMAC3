@@ -22,7 +22,7 @@ from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.random_forest.rfr_imputator import RFRImputator
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory_transformer import RunhistoryTransformer
+from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runner import Runner
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
@@ -140,7 +140,7 @@ class Facade:
         self.intensifier = intensifier
         self.multi_objective_algorithm = multi_objective_algorithm
         self.runhistory = runhistory
-        self.runhistory_transformer = self.get_runhistory_transformer(scenario)
+        self.runhistory_encoder = self.get_runhistory_encoder(scenario)
         self.stats = stats
         self.seed = scenario.seed
 
@@ -151,7 +151,7 @@ class Facade:
             runner=self.runner,
             initial_design=self.initial_design,
             runhistory=self.runhistory,
-            runhistory_transformer=self.runhistory_transformer,
+            runhistory_encoder=self.runhistory_encoder,
             intensifier=self.intensifier,
             model=self.model,
             acquisition_function=self.acquisition_function,
@@ -189,20 +189,20 @@ class Facade:
         # We add some more dependencies.
         # This is the easiest way to incorporate dependencies, although it might be a bit hacky.
         self.intensifier._set_stats(self.stats)
-        self.runhistory_transformer._set_multi_objective_algorithm(self.multi_objective_algorithm)
-        self.runhistory_transformer._set_imputer(self._get_imputer())
+        self.runhistory_encoder._set_multi_objective_algorithm(self.multi_objective_algorithm)
+        self.runhistory_encoder._set_imputer(self._get_imputer())
         self.acquisition_function._set_model(self.model)
         self.acquisition_optimizer._set_acquisition_function(self.acquisition_function)
         self.configuration_chooser._set_smbo(self.optimizer)
 
-        # TODO: self.runhistory_transformer.set_success_states etc. for different intensifier?
+        # TODO: self.runhistory_encoder.set_success_states etc. for different intensifier?
 
     def _validate(self) -> None:
         # Make sure the same acquisition function is used
         assert self.acquisition_function == self.acquisition_optimizer.acquisition_function
 
         # We have to check that if we use transform_y it's done everywhere
-        # For example, if we have LogEI, we also need to transform the data inside RunhistoryTransformer
+        # For example, if we have LogEI, we also need to transform the data inside RunHistoryEncoder
 
     def _continue(self, overwrite: bool = False) -> None:
         """Update the runhistory and stats object if configs (inclusive meta data) are the same."""
@@ -363,5 +363,5 @@ class Facade:
 
     @staticmethod
     @abstractmethod
-    def get_runhistory_transformer(scenario: Scenario) -> RunhistoryTransformer:
+    def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:
         raise NotImplementedError

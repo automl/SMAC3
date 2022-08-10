@@ -8,7 +8,8 @@ from smac.cli.scenario import Scenario
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.random_forest.rfr_imputator import RFRImputator
 from smac.model.utils import get_types
-from smac.runhistory import runhistory, runhistory_transformer
+from smac.runhistory import runhistory
+from smac.runhistory.encoder import encoder
 from smac.runner import StatusType
 
 __author__ = "Katharina Eggensperger"
@@ -59,7 +60,7 @@ class RunhistoryTest(unittest.TestCase):
             ),
         )
 
-        rh2epm = runhistory_transformer.RunhistoryLogTransformer(
+        rh2epm = encoder.RunhistoryLogTransformer(
             num_params=2,
             scenario=self.scen,
             impute_censored_data=True,
@@ -122,7 +123,7 @@ class RunhistoryTest(unittest.TestCase):
         adding some rundata to RunHistory2EPM4LogCost
         """
 
-        rh2epm = runhistory_transformer.RunhistoryLogTransformer(
+        rh2epm = encoder.RunhistoryLogTransformer(
             num_params=2,
             success_states=[
                 StatusType.SUCCESS,
@@ -196,7 +197,7 @@ class RunhistoryTest(unittest.TestCase):
             ),
         )
 
-        rh2epm = runhistory_transformer.RunhistoryTransformer(
+        rh2epm = encoder.RunhistoryTransformer(
             num_params=2,
             scenario=self.scen,
             impute_censored_data=True,
@@ -255,7 +256,7 @@ class RunhistoryTest(unittest.TestCase):
         adding some rundata to RunHistory2EPM4Cost without imputation
         """
 
-        rh2epm = runhistory_transformer.RunhistoryTransformer(
+        rh2epm = encoder.RunhistoryTransformer(
             num_params=2,
             success_states=[StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT],
             impute_censored_data=False,
@@ -313,7 +314,7 @@ class RunhistoryTest(unittest.TestCase):
         """
         self.scen = Scenario({"cutoff_time": 20, "cs": self.cs, "run_obj": "quality", "output_dir": ""})
 
-        rh2epm = runhistory_transformer.RunhistoryTransformer(
+        rh2epm = encoder.RunhistoryTransformer(
             num_params=2,
             success_states=[StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT],
             impute_censored_data=False,
@@ -367,7 +368,7 @@ class RunhistoryTest(unittest.TestCase):
             }
         )
 
-        rh2epm = runhistory_transformer.RunhistoryTransformer(
+        rh2epm = encoder.RunhistoryTransformer(
             num_params=2,
             success_states=[
                 StatusType.SUCCESS,
@@ -435,7 +436,7 @@ class RunhistoryTest(unittest.TestCase):
         adding some rundata and check budget selection
         """
 
-        rh2epm = runhistory_transformer.RunhistoryTransformer(
+        rh2epm = encoder.RunhistoryTransformer(
             num_params=2,
             success_states=[StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT],
             impute_censored_data=False,
@@ -532,7 +533,7 @@ class RunhistoryTest(unittest.TestCase):
             (StatusType.MEMOUT, 3),
             (StatusType.DONOTADVANCE, 4),
         ]:
-            rh2epm = runhistory_transformer.RunhistoryTransformer(
+            rh2epm = encoder.RunhistoryTransformer(
                 num_params=2,
                 success_states=[
                     s,
@@ -555,7 +556,7 @@ class RunhistoryTest(unittest.TestCase):
             (StatusType.DONOTADVANCE, []),
             (StatusType.TIMEOUT, []),
         ]:
-            rh2epm = runhistory_transformer.RunhistoryTransformer(
+            rh2epm = encoder.RunhistoryTransformer(
                 num_params=2,
                 success_states=[
                     s,
@@ -567,7 +568,7 @@ class RunhistoryTest(unittest.TestCase):
             self.assertSetEqual(set(y.flatten()), set(v))
 
         # Test defaults set in SMAC facade
-        rh2epm = runhistory_transformer.RunhistoryTransformer(
+        rh2epm = encoder.RunhistoryTransformer(
             num_params=2,
             success_states=[
                 StatusType.SUCCESS,

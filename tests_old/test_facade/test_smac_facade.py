@@ -31,7 +31,7 @@ from smac.optimizer.configuration_chooser.random_chooser import (
     ChooserProb,
 )
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory_transformer import (
+from smac.runhistory.encoder.encoder import (
     RunhistoryTransformer,
     RunHistory2EPM4EIPS,
     RunhistoryLogTransformer,

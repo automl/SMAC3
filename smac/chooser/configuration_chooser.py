@@ -65,7 +65,7 @@ class ConfigurationChooser:
 
         # Get #points per budget and if there are enough samples, then build a model
         for b in available_budgets:
-            X, Y = self.smbo.runhistory_transformer.transform(
+            X, Y = self.smbo.runhistory_encoder.transform(
                 self.smbo.runhistory,
                 budget_subset=[
                     b,
@@ -75,7 +75,7 @@ class ConfigurationChooser:
                 self.currently_considered_budgets = [
                     b,
                 ]
-                configs_array = self.smbo.runhistory_transformer.get_configurations(
+                configs_array = self.smbo.runhistory_encoder.get_configurations(
                     self.smbo.runhistory, budget_subset=self.currently_considered_budgets
                 )
                 return X, Y, configs_array
@@ -140,7 +140,7 @@ class ConfigurationChooser:
             best_observation_as_array = np.array(best_observation).reshape((1, 1))
             # It's unclear how to do this for inv scaling and potential future scaling.
             # This line should be changed if necessary
-            best_observation = self.smbo.runhistory_transformer.transform_response_values(best_observation_as_array)
+            best_observation = self.smbo.runhistory_encoder.transform_response_values(best_observation_as_array)
             best_observation = best_observation[0][0]
 
         return x_best_array, best_observation

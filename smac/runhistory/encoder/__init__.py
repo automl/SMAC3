@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import abc
-from typing import Dict, List, Mapping, Optional, Tuple
+from typing import Mapping, Optional, Tuple
 
 import numpy as np
 
@@ -22,7 +22,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class AbstractRunhistoryTransformer(object):
+class AbstractRunHistoryEncoder:
     __metaclass__ = abc.ABCMeta
 
     """Abstract class for preprocessing data in order to train an EPM.
@@ -78,15 +78,15 @@ class AbstractRunhistoryTransformer(object):
         self,
         scenario: Scenario,
         n_params: int,
-        success_states: List[StatusType] = [
+        success_states: list[StatusType] = [
             StatusType.SUCCESS,
             StatusType.CRASHED,
             StatusType.MEMOUT,
             StatusType.DONOTADVANCE,
         ],
         impute_censored_data: bool = False,
-        impute_state: List[StatusType] | None = None,
-        consider_for_higher_budgets_state: List[StatusType]
+        impute_state: list[StatusType] | None = None,
+        consider_for_higher_budgets_state: list[StatusType]
         | None = [
             StatusType.DONOTADVANCE,
             StatusType.TIMEOUT,
@@ -110,13 +110,15 @@ class AbstractRunhistoryTransformer(object):
         if impute_state is None and impute_censored_data:
             raise TypeError("No `impute_state` is given.")
 
+        self.impute_state: list[StatusType]
         if impute_state is None:
-            self.impute_state = []  # type: List[StatusType]
+            self.impute_state = []
         else:
             self.impute_state = impute_state
 
+        self.consider_for_higher_budgets_state: list[StatusType]
         if consider_for_higher_budgets_state is None:
-            self.consider_for_higher_budgets_state = []  # type: List[StatusType]
+            self.consider_for_higher_budgets_state = []
         else:
             self.consider_for_higher_budgets_state = consider_for_higher_budgets_state
 
@@ -187,8 +189,8 @@ class AbstractRunhistoryTransformer(object):
     def _get_s_run_dict(
         self,
         runhistory: RunHistory,
-        budget_subset: Optional[List] = None,
-    ) -> Dict[RunKey, RunValue]:
+        budget_subset: list | None = None,
+    ) -> dict[RunKey, RunValue]:
         # Get only successfully finished runs
         if budget_subset is not None:
             if len(budget_subset) != 1:
@@ -217,8 +219,8 @@ class AbstractRunhistoryTransformer(object):
     def _get_t_run_dict(
         self,
         runhistory: RunHistory,
-        budget_subset: Optional[List] = None,
-    ) -> Dict[RunKey, RunValue]:
+        budget_subset: list | None = None,
+    ) -> dict[RunKey, RunValue]:
         if budget_subset is not None:
             t_run_dict = {
                 run: runhistory.data[run]
@@ -239,7 +241,7 @@ class AbstractRunhistoryTransformer(object):
     def get_configurations(
         self,
         runhistory: RunHistory,
-        budget_subset: Optional[List] = None,
+        budget_subset: list | None = None,
     ) -> np.ndarray:
         """Returns vector representation of only the configurations. Instance features are not
         appended and cost values are not taken into account.
@@ -266,7 +268,7 @@ class AbstractRunhistoryTransformer(object):
     def transform(
         self,
         runhistory: RunHistory,
-        budget_subset: Optional[List] = None,
+        budget_subset: list | None = None,
     ) -> Tuple[np.ndarray, np.ndarray]:
         """Returns vector representation of runhistory; if imputation is disabled, censored (TIMEOUT
         with time < cutoff) will be skipped.
@@ -418,311 +420,3 @@ class AbstractRunhistoryTransformer(object):
             cen.append(v.status != StatusType.SUCCESS)
 
         return np.array(X), np.array(y), np.array(cen)
-
-
-class RunhistoryTransformer(AbstractRunhistoryTransformer):
-    """TODO."""
-
-    def _build_matrix(
-        self,
-        run_dict: Mapping[RunKey, RunValue],
-        runhistory: RunHistory,
-        return_time_as_y: bool = False,
-        store_statistics: bool = False,
-    ) -> Tuple[np.ndarray, np.ndarray]:
-        """Builds X,y matrixes from selected runs from runhistory.
-
-        Parameters
-        ----------
-        run_dict: dict: RunKey -> RunValue
-            dictionary from RunHistory.RunKey to RunHistory.RunValue
-        runhistory: RunHistory
-            runhistory object
-        return_time_as_y: bool
-            Return the time instead of cost as y value. Necessary to access the raw y values for imputation.
-        store_statistics: bool
-            Whether to store statistics about the data (to be used at subsequent calls)
-
-        Returns
-        -------
-        X: np.ndarray
-        Y: np.ndarray
-        """
-        # First build nan-matrix of size #configs x #params+1
-        n_rows = len(run_dict)
-        n_cols = self.n_params
-        X = np.ones([n_rows, n_cols + self.n_features]) * np.nan
-
-        # For now we keep it as 1
-        # TODO: Extend for native multi-objective
-        y = np.ones([n_rows, 1])
-
-        # Then populate matrix
-        for row, (key, run) in enumerate(run_dict.items()):
-            # Scaling is automatically done in configSpace
-            conf = runhistory.ids_config[key.config_id]
-            conf_vector = convert_configurations_to_array([conf])[0]
-            if self.n_features > 0:
-                feats = self.instance_features[key.instance]
-                X[row, :] = np.hstack((conf_vector, feats))
-            else:
-                X[row, :] = conf_vector
-            # run_array[row, -1] = instances[row]
-
-            if self.n_objectives > 1:
-                assert self.multi_objective_algorithm is not None
-
-                # Let's normalize y here
-                # We use the objective_bounds calculated by the runhistory
-                y_ = normalize_costs(run.cost, runhistory.objective_bounds)
-                y_agg = self.multi_objective_algorithm(y_)
-                y[row] = y_agg
-            else:
-                if return_time_as_y:
-                    y[row, 0] = run.time
-                else:
-                    y[row] = run.cost
-
-        if y.size > 0:
-            if store_statistics:
-                self.perc = np.percentile(y, self.scale_percentage, axis=0)
-                self.min_y = np.min(y, axis=0)
-                self.max_y = np.max(y, axis=0)
-
-        y = self.transform_response_values(values=y)
-        return X, y
-
-    def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values. Returns the input values.
-
-        Parameters
-        ----------
-        values : np.ndarray
-            Response values to be transformed.
-
-        Returns
-        -------
-        np.ndarray
-        """
-        return values
-
-
-class RunhistoryLogTransformer(RunhistoryTransformer):
-    """TODO."""
-
-    def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values. Transforms the response values by using a log
-        transformation.
-
-        Parameters
-        ----------
-        values : np.ndarray
-            Response values to be transformed.
-
-        Returns
-        -------
-        np.ndarray
-        """
-        # ensure that minimal value is larger than 0
-        if np.any(values <= 0):
-            logger.warning(
-                "Got cost of smaller/equal to 0. Replace by %f since we use"
-                " log cost." % constants.MINIMAL_COST_FOR_LOG
-            )
-            values[values < constants.MINIMAL_COST_FOR_LOG] = constants.MINIMAL_COST_FOR_LOG
-        values = np.log(values)
-        return values
-
-
-class RunHistory2EPM4ScaledCost(RunhistoryTransformer):
-    """TODO."""
-
-    def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values. Transforms the response values by linearly scaling
-        them between zero and one.
-
-        Parameters
-        ----------
-        values : np.ndarray
-            Response values to be transformed.
-
-        Returns
-        -------
-        np.ndarray
-        """
-        min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
-        min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
-        # linear scaling
-        # prevent diving by zero
-
-        min_y[np.where(min_y == self.max_y)] *= 1 - 10**-101
-        values = (values - min_y) / (self.max_y - min_y)
-        return values
-
-
-class RunhistoryInverseScaledTransformer(RunhistoryTransformer):
-    """TODO."""
-
-    def __init__(self, **kwargs):  # type: ignore[no-untyped-def] # noqa F723
-        super().__init__(**kwargs)
-        if self.instances is not None and len(self.instances) > 1:
-            raise NotImplementedError("Handling more than one instance is not supported for inverse scaled cost.")
-
-    def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values. Transform the response values by linearly scaling
-        them between zero and one and then using inverse scaling.
-
-        Parameters
-        ----------
-        values : np.ndarray
-            Response values to be transformed.
-
-        Returns
-        -------
-        np.ndarray
-        """
-        min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
-        min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
-        # linear scaling
-        # prevent diving by zero
-
-        min_y[np.where(min_y == self.max_y)] *= 1 - 10**-10
-
-        values = (values - min_y) / (self.max_y - min_y)
-        values = 1 - 1 / values
-        return values
-
-
-class RunHistory2EPM4SqrtScaledCost(RunhistoryTransformer):
-    """TODO."""
-
-    def __init__(self, **kwargs):  # type: ignore[no-untyped-def]  # noqa F723
-        super().__init__(**kwargs)
-        if self.instances is not None and len(self.instances) > 1:
-            raise NotImplementedError("Handling more than one instance is not supported for sqrt scaled cost.")
-
-    def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values. Transform the response values by linearly scaling
-        them between zero and one and then using the square root.
-
-        Parameters
-        ----------
-        values : np.ndarray
-            Response values to be transformed.
-
-        Returns
-        -------
-        np.ndarray
-        """
-        min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
-        min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
-        # linear scaling
-        # prevent diving by zero
-
-        min_y[np.where(min_y == self.max_y)] *= 1 - 10**-10
-
-        values = (values - min_y) / (self.max_y - min_y)
-        values = np.sqrt(values)
-        return values
-
-
-class RunhistoryLogScaledTransformer(RunhistoryTransformer):
-    """TODO."""
-
-    def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values.
-
-        Transform the response values by linearly scaling them between zero and one and
-        then using the log transformation.
-
-        Parameters
-        ----------
-        values : np.ndarray
-            Response values to be transformed.
-
-        Returns
-        -------
-        np.ndarray
-        """
-        min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
-        min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
-        # linear scaling
-        # prevent diving by zero
-
-        min_y[np.where(min_y == self.max_y)] *= 1 - 10**-10
-
-        values = (values - min_y) / (self.max_y - min_y)
-
-        values = np.log(values)
-        return values
-
-
-class RunHistory2EPM4EIPS(AbstractRunhistoryTransformer):
-    """TODO."""
-
-    def _build_matrix(
-        self,
-        run_dict: Mapping[RunKey, RunValue],
-        runhistory: RunHistory,
-        return_time_as_y: bool = False,
-        store_statistics: bool = False,
-    ) -> Tuple[np.ndarray, np.ndarray]:
-        """TODO."""
-        if return_time_as_y:
-            raise NotImplementedError()
-        if store_statistics:
-            # store_statistics is currently not necessary
-            pass
-
-        # First build nan-matrix of size #configs x #params+1
-        n_rows = len(run_dict)
-        n_cols = self.n_params
-        X = np.ones([n_rows, n_cols + self.n_features]) * np.nan
-        y = np.ones([n_rows, 2])
-
-        # Then populate matrix
-        for row, (key, run) in enumerate(run_dict.items()):
-            # Scaling is automatically done in configSpace
-            conf = runhistory.ids_config[key.config_id]
-            conf_vector = convert_configurations_to_array([conf])[0]
-            if self.n_features > 0:
-                feats = self.instance_features[key.instance]
-                X[row, :] = np.hstack((conf_vector, feats))
-            else:
-                X[row, :] = conf_vector
-
-            if self.n_objectives > 1:
-                assert self.multi_objective_algorithm is not None
-
-                # Let's normalize y here
-                # We use the objective_bounds calculated by the runhistory
-                y_ = normalize_costs(run.cost, runhistory.objective_bounds)
-                y_agg = self.multi_objective_algorithm(y_)
-                y[row, 0] = y_agg
-            else:
-                y[row, 0] = run.cost
-
-            y[row, 1] = run.time
-
-        y_transformed = self.transform_response_values(values=y)
-
-        return X, y_transformed
-
-    def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values. Transform the runtimes by a log transformation
-        (log(1.
-
-        + runtime).
-
-        Parameters
-        ----------
-        values : np.ndarray
-            Response values to be transformed.
-
-        Returns
-        -------
-        np.ndarray
-        """
-        # We need to ensure that time remains positive after the log transform.
-        values[:, 1] = np.log(1 + values[:, 1])
-        return values

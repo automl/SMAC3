@@ -13,7 +13,7 @@ from smac.configspace import Configuration
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.utils import get_types
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory_transformer import AbstractRunhistoryTransformer
+from smac.runhistory.encoder.encoder import AbstractRunhistoryTransformer
 from smac.utils.stats import Stats
 from smac.utils.subspaces.turbo_subspace import TuRBOSubSpace
 

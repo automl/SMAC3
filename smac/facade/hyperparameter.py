@@ -13,7 +13,7 @@ from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.utils import get_types
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
-from smac.runhistory.runhistory_transformer import RunhistoryLogScaledTransformer
+from smac.runhistory.encoder.log_scaled_encoder import RunhistoryLogScaledEncoder
 from smac.scenario import Scenario
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -116,8 +116,8 @@ class HyperparameterFacade(Facade):
         return MeanAggregationStrategy(scenario.seed)
 
     @staticmethod
-    def get_runhistory_transformer(scenario: Scenario) -> RunhistoryLogScaledTransformer:
-        return RunhistoryLogScaledTransformer(
+    def get_runhistory_encoder(scenario: Scenario) -> RunhistoryLogScaledEncoder:
+        return RunhistoryLogScaledEncoder(
             scenario,
             n_params=len(scenario.configspace.get_hyperparameters()),
             seed=scenario.seed,

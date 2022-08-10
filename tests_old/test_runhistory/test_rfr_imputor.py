@@ -14,7 +14,8 @@ from smac.cli import scenario
 from smac.model.random_forest import rfr_imputator
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.utils import get_types
-from smac.runhistory import runhistory, runhistory_transformer
+from smac.runhistory import runhistory
+from smac.runhistory.encoder import encoder
 from smac.runner import StatusType
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -195,7 +196,7 @@ class ImputorTest(unittest.TestCase):
             model=model,
         )
 
-        r2e = runhistory_transformer.RunhistoryLogTransformer(
+        r2e = encoder.RunhistoryLogTransformer(
             scenario=scen,
             num_params=3,
             success_states=[
@@ -224,7 +225,7 @@ class ImputorTest(unittest.TestCase):
                 max_iter=10,
                 model=model,
             )
-            r2e = runhistory_transformer.RunhistoryLogTransformer(
+            r2e = encoder.RunhistoryLogTransformer(
                 scenario=scen,
                 num_params=3,
                 success_states=[

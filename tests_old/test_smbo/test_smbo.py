@@ -17,7 +17,7 @@ from smac.facade.hyperparameter import SMAC4HPO
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.optimizer.acquisition import EI, LogEI
 from smac.runhistory.runhistory import RunInfo, RunValue
-from smac.runhistory.runhistory_transformer import RunhistoryTransformer, RunhistoryLogTransformer
+from smac.runhistory.encoder.encoder import RunhistoryTransformer, RunhistoryLogTransformer
 from smac.runner import FirstRunCrashedException, StatusType
 from smac.runner.target_algorithm_runner import ExecuteTAFuncArray
 from smac.utils import test_helpers

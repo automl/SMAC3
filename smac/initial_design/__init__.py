@@ -97,34 +97,6 @@ class InitialDesign:
                 "Initial budget %d cannot be higher than the run limit %d." % (self.n_configs, scenario.n_runs)
             )
 
-    def get_meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
-        return {
-            "name": self.__class__.__name__,
-            "n_configs": self.n_configs,
-            "seed": self.seed,
-        }
-
-    def select_configurations(self) -> List[Configuration]:
-        """Selects the initial configurations."""
-        logger.info(f"Retrieving {self.n_configs} configurations for the initial design.")
-        if self.n_configs == 0:
-            return []
-        if self.configs is None:
-            self.configs = self._select_configurations()
-
-        for config in self.configs:
-            if config.origin is None:
-                config.origin = "Initial design"
-
-        # add this incumbent right away to have an entry to time point 0
-        # self.traj_logger.add_entry(train_perf=2**31, incumbent_id=1, incumbent=self.configs[0])
-
-        # removing duplicates
-        # (Reference: https://stackoverflow.com/questions/7961363/removing-duplicates-in-lists)
-        self.configs = list(OrderedDict.fromkeys(self.configs))
-        return self.configs
-
     def _select_configurations(self) -> List[Configuration]:
         raise NotImplementedError
 
@@ -169,3 +141,31 @@ class InitialDesign:
         logger.debug("Size of initial design: %d" % (len(configs)))
 
         return configs
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+            "n_configs": self.n_configs,
+            "seed": self.seed,
+        }
+
+    def select_configurations(self) -> List[Configuration]:
+        """Selects the initial configurations."""
+        logger.info(f"Retrieving {self.n_configs} configurations for the initial design.")
+        if self.n_configs == 0:
+            return []
+        if self.configs is None:
+            self.configs = self._select_configurations()
+
+        for config in self.configs:
+            if config.origin is None:
+                config.origin = "Initial design"
+
+        # add this incumbent right away to have an entry to time point 0
+        # self.traj_logger.add_entry(train_perf=2**31, incumbent_id=1, incumbent=self.configs[0])
+
+        # removing duplicates
+        # (Reference: https://stackoverflow.com/questions/7961363/removing-duplicates-in-lists)
+        self.configs = list(OrderedDict.fromkeys(self.configs))
+        return self.configs

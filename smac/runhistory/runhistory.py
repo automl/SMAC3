@@ -766,10 +766,12 @@ class RunHistory(Mapping[RunKey, RunValue]):
             for k, v in self.data.items()
             if save_external or self.external[k] == DataOrigin.INTERNAL
         ]
+
         config_ids_to_serialize = set([entry[0][0] for entry in data])
         configs = {
             id_: conf.get_dictionary() for id_, conf in self.ids_config.items() if id_ in config_ids_to_serialize
         }
+
         config_origins = {
             id_: conf.origin
             for id_, conf in self.ids_config.items()

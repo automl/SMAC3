@@ -23,7 +23,7 @@ from smac.optimizer.configuration_chooser.boing_chooser import (
     subspace_extraction,
 )
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4ScaledLogCostWithRaw
+from smac.runhistory.encoder.boing_encoder import RunHistory2EPM4ScaledLogCostWithRaw
 from smac.runner import StatusType
 from smac.utils import test_helpers
 

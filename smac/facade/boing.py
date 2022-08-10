@@ -19,7 +19,7 @@ from smac.chooser.random_chooser import ChooserProb
 from smac.facade.hyperparameter import HyperparameterFacade
 from smac.model.base_model import BaseModel
 from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
-from smac.runhistory.runhistory2epm_boing import (
+from smac.runhistory.encoder.boing_encoder import (
     RunHistory2EPM4CostWithRaw,
     RunHistory2EPM4ScaledLogCostWithRaw,
 )
@@ -43,7 +43,7 @@ class BOinGFacade(HyperparameterFacade):
     """
 
     @staticmethod
-    def get_runhistory_transformer(scenario: Scenario) -> RunHistory2EPM4CostWithRaw:
+    def get_runhistory_encoder(scenario: Scenario) -> RunHistory2EPM4CostWithRaw:
         transformer = RunHistory2EPM4ScaledLogCostWithRaw(
             scenario=scenario,
             n_params=len(scenario.configspace.get_hyperparameters()),

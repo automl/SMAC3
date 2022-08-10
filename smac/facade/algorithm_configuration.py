@@ -16,7 +16,7 @@ from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.utils import get_types
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
-from smac.runhistory.runhistory_transformer import RunhistoryTransformer
+from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
@@ -116,8 +116,8 @@ class AlgorithmConfigurationFacade(Facade):
         return MeanAggregationStrategy(scenario.seed)
 
     @staticmethod
-    def get_runhistory_transformer(scenario: Scenario) -> RunhistoryTransformer:
-        transformer = RunhistoryTransformer(
+    def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:
+        transformer = RunHistoryEncoder(
             scenario=scenario,
             n_params=len(scenario.configspace.get_hyperparameters()),
             scale_percentage=5,

@@ -1,19 +1,31 @@
 from __future__ import annotations
 
-import typing
-
+import abc
 import copy
+from typing import List, Mapping, Optional, Tuple
 
 import numpy as np
 
-from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory_transformer import (
-    RunhistoryLogScaledTransformer,
-    RunhistoryTransformer,
-)
+from smac.runhistory.encoder.log_scaled_encoder import RunHistoryLogScaledEncoder
+from smac.runhistory.encoder.encoder import RunHistoryEncoder
+from smac import constants
+from smac.configspace import convert_configurations_to_array
+from smac.model.base_imputor import BaseImputor
+from smac.multi_objective import AbstractMultiObjectiveAlgorithm
+from smac.multi_objective.utils import normalize_costs
+from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
+from smac.runner import StatusType
+from smac.scenario import Scenario
+from smac.utils.logging import get_logger
+
+__copyright__ = "Copyright 2022, automl.org"
+__license__ = "3-clause BSD"
 
 
-class RunHistory2EPM4CostWithRaw(RunhistoryTransformer):
+logger = get_logger(__name__)
+
+
+class RunHistoryRawEncoder(RunHistoryEncoder):
     """
     A transformer that transform RunHistroy to vectors, this set of classes will return the raw cost values in
     addition to the transformed cost values. The raw cost values can then be applied for local BO approaches.
@@ -22,8 +34,8 @@ class RunHistory2EPM4CostWithRaw(RunhistoryTransformer):
     def transform_with_raw(
         self,
         runhistory: RunHistory,
-        budget_subset: typing.Optional[typing.List] = None,
-    ) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        budget_subset: list | None = None,
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Returns vector representation of runhistory; if imputation is
         disabled, censored (TIMEOUT with time < cutoff) will be skipped. This function returns both the raw
         and transformed cost values
@@ -43,7 +55,7 @@ class RunHistory2EPM4CostWithRaw(RunhistoryTransformer):
         Y_raw: numpy.ndarray
             cost values before transformation
         """
-        X, Y_raw = RunhistoryTransformer.transform(self, runhistory, budget_subset)
+        X, Y_raw = RunHistoryEncoder.transform(self, runhistory, budget_subset)
         Y = copy.deepcopy(Y_raw)
         Y = self.transform_raw_values(Y)
         return X, Y, Y_raw
@@ -78,7 +90,7 @@ class RunHistory2EPM4CostWithRaw(RunhistoryTransformer):
         return values
 
 
-class RunHistory2EPM4ScaledLogCostWithRaw(RunHistory2EPM4CostWithRaw, RunhistoryLogScaledTransformer):
+class RunHistoryRawScaledEncoder(RunHistoryRawEncoder, RunHistoryLogScaledEncoder):
     def transform_raw_values(self, values: np.ndarray) -> np.ndarray:
         """Transform function response values. Returns the raw input values before transformation
 
@@ -91,4 +103,4 @@ class RunHistory2EPM4ScaledLogCostWithRaw(RunHistory2EPM4CostWithRaw, Runhistory
         -------
         np.ndarray
         """
-        return RunhistoryLogScaledTransformer.transform_response_values(self, values)
+        return RunHistoryLogScaledEncoder.transform_response_values(self, values)

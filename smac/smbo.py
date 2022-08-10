@@ -17,7 +17,7 @@ from smac.intensification import AbstractIntensifier, RunInfoIntent
 from smac.model.base_model import BaseModel
 from smac.runhistory import RunInfo, RunValue
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory_transformer import AbstractRunhistoryTransformer
+from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runner import (
     FirstRunCrashedException,
     Runner,
@@ -50,8 +50,8 @@ class SMBO:
         initial sampling design
     runhistory: RunHistory
         runhistory with all runs so far
-    runhistory_transformer : Abstractrunhistory_transformer
-        Object that implements the Abstractrunhistory_transformer to convert runhistory
+    runhistory_encoder : Abstractrunhistory_encoder
+        Object that implements the Abstractrunhistory_encoder to convert runhistory
         data into EPM data
     intensifier: Intensifier
         intensification of new challengers against incumbent configuration
@@ -101,7 +101,7 @@ class SMBO:
         runner: Runner,
         initial_design: InitialDesign,
         runhistory: RunHistory,
-        runhistory_transformer: AbstractRunhistoryTransformer,
+        runhistory_encoder: RunHistoryEncoder,
         intensifier: AbstractIntensifier,
         model: BaseModel,
         acquisition_optimizer: AbstractAcquisitionOptimizer,
@@ -119,7 +119,7 @@ class SMBO:
         self.stats = stats
         self.initial_design = initial_design
         self.runhistory = runhistory
-        self.runhistory_transformer = runhistory_transformer
+        self.runhistory_encoder = runhistory_encoder
         self.intensifier = intensifier
         self.model = model
         self.acquisition_optimizer = acquisition_optimizer

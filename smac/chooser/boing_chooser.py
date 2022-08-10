@@ -22,7 +22,7 @@ from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussian
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.utils import get_types
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4CostWithRaw
+from smac.runhistory.encoder.boing_encoder import RunHistory2EPM4CostWithRaw
 from smac.utils.stats import Stats
 from smac.utils.subspaces.boing_subspace import BOinGSubspace
 from smac.utils.subspaces.turbo_subspace import TuRBOSubSpace

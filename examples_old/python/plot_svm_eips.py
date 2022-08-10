@@ -28,7 +28,7 @@ from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
 
 # EIPS related
 from smac.optimizer.acquisition import EIPS
-from smac.runhistory.runhistory_transformer import RunHistory2EPM4EIPS
+from smac.runhistory.encoder.encoder import RunHistory2EPM4EIPS
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

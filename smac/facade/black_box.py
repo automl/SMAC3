@@ -27,7 +27,7 @@ from smac.model.gaussian_process.utils.prior import HorseshoePrior, LognormalPri
 from smac.model.utils import get_types
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
-from smac.runhistory.runhistory_transformer import RunhistoryTransformer
+from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.scenario import Scenario
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -226,8 +226,8 @@ class BlackBoxFacade(Facade):
         return MeanAggregationStrategy(scenario.seed)
 
     @staticmethod
-    def get_runhistory_transformer(scenario: Scenario):
-        transformer = RunhistoryTransformer(
+    def get_runhistory_encoder(scenario: Scenario):
+        transformer = RunHistoryEncoder(
             scenario=scenario,
             n_params=len(scenario.configspace.get_hyperparameters()),
             scale_percentage=5,
