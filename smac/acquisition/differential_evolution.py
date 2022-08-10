@@ -3,25 +3,11 @@ from __future__ import annotations
 import abc
 from typing import Callable, Iterator, List, Optional, Set, Tuple, Union
 
-import copy
-import itertools
-import logging
-import time
 
 import numpy as np
 
-from smac.acquisition.functions import AbstractAcquisitionFunction
 from smac.acquisition import AbstractAcquisitionOptimizer
-from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
-from smac.configspace import (
-    Configuration,
-    ConfigurationSpace,
-    ForbiddenValueError,
-    convert_configurations_to_array,
-    get_one_exchange_neighbourhood,
-)
-from smac.runhistory.runhistory import RunHistory
-from smac.utils.stats import Stats
+from smac.configspace import Configuration
 
 
 class DifferentialEvolution(AbstractAcquisitionOptimizer):
@@ -29,10 +15,10 @@ class DifferentialEvolution(AbstractAcquisitionOptimizer):
 
     def _maximize(
         self,
-        previous_configs: List[Configuration],
+        previous_configs: list[Configuration],
         num_points: int,
         _sorted: bool = False,
-    ) -> List[Tuple[float, Configuration]]:
+    ) -> list[Tuple[float, Configuration]]:
         """DifferentialEvolutionSolver.
 
         Parameters

@@ -12,8 +12,8 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Kernel
 
 from smac.configspace import ConfigurationSpace
-from smac.model.gaussian_process import BaseGaussianProcess, GaussianProcess
-from smac.model.gaussian_process.utils.prior import Prior
+from smac.model.gaussian_process.base_gaussian_process import BaseGaussianProcess, GaussianProcess
+from smac.model.gaussian_process.priors.prior import Prior
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

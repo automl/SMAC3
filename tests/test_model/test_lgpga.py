@@ -11,7 +11,7 @@ from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
 from gpytorch.priors import HorseshoePrior
 
 from smac.configspace import ConfigurationSpace, UniformFloatHyperparameter
-from smac.model.gaussian_process.augmented import (
+from smac.model.gaussian_process.augmented_local_gaussian_process import (
     AugmentedLocalGaussianProcess,
     GloballyAugmentedLocalGaussianProcess,
 )

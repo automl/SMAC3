@@ -7,7 +7,8 @@ import warnings
 import numpy as np
 from scipy.stats import truncnorm
 
-import smac.model.base_imputor
+import smac.model.imputer
+from smac.model.imputer import AbstractImputer
 from smac.model.base_model import BaseModel
 from smac.utils.logging import get_logger
 
@@ -18,7 +19,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class RFRImputator(smac.model.base_imputor.BaseImputor):
+class RandomForestImputer(AbstractImputer):
     """Imputor using pyrfr's Random Forest regressor.
 
     Note
@@ -63,7 +64,7 @@ class RFRImputator(smac.model.base_imputor.BaseImputor):
         max_iter: int = 2,
         seed: int = 0,
     ):
-        super(RFRImputator, self).__init__()
+        super(RandomForestImputer, self).__init__()
         self.max_iter = max_iter
         self.change_threshold = change_threshold
         self.algorithm_walltime_limit = algorithm_walltime_limit
@@ -187,4 +188,5 @@ class RFRImputator(smac.model.base_imputor.BaseImputor):
 
         if not np.isfinite(imputed_y).all():
             logger.critical("Imputed values are not finite, %s" % str(imputed_y))
+
         return np.reshape(imputed_y, [imputed_y.shape[0], 1])

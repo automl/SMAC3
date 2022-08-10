@@ -16,7 +16,7 @@ from smac.intensification.successive_halving import (
 )
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.utils.stats import Stats
-from smac.runner import StatusType
+from smac.runner.runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 
 from .test_eval_utils import eval_challenger

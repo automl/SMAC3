@@ -26,7 +26,7 @@ import smac
 
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
-from smac.facade.black_box import BlackBoxFacade
+from smac.facade.blackbox_facade import BlackBoxFacade
 from smac.facade.psmac import PSMAC
 
 importlib.reload(smac.facade.psmac_facade)

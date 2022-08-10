@@ -22,11 +22,8 @@ copyright = f"""
 version = "2.0.0"
 
 
-try:
-    from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
-    from smac.facade.black_box import BlackBoxFacade
-    from smac.facade.hyperparameter import HyperparameterFacade
-    from smac.facade.multi_fidelity import MultiFidelityFacade
+if 0 == 0:
+    from smac.facade import BlackBoxFacade, HyperparameterFacade, MultiFidelityFacade, AlgorithmConfigurationFacade
     from smac.runhistory.runhistory import RunHistory
     from smac.scenario import Scenario
 
@@ -38,5 +35,5 @@ try:
         "MultiFidelityFacade",
         "AlgorithmConfigurationFacade",
     ]
-except ModuleNotFoundError:
-    pass
+# except ModuleNotFoundError:
+#    pass

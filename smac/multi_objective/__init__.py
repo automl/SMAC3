@@ -1,15 +1,10 @@
-from __future__ import annotations
+from smac.multi_objective.abstract_multi_objective_algorithm import AbstractMultiObjectiveAlgorithm
+from smac.multi_objective.aggregation_strategy import AggregationStrategy, MeanAggregationStrategy
+from smac.multi_objective.parego import ParEGO
 
-from abc import ABC
-
-import numpy as np
-
-
-class AbstractMultiObjectiveAlgorithm(ABC):
-    """
-    A general interface for multi-objective optimizer, depending on different strategies.
-    It can be applied to rh2epm or epmchooser.
-    """
-
-    def __init__(self, seed: int = 0):
-        self.rng = np.random.RandomState(seed)
+__all__ = [
+    "AbstractMultiObjectiveAlgorithm",
+    "AggregationStrategy",
+    "MeanAggregationStrategy",
+    "ParEGO",
+]

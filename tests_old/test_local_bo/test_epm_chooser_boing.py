@@ -13,25 +13,25 @@ from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
 from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
 from smac.cli.scenario import Scenario
-from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
-from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
+from smac.model.gaussian_process.augmented_local_gaussian_process import GloballyAugmentedLocalGaussianProcess
+from smac.model.random_forest.random_forest_with_instances import RandomForestWithInstances
 from smac.model.utils import check_subspace_points, get_types
-from smac.facade.black_box import BlackBoxFacade
-from smac.facade.hyperparameter import SMAC4HPO
+from smac.facade.blackbox_facade import BlackBoxFacade
+from smac.facade.hyperparameter_facade import SMAC4HPO
 from smac.optimizer.configuration_chooser.boing_chooser import (
     BOinGChooser,
     subspace_extraction,
 )
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.encoder.boing_encoder import RunHistory2EPM4ScaledLogCostWithRaw
-from smac.runner import StatusType
-from smac.utils import test_helpers
+from smac.runner.runner import StatusType
+from smac.utils import _test_helpers
 
 
 class TestEPMChooserBOinG(unittest.TestCase):
     def setUp(self):
         self.scenario = Scenario(
-            {"cs": test_helpers.get_branin_config_space(), "run_obj": "quality", "output_dir": "data-test_epmchooser"}
+            {"cs": _test_helpers.get_branin_config_space(), "run_obj": "quality", "output_dir": "data-test_epmchooser"}
         )
         self.output_dirs = []
         self.output_dirs.append(self.scenario.output_dir)

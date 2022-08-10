@@ -5,11 +5,11 @@ from smac.acquisition.random_search import (
     AbstractAcquisitionOptimizer,
     RandomSearch,
 )
-from smac.chooser.random_chooser import ChooserProb, RandomChooser
+from smac.chooser.random_chooser import ProbabilityConfigurationChooser, RandomConfigurationChooser
 from smac.configspace import Configuration
 from smac.facade import Facade
 from smac.initial_design import InitialDesign
-from smac.initial_design.default_configuration_design import DefaultInitialDesign
+from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.model.random_model import RandomModel
 from smac.model.utils import get_types
@@ -98,8 +98,8 @@ class RandomFacade(Facade):
         scenario: Scenario,
         *,
         random_probability: float = 0.5,
-    ) -> RandomChooser:
-        return ChooserProb(prob=random_probability, seed=scenario.seed)
+    ) -> RandomConfigurationChooser:
+        return ProbabilityConfigurationChooser(prob=random_probability, seed=scenario.seed)
 
     @staticmethod
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm | None:

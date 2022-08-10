@@ -6,7 +6,7 @@ import smac
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.runhistory import RunInfo, RunValue, StatusType
-from smac.runner import Runner
+from smac.runner.runner import Runner
 from smac.utils.stats import Stats
 
 __copyright__ = "Copyright 2022, automl.org"

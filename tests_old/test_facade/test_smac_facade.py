@@ -12,15 +12,15 @@ from smac.callback import IncorporateRunResultCallback
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.model.random_model import RandomModel
-from smac.model.random_forest.rf_mo import MultiObjectiveRandomForest
-from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
+from smac.model.random_forest.multi_objective_random_forest import MultiObjectiveRandomForest
+from smac.model.random_forest.random_forest_with_instances import RandomForestWithInstances
 from smac.model.utils import get_rng
-from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
-from smac.initial_design.default_configuration_design import DefaultInitialDesign
+from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
+from smac.initial_design.default_design import DefaultInitialDesign
 from smac.initial_design.factorial_design import FactorialInitialDesign
 from smac.initial_design.initial_design import InitialDesign
 from smac.initial_design.latin_hypercube_design import LatinHypercubeInitialDesign
-from smac.initial_design.random_configuration_design import RandomInitialDesign
+from smac.initial_design.random_design import RandomInitialDesign
 from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.intensification.hyperband import Hyperband
 from smac.intensification.intensification import Intensifier
@@ -36,7 +36,7 @@ from smac.runhistory.encoder.encoder import (
     RunHistory2EPM4EIPS,
     RunhistoryLogTransformer,
 )
-from smac.runner import StatusType
+from smac.runner.runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

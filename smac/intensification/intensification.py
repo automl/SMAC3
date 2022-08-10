@@ -1,21 +1,17 @@
 from __future__ import annotations
 
-from typing import List, Optional, Tuple, cast
+from typing import List, Optional, Tuple, cast, Iterator
 
 from collections import Counter
 from enum import Enum
 
 import numpy as np
 
-from smac.chooser.configuration_chooser import ConfigurationChooser
+from smac.chooser.chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
-from smac.intensification import (
-    AbstractIntensifier,
-    RunInfoIntent,
-    _config_to_run_type,
-)
-from smac.runhistory import InstanceSeedBudgetKey, RunInfo, RunValue
+from smac.intensification.abstract_intensifier import AbstractIntensifier
+from smac.runhistory import InstanceSeedBudgetKey, RunInfo, RunValue, RunInfoIntent
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.logging import format_array, get_logger
@@ -173,7 +169,7 @@ class Intensifier(AbstractIntensifier):
         self.num_chall_run = 0
         self.current_challenger = None
         self.continue_challenger = False
-        self.configs_to_run = iter([])  # type: _config_to_run_type
+        self.configs_to_run: Iterator[Optional[Configuration]] = iter([])
         self.update_configs_to_run = True
 
         # Racing related variables
@@ -848,7 +844,7 @@ class Intensifier(AbstractIntensifier):
             # this is a new intensification run, get the next list of configurations to run
             if self.update_configs_to_run:
                 configs_to_run = self._generate_challengers(challengers=challengers, chooser=chooser)
-                self.configs_to_run = cast(_config_to_run_type, configs_to_run)
+                self.configs_to_run = cast(Iterator[Optional[Configuration]], configs_to_run)
                 self.update_configs_to_run = False
 
             # pick next configuration from the generator
@@ -875,7 +871,7 @@ class Intensifier(AbstractIntensifier):
         self,
         challengers: list[Configuration] | None,
         chooser: ConfigurationChooser | None,
-    ) -> _config_to_run_type:
+    ) -> Iterator[Optional[Configuration]]:
         """Retuns a sequence of challengers to use in intensification If challengers are not
         provided, then optimizer will be used to generate the challenger list.
 
@@ -891,10 +887,11 @@ class Intensifier(AbstractIntensifier):
         Optional[Generator[Configuration]]
             A generator containing the next challengers to use
         """
+        chall_gen: Iterator[Optional[Configuration]]
         if challengers:
             # iterate over challengers provided
             logger.debug("Using provided challengers...")
-            chall_gen = iter(challengers)  # type: _config_to_run_type
+            chall_gen = iter(challengers)
         elif chooser:
             # generating challengers on-the-fly if optimizer is given
             logger.debug("Generating new challenger from optimizer...")

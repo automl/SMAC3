@@ -12,7 +12,7 @@ from dask.distributed import Client
 
 from smac.configspace import ConfigurationSpace
 from smac.runhistory import RunInfo, RunValue
-from smac.runner import StatusType
+from smac.runner.runner import StatusType
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.scenario import Scenario

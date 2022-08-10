@@ -23,7 +23,7 @@ from smac.cli.scenario import Scenario
 
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
-from smac.facade.black_box import BlackBoxFacade
+from smac.facade.blackbox_facade import BlackBoxFacade
 from smac.optimizer.configuration_chooser.turbo_chooser import TurBOChooser
 
 

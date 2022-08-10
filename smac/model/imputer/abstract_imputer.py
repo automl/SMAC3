@@ -9,7 +9,7 @@ __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class BaseImputor:
+class AbstractImputer:
     """Abstract implementation of the Imputation API."""
 
     def __init__(self) -> None:

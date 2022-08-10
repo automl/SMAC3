@@ -2,16 +2,14 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional, Set, Tuple, Union
 
-import warnings
-
 import numpy as np
 
-from smac.chooser.configuration_chooser import ConfigurationChooser
+from smac.chooser.chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
-from smac.intensification import AbstractIntensifier, RunInfoIntent
+from smac.intensification.abstract_intensifier import AbstractIntensifier
+from smac.runhistory import RunInfo, RunValue, RunInfoIntent, StatusType
 from smac.intensification.parallel_scheduling import ParallelScheduler
-from smac.runhistory import RunInfo, RunValue, StatusType
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
@@ -181,7 +179,7 @@ class SuccessiveHalving(ParallelScheduler):
 
         Returns
         -------
-            Whether or not a successive halving instance was added
+        Whether or not a successive halving instance was added
         """
         if len(self.intensifier_instances) >= num_workers:
             return False
@@ -564,13 +562,13 @@ class _SuccessiveHalving(AbstractIntensifier):
         # that no more instances will be launched for the current config, so we
         # can add a check to make sure that if we are capping, this makes sense
         # for the active challenger
-        if result.status == StatusType.CAPPED and run_info.config == self.running_challenger:
-            self.curr_inst_idx[run_info.config] = np.inf
-        else:
-            self._ta_time = self._ta_time  # type: float # make mypy happy
-            self.run_id = self.run_id  # type: int # make mypy happy
-            self._ta_time += result.time
-            self.run_id += 1
+        # if result.status == StatusType.CAPPED and run_info.config == self.running_challenger:
+        #    self.curr_inst_idx[run_info.config] = np.inf
+        # else:
+        self._ta_time = self._ta_time  # type: float # make mypy happy
+        self.run_id = self.run_id  # type: int # make mypy happy
+        self._ta_time += result.time
+        self.run_id += 1
 
         # 0: Before moving to a new stage, we have to complete M x N tasks, where M is the
         # total number of configurations evaluated in N instance/seed pairs.
@@ -649,13 +647,13 @@ class _SuccessiveHalving(AbstractIntensifier):
 
     def get_next_run(
         self,
-        challengers: Optional[List[Configuration]],
+        challengers: list[Configuration] | None,
         incumbent: Configuration,
-        chooser: Optional[ConfigurationChooser],
+        chooser: ConfigurationChooser | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
-    ) -> Tuple[RunInfoIntent, RunInfo]:
+    ) -> tuple[RunInfoIntent, RunInfo]:
         """Selects which challenger to use based on the iteration stage and set the iteration
         parameters. First iteration will choose configurations from the ``chooser`` or input
         challengers, while the later iterations pick top configurations from the previously selected
@@ -686,7 +684,7 @@ class _SuccessiveHalving(AbstractIntensifier):
             evaluate a configuration
         """
         if num_workers > 1:
-            warnings.warn(
+            self.logger.warning(
                 "Consider using ParallelSuccesiveHalving instead of "
                 "SuccesiveHalving. The later will halt on each stage "
                 "transition until all configs for the current stage are completed."

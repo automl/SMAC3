@@ -1,18 +1,6 @@
 from __future__ import annotations
 
-from typing import (
-    Any,
-    Dict,
-    Iterable,
-    Iterator,
-    List,
-    Mapping,
-    Optional,
-    Tuple,
-    Type,
-    Union,
-    cast,
-)
+from typing import Any, Dict, Iterable, Iterator, List, Mapping, Optional, Tuple, Type, Union, cast
 
 import collections
 import json
@@ -23,7 +11,6 @@ from smac.configspace import Configuration, ConfigurationSpace
 from smac.multi_objective.utils import normalize_costs
 from smac.runhistory import (
     DataOrigin,
-    EnumEncoder,
     InstanceSeedBudgetKey,
     InstanceSeedKey,
     RunKey,
@@ -144,12 +131,12 @@ class RunHistory(Mapping[RunKey, RunValue]):
         self,
         key: str,
         obj: Any,
-        encoder: Type[json.JSONEncoder],
+        # encoder: Type[json.JSONEncoder],
         runkey: RunKey,
         runvalue: RunValue,
     ) -> None:
         try:
-            json.dumps(obj, cls=encoder)
+            json.dumps(obj)  # , cls=encoder)
         except Exception as e:
             raise ValueError(
                 "Cannot add %s: %s of type %s to runhistory because it raises an error during JSON encoding, "
@@ -373,7 +360,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
             ("additional_info", additional_info),
             ("origin", config.origin),
         ):
-            self._check_json_serializable(key, value, EnumEncoder, k, v)
+            self._check_json_serializable(key, value, k, v)
 
         # Each runkey is supposed to be used only once. Repeated tries to add
         # the same runkey will be ignored silently if not capped.
@@ -780,9 +767,9 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
         with open(fn, "w") as fp:
             json.dump(
-                {"data": data, "config_origins": config_origins, "configs": configs},
+                {"data": data, "configs": configs, "config_origins": config_origins},
                 fp,
-                cls=EnumEncoder,
+                # cls=EnumEncoder,
                 indent=2,
             )
 
@@ -802,7 +789,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         """
         try:
             with open(fn) as fp:
-                all_data = json.load(fp, object_hook=StatusType.enum_hook)
+                all_data = json.load(fp)
         except Exception as e:
             logger.warning(
                 "Encountered exception %s while reading runhistory from %s. " "Not adding any runs!",

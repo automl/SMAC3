@@ -5,12 +5,12 @@ from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac.cli.scenario import Scenario
-from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
-from smac.model.random_forest.rfr_imputator import RFRImputator
+from smac.model.random_forest.random_forest_with_instances import RandomForestWithInstances
+from smac.model.imputer.random_forest_imputer import RandomForestImputer
 from smac.model.utils import get_types
 from smac.runhistory import runhistory
 from smac.runhistory.encoder import encoder
-from smac.runner import StatusType
+from smac.runner.runner import StatusType
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -46,7 +46,7 @@ class RunhistoryTest(unittest.TestCase):
         """
         adding some rundata to RunHistory2EPM4LogCost and impute censored data
         """
-        self.imputor = RFRImputator(
+        self.imputor = RandomForestImputer(
             rng=np.random.RandomState(seed=12345),
             cutoff=np.log(self.scen.cutoff),
             threshold=np.log(self.scen.cutoff * self.scen.par_factor),
@@ -182,7 +182,7 @@ class RunhistoryTest(unittest.TestCase):
         adding some rundata to RunHistory2EPM4Cost and impute censored data
         """
 
-        self.imputor = RFRImputator(
+        self.imputor = RandomForestImputer(
             rng=np.random.RandomState(seed=12345),
             cutoff=self.scen.cutoff,
             threshold=self.scen.cutoff * self.scen.par_factor,

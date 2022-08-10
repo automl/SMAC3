@@ -11,7 +11,7 @@ import os
 
 from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
-from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
+from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.stats import Stats
 

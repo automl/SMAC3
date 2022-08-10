@@ -23,8 +23,8 @@ from sklearn.model_selection import cross_val_score
 # Import SMAC-utilities
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.model.random_forest.rf_mo import MultiObjectiveRandomForest
-from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
+from smac.model.random_forest.multi_objective_random_forest import MultiObjectiveRandomForest
+from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 
 # EIPS related
 from smac.optimizer.acquisition import EIPS

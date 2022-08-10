@@ -13,7 +13,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 from smac.cli.scenario import Scenario
-from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
+from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 from smac.intensification.successive_halving import SuccessiveHalving
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

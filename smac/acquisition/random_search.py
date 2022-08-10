@@ -8,6 +8,12 @@ from smac.acquisition import AbstractAcquisitionOptimizer
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.stats import Stats
+from smac.utils.logging import get_logger
+
+__copyright__ = "Copyright 2022, automl.org"
+__license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 
 class RandomSearch(AbstractAcquisitionOptimizer):
@@ -24,6 +30,7 @@ class RandomSearch(AbstractAcquisitionOptimizer):
             rand_configs = self.configspace.sample_configuration(size=num_points)
         else:
             rand_configs = [self.configspace.sample_configuration(size=1)]
+
         if _sorted:
             for i in range(len(rand_configs)):
                 rand_configs[i].origin = "Random Search (sorted)"

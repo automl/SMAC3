@@ -14,16 +14,17 @@ from smac.acquisition.functions import AbstractAcquisitionFunction
 from smac.acquisition import AbstractAcquisitionOptimizer
 from smac.acquisition.local_search import LocalSearch
 from smac.acquisition.random_search import RandomSearch
-from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.configspace import (
     Configuration,
     ConfigurationSpace,
-    ForbiddenValueError,
-    convert_configurations_to_array,
     get_one_exchange_neighbourhood,
 )
-from smac.runhistory.runhistory import RunHistory
-from smac.utils.stats import Stats
+from smac.utils.logging import get_logger
+
+__copyright__ = "Copyright 2022, automl.org"
+__license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 
 class LocalAndSortedRandomSearch(AbstractAcquisitionOptimizer):
@@ -107,7 +108,7 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionOptimizer):
         next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
         first_five = [f"{_[0]} ({_[1].origin})" for _ in next_configs_by_acq_value[:5]]
 
-        self.logger.debug(
+        logger.debug(
             "First 5 acquisition function values of selected configurations:\n%s",
             ", ".join(first_five),
         )
@@ -219,7 +220,7 @@ class LocalAndSortedPriorRandomSearch(AbstractAcquisitionOptimizer):
         # search, and then sorting them)
         next_configs_by_acq_value = next_configs_by_random_search_sorted + next_configs_by_local_search
         next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
-        self.logger.debug(
+        logger.debug(
             "First 5 acq func (origin) values of selected configurations: %s",
             str([[_[0], _[1].origin] for _ in next_configs_by_acq_value[:5]]),
         )

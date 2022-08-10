@@ -35,7 +35,7 @@ from smac.cli.scenario import Scenario
 
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
-from smac.facade.multi_fidelity import SMAC4MF
+from smac.facade.multi_fidelity_facade import SMAC4MF
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

@@ -19,7 +19,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 # Import SMAC-utilities
 from smac.cli.scenario import Scenario
-from smac.facade.boing import SMAC4BOING
+from smac.facade.boing_facade import SMAC4BOING
 
 
 def rosenbrock_2d(x):

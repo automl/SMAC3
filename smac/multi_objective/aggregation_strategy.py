@@ -4,7 +4,7 @@ from abc import abstractmethod
 
 import numpy as np
 
-from smac.multi_objective import AbstractMultiObjectiveAlgorithm
+from smac.multi_objective.abstract_multi_objective_algorithm import AbstractMultiObjectiveAlgorithm
 
 
 class AggregationStrategy(AbstractMultiObjectiveAlgorithm):

@@ -5,8 +5,8 @@ import sklearn.datasets
 import sklearn.model_selection
 
 from smac.configspace import ConfigurationSpace, UniformFloatHyperparameter
-from smac.model.gaussian_process.mcmc import MCMCGaussianProcess
-from smac.model.gaussian_process.utils.prior import HorseshoePrior, LognormalPrior
+from smac.model.gaussian_process.mcmc_gaussian_process import MCMCGaussianProcess
+from smac.model.gaussian_process.priors import HorseshoePrior, LogNormalPrior
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -18,7 +18,7 @@ def get_gp(n_dimensions, seed, noise=1e-3, normalize_y=True, average_samples=Fal
     cov_amp = ConstantKernel(
         2.0,
         constant_value_bounds=(1e-10, 2),
-        prior=LognormalPrior(mean=0.0, sigma=1.0, seed=seed),
+        prior=LogNormalPrior(mean=0.0, sigma=1.0, seed=seed),
     )
     exp_kernel = Matern(
         np.ones([n_dimensions]),

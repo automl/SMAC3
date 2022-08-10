@@ -10,7 +10,7 @@ from ConfigSpace import (
     UniformFloatHyperparameter,
 )
 
-from smac.initial_design.random_configuration_design import RandomInitialDesign
+from smac.initial_design.random_design import RandomInitialDesign
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

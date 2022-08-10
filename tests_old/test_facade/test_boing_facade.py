@@ -15,7 +15,7 @@ from ConfigSpace.hyperparameters import (
 )
 
 from smac.cli.scenario import Scenario
-from smac.facade.boing import SMAC4BOING
+from smac.facade.boing_facade import SMAC4BOING
 from smac.optimizer.configuration_chooser.boing_chooser import BOinGChooser
 
 

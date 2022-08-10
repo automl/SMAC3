@@ -6,11 +6,11 @@ import numpy as np
 from ConfigSpace import Configuration
 
 from smac.cli.scenario import Scenario
-from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
-from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
+from smac.model.random_forest.random_forest_with_instances import RandomForestWithInstances
+from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 from smac.runhistory.runhistory import RunHistory
-from smac.runner import StatusType
-from smac.utils import test_helpers
+from smac.runner.runner import StatusType
+from smac.utils import _test_helpers
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -28,7 +28,7 @@ class TestEPMChooser(unittest.TestCase):
     def setUp(self):
         self.scenario = Scenario(
             {
-                "cs": test_helpers.get_branin_config_space(),
+                "cs": _test_helpers.get_branin_config_space(),
                 "run_obj": "quality",
                 "output_dir": "data-test_epmchooser",
                 "deterministic": False,

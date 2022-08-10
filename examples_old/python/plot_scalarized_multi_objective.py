@@ -29,7 +29,7 @@ from sklearn.model_selection import cross_val_score
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.constants import MAXINT
-from smac.facade.hyperparameter import SMAC4HPO
+from smac.facade.hyperparameter_facade import SMAC4HPO
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

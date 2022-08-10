@@ -6,7 +6,7 @@ from ConfigSpace import ConfigurationSpace
 
 from smac import Scenario
 from smac.runhistory import RunInfo, RunValue
-from smac.runner import StatusType
+from smac.runner.runner import StatusType
 from smac.runner.serial_runner import SerialRunner
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.utils.stats import Stats

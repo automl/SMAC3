@@ -8,11 +8,11 @@ import numpy as np
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac import constants
 from smac.configspace import convert_configurations_to_array
-from smac.model.base_imputor import BaseImputor
+from smac.model.imputer import AbstractImputer
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.utils import normalize_costs
 from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
-from smac.runner import StatusType
+from smac.runner.runner import StatusType
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
@@ -23,7 +23,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class RunhistoryLogScaledEncoder(RunHistoryEncoder):
+class RunHistoryLogScaledEncoder(RunHistoryEncoder):
     """TODO."""
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:

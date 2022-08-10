@@ -7,7 +7,7 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac.intensification import AbstractIntensifier
 from smac.runhistory.runhistory import RunHistory
-from smac.runner import StatusType
+from smac.runner.runner import StatusType
 from smac.scenario import Scenario
 from smac.utils.stats import Stats
 

@@ -1,43 +1,49 @@
 from __future__ import annotations
-
 from smac.acquisition.functions.expected_improvement import EI
+from smac.acquisition.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
 from smac.acquisition.local_and_random_search import (
     LocalAndSortedRandomSearch,
 )
-from smac.chooser.random_chooser import ChooserProb
+from smac.chooser.probability_chooser import ProbabilityConfigurationChooser
 from smac.configspace import Configuration
 from smac.facade import Facade
-from smac.initial_design.sobol_design import SobolInitialDesign
+from smac.initial_design import InitialDesign
+from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensification.intensification import Intensifier
-from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
+from smac.model.random_forest.random_forest_with_instances import RandomForestWithInstances
 from smac.model.utils import get_types
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
-from smac.runhistory.encoder.log_scaled_encoder import RunhistoryLogScaledEncoder
+from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.scenario import Scenario
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class HyperparameterFacade(Facade):
+logger = get_logger(__name__)
+
+
+class AlgorithmConfigurationFacade(Facade):
     @staticmethod
     def get_model(
         scenario: Scenario,
         *,
         n_trees: int = 10,
         bootstrapping: bool = True,
-        ratio_features: float = 1.0,
-        min_samples_split: int = 2,
-        min_samples_leaf: int = 1,
-        max_depth: int = 2**20,
+        ratio_features: float = 5.0 / 6.0,
+        min_samples_split: int = 3,
+        min_samples_leaf: int = 3,
+        max_depth: int = 20,
+        pca_components: int = 4,
     ) -> RandomForestWithInstances:
-        types, bounds = get_types(scenario.configspace)
+        types, bounds = get_types(scenario.configspace, scenario.instance_features)
 
         return RandomForestWithInstances(
             types=types,
             bounds=bounds,
-            log_y=True,
+            log_y=False,
             num_trees=n_trees,
             do_bootstrapping=bootstrapping,
             ratio_features=ratio_features,
@@ -46,24 +52,18 @@ class HyperparameterFacade(Facade):
             max_depth=max_depth,
             configspace=scenario.configspace,
             instance_features=scenario.instance_features,
+            pca_components=pca_components,
             seed=scenario.seed,
         )
 
     @staticmethod
-    def get_acquisition_function(scenario: Scenario, *, par: float = 0.0) -> EI:
-        return EI(par=par, log=True)
+    def get_acquisition_function(scenario: Scenario, par: float = 0.0) -> EI:
+        return EI(par=par)
 
     @staticmethod
-    def get_acquisition_optimizer(
-        scenario: Scenario,
-        *,
-        local_search_iterations: int = 10,
-        challengers: int = 10000,
-    ) -> LocalAndSortedRandomSearch:
+    def get_acquisition_optimizer(scenario: Scenario) -> AbstractAcquisitionOptimizer:
         optimizer = LocalAndSortedRandomSearch(
             scenario.configspace,
-            local_search_iterations=local_search_iterations,
-            challengers=challengers,
             seed=scenario.seed,
         )
 
@@ -73,9 +73,9 @@ class HyperparameterFacade(Facade):
     def get_intensifier(
         scenario: Scenario,
         *,
-        min_challenger: int = 1,
-        min_config_calls: int = 1,
-        max_config_calls: int = 3,
+        min_challenger=1,
+        min_config_calls=1,
+        max_config_calls=2000,
     ) -> Intensifier:
         intensifier = Intensifier(
             scenario=scenario,
@@ -92,21 +92,19 @@ class HyperparameterFacade(Facade):
         scenario: Scenario,
         *,
         configs: list[Configuration] | None = None,
-        n_configs: int | None = None,
-        n_configs_per_hyperparamter: int = 10,
-        max_config_ratio: float = 0.25,  # Use at most X*budget in the initial design
-    ) -> SobolInitialDesign:
-        return SobolInitialDesign(
+    ) -> InitialDesign:
+        return DefaultInitialDesign(
             scenario=scenario,
             configs=configs,
-            n_configs=n_configs,
-            n_configs_per_hyperparameter=n_configs_per_hyperparamter,
-            max_config_ratio=max_config_ratio,
         )
 
     @staticmethod
-    def get_random_configuration_chooser(scenario: Scenario, *, probability: float = 0.2) -> ChooserProb:
-        return ChooserProb(prob=probability)
+    def get_random_configuration_chooser(
+        scenario: Scenario,
+        *,
+        random_probability: float = 0.5,
+    ) -> ProbabilityConfigurationChooser:
+        return ProbabilityConfigurationChooser(prob=random_probability, seed=scenario.seed)
 
     @staticmethod
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm | None:
@@ -116,9 +114,12 @@ class HyperparameterFacade(Facade):
         return MeanAggregationStrategy(scenario.seed)
 
     @staticmethod
-    def get_runhistory_encoder(scenario: Scenario) -> RunhistoryLogScaledEncoder:
-        return RunhistoryLogScaledEncoder(
-            scenario,
+    def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:
+        transformer = RunHistoryEncoder(
+            scenario=scenario,
             n_params=len(scenario.configspace.get_hyperparameters()),
+            scale_percentage=5,
             seed=scenario.seed,
         )
+
+        return transformer

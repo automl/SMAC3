@@ -12,7 +12,6 @@ import numpy as np
 
 from smac.acquisition.functions import AbstractAcquisitionFunction
 from smac.acquisition import AbstractAcquisitionOptimizer
-from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.configspace import (
     Configuration,
     ConfigurationSpace,
@@ -20,8 +19,12 @@ from smac.configspace import (
     convert_configurations_to_array,
     get_one_exchange_neighbourhood,
 )
-from smac.runhistory.runhistory import RunHistory
-from smac.utils.stats import Stats
+from smac.utils.logging import get_logger
+
+__copyright__ = "Copyright 2022, automl.org"
+__license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 
 class LocalSearch(AbstractAcquisitionOptimizer):
@@ -65,8 +68,8 @@ class LocalSearch(AbstractAcquisitionOptimizer):
         self,
         previous_configs: List[Configuration],
         num_points: int,
-        additional_start_points: Optional[List[Tuple[float, Configuration]]] = None,
-    ) -> List[Tuple[float, Configuration]]:
+        additional_start_points: list[Tuple[float, Configuration]] | None = None,
+    ) -> list[tuple[float, Configuration]]:
         """Starts a local search from the given startpoint and quits if either the max number of
         steps is reached or no neighbor with an higher improvement was found.
 
@@ -256,7 +259,7 @@ class LocalSearch(AbstractAcquisitionOptimizer):
                         except ValueError as e:
                             # `neighborhood_iterator` raises `ValueError` with some probability when it reaches
                             # an invalid configuration.
-                            self.logger.debug(e)
+                            logger.debug(e)
                             new_neighborhood[i] = True
                         except StopIteration:
                             new_neighborhood[i] = True
@@ -294,9 +297,9 @@ class LocalSearch(AbstractAcquisitionOptimizer):
                                     neighbors[acq_index].is_valid_configuration()
                                     is_valid = True
                                 except (ValueError, ForbiddenValueError) as e:
-                                    self.logger.debug("Local search %d: %s", i, e)
+                                    logger.debug("Local search %d: %s", i, e)
                                 if is_valid:
-                                    self.logger.debug(
+                                    logger.debug(
                                         "Local search %d: Switch to one of the neighbors (after %d configurations).",
                                         i,
                                         neighbors_looked_at[i],
@@ -340,7 +343,7 @@ class LocalSearch(AbstractAcquisitionOptimizer):
                         seed=self.rng.randint(low=0, high=100000),
                     )
 
-        self.logger.debug(
+        logger.debug(
             "Local searches took %s steps and looked at %s configurations. Computing the acquisition function in "
             "vectorized for took %f seconds on average.",
             local_search_steps,

@@ -12,8 +12,8 @@ from smac.configspace import (
     UniformFloatHyperparameter,
     convert_configurations_to_array,
 )
-from smac.model.gaussian_process import GaussianProcess
-from smac.model.gaussian_process.utils.prior import HorseshoePrior, LognormalPrior
+from smac.model.gaussian_process.base_gaussian_process import GaussianProcess
+from smac.model.gaussian_process.priors import HorseshoePrior, LogNormalPrior
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -25,7 +25,7 @@ def get_gp(n_dimensions, seed, noise=1e-3, normalize_y=True) -> GaussianProcess:
     cov_amp = ConstantKernel(
         2.0,
         constant_value_bounds=(1e-10, 2),
-        prior=LognormalPrior(mean=0.0, sigma=1.0, seed=seed),
+        prior=LogNormalPrior(mean=0.0, sigma=1.0, seed=seed),
     )
     exp_kernel = Matern(
         np.ones([n_dimensions]),
@@ -91,7 +91,7 @@ def get_mixed_gp(cat_dims, cont_dims, seed, noise=1e-3, normalize_y=True):
     cov_amp = ConstantKernel(
         2.0,
         constant_value_bounds=(1e-10, 2),
-        prior=LognormalPrior(mean=0.0, sigma=1.0, seed=seed),
+        prior=LogNormalPrior(mean=0.0, sigma=1.0, seed=seed),
     )
 
     exp_kernel = Matern(

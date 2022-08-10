@@ -36,10 +36,10 @@ class TestPSMACFacade(unittest.TestCase):
     def test_psmac(self):
         import joblib
 
-        from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
-        from smac.facade.black_box import BlackBoxFacade
-        from smac.facade.hyperparameter import SMAC4HPO
-        from smac.facade.multi_fidelity import SMAC4MF
+        from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
+        from smac.facade.blackbox_facade import BlackBoxFacade
+        from smac.facade.hyperparameter_facade import SMAC4HPO
+        from smac.facade.multi_fidelity_facade import SMAC4MF
         from smac.facade.psmac import PSMAC
 
         facades = [None, AlgorithmConfigurationFacade, BlackBoxFacade, SMAC4HPO, SMAC4MF]

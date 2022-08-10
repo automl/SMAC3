@@ -17,7 +17,7 @@ from ConfigSpace.configuration_space import Configuration
 from smac.cli.output_directory import create_output_directory
 from smac.cli.scenario import Scenario
 from smac.constants import MAXINT
-from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
+from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 from smac.facade.psmac import PSMAC
 from smac.model.utils import get_rng
 from smac.optimizer.pSMAC import read

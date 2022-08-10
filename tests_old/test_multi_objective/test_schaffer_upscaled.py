@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
+from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 
 MIN_V = -2
 MAX_V = 2

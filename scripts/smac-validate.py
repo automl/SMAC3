@@ -17,7 +17,7 @@ from smac.utils.stats import Stats  # noqa: E402
 from smac.runner.old.execute_ta_run_aclib import ExecuteTARunAClib  # noqa: E402
 from smac.runner.old.execute_ta_run_old import ExecuteTARunOld  # noqa: E402
 from smac.cli.traj_logging import TrajLogger  # noqa: E402
-from smac.utils.validate import Validator  # noqa: E402
+from smac.utils._validate import Validator  # noqa: E402
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

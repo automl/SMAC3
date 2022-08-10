@@ -4,10 +4,10 @@ from typing import Dict, List, Optional, Tuple
 
 import warnings
 
-from smac.chooser.configuration_chooser import ConfigurationChooser
+from smac.chooser.chooser import ConfigurationChooser
 from smac.configspace import Configuration
-from smac.intensification import AbstractIntensifier, RunInfoIntent
-from smac.runhistory import RunInfo, RunValue
+from smac.intensification.abstract_intensifier import AbstractIntensifier
+from smac.runhistory import RunInfo, RunValue, RunInfoIntent
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 

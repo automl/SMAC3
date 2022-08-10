@@ -4,21 +4,14 @@ import typing
 
 import numpy as np
 
-from smac.acquisition.functions import TS, AbstractAcquisitionFunction
-from smac.acquisition import AbstractAcquisitionOptimizer
-from smac.chooser.configuration_chooser import ConfigurationChooser
-from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
-from smac.cli.scenario import Scenario
+from smac.chooser.chooser import ConfigurationChooser
+from smac.acquisition.functions import TS
 from smac.configspace import Configuration
-from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.utils import get_types
-from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.encoder.encoder import AbstractRunhistoryTransformer
-from smac.utils.stats import Stats
 from smac.utils.subspaces.turbo_subspace import TuRBOSubSpace
 
 
-class TurBOChooser(ConfigurationChooser):
+class TurBOConfigurationChooser(ConfigurationChooser):
     """
     Interface to train the EPM and generate next configurations with TurBO:
         D. Eriksson et al. Scalable Global Optimization via Local Bayesian Optimization
@@ -45,16 +38,16 @@ class TurBOChooser(ConfigurationChooser):
 
     def __init__(
         self,
-        scenario: Scenario,
-        stats: Stats,
-        runhistory: RunHistory,
-        runhistory2epm: AbstractRunhistoryTransformer,
-        model: RandomForestWithInstances,
-        acq_optimizer: AbstractAcquisitionOptimizer,
-        acquisition_func: AbstractAcquisitionFunction,
-        rng: np.random.RandomState,
-        restore_incumbent: Configuration = None,
-        random_configuration_chooser: RandomChooser = ChooserNoCoolDown(2.0),
+        # scenario: Scenario,
+        # stats: Stats,
+        # runhistory: RunHistory,
+        # runhistory2epm: AbstractRunHistoryEncoder,
+        # model: RandomForestWithInstances,
+        # acq_optimizer: AbstractAcquisitionOptimizer,
+        # acquisition_func: AbstractAcquisitionFunction,
+        # rng: np.random.RandomState,
+        # restore_incumbent: Configuration = None,
+        # random_configuration_chooser: RandomConfigurationChooser = NoCoolDownConfigurationChooser(2.0),
         predict_x_best: bool = False,
         min_samples_model: int = 1,
         length_init: float = 0.8,
@@ -65,17 +58,7 @@ class TurBOChooser(ConfigurationChooser):
         n_init_x_params: int = 2,
         n_candidate_max: int = 5000,
     ):
-        super(TurBOChooser, self).__init__(
-            scenario=scenario,
-            stats=stats,
-            runhistory=runhistory,
-            runhistory2epm=runhistory2epm,
-            model=model,
-            acquisition_func=acquisition_func,
-            acq_optimizer=acq_optimizer,
-            restore_incumbent=restore_incumbent,
-            rng=rng,
-            random_configuration_chooser=random_configuration_chooser,
+        super(TurBOConfigurationChooser, self).__init__(
             predict_x_best=predict_x_best,
             min_samples_model=min_samples_model,
         )

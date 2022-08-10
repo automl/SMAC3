@@ -6,7 +6,7 @@ import copy
 
 import numpy as np
 
-from smac.acquisition.functions import AbstractAcquisitionFunction
+from smac.acquisition.functions.abstract_acquisition_function import AbstractAcquisitionFunction
 
 
 class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):

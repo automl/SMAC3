@@ -10,7 +10,7 @@ from dask.distributed import Client, Future, wait
 
 from smac.configspace import Configuration
 from smac.runhistory import RunInfo, RunValue, StatusType
-from smac.runner import Runner
+from smac.runner.runner import Runner
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"

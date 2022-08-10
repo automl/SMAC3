@@ -6,8 +6,8 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.facade.multi_fidelity import SMAC4MF
-from smac.initial_design.random_configuration_design import RandomInitialDesign
+from smac.facade.multi_fidelity_facade import SMAC4MF
+from smac.initial_design.random_design import RandomInitialDesign
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

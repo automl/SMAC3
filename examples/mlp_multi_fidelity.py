@@ -136,7 +136,7 @@ if __name__ == "__main__":
     initial_design = MultiFidelityFacade.get_initial_design(scenario, n_configs=5)
 
     # Create our SMAC object and pass the scenario and the train method
-    smac = MultiFidelityFacade(scenario, mlp.train, initial_design=initial_design, overwrite=True)
+    smac = MultiFidelityFacade(scenario, mlp.train, initial_design=initial_design)
     incumbent = smac.optimize()
 
     incumbent_value = mlp.train(incumbent)

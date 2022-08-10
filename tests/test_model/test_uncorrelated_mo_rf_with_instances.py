@@ -4,8 +4,8 @@ from unittest import mock
 import numpy as np
 
 import smac.configspace
-from smac.model.random_forest.rf_mo import MultiObjectiveRandomForest
-from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
+from smac.model.random_forest.multi_objective_random_forest import MultiObjectiveRandomForest
+from smac.model.random_forest.random_forest_with_instances import RandomForestWithInstances
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

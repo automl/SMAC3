@@ -14,11 +14,11 @@ from smac.acquisition import (
     AbstractAcquisitionOptimizer,
     LocalAndSortedRandomSearch,
 )
-from smac.chooser.boing_chooser import BOinGChooser
-from smac.chooser.random_chooser import ChooserProb
-from smac.facade.hyperparameter import HyperparameterFacade
+from smac.chooser.boing_chooser import BOinGConfigurationChooser
+from smac.chooser.random_chooser import ProbabilityConfigurationChooser
+from smac.facade.hyperparameter_facade import HyperparameterFacade
 from smac.model.base_model import BaseModel
-from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
+from smac.model.gaussian_process.augmented_local_gaussian_process import GloballyAugmentedLocalGaussianProcess
 from smac.runhistory.encoder.boing_encoder import (
     RunHistory2EPM4CostWithRaw,
     RunHistory2EPM4ScaledLogCostWithRaw,
@@ -58,8 +58,8 @@ class BOinGFacade(HyperparameterFacade):
         scenario: Scenario,
         *,
         probability: float = 0.08447232371720552,
-    ) -> ChooserProb:
-        return ChooserProb(prob=probability)
+    ) -> ProbabilityConfigurationChooser:
+        return ProbabilityConfigurationChooser(prob=probability)
 
     @staticmethod
     def get_acquisition_optimizer(
@@ -121,7 +121,7 @@ class BOinGFacade(HyperparameterFacade):
         if model_local_kwargs is None and model_local.__name__ == "GloballyAugmentedLocalGaussianProcess":
             model_local_kwargs = BOinGFacade.get_lgpga_local_components()
 
-        return BOinGChooser(
+        return BOinGConfigurationChooser(
             predict_x_best=predict_x_best,
             min_samples_model=min_samples_model,
             model_local=model_local,

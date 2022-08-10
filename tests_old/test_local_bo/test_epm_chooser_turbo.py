@@ -3,17 +3,17 @@ import unittest
 import numpy as np
 
 from smac.cli.scenario import Scenario
-from smac.facade.black_box import BlackBoxFacade
+from smac.facade.blackbox_facade import BlackBoxFacade
 from smac.optimizer.configuration_chooser.turbo_chooser import TurBOChooser
 from smac.runhistory.runhistory import RunHistory
-from smac.runner import StatusType
-from smac.utils import test_helpers
+from smac.runner.runner import StatusType
+from smac.utils import _test_helpers
 
 
 class TestEPMChooserTuRBO(unittest.TestCase):
     def setUp(self):
         self.scenario = Scenario(
-            {"cs": test_helpers.get_branin_config_space(), "run_obj": "quality", "output_dir": "data-test_epmchooser"}
+            {"cs": _test_helpers.get_branin_config_space(), "run_obj": "quality", "output_dir": "data-test_epmchooser"}
         )
         self.output_dirs = []
         self.output_dirs.append(self.scenario.output_dir)

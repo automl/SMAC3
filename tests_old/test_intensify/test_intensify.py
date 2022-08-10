@@ -9,12 +9,12 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
-from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
+from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.intensification.intensification import Intensifier, IntensifierStage
 from smac.runhistory.runhistory import RunHistory, RunInfo
 from smac.utils.stats import Stats
-from smac.runner import StatusType
+from smac.runner.runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 
 

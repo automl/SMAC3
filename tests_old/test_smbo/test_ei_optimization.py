@@ -20,8 +20,8 @@ from smac.optimizer.acquisition.maximizer import (
     RandomSearch,
 )
 from smac.runhistory.runhistory import RunHistory
-from smac.runner import StatusType
-from smac.utils import test_helpers
+from smac.runner.runner import StatusType
+from smac.utils import _test_helpers
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -196,7 +196,7 @@ class TestLocalSearch(unittest.TestCase):
                 return rval
 
         patch.side_effect = SideEffect()
-        cs = test_helpers.get_branin_config_space()
+        cs = _test_helpers.get_branin_config_space()
         rand_confs = cs.sample_configuration(size=9)
         _get_initial_points_patch.return_value = rand_confs
         acq_func = EI(None)

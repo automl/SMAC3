@@ -6,29 +6,25 @@ import time
 
 import numpy as np
 
-from smac.acquisition.functions import AbstractAcquisitionFunction
-from smac.acquisition import AbstractAcquisitionOptimizer
-from smac.chooser.configuration_chooser import ConfigurationChooser
-from smac.chooser.random_chooser import RandomChooser
+from smac.acquisition.functions.abstract_acquisition_function import AbstractAcquisitionFunction
+from smac.acquisition.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
+from smac.chooser.chooser import ConfigurationChooser
+from smac.chooser.random_chooser import RandomConfigurationChooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.initial_design import InitialDesign
-from smac.intensification import AbstractIntensifier, RunInfoIntent
+from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.model.base_model import BaseModel
-from smac.runhistory import RunInfo, RunValue
+from smac.runhistory import RunInfo, RunValue, RunInfoIntent, StatusType
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
-from smac.runner import (
-    FirstRunCrashedException,
-    Runner,
-    StatusType,
-    TargetAlgorithmAbortException,
-)
+from smac.runner.runner import Runner
+
+from smac.runner.exceptions import FirstRunCrashedException, TargetAlgorithmAbortException
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 from smac.utils.stats import Stats
 from smac.callback import Callback
-from smac.utils.validate import Validator
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -107,7 +103,7 @@ class SMBO:
         acquisition_optimizer: AbstractAcquisitionOptimizer,
         acquisition_function: AbstractAcquisitionFunction,
         configuration_chooser: ConfigurationChooser,
-        random_configuration_chooser: RandomChooser,
+        random_configuration_chooser: RandomConfigurationChooser,
         seed: int = 0,
     ):
         # Changed in 2.0: We don't restore the incumbent anymore but derive it directly from

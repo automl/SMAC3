@@ -1,3 +1,10 @@
+# 2.0
+
+* configspace is saved in json only
+* `StatusType` is saved as integer and not as dict anymore in runhistory
+
+
+
 # 1.4.0
 
 ## Features

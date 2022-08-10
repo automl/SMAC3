@@ -5,7 +5,7 @@ from ConfigSpace import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from gpytorch.kernels import MaternKernel, ScaleKernel
 
-from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
+from smac.model.gaussian_process.augmented_local_gaussian_process import GloballyAugmentedLocalGaussianProcess
 from smac.model.utils import get_types
 from smac.optimizer.acquisition import EI
 from smac.optimizer.acquisition.maximizer import LocalAndSortedRandomSearch

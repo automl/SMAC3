@@ -7,9 +7,9 @@ from pyrfr import regression
 
 from smac.configspace import ConfigurationSpace
 from smac.constants import N_TREES, VERY_SMALL_NUMBER
-from smac.model.base_imputor import BaseImputor
+from smac.model.imputer import AbstractImputer
 from smac.model.random_forest import BaseRandomForest
-from smac.model.random_forest.rfr_imputator import RFRImputator
+from smac.model.imputer.random_forest_imputer import RandomForestImputer
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -20,13 +20,13 @@ class RandomForestWithInstances(BaseRandomForest):
 
     Parameters
     ----------
-    types : List[int]
+    types : list[int]
         Specifies the number of categorical values of an input dimension where
         the i-th entry corresponds to the i-th input dimension. Let's say we
         have 2 dimension where the first dimension consists of 3 different
         categorical choices and the second dimension is continuous than we
         have to pass [3, 0]. Note that we count starting from 0.
-    bounds : List[Tuple[float, float]]
+    bounds : list[Tuple[float, float]]
         bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
     seed : int
         The seed that is passed to the random_forest_run library.
@@ -79,8 +79,8 @@ class RandomForestWithInstances(BaseRandomForest):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: List[int],
-        bounds: List[Tuple[float, float]],
+        types: list[int],
+        bounds: list[Tuple[float, float]],
         seed: int,
         log_y: bool = False,
         num_trees: int = N_TREES,

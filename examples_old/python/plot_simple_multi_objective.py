@@ -13,7 +13,7 @@ from matplotlib import pyplot as plt
 
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.facade.black_box import BlackBoxFacade
+from smac.facade.blackbox_facade import BlackBoxFacade
 
 
 def schaffer(x):

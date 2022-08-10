@@ -14,7 +14,7 @@ from smac.acquisition import (
 )
 from smac.configspace import Configuration
 from smac.model.base_model import BaseModel
-from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
+from smac.model.gaussian_process.augmented_local_gaussian_process import GloballyAugmentedLocalGaussianProcess
 from smac.utils.subspaces import LocalSubspace
 
 

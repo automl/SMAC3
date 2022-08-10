@@ -12,13 +12,13 @@ from joblib import Parallel, delayed
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration, convert_configurations_to_array
 from smac.constants import MAXINT
-from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
-from smac.model.random_forest.rfr_imputator import RFRImputator
+from smac.model.random_forest.random_forest_with_instances import RandomForestWithInstances
+from smac.model.imputer.random_forest_imputer import RandomForestImputer
 from smac.model.utils import get_types
 from smac.runhistory import RunInfo, RunKey, RunValue, StatusType
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
-from smac.runner import Runner
+from smac.runner.runner import Runner
 
 # from smac.runner.old.execute_ta_run_old import ExecuteTARunOld
 from smac.utils.stats import Stats
@@ -358,7 +358,7 @@ class Validator(object):
             impute_censored_data = False
             if self.scen.run_obj == "runtime":
                 threshold = self.scen.cutoff * self.scen.par_factor  # type: ignore[attr-defined] # noqa F821
-                imputor = RFRImputator(
+                imputor = RandomForestImputer(
                     rng=self.rng,
                     cutoff=self.scen.cutoff,  # type: ignore[attr-defined] # noqa F821
                     threshold=threshold,

@@ -6,8 +6,8 @@ import unittest
 
 from smac.optimizer import pSMAC
 from smac.runhistory.runhistory import DataOrigin, RunHistory, RunKey
-from smac.runner import StatusType
-from smac.utils import test_helpers
+from smac.runner.runner import StatusType
+from smac.utils import _test_helpers
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -52,7 +52,7 @@ class TestPSMAC(unittest.TestCase):
         )
 
         run_history = RunHistory()
-        configuration_space = test_helpers.get_branin_config_space()
+        configuration_space = _test_helpers.get_branin_config_space()
         configuration_space.seed(1)
 
         config = configuration_space.sample_configuration()
@@ -99,7 +99,7 @@ class TestPSMAC(unittest.TestCase):
         self.assertEqual(output, fixture)
 
     def test_load(self):
-        configuration_space = test_helpers.get_branin_config_space()
+        configuration_space = _test_helpers.get_branin_config_space()
 
         other_runhistory = (
             '{"data": [[[2, "branini", 1], [1, 1,'

@@ -11,16 +11,16 @@ from smac.cli.output_directory import create_output_directory
 from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
 from smac.configspace import Configuration
-from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
-from smac.facade.black_box import BlackBoxFacade
+from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
+from smac.facade.blackbox_facade import BlackBoxFacade
 from smac.facade.experimental.hydra_facade import (  # type: ignore[attr-defined] # noqa F821
     Hydra,
 )
-from smac.facade.hyperparameter import SMAC4HPO
+from smac.facade.hyperparameter_facade import SMAC4HPO
 from smac.facade.psmac import PSMAC  # type: ignore[attr-defined] # noqa F821
-from smac.facade.random import ROAR
+from smac.facade.random_facade import ROAR
 from smac.runhistory.runhistory import RunHistory
-from smac.runner import FirstRunCrashedException, TargetAlgorithmAbortException
+from smac.runner.runner import FirstRunCrashedException, TargetAlgorithmAbortException
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 from smac.utils.stats import Stats
 

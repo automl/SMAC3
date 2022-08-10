@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 from smac.configspace import Configuration
-from smac.facade.random import RandomFacade
-from smac.initial_design import InitialDesign
-from smac.initial_design.random_configuration_design import RandomInitialDesign
+from smac.facade.random_facade import RandomFacade
+from smac.initial_design.random_design import RandomInitialDesign
 from smac.intensification.hyperband import Hyperband
 from smac.scenario import Scenario
 

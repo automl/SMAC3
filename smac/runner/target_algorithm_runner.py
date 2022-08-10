@@ -14,7 +14,7 @@ from pynisher import MemoryLimitException, WallTimeoutException, limit
 import smac
 from smac.configspace import Configuration
 from smac.constants import MAXINT
-from smac.runner import StatusType
+from smac.runner.runner import StatusType
 from smac.runner.serial_runner import SerialRunner
 from smac.utils.logging import get_logger
 from smac.utils.stats import Stats

@@ -8,7 +8,7 @@ from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
 from smac.configspace import ConfigurationSpace
 from smac.initial_design import InitialDesign
-from smac.initial_design.default_configuration_design import DefaultInitialDesign
+from smac.initial_design.default_design import DefaultInitialDesign
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.utils.stats import Stats

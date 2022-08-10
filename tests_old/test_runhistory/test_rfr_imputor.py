@@ -11,12 +11,12 @@ from ConfigSpace.hyperparameters import (
 )
 
 from smac.cli import scenario
-from smac.model.random_forest import rfr_imputator
-from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
+from smac.model.imputer import random_forest_imputer
+from smac.model.random_forest.random_forest_with_instances import RandomForestWithInstances
 from smac.model.utils import get_types
 from smac.runhistory import runhistory
 from smac.runhistory.encoder import encoder
-from smac.runner import StatusType
+from smac.runner.runner import StatusType
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -160,7 +160,7 @@ class ImputorTest(unittest.TestCase):
             for i in range(num_feat):
                 cs.add_hyperparameter(UniformFloatHyperparameter(name="a_%d" % i, lower=0, upper=1, default_value=0.5))
 
-            imputor = rfr_imputator.RFRImputator(
+            imputor = random_forest_imputer.RandomForestImputer(
                 rng=rs,
                 cutoff=cutoff,
                 threshold=cutoff * 10,
@@ -187,7 +187,7 @@ class ImputorTest(unittest.TestCase):
 
         scen = self.get_scenario()
         model = self.get_model(cs)
-        imputor = rfr_imputator.RFRImputator(
+        imputor = random_forest_imputer.RandomForestImputer(
             rng=rs,
             cutoff=scen.cutoff,
             threshold=scen.cutoff * 10,
@@ -217,7 +217,7 @@ class ImputorTest(unittest.TestCase):
         model = self.get_model(cs, instance_features)
 
         with unittest.mock.patch.object(model, attribute="train", wraps=model.train) as train_wrapper:
-            imputor = rfr_imputator.RFRImputator(
+            imputor = random_forest_imputer.RandomForestImputer(
                 rng=rs,
                 cutoff=scen.cutoff,
                 threshold=scen.cutoff * 10,

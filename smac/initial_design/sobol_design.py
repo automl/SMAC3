@@ -8,7 +8,7 @@ from ConfigSpace.configuration_space import Configuration
 from ConfigSpace.hyperparameters import Constant
 from scipy.stats.qmc import Sobol
 
-from smac.initial_design import InitialDesign
+from smac.initial_design.initial_design import InitialDesign
 from smac.scenario import Scenario
 
 __copyright__ = "Copyright 2022, automl.org"

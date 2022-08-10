@@ -5,10 +5,10 @@ import numpy as np
 import scipy.optimize
 
 from smac.constants import VERY_SMALL_NUMBER
-from smac.model.gaussian_process.utils.prior import (
+from smac.model.gaussian_process.priors import (
     GammaPrior,
     HorseshoePrior,
-    LognormalPrior,
+    LogNormalPrior,
     SoftTopHatPrior,
     TophatPrior,
 )
@@ -179,7 +179,7 @@ class TestGammaPrior(unittest.TestCase):
 class TestLogNormalPrior(unittest.TestCase):
     def test_gradient(self):
         for sigma in (0.5, 1.0, 2.0):
-            prior = LognormalPrior(mean=0, sigma=sigma, seed=1)
+            prior = LogNormalPrior(mean=0, sigma=sigma, seed=1)
             # The function appears to be unstable above 15
             for theta in range(0, 15):
                 # Gradient approximation becomes unstable when going closer to zero

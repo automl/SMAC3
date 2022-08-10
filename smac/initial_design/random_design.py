@@ -4,7 +4,7 @@ from typing import List
 
 from ConfigSpace import Configuration
 
-from smac.initial_design import InitialDesign
+from smac.initial_design.initial_design import InitialDesign
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -13,7 +13,7 @@ __license__ = "3-clause BSD"
 class RandomInitialDesign(InitialDesign):
     """Initial design that evaluates random configurations."""
 
-    def _select_configurations(self) -> List[Configuration]:
+    def _select_configurations(self) -> list[Configuration]:
         """Select a random configuration.
 
         Returns
