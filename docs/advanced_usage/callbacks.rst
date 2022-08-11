@@ -1,23 +1,38 @@
 Callbacks
 =========
 
-Callbacks allow customizing the behavior of SMAC to ones needs. Currently, the list of
-implemented callbacks is very limited, but they can easily be added.
+Callbacks provide the ability to easily execute code before, inside, and after the Bayesian Optimization loop.
+To add a callback, you have to inherit from ``smac.callback.Callback`` and overwrite the abstract methods.
+Afterwards, you can pass the callbacks to any facade. 
 
 
-How to add a new callback
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Example
+-------
 
-* Implement a callback class in ``smac/callbacks.py``. There are no restrictions on how such a
-  callback must look like, but it is recommended to implement the main logic inside the `__call__`
-  function, such as for example in ``IncorporateRunResultCallback``.
+.. code-block:: python
 
-* Add your callback to ``smac.smbo.optimizer.SMBO._callbacks``, using the name of your callback
-  as the key, and an empty list as the value.
+    from smac import MultiFidelityFacade
+    from smac.callback import Callback
 
-* Add your callback to ``smac.smbo.optimizer.SMBO._callback_to_key``, using the callback class as
-  the key, and the name as value (the name used in 2.).
+    class CustomCallback(Callback):
+        def on_start(self, smbo: SMBO) -> None:
+            pass
 
-* Implement calling all registered callbacks at the correct place. This is as simple as 
-  ``for callback in self._callbacks['your_callback']: callback(*args, **kwargs)``, where you
-  obviously need to change the callback name and signature.
+        @abstractmethod
+        def on_end(self, smbo: SMBO) -> None:
+            pass
+
+        @abstractmethod
+        def on_iteration_start(self, smbo: SMBO) -> None:
+            pass
+
+        @abstractmethod
+        def on_iteration_end(self, smbo: SMBO, info: RunInfo, value: RunValue) -> bool | None:
+            # We just do a simple printing here
+            print(info, value)
+
+    smac = MultiFidelityFacade(
+        ...
+        callbacks=[CustomCallback()]
+    )
+    smac.optimize()

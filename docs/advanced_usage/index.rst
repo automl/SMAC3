@@ -8,6 +8,9 @@ This chapter gives more details of single components of SMAC.
     :hidden:
 
     facades
+    resume
+    callbacks
+    .. facades
     .. target_algorithm_evaluator
     .. scenario
     .. arguments
