@@ -9,11 +9,9 @@ from smac.acquisition import AbstractAcquisitionOptimizer
 from smac.acquisition.local_and_random_search import (
     LocalAndSortedRandomSearch,
 )
-from smac.chooser.random_chooser import RandomConfigurationChooser
 from smac.chooser.probability_chooser import ProbabilityConfigurationChooser
 from smac.configspace import Configuration
 from smac.facade import Facade
-from smac.initial_design import InitialDesign
 from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.model.gaussian_process.base_gaussian_process import BaseGaussianProcess, GaussianProcess

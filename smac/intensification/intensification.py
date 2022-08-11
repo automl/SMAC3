@@ -316,7 +316,7 @@ class Intensifier(AbstractIntensifier):
             return RunInfoIntent.SKIP, RunInfo(
                 config=None,
                 instance=None,
-                instance_specific="0",
+                # instance_specific="0",
                 seed=0,
                 budget=0.0,
             )
@@ -324,11 +324,11 @@ class Intensifier(AbstractIntensifier):
         # Skip the iteration if the challenger was previously run
         if challenger == incumbent and self.stage == IntensifierStage.RUN_CHALLENGER:
             self.challenger_same_as_incumbent = True
-            logger.debug("Challenger was the same as the current incumbent; Skipping challenger")
+            logger.debug("Challenger was the same as the current incumbent. Challenger is skipped.")
             return RunInfoIntent.SKIP, RunInfo(
                 config=None,
                 instance=None,
-                instance_specific="0",
+                # instance_specific="0",
                 seed=0,
                 budget=0.0,
             )
@@ -367,7 +367,7 @@ class Intensifier(AbstractIntensifier):
                 return RunInfoIntent.SKIP, RunInfo(
                     config=None,
                     instance=None,
-                    instance_specific="0",
+                    # instance_specific="0",
                     seed=0,
                     budget=0.0,
                 )
