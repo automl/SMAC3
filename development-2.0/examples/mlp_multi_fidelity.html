@@ -186,8 +186,13 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/facades.html">
-     Facades
+    <a class="reference internal" href="../advanced_usage/resumption.html">
+     Resumption
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/callbacks.html">
+     Callbacks
     </a>
    </li>
   </ul>
@@ -404,10 +409,6 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
 [INFO][hyperband.py:428] Finished Hyperband iteration-step 6-1 with initial budget 8.
 [INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
-[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
-[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
-[INFO][hyperband.py:428] Finished Hyperband iteration-step 6-2 with initial budget 25.
-[INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
 [INFO][facade.py:318] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 2, &#39;n_neurons&#39;: 236, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 238, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.0036985335686206514}
 [INFO][facade.py:319] Estimated cost: 0.023368926029093018
 Incumbent value: 0.02
@@ -548,7 +549,7 @@ Incumbent value: 0.02
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent value: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">incumbent_value</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  2.796 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  4.274 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-mlp-multi-fidelity-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/f66317bf5b0121f73605c64e54585f74/mlp_multi_fidelity.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">mlp_multi_fidelity.py</span></code></a></p>

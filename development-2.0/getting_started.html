@@ -186,8 +186,13 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/facades.html">
-     Facades
+    <a class="reference internal" href="advanced_usage/resumption.html">
+     Resumption
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/callbacks.html">
+     Callbacks
     </a>
    </li>
   </ul>
@@ -300,7 +305,7 @@ style="width: 100%;">
 <nav id="bd-toc-nav">
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id1">
+  <a class="reference internal nav-link" href="#configuration-space">
    Configuration Space
   </a>
  </li>
@@ -342,29 +347,87 @@ style="width: 100%;">
                 
   <section id="getting-started">
 <h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h1>
-<p>There are two ways to use SMAC, either within your Python-code or over the commandline.</p>
-<p>Either way, you need to provide a <a class="reference internal" href="advanced_usage/target_algorithm_evaluator.html#target-algorithm-evaluator"><span class="std std-ref">target algorithm</span></a> you want to
-optimize and the <a class="reference external" href="https://automl.github.io/ConfigSpace/master/">configuration space</a>, which
-specifies the legal ranges and default values of the tunable parameters.
-In addition, you can configure the optimization process with the <a class="reference internal" href="advanced_usage/scenario.html#scenario"><span class="std std-ref">scenario</span></a> object.</p>
-<p>The usage of SMAC from your Python-code is described in the <a class="reference internal" href="minimal_example.html#minimal-example"><span class="std std-ref">minimal example</span></a>.
-Scenario and configuration space are both build within the code. The target algorithm needs to be
-registered with a <a class="reference internal" href="advanced_usage/target_algorithm_evaluator.html#target-algorithm-evaluator"><span class="std std-ref">target algorithm</span></a>, which communicates between
-SMAC and the target algorithm. To optimize a function, you can instantiate <code class="docutils literal notranslate"><span class="pre">ExecuteTAFuncDict</span></code> or
-<code class="docutils literal notranslate"><span class="pre">ExecuteTAFuncArray</span></code>. In both cases, the algorithm needs to return a cost, representing the
-quality of the solution. Time- and memory-limits, on the other hand, are measured and enforced by
-Pynisher.</p>
-<section id="id1">
-<h2>Configuration Space<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<p>In the core, SMAC needs four components to run an optimization process, which are explained on this page. The following
+four components are:</p>
+<ul class="simple">
+<li><p>Configuration space</p></li>
+<li><p>Target algorithm</p></li>
+<li><p>Scenario</p></li>
+<li><p>Facade</p></li>
+</ul>
+<section id="configuration-space">
+<h2>Configuration Space<a class="headerlink" href="#configuration-space" title="Permalink to this heading">¶</a></h2>
+<p>The configuration space defines the search space of the hyperparameters and, therefore, the tunable parameters’ legal
+ranges and default values.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">ConfigSpace</span>
+
+<span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigSpace</span><span class="p">({</span>
+    <span class="s2">&quot;learning_rate&quot;</span> <span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">),</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>Please see the documentation of <code class="docutils literal notranslate"><span class="pre">ConfigSpace</span></code> for more details.</p>
 </section>
 <section id="target-algorithm">
 <h2>Target Algorithm<a class="headerlink" href="#target-algorithm" title="Permalink to this heading">¶</a></h2>
+<p>The target algorithm takes a configuration from the configuration space and returns a performance value.
+For example, you could use a Neural Network and predict the performance based on the learning rate. Every configuration
+would (most likely) return a different value. However, SMAC tries to find the best learning rate by trying
+different and potentially improving configurations.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">MultiLayerPerceptron</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">])</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">accuracy</span>  <span class="c1"># SMAC always minimizes (the smaller the better)</span>
+</pre></div>
+</div>
 </section>
 <section id="scenario">
 <h2>Scenario<a class="headerlink" href="#scenario" title="Permalink to this heading">¶</a></h2>
+<p>The <span class="xref std std-ref">Scenario</span> is used to provide environment variables. For example,
+you want to limit the optimization process by a time limit or want to specify where to save the results.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">Scenario</span>
+
+<span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span>
+    <span class="n">configspace</span><span class="o">=</span><span class="n">cs</span><span class="p">,</span>
+    <span class="n">output_directory</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;output_directory&quot;</span><span class="p">)</span>
+    <span class="n">walltime_limit</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span>  <span class="c1"># Limit to two minutes</span>
+    <span class="n">n_workers</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>  <span class="c1"># Use eight workers</span>
+    <span class="o">...</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="facade">
 <h2>Facade<a class="headerlink" href="#facade" title="Permalink to this heading">¶</a></h2>
+<p><span class="xref std std-ref">Facades</span> are used to satisfy different tasks. We support the following facades by default:</p>
+<ul class="simple">
+<li><p><span class="xref std std-ref">BlackBoxFacade</span>: Random Search</p></li>
+<li><p><span class="xref std std-ref">HyperbandFacade</span>: Random Search when using multiple budgets (like epochs or subset sizes).</p></li>
+<li><p><span class="xref std std-ref">BlackBoxFacade</span>: Black-box optimization</p></li>
+<li><p><span class="xref std std-ref">HyperparameterFacade</span>: Hyperparameter optimization</p></li>
+<li><p><span class="xref std std-ref">MultiFidelityFacade</span>: Multi-Fidelity optimization when using multiple budgets (like epochs or subset sizes).</p></li>
+<li><p><span class="xref std std-ref">AlgorithmConfigurationFacade</span>: Algorithm Configuration to optimize across different instances.</p></li>
+</ul>
+<p>Each facade might differ in the following ways (but are not limited to that):
+- Initial design (how the first configurations are sampled)
+- Surrogate model (which model is used to learn promising regions on the hyperparamter facade)
+- Acqusition function (exploration and exploitation trade-off)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">BlackBoxFacade</span>
+
+<span class="n">smac</span> <span class="o">=</span> <span class="n">BlackBoxFacade</span><span class="p">(</span>
+    <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
+    <span class="n">target_algorithm</span><span class="o">=</span><span class="n">train</span><span class="p">,</span>
+    <span class="o">...</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We want to emphasize that SMAC is a highly modular optimization framework.
+The facade accepts many arguments to specify components of the pipeline.</p>
+</div>
 </section>
 </section>
 

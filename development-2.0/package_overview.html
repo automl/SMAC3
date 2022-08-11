@@ -186,8 +186,13 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/facades.html">
-     Facades
+    <a class="reference internal" href="advanced_usage/resumption.html">
+     Resumption
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/callbacks.html">
+     Callbacks
     </a>
    </li>
   </ul>
@@ -339,8 +344,8 @@ style="width: 100%;">
 <h1>Package Overview<a class="headerlink" href="#package-overview" title="Permalink to this heading">¶</a></h1>
 <p>SMAC supports you in determining well-performing hyperparameter configurations for your algorithms.
 By being a robust and flexible framework for <a class="reference internal" href="glossary.html#term-BO"><span class="xref std std-term">BO</span></a>, SMAC can improve performance within few function evaluations.
-It offers several <a class="reference internal" href="advanced_usage/facades.html#facades"><span class="std std-ref">Facades</span></a> and pre-sets for typical use cases, such as optimizing
-hyperparameters, solving low dimensional continuous (artificial) global optimization problems and configuring algorithms to perform well across multiple problem <a class="reference internal" href="advanced_usage/instances.html#instances-and-features"><span class="std std-ref">Instances</span></a>.</p>
+It offers several <a class="reference internal" href="advanced_usage/old/facades.html#facades"><span class="std std-ref">Facades</span></a> and pre-sets for typical use cases, such as optimizing
+hyperparameters, solving low dimensional continuous (artificial) global optimization problems and configuring algorithms to perform well across multiple problem <a class="reference internal" href="advanced_usage/old/instances.html#instances-and-features"><span class="std std-ref">Instances</span></a>.</p>
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this heading">¶</a></h2>
 <p>SMAC has following characteristics and capabilities:</p>
@@ -356,12 +361,12 @@ hyperparameters efficiently.</p>
 </dd>
 <dt>Any objectives</dt><dd><p>Optimization with any <a class="reference internal" href="glossary.html#term-Objective"><span class="xref std std-term">objective</span></a> (e.g., quality or runtime) is possible.</p>
 </dd>
-<dt><a class="reference internal" href="advanced_usage/multi_objective.html#multi-objective-optimization"><span class="std std-ref">Multi-Objective</span></a></dt><dd><p>Optimize any number of objectives using scalarized multi-ojective algorithms.</p>
+<dt><a class="reference internal" href="advanced_usage/old/multi_objective.html#multi-objective-optimization"><span class="std std-ref">Multi-Objective</span></a></dt><dd><p>Optimize any number of objectives using scalarized multi-ojective algorithms.</p>
 </dd>
 <dt><a class="reference internal" href="glossary.html#term-MF"><span class="xref std std-term">Multi-Fidelity</span></a> Optimization</dt><dd><p>Judge configurations on multiple <a class="reference internal" href="glossary.html#term-Budget"><span class="xref std std-term">budgets</span></a> to discard unsuitable configurations
 early on. This will result in a massive speed-up, depending on the budgets.</p>
 </dd>
-<dt><a class="reference internal" href="advanced_usage/instances.html#instances-and-features"><span class="std std-ref">Instances</span></a></dt><dd><p>Find well-performing hyperparameter configurations not only for one instance (e.g. dataset) of
+<dt><a class="reference internal" href="advanced_usage/old/instances.html#instances-and-features"><span class="std std-ref">Instances</span></a></dt><dd><p>Find well-performing hyperparameter configurations not only for one instance (e.g. dataset) of
 an algorithm, but for many.</p>
 </dd>
 <dt>Commandline (<a class="reference internal" href="glossary.html#term-CLI"><span class="xref std std-term">CLI</span></a>)</dt><dd><p>SMAC can not only be executed within a python file but also from the commandline. Consequently,
@@ -414,7 +419,7 @@ not only algorithms in python can be optimized but in other languages as well.</
 <th class="head"><p>Complex Hyperparameter Spaces</p></th>
 <th class="head"><p>Multi-<a class="reference internal" href="glossary.html#term-Objective"><span class="xref std std-term">Objective</span></a></p></th>
 <th class="head"><p><a class="reference internal" href="glossary.html#term-MF"><span class="xref std std-term">Multi-Fidelity</span></a></p></th>
-<th class="head"><p><a class="reference internal" href="advanced_usage/instances.html#instances-and-features"><span class="std std-ref">Instances</span></a></p></th>
+<th class="head"><p><a class="reference internal" href="advanced_usage/old/instances.html#instances-and-features"><span class="std std-ref">Instances</span></a></p></th>
 <th class="head"><p><a class="reference internal" href="glossary.html#term-CLI"><span class="xref std std-term">CLI</span></a></p></th>
 <th class="head"><p>Parallelism</p></th>
 </tr>

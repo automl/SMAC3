@@ -183,8 +183,13 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../../advanced_usage/facades.html">
-     Facades
+    <a class="reference internal" href="../../../../../advanced_usage/resumption.html">
+     Resumption
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../../advanced_usage/callbacks.html">
+     Callbacks
     </a>
    </li>
   </ul>
@@ -312,7 +317,7 @@ style="width: 100%;">
 <span class="kn">import</span> <span class="nn">scipy.special</span>
 <span class="kn">import</span> <span class="nn">sklearn.gaussian_process.kernels</span> <span class="k">as</span> <span class="nn">kernels</span>
 
-<span class="kn">from</span> <span class="nn">smac.model.gaussian_process.kernels.base_kernels</span> <span class="kn">import</span> <span class="n">MagicMixin</span>
+<span class="kn">from</span> <span class="nn">smac.model.gaussian_process.kernels.base_kernels</span> <span class="kn">import</span> <span class="n">MagicMixinKernel</span>
 <span class="kn">from</span> <span class="nn">smac.model.gaussian_process.priors.prior</span> <span class="kn">import</span> <span class="n">Prior</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2022, automl.org&quot;</span>
@@ -320,7 +325,7 @@ style="width: 100%;">
 
 
 <div class="viewcode-block" id="HammingKernel"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.hamming_kernel.html#smac.model.gaussian_process.kernels.HammingKernel">[docs]</a><span class="k">class</span> <span class="nc">HammingKernel</span><span class="p">(</span>
-    <span class="n">MagicMixin</span><span class="p">,</span>
+    <span class="n">MagicMixinKernel</span><span class="p">,</span>
     <span class="n">kernels</span><span class="o">.</span><span class="n">StationaryKernelMixin</span><span class="p">,</span>
     <span class="n">kernels</span><span class="o">.</span><span class="n">NormalizedKernelMixin</span><span class="p">,</span>
     <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span>

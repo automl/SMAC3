@@ -51,6 +51,9 @@ Glossary
         Budget is another word for fidelity. Examples are the number of training epochs or the size of
         the data subset the algorithm is trained on.
 
+    Trial
+        Trial is a single run of a target algorithm on a combination of configuration, seed, budget and/or instance.
+
     PCS
         `ConfigurationSpace <https://automl.github.io/ConfigSpace/master/API-Doc.html>`_ can be written/read from a PCS file.
 

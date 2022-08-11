@@ -114,10 +114,6 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     [INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
     [INFO][hyperband.py:428] Finished Hyperband iteration-step 6-1 with initial budget 8.
     [INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
-    [INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
-    [INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
-    [INFO][hyperband.py:428] Finished Hyperband iteration-step 6-2 with initial budget 25.
-    [INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
     [INFO][facade.py:318] Final Incumbent: {'activation': 'relu', 'n_layer': 2, 'n_neurons': 236, 'solver': 'sgd', 'batch_size': 238, 'learning_rate': 'adaptive', 'learning_rate_init': 0.0036985335686206514}
     [INFO][facade.py:319] Estimated cost: 0.023368926029093018
     Incumbent value: 0.02
@@ -266,7 +262,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  2.796 seconds)
+   **Total running time of the script:** ( 1 minutes  4.274 seconds)
 
 
 .. _sphx_glr_download_examples_mlp_multi_fidelity.py:

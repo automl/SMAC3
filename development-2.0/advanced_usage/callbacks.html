@@ -39,6 +39,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API References" href="../api.html" />
+    <link rel="prev" title="Resumption" href="resumption.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -115,7 +117,7 @@ style="width: 100%;">
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
 <div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
-    <ul class="nav bd-sidenav">
+    <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="../installation.html">
    Installation
@@ -173,19 +175,24 @@ style="width: 100%;">
    </li>
   </ul>
  </li>
- <li class="toctree-l1 has-children">
+ <li class="toctree-l1 current active has-children">
   <a class="reference internal" href="index.html">
    Advanced Usage
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
   <label for="toctree-checkbox-2">
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul>
+  <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="facades.html">
-     Facades
+    <a class="reference internal" href="resumption.html">
+     Resumption
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Callbacks
     </a>
    </li>
   </ul>
@@ -298,8 +305,8 @@ style="width: 100%;">
 <nav id="bd-toc-nav">
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#how-to-add-a-new-callback">
-   How to add a new callback
+  <a class="reference internal nav-link" href="#example">
+   Example
   </a>
  </li>
 </ul>
@@ -325,22 +332,40 @@ style="width: 100%;">
                 
   <section id="callbacks">
 <h1>Callbacks<a class="headerlink" href="#callbacks" title="Permalink to this heading">¶</a></h1>
-<p>Callbacks allow customizing the behavior of SMAC to ones needs. Currently, the list of
-implemented callbacks is very limited, but they can easily be added.</p>
-<section id="how-to-add-a-new-callback">
-<h2>How to add a new callback<a class="headerlink" href="#how-to-add-a-new-callback" title="Permalink to this heading">¶</a></h2>
-<ul class="simple">
-<li><p>Implement a callback class in <code class="docutils literal notranslate"><span class="pre">smac/callbacks.py</span></code>. There are no restrictions on how such a
-callback must look like, but it is recommended to implement the main logic inside the <cite>__call__</cite>
-function, such as for example in <code class="docutils literal notranslate"><span class="pre">IncorporateRunResultCallback</span></code>.</p></li>
-<li><p>Add your callback to <code class="docutils literal notranslate"><span class="pre">smac.smbo.optimizer.SMBO._callbacks</span></code>, using the name of your callback
-as the key, and an empty list as the value.</p></li>
-<li><p>Add your callback to <code class="docutils literal notranslate"><span class="pre">smac.smbo.optimizer.SMBO._callback_to_key</span></code>, using the callback class as
-the key, and the name as value (the name used in 2.).</p></li>
-<li><p>Implement calling all registered callbacks at the correct place. This is as simple as
-<code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">callback</span> <span class="pre">in</span> <span class="pre">self._callbacks['your_callback']:</span> <span class="pre">callback(*args,</span> <span class="pre">**kwargs)</span></code>, where you
-obviously need to change the callback name and signature.</p></li>
-</ul>
+<p>Callbacks provide the ability to easily execute code before, inside, and after the Bayesian Optimization loop.
+To add a callback, you have to inherit from <code class="docutils literal notranslate"><span class="pre">smac.callback.Callback</span></code> and overwrite the abstract methods.
+Afterwards, you can pass the callbacks to any facade.</p>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">MultiFidelityFacade</span>
+<span class="kn">from</span> <span class="nn">smac.callback</span> <span class="kn">import</span> <span class="n">Callback</span>
+
+
+<span class="k">class</span> <span class="nc">CustomCallback</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">SMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">on_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">SMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">on_iteration_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">SMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">on_iteration_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">SMBO</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">RunInfo</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">RunValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># We just do a simple printing here</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+
+<span class="n">smac</span> <span class="o">=</span> <span class="n">MultiFidelityFacade</span><span class="p">(</span>
+    <span class="o">...</span>
+    <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">CustomCallback</span><span class="p">()]</span>
+<span class="p">)</span>
+<span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+</pre></div>
+</div>
 </section>
 </section>
 
@@ -349,7 +374,21 @@ obviously need to change the callback name and signature.</p></li>
               
               
               <!-- Previous / next buttons -->
-<div class='prev-next-area'>
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="resumption.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Resumption</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../api.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">API References</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
 </div>
               
           </main>

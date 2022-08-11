@@ -186,8 +186,13 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/facades.html">
-     Facades
+    <a class="reference internal" href="../advanced_usage/resumption.html">
+     Resumption
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/callbacks.html">
+     Callbacks
     </a>
    </li>
   </ul>
@@ -327,13 +332,13 @@ style="width: 100%;">
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.gaussian_process.kernels.base_kernels.ConstantKernel" title="smac.model.gaussian_process.kernels.base_kernels.ConstantKernel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConstantKernel</span></code></a>([constant_value, ...])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MagicMixin</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MagicMixinKernel</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.gaussian_process.kernels.base_kernels.Product" title="smac.model.gaussian_process.kernels.base_kernels.Product"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Product</span></code></a>(k1, k2[, operate_on, has_conditions])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.gaussian_process.kernels.base_kernels.ProductKernel" title="smac.model.gaussian_process.kernels.base_kernels.ProductKernel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ProductKernel</span></code></a>(k1, k2[, operate_on, ...])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#smac.model.gaussian_process.kernels.base_kernels.Sum" title="smac.model.gaussian_process.kernels.base_kernels.Sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sum</span></code></a>(k1, k2[, operate_on, has_conditions])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#smac.model.gaussian_process.kernels.base_kernels.SumKernel" title="smac.model.gaussian_process.kernels.base_kernels.SumKernel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SumKernel</span></code></a>(k1, k2[, operate_on, has_conditions])</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -341,19 +346,19 @@ style="width: 100%;">
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.ConstantKernel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.kernels.base_kernels.</span></span><span class="sig-name descname"><span class="pre">ConstantKernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">constant_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constant_value_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1e-05,</span> <span class="pre">100000.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operate_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prior</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_conditions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/kernels/base_kernels.html#ConstantKernel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.ConstantKernel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MagicMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantKernel</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MagicMixinKernel</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantKernel</span></code></p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.Product">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.kernels.base_kernels.</span></span><span class="sig-name descname"><span class="pre">Product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operate_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_conditions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/kernels/base_kernels.html#Product"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.Product" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MagicMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Product</span></code></p>
+<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.ProductKernel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.kernels.base_kernels.</span></span><span class="sig-name descname"><span class="pre">ProductKernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operate_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_conditions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/kernels/base_kernels.html#ProductKernel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.ProductKernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MagicMixinKernel</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Product</span></code></p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.Sum">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.kernels.base_kernels.</span></span><span class="sig-name descname"><span class="pre">Sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operate_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_conditions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/kernels/base_kernels.html#Sum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.Sum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MagicMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sum</span></code></p>
+<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.SumKernel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.kernels.base_kernels.</span></span><span class="sig-name descname"><span class="pre">SumKernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operate_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_conditions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/kernels/base_kernels.html#SumKernel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.SumKernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MagicMixinKernel</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sum</span></code></p>
 </dd></dl>
 
 </section>

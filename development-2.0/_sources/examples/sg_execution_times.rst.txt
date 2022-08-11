@@ -5,16 +5,16 @@
 
 Computation times
 =================
-**02:13.987** total execution time for **examples** files:
+**02:13.481** total execution time for **examples** files:
 
 +----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_sgd_instances.py` (``sgd_instances.py``)                       | 01:07.764 | 0.0 MB |
+| :ref:`sphx_glr_examples_sgd_instances.py` (``sgd_instances.py``)                       | 01:06.109 | 0.0 MB |
 +----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_mlp_multi_fidelity.py` (``mlp_multi_fidelity.py``)             | 01:02.796 | 0.0 MB |
+| :ref:`sphx_glr_examples_mlp_multi_fidelity.py` (``mlp_multi_fidelity.py``)             | 01:04.274 | 0.0 MB |
 +----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_schaffer_multi_objective.py` (``schaffer_multi_objective.py``) | 00:01.674 | 0.0 MB |
+| :ref:`sphx_glr_examples_schaffer_multi_objective.py` (``schaffer_multi_objective.py``) | 00:01.571 | 0.0 MB |
 +----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_svm_cv.py` (``svm_cv.py``)                                     | 00:00.972 | 0.0 MB |
+| :ref:`sphx_glr_examples_synthetic_function.py` (``synthetic_function.py``)             | 00:00.781 | 0.0 MB |
 +----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_synthetic_function.py` (``synthetic_function.py``)             | 00:00.782 | 0.0 MB |
+| :ref:`sphx_glr_examples_svm_cv.py` (``svm_cv.py``)                                     | 00:00.745 | 0.0 MB |
 +----------------------------------------------------------------------------------------+-----------+--------+

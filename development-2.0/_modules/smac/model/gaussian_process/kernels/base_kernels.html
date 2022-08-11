@@ -183,8 +183,13 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../../advanced_usage/facades.html">
-     Facades
+    <a class="reference internal" href="../../../../../advanced_usage/resumption.html">
+     Resumption
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../../advanced_usage/callbacks.html">
+     Callbacks
     </a>
    </li>
   </ul>
@@ -319,7 +324,7 @@ style="width: 100%;">
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<span class="k">class</span> <span class="nc">MagicMixin</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">MagicMixinKernel</span><span class="p">:</span>
     <span class="c1"># This is a mixin for a kernel to override functions of the kernel.</span>
     <span class="c1"># Because it overrides functions of the kernel, it needs to be placed first in the inheritance</span>
     <span class="c1"># hierarchy. For this reason it is not possible to subclass the</span>
@@ -375,23 +380,23 @@ style="width: 100%;">
 
     <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Sum</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">Sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ConstantKernel</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">Sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">SumKernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ConstantKernel</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">SumKernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Sum</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">Sum</span><span class="p">(</span><span class="n">ConstantKernel</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">Sum</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">SumKernel</span><span class="p">(</span><span class="n">ConstantKernel</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SumKernel</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Product</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">Product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ConstantKernel</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">Product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ProductKernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ConstantKernel</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">ProductKernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Product</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">Product</span><span class="p">(</span><span class="n">ConstantKernel</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">Product</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ProductKernel</span><span class="p">(</span><span class="n">ConstantKernel</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ProductKernel</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Signature</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
@@ -494,7 +499,7 @@ style="width: 100%;">
             <span class="bp">self</span><span class="o">.</span><span class="n">len_active</span> <span class="o">=</span> <span class="kc">None</span>
 
 
-<div class="viewcode-block" id="Sum"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.Sum">[docs]</a><span class="k">class</span> <span class="nc">Sum</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Sum</span><span class="p">):</span>
+<div class="viewcode-block" id="SumKernel"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.SumKernel">[docs]</a><span class="k">class</span> <span class="nc">SumKernel</span><span class="p">(</span><span class="n">MagicMixinKernel</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Sum</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">k1</span><span class="p">:</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span>
@@ -502,7 +507,7 @@ style="width: 100%;">
         <span class="n">operate_on</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">has_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Sum</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">k1</span><span class="o">=</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="o">=</span><span class="n">k2</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SumKernel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">k1</span><span class="o">=</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="o">=</span><span class="n">k2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_active_dims</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
 
@@ -549,7 +554,7 @@ style="width: 100%;">
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k2</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Product"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.Product">[docs]</a><span class="k">class</span> <span class="nc">Product</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Product</span><span class="p">):</span>
+<div class="viewcode-block" id="ProductKernel"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.ProductKernel">[docs]</a><span class="k">class</span> <span class="nc">ProductKernel</span><span class="p">(</span><span class="n">MagicMixinKernel</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Product</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">k1</span><span class="p">:</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span>
@@ -557,7 +562,7 @@ style="width: 100%;">
         <span class="n">operate_on</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">has_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Product</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">k1</span><span class="o">=</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="o">=</span><span class="n">k2</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ProductKernel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">k1</span><span class="o">=</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="o">=</span><span class="n">k2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_active_dims</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
 
@@ -604,7 +609,7 @@ style="width: 100%;">
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k2</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ConstantKernel"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.ConstantKernel">[docs]</a><span class="k">class</span> <span class="nc">ConstantKernel</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">ConstantKernel</span><span class="p">):</span>
+<div class="viewcode-block" id="ConstantKernel"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.ConstantKernel">[docs]</a><span class="k">class</span> <span class="nc">ConstantKernel</span><span class="p">(</span><span class="n">MagicMixinKernel</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">ConstantKernel</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">constant_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
