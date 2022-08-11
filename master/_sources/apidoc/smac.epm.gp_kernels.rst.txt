@@ -1,8 +1,0 @@
-smac.epm.gp\_kernels
-====================
-
-.. automodule:: smac.epm.gp_kernels
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:

@@ -1,8 +1,0 @@
-smac.callbacks
-==============
-
-.. automodule:: smac.callbacks
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:

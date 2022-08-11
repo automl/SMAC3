@@ -1,8 +1,0 @@
-smac.epm.base\_rf
-=================
-
-.. automodule:: smac.epm.base_rf
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:

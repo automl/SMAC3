@@ -1,8 +1,0 @@
-smac.facade.roar\_facade
-========================
-
-.. automodule:: smac.facade.roar_facade
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:

@@ -1,8 +1,0 @@
-smac.intensification.intensification
-====================================
-
-.. automodule:: smac.intensification.intensification
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:

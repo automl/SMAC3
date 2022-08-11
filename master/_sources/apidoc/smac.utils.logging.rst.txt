@@ -1,8 +1,0 @@
-smac.utils.logging
-==================
-
-.. automodule:: smac.utils.logging
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:

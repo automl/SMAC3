@@ -1,8 +1,0 @@
-smac.optimizer.smbo
-===================
-
-.. automodule:: smac.optimizer.smbo
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
