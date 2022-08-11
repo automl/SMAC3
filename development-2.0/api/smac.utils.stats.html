@@ -164,13 +164,13 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="../examples/sgd_instances.html">
+     Stochastic Gradient Descent on Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
+    <a class="reference internal" href="../examples/mlp_multi_fidelity.html">
+     Multi-Layer Perceptron with Multi-Fidelity
     </a>
    </li>
   </ul>
@@ -338,8 +338,8 @@ style="width: 100%;">
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>All statistics collected during run.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.utils.stats.Stats.get_remaing_time_budget">
-<span class="sig-name descname"><span class="pre">get_remaing_time_budget</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/stats.html#Stats.get_remaing_time_budget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.stats.Stats.get_remaing_time_budget" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.stats.Stats.get_remaing_walltime">
+<span class="sig-name descname"><span class="pre">get_remaing_walltime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/stats.html#Stats.get_remaing_walltime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.stats.Stats.get_remaing_walltime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subtracts the runtime configuration budget with the used wallclock time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -349,8 +349,8 @@ style="width: 100%;">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.utils.stats.Stats.get_remaining_target_algorithm_budget">
-<span class="sig-name descname"><span class="pre">get_remaining_target_algorithm_budget</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/stats.html#Stats.get_remaining_target_algorithm_budget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.stats.Stats.get_remaining_target_algorithm_budget" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.stats.Stats.get_remaining_cputime">
+<span class="sig-name descname"><span class="pre">get_remaining_cputime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/stats.html#Stats.get_remaining_cputime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.stats.Stats.get_remaining_cputime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subtracts the ta running budget with the used time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -360,8 +360,8 @@ style="width: 100%;">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.utils.stats.Stats.get_remaining_target_algorithm_runs">
-<span class="sig-name descname"><span class="pre">get_remaining_target_algorithm_runs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/stats.html#Stats.get_remaining_target_algorithm_runs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.stats.Stats.get_remaining_target_algorithm_runs" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.stats.Stats.get_remaining_trials">
+<span class="sig-name descname"><span class="pre">get_remaining_trials</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/stats.html#Stats.get_remaining_trials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.stats.Stats.get_remaining_trials" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subtract the target algorithm runs in the scenario with the used ta runs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>

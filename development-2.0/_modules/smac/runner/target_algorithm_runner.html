@@ -161,13 +161,13 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="../../../examples/sgd_instances.html">
+     Stochastic Gradient Descent on Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
+    <a class="reference internal" href="../../../examples/mlp_multi_fidelity.html">
+     Multi-Layer Perceptron with Multi-Fidelity
     </a>
    </li>
   </ul>
@@ -382,14 +382,15 @@ style="width: 100%;">
         <span class="bp">self</span><span class="o">.</span><span class="n">_target_algorithm</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Callable</span><span class="p">,</span> <span class="n">target_algorithm</span><span class="p">)</span>
 
         <span class="c1"># Pynisher limitations</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">memory</span> <span class="o">:=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">memory_limit</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">memory</span> <span class="o">:=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">trial_memory_limit</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">memory</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">memory</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="p">(</span><span class="n">time</span> <span class="o">:=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">algorithm_walltime_limit</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">time</span> <span class="o">:=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">trial_walltime_limit</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">time</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">memory_limit</span> <span class="o">=</span> <span class="n">memory</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">algorithm_walltime_limit</span> <span class="o">=</span> <span class="n">time</span>
+        <span class="bp">self</span>
 
 <div class="viewcode-block" id="TargetAlgorithmRunner.run"><a class="viewcode-back" href="../../../api/smac.runner.target_algorithm_runner.html#smac.runner.TargetAlgorithmRunner.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>

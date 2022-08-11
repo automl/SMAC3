@@ -39,7 +39,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Multi-Layer Perceptron with Multi-Fidelity" href="mlp_multi_fidelity.html" />
+    <link rel="next" title="Stochastic Gradient Descent on Instances" href="sgd_instances.html" />
     <link rel="prev" title="Schaffer Multi-Objective" href="schaffer_multi_objective.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
@@ -164,13 +164,13 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="sgd_instances.html">
+     Stochastic Gradient Descent on Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="sgd_instances.html">
-     Stochastic Gradient Descent on Instances
+    <a class="reference internal" href="mlp_multi_fidelity.html">
+     Multi-Layer Perceptron with Multi-Fidelity
     </a>
    </li>
   </ul>
@@ -339,8 +339,8 @@ iterations) is passed to the target algorithm.</p>
 [INFO][abstract_intensifier.py:356] --- C: 0.03992740880515713 -&gt; 1.2760639488343621
 [INFO][abstract_intensifier.py:356] --- kernel: &#39;rbf&#39; -&gt; &#39;linear&#39;
 [INFO][abstract_intensifier.py:356] --- shrinking: True -&gt; False
-[INFO][facade.py:320] Final Incumbent: {&#39;C&#39;: 1.2760639488343621, &#39;kernel&#39;: &#39;linear&#39;, &#39;shrinking&#39;: False}
-[INFO][facade.py:321] Estimated cost: 0.013333333333333308
+[INFO][facade.py:318] Final Incumbent: {&#39;C&#39;: 1.2760639488343621, &#39;kernel&#39;: &#39;linear&#39;, &#39;shrinking&#39;: False}
+[INFO][facade.py:319] Estimated cost: 0.013333333333333308
 Incumbent value: 0.01
 </pre></div>
 </div>
@@ -415,7 +415,7 @@ Incumbent value: 0.01
     <span class="c1"># Next, we create an object, holding general information about the run</span>
     <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span>
         <span class="n">configspace</span><span class="p">,</span>
-        <span class="n">n_runs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>  <span class="c1"># We want 50 target algorithm evaluations</span>
+        <span class="n">n_trials</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>  <span class="c1"># We want 50 target algorithm evaluations</span>
     <span class="p">)</span>
 
     <span class="c1"># Example call of the target algorithm</span>
@@ -430,7 +430,7 @@ Incumbent value: 0.01
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent value: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">incumbent_value</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.366 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.972 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-svm-cv-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/311ff2de6aca8f03bcddcf23d59a2b5a/svm_cv.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">svm_cv.py</span></code></a></p>
@@ -454,10 +454,10 @@ Incumbent value: 0.01
             <p class="prev-next-title">Schaffer Multi-Objective</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="mlp_multi_fidelity.html" title="next page">
+    <a class='right-next' id="next-link" href="sgd_instances.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Multi-Layer Perceptron with Multi-Fidelity</p>
+        <p class="prev-next-title">Stochastic Gradient Descent on Instances</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

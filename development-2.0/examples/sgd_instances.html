@@ -39,8 +39,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Advanced Usage" href="../advanced_usage/index.html" />
-    <link rel="prev" title="Multi-Layer Perceptron with Multi-Fidelity" href="mlp_multi_fidelity.html" />
+    <link rel="next" title="Multi-Layer Perceptron with Multi-Fidelity" href="mlp_multi_fidelity.html" />
+    <link rel="prev" title="Support Vector Machine with Cross-Validation" href="svm_cv.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -163,14 +163,14 @@ style="width: 100%;">
      Support Vector Machine with Cross-Validation
     </a>
    </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
-    </a>
-   </li>
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
      Stochastic Gradient Descent on Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="mlp_multi_fidelity.html">
+     Multi-Layer Perceptron with Multi-Fidelity
     </a>
    </li>
   </ul>
@@ -338,7 +338,7 @@ budget is no longer required by the target function.</p>
 [INFO][hyperband.py:428] Finished Hyperband iteration-step 1-1 with initial budget 1.
 [INFO][successive_halving.py:485] Successive Halving configuration: budget type = INSTANCES, Initial budget = 1.00, Max. budget = 45.00, eta = 3.00
 [INFO][successive_halving.py:797] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-[INFO][abstract_intensifier.py:333] Challenger (0.0056) is better than incumbent (0.0139) on 1 runs.
+[INFO][abstract_intensifier.py:333] Challenger (0.0028) is better than incumbent (0.0056) on 1 runs.
 [INFO][abstract_intensifier.py:353] Changes in incumbent:
 [INFO][abstract_intensifier.py:356] --- alpha: 0.5488135039273248 -&gt; 0.6027633760716439
 [INFO][abstract_intensifier.py:356] --- eta0: 0.0006273927602293597 -&gt; 0.03077201812975574
@@ -358,8 +358,8 @@ budget is no longer required by the target function.</p>
 [INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-2 with budget [45.00 / 45] and 2 evaluated challenger(s).
 [INFO][hyperband.py:428] Finished Hyperband iteration-step 1-4 with initial budget 45.
 [INFO][successive_halving.py:485] Successive Halving configuration: budget type = INSTANCES, Initial budget = 1.00, Max. budget = 45.00, eta = 3.00
-[INFO][facade.py:320] Final Incumbent: {&#39;alpha&#39;: 0.6027633760716439, &#39;eta0&#39;: 0.03077201812975574, &#39;l1_ratio&#39;: 0.06414749634878436, &#39;learning_rate&#39;: &#39;adaptive&#39;}
-[INFO][facade.py:321] Estimated cost: 0.005555555555555536
+[INFO][facade.py:318] Final Incumbent: {&#39;alpha&#39;: 0.6027633760716439, &#39;eta0&#39;: 0.03077201812975574, &#39;l1_ratio&#39;: 0.06414749634878436, &#39;learning_rate&#39;: &#39;adaptive&#39;}
+[INFO][facade.py:319] Estimated cost: 0.0058204382992691015
 Incumbent cost: 0.01
 </pre></div>
 </div>
@@ -467,7 +467,7 @@ Incumbent cost: 0.01
     <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span>
         <span class="n">model</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span>
         <span class="n">walltime_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># We want to optimize for one minute</span>
-        <span class="n">n_runs</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>  <span class="c1"># We want to try max 5000 different configurations</span>
+        <span class="n">n_trials</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>  <span class="c1"># We want to try max 5000 different configurations</span>
         <span class="n">min_budget</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># Use min one instance</span>
         <span class="n">max_budget</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span>  <span class="c1"># Use max 45 instances (if we have a lot of instances we could constraint it)</span>
         <span class="n">instances</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_instances</span><span class="p">(),</span>
@@ -500,7 +500,7 @@ Incumbent cost: 0.01
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">incumbent_costs</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  6.040 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  7.764 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-sgd-instances-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/b20918b138a677bec59764f98486ce7d/sgd_instances.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">sgd_instances.py</span></code></a></p>
@@ -517,17 +517,17 @@ Incumbent cost: 0.01
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="mlp_multi_fidelity.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="svm_cv.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Multi-Layer Perceptron with Multi-Fidelity</p>
+            <p class="prev-next-title">Support Vector Machine with Cross-Validation</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="../advanced_usage/index.html" title="next page">
+    <a class='right-next' id="next-link" href="mlp_multi_fidelity.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Advanced Usage</p>
+        <p class="prev-next-title">Multi-Layer Perceptron with Multi-Fidelity</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

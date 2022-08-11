@@ -161,13 +161,13 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="../../examples/sgd_instances.html">
+     Stochastic Gradient Descent on Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
+    <a class="reference internal" href="../../examples/mlp_multi_fidelity.html">
+     Multi-Layer Perceptron with Multi-Fidelity
     </a>
    </li>
   </ul>
@@ -754,9 +754,9 @@ style="width: 100%;">
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                 <span class="s2">&quot;Remaining budget: </span><span class="si">%f</span><span class="s2"> (wallclock time), </span><span class="si">%f</span><span class="s2"> (target algorithm time), </span><span class="si">%f</span><span class="s2"> (target algorithm runs)&quot;</span>
                 <span class="o">%</span> <span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get_remaing_time_budget</span><span class="p">(),</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get_remaining_target_algorithm_budget</span><span class="p">(),</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get_remaining_target_algorithm_runs</span><span class="p">(),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get_remaing_walltime</span><span class="p">(),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get_remaining_cputime</span><span class="p">(),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get_remaining_trials</span><span class="p">(),</span>
                 <span class="p">)</span>
             <span class="p">)</span>
 

@@ -164,13 +164,13 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="sgd_instances.html">
+     Stochastic Gradient Descent on Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="sgd_instances.html">
-     Stochastic Gradient Descent on Instances
+    <a class="reference internal" href="mlp_multi_fidelity.html">
+     Multi-Layer Perceptron with Multi-Fidelity
     </a>
    </li>
   </ul>
@@ -344,8 +344,8 @@ to download the full example code</p>
 [INFO][abstract_intensifier.py:333] Challenger (0.2519) is better than incumbent (0.2519) on 1 runs.
 [INFO][abstract_intensifier.py:353] Changes in incumbent:
 [INFO][abstract_intensifier.py:356] --- x: -0.9830894923668425 -&gt; -0.9830959163823119
-[INFO][facade.py:320] Final Incumbent: {&#39;x&#39;: -0.9830894923668425}
-[INFO][facade.py:321] Estimated cost: 0.25082343076466224
+[INFO][facade.py:318] Final Incumbent: {&#39;x&#39;: -0.9830894923668425}
+[INFO][facade.py:319] Estimated cost: 0.25082343076466224
 </pre></div>
 </div>
 <div class="line-block">
@@ -412,7 +412,7 @@ to download the full example code</p>
     <span class="c1"># Scenario object</span>
     <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span>
         <span class="n">configspace</span><span class="o">=</span><span class="n">cs</span><span class="p">,</span>
-        <span class="n">n_runs</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span>
+        <span class="n">n_trials</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span>
         <span class="n">objectives</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;metric1&quot;</span><span class="p">,</span> <span class="s2">&quot;metric2&quot;</span><span class="p">],</span>
     <span class="p">)</span>
 
@@ -428,7 +428,7 @@ to download the full example code</p>
     <span class="n">plot_from_smac</span><span class="p">(</span><span class="n">smac</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.495 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.674 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-schaffer-multi-objective-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/d7df58134b20b5905c36717d484f4c2a/schaffer_multi_objective.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">schaffer_multi_objective.py</span></code></a></p>

@@ -161,13 +161,13 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="../../../examples/sgd_instances.html">
+     Stochastic Gradient Descent on Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
+    <a class="reference internal" href="../../../examples/mlp_multi_fidelity.html">
+     Multi-Layer Perceptron with Multi-Fidelity
     </a>
    </li>
   </ul>
@@ -407,26 +407,24 @@ style="width: 100%;">
         <span class="sd">&quot;&quot;&quot;Returns used wallclock time.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span></div>
 
-<div class="viewcode-block" id="Stats.get_remaing_time_budget"><a class="viewcode-back" href="../../../api/smac.utils.stats.html#smac.utils.stats.Stats.get_remaing_time_budget">[docs]</a>    <span class="k">def</span> <span class="nf">get_remaing_time_budget</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="Stats.get_remaing_walltime"><a class="viewcode-back" href="../../../api/smac.utils.stats.html#smac.utils.stats.Stats.get_remaing_walltime">[docs]</a>    <span class="k">def</span> <span class="nf">get_remaing_walltime</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Subtracts the runtime configuration budget with the used wallclock time.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">walltime_limit</span> <span class="o">-</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Scenario is missing&quot;</span><span class="p">)</span></div>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">walltime_limit</span> <span class="o">-</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Stats.get_remaining_target_algorithm_runs"><a class="viewcode-back" href="../../../api/smac.utils.stats.html#smac.utils.stats.Stats.get_remaining_target_algorithm_runs">[docs]</a>    <span class="k">def</span> <span class="nf">get_remaining_target_algorithm_runs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Subtract the target algorithm runs in the scenario with the used ta runs.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">n_runs</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">submitted</span></div>
-
-<div class="viewcode-block" id="Stats.get_remaining_target_algorithm_budget"><a class="viewcode-back" href="../../../api/smac.utils.stats.html#smac.utils.stats.Stats.get_remaining_target_algorithm_budget">[docs]</a>    <span class="k">def</span> <span class="nf">get_remaining_target_algorithm_budget</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="Stats.get_remaining_cputime"><a class="viewcode-back" href="../../../api/smac.utils.stats.html#smac.utils.stats.Stats.get_remaining_cputime">[docs]</a>    <span class="k">def</span> <span class="nf">get_remaining_cputime</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Subtracts the ta running budget with the used time.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cputime_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_algorithm_walltime_used</span></div>
+
+<div class="viewcode-block" id="Stats.get_remaining_trials"><a class="viewcode-back" href="../../../api/smac.utils.stats.html#smac.utils.stats.Stats.get_remaining_trials">[docs]</a>    <span class="k">def</span> <span class="nf">get_remaining_trials</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Subtract the target algorithm runs in the scenario with the used ta runs.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">n_trials</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">submitted</span></div>
 
 <div class="viewcode-block" id="Stats.is_budget_exhausted"><a class="viewcode-back" href="../../../api/smac.utils.stats.html#smac.utils.stats.Stats.is_budget_exhausted">[docs]</a>    <span class="k">def</span> <span class="nf">is_budget_exhausted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Check whether the configuration budget for time budget, ta_budget and submitted</span>
 <span class="sd">        is exhausted.&quot;&quot;&quot;</span>
-        <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_remaing_time_budget</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_remaining_target_algorithm_budget</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span>
-        <span class="n">B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_remaining_target_algorithm_runs</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">0</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_remaing_walltime</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_remaining_cputime</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_remaining_trials</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">0</span>
 
         <span class="k">return</span> <span class="n">A</span> <span class="ow">or</span> <span class="n">B</span></div>
 
@@ -464,8 +462,8 @@ style="width: 100%;">
             <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;--- STATISTICS -------------------------------------</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;--- Incumbent changed: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">incumbent_changed</span> <span class="o">-</span> <span class="mi">1</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;--- Submitted target algorithm runs: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">submitted</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">n_runs</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;--- Finished target algorithm runs: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">finished</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">n_runs</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--- Submitted target algorithm runs: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">submitted</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">n_trials</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--- Finished target algorithm runs: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">finished</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">n_trials</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;--- Configurations: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_configs</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;--- Used wallclock time: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_used_walltime</span><span class="p">())</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">walltime_limit</span><span class="si">}</span><span class="s2"> sec</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;--- Used target algorithm runtime: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_algorithm_walltime_used</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cputime_limit</span><span class="si">}</span><span class="s2"> sec</span><span class="se">\n</span><span class="s2">&quot;</span>

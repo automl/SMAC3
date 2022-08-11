@@ -127,7 +127,7 @@ if __name__ == "__main__":
     scenario = Scenario(
         mlp.configspace,
         walltime_limit=60,  # After one minute, we stop the optimization
-        n_runs=100,  # Evaluate max 100 different configurations
+        n_trials=100,  # Evaluate max 100 different configurations
         min_budget=5,  # Train the MLP for at least 5 epochs
         max_budget=25,  # Train the MLP for at most 25 epochs
     )
@@ -136,7 +136,12 @@ if __name__ == "__main__":
     initial_design = MultiFidelityFacade.get_initial_design(scenario, n_configs=5)
 
     # Create our SMAC object and pass the scenario and the train method
-    smac = MultiFidelityFacade(scenario, mlp.train, initial_design=initial_design)
+    smac = MultiFidelityFacade(
+        scenario,
+        mlp.train,
+        initial_design=initial_design,
+        overwrite=True,
+    )
     incumbent = smac.optimize()
 
     incumbent_value = mlp.train(incumbent)

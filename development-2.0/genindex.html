@@ -161,13 +161,13 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="examples/sgd_instances.html">
+     Stochastic Gradient Descent on Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
+    <a class="reference internal" href="examples/mlp_multi_fidelity.html">
+     Multi-Layer Perceptron with Multi-Fidelity
     </a>
    </li>
   </ul>
@@ -583,10 +583,10 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.config_ids">config_ids (smac.runhistory.runhistory.RunHistory attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.smbo.html#smac.smbo.SMBO.config_space">config_space (smac.smbo.SMBO attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.configspace.html#smac.configspace.Configuration">Configuration (class in smac.configspace)</a>
 </li>
       <li><a href="api/smac.smbo.html#smac.smbo.SMBO.configuration_chooser">configuration_chooser (smac.smbo.SMBO attribute)</a>
@@ -629,6 +629,10 @@ style="width: 100%;">
         <li><a href="api/smac.chooser.cosine_annealing_chooser.html#smac.chooser.cosine_annealing_chooser.CosineAnnealingConfigurationChooser">(class in smac.chooser.cosine_annealing_chooser)</a>
 </li>
       </ul></li>
+      <li><a href="api/smac.scenario.html#smac.scenario.Scenario.count_instance_features">count_instance_features() (smac.scenario.Scenario method)</a>
+</li>
+      <li><a href="api/smac.scenario.html#smac.scenario.Scenario.count_objectives">count_objectives() (smac.scenario.Scenario method)</a>
+</li>
       <li><a href="api/smac.runner.dask_runner.html#smac.runner.dask_runner.DaskParallelRunner.crash_cost">crash_cost (smac.runner.dask_runner.DaskParallelRunner attribute)</a>
 
       <ul>
@@ -843,6 +847,8 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_instance_costs_for_config">get_instance_costs_for_config() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
+      <li><a href="api/smac.scenario.html#smac.scenario.Scenario.get_meta">get_meta() (smac.scenario.Scenario method)</a>
+</li>
       <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_min_cost">get_min_cost() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
       <li><a href="api/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier.get_next_challenger">get_next_challenger() (smac.intensification.intensification.Intensifier method)</a>
@@ -863,11 +869,11 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.configspace.html#smac.configspace.ConfigurationSpace.get_parents_of">get_parents_of() (smac.configspace.ConfigurationSpace method)</a>
 </li>
-      <li><a href="api/smac.utils.stats.html#smac.utils.stats.Stats.get_remaing_time_budget">get_remaing_time_budget() (smac.utils.stats.Stats method)</a>
+      <li><a href="api/smac.utils.stats.html#smac.utils.stats.Stats.get_remaing_walltime">get_remaing_walltime() (smac.utils.stats.Stats method)</a>
 </li>
-      <li><a href="api/smac.utils.stats.html#smac.utils.stats.Stats.get_remaining_target_algorithm_budget">get_remaining_target_algorithm_budget() (smac.utils.stats.Stats method)</a>
+      <li><a href="api/smac.utils.stats.html#smac.utils.stats.Stats.get_remaining_cputime">get_remaining_cputime() (smac.utils.stats.Stats method)</a>
 </li>
-      <li><a href="api/smac.utils.stats.html#smac.utils.stats.Stats.get_remaining_target_algorithm_runs">get_remaining_target_algorithm_runs() (smac.utils.stats.Stats method)</a>
+      <li><a href="api/smac.utils.stats.html#smac.utils.stats.Stats.get_remaining_trials">get_remaining_trials() (smac.utils.stats.Stats method)</a>
 </li>
       <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_runs_for_config">get_runs_for_config() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
@@ -1029,8 +1035,12 @@ style="width: 100%;">
         <li><a href="api/smac.model.gaussian_process.priors.tophat_prior.html#smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior.lnprob">(smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior method)</a>
 </li>
       </ul></li>
-      <li><a href="api/smac.utils.stats.html#smac.utils.stats.Stats.load">load() (smac.utils.stats.Stats method)</a>
+      <li><a href="api/smac.scenario.html#smac.scenario.Scenario.load">load() (smac.scenario.Scenario static method)</a>
+
+      <ul>
+        <li><a href="api/smac.utils.stats.html#smac.utils.stats.Stats.load">(smac.utils.stats.Stats method)</a>
 </li>
+      </ul></li>
       <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.load_json">load_json() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
       <li><a href="api/smac.acquisition.html#smac.acquisition.LocalAndSortedPriorRandomSearch">LocalAndSortedPriorRandomSearch (class in smac.acquisition)</a>
@@ -1782,9 +1792,11 @@ style="width: 100%;">
         <li><a href="api/smac.model.gaussian_process.gpytorch.html#smac.model.gaussian_process.gpytorch.GPyTorchGaussianProcess.sample_functions">(smac.model.gaussian_process.gpytorch.GPyTorchGaussianProcess method)</a>
 </li>
       </ul></li>
-      <li><a href="api/smac.smbo.html#smac.smbo.SMBO.save">save() (smac.smbo.SMBO method)</a>
+      <li><a href="api/smac.scenario.html#smac.scenario.Scenario.save">save() (smac.scenario.Scenario method)</a>
 
       <ul>
+        <li><a href="api/smac.smbo.html#smac.smbo.SMBO.save">(smac.smbo.SMBO method)</a>
+</li>
         <li><a href="api/smac.utils.stats.html#smac.utils.stats.Stats.save">(smac.utils.stats.Stats method)</a>
 </li>
       </ul></li>

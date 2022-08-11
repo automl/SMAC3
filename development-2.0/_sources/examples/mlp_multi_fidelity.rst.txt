@@ -34,7 +34,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     This example uses the ``MultiFidelityFacade`` facade, which is the closest implementation to
     `BOHB <https://github.com/automl/HpBandSter>`_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-144
+.. GENERATED FROM PYTHON SOURCE LINES 18-149
 
 
 
@@ -93,17 +93,33 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     [INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
     [INFO][successive_halving.py:1038] Challenger (0.0234) is better than incumbent (0.0284) on budget 25.0000.
     [INFO][abstract_intensifier.py:353] Changes in incumbent:
-    [INFO][abstract_intensifier.py:356] --- activation: 'relu' -> 'tanh'
-    [INFO][abstract_intensifier.py:356] --- batch_size: 230 -> 299
-    [INFO][abstract_intensifier.py:356] --- learning_rate_init: 0.0013527821070347626 -> 0.003554838514279438
-    [INFO][abstract_intensifier.py:356] --- n_layer: 3 -> 4
-    [INFO][abstract_intensifier.py:356] --- n_neurons: 236 -> 178
-    [INFO][abstract_intensifier.py:356] --- solver: 'sgd' -> 'adam'
+    [INFO][abstract_intensifier.py:356] --- batch_size: 230 -> 238
+    [INFO][abstract_intensifier.py:356] --- learning_rate: 'constant' -> 'adaptive'
+    [INFO][abstract_intensifier.py:356] --- learning_rate_init: 0.0013527821070347626 -> 0.0036985335686206514
+    [INFO][abstract_intensifier.py:356] --- n_layer: 3 -> 2
     [INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
     [INFO][hyperband.py:428] Finished Hyperband iteration-step 4-1 with initial budget 8.
     [INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
-    [INFO][facade.py:320] Final Incumbent: {'activation': 'tanh', 'n_layer': 4, 'n_neurons': 178, 'solver': 'adam', 'batch_size': 299, 'learning_rate_init': 0.003554838514279438}
-    [INFO][facade.py:321] Estimated cost: 0.023373568554627133
+    [INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+    [INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+    [INFO][hyperband.py:428] Finished Hyperband iteration-step 4-2 with initial budget 25.
+    [INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+    [INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
+    [INFO][hyperband.py:428] Finished Hyperband iteration-step 5-1 with initial budget 8.
+    [INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+    [INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+    [INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+    [INFO][hyperband.py:428] Finished Hyperband iteration-step 5-2 with initial budget 25.
+    [INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+    [INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
+    [INFO][hyperband.py:428] Finished Hyperband iteration-step 6-1 with initial budget 8.
+    [INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+    [INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+    [INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+    [INFO][hyperband.py:428] Finished Hyperband iteration-step 6-2 with initial budget 25.
+    [INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+    [INFO][facade.py:318] Final Incumbent: {'activation': 'relu', 'n_layer': 2, 'n_neurons': 236, 'solver': 'sgd', 'batch_size': 238, 'learning_rate': 'adaptive', 'learning_rate_init': 0.0036985335686206514}
+    [INFO][facade.py:319] Estimated cost: 0.023368926029093018
     Incumbent value: 0.02
 
 
@@ -227,7 +243,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
         scenario = Scenario(
             mlp.configspace,
             walltime_limit=60,  # After one minute, we stop the optimization
-            n_runs=100,  # Evaluate max 100 different configurations
+            n_trials=100,  # Evaluate max 100 different configurations
             min_budget=5,  # Train the MLP for at least 5 epochs
             max_budget=25,  # Train the MLP for at most 25 epochs
         )
@@ -236,7 +252,12 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
         initial_design = MultiFidelityFacade.get_initial_design(scenario, n_configs=5)
 
         # Create our SMAC object and pass the scenario and the train method
-        smac = MultiFidelityFacade(scenario, mlp.train, initial_design=initial_design)
+        smac = MultiFidelityFacade(
+            scenario,
+            mlp.train,
+            initial_design=initial_design,
+            overwrite=True,
+        )
         incumbent = smac.optimize()
 
         incumbent_value = mlp.train(incumbent)
@@ -245,7 +266,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  8.681 seconds)
+   **Total running time of the script:** ( 1 minutes  2.796 seconds)
 
 
 .. _sphx_glr_download_examples_mlp_multi_fidelity.py:

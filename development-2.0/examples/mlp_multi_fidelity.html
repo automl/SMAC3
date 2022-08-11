@@ -39,8 +39,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Stochastic Gradient Descent on Instances" href="sgd_instances.html" />
-    <link rel="prev" title="Support Vector Machine with Cross-Validation" href="svm_cv.html" />
+    <link rel="next" title="Advanced Usage" href="../advanced_usage/index.html" />
+    <link rel="prev" title="Stochastic Gradient Descent on Instances" href="sgd_instances.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -163,14 +163,14 @@ style="width: 100%;">
      Support Vector Machine with Cross-Validation
     </a>
    </li>
-   <li class="toctree-l2 current active">
-    <a class="current reference internal" href="#">
-     Multi-Layer Perceptron with Multi-Fidelity
-    </a>
-   </li>
    <li class="toctree-l2">
     <a class="reference internal" href="sgd_instances.html">
      Stochastic Gradient Descent on Instances
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Multi-Layer Perceptron with Multi-Fidelity
     </a>
    </li>
   </ul>
@@ -383,17 +383,33 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
 [INFO][successive_halving.py:1038] Challenger (0.0234) is better than incumbent (0.0284) on budget 25.0000.
 [INFO][abstract_intensifier.py:353] Changes in incumbent:
-[INFO][abstract_intensifier.py:356] --- activation: &#39;relu&#39; -&gt; &#39;tanh&#39;
-[INFO][abstract_intensifier.py:356] --- batch_size: 230 -&gt; 299
-[INFO][abstract_intensifier.py:356] --- learning_rate_init: 0.0013527821070347626 -&gt; 0.003554838514279438
-[INFO][abstract_intensifier.py:356] --- n_layer: 3 -&gt; 4
-[INFO][abstract_intensifier.py:356] --- n_neurons: 236 -&gt; 178
-[INFO][abstract_intensifier.py:356] --- solver: &#39;sgd&#39; -&gt; &#39;adam&#39;
+[INFO][abstract_intensifier.py:356] --- batch_size: 230 -&gt; 238
+[INFO][abstract_intensifier.py:356] --- learning_rate: &#39;constant&#39; -&gt; &#39;adaptive&#39;
+[INFO][abstract_intensifier.py:356] --- learning_rate_init: 0.0013527821070347626 -&gt; 0.0036985335686206514
+[INFO][abstract_intensifier.py:356] --- n_layer: 3 -&gt; 2
 [INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
 [INFO][hyperband.py:428] Finished Hyperband iteration-step 4-1 with initial budget 8.
 [INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
-[INFO][facade.py:320] Final Incumbent: {&#39;activation&#39;: &#39;tanh&#39;, &#39;n_layer&#39;: 4, &#39;n_neurons&#39;: 178, &#39;solver&#39;: &#39;adam&#39;, &#39;batch_size&#39;: 299, &#39;learning_rate_init&#39;: 0.003554838514279438}
-[INFO][facade.py:321] Estimated cost: 0.023373568554627133
+[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+[INFO][hyperband.py:428] Finished Hyperband iteration-step 4-2 with initial budget 25.
+[INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
+[INFO][hyperband.py:428] Finished Hyperband iteration-step 5-1 with initial budget 8.
+[INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+[INFO][hyperband.py:428] Finished Hyperband iteration-step 5-2 with initial budget 25.
+[INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
+[INFO][hyperband.py:428] Finished Hyperband iteration-step 6-1 with initial budget 8.
+[INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+[INFO][hyperband.py:428] Finished Hyperband iteration-step 6-2 with initial budget 25.
+[INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[INFO][facade.py:318] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 2, &#39;n_neurons&#39;: 236, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 238, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.0036985335686206514}
+[INFO][facade.py:319] Estimated cost: 0.023368926029093018
 Incumbent value: 0.02
 </pre></div>
 </div>
@@ -511,7 +527,7 @@ Incumbent value: 0.02
     <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span>
         <span class="n">mlp</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span>
         <span class="n">walltime_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># After one minute, we stop the optimization</span>
-        <span class="n">n_runs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>  <span class="c1"># Evaluate max 100 different configurations</span>
+        <span class="n">n_trials</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>  <span class="c1"># Evaluate max 100 different configurations</span>
         <span class="n">min_budget</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>  <span class="c1"># Train the MLP for at least 5 epochs</span>
         <span class="n">max_budget</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>  <span class="c1"># Train the MLP for at most 25 epochs</span>
     <span class="p">)</span>
@@ -520,14 +536,19 @@ Incumbent value: 0.02
     <span class="n">initial_design</span> <span class="o">=</span> <span class="n">MultiFidelityFacade</span><span class="o">.</span><span class="n">get_initial_design</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">n_configs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
     <span class="c1"># Create our SMAC object and pass the scenario and the train method</span>
-    <span class="n">smac</span> <span class="o">=</span> <span class="n">MultiFidelityFacade</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">mlp</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="n">initial_design</span><span class="o">=</span><span class="n">initial_design</span><span class="p">)</span>
+    <span class="n">smac</span> <span class="o">=</span> <span class="n">MultiFidelityFacade</span><span class="p">(</span>
+        <span class="n">scenario</span><span class="p">,</span>
+        <span class="n">mlp</span><span class="o">.</span><span class="n">train</span><span class="p">,</span>
+        <span class="n">initial_design</span><span class="o">=</span><span class="n">initial_design</span><span class="p">,</span>
+        <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
 
     <span class="n">incumbent_value</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent value: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">incumbent_value</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  8.681 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  2.796 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-mlp-multi-fidelity-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/f66317bf5b0121f73605c64e54585f74/mlp_multi_fidelity.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">mlp_multi_fidelity.py</span></code></a></p>
@@ -544,17 +565,17 @@ Incumbent value: 0.02
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="svm_cv.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="sgd_instances.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Support Vector Machine with Cross-Validation</p>
+            <p class="prev-next-title">Stochastic Gradient Descent on Instances</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="sgd_instances.html" title="next page">
+    <a class='right-next' id="next-link" href="../advanced_usage/index.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Stochastic Gradient Descent on Instances</p>
+        <p class="prev-next-title">Advanced Usage</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

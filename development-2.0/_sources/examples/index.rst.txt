@@ -65,23 +65,6 @@ variety of SMAC. We refer to the documentation to use SMAC with the command line
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets. Since we want to ...">
-
-.. only:: html
-
-  .. image:: /examples/images/thumb/sphx_glr_mlp_multi_fidelity_thumb.png
-    :alt: Multi-Layer Perceptron with Multi-Fidelity
-
-  :ref:`sphx_glr_examples_mlp_multi_fidelity.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Multi-Layer Perceptron with Multi-Fidelity</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="Example for optimizing a Multi-Layer Perceptron (MLP) across multiple (dataset) instances.">
 
 .. only:: html
@@ -99,6 +82,23 @@ variety of SMAC. We refer to the documentation to use SMAC with the command line
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets. Since we want to ...">
+
+.. only:: html
+
+  .. image:: /examples/images/thumb/sphx_glr_mlp_multi_fidelity_thumb.png
+    :alt: Multi-Layer Perceptron with Multi-Fidelity
+
+  :ref:`sphx_glr_examples_mlp_multi_fidelity.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Multi-Layer Perceptron with Multi-Fidelity</div>
+    </div>
+
+
+.. raw:: html
+
     </div>
 
 
@@ -108,8 +108,8 @@ variety of SMAC. We refer to the documentation to use SMAC with the command line
    /examples/synthetic_function
    /examples/schaffer_multi_objective
    /examples/svm_cv
-   /examples/mlp_multi_fidelity
    /examples/sgd_instances
+   /examples/mlp_multi_fidelity
 
 
 .. only:: html

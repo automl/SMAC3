@@ -41,7 +41,7 @@ if __name__ == "__main__":
     configspace.add_hyperparameters([x0, x1])
 
     # Scenario object
-    scenario = Scenario(configspace, n_runs=100)
+    scenario = Scenario(configspace, n_trials=100)
 
     # Example call of the target algorithm
     default_value = rosenbrock_2d(configspace.get_default_configuration())

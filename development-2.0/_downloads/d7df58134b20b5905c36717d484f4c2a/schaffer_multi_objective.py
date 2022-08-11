@@ -66,7 +66,7 @@ if __name__ == "__main__":
     # Scenario object
     scenario = Scenario(
         configspace=cs,
-        n_runs=150,
+        n_trials=150,
         objectives=["metric1", "metric2"],
     )
 
