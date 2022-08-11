@@ -1,0 +1,29 @@
+smac.runhistory.encoder.encoder
+===============================
+
+.. automodule:: smac.runhistory.encoder.encoder
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      RunHistoryEncoder
+   
+   
+
+   
+   
+   
+
+
+

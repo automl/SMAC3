@@ -1,0 +1,29 @@
+smac.chooser.random\_chooser
+============================
+
+.. automodule:: smac.chooser.random_chooser
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      RandomConfigurationChooser
+   
+   
+
+   
+   
+   
+
+
+

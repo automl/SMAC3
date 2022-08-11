@@ -28,18 +28,48 @@ number of dimensions. Also, you can use mixed data types as well as conditional 
 The hyperparameter facade only supports a single fidelity approach. Therefore, only the configuration (not a budget like
 iterations) is passed to the target algorithm.
 
-.. GENERATED FROM PYTHON SOURCE LINES 12-95
+.. GENERATED FROM PYTHON SOURCE LINES 12-94
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Default value: 0.03
+    [INFO][initial_design.py:82] Ignoring `configs` and `n_configs_per_hyperparameter` since `n_configs` is given.
+    [INFO][smbo.py:144] Running initial design...
+    [INFO][initial_design.py:155] Retrieving 10 configurations for the initial design.
+    [INFO][intensification.py:249] No incumbent provided in the first run. Sampling a new challenger...
+    [INFO][intensification.py:448] First run and no incumbent provided. Challenger is assumed to be the incumbent.
+    [INFO][intensification.py:609] Updated estimated cost of incumbent on 1 runs: 0.0667
+    [INFO][abstract_intensifier.py:333] Challenger (0.0133) is better than incumbent (0.0667) on 1 runs.
+    [INFO][abstract_intensifier.py:353] Changes in incumbent:
+    [INFO][abstract_intensifier.py:356] --- C: 0.03992740880515713 -> 1.2760639488343621
+    [INFO][abstract_intensifier.py:356] --- kernel: 'rbf' -> 'linear'
+    [INFO][abstract_intensifier.py:356] --- shrinking: True -> False
+    [INFO][facade.py:320] Final Incumbent: {'C': 1.2760639488343621, 'kernel': 'linear', 'shrinking': False}
+    [INFO][facade.py:321] Estimated cost: 0.013333333333333308
+    Incumbent value: 0.01
+
+
+
+
+
+
+|
 
 .. code-block:: default
 
 
     import numpy as np
-    from ConfigSpace import Categorical, Configuration, ConfigurationSpace, Float, Int
+    from ConfigSpace import Categorical, Configuration, ConfigurationSpace, Float, Integer
     from ConfigSpace.conditions import InCondition
     from sklearn import datasets, svm
     from sklearn.model_selection import cross_val_score
 
-    from smac import Config, HyperparameterFacade
+    from smac import HyperparameterFacade, Scenario
 
     __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
     __license__ = "3-clause BSD"
@@ -63,7 +93,6 @@ iterations) is passed to the target algorithm.
         --------
         A cross-validated mean score for the SVM on the loaded dataset.
         """
-        # For gamma, we set it to a fixed value or to "auto" (if used)
         config_dict = config.get_dictionary()
         if "gamma" in config:
             config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
@@ -84,7 +113,7 @@ iterations) is passed to the target algorithm.
         kernel = Categorical("kernel", ["linear", "poly", "rbf", "sigmoid"], default="poly")
         C = Float("C", (0.001, 1000.0), default=1.0, log=True)
         shrinking = Categorical("shrinking", [True, False], default=True)
-        degree = Int("degree", (1, 5), default=3)
+        degree = Integer("degree", (1, 5), default=3)
         coef = Float("coef0", (0.0, 10.0), default=0.0)
         gamma = Categorical("gamma", ["auto", "value"], default="auto")
         gamma_value = Float("gamma_value", (0.0001, 8.0), default=1.0, log=True)
@@ -100,9 +129,9 @@ iterations) is passed to the target algorithm.
         configspace.add_conditions([use_degree, use_coef, use_gamma, use_gamma_value])
 
         # Next, we create an object, holding general information about the run
-        config = Config(
+        scenario = Scenario(
             configspace,
-            n_runs=100,  # We want 50 target algorithm evaluations
+            n_runs=50,  # We want 50 target algorithm evaluations
         )
 
         # Example call of the target algorithm
@@ -110,7 +139,7 @@ iterations) is passed to the target algorithm.
         print(f"Default value: {round(default_value, 2)}")
 
         # Now we use SMAC to find the best hyperparameters
-        smac = HyperparameterFacade(config, target_algorithm)
+        smac = HyperparameterFacade(scenario, target_algorithm, overwrite=True)
         incumbent = smac.optimize()
 
         incumbent_value = target_algorithm(incumbent)
@@ -119,32 +148,20 @@ iterations) is passed to the target algorithm.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.000 seconds)
+   **Total running time of the script:** ( 0 minutes  1.366 seconds)
 
 
 .. _sphx_glr_download_examples_svm_cv.py:
 
-
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-python
-
-     :download:`Download Python source code: svm_cv.py <svm_cv.py>`
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: svm_cv.ipynb <svm_cv.ipynb>`
-
-
 .. only:: html
 
- .. rst-class:: sphx-glr-signature
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
-    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
+
+    .. container:: sphx-glr-download sphx-glr-download-python
+
+      :download:`Download Python source code: svm_cv.py <svm_cv.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+      :download:`Download Jupyter notebook: svm_cv.ipynb <svm_cv.ipynb>`

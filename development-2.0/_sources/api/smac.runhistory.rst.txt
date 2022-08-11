@@ -13,19 +13,6 @@
 
    
    
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      DataOrigin
-      EnumEncoder
-      InstSeedBudgetKey
-      InstSeedKey
-      RunInfo
-      RunKey
-      RunValue
-      StatusType
-   
    
 
    
@@ -40,7 +27,8 @@
    :toctree:
    :recursive:
 
+   smac.runhistory.dataclasses
+   smac.runhistory.encoder
+   smac.runhistory.enumerations
    smac.runhistory.runhistory
-   smac.runhistory.runhistory2epm_boing
-   smac.runhistory.runhistory_transformer
 

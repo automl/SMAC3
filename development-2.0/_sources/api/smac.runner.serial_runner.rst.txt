@@ -1,0 +1,29 @@
+smac.runner.serial\_runner
+==========================
+
+.. automodule:: smac.runner.serial_runner
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      SerialRunner
+   
+   
+
+   
+   
+   
+
+
+

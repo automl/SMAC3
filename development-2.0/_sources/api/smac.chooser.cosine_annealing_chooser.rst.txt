@@ -1,0 +1,29 @@
+smac.chooser.cosine\_annealing\_chooser
+=======================================
+
+.. automodule:: smac.chooser.cosine_annealing_chooser
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      CosineAnnealingConfigurationChooser
+   
+   
+
+   
+   
+   
+
+
+

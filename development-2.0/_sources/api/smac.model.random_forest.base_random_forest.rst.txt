@@ -1,0 +1,29 @@
+smac.model.random\_forest.base\_random\_forest
+==============================================
+
+.. automodule:: smac.model.random_forest.base_random_forest
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BaseRandomForest
+   
+   
+
+   
+   
+   
+
+
+

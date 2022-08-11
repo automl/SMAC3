@@ -1,0 +1,35 @@
+smac.model.gaussian\_process.priors
+===================================
+
+.. automodule:: smac.model.gaussian_process.priors
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   smac.model.gaussian_process.priors.gamma_prior
+   smac.model.gaussian_process.priors.horseshoe_prior
+   smac.model.gaussian_process.priors.log_normal_prior
+   smac.model.gaussian_process.priors.prior
+   smac.model.gaussian_process.priors.tophat_prior
+

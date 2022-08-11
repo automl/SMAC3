@@ -5,9 +5,12 @@ Home
    :hidden:
    :maxdepth: 2
 
-   getting_started/index
+   installation
+   package_overview
+   getting_started
+   minimal_example
    examples/index
-   details/index
+   advanced_usage/index
    api
    glossary
    faq

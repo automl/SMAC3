@@ -1,0 +1,29 @@
+smac.chooser.chooser
+====================
+
+.. automodule:: smac.chooser.chooser
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ConfigurationChooser
+   
+   
+
+   
+   
+   
+
+
+

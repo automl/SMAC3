@@ -1,0 +1,29 @@
+smac.model.random\_model
+========================
+
+.. automodule:: smac.model.random_model
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      RandomModel
+   
+   
+
+   
+   
+   
+
+
+

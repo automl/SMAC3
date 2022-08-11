@@ -27,13 +27,9 @@
    :toctree:
    :recursive:
 
-   smac.utils.dependencies
+   smac.utils.data_structures
    smac.utils.logging
    smac.utils.merge_foreign_data
-   smac.utils.others
-   smac.utils.result_merging
    smac.utils.stats
    smac.utils.subspaces
-   smac.utils.test_helpers
-   smac.utils.validate
 

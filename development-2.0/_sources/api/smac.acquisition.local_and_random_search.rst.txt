@@ -1,0 +1,30 @@
+smac.acquisition.local\_and\_random\_search
+===========================================
+
+.. automodule:: smac.acquisition.local_and_random_search
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      LocalAndSortedPriorRandomSearch
+      LocalAndSortedRandomSearch
+   
+   
+
+   
+   
+   
+
+
+

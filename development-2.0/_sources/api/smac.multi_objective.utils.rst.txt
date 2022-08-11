@@ -1,0 +1,29 @@
+smac.multi\_objective.utils
+===========================
+
+.. automodule:: smac.multi_objective.utils
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      normalize_costs
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

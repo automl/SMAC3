@@ -24,12 +24,6 @@ smac.intensification.intensification
 
    
    
-   .. rubric:: Exceptions
-
-   .. autosummary::
-   
-      NoMoreChallengers
-   
    
 
 

@@ -1,9 +1,5 @@
 :orphan:
 
-
-
-.. _sphx_glr_examples:
-
 Examples
 ========
 
@@ -13,14 +9,93 @@ variety of SMAC. We refer to the documentation to use SMAC with the command line
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of applying SMAC to optimize a synthetic function (2D Rosenbrock function).">
+
+.. only:: html
+
+  .. image:: /examples/images/thumb/sphx_glr_synthetic_function_thumb.png
+    :alt: Synthetic Function
+
+  :ref:`sphx_glr_examples_synthetic_function.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Synthetic Function</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="A simple example on how to use multi-objective optimization is shown. The schaffer function is ...">
+
+.. only:: html
+
+  .. image:: /examples/images/thumb/sphx_glr_schaffer_multi_objective_thumb.png
+    :alt: Schaffer Multi-Objective
+
+  :ref:`sphx_glr_examples_schaffer_multi_objective.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Schaffer Multi-Objective</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="An example of optimizing a simple support vector machine on the IRIS benchmark. We use the hype...">
 
 .. only:: html
 
- .. figure:: /examples/images/thumb/sphx_glr_svm_cv_thumb.png
-     :alt: Support Vector Machine with Cross-Validation
+  .. image:: /examples/images/thumb/sphx_glr_svm_cv_thumb.png
+    :alt: Support Vector Machine with Cross-Validation
 
-     :ref:`sphx_glr_examples_svm_cv.py`
+  :ref:`sphx_glr_examples_svm_cv.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Support Vector Machine with Cross-Validation</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets. Since we want to ...">
+
+.. only:: html
+
+  .. image:: /examples/images/thumb/sphx_glr_mlp_multi_fidelity_thumb.png
+    :alt: Multi-Layer Perceptron with Multi-Fidelity
+
+  :ref:`sphx_glr_examples_mlp_multi_fidelity.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Multi-Layer Perceptron with Multi-Fidelity</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Example for optimizing a Multi-Layer Perceptron (MLP) across multiple (dataset) instances.">
+
+.. only:: html
+
+  .. image:: /examples/images/thumb/sphx_glr_sgd_instances_thumb.png
+    :alt: Stochastic Gradient Descent on Instances
+
+  :ref:`sphx_glr_examples_sgd_instances.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Stochastic Gradient Descent on Instances</div>
+    </div>
+
 
 .. raw:: html
 
@@ -30,25 +105,21 @@ variety of SMAC. We refer to the documentation to use SMAC with the command line
 .. toctree::
    :hidden:
 
+   /examples/synthetic_function
+   /examples/schaffer_multi_objective
    /examples/svm_cv
-.. raw:: html
-
-    <div class="sphx-glr-clear"></div>
-
+   /examples/mlp_multi_fidelity
+   /examples/sgd_instances
 
 
-.. only :: html
+.. only:: html
 
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-gallery
+  .. container:: sphx-glr-footer sphx-glr-footer-gallery
 
+    .. container:: sphx-glr-download sphx-glr-download-python
 
-  .. container:: sphx-glr-download sphx-glr-download-python
+      :download:`Download all examples in Python source code: examples_python.zip </examples/examples_python.zip>`
 
-    :download:`Download all examples in Python source code: examples_python.zip </examples/examples_python.zip>`
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-    :download:`Download all examples in Jupyter notebooks: examples_jupyter.zip </examples/examples_jupyter.zip>`
+      :download:`Download all examples in Jupyter notebooks: examples_jupyter.zip </examples/examples_jupyter.zip>`

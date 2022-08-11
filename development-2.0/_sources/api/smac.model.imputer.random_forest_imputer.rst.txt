@@ -1,0 +1,29 @@
+smac.model.imputer.random\_forest\_imputer
+==========================================
+
+.. automodule:: smac.model.imputer.random_forest_imputer
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      RandomForestImputer
+   
+   
+
+   
+   
+   
+
+
+

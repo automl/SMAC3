@@ -1,0 +1,29 @@
+smac.configspace.util
+=====================
+
+.. automodule:: smac.configspace.util
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      convert_configurations_to_array
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

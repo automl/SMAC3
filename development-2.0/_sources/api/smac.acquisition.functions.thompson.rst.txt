@@ -1,0 +1,29 @@
+smac.acquisition.functions.thompson
+===================================
+
+.. automodule:: smac.acquisition.functions.thompson
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      TS
+   
+   
+
+   
+   
+   
+
+
+

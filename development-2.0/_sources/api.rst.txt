@@ -5,15 +5,16 @@ API References
    :toctree: api
    :recursive:
 
-   smac.epm
-   smac.facade
-   smac.initial_design
-   smac.intensification
-   smac.optimizer
-   smac.runhistory
+   smac.smbo
    smac.scenario
-   smac.smac_cli
-   smac.stats
-   smac.tae
-   smac.callbacks
+   smac.model
+   smac.acquisition
+   smac.intensification
+   smac.runner
+   smac.chooser
+   smac.multi_objective
+   smac.runhistory
+   smac.configspace
    smac.utils
+   smac.constants
+   smac.callbacks

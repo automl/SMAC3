@@ -1,0 +1,30 @@
+smac.chooser.modulus\_chooser
+=============================
+
+.. automodule:: smac.chooser.modulus_chooser
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      LinearCoolDownConfigurationChooser
+      NoCoolDownConfigurationChooser
+   
+   
+
+   
+   
+   
+
+
+

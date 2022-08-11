@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -34,12 +34,13 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
+    <meta name="docsearch:language" content="en">
     
 
     <!-- Google Analytics -->
@@ -117,9 +118,29 @@ style="width: 100%;">
 <div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="getting_started/index.html">
+ <li class="toctree-l1">
+  <a class="reference internal" href="installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="package_overview.html">
+   Package Overview
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="getting_started.html">
    Getting Started
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="minimal_example.html">
+   Minimal Example
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="examples/index.html">
+   Examples
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
@@ -128,30 +149,35 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="getting_started/installation.html">
-     Installation
+    <a class="reference internal" href="examples/synthetic_function.html">
+     Synthetic Function
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="getting_started/minimal_example.html">
-     Minimal Example
+    <a class="reference internal" href="examples/schaffer_multi_objective.html">
+     Schaffer Multi-Objective
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="getting_started/package_overview.html">
-     Package Overview
+    <a class="reference internal" href="examples/svm_cv.html">
+     Support Vector Machine with Cross-Validation
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="getting_started/basic_usage.html">
-     Basic Usage
+    <a class="reference internal" href="examples/mlp_multi_fidelity.html">
+     Multi-Layer Perceptron with Multi-Fidelity
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="examples/sgd_instances.html">
+     Stochastic Gradient Descent on Instances
     </a>
    </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="examples/index.html">
-   Examples
+  <a class="reference internal" href="advanced_usage/index.html">
+   Advanced Usage
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
   <label for="toctree-checkbox-2">
@@ -160,80 +186,8 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="examples/svm_cv.html">
-     Support Vector Machine with Cross-Validation
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="details/index.html">
-   Details
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
-  <label for="toctree-checkbox-3">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/facades.html">
+    <a class="reference internal" href="advanced_usage/facades.html">
      Facades
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/target_algorithm_evaluator.html">
-     Target Algorithm Evaluator
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/scenario.html">
-     Scenario
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/arguments.html">
-     Arguments
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/multi_objective.html">
-     Multi-Objective Optimization
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/run_history.html">
-     Run-History
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/instances.html">
-     Instances and Features
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/validation.html">
-     Validation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/callbacks.html">
-     Callbacks
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/parallelism.html">
-     Parallelism
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/cuda.html">
-     CUDA
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/restoring.html">
-     Restoring
     </a>
    </li>
   </ul>
@@ -242,15 +196,30 @@ style="width: 100%;">
   <a class="reference internal" href="api.html">
    API References
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
-  <label for="toctree-checkbox-4">
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="api/smac.initial_design.html">
-     smac.initial_design
+    <a class="reference internal" href="api/smac.smbo.html">
+     smac.smbo
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.model.html">
+     smac.model
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.acquisition.html">
+     smac.acquisition
     </a>
    </li>
    <li class="toctree-l2">
@@ -259,18 +228,38 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.runner.html">
+     smac.runner
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.chooser.html">
+     smac.chooser
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.multi_objective.html">
+     smac.multi_objective
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="api/smac.runhistory.html">
      smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="api/smac.callbacks.html">
-     smac.callbacks
+    <a class="reference internal" href="api/smac.configspace.html">
+     smac.configspace
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="api/smac.utils.html">
      smac.utils
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.constants.html">
+     smac.constants
     </a>
    </li>
   </ul>
@@ -332,42 +321,117 @@ style="width: 100%;">
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.callbacks.html#module-smac.callbacks"><code class="xref">smac.callbacks</code></a></td><td>
+       <a href="api/smac.acquisition.html#module-smac.acquisition"><code class="xref">smac.acquisition</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.callbacks.callbacks.html#module-smac.callbacks.callbacks"><code class="xref">smac.callbacks.callbacks</code></a></td><td>
+       <a href="api/smac.acquisition.abstract_acqusition_optimizer.html#module-smac.acquisition.abstract_acqusition_optimizer"><code class="xref">smac.acquisition.abstract_acqusition_optimizer</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.initial_design.html#module-smac.initial_design"><code class="xref">smac.initial_design</code></a></td><td>
+       <a href="api/smac.acquisition.differential_evolution.html#module-smac.acquisition.differential_evolution"><code class="xref">smac.acquisition.differential_evolution</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.initial_design.default_configuration_design.html#module-smac.initial_design.default_configuration_design"><code class="xref">smac.initial_design.default_configuration_design</code></a></td><td>
+       <a href="api/smac.acquisition.functions.html#module-smac.acquisition.functions"><code class="xref">smac.acquisition.functions</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.initial_design.factorial_design.html#module-smac.initial_design.factorial_design"><code class="xref">smac.initial_design.factorial_design</code></a></td><td>
+       <a href="api/smac.acquisition.functions.abstract_acquisition_function.html#module-smac.acquisition.functions.abstract_acquisition_function"><code class="xref">smac.acquisition.functions.abstract_acquisition_function</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.initial_design.latin_hypercube_design.html#module-smac.initial_design.latin_hypercube_design"><code class="xref">smac.initial_design.latin_hypercube_design</code></a></td><td>
+       <a href="api/smac.acquisition.functions.confidence_bound.html#module-smac.acquisition.functions.confidence_bound"><code class="xref">smac.acquisition.functions.confidence_bound</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.initial_design.random_configuration_design.html#module-smac.initial_design.random_configuration_design"><code class="xref">smac.initial_design.random_configuration_design</code></a></td><td>
+       <a href="api/smac.acquisition.functions.expected_improvement.html#module-smac.acquisition.functions.expected_improvement"><code class="xref">smac.acquisition.functions.expected_improvement</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.initial_design.sobol_design.html#module-smac.initial_design.sobol_design"><code class="xref">smac.initial_design.sobol_design</code></a></td><td>
+       <a href="api/smac.acquisition.functions.integrated.html#module-smac.acquisition.functions.integrated"><code class="xref">smac.acquisition.functions.integrated</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.acquisition.functions.prior.html#module-smac.acquisition.functions.prior"><code class="xref">smac.acquisition.functions.prior</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.acquisition.functions.probability_improvement.html#module-smac.acquisition.functions.probability_improvement"><code class="xref">smac.acquisition.functions.probability_improvement</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.acquisition.functions.thompson.html#module-smac.acquisition.functions.thompson"><code class="xref">smac.acquisition.functions.thompson</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.acquisition.local_and_random_search.html#module-smac.acquisition.local_and_random_search"><code class="xref">smac.acquisition.local_and_random_search</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.acquisition.local_search.html#module-smac.acquisition.local_search"><code class="xref">smac.acquisition.local_search</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.acquisition.random_search.html#module-smac.acquisition.random_search"><code class="xref">smac.acquisition.random_search</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.chooser.html#module-smac.chooser"><code class="xref">smac.chooser</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.chooser.chooser.html#module-smac.chooser.chooser"><code class="xref">smac.chooser.chooser</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.chooser.cosine_annealing_chooser.html#module-smac.chooser.cosine_annealing_chooser"><code class="xref">smac.chooser.cosine_annealing_chooser</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.chooser.modulus_chooser.html#module-smac.chooser.modulus_chooser"><code class="xref">smac.chooser.modulus_chooser</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.chooser.probability_chooser.html#module-smac.chooser.probability_chooser"><code class="xref">smac.chooser.probability_chooser</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.chooser.random_chooser.html#module-smac.chooser.random_chooser"><code class="xref">smac.chooser.random_chooser</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.configspace.html#module-smac.configspace"><code class="xref">smac.configspace</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.configspace.util.html#module-smac.configspace.util"><code class="xref">smac.configspace.util</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.constants.html#module-smac.constants"><code class="xref">smac.constants</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
@@ -377,7 +441,7 @@ style="width: 100%;">
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.intensification.abstract_racer.html#module-smac.intensification.abstract_racer"><code class="xref">smac.intensification.abstract_racer</code></a></td><td>
+       <a href="api/smac.intensification.abstract_intensifier.html#module-smac.intensification.abstract_intensifier"><code class="xref">smac.intensification.abstract_intensifier</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
@@ -397,7 +461,192 @@ style="width: 100%;">
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
+       <a href="api/smac.intensification.simple_intensifier.html#module-smac.intensification.simple_intensifier"><code class="xref">smac.intensification.simple_intensifier</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
        <a href="api/smac.intensification.successive_halving.html#module-smac.intensification.successive_halving"><code class="xref">smac.intensification.successive_halving</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.html#module-smac.model"><code class="xref">smac.model</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.base_model.html#module-smac.model.base_model"><code class="xref">smac.model.base_model</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.html#module-smac.model.gaussian_process"><code class="xref">smac.model.gaussian_process</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.base_gaussian_process.html#module-smac.model.gaussian_process.base_gaussian_process"><code class="xref">smac.model.gaussian_process.base_gaussian_process</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.gaussian_process.html#module-smac.model.gaussian_process.gaussian_process"><code class="xref">smac.model.gaussian_process.gaussian_process</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.gpytorch.html#module-smac.model.gaussian_process.gpytorch"><code class="xref">smac.model.gaussian_process.gpytorch</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.kernels.html#module-smac.model.gaussian_process.kernels"><code class="xref">smac.model.gaussian_process.kernels</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.kernels.base_kernels.html#module-smac.model.gaussian_process.kernels.base_kernels"><code class="xref">smac.model.gaussian_process.kernels.base_kernels</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.kernels.boing.html#module-smac.model.gaussian_process.kernels.boing"><code class="xref">smac.model.gaussian_process.kernels.boing</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.kernels.hamming_kernel.html#module-smac.model.gaussian_process.kernels.hamming_kernel"><code class="xref">smac.model.gaussian_process.kernels.hamming_kernel</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.kernels.matern_kernel.html#module-smac.model.gaussian_process.kernels.matern_kernel"><code class="xref">smac.model.gaussian_process.kernels.matern_kernel</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.kernels.rbf_kernel.html#module-smac.model.gaussian_process.kernels.rbf_kernel"><code class="xref">smac.model.gaussian_process.kernels.rbf_kernel</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.kernels.utils.html#module-smac.model.gaussian_process.kernels.utils"><code class="xref">smac.model.gaussian_process.kernels.utils</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.kernels.white_kernel.html#module-smac.model.gaussian_process.kernels.white_kernel"><code class="xref">smac.model.gaussian_process.kernels.white_kernel</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.mcmc_gaussian_process.html#module-smac.model.gaussian_process.mcmc_gaussian_process"><code class="xref">smac.model.gaussian_process.mcmc_gaussian_process</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.priors.html#module-smac.model.gaussian_process.priors"><code class="xref">smac.model.gaussian_process.priors</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.priors.gamma_prior.html#module-smac.model.gaussian_process.priors.gamma_prior"><code class="xref">smac.model.gaussian_process.priors.gamma_prior</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.priors.horseshoe_prior.html#module-smac.model.gaussian_process.priors.horseshoe_prior"><code class="xref">smac.model.gaussian_process.priors.horseshoe_prior</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.priors.log_normal_prior.html#module-smac.model.gaussian_process.priors.log_normal_prior"><code class="xref">smac.model.gaussian_process.priors.log_normal_prior</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.priors.prior.html#module-smac.model.gaussian_process.priors.prior"><code class="xref">smac.model.gaussian_process.priors.prior</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.gaussian_process.priors.tophat_prior.html#module-smac.model.gaussian_process.priors.tophat_prior"><code class="xref">smac.model.gaussian_process.priors.tophat_prior</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.imputer.html#module-smac.model.imputer"><code class="xref">smac.model.imputer</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.imputer.abstract_imputer.html#module-smac.model.imputer.abstract_imputer"><code class="xref">smac.model.imputer.abstract_imputer</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.imputer.random_forest_imputer.html#module-smac.model.imputer.random_forest_imputer"><code class="xref">smac.model.imputer.random_forest_imputer</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.multi_objective_model.html#module-smac.model.multi_objective_model"><code class="xref">smac.model.multi_objective_model</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.random_forest.html#module-smac.model.random_forest"><code class="xref">smac.model.random_forest</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.random_forest.base_random_forest.html#module-smac.model.random_forest.base_random_forest"><code class="xref">smac.model.random_forest.base_random_forest</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.random_forest.multi_objective_random_forest.html#module-smac.model.random_forest.multi_objective_random_forest"><code class="xref">smac.model.random_forest.multi_objective_random_forest</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.random_forest.random_forest_with_instances.html#module-smac.model.random_forest.random_forest_with_instances"><code class="xref">smac.model.random_forest.random_forest_with_instances</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.random_model.html#module-smac.model.random_model"><code class="xref">smac.model.random_model</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.model.utils.html#module-smac.model.utils"><code class="xref">smac.model.utils</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.multi_objective.html#module-smac.multi_objective"><code class="xref">smac.multi_objective</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.multi_objective.abstract_multi_objective_algorithm.html#module-smac.multi_objective.abstract_multi_objective_algorithm"><code class="xref">smac.multi_objective.abstract_multi_objective_algorithm</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.multi_objective.aggregation_strategy.html#module-smac.multi_objective.aggregation_strategy"><code class="xref">smac.multi_objective.aggregation_strategy</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.multi_objective.parego.html#module-smac.multi_objective.parego"><code class="xref">smac.multi_objective.parego</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.multi_objective.utils.html#module-smac.multi_objective.utils"><code class="xref">smac.multi_objective.utils</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
@@ -407,17 +656,107 @@ style="width: 100%;">
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
+       <a href="api/smac.runhistory.dataclasses.html#module-smac.runhistory.dataclasses"><code class="xref">smac.runhistory.dataclasses</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.runhistory.encoder.html#module-smac.runhistory.encoder"><code class="xref">smac.runhistory.encoder</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.runhistory.encoder.abstract_encoder.html#module-smac.runhistory.encoder.abstract_encoder"><code class="xref">smac.runhistory.encoder.abstract_encoder</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.runhistory.encoder.boing_encoder.html#module-smac.runhistory.encoder.boing_encoder"><code class="xref">smac.runhistory.encoder.boing_encoder</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.runhistory.encoder.eips_encoder.html#module-smac.runhistory.encoder.eips_encoder"><code class="xref">smac.runhistory.encoder.eips_encoder</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.runhistory.encoder.encoder.html#module-smac.runhistory.encoder.encoder"><code class="xref">smac.runhistory.encoder.encoder</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.runhistory.encoder.inversed_scaled_encoder.html#module-smac.runhistory.encoder.inversed_scaled_encoder"><code class="xref">smac.runhistory.encoder.inversed_scaled_encoder</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.runhistory.encoder.log_encoder.html#module-smac.runhistory.encoder.log_encoder"><code class="xref">smac.runhistory.encoder.log_encoder</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.runhistory.encoder.log_scaled_encoder.html#module-smac.runhistory.encoder.log_scaled_encoder"><code class="xref">smac.runhistory.encoder.log_scaled_encoder</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.runhistory.encoder.scaled_encoder.html#module-smac.runhistory.encoder.scaled_encoder"><code class="xref">smac.runhistory.encoder.scaled_encoder</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.runhistory.encoder.sqrt_scaled_encoder.html#module-smac.runhistory.encoder.sqrt_scaled_encoder"><code class="xref">smac.runhistory.encoder.sqrt_scaled_encoder</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.runhistory.enumerations.html#module-smac.runhistory.enumerations"><code class="xref">smac.runhistory.enumerations</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
        <a href="api/smac.runhistory.runhistory.html#module-smac.runhistory.runhistory"><code class="xref">smac.runhistory.runhistory</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.runhistory.runhistory2epm_boing.html#module-smac.runhistory.runhistory2epm_boing"><code class="xref">smac.runhistory.runhistory2epm_boing</code></a></td><td>
+       <a href="api/smac.runner.html#module-smac.runner"><code class="xref">smac.runner</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.runhistory.runhistory_transformer.html#module-smac.runhistory.runhistory_transformer"><code class="xref">smac.runhistory.runhistory_transformer</code></a></td><td>
+       <a href="api/smac.runner.dask_runner.html#module-smac.runner.dask_runner"><code class="xref">smac.runner.dask_runner</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.runner.exceptions.html#module-smac.runner.exceptions"><code class="xref">smac.runner.exceptions</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.runner.runner.html#module-smac.runner.runner"><code class="xref">smac.runner.runner</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.runner.serial_runner.html#module-smac.runner.serial_runner"><code class="xref">smac.runner.serial_runner</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.runner.target_algorithm_runner.html#module-smac.runner.target_algorithm_runner"><code class="xref">smac.runner.target_algorithm_runner</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.scenario.html#module-smac.scenario"><code class="xref">smac.scenario</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.smbo.html#module-smac.smbo"><code class="xref">smac.smbo</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
@@ -427,7 +766,7 @@ style="width: 100%;">
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.utils.dependencies.html#module-smac.utils.dependencies"><code class="xref">smac.utils.dependencies</code></a></td><td>
+       <a href="api/smac.utils.data_structures.html#module-smac.utils.data_structures"><code class="xref">smac.utils.data_structures</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
@@ -437,27 +776,12 @@ style="width: 100%;">
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.utils.merge_foreign_data.html#module-smac.utils.merge_foreign_data"><code class="xref">smac.utils.merge_foreign_data</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/smac.utils.others.html#module-smac.utils.others"><code class="xref">smac.utils.others</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/smac.utils.result_merging.html#module-smac.utils.result_merging"><code class="xref">smac.utils.result_merging</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
        <a href="api/smac.utils.stats.html#module-smac.utils.stats"><code class="xref">smac.utils.stats</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.utils.test_helpers.html#module-smac.utils.test_helpers"><code class="xref">smac.utils.test_helpers</code></a></td><td>
+       <a href="api/smac.utils.subspaces.html#module-smac.utils.subspaces"><code class="xref">smac.utils.subspaces</code></a></td><td>
        <em></em></td></tr>
    </table>
 
@@ -492,7 +816,7 @@ style="width: 100%;">
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-4.5.0. Template is modified version of <a
+5.1.1. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

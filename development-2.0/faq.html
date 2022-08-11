@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
@@ -35,13 +35,14 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="License" href="license.html" />
     <link rel="prev" title="Glossary" href="glossary.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
+    <meta name="docsearch:language" content="en">
     
 
     <!-- Google Analytics -->
@@ -117,9 +118,29 @@ style="width: 100%;">
 <div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="getting_started/index.html">
+ <li class="toctree-l1">
+  <a class="reference internal" href="installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="package_overview.html">
+   Package Overview
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="getting_started.html">
    Getting Started
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="minimal_example.html">
+   Minimal Example
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="examples/index.html">
+   Examples
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
@@ -128,30 +149,35 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="getting_started/installation.html">
-     Installation
+    <a class="reference internal" href="examples/synthetic_function.html">
+     Synthetic Function
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="getting_started/minimal_example.html">
-     Minimal Example
+    <a class="reference internal" href="examples/schaffer_multi_objective.html">
+     Schaffer Multi-Objective
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="getting_started/package_overview.html">
-     Package Overview
+    <a class="reference internal" href="examples/svm_cv.html">
+     Support Vector Machine with Cross-Validation
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="getting_started/basic_usage.html">
-     Basic Usage
+    <a class="reference internal" href="examples/mlp_multi_fidelity.html">
+     Multi-Layer Perceptron with Multi-Fidelity
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="examples/sgd_instances.html">
+     Stochastic Gradient Descent on Instances
     </a>
    </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="examples/index.html">
-   Examples
+  <a class="reference internal" href="advanced_usage/index.html">
+   Advanced Usage
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
   <label for="toctree-checkbox-2">
@@ -160,80 +186,8 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="examples/svm_cv.html">
-     Support Vector Machine with Cross-Validation
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="details/index.html">
-   Details
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
-  <label for="toctree-checkbox-3">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/facades.html">
+    <a class="reference internal" href="advanced_usage/facades.html">
      Facades
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/target_algorithm_evaluator.html">
-     Target Algorithm Evaluator
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/scenario.html">
-     Scenario
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/arguments.html">
-     Arguments
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/multi_objective.html">
-     Multi-Objective Optimization
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/run_history.html">
-     Run-History
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/instances.html">
-     Instances and Features
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/validation.html">
-     Validation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/callbacks.html">
-     Callbacks
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/parallelism.html">
-     Parallelism
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/cuda.html">
-     CUDA
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="details/restoring.html">
-     Restoring
     </a>
    </li>
   </ul>
@@ -242,15 +196,30 @@ style="width: 100%;">
   <a class="reference internal" href="api.html">
    API References
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
-  <label for="toctree-checkbox-4">
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="api/smac.initial_design.html">
-     smac.initial_design
+    <a class="reference internal" href="api/smac.smbo.html">
+     smac.smbo
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.model.html">
+     smac.model
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.acquisition.html">
+     smac.acquisition
     </a>
    </li>
    <li class="toctree-l2">
@@ -259,18 +228,38 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.runner.html">
+     smac.runner
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.chooser.html">
+     smac.chooser
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.multi_objective.html">
+     smac.multi_objective
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="api/smac.runhistory.html">
      smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="api/smac.callbacks.html">
-     smac.callbacks
+    <a class="reference internal" href="api/smac.configspace.html">
+     smac.configspace
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="api/smac.utils.html">
      smac.utils
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.constants.html">
+     smac.constants
     </a>
    </li>
   </ul>
@@ -327,7 +316,7 @@ style="width: 100%;">
               <div>
                 
   <section id="f-a-q">
-<h1>F.A.Q.<a class="headerlink" href="#f-a-q" title="Permalink to this headline">¶</a></h1>
+<h1>F.A.Q.<a class="headerlink" href="#f-a-q" title="Permalink to this heading">¶</a></h1>
 <dl>
 <dt>Should I use SMAC2 or SMAC3?</dt><dd><p>SMAC3 is a reimplementation of the original SMAC tool (<a class="reference external" href="https://ml.informatik.uni-freiburg.de/wp-content/uploads/papers/11-LION5-SMAC.pdf">Sequential Model-Based Optimization for
 General Algorithm Configuration</a>, Hutter et al., 2021). However, the reimplementation slightly differs from the original
@@ -340,14 +329,14 @@ or try to run the installation first.</p>
 </dd>
 <dt>pyrfr raises cryptic import errors.</dt><dd><p>Ensure that the gcc used to compile the pyrfr is the same as used for linking
 during execution. This often happens with Anaconda. See
-<a class="reference internal" href="getting_started/installation.html#installation"><span class="std std-ref">Installation</span></a> for a solution.</p>
+<a class="reference internal" href="installation.html#installation"><span class="std std-ref">Installation</span></a> for a solution.</p>
 </dd>
 <dt>My target algorithm is not accepted when using the scenario-file.</dt><dd><p>Make sure that your algorithm accepts commandline options as provided by
-SMAC. Refer to <a class="reference internal" href="getting_started/basic_usage.html#basic-usage"><span class="std std-ref">commandline execution</span></a> for
+SMAC. Refer to <span class="xref std std-ref">commandline execution</span> for
 details on how to wrap your algorithm.</p>
 <p>You can also run SMAC with <code class="docutils literal notranslate"><span class="pre">--verbose</span> <span class="pre">DEBUG</span></code> to see how SMAC tried to call your algorithm.</p>
 </dd>
-<dt>Can I restore SMAC from a previous state?</dt><dd><p>Yes. Have a look <a class="reference internal" href="details/restoring.html#restoring"><span class="std std-ref">here</span></a>.</p>
+<dt>Can I restore SMAC from a previous state?</dt><dd><p>Yes. Have a look <a class="reference internal" href="advanced_usage/restoring.html#restoring"><span class="std std-ref">here</span></a>.</p>
 </dd>
 <dt>How can I use <a class="reference internal" href="glossary.html#term-BOHB"><span class="xref std std-term">BOHB</span></a> and/or <a class="reference external" href="https://github.com/automl/HpBandSter">HpBandSter</a> with SMAC?</dt><dd><p>The facade SMAC4HPO is the closes implementation to <a class="reference internal" href="glossary.html#term-BOHB"><span class="xref std std-term">BOHB</span></a> and/or <a class="reference external" href="https://github.com/automl/HpBandSter">HpBandSter</a>.</p>
 </dd>
@@ -375,7 +364,7 @@ Deterministic algorithms don’t depend on seeds, thus requiring only one evalua
 to evaluate the performance on that instance. Nevertheless the default seed 0 is still passed to the
 target algorithm.</p>
 </dd>
-<dt>I want my algorithm to be optimized across different datasets. How should I realize that?</dt><dd><p>Generally, you have two options: Validate all datasets within your <a class="reference internal" href="details/target_algorithm_evaluator.html#target-algorithm-evaluator"><span class="std std-ref">TAE</span></a> or use instances.
+<dt>I want my algorithm to be optimized across different datasets. How should I realize that?</dt><dd><p>Generally, you have two options: Validate all datasets within your <a class="reference internal" href="advanced_usage/target_algorithm_evaluator.html#target-algorithm-evaluator"><span class="std std-ref">TAE</span></a> or use instances.
 The significant advantage of instances is that not all datasets necessarily have to be processed.
 If the first instances already perform worse, the configuration might be discarded early. This
 will lead to a speed-up.</p>
@@ -431,7 +420,7 @@ work on specific setups. To overcome this error, it is recommended to set <cite>
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-4.5.0. Template is modified version of <a
+5.1.1. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

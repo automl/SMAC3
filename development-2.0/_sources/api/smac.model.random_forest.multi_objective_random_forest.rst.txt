@@ -1,0 +1,29 @@
+smac.model.random\_forest.multi\_objective\_random\_forest
+==========================================================
+
+.. automodule:: smac.model.random_forest.multi_objective_random_forest
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      MultiObjectiveRandomForest
+   
+   
+
+   
+   
+   
+
+
+

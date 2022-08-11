@@ -11,12 +11,12 @@ iterations) is passed to the target algorithm.
 """
 
 import numpy as np
-from ConfigSpace import Categorical, Configuration, ConfigurationSpace, Float, Int
+from ConfigSpace import Categorical, Configuration, ConfigurationSpace, Float, Integer
 from ConfigSpace.conditions import InCondition
 from sklearn import datasets, svm
 from sklearn.model_selection import cross_val_score
 
-from smac import Config, HyperparameterFacade
+from smac import HyperparameterFacade, Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -40,7 +40,6 @@ def target_algorithm(config: Configuration, seed: int = 0) -> float:
     --------
     A cross-validated mean score for the SVM on the loaded dataset.
     """
-    # For gamma, we set it to a fixed value or to "auto" (if used)
     config_dict = config.get_dictionary()
     if "gamma" in config:
         config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
@@ -61,7 +60,7 @@ if __name__ == "__main__":
     kernel = Categorical("kernel", ["linear", "poly", "rbf", "sigmoid"], default="poly")
     C = Float("C", (0.001, 1000.0), default=1.0, log=True)
     shrinking = Categorical("shrinking", [True, False], default=True)
-    degree = Int("degree", (1, 5), default=3)
+    degree = Integer("degree", (1, 5), default=3)
     coef = Float("coef0", (0.0, 10.0), default=0.0)
     gamma = Categorical("gamma", ["auto", "value"], default="auto")
     gamma_value = Float("gamma_value", (0.0001, 8.0), default=1.0, log=True)
@@ -77,9 +76,9 @@ if __name__ == "__main__":
     configspace.add_conditions([use_degree, use_coef, use_gamma, use_gamma_value])
 
     # Next, we create an object, holding general information about the run
-    config = Config(
+    scenario = Scenario(
         configspace,
-        n_runs=100,  # We want 50 target algorithm evaluations
+        n_runs=50,  # We want 50 target algorithm evaluations
     )
 
     # Example call of the target algorithm
@@ -87,7 +86,7 @@ if __name__ == "__main__":
     print(f"Default value: {round(default_value, 2)}")
 
     # Now we use SMAC to find the best hyperparameters
-    smac = HyperparameterFacade(config, target_algorithm)
+    smac = HyperparameterFacade(scenario, target_algorithm, overwrite=True)
     incumbent = smac.optimize()
 
     incumbent_value = target_algorithm(incumbent)

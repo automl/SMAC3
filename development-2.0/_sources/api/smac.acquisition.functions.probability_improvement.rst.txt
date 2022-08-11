@@ -1,0 +1,29 @@
+smac.acquisition.functions.probability\_improvement
+===================================================
+
+.. automodule:: smac.acquisition.functions.probability_improvement
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      PI
+   
+   
+
+   
+   
+   
+
+
+

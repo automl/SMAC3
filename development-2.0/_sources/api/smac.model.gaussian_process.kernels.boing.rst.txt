@@ -1,0 +1,37 @@
+smac.model.gaussian\_process.kernels.boing
+==========================================
+
+.. automodule:: smac.model.gaussian_process.kernels.boing
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      construct_gp_kernel
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      FITCKernel
+      FITCMean
+      MixedKernel
+   
+   
+
+   
+   
+   
+
+
+

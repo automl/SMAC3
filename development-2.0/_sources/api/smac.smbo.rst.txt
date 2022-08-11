@@ -1,0 +1,29 @@
+﻿smac.smbo
+=========
+
+.. automodule:: smac.smbo
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      SMBO
+   
+   
+
+   
+   
+   
+
+
+

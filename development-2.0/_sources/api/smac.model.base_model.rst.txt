@@ -1,0 +1,29 @@
+smac.model.base\_model
+======================
+
+.. automodule:: smac.model.base_model
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BaseModel
+   
+   
+
+   
+   
+   
+
+
+

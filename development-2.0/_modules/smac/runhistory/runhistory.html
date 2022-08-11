@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -34,11 +34,12 @@
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
+    <meta name="docsearch:language" content="en">
     
 
     <!-- Google Analytics -->
@@ -114,9 +115,29 @@ style="width: 100%;">
 <div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../getting_started/index.html">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../package_overview.html">
+   Package Overview
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../getting_started.html">
    Getting Started
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../minimal_example.html">
+   Minimal Example
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../examples/index.html">
+   Examples
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
@@ -125,30 +146,35 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../getting_started/installation.html">
-     Installation
+    <a class="reference internal" href="../../../examples/synthetic_function.html">
+     Synthetic Function
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../getting_started/minimal_example.html">
-     Minimal Example
+    <a class="reference internal" href="../../../examples/schaffer_multi_objective.html">
+     Schaffer Multi-Objective
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../getting_started/package_overview.html">
-     Package Overview
+    <a class="reference internal" href="../../../examples/svm_cv.html">
+     Support Vector Machine with Cross-Validation
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../getting_started/basic_usage.html">
-     Basic Usage
+    <a class="reference internal" href="../../../examples/mlp_multi_fidelity.html">
+     Multi-Layer Perceptron with Multi-Fidelity
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../examples/sgd_instances.html">
+     Stochastic Gradient Descent on Instances
     </a>
    </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../examples/index.html">
-   Examples
+  <a class="reference internal" href="../../../advanced_usage/index.html">
+   Advanced Usage
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
   <label for="toctree-checkbox-2">
@@ -157,80 +183,8 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/svm_cv.html">
-     Support Vector Machine with Cross-Validation
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../details/index.html">
-   Details
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
-  <label for="toctree-checkbox-3">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../details/facades.html">
+    <a class="reference internal" href="../../../advanced_usage/facades.html">
      Facades
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../details/target_algorithm_evaluator.html">
-     Target Algorithm Evaluator
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../details/scenario.html">
-     Scenario
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../details/arguments.html">
-     Arguments
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../details/multi_objective.html">
-     Multi-Objective Optimization
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../details/run_history.html">
-     Run-History
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../details/instances.html">
-     Instances and Features
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../details/validation.html">
-     Validation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../details/callbacks.html">
-     Callbacks
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../details/parallelism.html">
-     Parallelism
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../details/cuda.html">
-     CUDA
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../details/restoring.html">
-     Restoring
     </a>
    </li>
   </ul>
@@ -239,15 +193,30 @@ style="width: 100%;">
   <a class="reference internal" href="../../../api.html">
    API References
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
-  <label for="toctree-checkbox-4">
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../api/smac.initial_design.html">
-     smac.initial_design
+    <a class="reference internal" href="../../../api/smac.smbo.html">
+     smac.smbo
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.model.html">
+     smac.model
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.acquisition.html">
+     smac.acquisition
     </a>
    </li>
    <li class="toctree-l2">
@@ -256,18 +225,38 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.runner.html">
+     smac.runner
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.chooser.html">
+     smac.chooser
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.multi_objective.html">
+     smac.multi_objective
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../../../api/smac.runhistory.html">
      smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../api/smac.callbacks.html">
-     smac.callbacks
+    <a class="reference internal" href="../../../api/smac.configspace.html">
+     smac.configspace
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../api/smac.utils.html">
      smac.utils
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.constants.html">
+     smac.constants
     </a>
    </li>
   </ul>
@@ -311,19 +300,8 @@ style="width: 100%;">
                 
   <h1>Source code for smac.runhistory.runhistory</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">Any</span><span class="p">,</span>
-    <span class="n">Dict</span><span class="p">,</span>
-    <span class="n">Iterable</span><span class="p">,</span>
-    <span class="n">Iterator</span><span class="p">,</span>
-    <span class="n">List</span><span class="p">,</span>
-    <span class="n">Mapping</span><span class="p">,</span>
-    <span class="n">Optional</span><span class="p">,</span>
-    <span class="n">Tuple</span><span class="p">,</span>
-    <span class="n">Type</span><span class="p">,</span>
-    <span class="n">Union</span><span class="p">,</span>
-    <span class="n">cast</span><span class="p">,</span>
-<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">cast</span>
 
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">json</span>
@@ -334,16 +312,15 @@ style="width: 100%;">
 <span class="kn">from</span> <span class="nn">smac.multi_objective.utils</span> <span class="kn">import</span> <span class="n">normalize_costs</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">DataOrigin</span><span class="p">,</span>
-    <span class="n">EnumEncoder</span><span class="p">,</span>
-    <span class="n">InstSeedBudgetKey</span><span class="p">,</span>
-    <span class="n">InstSeedKey</span><span class="p">,</span>
+    <span class="n">InstanceSeedBudgetKey</span><span class="p">,</span>
+    <span class="n">InstanceSeedKey</span><span class="p">,</span>
     <span class="n">RunKey</span><span class="p">,</span>
     <span class="n">RunValue</span><span class="p">,</span>
     <span class="n">StatusType</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span>
 
-<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2022, automl.org&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -389,35 +366,37 @@ style="width: 100%;">
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">overwrite_existing_runs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_existing_runs</span> <span class="o">=</span> <span class="n">overwrite_existing_runs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># By having the data in a deterministic order we can do useful tests</span>
         <span class="c1"># when we serialize the data and can assume it&#39;s still in the same</span>
         <span class="c1"># order as it was added.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>  <span class="c1"># type: Dict[RunKey, RunValue]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">RunKey</span><span class="p">,</span> <span class="n">RunValue</span><span class="p">]</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
 
         <span class="c1"># for fast access, we have also an unordered data structure</span>
         <span class="c1"># to get all instance seed pairs of a configuration.</span>
         <span class="c1"># This does not include capped runs.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed_budget</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[int, Dict[InstSeedKey, List[float]]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config_id_to_inst_seed_budget</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">InstanceSeedKey</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">config_ids</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[Configuration, int]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[int, Configuration]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_ids</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_id</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="c1"># Stores cost for each configuration ID</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_cost_per_config</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[int, float | list[float]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cost_per_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="c1"># Stores min cost across all budgets for each configuration ID</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_min_cost_per_config</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[int, float | list[float]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_min_cost_per_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="c1"># runs_per_config maps the configuration ID to the number of runs for that configuration</span>
         <span class="c1"># and is necessary for computing the moving average</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_runs_per_config</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[int, int]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_runs_per_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="c1"># Store whether a datapoint is &quot;external&quot;, which means it was read from</span>
         <span class="c1"># a JSON file. Can be chosen to not be written to disk</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">external</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[RunKey, DataOrigin]</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_existing_runs</span> <span class="o">=</span> <span class="n">overwrite_existing_runs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_obj</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># type: int</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">objective_bounds</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: List[Tuple[float, float]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">external</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">RunKey</span><span class="p">,</span> <span class="n">DataOrigin</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_obj</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># type: int</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">objective_bounds</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
 
 <div class="viewcode-block" id="RunHistory.__contains__"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.__contains__">[docs]</a>    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Dictionary semantics for `k in runhistory`&quot;&quot;&quot;</span>
@@ -453,12 +432,12 @@ style="width: 100%;">
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-        <span class="n">encoder</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">],</span>
+        <span class="c1"># encoder: Type[json.JSONEncoder],</span>
         <span class="n">runkey</span><span class="p">:</span> <span class="n">RunKey</span><span class="p">,</span>
         <span class="n">runvalue</span><span class="p">:</span> <span class="n">RunValue</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">encoder</span><span class="p">)</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>  <span class="c1"># , cls=encoder)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Cannot add </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2"> of type </span><span class="si">%s</span><span class="s2"> to runhistory because it raises an error during JSON encoding, &quot;</span>
@@ -468,8 +447,9 @@ style="width: 100%;">
     <span class="k">def</span> <span class="nf">_update_objective_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Update the objective bounds based on the data in the runhistory.&quot;&quot;&quot;</span>
         <span class="n">all_costs</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">run_value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">costs</span> <span class="o">=</span> <span class="n">run_value</span><span class="o">.</span><span class="n">cost</span>
+            <span class="k">if</span> <span class="n">run_value</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
                     <span class="n">costs</span> <span class="o">=</span> <span class="p">[</span><span class="n">costs</span><span class="p">]</span>
 
@@ -506,23 +486,29 @@ style="width: 100%;">
 
         <span class="c1"># Capped data is added above</span>
         <span class="c1"># Do not register the cost until the run has completed</span>
-        <span class="k">if</span> <span class="n">origin</span> <span class="ow">in</span> <span class="p">(</span>
-            <span class="n">DataOrigin</span><span class="o">.</span><span class="n">INTERNAL</span><span class="p">,</span>
-            <span class="n">DataOrigin</span><span class="o">.</span><span class="n">EXTERNAL_SAME_INSTANCES</span><span class="p">,</span>
-        <span class="p">)</span> <span class="ow">and</span> <span class="n">status</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span><span class="p">,</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">]:</span>
-            <span class="c1"># also add to fast data structure</span>
-            <span class="n">is_k</span> <span class="o">=</span> <span class="n">InstSeedKey</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">instance_id</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed_budget</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed_budget</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">,</span> <span class="p">{})</span>
-            <span class="k">if</span> <span class="n">is_k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed_budget</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="c1"># add new inst-seed-key with budget to main dict</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed_budget</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">][</span><span class="n">is_k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">budget</span><span class="p">]</span>
-            <span class="k">elif</span> <span class="n">k</span><span class="o">.</span><span class="n">budget</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">is_k</span><span class="p">:</span>
-                <span class="c1"># append new budget to existing inst-seed-key dict</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed_budget</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">][</span><span class="n">is_k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">origin</span>
+            <span class="ow">in</span> <span class="p">(</span>
+                <span class="n">DataOrigin</span><span class="o">.</span><span class="n">INTERNAL</span><span class="p">,</span>
+                <span class="n">DataOrigin</span><span class="o">.</span><span class="n">EXTERNAL_SAME_INSTANCES</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="ow">and</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">RUNNING</span>
+        <span class="p">):</span>
+            <span class="c1"># Also add to fast data structure</span>
+            <span class="n">is_k</span> <span class="o">=</span> <span class="n">InstanceSeedKey</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_config_id_to_inst_seed_budget</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_id_to_inst_seed_budget</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">,</span> <span class="p">{})</span>
 
-            <span class="c1"># if budget is used, then update cost instead of incremental updates</span>
+            <span class="k">if</span> <span class="n">is_k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_id_to_inst_seed_budget</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="c1"># Add new inst-seed-key with budget to main dict</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_config_id_to_inst_seed_budget</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">][</span><span class="n">is_k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">budget</span><span class="p">]</span>
+            <span class="c1"># Before it was k.budget not in is_k</span>
+            <span class="k">elif</span> <span class="n">k</span><span class="o">.</span><span class="n">budget</span> <span class="o">!=</span> <span class="n">is_k</span><span class="o">.</span><span class="n">instance</span> <span class="ow">and</span> <span class="n">k</span><span class="o">.</span><span class="n">budget</span> <span class="o">!=</span> <span class="n">is_k</span><span class="o">.</span><span class="n">seed</span><span class="p">:</span>
+                <span class="c1"># Append new budget to existing inst-seed-key dict</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_config_id_to_inst_seed_budget</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">][</span><span class="n">is_k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
+
+            <span class="c1"># If budget is used, then update cost instead of incremental updates</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_existing_runs</span> <span class="ow">and</span> <span class="n">k</span><span class="o">.</span><span class="n">budget</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="c1"># assumes an average across runs as cost function aggregation, this is used for</span>
+                <span class="c1"># Assumes an average across runs as cost function aggregation, this is used for</span>
                 <span class="c1"># algorithm configuration (incremental updates are used to save time as getting the</span>
                 <span class="c1"># cost for &gt; 100 instances is high)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">incremental_update_cost</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">],</span> <span class="n">v</span><span class="o">.</span><span class="n">cost</span><span class="p">)</span>
@@ -536,7 +522,7 @@ style="width: 100%;">
     <span class="k">def</span> <span class="nf">_cost</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
-        <span class="n">instance_seed_budget_keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">InstSeedBudgetKey</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">instance_seed_budget_keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
         <span class="sd">&quot;&quot;&quot;Returns a list of all costs for the given config for further calculations.</span>
 <span class="sd">        The costs are directly taken from the runhistory data.</span>
@@ -563,8 +549,13 @@ style="width: 100%;">
             <span class="n">instance_seed_budget_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="n">costs</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">instance_seed_budget_keys</span><span class="p">:</span>
-            <span class="n">k</span> <span class="o">=</span> <span class="n">RunKey</span><span class="p">(</span><span class="n">id_</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">instance_seed_budget_keys</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">RunKey</span><span class="p">(</span>
+                <span class="n">config_id</span><span class="o">=</span><span class="n">id_</span><span class="p">,</span>
+                <span class="n">instance</span><span class="o">=</span><span class="n">key</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span>
+                <span class="n">seed</span><span class="o">=</span><span class="n">key</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+                <span class="n">budget</span><span class="o">=</span><span class="n">key</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="n">costs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">cost</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">costs</span>
@@ -572,20 +563,20 @@ style="width: 100%;">
 <div class="viewcode-block" id="RunHistory.add"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
-        <span class="n">cost</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">cost</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">],</span>
         <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">status</span><span class="p">:</span> <span class="n">StatusType</span><span class="p">,</span>
-        <span class="n">instance_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">starttime</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">endtime</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="n">additional_info</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">additional_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">origin</span><span class="p">:</span> <span class="n">DataOrigin</span> <span class="o">=</span> <span class="n">DataOrigin</span><span class="o">.</span><span class="n">INTERNAL</span><span class="p">,</span>
         <span class="n">force_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Adds a data of a new target algorithm (TA) run; it will update data if the same key</span>
-<span class="sd">        values are used (config, instance_id, seed)</span>
+<span class="sd">        values are used (config, instance, seed)</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -597,7 +588,7 @@ style="width: 100%;">
 <span class="sd">            Runtime of TA run</span>
 <span class="sd">        status: str</span>
 <span class="sd">            Status in {SUCCESS, TIMEOUT, CRASHED, ABORT, MEMOUT}</span>
-<span class="sd">        instance_id: str</span>
+<span class="sd">        instance: str</span>
 <span class="sd">            String representing an instance (default: None)</span>
 <span class="sd">        seed: int</span>
 <span class="sd">            Random seed used by TA (default: None)</span>
@@ -652,14 +643,14 @@ style="width: 100%;">
         <span class="k">else</span><span class="p">:</span>
             <span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">c</span><span class="p">]</span>
 
-        <span class="n">k</span> <span class="o">=</span> <span class="n">RunKey</span><span class="p">(</span><span class="n">config_id</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">budget</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">RunKey</span><span class="p">(</span><span class="n">config_id</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">budget</span><span class="p">)</span>
         <span class="n">v</span> <span class="o">=</span> <span class="n">RunValue</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">starttime</span><span class="p">,</span> <span class="n">endtime</span><span class="p">,</span> <span class="n">additional_info</span><span class="p">)</span>
 
         <span class="c1"># Construct keys and values for the data dictionary</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span>
             <span class="p">(</span><span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">get_dictionary</span><span class="p">()),</span>
             <span class="p">(</span><span class="s2">&quot;config_id&quot;</span><span class="p">,</span> <span class="n">config_id</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;instance_id&quot;</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;instance&quot;</span><span class="p">,</span> <span class="n">instance</span><span class="p">),</span>
             <span class="p">(</span><span class="s2">&quot;seed&quot;</span><span class="p">,</span> <span class="n">seed</span><span class="p">),</span>
             <span class="p">(</span><span class="s2">&quot;budget&quot;</span><span class="p">,</span> <span class="n">budget</span><span class="p">),</span>
             <span class="p">(</span><span class="s2">&quot;cost&quot;</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span>
@@ -670,7 +661,7 @@ style="width: 100%;">
             <span class="p">(</span><span class="s2">&quot;additional_info&quot;</span><span class="p">,</span> <span class="n">additional_info</span><span class="p">),</span>
             <span class="p">(</span><span class="s2">&quot;origin&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">origin</span><span class="p">),</span>
         <span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_check_json_serializable</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">EnumEncoder</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_check_json_serializable</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 
         <span class="c1"># Each runkey is supposed to be used only once. Repeated tries to add</span>
         <span class="c1"># the same runkey will be ignored silently if not capped.</span>
@@ -797,7 +788,7 @@ style="width: 100%;">
 <div class="viewcode-block" id="RunHistory.average_cost"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.average_cost">[docs]</a>    <span class="k">def</span> <span class="nf">average_cost</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
-        <span class="n">instance_seed_budget_keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">InstSeedBudgetKey</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">instance_seed_budget_keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Return the average cost of a configuration. This is the mean of costs of all instance-</span>
@@ -840,7 +831,7 @@ style="width: 100%;">
 <div class="viewcode-block" id="RunHistory.sum_cost"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.sum_cost">[docs]</a>    <span class="k">def</span> <span class="nf">sum_cost</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
-        <span class="n">instance_seed_budget_keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">InstSeedBudgetKey</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">instance_seed_budget_keys</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Return the sum of costs of a configuration. This is the sum of costs of all instance-seed</span>
@@ -882,7 +873,7 @@ style="width: 100%;">
 <div class="viewcode-block" id="RunHistory.min_cost"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.min_cost">[docs]</a>    <span class="k">def</span> <span class="nf">min_cost</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
-        <span class="n">instance_seed_budget_keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">InstSeedBudgetKey</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">instance_seed_budget_keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Return the minimum cost of a configuration.</span>
@@ -977,7 +968,7 @@ style="width: 100%;">
         <span class="n">cost_per_inst</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">inst</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">costs</span><span class="p">))</span> <span class="k">for</span> <span class="n">inst</span><span class="p">,</span> <span class="n">costs</span> <span class="ow">in</span> <span class="n">cost_per_inst</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
         <span class="k">return</span> <span class="n">cost_per_inst</span></div>
 
-<div class="viewcode-block" id="RunHistory.get_runs_for_config"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_runs_for_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_runs_for_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">InstSeedBudgetKey</span><span class="p">]:</span>
+<div class="viewcode-block" id="RunHistory.get_runs_for_config"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_runs_for_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_runs_for_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Return all runs (instance seed pairs) for a configuration.</span>
 
 <span class="sd">        Note</span>
@@ -990,20 +981,21 @@ style="width: 100%;">
 <span class="sd">            Parameter configuration</span>
 <span class="sd">        only_max_observed_budget : bool</span>
 <span class="sd">            Select only the maximally observed budget run for this configuration</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        instance_seed_budget_pairs : list&lt;tuples of instance, seed, budget&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_ids</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-        <span class="n">runs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed_budget</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">config_id</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
+        <span class="n">runs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_id_to_inst_seed_budget</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">config_id</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-        <span class="c1"># select only the max budget run if specified</span>
+        <span class="c1"># Select only the max budget run if specified</span>
         <span class="k">if</span> <span class="n">only_max_observed_budget</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">runs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">runs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span>
 
         <span class="c1"># convert to inst-seed-budget key</span>
-        <span class="n">rval</span> <span class="o">=</span> <span class="p">[</span><span class="n">InstSeedBudgetKey</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="n">budget</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">runs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">budget</span> <span class="ow">in</span> <span class="n">v</span><span class="p">]</span>
+        <span class="n">rval</span> <span class="o">=</span> <span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="n">budget</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">runs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">budget</span> <span class="ow">in</span> <span class="n">v</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">rval</span></div>
 
 <div class="viewcode-block" id="RunHistory.get_all_configs"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_all_configs">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
@@ -1017,24 +1009,26 @@ style="width: 100%;">
 
 <div class="viewcode-block" id="RunHistory.get_all_configs_per_budget"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_all_configs_per_budget">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_configs_per_budget</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">budget_subset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+        <span class="n">budget_subset</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Return all configs in this RunHistory object that have been run on one of these budgets.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            budget_subset: list</span>
+<span class="sd">        budget_subset: list</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            parameter configurations: list</span>
+<span class="sd">        parameter configurations: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">budget_subset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_configs</span><span class="p">()</span>
+
         <span class="n">configs</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">budget_subset</span><span class="p">:</span>
-                <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="p">[</span><span class="n">c</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">budget</span> <span class="ow">in</span> <span class="n">budget_subset</span><span class="p">:</span>
+                <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">config_id</span><span class="p">])</span>
+
         <span class="k">return</span> <span class="n">configs</span></div>
 
 <div class="viewcode-block" id="RunHistory.save_json"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.save_json">[docs]</a>    <span class="k">def</span> <span class="nf">save_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;runhistory.json&quot;</span><span class="p">,</span> <span class="n">save_external</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -1051,19 +1045,21 @@ style="width: 100%;">
             <span class="p">(</span>
                 <span class="p">[</span>
                     <span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">),</span>
-                    <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">instance_id</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">instance_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
                     <span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
-                    <span class="nb">float</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="nb">float</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">budget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
                 <span class="p">],</span>
                 <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">cost</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">starttime</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">endtime</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">additional_info</span><span class="p">],</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">save_external</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">external</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">DataOrigin</span><span class="o">.</span><span class="n">INTERNAL</span>
         <span class="p">]</span>
+
         <span class="n">config_ids_to_serialize</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">entry</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">data</span><span class="p">])</span>
         <span class="n">configs</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">id_</span><span class="p">:</span> <span class="n">conf</span><span class="o">.</span><span class="n">get_dictionary</span><span class="p">()</span> <span class="k">for</span> <span class="n">id_</span><span class="p">,</span> <span class="n">conf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">id_</span> <span class="ow">in</span> <span class="n">config_ids_to_serialize</span>
         <span class="p">}</span>
+
         <span class="n">config_origins</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">id_</span><span class="p">:</span> <span class="n">conf</span><span class="o">.</span><span class="n">origin</span>
             <span class="k">for</span> <span class="n">id_</span><span class="p">,</span> <span class="n">conf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
@@ -1072,9 +1068,9 @@ style="width: 100%;">
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
-                <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span> <span class="s2">&quot;config_origins&quot;</span><span class="p">:</span> <span class="n">config_origins</span><span class="p">,</span> <span class="s2">&quot;configs&quot;</span><span class="p">:</span> <span class="n">configs</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span> <span class="s2">&quot;configs&quot;</span><span class="p">:</span> <span class="n">configs</span><span class="p">,</span> <span class="s2">&quot;config_origins&quot;</span><span class="p">:</span> <span class="n">config_origins</span><span class="p">},</span>
                 <span class="n">fp</span><span class="p">,</span>
-                <span class="bp">cls</span><span class="o">=</span><span class="n">EnumEncoder</span><span class="p">,</span>
+                <span class="c1"># cls=EnumEncoder,</span>
                 <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
             <span class="p">)</span></div>
 
@@ -1094,7 +1090,7 @@ style="width: 100%;">
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-                <span class="n">all_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">object_hook</span><span class="o">=</span><span class="n">StatusType</span><span class="o">.</span><span class="n">enum_hook</span><span class="p">)</span>
+                <span class="n">all_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                 <span class="s2">&quot;Encountered exception </span><span class="si">%s</span><span class="s2"> while reading runhistory from </span><span class="si">%s</span><span class="s2">. &quot;</span> <span class="s2">&quot;Not adding any runs!&quot;</span><span class="p">,</span>
@@ -1104,6 +1100,11 @@ style="width: 100%;">
             <span class="k">return</span>
 
         <span class="n">config_origins</span> <span class="o">=</span> <span class="n">all_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;config_origins&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+        <span class="c1"># self.ids_config = {}</span>
+        <span class="c1"># for id_, values in all_data[&quot;configs&quot;].items():</span>
+        <span class="c1">#    print(values)</span>
+        <span class="c1">#    self.ids_config[id_] = Configuration(cs, values=values, origin=config_origins.get(id_, None))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span> <span class="o">=</span> <span class="p">{</span>
             <span class="nb">int</span><span class="p">(</span><span class="n">id_</span><span class="p">):</span> <span class="n">Configuration</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">config_origins</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">id_</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
@@ -1132,7 +1133,7 @@ style="width: 100%;">
                 <span class="n">cost</span><span class="o">=</span><span class="n">cost</span><span class="p">,</span>
                 <span class="n">time</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
                 <span class="n">status</span><span class="o">=</span><span class="n">StatusType</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
-                <span class="n">instance_id</span><span class="o">=</span><span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="n">instance</span><span class="o">=</span><span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                 <span class="n">seed</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
                 <span class="n">budget</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">k</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
                 <span class="n">starttime</span><span class="o">=</span><span class="n">v</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
@@ -1174,7 +1175,7 @@ style="width: 100%;">
 <span class="sd">            Runhistory with additional data to be added to self</span>
 <span class="sd">        origin: DataOrigin</span>
 <span class="sd">            If set to ``INTERNAL`` or ``EXTERNAL_FULL`` the data will be</span>
-<span class="sd">            added to the internal data structure self._configid_to_inst_seed_budget</span>
+<span class="sd">            added to the internal data structure self._config_id_to_inst_seed_budget</span>
 <span class="sd">            and be available :meth:`through get_runs_for_config`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Configurations might be already known, but by a different ID. This</span>
@@ -1182,7 +1183,7 @@ style="width: 100%;">
         <span class="c1"># correctly by assigning an ID to unknown configurations and re-using</span>
         <span class="c1">#  the ID</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">config_id</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">budget</span> <span class="o">=</span> <span class="n">key</span>
+            <span class="n">config_id</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">budget</span> <span class="o">=</span> <span class="n">key</span>
             <span class="n">cost</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">additional_info</span> <span class="o">=</span> <span class="n">value</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">ids_config</span><span class="p">[</span><span class="n">config_id</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
@@ -1190,7 +1191,7 @@ style="width: 100%;">
                 <span class="n">cost</span><span class="o">=</span><span class="n">cost</span><span class="p">,</span>
                 <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span>
                 <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
-                <span class="n">instance_id</span><span class="o">=</span><span class="n">instance_id</span><span class="p">,</span>
+                <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span>
                 <span class="n">starttime</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
                 <span class="n">endtime</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
                 <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
@@ -1230,7 +1231,7 @@ style="width: 100%;">
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-4.5.0. Template is modified version of <a
+5.1.1. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>
