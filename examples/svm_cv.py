@@ -11,7 +11,7 @@ iterations) is passed to the target algorithm.
 """
 
 import numpy as np
-from ConfigSpace import Categorical, Configuration, ConfigurationSpace, Float, Int
+from ConfigSpace import Categorical, Configuration, ConfigurationSpace, Float, Integer
 from ConfigSpace.conditions import InCondition
 from sklearn import datasets, svm
 from sklearn.model_selection import cross_val_score
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     kernel = Categorical("kernel", ["linear", "poly", "rbf", "sigmoid"], default="poly")
     C = Float("C", (0.001, 1000.0), default=1.0, log=True)
     shrinking = Categorical("shrinking", [True, False], default=True)
-    degree = Int("degree", (1, 5), default=3)
+    degree = Integer("degree", (1, 5), default=3)
     coef = Float("coef0", (0.0, 10.0), default=0.0)
     gamma = Categorical("gamma", ["auto", "value"], default="auto")
     gamma_value = Float("gamma_value", (0.0001, 8.0), default=1.0, log=True)

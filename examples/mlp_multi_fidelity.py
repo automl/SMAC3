@@ -29,7 +29,7 @@ from ConfigSpace import (
     EqualsCondition,
     Float,
     InCondition,
-    Int,
+    Integer,
 )
 from sklearn.datasets import load_digits
 from sklearn.exceptions import ConvergenceWarning
@@ -53,11 +53,11 @@ class MLP:
         # To illustrate different parameter types, we use continuous, integer and categorical parameters.
         cs = ConfigurationSpace()
 
-        n_layer = Int("n_layer", (1, 5), default=1)
-        n_neurons = Int("n_neurons", (8, 256), log=True, default=10)
+        n_layer = Integer("n_layer", (1, 5), default=1)
+        n_neurons = Integer("n_neurons", (8, 256), log=True, default=10)
         activation = Categorical("activation", ["logistic", "tanh", "relu"], default="tanh")
         solver = Categorical("solver", ["lbfgs", "sgd", "adam"], default="adam")
-        batch_size = Int("batch_size", (30, 300), default=200)
+        batch_size = Integer("batch_size", (30, 300), default=200)
         learning_rate = Categorical("learning_rate", ["constant", "invscaling", "adaptive"], default="constant")
         learning_rate_init = Float("learning_rate_init", (0.0001, 1.0), default=0.001, log=True)
 
