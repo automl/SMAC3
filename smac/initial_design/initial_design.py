@@ -84,7 +84,7 @@ class InitialDesign:
         elif n_configs_per_hyperparameter is not None:
             logger.info("Ignoring `configs` and `n_configs` since `n_configs_per_hyperparameter` is given.")
             self.n_configs = int(
-                max(1, min(n_configs_per_hyperparameter * n_params, (max_config_ratio * scenario.n_runs)))
+                max(1, min(n_configs_per_hyperparameter * n_params, (max_config_ratio * scenario.n_trials)))
             )
         else:
             raise ValueError(
@@ -92,9 +92,9 @@ class InitialDesign:
                 "`n_configs_per_hyperparameter`, but provided none of them."
             )
 
-        if self.n_configs > scenario.n_runs:
+        if self.n_configs > scenario.n_trials:
             raise ValueError(
-                "Initial budget %d cannot be higher than the run limit %d." % (self.n_configs, scenario.n_runs)
+                "Initial budget %d cannot be higher than the run limit %d." % (self.n_configs, scenario.n_trials)
             )
 
     def _select_configurations(self) -> List[Configuration]:

@@ -57,7 +57,7 @@ class SchafferTest(unittest.TestCase):
         # Scenario object
         self.scenario = Scenario(
             self.cs,
-            n_runs=50,
+            n_trials=50,
             objectives=["metric1", "metric2"],
             output_directory="smac3_output_test",
         )

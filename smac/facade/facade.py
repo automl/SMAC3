@@ -265,12 +265,10 @@ class Facade:
 
         if isinstance(self.model, RandomForestWithInstances):
             if self.model.log_y:
-                algorithm_walltime_limit = np.log(
-                    np.nanmin([np.inf, np.float_(self.scenario.algorithm_walltime_limit)])
-                )
+                algorithm_walltime_limit = np.log(np.nanmin([np.inf, np.float_(self.scenario.trial_walltime_limit)]))
                 threshold = algorithm_walltime_limit + np.log(par_factor)
             else:
-                algorithm_walltime_limit = np.nanmin([np.inf, np.float_(self.scenario.algorithm_walltime_limit)])
+                algorithm_walltime_limit = np.nanmin([np.inf, np.float_(self.scenario.trial_walltime_limit)])
                 threshold = algorithm_walltime_limit * par_factor
 
             return RandomForestImputer(

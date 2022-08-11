@@ -453,9 +453,9 @@ class SMBO:
             logger.debug(
                 "Remaining budget: %f (wallclock time), %f (target algorithm time), %f (target algorithm runs)"
                 % (
-                    self.stats.get_remaing_time_budget(),
-                    self.stats.get_remaining_target_algorithm_budget(),
-                    self.stats.get_remaining_target_algorithm_runs(),
+                    self.stats.get_remaing_walltime(),
+                    self.stats.get_remaining_cputime(),
+                    self.stats.get_remaining_trials(),
                 )
             )
 

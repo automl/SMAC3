@@ -81,14 +81,15 @@ class TargetAlgorithmRunner(SerialRunner):
         self._target_algorithm = cast(Callable, target_algorithm)
 
         # Pynisher limitations
-        if (memory := scenario.memory_limit) is not None:
+        if (memory := scenario.trial_memory_limit) is not None:
             memory = int(math.ceil(memory))
 
-        if (time := scenario.algorithm_walltime_limit) is not None:
+        if (time := scenario.trial_walltime_limit) is not None:
             time = int(math.ceil(time))
 
         self.memory_limit = memory
         self.algorithm_walltime_limit = time
+        self
 
     def run(
         self,

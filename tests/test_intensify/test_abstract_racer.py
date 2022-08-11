@@ -32,7 +32,7 @@ class TestAbstractRacer(unittest.TestCase):
         self.config2 = Configuration(self.cs, values={"a": 100, "b": 0})
         self.config3 = Configuration(self.cs, values={"a": 100, "b": 100})
 
-        scenario = Scenario(self.cs, algorithm_walltime_limit=2, output_directory="smac3_output_test")
+        scenario = Scenario(self.cs, trial_walltime_limit=2, output_directory="smac3_output_test")
         self.stats = Stats(scenario=scenario)
         self.intensifier = AbstractIntensifier(scenario=scenario)
         self.intensifier._set_stats(self.stats)

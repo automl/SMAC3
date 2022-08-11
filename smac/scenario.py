@@ -20,52 +20,91 @@ logger = get_logger(__name__)
 @dataclass(frozen=True)
 class Scenario:
     """
-    Replaces the scenario class in the original code.
+    The scenario manages enviroment variables and therefore gives context in which frame the optimization is performed.
+
+
+    Parameters
+    ----------
+    configspace : ConfigSpace
+        The configuration space from which to sample the configurations.
+    name : str | None, defaults to None
+        The name of the run. If no name is passed, SMAC generates a hash from the meta data.
+        Specify this argument to identify your run easily.
+    output_directory : Path, defaults to Path("smac3_output")
+        The directory in which to save the output. The files are saved in `./output_directory/name/seed`.
+    deterministic : bool, defaults to True
+        Whether the target algorithm is deterministic or not. If deterministic is set to false, SMAC assumes that the
+        algorithm procudes a different result for the same seed. Therefore, only one seed will be used.
+    objective : str | list[str] | None, defaults to "cost"
+        The objective(s) to optimize. This argument is required for multi-objective optimization.
+    crash_cost : float | list[float], defaults to np.inf
+        Defines the cost for a failed trial. In case of multi-objective, each objective can be associated with
+        a different cost.
+    walltime_limit : float, defaults to np.inf
+        The maximum time in seconds that SMAC is allowed to run.
+    cputime_limit : float, defaults to np.inf
+        The maximum CPU time in seconds that SMAC is allowed to run.
+    trial_walltime_limit : float | None, defaults to None
+        The maximum time in seconds that a trial is allowed to run. If not specified,
+        no contraints are enforced. Ohterwise, the process will be spawned by pynisher.
+    trial_memory_limit : int | None, defaults to None
+        The maximum memory in MB that a trial is allowed to use. If not specified,
+        no contraints are enforced. Otherwise, the process will be spawned by pynisher.
+    n_trials : int, defaults to 100
+        The maximum number of trials to run.
+    intensify_percentage : float, defaults to 0.5
+        How much percentage of the time should configurations be intensified (evaluated on higher budgets or
+        more instances).
+    instances : list[str] | None, defaults to None
+        Names of the instances to use. If None, no instances are used.
+        Instances could be dataset names, seeds, subsets, etc.
+    instance_features : dict[str, list[float]] | None, defaults to None
+        Instances can be associated with features. For example, meta data of the dataset (mean, var, ...) can be
+        incorporated which are then further used to expand the training data of the surrogate model.
+    instance_order : str | None, defaults to "shuffle_once"
+        How to order the instances. Possible values are "shuffle" and "shuffle_once". You can disable this feature by
+        setting the argument to None.
+    min_budget : float | None, defaults to None
+        The minimum budget (epochs, subset size, number of instances, ...) that is used for the optimization. Use this argument if you use multi-fidelity
+        or instance optimization.
+    max_budget : float | None, defaults to None
+        The maximum budget (epochs, subset size, number of instances, ...) that is used for the optimization. Use this argument if you use multi-fidelity
+        or instance optimization.
+    seed : int, defaults to 0
+        The seed is used to make results reproducible. If seed is -1, SMAC will generate a random seed.
+    n_workers : int, defaults to 1
+        The number of workers to use for parallelization. If `n_workers` is greather than 1, SMAC will use
+        Dask to parallelize the optimization.
     """
 
+    # General
     configspace: ConfigSpace
-
-    # If no name is used, SMAC generates a hash based on the meta data (basically from the config and the arguments of the components)
-    # You can use `name` to directly identify your run.
     name: str | None = None
-    output_directory: Path = Path("smac3_output")  # ./smac3_output/name/seed/... in the end.
-    deterministic: bool = True  # Whether the target algorithm is determinstic or not.
+    output_directory: Path = Path("smac3_output")
+    deterministic: bool = True
 
+    # Objectives
     objectives: str | list[str] = "cost"
     crash_cost: float | list[float] = np.inf
 
     # Limitations
     walltime_limit: float = np.inf
     cputime_limit: float = np.inf
-    memory_limit: int | None = None
-    algorithm_walltime_limit: float | None = None
-    n_runs: int = 100
+    trial_walltime_limit: float | None = None
+    trial_memory_limit: int | None = None
+    n_trials: int = 100
 
     # Other time things
     intensify_percentage: float = 0.5
 
-    # always_race_default
-    # How to deal with instances? Have them here too? It's not really a config, rather data
-    # So they probably should go to the cli directory.
-    # However, we need an interface to accept instances/test instances in the main python code.
-
     # Algorithm Configuration
-    instances: list[str] | None = None  # e.g. if the algorithm should optimized across multiple datasets, seeds, ...
-    instance_features: dict[
-        str, list[int | float]
-    ] | None = None  # Each instance can be associated with features. Those features are incorporated in the runhistory transformer.
-    instance_order: str | None = "shuffle_once"  # Can be "shuffle_once", "shuffle" or None
+    instances: list[str] | None = None
+    instance_features: dict[str, list[float]] | None = None
+    instance_order: str | None = "shuffle_once"
 
-    # What we want to have is:
-    # instances: dict[str, list[int | float]] | None = None
-    # or
-    # instances: list[str] | None = None
-    # instance_features: dict[str, list[int | float]] | None = None
-
-    # For multi-fidelity and instance optimization
+    # Budgets
     min_budget: float | None = None
     max_budget: float | None = None
-    # eta: float = 3
 
     # Others
     seed: int = 0  # TODO: Document if seed is set to -1, we use a random seed.
@@ -115,15 +154,18 @@ class Scenario:
             self._change_output_directory()
 
     def get_meta(self) -> dict[str, str]:
-        return self._meta  # type: ignore
+        """Returns the meta data."""
+        return self._meta
 
     def count_objectives(self) -> int:
+        """Counts the number of objectives."""
         if isinstance(self.objectives, list):
             return len(self.objectives)
 
         return 1
 
     def count_instance_features(self) -> int:
+        """Counts the number of instance features."""
         # Check whether key of instance features exist
         n_features = 0
         if self.instance_features is not None:
@@ -140,6 +182,7 @@ class Scenario:
         return n_features
 
     def save(self) -> None:
+        """Saves internal variables and the configuration space to a file."""
         if self.name is None:
             raise RuntimeError(
                 "Please specify meta data for generating a name. Alternatively, you can specify a name manually."
@@ -169,6 +212,7 @@ class Scenario:
 
     @staticmethod
     def load(path: Path) -> Scenario:
+        """Loads a scenario and the configuration space from a file."""
         filename = path / "scenario.json"
         with open(filename, "r") as fh:
             data = json.load(fh)

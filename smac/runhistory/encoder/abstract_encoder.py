@@ -105,7 +105,7 @@ class AbstractRunHistoryEncoder:
 
         # Configuration
         self.impute_censored_data = impute_censored_data
-        self.algorithm_walltime_limit = self.scenario.algorithm_walltime_limit  # type: ignore[attr-defined] # noqa F821
+        self.algorithm_walltime_limit = self.scenario.trial_walltime_limit  # type: ignore[attr-defined] # noqa F821
 
         if impute_state is None and impute_censored_data:
             raise TypeError("No `impute_state` is given.")

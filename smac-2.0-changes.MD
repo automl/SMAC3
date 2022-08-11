@@ -95,6 +95,9 @@ is bounded to `runtime`, you can remove that too.
 - Get rid of `# type: ignore`. Mostly it was used in context with the old scenario object.
 
 
+- Introducing "trials": Each config/seed/budget/instance calculation is a trial.
+
+
 # Variable Renaming
 
 We removed run_obj == runtime COMPLETELY

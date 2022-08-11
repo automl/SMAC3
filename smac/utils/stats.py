@@ -106,26 +106,24 @@ class Stats:
         """Returns used wallclock time."""
         return time.time() - self._start_time
 
-    def get_remaing_time_budget(self) -> float:
+    def get_remaing_walltime(self) -> float:
         """Subtracts the runtime configuration budget with the used wallclock time."""
-        if self.scenario:
-            return self.scenario.walltime_limit - (time.time() - self._start_time)
-        else:
-            raise ValueError("Scenario is missing")
+        assert self.scenario
+        return self.scenario.walltime_limit - (time.time() - self._start_time)
 
-    def get_remaining_target_algorithm_runs(self) -> int:
-        """Subtract the target algorithm runs in the scenario with the used ta runs."""
-        return self.scenario.n_runs - self.submitted
-
-    def get_remaining_target_algorithm_budget(self) -> float:
+    def get_remaining_cputime(self) -> float:
         """Subtracts the ta running budget with the used time."""
         return self.scenario.cputime_limit - self.target_algorithm_walltime_used
+
+    def get_remaining_trials(self) -> int:
+        """Subtract the target algorithm runs in the scenario with the used ta runs."""
+        return self.scenario.n_trials - self.submitted
 
     def is_budget_exhausted(self) -> bool:
         """Check whether the configuration budget for time budget, ta_budget and submitted
         is exhausted."""
-        A = self.get_remaing_time_budget() < 0 or self.get_remaining_target_algorithm_budget() < 0
-        B = self.get_remaining_target_algorithm_runs() <= 0
+        A = self.get_remaing_walltime() < 0 or self.get_remaining_cputime() < 0
+        B = self.get_remaining_trials() <= 0
 
         return A or B
 
@@ -163,8 +161,8 @@ class Stats:
             "\n"
             f"--- STATISTICS -------------------------------------\n"
             f"--- Incumbent changed: {self.incumbent_changed - 1}\n"
-            f"--- Submitted target algorithm runs: {self.submitted} / {self.scenario.n_runs}\n"
-            f"--- Finished target algorithm runs: {self.finished} / {self.scenario.n_runs}\n"
+            f"--- Submitted target algorithm runs: {self.submitted} / {self.scenario.n_trials}\n"
+            f"--- Finished target algorithm runs: {self.finished} / {self.scenario.n_trials}\n"
             f"--- Configurations: {self.n_configs}\n"
             f"--- Used wallclock time: {round(self.get_used_walltime())} / {self.scenario.walltime_limit} sec\n"
             f"--- Used target algorithm runtime: {round(self.target_algorithm_walltime_used, 2)} / {self.scenario.cputime_limit} sec\n"

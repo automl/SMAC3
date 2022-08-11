@@ -78,7 +78,7 @@ if __name__ == "__main__":
     # Next, we create an object, holding general information about the run
     scenario = Scenario(
         configspace,
-        n_runs=50,  # We want 50 target algorithm evaluations
+        n_trials=50,  # We want 50 target algorithm evaluations
     )
 
     # Example call of the target algorithm

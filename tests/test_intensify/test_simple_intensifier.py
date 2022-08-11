@@ -46,7 +46,7 @@ class TestSimpleIntensifier(unittest.TestCase):
         self.config3 = Configuration(self.cs, values={"a": 0, "b": 7})
         self.config4 = Configuration(self.cs, values={"a": 29, "b": 31})
 
-        scenario = Scenario(self.cs, algorithm_walltime_limit=2, output_directory="smac3_output_test")
+        scenario = Scenario(self.cs, trial_walltime_limit=2, output_directory="smac3_output_test")
         self.stats = Stats(scenario=scenario)
         self.intensifier = SimpleIntensifier(scenario=scenario)
         self.intensifier._set_stats(self.stats)

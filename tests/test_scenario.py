@@ -13,12 +13,12 @@ def configspace() -> ConfigurationSpace:
 
 @pytest.fixture
 def scenario1(configspace: ConfigurationSpace) -> Scenario:
-    return Scenario(configspace, output_directory=Path("smac3_output_test"), n_runs=50)
+    return Scenario(configspace, output_directory=Path("smac3_output_test"), n_trials=50)
 
 
 @pytest.fixture
 def scenario2(configspace: ConfigurationSpace) -> Scenario:
-    return Scenario(configspace, output_directory=Path("smac3_output_test"), n_runs=50)
+    return Scenario(configspace, output_directory=Path("smac3_output_test"), n_trials=50)
 
 
 @pytest.fixture
@@ -27,7 +27,7 @@ def scenario3(configspace: ConfigurationSpace) -> Scenario:
         configspace,
         name="test_scenario",
         output_directory=Path("smac3_output_test"),
-        n_runs=20,
+        n_trials=20,
         seed=5,
     )
 
