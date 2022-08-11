@@ -14,6 +14,7 @@ Example
     from smac import MultiFidelityFacade
     from smac.callback import Callback
 
+
     class CustomCallback(Callback):
         def on_start(self, smbo: SMBO) -> None:
             pass
@@ -30,6 +31,7 @@ Example
         def on_iteration_end(self, smbo: SMBO, info: RunInfo, value: RunValue) -> bool | None:
             # We just do a simple printing here
             print(info, value)
+
 
     smac = MultiFidelityFacade(
         ...

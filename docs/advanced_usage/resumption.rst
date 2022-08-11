@@ -1,4 +1,4 @@
-Resume Run
+Resumption
 ==========
 
 SMAC automatically resumes where it left off if it was interrupted. To do so, it reads in files

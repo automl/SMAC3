@@ -7,8 +7,8 @@ This chapter gives more details of single components of SMAC.
     :maxdepth: 2
     :hidden:
 
-    facades
-    resume
+    .. facades
+    resumption
     callbacks
     .. facades
     .. target_algorithm_evaluator

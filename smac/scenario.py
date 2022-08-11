@@ -107,8 +107,8 @@ class Scenario:
     max_budget: float | None = None
 
     # Others
-    seed: int = 0  # TODO: Document if seed is set to -1, we use a random seed.
-    n_workers: int = 1  # Parallelization is automatically applied if n_workers > 1 using dask
+    seed: int = 0
+    n_workers: int = 1
 
     def __post_init__(self) -> None:
         """Checks whether the config is valid."""
