@@ -18,7 +18,7 @@ __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class MagicMixin:
+class MagicMixinKernel:
     # This is a mixin for a kernel to override functions of the kernel.
     # Because it overrides functions of the kernel, it needs to be placed first in the inheritance
     # hierarchy. For this reason it is not possible to subclass the
@@ -74,23 +74,23 @@ class MagicMixin:
 
     def __add__(self, b: Union[kernels.Kernel, float]) -> kernels.Sum:
         if not isinstance(b, kernels.Kernel):
-            return Sum(self, ConstantKernel(b))
-        return Sum(self, b)
+            return SumKernel(self, ConstantKernel(b))
+        return SumKernel(self, b)
 
     def __radd__(self, b: Union[kernels.Kernel, float]) -> kernels.Sum:
         if not isinstance(b, kernels.Kernel):
-            return Sum(ConstantKernel(b), self)
-        return Sum(b, self)
+            return SumKernel(ConstantKernel(b), self)
+        return SumKernel(b, self)
 
     def __mul__(self, b: Union[kernels.Kernel, float]) -> kernels.Product:
         if not isinstance(b, kernels.Kernel):
-            return Product(self, ConstantKernel(b))
-        return Product(self, b)
+            return ProductKernel(self, ConstantKernel(b))
+        return ProductKernel(self, b)
 
     def __rmul__(self, b: Union[kernels.Kernel, float]) -> kernels.Product:
         if not isinstance(b, kernels.Kernel):
-            return Product(ConstantKernel(b), self)
-        return Product(b, self)
+            return ProductKernel(ConstantKernel(b), self)
+        return ProductKernel(b, self)
 
     def _signature(self, func: Callable) -> Signature:
         try:
@@ -193,7 +193,7 @@ class MagicMixin:
             self.len_active = None
 
 
-class Sum(MagicMixin, kernels.Sum):
+class SumKernel(MagicMixinKernel, kernels.Sum):
     def __init__(
         self,
         k1: kernels.Kernel,
@@ -201,7 +201,7 @@ class Sum(MagicMixin, kernels.Sum):
         operate_on: np.ndarray = None,
         has_conditions: bool = False,
     ) -> None:
-        super(Sum, self).__init__(k1=k1, k2=k2)
+        super(SumKernel, self).__init__(k1=k1, k2=k2)
         self.set_active_dims(operate_on)
         self.has_conditions = has_conditions
 
@@ -248,7 +248,7 @@ class Sum(MagicMixin, kernels.Sum):
             return self.k1(X, Y, active=active) + self.k2(X, Y, active=active)
 
 
-class Product(MagicMixin, kernels.Product):
+class ProductKernel(MagicMixinKernel, kernels.Product):
     def __init__(
         self,
         k1: kernels.Kernel,
@@ -256,7 +256,7 @@ class Product(MagicMixin, kernels.Product):
         operate_on: np.ndarray = None,
         has_conditions: bool = False,
     ) -> None:
-        super(Product, self).__init__(k1=k1, k2=k2)
+        super(ProductKernel, self).__init__(k1=k1, k2=k2)
         self.set_active_dims(operate_on)
         self.has_conditions = has_conditions
 
@@ -303,7 +303,7 @@ class Product(MagicMixin, kernels.Product):
             return self.k1(X, Y, active=active) * self.k2(X, Y, active=active)
 
 
-class ConstantKernel(MagicMixin, kernels.ConstantKernel):
+class ConstantKernel(MagicMixinKernel, kernels.ConstantKernel):
     def __init__(
         self,
         constant_value: float = 1.0,

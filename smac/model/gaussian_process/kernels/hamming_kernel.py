@@ -11,7 +11,7 @@ import scipy.spatial.distance
 import scipy.special
 import sklearn.gaussian_process.kernels as kernels
 
-from smac.model.gaussian_process.kernels.base_kernels import MagicMixin
+from smac.model.gaussian_process.kernels.base_kernels import MagicMixinKernel
 from smac.model.gaussian_process.priors.prior import Prior
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -19,7 +19,7 @@ __license__ = "3-clause BSD"
 
 
 class HammingKernel(
-    MagicMixin,
+    MagicMixinKernel,
     kernels.StationaryKernelMixin,
     kernels.NormalizedKernelMixin,
     kernels.Kernel,
