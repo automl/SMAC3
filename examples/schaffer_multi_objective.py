@@ -1,6 +1,6 @@
 """
 Schaffer Multi-Objective
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 A simple example on how to use multi-objective optimization is shown. The `schaffer` function is used.
 """

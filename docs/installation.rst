@@ -4,7 +4,7 @@ Installation
 Requirements
 ~~~~~~~~~~~~
 
-SMAC is written in python3 and therefore requires an environment with python>=3.7.
+SMAC is written in python3 and therefore requires an environment with python>=3.8.
 Furthermore, the random forest used in SMAC requires SWIG as a build dependency. Install it either in your
 environment or on your system directly. The command to install swig on linux machines is the following:
 
@@ -12,24 +12,21 @@ environment or on your system directly. The command to install swig on linux mac
 
     apt-get install swig
 
-SMAC is tested on Linux and Mac (Intel) machines with python 3.7, 3.8, and 3.9.
 
-.. warning::
-    When using Mac, make sure ``smac.optimize`` is
-    wrapped inside ``if __name__ == "__main__"``.
+SMAC is tested on Linux and Mac (Intel) machines with python 3.8, 3.9 and 3.10.
 
 Anaconda
 ~~~~~~~~
 
-Create and activate environment:
+We recommend using Anaconda to create and activate an environment:
 
 .. code-block::
 
-    conda create -n SMAC python=3.9
+    conda create -n SMAC python=3.10
     conda activate SMAC
 
 
-If you haven't installed swig yet, you can install it directly inside the environment:
+If you haven't installed swig yet, you can install it directly inside the Anaconda environment:
 
 .. code-block::
 
@@ -48,15 +45,7 @@ Or alternatively, clone the environment from GitHub directly:
 .. code-block::
 
     git clone https://github.com/automl/SMAC3.git && cd SMAC3
-    pip install -r requirements.txt
-    pip install .
-
-
-.. warning::
-
-    Please note that calling SMAC via :term:`CLI` is only available when installing from GitHub. We
-    refer to :ref:`Branin` for more details.
-
+    pip install -e .[dev]
 
 
 Conda-forge
@@ -78,4 +67,3 @@ You must have `conda >= 4.9` installed. To update conda or check your current co
     
 
 Read `SMAC feedstock <https://github.com/conda-forge/smac-feedstock>`_ for more details.
-    
