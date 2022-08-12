@@ -84,8 +84,8 @@ class DaskParallelRunner(Runner):
         single_worker: Runner,
         n_workers: int,
         patience: int = 5,
-        output_directory: Optional[str] = None,
-        dask_client: Optional[dask.distributed.Client] = None,
+        output_directory: str | None = None,
+        dask_client: dask.distributed.Client | None = None,
     ):
         super(DaskParallelRunner, self).__init__(
             target_algorithm=single_worker.target_algorithm,

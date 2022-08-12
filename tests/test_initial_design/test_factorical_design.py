@@ -1,6 +1,3 @@
-import unittest
-import unittest.mock
-
 import numpy as np
 from ConfigSpace import (
     CategoricalHyperparameter,

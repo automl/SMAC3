@@ -89,6 +89,8 @@ class Runner(ABC):
         # crash_cost: float | list[float] = float(MAXINT),
         # abort_on_first_run_crash: bool = True,
     ):
+        self.scenario = scenario
+
         # The results is a FIFO structure, implemented via a list
         # (because the Queue lock is not pickable). Finished runs are
         # put in this list and collected via process_finished_runs
