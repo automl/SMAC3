@@ -76,7 +76,7 @@ class HyperparameterFacade(Facade):
         min_challenger: int = 1,
         min_config_calls: int = 1,
         max_config_calls: int = 3,
-        intensifier_percentage: float = 0.5,
+        intensify_percentage: float = 0.5,
     ) -> Intensifier:
         intensifier = Intensifier(
             scenario=scenario,
@@ -84,7 +84,7 @@ class HyperparameterFacade(Facade):
             race_against=scenario.configspace.get_default_configuration(),
             min_config_calls=min_config_calls,
             max_config_calls=max_config_calls,
-            intensifier_percentage=intensifier_percentage,
+            intensify_percentage=intensify_percentage,
         )
 
         return intensifier
