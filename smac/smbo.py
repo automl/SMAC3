@@ -331,6 +331,24 @@ class SMBO:
             result=result,
         )
 
+        # Gracefully end optimization if termination cost is reached
+        if self.scenario.termination_cost_threshold != np.inf:
+            if not isinstance(result.cost, list):
+                cost = [result.cost]
+            else:
+                cost = result.cost
+
+            if not isinstance(self.scenario.termination_cost_threshold, list):
+                cost_threshold = [self.scenario.termination_cost_threshold]
+            else:
+                cost_threshold = self.scenario.termination_cost_threshold
+
+            if len(cost) != len(cost_threshold):
+                raise RuntimeError("You must specify a termination cost threshold for each objective.")
+
+            if all(cost[i] < cost_threshold[i] for i in range(len(cost))):
+                self._stop = True
+
         for callback in self._callbacks:
             response = callback.on_iteration_end(smbo=self, info=run_info, value=result)
 

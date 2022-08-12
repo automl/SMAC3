@@ -41,6 +41,9 @@ class Scenario:
     crash_cost : float | list[float], defaults to np.inf
         Defines the cost for a failed trial. In case of multi-objective, each objective can be associated with
         a different cost.
+    termination_cost_threshold : float | list[float], defaults to np.inf
+        Defines a cost threshold when the optimization should stop. In case of multi-objective, each objective *must* be
+        associated with a different cost. The optimization stops when all objectives crossed the threshold.
     walltime_limit : float, defaults to np.inf
         The maximum time in seconds that SMAC is allowed to run.
     cputime_limit : float, defaults to np.inf
@@ -84,6 +87,7 @@ class Scenario:
     # Objectives
     objectives: str | list[str] = "cost"
     crash_cost: float | list[float] = np.inf
+    termination_cost_threshold: float | list[float] = np.inf
 
     # Limitations
     walltime_limit: float = np.inf

@@ -1,8 +1,12 @@
 # 2.0
 
-* configspace is saved in json only
-* `StatusType` is saved as integer and not as dict anymore in runhistory
+## New features
+* Terminate if cost is reached.
 
+## Breaks
+* configspace is saved in json only
+* `StatusType` is saved as integer and not as dict anymore in runhistory. Therefore, SMAC3 v2.0 is not backwards
+compatible.
 
 
 # 1.4.0
