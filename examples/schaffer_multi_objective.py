@@ -56,12 +56,8 @@ def plot_from_smac(smac: Facade) -> None:
 
 
 if __name__ == "__main__":
-    MIN_V = -2
-    MAX_V = 2
-
     # Simple configspace
-    cs = ConfigurationSpace()
-    cs.add_hyperparameter(Float("x", (MIN_V, MAX_V)))
+    cs = ConfigurationSpace({"x": (-2.0, 2.0)})
 
     # Scenario object
     scenario = Scenario(

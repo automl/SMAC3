@@ -94,7 +94,7 @@ class InitialDesign:
 
         if self.n_configs > scenario.n_trials:
             raise ValueError(
-                "Initial budget %d cannot be higher than the run limit %d." % (self.n_configs, scenario.n_trials)
+                f"Initial budget {self.n_configs} cannot be higher than the number of trials {scenario.n_trials}."
             )
 
     def _select_configurations(self) -> List[Configuration]:

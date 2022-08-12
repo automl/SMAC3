@@ -32,9 +32,9 @@ class SobolInitialDesign(InitialDesign):
         self,
         scenario: Scenario,
         configs: list[Configuration] | None = None,
+        n_configs: int | None = None,
         n_configs_per_hyperparameter: int | None = 10,
         max_config_ratio: float = 0.25,
-        n_configs: int | None = None,
         seed: int | None = None,
     ):
         if len(scenario.configspace.get_hyperparameters()) > 21201:
@@ -44,12 +44,12 @@ class SobolInitialDesign(InitialDesign):
             )
 
         super().__init__(
-            scenario,
-            configs,
-            n_configs_per_hyperparameter,
-            max_config_ratio,
-            n_configs,
-            seed,
+            scenario=scenario,
+            configs=configs,
+            n_configs=n_configs,
+            n_configs_per_hyperparameter=n_configs_per_hyperparameter,
+            max_config_ratio=max_config_ratio,
+            seed=seed,
         )
 
     def _select_configurations(self) -> List[Configuration]:
