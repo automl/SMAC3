@@ -22,7 +22,6 @@ class Scenario:
     """
     The scenario manages enviroment variables and therefore gives context in which frame the optimization is performed.
 
-
     Parameters
     ----------
     configspace : ConfigSpace
@@ -32,10 +31,9 @@ class Scenario:
         Specify this argument to identify your run easily.
     output_directory : Path, defaults to Path("smac3_output")
         The directory in which to save the output. The files are saved in `./output_directory/name/seed`.
-    deterministic : bool, defaults to True
-        Whether the target algorithm is deterministic or not.
-        If deterministic is set to false, SMAC assumes that the
-        algorithm procudes a different result for the same seed. Therefore, only one seed will be used.
+    deterministic : bool, defaults to False
+        If deterministic is set to true, only one seed is passed to the target algorithm.
+        Otherwise, multiple seeds are passed to the target algorithm to ensure generalization.
     objective : str | list[str] | None, defaults to "cost"
         The objective(s) to optimize. This argument is required for multi-objective optimization.
     crash_cost : float | list[float], defaults to np.inf
@@ -55,7 +53,8 @@ class Scenario:
         The maximum memory in MB that a trial is allowed to use. If not specified,
         no contraints are enforced. Otherwise, the process will be spawned by pynisher.
     n_trials : int, defaults to 100
-        The maximum number of trials to run.
+        The maximum number of trials (combination of configuration, seed, budget, and instance, depending on the task)
+        to run.
     instances : list[str] | None, defaults to None
         Names of the instances to use. If None, no instances are used.
         Instances could be dataset names, seeds, subsets, etc.
@@ -66,11 +65,11 @@ class Scenario:
         How to order the instances. Possible values are "shuffle" and "shuffle_once". You can disable this feature by
         setting the argument to None.
     min_budget : float | None, defaults to None
-        The minimum budget (epochs, subset size, number of instances, ...) that is used for the optimization. Use this argument if you use multi-fidelity
-        or instance optimization.
+        The minimum budget (epochs, subset size, number of instances, ...) that is used for the optimization.
+        Use this argument if you use multi-fidelity or instance optimization.
     max_budget : float | None, defaults to None
-        The maximum budget (epochs, subset size, number of instances, ...) that is used for the optimization. Use this argument if you use multi-fidelity
-        or instance optimization.
+        The maximum budget (epochs, subset size, number of instances, ...) that is used for the optimization.
+        Use this argument if you use multi-fidelity or instance optimization.
     seed : int, defaults to 0
         The seed is used to make results reproducible. If seed is -1, SMAC will generate a random seed.
     n_workers : int, defaults to 1
@@ -82,7 +81,7 @@ class Scenario:
     configspace: ConfigSpace
     name: str | None = None
     output_directory: Path = Path("smac3_output")
-    deterministic: bool = True
+    deterministic: bool = False
 
     # Objectives
     objectives: str | list[str] = "cost"
@@ -111,10 +110,6 @@ class Scenario:
 
     def __post_init__(self) -> None:
         """Checks whether the config is valid."""
-        # transform_y_options = [None, "log", "log_scaled", "inverse_scaled"]
-        # if self.transform_y not in transform_y_options:
-        #    raise RuntimeError(f"`transform_y` must be one of `{transform_y_options}`")
-
         # Use random seed if seed is -1
         if self.seed == -1:
             seed = random.randint(0, 999999)
@@ -150,7 +145,12 @@ class Scenario:
             self._change_output_directory()
 
     def get_meta(self) -> dict[str, str]:
-        """Returns the meta data."""
+        """Returns the meta data of the SMAC run.
+
+        Note
+        ----
+        Meta data are set when the facade is initialized.
+        """
         return self._meta
 
     def count_objectives(self) -> int:

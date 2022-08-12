@@ -295,8 +295,8 @@ class SMBO:
         self.stats.finished += 1
 
         logger.debug(
-            f"Return: Status: {result.status}, cost: {result.cost}, time: {result.time}, "
-            f"additional: {result.additional_info}"
+            f"Status: {result.status}, cost: {result.cost}, time: {result.time}, "
+            f"Additional: {result.additional_info}"
         )
 
         self.runhistory.add(
