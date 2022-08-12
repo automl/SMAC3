@@ -341,74 +341,78 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Default value: 0.38
 [INFO][smbo.py:144] Running initial design...
 [INFO][initial_design.py:155] Retrieving 5 configurations for the initial design.
-[WARNING][parallel_scheduling.py:142] Hyperband is executed with 1 worker(s) only. Consider to use pynisher to use all available workers.
-[INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
-[INFO][hyperband.py:428] Finished Hyperband iteration-step 1-1 with initial budget 8.
-[INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
-[INFO][successive_halving.py:797] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-[INFO][successive_halving.py:1038] Challenger (0.0534) is better than incumbent (0.0595) on budget 8.3333.
-[INFO][abstract_intensifier.py:353] Changes in incumbent:
-[INFO][abstract_intensifier.py:356] --- batch_size: None -&gt; 155
-[INFO][abstract_intensifier.py:356] --- learning_rate_init: None -&gt; 0.006677306766018313
-[INFO][abstract_intensifier.py:356] --- n_layer: 4 -&gt; 5
-[INFO][abstract_intensifier.py:356] --- n_neurons: 123 -&gt; 56
-[INFO][abstract_intensifier.py:356] --- solver: &#39;lbfgs&#39; -&gt; &#39;adam&#39;
-[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
-[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
-[INFO][hyperband.py:428] Finished Hyperband iteration-step 1-2 with initial budget 25.
-[INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
-[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
-[INFO][hyperband.py:428] Finished Hyperband iteration-step 2-1 with initial budget 8.
-[INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
-[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
-[INFO][successive_halving.py:1038] Challenger (0.0295) is better than incumbent (0.0395) on budget 25.0000.
-[INFO][abstract_intensifier.py:353] Changes in incumbent:
-[INFO][abstract_intensifier.py:356] --- batch_size: 155 -&gt; 214
-[INFO][abstract_intensifier.py:356] --- learning_rate_init: 0.006677306766018313 -&gt; 0.005599223654063347
-[INFO][abstract_intensifier.py:356] --- n_layer: 5 -&gt; 4
-[INFO][abstract_intensifier.py:356] --- n_neurons: 56 -&gt; 66
-[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
-[INFO][hyperband.py:428] Finished Hyperband iteration-step 2-2 with initial budget 25.
-[INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
-[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
-[INFO][hyperband.py:428] Finished Hyperband iteration-step 3-1 with initial budget 8.
-[INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
-[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
-[INFO][successive_halving.py:1038] Challenger (0.0284) is better than incumbent (0.0295) on budget 25.0000.
-[INFO][abstract_intensifier.py:353] Changes in incumbent:
-[INFO][abstract_intensifier.py:356] --- activation: &#39;tanh&#39; -&gt; &#39;relu&#39;
-[INFO][abstract_intensifier.py:356] --- batch_size: 214 -&gt; 230
-[INFO][abstract_intensifier.py:356] --- learning_rate: None -&gt; &#39;constant&#39;
-[INFO][abstract_intensifier.py:356] --- learning_rate_init: 0.005599223654063347 -&gt; 0.0013527821070347626
-[INFO][abstract_intensifier.py:356] --- n_layer: 4 -&gt; 3
-[INFO][abstract_intensifier.py:356] --- n_neurons: 66 -&gt; 236
-[INFO][abstract_intensifier.py:356] --- solver: &#39;adam&#39; -&gt; &#39;sgd&#39;
-[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
-[INFO][hyperband.py:428] Finished Hyperband iteration-step 3-2 with initial budget 25.
-[INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
-[INFO][successive_halving.py:1038] Challenger (0.0234) is better than incumbent (0.0284) on budget 25.0000.
-[INFO][abstract_intensifier.py:353] Changes in incumbent:
-[INFO][abstract_intensifier.py:356] --- batch_size: 230 -&gt; 238
-[INFO][abstract_intensifier.py:356] --- learning_rate: &#39;constant&#39; -&gt; &#39;adaptive&#39;
-[INFO][abstract_intensifier.py:356] --- learning_rate_init: 0.0013527821070347626 -&gt; 0.0036985335686206514
-[INFO][abstract_intensifier.py:356] --- n_layer: 3 -&gt; 2
-[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
-[INFO][hyperband.py:428] Finished Hyperband iteration-step 4-1 with initial budget 8.
-[INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
-[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
-[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
-[INFO][hyperband.py:428] Finished Hyperband iteration-step 4-2 with initial budget 25.
-[INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
-[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
-[INFO][hyperband.py:428] Finished Hyperband iteration-step 5-1 with initial budget 8.
-[INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
-[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
-[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
-[INFO][hyperband.py:428] Finished Hyperband iteration-step 5-2 with initial budget 25.
-[INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
-[INFO][successive_halving.py:629] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
-[INFO][hyperband.py:428] Finished Hyperband iteration-step 6-1 with initial budget 8.
-[INFO][successive_halving.py:485] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[WARNING][parallel_scheduling.py:144] Hyperband is executed with 1 worker(s) only. Consider to use pynisher to use all available workers.
+[INFO][successive_halving.py:491] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[INFO][hyperband.py:432] Finished Hyperband iteration-step 1-1 with initial budget 8.
+[INFO][successive_halving.py:491] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[INFO][successive_halving.py:803] First run and no incumbent provided. Challenger is assumed to be the incumbent.
+[INFO][successive_halving.py:1044] Challenger (0.0534) is better than incumbent (0.0595) on budget 8.3333.
+[INFO][abstract_intensifier.py:361] Changes in incumbent:
+[INFO][abstract_intensifier.py:364] --- batch_size: None -&gt; 155
+[INFO][abstract_intensifier.py:364] --- learning_rate_init: None -&gt; 0.006677306766018313
+[INFO][abstract_intensifier.py:364] --- n_layer: 4 -&gt; 5
+[INFO][abstract_intensifier.py:364] --- n_neurons: 123 -&gt; 56
+[INFO][abstract_intensifier.py:364] --- solver: &#39;lbfgs&#39; -&gt; &#39;adam&#39;
+[INFO][successive_halving.py:635] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+[INFO][successive_halving.py:635] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+[INFO][hyperband.py:432] Finished Hyperband iteration-step 1-2 with initial budget 25.
+[INFO][successive_halving.py:491] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[INFO][successive_halving.py:635] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
+[INFO][hyperband.py:432] Finished Hyperband iteration-step 2-1 with initial budget 8.
+[INFO][successive_halving.py:491] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[INFO][successive_halving.py:635] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+[INFO][successive_halving.py:1044] Challenger (0.0295) is better than incumbent (0.0395) on budget 25.0000.
+[INFO][abstract_intensifier.py:361] Changes in incumbent:
+[INFO][abstract_intensifier.py:364] --- batch_size: 155 -&gt; 214
+[INFO][abstract_intensifier.py:364] --- learning_rate_init: 0.006677306766018313 -&gt; 0.005599223654063347
+[INFO][abstract_intensifier.py:364] --- n_layer: 5 -&gt; 4
+[INFO][abstract_intensifier.py:364] --- n_neurons: 56 -&gt; 66
+[INFO][successive_halving.py:635] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+[INFO][hyperband.py:432] Finished Hyperband iteration-step 2-2 with initial budget 25.
+[INFO][successive_halving.py:491] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[INFO][successive_halving.py:635] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
+[INFO][hyperband.py:432] Finished Hyperband iteration-step 3-1 with initial budget 8.
+[INFO][successive_halving.py:491] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[INFO][successive_halving.py:635] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+[INFO][successive_halving.py:1044] Challenger (0.0284) is better than incumbent (0.0295) on budget 25.0000.
+[INFO][abstract_intensifier.py:361] Changes in incumbent:
+[INFO][abstract_intensifier.py:364] --- activation: &#39;tanh&#39; -&gt; &#39;relu&#39;
+[INFO][abstract_intensifier.py:364] --- batch_size: 214 -&gt; 230
+[INFO][abstract_intensifier.py:364] --- learning_rate: None -&gt; &#39;constant&#39;
+[INFO][abstract_intensifier.py:364] --- learning_rate_init: 0.005599223654063347 -&gt; 0.0013527821070347626
+[INFO][abstract_intensifier.py:364] --- n_layer: 4 -&gt; 3
+[INFO][abstract_intensifier.py:364] --- n_neurons: 66 -&gt; 236
+[INFO][abstract_intensifier.py:364] --- solver: &#39;adam&#39; -&gt; &#39;sgd&#39;
+[INFO][successive_halving.py:635] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+[INFO][hyperband.py:432] Finished Hyperband iteration-step 3-2 with initial budget 25.
+[INFO][successive_halving.py:491] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[INFO][successive_halving.py:1044] Challenger (0.0234) is better than incumbent (0.0284) on budget 25.0000.
+[INFO][abstract_intensifier.py:361] Changes in incumbent:
+[INFO][abstract_intensifier.py:364] --- batch_size: 230 -&gt; 238
+[INFO][abstract_intensifier.py:364] --- learning_rate: &#39;constant&#39; -&gt; &#39;adaptive&#39;
+[INFO][abstract_intensifier.py:364] --- learning_rate_init: 0.0013527821070347626 -&gt; 0.0036985335686206514
+[INFO][abstract_intensifier.py:364] --- n_layer: 3 -&gt; 2
+[INFO][successive_halving.py:635] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
+[INFO][hyperband.py:432] Finished Hyperband iteration-step 4-1 with initial budget 8.
+[INFO][successive_halving.py:491] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[INFO][successive_halving.py:635] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+[INFO][successive_halving.py:635] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+[INFO][hyperband.py:432] Finished Hyperband iteration-step 4-2 with initial budget 25.
+[INFO][successive_halving.py:491] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[INFO][successive_halving.py:635] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
+[INFO][hyperband.py:432] Finished Hyperband iteration-step 5-1 with initial budget 8.
+[INFO][successive_halving.py:491] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[INFO][successive_halving.py:635] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+[INFO][successive_halving.py:635] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+[INFO][hyperband.py:432] Finished Hyperband iteration-step 5-2 with initial budget 25.
+[INFO][successive_halving.py:491] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[INFO][successive_halving.py:635] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
+[INFO][hyperband.py:432] Finished Hyperband iteration-step 6-1 with initial budget 8.
+[INFO][successive_halving.py:491] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[INFO][successive_halving.py:635] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+[INFO][successive_halving.py:635] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+[INFO][hyperband.py:432] Finished Hyperband iteration-step 6-2 with initial budget 25.
+[INFO][successive_halving.py:491] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
 [INFO][facade.py:318] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 2, &#39;n_neurons&#39;: 236, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 238, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.0036985335686206514}
 [INFO][facade.py:319] Estimated cost: 0.023368926029093018
 Incumbent value: 0.02
@@ -549,7 +553,7 @@ Incumbent value: 0.02
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent value: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">incumbent_value</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  4.274 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  4.141 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-mlp-multi-fidelity-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/f66317bf5b0121f73605c64e54585f74/mlp_multi_fidelity.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">mlp_multi_fidelity.py</span></code></a></p>

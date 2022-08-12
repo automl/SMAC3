@@ -40,24 +40,24 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
     [INFO][initial_design.py:82] Ignoring `configs` and `n_configs_per_hyperparameter` since `n_configs` is given.
     [INFO][smbo.py:144] Running initial design...
     [INFO][initial_design.py:155] Retrieving 10 configurations for the initial design.
-    [INFO][intensification.py:249] No incumbent provided in the first run. Sampling a new challenger...
-    [INFO][intensification.py:448] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-    [INFO][intensification.py:609] Updated estimated cost of incumbent on 1 runs: 1.0
-    [INFO][abstract_intensifier.py:333] Challenger (0.2843) is better than incumbent (0.2851) on 1 runs.
-    [INFO][abstract_intensifier.py:353] Changes in incumbent:
-    [INFO][abstract_intensifier.py:356] --- x: -0.9324859157204628 -> -0.9887294373327251
-    [INFO][abstract_intensifier.py:333] Challenger (0.2558) is better than incumbent (0.2558) on 1 runs.
-    [INFO][abstract_intensifier.py:353] Changes in incumbent:
-    [INFO][abstract_intensifier.py:356] --- x: -0.9887294373327251 -> -0.9825740729184282
-    [INFO][abstract_intensifier.py:333] Challenger (0.2558) is better than incumbent (0.2558) on 1 runs.
-    [INFO][abstract_intensifier.py:353] Changes in incumbent:
-    [INFO][abstract_intensifier.py:356] --- x: -0.9887294373327251 -> -0.985301164892908
-    [INFO][abstract_intensifier.py:333] Challenger (0.2558) is better than incumbent (0.2558) on 1 runs.
-    [INFO][abstract_intensifier.py:353] Changes in incumbent:
-    [INFO][abstract_intensifier.py:356] --- x: -0.985301164892908 -> -0.9830894923668425
-    [INFO][abstract_intensifier.py:333] Challenger (0.2519) is better than incumbent (0.2519) on 1 runs.
-    [INFO][abstract_intensifier.py:353] Changes in incumbent:
-    [INFO][abstract_intensifier.py:356] --- x: -0.9830894923668425 -> -0.9830959163823119
+    [INFO][intensification.py:251] No incumbent provided in the first run. Sampling a new challenger...
+    [INFO][intensification.py:450] First run and no incumbent provided. Challenger is assumed to be the incumbent.
+    [INFO][intensification.py:611] Updated estimated cost of incumbent on 1 runs: 1.0
+    [INFO][abstract_intensifier.py:341] Challenger (0.2843) is better than incumbent (0.2851) on 1 runs.
+    [INFO][abstract_intensifier.py:361] Changes in incumbent:
+    [INFO][abstract_intensifier.py:364] --- x: -0.9324859157204628 -> -0.9887294373327251
+    [INFO][abstract_intensifier.py:341] Challenger (0.2558) is better than incumbent (0.2558) on 1 runs.
+    [INFO][abstract_intensifier.py:361] Changes in incumbent:
+    [INFO][abstract_intensifier.py:364] --- x: -0.9887294373327251 -> -0.9825740729184282
+    [INFO][abstract_intensifier.py:341] Challenger (0.2558) is better than incumbent (0.2558) on 1 runs.
+    [INFO][abstract_intensifier.py:361] Changes in incumbent:
+    [INFO][abstract_intensifier.py:364] --- x: -0.9887294373327251 -> -0.985301164892908
+    [INFO][abstract_intensifier.py:341] Challenger (0.2558) is better than incumbent (0.2558) on 1 runs.
+    [INFO][abstract_intensifier.py:361] Changes in incumbent:
+    [INFO][abstract_intensifier.py:364] --- x: -0.985301164892908 -> -0.9830894923668425
+    [INFO][abstract_intensifier.py:341] Challenger (0.2519) is better than incumbent (0.2519) on 1 runs.
+    [INFO][abstract_intensifier.py:361] Changes in incumbent:
+    [INFO][abstract_intensifier.py:364] --- x: -0.9830894923668425 -> -0.9830959163823119
     [INFO][facade.py:318] Final Incumbent: {'x': -0.9830894923668425}
     [INFO][facade.py:319] Estimated cost: 0.25082343076466224
 
@@ -150,7 +150,7 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.571 seconds)
+   **Total running time of the script:** ( 0 minutes  1.705 seconds)
 
 
 .. _sphx_glr_download_examples_schaffer_multi_objective.py:

@@ -360,6 +360,9 @@ style="width: 100%;">
 <span class="sd">        intensifiy).</span>
 <span class="sd">    min_challenger: int</span>
 <span class="sd">        minimal number of challengers to be considered (even if time_bound is exhausted earlier)</span>
+<span class="sd">    intensify_percentage : float, defaults to 0.5</span>
+<span class="sd">        How much percentage of the time should configurations be intensified (evaluated on higher budgets or</span>
+<span class="sd">        more instances).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -370,6 +373,7 @@ style="width: 100%;">
         <span class="n">min_config_calls</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">max_config_calls</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
         <span class="n">min_challenger</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">intensify_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -379,12 +383,16 @@ style="width: 100%;">
         <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">seed</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">seed</span>
 
+        <span class="c1"># Intensify percentage must be between 0 and 1</span>
+        <span class="k">assert</span> <span class="n">intensify_percentage</span> <span class="o">&gt;=</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">intensify_percentage</span> <span class="o">&lt;=</span> <span class="mf">1.0</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">deterministic</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_config_calls</span> <span class="o">=</span> <span class="n">min_config_calls</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_config_calls</span> <span class="o">=</span> <span class="n">max_config_calls</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_challenger</span> <span class="o">=</span> <span class="n">min_challenger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intensify_percentage</span> <span class="o">=</span> <span class="n">intensify_percentage</span>
 
         <span class="c1"># Instances</span>
         <span class="n">instances</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>

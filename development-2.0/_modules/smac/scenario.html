@@ -339,13 +339,17 @@ style="width: 100%;">
 <span class="sd">    output_directory : Path, defaults to Path(&quot;smac3_output&quot;)</span>
 <span class="sd">        The directory in which to save the output. The files are saved in `./output_directory/name/seed`.</span>
 <span class="sd">    deterministic : bool, defaults to True</span>
-<span class="sd">        Whether the target algorithm is deterministic or not. If deterministic is set to false, SMAC assumes that the</span>
+<span class="sd">        Whether the target algorithm is deterministic or not.</span>
+<span class="sd">        If deterministic is set to false, SMAC assumes that the</span>
 <span class="sd">        algorithm procudes a different result for the same seed. Therefore, only one seed will be used.</span>
 <span class="sd">    objective : str | list[str] | None, defaults to &quot;cost&quot;</span>
 <span class="sd">        The objective(s) to optimize. This argument is required for multi-objective optimization.</span>
 <span class="sd">    crash_cost : float | list[float], defaults to np.inf</span>
 <span class="sd">        Defines the cost for a failed trial. In case of multi-objective, each objective can be associated with</span>
 <span class="sd">        a different cost.</span>
+<span class="sd">    termination_cost_threshold : float | list[float], defaults to np.inf</span>
+<span class="sd">        Defines a cost threshold when the optimization should stop. In case of multi-objective, each objective *must* be</span>
+<span class="sd">        associated with a different cost. The optimization stops when all objectives crossed the threshold.</span>
 <span class="sd">    walltime_limit : float, defaults to np.inf</span>
 <span class="sd">        The maximum time in seconds that SMAC is allowed to run.</span>
 <span class="sd">    cputime_limit : float, defaults to np.inf</span>
@@ -358,9 +362,6 @@ style="width: 100%;">
 <span class="sd">        no contraints are enforced. Otherwise, the process will be spawned by pynisher.</span>
 <span class="sd">    n_trials : int, defaults to 100</span>
 <span class="sd">        The maximum number of trials to run.</span>
-<span class="sd">    intensify_percentage : float, defaults to 0.5</span>
-<span class="sd">        How much percentage of the time should configurations be intensified (evaluated on higher budgets or</span>
-<span class="sd">        more instances).</span>
 <span class="sd">    instances : list[str] | None, defaults to None</span>
 <span class="sd">        Names of the instances to use. If None, no instances are used.</span>
 <span class="sd">        Instances could be dataset names, seeds, subsets, etc.</span>
@@ -392,6 +393,7 @@ style="width: 100%;">
     <span class="c1"># Objectives</span>
     <span class="n">objectives</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;cost&quot;</span>
     <span class="n">crash_cost</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+    <span class="n">termination_cost_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
 
     <span class="c1"># Limitations</span>
     <span class="n">walltime_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
@@ -399,9 +401,6 @@ style="width: 100%;">
     <span class="n">trial_walltime_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">trial_memory_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">n_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span>
-
-    <span class="c1"># Other time things</span>
-    <span class="n">intensify_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span>
 
     <span class="c1"># Algorithm Configuration</span>
     <span class="n">instances</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -421,9 +420,6 @@ style="width: 100%;">
         <span class="c1"># transform_y_options = [None, &quot;log&quot;, &quot;log_scaled&quot;, &quot;inverse_scaled&quot;]</span>
         <span class="c1"># if self.transform_y not in transform_y_options:</span>
         <span class="c1">#    raise RuntimeError(f&quot;`transform_y` must be one of `{transform_y_options}`&quot;)</span>
-
-        <span class="c1"># Intensify percentage must be between 0 and 1</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensify_percentage</span> <span class="o">&gt;=</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensify_percentage</span> <span class="o">&lt;=</span> <span class="mf">1.0</span>
 
         <span class="c1"># Use random seed if seed is -1</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>

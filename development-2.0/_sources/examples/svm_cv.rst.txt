@@ -41,14 +41,14 @@ iterations) is passed to the target algorithm.
     [INFO][initial_design.py:82] Ignoring `configs` and `n_configs_per_hyperparameter` since `n_configs` is given.
     [INFO][smbo.py:144] Running initial design...
     [INFO][initial_design.py:155] Retrieving 10 configurations for the initial design.
-    [INFO][intensification.py:249] No incumbent provided in the first run. Sampling a new challenger...
-    [INFO][intensification.py:448] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-    [INFO][intensification.py:609] Updated estimated cost of incumbent on 1 runs: 0.0667
-    [INFO][abstract_intensifier.py:333] Challenger (0.0133) is better than incumbent (0.0667) on 1 runs.
-    [INFO][abstract_intensifier.py:353] Changes in incumbent:
-    [INFO][abstract_intensifier.py:356] --- C: 0.03992740880515713 -> 1.2760639488343621
-    [INFO][abstract_intensifier.py:356] --- kernel: 'rbf' -> 'linear'
-    [INFO][abstract_intensifier.py:356] --- shrinking: True -> False
+    [INFO][intensification.py:251] No incumbent provided in the first run. Sampling a new challenger...
+    [INFO][intensification.py:450] First run and no incumbent provided. Challenger is assumed to be the incumbent.
+    [INFO][intensification.py:611] Updated estimated cost of incumbent on 1 runs: 0.0667
+    [INFO][abstract_intensifier.py:341] Challenger (0.0133) is better than incumbent (0.0667) on 1 runs.
+    [INFO][abstract_intensifier.py:361] Changes in incumbent:
+    [INFO][abstract_intensifier.py:364] --- C: 0.03992740880515713 -> 1.2760639488343621
+    [INFO][abstract_intensifier.py:364] --- kernel: 'rbf' -> 'linear'
+    [INFO][abstract_intensifier.py:364] --- shrinking: True -> False
     [INFO][facade.py:318] Final Incumbent: {'C': 1.2760639488343621, 'kernel': 'linear', 'shrinking': False}
     [INFO][facade.py:319] Estimated cost: 0.013333333333333308
     Incumbent value: 0.01
@@ -148,7 +148,7 @@ iterations) is passed to the target algorithm.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.745 seconds)
+   **Total running time of the script:** ( 0 minutes  0.979 seconds)
 
 
 .. _sphx_glr_download_examples_svm_cv.py:

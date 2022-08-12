@@ -385,6 +385,7 @@ style="width: 100%;">
         <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
         <span class="c1"># instance_order: str = &quot;shuffle_once&quot;,</span>
         <span class="n">min_challenger</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">intensify_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
         <span class="n">incumbent_selection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;highest_executed_budget&quot;</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">n_seeds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -397,6 +398,7 @@ style="width: 100%;">
             <span class="c1"># algorithm_walltime_limit=algorithm_walltime_limit,</span>
             <span class="c1"># deterministic=deterministic,</span>
             <span class="n">min_challenger</span><span class="o">=</span><span class="n">min_challenger</span><span class="p">,</span>
+            <span class="n">intensify_percentage</span><span class="o">=</span><span class="n">intensify_percentage</span><span class="p">,</span>
             <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -545,6 +547,7 @@ style="width: 100%;">
         <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
         <span class="c1"># instance_order: str = &quot;shuffle_once&quot;,</span>
         <span class="n">min_challenger</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">intensify_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
         <span class="n">incumbent_selection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;highest_executed_budget&quot;</span><span class="p">,</span>
         <span class="n">identifier</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -563,6 +566,7 @@ style="width: 100%;">
             <span class="n">num_initial_challengers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># Initial challengers passed as None</span>
             <span class="c1"># instance_order=instance_order,</span>
             <span class="n">min_challenger</span><span class="o">=</span><span class="n">min_challenger</span><span class="p">,</span>
+            <span class="n">intensify_percentage</span><span class="o">=</span><span class="n">intensify_percentage</span><span class="p">,</span>
             <span class="n">incumbent_selection</span><span class="o">=</span><span class="n">incumbent_selection</span><span class="p">,</span>
             <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
             <span class="n">n_seeds</span><span class="o">=</span><span class="n">n_seeds</span><span class="p">,</span>
@@ -748,6 +752,9 @@ style="width: 100%;">
             <span class="n">eta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">,</span>
             <span class="n">num_initial_challengers</span><span class="o">=</span><span class="n">n_challengers</span><span class="p">,</span>
             <span class="c1"># instance_order=self.instance_order,</span>
+            <span class="n">min_challenger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_challenger</span><span class="p">,</span>
+            <span class="n">intensify_percentage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">intensify_percentage</span><span class="p">,</span>
+            <span class="n">incumbent_selection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">incumbent_selection</span><span class="p">,</span>
             <span class="n">instance_seed_pairs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance_seed_pairs</span><span class="p">,</span>  <span class="c1"># Additional argument to avoid</span>
             <span class="n">identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span>
             <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
