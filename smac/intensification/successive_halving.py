@@ -106,6 +106,7 @@ class SuccessiveHalving(ParallelScheduler):
         # instance_order: Optional[str] = "shuffle_once",
         instance_seed_pairs: Optional[List[Tuple[str, int]]] = None,
         min_challenger: int = 1,
+        intensify_percentage: float = 0.5,
         incumbent_selection: str = "highest_executed_budget",
         seed: int | None = None,
         n_seeds: int | None = None,
@@ -117,6 +118,7 @@ class SuccessiveHalving(ParallelScheduler):
             # algorithm_walltime_limit=algorithm_walltime_limit,
             # deterministic=deterministic,
             min_challenger=min_challenger,
+            intensify_percentage=intensify_percentage,
             seed=seed,
         )
 
@@ -185,21 +187,23 @@ class SuccessiveHalving(ParallelScheduler):
             return False
 
         sh = _SuccessiveHalving(
-            instances=self._instances,
-            instance_specifics=self._instance_specifics,
-            algorithm_walltime_limit=self.algorithm_walltime_limit,
-            deterministic=self.deterministic,
-            min_budget=self.min_budget,
-            max_budget=self.max_budget,
+            scenario=self.scenario,
+            # instances=self._instances,
+            # instance_specifics=self._instance_specifics,
+            # algorithm_walltime_limit=self.algorithm_walltime_limit,
+            # deterministic=self.deterministic,
+            # min_budget=self.min_budget,
+            # max_budget=self.max_budget,
             eta=self.eta,
             num_initial_challengers=self.num_initial_challengers,
-            n_seeds=self.n_seeds,
-            instance_order=self.instance_order,
-            inst_seed_pairs=self.instance_seed_pairs,
+            # instance_order=self.instance_order,
             min_challenger=self.min_challenger,
+            intensify_percentage=self.intensify_percentage,
             incumbent_selection=self.incumbent_selection,
+            inst_seed_pairs=self.instance_seed_pairs,
             identifier=len(self.intensifier_instances),
             seed=self.seed,
+            n_seeds=self.n_seeds,
         )
         sh._set_stats(self.stats)
         self.intensifier_instances[len(self.intensifier_instances)] = sh
@@ -307,6 +311,7 @@ class _SuccessiveHalving(AbstractIntensifier):
         num_initial_challengers: int | None = None,
         # instance_order: Optional[str] = "shuffle_once",
         min_challenger: int = 1,
+        intensify_percentage: float = 0.5,
         incumbent_selection: str = "highest_executed_budget",
         instance_seed_pairs: list[Tuple[str, int]] | None = None,
         identifier: int = 0,
@@ -322,6 +327,7 @@ class _SuccessiveHalving(AbstractIntensifier):
             # deterministic=deterministic,
             scenario=scenario,
             min_challenger=min_challenger,
+            intensify_percentage=intensify_percentage,
             seed=seed,
         )
 

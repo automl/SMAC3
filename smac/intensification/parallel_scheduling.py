@@ -76,6 +76,7 @@ class ParallelScheduler(AbstractIntensifier):
         num_initial_challengers: int | None = None,
         # instance_order: Optional[str] = "shuffle_once",
         min_challenger: int = 1,
+        intensify_percentage: float = 0.5,
         incumbent_selection: str = "highest_executed_budget",
         instance_seed_pairs: list[Tuple[str, int]] | None = None,
         seed: int | None = None,
@@ -89,6 +90,7 @@ class ParallelScheduler(AbstractIntensifier):
             # algorithm_walltime_limit=algorithm_walltime_limit,
             # deterministic=deterministic,
             min_challenger=min_challenger,
+            intensify_percentage=intensify_percentage,
             seed=seed,
         )
 

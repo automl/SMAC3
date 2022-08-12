@@ -33,7 +33,8 @@ class Scenario:
     output_directory : Path, defaults to Path("smac3_output")
         The directory in which to save the output. The files are saved in `./output_directory/name/seed`.
     deterministic : bool, defaults to True
-        Whether the target algorithm is deterministic or not. If deterministic is set to false, SMAC assumes that the
+        Whether the target algorithm is deterministic or not.
+        If deterministic is set to false, SMAC assumes that the
         algorithm procudes a different result for the same seed. Therefore, only one seed will be used.
     objective : str | list[str] | None, defaults to "cost"
         The objective(s) to optimize. This argument is required for multi-objective optimization.
@@ -52,9 +53,6 @@ class Scenario:
         no contraints are enforced. Otherwise, the process will be spawned by pynisher.
     n_trials : int, defaults to 100
         The maximum number of trials to run.
-    intensify_percentage : float, defaults to 0.5
-        How much percentage of the time should configurations be intensified (evaluated on higher budgets or
-        more instances).
     instances : list[str] | None, defaults to None
         Names of the instances to use. If None, no instances are used.
         Instances could be dataset names, seeds, subsets, etc.
@@ -94,9 +92,6 @@ class Scenario:
     trial_memory_limit: int | None = None
     n_trials: int = 100
 
-    # Other time things
-    intensify_percentage: float = 0.5
-
     # Algorithm Configuration
     instances: list[str] | None = None
     instance_features: dict[str, list[float]] | None = None
@@ -115,9 +110,6 @@ class Scenario:
         # transform_y_options = [None, "log", "log_scaled", "inverse_scaled"]
         # if self.transform_y not in transform_y_options:
         #    raise RuntimeError(f"`transform_y` must be one of `{transform_y_options}`")
-
-        # Intensify percentage must be between 0 and 1
-        assert self.intensify_percentage >= 0.0 and self.intensify_percentage <= 1.0
 
         # Use random seed if seed is -1
         if self.seed == -1:

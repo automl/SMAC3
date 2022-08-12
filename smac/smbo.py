@@ -239,7 +239,7 @@ class SMBO:
     def _get_timebound_for_intensification(self, time_spent: float, update: bool) -> float:
         """Calculate time left for intensify from the time spent on choosing challengers using the
         fraction of time intended for intensification (which is specified in
-        scenario.intensification_percentage).
+        intensifier.intensification_percentage).
 
         Parameters
         ----------
@@ -252,7 +252,7 @@ class SMBO:
         -------
         time_left : float
         """
-        frac_intensify = self.scenario.intensify_percentage
+        frac_intensify = self.intensifier.intensify_percentage
         total_time = time_spent / (1 - frac_intensify)
         time_left = frac_intensify * total_time
 

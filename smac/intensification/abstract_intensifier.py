@@ -54,6 +54,9 @@ class AbstractIntensifier:
         intensifiy).
     min_challenger: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier)
+    intensify_percentage : float, defaults to 0.5
+        How much percentage of the time should configurations be intensified (evaluated on higher budgets or
+        more instances).
     """
 
     def __init__(
@@ -64,6 +67,7 @@ class AbstractIntensifier:
         min_config_calls: int = 1,
         max_config_calls: int = 2000,
         min_challenger: int = 1,
+        intensify_percentage: float = 0.5,
         seed: int | None = None,
     ):
         self.logger = get_logger(__name__)
@@ -73,12 +77,16 @@ class AbstractIntensifier:
         if seed is None:
             seed = scenario.seed
 
+        # Intensify percentage must be between 0 and 1
+        assert intensify_percentage >= 0.0 and intensify_percentage <= 1.0
+
         self.seed = seed
         self.rng = np.random.RandomState(seed)
         self.deterministic = scenario.deterministic
         self.min_config_calls = min_config_calls
         self.max_config_calls = max_config_calls
         self.min_challenger = min_challenger
+        self.intensify_percentage = intensify_percentage
 
         # Instances
         instances: list[str]

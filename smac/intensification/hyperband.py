@@ -79,6 +79,7 @@ class Hyperband(ParallelScheduler):
         eta: float = 3,
         # instance_order: str = "shuffle_once",
         min_challenger: int = 1,
+        intensify_percentage: float = 0.5,
         incumbent_selection: str = "highest_executed_budget",
         seed: int | None = None,
         n_seeds: int | None = None,
@@ -91,6 +92,7 @@ class Hyperband(ParallelScheduler):
             # algorithm_walltime_limit=algorithm_walltime_limit,
             # deterministic=deterministic,
             min_challenger=min_challenger,
+            intensify_percentage=intensify_percentage,
             seed=seed,
         )
 
@@ -239,6 +241,7 @@ class _Hyperband(_SuccessiveHalving):
         eta: float = 3,
         # instance_order: str = "shuffle_once",
         min_challenger: int = 1,
+        intensify_percentage: float = 0.5,
         incumbent_selection: str = "highest_executed_budget",
         identifier: int = 0,
         seed: int | None = None,
@@ -257,6 +260,7 @@ class _Hyperband(_SuccessiveHalving):
             num_initial_challengers=None,  # Initial challengers passed as None
             # instance_order=instance_order,
             min_challenger=min_challenger,
+            intensify_percentage=intensify_percentage,
             incumbent_selection=incumbent_selection,
             seed=seed,
             n_seeds=n_seeds,
@@ -442,6 +446,9 @@ class _Hyperband(_SuccessiveHalving):
             eta=self.eta,
             num_initial_challengers=n_challengers,
             # instance_order=self.instance_order,
+            min_challenger=self.min_challenger,
+            intensify_percentage=self.intensify_percentage,
+            incumbent_selection=self.incumbent_selection,
             instance_seed_pairs=self.instance_seed_pairs,  # Additional argument to avoid
             identifier=self.identifier,
             seed=self.seed,

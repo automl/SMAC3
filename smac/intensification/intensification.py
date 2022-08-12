@@ -125,6 +125,7 @@ class Intensifier(AbstractIntensifier):
         min_config_calls: int = 1,
         max_config_calls: int = 2000,
         min_challenger: int = 2,
+        intensify_percentage: float = 0.5,
         seed: int | None = None,
     ):
         super().__init__(
@@ -136,6 +137,7 @@ class Intensifier(AbstractIntensifier):
             min_config_calls=min_config_calls,
             max_config_calls=max_config_calls,
             min_challenger=min_challenger,
+            intensify_percentage=intensify_percentage,
             seed=seed,
         )
 

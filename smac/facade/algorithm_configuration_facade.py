@@ -76,6 +76,7 @@ class AlgorithmConfigurationFacade(Facade):
         min_challenger=1,
         min_config_calls=1,
         max_config_calls=2000,
+        intensifier_percentage: float = 0.5,
     ) -> Intensifier:
         intensifier = Intensifier(
             scenario=scenario,
@@ -83,6 +84,7 @@ class AlgorithmConfigurationFacade(Facade):
             race_against=scenario.configspace.get_default_configuration(),
             min_config_calls=min_config_calls,
             max_config_calls=max_config_calls,
+            intensifier_percentage=intensifier_percentage,
         )
 
         return intensifier

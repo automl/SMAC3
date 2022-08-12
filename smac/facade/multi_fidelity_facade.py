@@ -18,11 +18,13 @@ class MultiFidelityFacade(HyperparameterFacade):
         *,
         eta: int = 3,
         min_challenger: int = 1,
+        intensifier_percentage: float = 0.5,
     ) -> Hyperband:
         return Hyperband(
             scenario=scenario,
             eta=eta,
             min_challenger=min_challenger,
+            intensifier_percentage=intensifier_percentage,
         )
 
     @staticmethod
