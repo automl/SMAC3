@@ -11,14 +11,16 @@ punctuations, spelling, and so on can be easily removed.
     ```
 
     In that context, we also use the new operations:
-    `list[int]`, `dict[int, int]`, etc.
+    `list[int]`, `dict[int, int]`, `list | dict`, `int | None = None` etc.
 
     And in the parameters:
     `smbo: "SMBO"` => `smbo: SMBO`
+
+    `variable = []  # type: list[str]` => `variable: list[str] = []`
     
     Please change if you see the old style.
 
-- Remove `self.logger` in all classes. Create a global logger at top:
+- Remove `self.logger` in all classes (there are exceptions of course, e.g., different intensifier worker). Create a global logger at top:
 logger = get_logger(__name__) (from smac.utils.logging import get_logger)
 
 - Remove `rng` from init and replace it with `seed: int = 0`. Create new `rng = np.random.RandomState(seed)` if needed.
@@ -90,6 +92,7 @@ accordingly. Just make sure it is persistent.
 - If you find something with `run_obj == "runtime"` remove it. Since adaptive capping 
 is bounded to `runtime`, you can remove that too.
 
+
 - Please always check whether the docstrings are still correct. If not, correct them accordingly. Sometimes the ordering has changed.
 
 - Get rid of `# type: ignore`. Mostly it was used in context with the old scenario object.
@@ -141,6 +144,6 @@ minR => min_config_calls
 maxR => max_config_calls
 initial_budget => min_budget
 
-
-# Known Issues
-- HyperparameterFacade starts a local search when continue a run. However, the limit already was exceeded.
+_get_inc_available_inst => _get_pending_instances
+_get_instances_to_run => _get_missing_instances
+_get_next_inc_run = > _get_next_instance

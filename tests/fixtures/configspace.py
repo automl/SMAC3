@@ -5,7 +5,7 @@ import pytest
 
 @pytest.fixture
 def configspace_small() -> ConfigurationSpace:
-    cs = ConfigurationSpace()
+    cs = ConfigurationSpace(seed=0)
 
     a = Integer("a", (1, 10000), default=1)
     b = Float("b", (1e-5, 1e-1), log=True, default=1e-1)
@@ -19,7 +19,7 @@ def configspace_small() -> ConfigurationSpace:
 
 @pytest.fixture
 def configspace_large() -> ConfigurationSpace:
-    cs = ConfigurationSpace()
+    cs = ConfigurationSpace(seed=0)
 
     n_layer = Integer("n_layer", (1, 5), default=1)
     n_neurons = Integer("n_neurons", (8, 256), log=True, default=10)

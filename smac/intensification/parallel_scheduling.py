@@ -196,11 +196,11 @@ class ParallelScheduler(AbstractIntensifier):
     def process_results(
         self,
         run_info: RunInfo,
-        incumbent: Optional[Configuration],
+        run_value: RunValue,
+        incumbent: Configuration | None,
         runhistory: RunHistory,
         time_bound: float,
-        result: RunValue,
-        log_traj: bool = True,
+        log_trajectory: bool = True,
     ) -> Tuple[Configuration, float]:
         """The intensifier stage will be updated based on the results/status of a configuration
         execution.
@@ -227,7 +227,7 @@ class ParallelScheduler(AbstractIntensifier):
         result: RunValue
             Contain the result (status and other methadata) of exercising
             a challenger/incumbent.
-        log_traj: bool
+        log_trajectory: bool
             Whether to log changes of incumbents in trajectory
 
         Returns
@@ -239,11 +239,11 @@ class ParallelScheduler(AbstractIntensifier):
         """
         return self.intensifier_instances[run_info.source].process_results(
             run_info=run_info,
+            run_value=run_value,
             incumbent=incumbent,
             runhistory=runhistory,
             time_bound=time_bound,
-            result=result,
-            log_traj=log_traj,
+            log_trajectory=log_trajectory,
         )
 
     def _add_new_instance(self, num_workers: int) -> bool:

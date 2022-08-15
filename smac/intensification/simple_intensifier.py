@@ -61,12 +61,12 @@ class SimpleIntensifier(AbstractIntensifier):
     def process_results(
         self,
         run_info: RunInfo,
-        incumbent: Optional[Configuration],
+        run_value: RunValue,
+        incumbent: Configuration | None,
         runhistory: RunHistory,
         time_bound: float,
-        result: RunValue,
-        log_traj: bool = True,
-    ) -> Tuple[Configuration, float]:
+        log_trajectory: bool = True,
+    ) -> tuple[Configuration, float]:
         """The intensifier stage will be updated based on the results/status of a configuration
         execution. Also, a incumbent will be determined.
 
@@ -84,7 +84,7 @@ class SimpleIntensifier(AbstractIntensifier):
         result: RunValue
             Contain the result (status and other methadata) of exercising
             a challenger/incumbent.
-        log_traj: bool
+        log_trajectory: bool
             Whether to log changes of incumbents in trajectory
 
         Returns
@@ -102,13 +102,13 @@ class SimpleIntensifier(AbstractIntensifier):
             self.logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
             incumbent = run_info.config
 
-        self.run_id += 1
+        self.num_run += 1
 
         incumbent = self._compare_configs(
             challenger=run_info.config,
             incumbent=incumbent,
             runhistory=runhistory,
-            log_trajectory=log_traj,
+            log_trajectory=log_trajectory,
         )
         # get incumbent cost
         inc_perf = runhistory.get_cost(incumbent)

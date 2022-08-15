@@ -50,7 +50,7 @@ def configspace():
 
 
 def test_mean_aggregation(make_scenario, configspace):
-    scenario = make_scenario(configspace, multi_objective=True)
+    scenario = make_scenario(configspace, use_multi_objective=True)
 
     for facade in [BlackBoxFacade, HyperparameterFacade, AlgorithmConfigurationFacade]:
         smac = facade(
@@ -72,7 +72,7 @@ def test_mean_aggregation(make_scenario, configspace):
 
 
 def test_parego(make_scenario, configspace):
-    scenario = make_scenario(configspace, multi_objective=True)
+    scenario = make_scenario(configspace, use_multi_objective=True)
 
     for facade in [BlackBoxFacade, HyperparameterFacade, AlgorithmConfigurationFacade]:
         smac = facade(

@@ -108,10 +108,10 @@ class AbstractIntensifier:
         # else:
         #    self.instance_specifics = scenario.instance_specifics
 
-        # general attributes
-        self.run_id = 0  # Number of runs done in an iteration so far
-        self._chall_indx = 0
-        self._ta_time = 0.0
+        # General attributes
+        self.num_run = 0  # Number of runs done in an iteration so far
+        self._challenger_id = 0
+        self._target_algorithm_time = 0.0
 
         # attributes for sampling next configuration
         # Repeating configurations is discouraged for parallel runs
@@ -124,13 +124,13 @@ class AbstractIntensifier:
 
     def get_next_run(
         self,
-        challengers: Optional[List[Configuration]],
+        challengers: list[Configuration] | None,
         incumbent: Configuration,
-        chooser: Optional[ConfigurationChooser],
+        chooser: ConfigurationChooser | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
-    ) -> Tuple[RunInfoIntent, RunInfo]:
+    ) -> tuple[RunInfoIntent, RunInfo]:
         """Abstract method for choosing the next challenger, to allow for different selections
         across intensifiers uses ``_next_challenger()`` by default.
 
@@ -165,11 +165,11 @@ class AbstractIntensifier:
     def process_results(
         self,
         run_info: RunInfo,
-        incumbent: Optional[Configuration],
+        run_value: RunValue,
+        incumbent: Configuration | None,
         runhistory: RunHistory,
         time_bound: float,
-        result: RunValue,
-        log_traj: bool = True,
+        log_trajectory: bool = True,
     ) -> Tuple[Configuration, float]:
         """The intensifier stage will be updated based on the results/status of a configuration
         execution. Also, a incumbent will be determined.
@@ -188,7 +188,7 @@ class AbstractIntensifier:
         result: RunValue
             Contain the result (status and other methadata) of exercising
             a challenger/incumbent.
-        log_traj: bool
+        log_trajectory: bool
             Whether to log changes of incumbents in trajectory
 
         Returns
@@ -202,8 +202,8 @@ class AbstractIntensifier:
 
     def _next_challenger(
         self,
-        challengers: Optional[List[Configuration]],
-        chooser: Optional[ConfigurationChooser],
+        challengers: list[Configuration] | None,
+        chooser: ConfigurationChooser | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
     ) -> Optional[Configuration]:
@@ -264,7 +264,7 @@ class AbstractIntensifier:
         challenger: Configuration,
         runhistory: RunHistory,
         log_trajectory: bool = True,
-    ) -> Optional[Configuration]:
+    ) -> Configuration | None:
         """Compare two configuration wrt the runhistory and return the one which performs better (or
         None if the decision is not safe)
 
@@ -284,7 +284,7 @@ class AbstractIntensifier:
             Challenger configuration
         runhistory: smac.runhistory.runhistory.RunHistory
             Stores all runs we ran so far
-        log_traj: bool
+        log_trajectory: bool
             Whether to log changes of incumbents in trajectory
 
         Returns

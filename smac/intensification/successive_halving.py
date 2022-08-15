@@ -104,7 +104,7 @@ class SuccessiveHalving(ParallelScheduler):
         eta: float = 3,
         num_initial_challengers: Optional[int] = None,
         # instance_order: Optional[str] = "shuffle_once",
-        instance_seed_pairs: Optional[List[Tuple[str, int]]] = None,
+        instance_seed_pairs: List[Tuple[str, int]] | None = None,
         min_challenger: int = 1,
         intensify_percentage: float = 0.5,
         incumbent_selection: str = "highest_executed_budget",
@@ -130,7 +130,7 @@ class SuccessiveHalving(ParallelScheduler):
         self.instance_seed_pairs = instance_seed_pairs
         self.incumbent_selection = incumbent_selection
         self._instances = scenario.instances
-        self._instance_specifics = scenario.instance_specifics
+        # self._instance_specifics = scenario.instance_specifics
         self.min_budget = scenario.min_budget
         self.max_budget = scenario.max_budget
         self.eta = eta
@@ -518,11 +518,11 @@ class _SuccessiveHalving(AbstractIntensifier):
     def process_results(
         self,
         run_info: RunInfo,
-        incumbent: Optional[Configuration],
+        run_value: RunValue,
+        incumbent: Configuration | None,
         runhistory: RunHistory,
         time_bound: float,
-        result: RunValue,
-        log_traj: bool = True,
+        log_trajectory: bool = True,
     ) -> Tuple[Configuration, float]:
         """The intensifier stage will be updated based on the results/status of a configuration
         execution. Also, a incumbent will be determined.
@@ -541,7 +541,7 @@ class _SuccessiveHalving(AbstractIntensifier):
         result: RunValue
             Contain the result (status and other methadata) of exercising
             a challenger/incumbent.
-        log_traj: bool
+        log_trajectory: bool
             Whether to log changes of incumbents in trajectory
 
         Returns
@@ -571,10 +571,10 @@ class _SuccessiveHalving(AbstractIntensifier):
         # if result.status == StatusType.CAPPED and run_info.config == self.running_challenger:
         #    self.curr_inst_idx[run_info.config] = np.inf
         # else:
-        self._ta_time = self._ta_time  # type: float # make mypy happy
-        self.run_id = self.run_id  # type: int # make mypy happy
-        self._ta_time += result.time
-        self.run_id += 1
+        self._target_algorithm_time = self._target_algorithm_time  # type: float # make mypy happy
+        self._target_algorithm_time += run_value.time
+        self.num_run = self.num_run  # type: int # make mypy happy
+        self.num_run += 1
 
         # 0: Before moving to a new stage, we have to complete M x N tasks, where M is the
         # total number of configurations evaluated in N instance/seed pairs.
@@ -606,9 +606,9 @@ class _SuccessiveHalving(AbstractIntensifier):
         # curr_challengers is a set, so "at least 1" success can be counted by set addition (no duplicates)
         # If a configuration is successful, it is added to curr_challengers.
         # if it fails it is added to fail_challengers.
-        if np.isfinite(self.curr_inst_idx[run_info.config]) and result.status == StatusType.SUCCESS:
+        if np.isfinite(self.curr_inst_idx[run_info.config]) and run_value.status == StatusType.SUCCESS:
             self.success_challengers.add(run_info.config)  # successful configs
-        elif np.isfinite(self.curr_inst_idx[run_info.config]) and result.status == StatusType.DONOTADVANCE:
+        elif np.isfinite(self.curr_inst_idx[run_info.config]) and run_value.status == StatusType.DONOTADVANCE:
             self.do_not_advance_challengers.add(run_info.config)
         else:
             self.fail_challengers.add(run_info.config)  # capped/crashed/do not advance configs
@@ -629,7 +629,7 @@ class _SuccessiveHalving(AbstractIntensifier):
                 challenger=run_info.config,
                 incumbent=incumbent,
                 runhistory=runhistory,
-                log_traj=log_traj,
+                log_trajectory=log_trajectory,
             )
         if is_stage_done:
             self.logger.info(
@@ -786,8 +786,8 @@ class _SuccessiveHalving(AbstractIntensifier):
                 # We see a challenger for the first time, so no
                 # instance has been launched
                 self.curr_inst_idx[challenger] = 0
-                self._chall_indx = self._chall_indx  # type: int # make mypy happy
-                self._chall_indx += 1
+                self._challenger_id = self._challenger_id  # type: int # make mypy happy
+                self._challenger_id += 1
                 self.running_challenger = challenger
 
         # calculating the incumbent's performance for adaptive capping
@@ -796,14 +796,14 @@ class _SuccessiveHalving(AbstractIntensifier):
         #   - during the 1st intensify run, the incumbent shouldn't be capped after being compared against itself
         if incumbent and incumbent != challenger:
             inc_runs = runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True)
-            inc_sum_cost = runhistory.sum_cost(config=incumbent, instance_seed_budget_keys=inc_runs, normalize=True)
+            # inc_sum_cost = runhistory.sum_cost(config=incumbent, instance_seed_budget_keys=inc_runs, normalize=True)
         else:
-            inc_sum_cost = np.inf
+            # inc_sum_cost = np.inf
             if self.first_run:
                 self.logger.info("First run and no incumbent provided. Challenger is assumed to be the incumbent.")
                 incumbent = challenger
 
-        assert type(inc_sum_cost) == float
+        # assert type(inc_sum_cost) == float
 
         # Selecting instance-seed subset for this budget, depending on the kind of budget
         if self.instance_as_budget:
@@ -912,12 +912,12 @@ class _SuccessiveHalving(AbstractIntensifier):
             if next_stage:
                 # update stats for the prev iteration
                 assert self.stats
-                self.stats.update_average_configs_per_intensify(n_configs=self._chall_indx)
+                self.stats.update_average_configs_per_intensify(n_configs=self._challenger_id)
 
                 # reset stats for the new iteration
-                self._ta_time = 0
-                self._chall_indx = 0
-                self.run_id = 0
+                self._target_algorithm_time = 0
+                self._challenger_id = 0
+                self.num_run = 0
 
                 self.iteration_done = True
                 self.sh_iters += 1
@@ -942,7 +942,7 @@ class _SuccessiveHalving(AbstractIntensifier):
         incumbent: Configuration,
         challenger: Configuration,
         runhistory: RunHistory,
-        log_traj: bool = True,
+        log_trajectory: bool = True,
     ) -> Optional[Configuration]:
         """Compares the challenger with current incumbent and returns the best configuration, based
         on the given incumbent selection design.
@@ -955,7 +955,7 @@ class _SuccessiveHalving(AbstractIntensifier):
             best configuration so far
         runhistory : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
-        log_traj : bool
+        log_trajectory : bool
             whether to log changes of incumbents in trajectory
 
         Returns
@@ -966,7 +966,7 @@ class _SuccessiveHalving(AbstractIntensifier):
         assert self.stats
 
         if self.instance_as_budget:
-            new_incumbent = super()._compare_configs(incumbent, challenger, runhistory, log_traj)
+            new_incumbent = super()._compare_configs(incumbent, challenger, runhistory, log_trajectory)
             # if compare config returned none, then it is undecided. So return old incumbent
             new_incumbent = incumbent if new_incumbent is None else new_incumbent
             return new_incumbent
@@ -980,7 +980,7 @@ class _SuccessiveHalving(AbstractIntensifier):
                 challenger=challenger,
                 incumbent=incumbent,
                 runhistory=runhistory,
-                log_traj=log_traj,
+                log_trajectory=log_trajectory,
             )
             return new_incumbent
 
@@ -1027,7 +1027,7 @@ class _SuccessiveHalving(AbstractIntensifier):
                 chall_run.budget,
                 inc_run.budget,
             )
-            if log_traj:
+            if log_trajectory:
                 assert self.stats
                 self.stats.add_incumbent(
                     cost=runhistory.get_cost(challenger),
@@ -1049,7 +1049,7 @@ class _SuccessiveHalving(AbstractIntensifier):
             )
             self._log_incumbent_changes(incumbent, challenger)
             new_incumbent = challenger
-            if log_traj:
+            if log_trajectory:
                 assert self.stats
                 self.stats.add_incumbent(cost=chall_cost, incumbent=new_incumbent, budget=curr_budget)
         else:
@@ -1060,7 +1060,7 @@ class _SuccessiveHalving(AbstractIntensifier):
                 inc_run.budget,
             )
 
-            if log_traj and self.stats.incumbent_changed == 0:
+            if log_trajectory and self.stats.incumbent_changed == 0:
                 assert self.stats
                 self.stats.add_incumbent(
                     cost=inc_cost,
@@ -1076,7 +1076,7 @@ class _SuccessiveHalving(AbstractIntensifier):
         challenger: Configuration,
         incumbent: Configuration,
         runhistory: RunHistory,
-        log_traj: bool = True,
+        log_trajectory: bool = True,
     ) -> Optional[Configuration]:
         """Compares challenger with current incumbent on any budget.
 
@@ -1088,7 +1088,7 @@ class _SuccessiveHalving(AbstractIntensifier):
             best configuration so far
         runhistory : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
-        log_traj : bool
+        log_trajectory : bool
             whether to log changes of incumbents in trajectory
 
         Returns
@@ -1111,7 +1111,7 @@ class _SuccessiveHalving(AbstractIntensifier):
                 )
                 self._log_incumbent_changes(incumbent, challenger)
                 new_incumbent = challenger
-                if log_traj:
+                if log_trajectory:
                     assert self.stats
                     self.stats.add_incumbent(
                         cost=chall_cost,
@@ -1124,7 +1124,7 @@ class _SuccessiveHalving(AbstractIntensifier):
                     inc_cost,
                     chall_cost,
                 )
-                if log_traj and self.stats.incumbent_changed == 0:
+                if log_trajectory and self.stats.incumbent_changed == 0:
                     self.stats.add_incumbent(cost=inc_cost, incumbent=incumbent, budget=curr_budget)
                 new_incumbent = incumbent
         else:

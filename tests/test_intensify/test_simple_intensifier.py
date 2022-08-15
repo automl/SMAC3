@@ -117,7 +117,7 @@ def test_process_results(intensifier, runhistory, configs):
         chooser=None,
     )
 
-    result = RunValue(
+    run_value = RunValue(
         cost=1,
         time=0.5,
         status=StatusType.SUCCESS,
@@ -138,10 +138,10 @@ def test_process_results(intensifier, runhistory, configs):
 
     incumbent, inc_perf = intensifier.process_results(
         run_info=run_info,
+        run_value=run_value,
         incumbent=None,
         runhistory=runhistory,
         time_bound=np.inf,
-        result=result,
     )
 
     assert incumbent == run_info.config

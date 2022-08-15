@@ -276,11 +276,11 @@ class _Hyperband(_SuccessiveHalving):
     def process_results(
         self,
         run_info: RunInfo,
+        run_value: RunValue,
         incumbent: Optional[Configuration],
         runhistory: RunHistory,
         time_bound: float,
-        result: RunValue,
-        log_traj: bool = True,
+        log_trajectory: bool = True,
     ) -> Tuple[Configuration, float]:
         """The intensifier stage will be updated based on the results/status of a configuration
         execution. Also, a incumbent will be determined.
@@ -299,7 +299,7 @@ class _Hyperband(_SuccessiveHalving):
         result: RunValue
             Contain the result (status and other methadata) of exercising
             a challenger/incumbent.
-        log_traj: bool
+        log_trajectory: bool
             Whether to log changes of incumbents in trajectory
 
         Returns
@@ -314,13 +314,13 @@ class _Hyperband(_SuccessiveHalving):
         # run 1 iteration of successive halving
         incumbent, inc_perf = self.sh_intensifier.process_results(
             run_info=run_info,
+            run_value=run_value,
             incumbent=incumbent,
             runhistory=runhistory,
             time_bound=time_bound,
-            result=result,
-            log_traj=log_traj,
+            log_trajectory=log_trajectory,
         )
-        self.run_id += 1
+        self.num_run += 1
 
         # reset if SH iteration is over, else update for next iteration
         if self.sh_intensifier.iteration_done:
@@ -415,7 +415,7 @@ class _Hyperband(_SuccessiveHalving):
             self.s = self.s_max
             self.hb_iters += 1
             self.iteration_done = True
-            self.run_id = 0
+            self.num_run = 0
         else:
             # update for next iteration
             self.s -= 1

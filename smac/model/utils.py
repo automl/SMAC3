@@ -25,18 +25,18 @@ __license__ = "3-clause BSD"
 
 
 def get_types(
-    config_space: ConfigurationSpace,
-    instance_features: typing.Optional[np.ndarray] = None,
-) -> typing.Tuple[typing.List[int], typing.List[typing.Tuple[float, float]]]:
+    configspace: ConfigurationSpace,
+    instance_features: dict[str, list[float]] | None = None,
+) -> tuple[list[int], list[tuple[float, float]]]:
     """Return the types of the hyperparameters and the bounds of the
     hyperparameters and instance features.
     """
     # Extract types vector for rf from config space and the bounds
-    types = [0] * len(config_space.get_hyperparameters())
+    types = [0] * len(configspace.get_hyperparameters())
     bounds = [(np.nan, np.nan)] * len(types)
 
-    for i, param in enumerate(config_space.get_hyperparameters()):
-        parents = config_space.get_parents_of(param.name)
+    for i, param in enumerate(configspace.get_hyperparameters()):
+        parents = configspace.get_parents_of(param.name)
         if len(parents) == 0:
             can_be_inactive = False
         else:
@@ -113,32 +113,33 @@ def get_types(
             raise TypeError("Unknown hyperparameter type %s" % type(param))
 
     if instance_features is not None:
-        types = types + [0] * instance_features.shape[1]
+        n_features = len(list(instance_features.values())[0])
+        types = types + [0] * n_features
 
     return types, bounds
 
 
 def check_subspace_points(
     X: np.ndarray,
-    cont_dims: typing.Union[np.ndarray, typing.List] = [],
-    cat_dims: typing.Union[np.ndarray, typing.List] = [],
-    bounds_cont: typing.Optional[np.ndarray] = None,
-    bounds_cat: typing.Optional[typing.List[typing.Tuple]] = None,
+    cont_dims: np.ndarray | list = [],
+    cat_dims: np.ndarray | list = [],
+    bounds_cont: np.ndarray | None = None,
+    bounds_cat: list[tuple] | None = None,
     expand_bound: bool = False,
 ) -> np.ndarray:
     """
     Check which points are place inside a given subspace
     Parameters
     ----------
-    X: typing.Optional[np.ndarray(N,D)],
+    X: Optional[np.ndarray(N,D)],
         points to be checked, where D = D_cont + D_cat
-    cont_dims: typing.Union[np.ndarray(D_cont), typing.List]
+    cont_dims: Union[np.ndarray(D_cont), List]
         which dimensions represent continuous hyperparameters
-    cat_dims: typing.Union[np.ndarray(D_cat), typing.List]
+    cat_dims: Union[np.ndarray(D_cat), List]
         which dimensions represent categorical hyperparameters
-    bounds_cont: typing.optional[typing.List[typing.Tuple]]
+    bounds_cont: optional[List[Tuple]]
         subspaces bounds of categorical hyperparameters, its length is the number of continuous hyperparameters
-    bounds_cat: typing.Optional[typing.List[typing.Tuple]]
+    bounds_cat: Optional[List[Tuple]]
         subspaces bounds of continuous hyperparameters, its length is the number of categorical hyperparameters
     expand_bound: bool
         if the bound needs to be expanded to contain more points rather than the points inside the subregion

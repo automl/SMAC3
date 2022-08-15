@@ -15,6 +15,7 @@ from smac.runhistory import InstanceSeedBudgetKey, RunInfo, RunValue, RunInfoInt
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.logging import format_array, get_logger
+from smac.intensification.stages import IntensifierStage
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -27,21 +28,6 @@ logger = get_logger(__name__)
 #    """Indicates that no more challengers are available for the intensification to proceed."""
 
 #   pass
-
-
-class IntensifierStage(Enum):
-    """Class to define different stages of intensifier."""
-
-    RUN_FIRST_CONFIG = 0  # to replicate the old initial design
-    RUN_INCUMBENT = 1  # Lines 3-7
-    RUN_CHALLENGER = 2  # Lines 8-17
-    RUN_BASIS = 3
-
-    # helpers to determine what type of run to process
-    # A challenger is assumed to be processed if the stage
-    # is not from first_config or incumbent
-    PROCESS_FIRST_CONFIG_RUN = 4
-    PROCESS_INCUMBENT_RUN = 5
 
 
 class Intensifier(AbstractIntensifier):
@@ -96,7 +82,7 @@ class Intensifier(AbstractIntensifier):
     race_against: Configuration
         if incumbent changes race this configuration always against new incumbent;
         can sometimes prevent over-tuning
-    use_ta_time_bound: bool,
+    use_target_algorithm_time_bound: bool,
         if true, trust time reported by the target algorithms instead of
         measuring the wallclock time for limiting the time of intensification
     run_limit : int
@@ -121,7 +107,7 @@ class Intensifier(AbstractIntensifier):
         # deterministic: bool = False,
         race_against: Configuration | None = None,
         run_limit: int = MAXINT,
-        use_ta_time_bound: bool = False,
+        use_target_algorithm_time_bound: bool = False,
         min_config_calls: int = 1,
         max_config_calls: int = 2000,
         min_challenger: int = 2,
@@ -154,7 +140,7 @@ class Intensifier(AbstractIntensifier):
         if self.run_limit < 1:
             raise ValueError("The argument `run_limit` must be greather than 1.")
 
-        self.use_ta_time_bound = use_ta_time_bound
+        self.use_target_algorithm_time_bound = use_target_algorithm_time_bound
         self.elapsed_time = 0.0
 
         # Stage variables
@@ -167,8 +153,8 @@ class Intensifier(AbstractIntensifier):
         self.n_iters = 0
 
         # Challenger related variables
-        self._chall_indx = 0
-        self.num_chall_run = 0
+        self._challenger_id = 0
+        self.num_challenger_run = 0
         self.current_challenger = None
         self.continue_challenger = False
         self.configs_to_run: Iterator[Optional[Configuration]] = iter([])
@@ -176,7 +162,7 @@ class Intensifier(AbstractIntensifier):
 
         # Racing related variables
         self.to_run = []  # type: List[InstanceSeedBudgetKey]
-        self.inc_sum_cost = np.inf
+        # self.inc_sum_cost = np.inf
         self.N = -1
 
     def get_next_run(
@@ -269,10 +255,10 @@ class Intensifier(AbstractIntensifier):
             inc_runs = runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True)
 
             # Line 4
-            available_insts = self._get_inc_available_inst(incumbent, runhistory)
-            if available_insts and len(inc_runs) < self.max_config_calls:
+            pending_instances = self._get_pending_instances(incumbent, runhistory)
+            if pending_instances and len(inc_runs) < self.max_config_calls:
                 # Lines 5-7
-                instance, seed = self._get_next_inc_run(available_insts)
+                instance, seed = self._get_next_instance(pending_instances)
 
                 # instance_specific = "0"
                 # if instance is not None:
@@ -342,7 +328,7 @@ class Intensifier(AbstractIntensifier):
         if self.stage in [IntensifierStage.RUN_CHALLENGER, IntensifierStage.RUN_BASIS]:
 
             if not self.to_run:
-                self.to_run, self.inc_sum_cost = self._get_instances_to_run(
+                self.to_run = self._get_missing_instances(
                     incumbent=incumbent, challenger=challenger, runhistory=runhistory, N=self.N
                 )
 
@@ -400,12 +386,12 @@ class Intensifier(AbstractIntensifier):
     def process_results(
         self,
         run_info: RunInfo,
+        run_value: RunValue,
         incumbent: Configuration | None,
         runhistory: RunHistory,
         time_bound: float,
-        result: RunValue,
-        log_traj: bool = True,
-    ) -> Tuple[Configuration, float]:
+        log_trajectory: bool = True,
+    ) -> tuple[Configuration, float]:
         """The intensifier stage will be updated based on the results/status of a configuration
         execution.
 
@@ -424,7 +410,7 @@ class Intensifier(AbstractIntensifier):
         Parameters
         ----------
         run_info : RunInfo
-               A RunInfo containing the configuration that was evaluated
+            A RunInfo containing the configuration that was evaluated
         incumbent : Optional[Configuration]
             best configuration so far, None in 1st run
         runhistory : RunHistory
@@ -435,7 +421,7 @@ class Intensifier(AbstractIntensifier):
         result: RunValue
              Contain the result (status and other methadata) of exercising
              a challenger/incumbent.
-        log_traj: bool
+        log_trajectory: bool
             whether to log changes of incumbents in trajectory
 
         Returns
@@ -454,50 +440,50 @@ class Intensifier(AbstractIntensifier):
             IntensifierStage.PROCESS_INCUMBENT_RUN,
             IntensifierStage.PROCESS_FIRST_CONFIG_RUN,
         ]:
-            self._ta_time += result.time
-            self.run_id += 1
-            self._process_inc_run(
+            self._target_algorithm_time += run_value.time
+            self.num_run += 1
+            self._process_incumbent(
                 incumbent=incumbent,
                 runhistory=runhistory,
-                log_traj=log_traj,
+                log_trajectory=log_trajectory,
             )
         else:
-            self.run_id += 1
-            self.num_chall_run += 1
-            self._ta_time += result.time
+            self.num_run += 1
+            self.num_challenger_run += 1
+            self._target_algorithm_time += run_value.time
             incumbent = self._process_racer_results(
                 challenger=run_info.config,
                 incumbent=incumbent,
                 runhistory=runhistory,
-                log_traj=log_traj,
+                log_trajectory=log_trajectory,
             )
 
-        self.elapsed_time += result.endtime - result.starttime
+        self.elapsed_time += run_value.endtime - run_value.starttime
         # check if 1 intensification run is complete - line 18
         # this is different to regular SMAC as it requires at least successful challenger run,
         # which is necessary to work on a fixed grid of configurations.
         if (
             self.stage == IntensifierStage.RUN_INCUMBENT
-            and self._chall_indx >= self.min_challenger
-            and self.num_chall_run > 0
+            and self._challenger_id >= self.min_challenger
+            and self.num_challenger_run > 0
         ):
-            if self.run_id > self.run_limit:
+            if self.num_run > self.run_limit:
                 logger.debug("Maximum #runs for intensification reached")
                 self._next_iteration()
 
-            if not self.use_ta_time_bound and self.elapsed_time - time_bound >= 0:
+            if not self.use_target_algorithm_time_bound and self.elapsed_time - time_bound >= 0:
                 logger.debug(
-                    "Wallclock time limit for intensification reached " "(used: %f sec, available: %f sec)",
+                    "Wallclock time limit for intensification reached (used: %f sec, available: %f sec)",
                     self.elapsed_time,
                     time_bound,
                 )
 
                 self._next_iteration()
 
-            elif self._ta_time - time_bound >= 0:
+            elif self._target_algorithm_time - time_bound >= 0:
                 logger.debug(
                     "TA time limit for intensification reached (used: %f sec, available: %f sec)",
-                    self._ta_time,
+                    self._target_algorithm_time,
                     time_bound,
                 )
 
@@ -507,15 +493,15 @@ class Intensifier(AbstractIntensifier):
 
         return incumbent, inc_perf
 
-    def _get_next_inc_run(
+    def _get_next_instance(
         self,
-        available_insts: List[str],
-    ) -> Tuple[str, int]:
+        pending_instances: list[str],
+    ) -> tuple[str, int]:
         """Method to extract the next seed/instance in which a incumbent run most be evaluated.
 
         Parameters
         ----------
-        available_insts : List[str]
+        pending_instances : List[str]
             A list of instances from which to extract the next incumbent run
 
         Returns
@@ -526,8 +512,8 @@ class Intensifier(AbstractIntensifier):
             Seed in which to evaluate the instance
         """
         # Line 5 - and avoid https://github.com/numpy/numpy/issues/10791
-        _idx = self.rng.choice(len(available_insts))
-        next_instance = available_insts[_idx]
+        _idx = self.rng.choice(len(pending_instances))
+        next_instance = pending_instances[_idx]
 
         # Line 6
         if self.deterministic:
@@ -544,12 +530,11 @@ class Intensifier(AbstractIntensifier):
 
         return next_instance, next_seed
 
-    def _get_inc_available_inst(
+    def _get_pending_instances(
         self,
         incumbent: Configuration,
         runhistory: RunHistory,
-        log_traj: bool = True,
-    ) -> List[str]:
+    ) -> list[str]:
         """Implementation of line 4 of Intensification.
 
         This method queries the inc runs in the run history
@@ -561,7 +546,7 @@ class Intensifier(AbstractIntensifier):
             Either challenger or incumbent
         runhistory : RunHistory
             stores all runs we ran so far
-        log_traj: bool
+        log_trajectory: bool
             Whether to log changes of incumbents in trajectory
         """
         # Line 4
@@ -587,11 +572,11 @@ class Intensifier(AbstractIntensifier):
 
         return available_insts
 
-    def _process_inc_run(
+    def _process_incumbent(
         self,
         incumbent: Configuration,
         runhistory: RunHistory,
-        log_traj: bool = True,
+        log_trajectory: bool = True,
     ) -> None:
         """Method to process the results of a challenger that races an incumbent.
 
@@ -601,7 +586,7 @@ class Intensifier(AbstractIntensifier):
             Either challenger or incumbent
         runhistory : RunHistory
             stores all runs we ran so far
-        log_traj: bool
+        log_trajectory: bool
             Whether to log changes of incumbents in trajectory
         """
         # output estimated performance of incumbent
@@ -625,14 +610,16 @@ class Intensifier(AbstractIntensifier):
             else:
                 self.stage = IntensifierStage.RUN_INCUMBENT
 
-        self._compare_configs(incumbent=incumbent, challenger=incumbent, runhistory=runhistory, log_trajectory=log_traj)
+        self._compare_configs(
+            incumbent=incumbent, challenger=incumbent, runhistory=runhistory, log_trajectory=log_trajectory
+        )
 
     def _get_next_racer(
         self,
         challenger: Configuration,
         incumbent: Configuration,
         runhistory: RunHistory,
-        log_traj: bool = True,
+        log_trajectory: bool = True,
     ) -> Tuple[Configuration, str, int]:
         """Method to return the next config setting to aggressively race challenger against
         incumbent.
@@ -645,7 +632,7 @@ class Intensifier(AbstractIntensifier):
             Best configuration so far
         runhistory : RunHistory
             Stores all runs we ran so far
-        log_traj: bool
+        log_trajectory: bool
                Whether to log changes of incumbents in trajectory
 
         Returns
@@ -661,7 +648,7 @@ class Intensifier(AbstractIntensifier):
         # have shifted. Re-populate the list if necessary
         if not self.to_run:
             # Lines 10/11
-            self.to_run, self.inc_sum_cost = self._get_instances_to_run(
+            self.to_run = self._get_missing_instances(
                 incumbent=incumbent, challenger=challenger, runhistory=runhistory, N=self.N
             )
 
@@ -678,8 +665,8 @@ class Intensifier(AbstractIntensifier):
         challenger: Configuration,
         incumbent: Configuration,
         runhistory: RunHistory,
-        log_traj: bool = True,
-    ) -> Optional[Configuration]:
+        log_trajectory: bool = True,
+    ) -> Configuration | None:
         """Process the result of a racing configuration against the current incumbent. Might propose
         a new incumbent.
 
@@ -700,13 +687,13 @@ class Intensifier(AbstractIntensifier):
         chal_runs = runhistory.get_runs_for_config(challenger, only_max_observed_budget=True)
         chal_perf = runhistory.get_cost(challenger)
 
-        # if all <instance, seed> have been run, compare challenger performance
+        # If all <instance, seed> have been run, compare challenger performance
         if not self.to_run:
             new_incumbent = self._compare_configs(
                 incumbent=incumbent,
                 challenger=challenger,
                 runhistory=runhistory,
-                log_trajectory=log_traj,
+                log_trajectory=log_trajectory,
             )
 
             # update intensification stage
@@ -755,13 +742,13 @@ class Intensifier(AbstractIntensifier):
 
         return incumbent
 
-    def _get_instances_to_run(
+    def _get_missing_instances(
         self,
         challenger: Configuration,
         incumbent: Configuration,
         N: int,
         runhistory: RunHistory,
-    ) -> Tuple[List[InstanceSeedBudgetKey], float]:
+    ) -> list[InstanceSeedBudgetKey]:
         """Returns the minimum list of <instance, seed> pairs to run the challenger on before
         comparing it with the incumbent.
 
@@ -780,8 +767,8 @@ class Intensifier(AbstractIntensifier):
         -------
         List[InstSeedBudgetKey]
             list of <instance, seed, budget> tuples to run
-        float
-            total (runtime) cost of running the incumbent on the instances (used for adaptive capping while racing)
+        # float
+        #     total (runtime) cost of running the incumbent on the instances (used for adaptive capping while racing)
         """
         # Get next instances left for the challenger
         # Line 8
@@ -801,12 +788,12 @@ class Intensifier(AbstractIntensifier):
 
         # for adaptive capping
         # because of efficiency computed here
-        inst_seed_pairs = list(inc_inst_seeds - set(missing_runs))
+        # inst_seed_pairs = list(inc_inst_seeds - set(missing_runs))
         # cost used by incumbent for going over all runs in inst_seed_pairs
-        inc_sum_cost = runhistory.sum_cost(config=incumbent, instance_seed_budget_keys=inst_seed_pairs, normalize=True)
-        assert type(inc_sum_cost) == float
+        # inc_sum_cost = runhistory.sum_cost(config=incumbent, instance_seed_budget_keys=inst_seed_pairs, normalize=True)
+        # assert type(inc_sum_cost) == float
 
-        return to_run, inc_sum_cost
+        return to_run  # , inc_sum_cost
 
     def get_next_challenger(
         self,
@@ -862,7 +849,7 @@ class Intensifier(AbstractIntensifier):
 
             if challenger:
                 # reset instance index for the new challenger
-                self._chall_indx += 1
+                self._challenger_id += 1
                 self.current_challenger = challenger
                 self.N = max(1, self.min_config_calls)
                 self.to_run = []
@@ -917,10 +904,10 @@ class Intensifier(AbstractIntensifier):
         self.update_configs_to_run = True
 
         # reset for a new iteration
-        self.run_id = 0
-        self.num_chall_run = 0
-        self._chall_indx = 0
+        self.num_run = 0
+        self.num_challenger_run = 0
+        self._challenger_id = 0
         self.elapsed_time = 0
-        self._ta_time = 0.0
+        self._target_algorithm_time = 0.0
 
-        self.stats.update_average_configs_per_intensify(n_configs=self._chall_indx)
+        self.stats.update_average_configs_per_intensify(n_configs=self._challenger_id)
