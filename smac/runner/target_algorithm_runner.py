@@ -24,8 +24,8 @@ __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
 
-SingleObjectiveOutput = float | list[float] | dict[str, float] | tuple[float, dict]
-MultiObjectiveOutput = tuple[list[float] | dict] | tuple[dict[str, float] | dict]
+SingleObjectiveOutput = Union[float, list[float], dict[str, float], tuple[float, dict]]
+MultiObjectiveOutput = Union[tuple[Union[list[float], dict]], tuple[Union[dict[str, float], dict]]]
 
 
 class TargetAlgorithmRunner(SerialRunner):
