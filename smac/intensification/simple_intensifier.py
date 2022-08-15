@@ -108,7 +108,7 @@ class SimpleIntensifier(AbstractIntensifier):
             challenger=run_info.config,
             incumbent=incumbent,
             runhistory=runhistory,
-            log_traj=log_traj,
+            log_trajectory=log_traj,
         )
         # get incumbent cost
         inc_perf = runhistory.get_cost(incumbent)

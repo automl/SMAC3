@@ -366,16 +366,18 @@ class RunHistory(Mapping[RunKey, RunValue]):
         # the same runkey will be ignored silently if not capped.
         if self.overwrite_existing_runs or force_update or self.data.get(k) is None:
             self._add(k, v, status, origin)
-        elif status != StatusType.CAPPED and self.data[k].status == StatusType.CAPPED:
-            # overwrite capped runs with uncapped runs
-            self._add(k, v, status, origin)
-        elif status == StatusType.CAPPED and self.data[k].status == StatusType.CAPPED:
-            if self.num_obj > 1:
-                raise RuntimeError("Not supported yet.")
 
-            # Overwrite if censored with a larger cutoff
-            if cost > self.data[k].cost:
-                self._add(k, v, status, origin)
+        # v2.0: We remove all runtime optimization
+        # elif status != StatusType.CAPPED and self.data[k].status == StatusType.CAPPED:
+        #    # overwrite capped runs with uncapped runs
+        #    self._add(k, v, status, origin)
+        # elif status == StatusType.CAPPED and self.data[k].status == StatusType.CAPPED:
+        #    if self.num_obj > 1:
+        #        raise RuntimeError("Not supported yet.")
+        #
+        #    # Overwrite if censored with a larger cutoff
+        #    if cost > self.data[k].cost:
+        #        self._add(k, v, status, origin)
         else:
             logger.info("Entry was not added to the runhistory because existing runs will not overwritten.")
 

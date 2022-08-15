@@ -625,7 +625,7 @@ class Intensifier(AbstractIntensifier):
             else:
                 self.stage = IntensifierStage.RUN_INCUMBENT
 
-        self._compare_configs(incumbent=incumbent, challenger=incumbent, runhistory=runhistory, log_traj=log_traj)
+        self._compare_configs(incumbent=incumbent, challenger=incumbent, runhistory=runhistory, log_trajectory=log_traj)
 
     def _get_next_racer(
         self,
@@ -706,7 +706,7 @@ class Intensifier(AbstractIntensifier):
                 incumbent=incumbent,
                 challenger=challenger,
                 runhistory=runhistory,
-                log_traj=log_traj,
+                log_trajectory=log_traj,
             )
 
             # update intensification stage

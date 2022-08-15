@@ -263,7 +263,7 @@ class AbstractIntensifier:
         incumbent: Configuration,
         challenger: Configuration,
         runhistory: RunHistory,
-        log_traj: bool = True,
+        log_trajectory: bool = True,
     ) -> Optional[Configuration]:
         """Compare two configuration wrt the runhistory and return the one which performs better (or
         None if the decision is not safe)
@@ -326,7 +326,7 @@ class AbstractIntensifier:
                     f"challenger ({chal_perf_format}) on {len(chall_runs)} runs."
                 )
                 assert self.stats
-                if log_traj and self.stats.incumbent_changed == 0:
+                if log_trajectory and self.stats.incumbent_changed == 0:
                     self.stats.add_incumbent(cost=chal_perf, incumbent=incumbent)
 
                 return incumbent
@@ -343,7 +343,7 @@ class AbstractIntensifier:
             )
             self._log_incumbent_changes(incumbent, challenger)
 
-            if log_traj:
+            if log_trajectory:
                 assert self.stats
                 self.stats.add_incumbent(cost=chal_perf, incumbent=challenger)
 
