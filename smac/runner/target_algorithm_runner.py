@@ -24,9 +24,6 @@ __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
 
-SingleObjectiveOutput = Union[float, list[float], dict[str, float], tuple[float, dict]]
-MultiObjectiveOutput = Union[tuple[Union[list[float], dict]], tuple[Union[dict[str, float], dict]]]
-
 
 class TargetAlgorithmRunner(SerialRunner):
     """Class to execute target algorithms which are python functions.
@@ -198,5 +195,12 @@ class TargetAlgorithmRunner(SerialRunner):
         config: Configuration,
         algorithm: Callable,
         algorithm_kwargs: Dict[str, Union[int, str, float, None]],
-    ) -> SingleObjectiveOutput | MultiObjectiveOutput:
+    ) -> Union[
+        float,
+        list[float],
+        dict[str, float],
+        tuple[float, dict],
+        tuple[Union[list[float], dict]],
+        tuple[Union[dict[str, float], dict]],
+    ]:
         return algorithm(config, **algorithm_kwargs)
