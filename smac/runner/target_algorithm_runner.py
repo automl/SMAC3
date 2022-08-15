@@ -89,7 +89,6 @@ class TargetAlgorithmRunner(SerialRunner):
 
         self.memory_limit = memory
         self.algorithm_walltime_limit = time
-        self
 
     def run(
         self,

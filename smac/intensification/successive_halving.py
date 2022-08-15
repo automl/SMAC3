@@ -711,7 +711,7 @@ class _SuccessiveHalving(AbstractIntensifier):
                 # instance_specific="0",
                 seed=0,
                 budget=0.0,
-                source_id=self.identifier,
+                source=self.identifier,
             )
 
         # sampling from next challenger marks the beginning of a new iteration
@@ -759,7 +759,7 @@ class _SuccessiveHalving(AbstractIntensifier):
                         # instance_specific="0",
                         seed=0,
                         budget=0.0,
-                        source_id=self.identifier,
+                        source=self.identifier,
                     )
 
                 new_challenger = True
@@ -779,7 +779,7 @@ class _SuccessiveHalving(AbstractIntensifier):
                         # instance_specific="0",
                         seed=0,
                         budget=0.0,
-                        source_id=self.identifier,
+                        source=self.identifier,
                     )
 
             if challenger:
@@ -838,7 +838,7 @@ class _SuccessiveHalving(AbstractIntensifier):
             # instance_specific=self.instance_specifics.get(instance, "0"),
             seed=seed,
             budget=budget,
-            source_id=self.identifier,
+            source=self.identifier,
         )
 
     def _update_stage(self, runhistory: RunHistory) -> None:

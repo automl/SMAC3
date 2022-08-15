@@ -783,10 +783,11 @@ class Intensifier(AbstractIntensifier):
         float
             total (runtime) cost of running the incumbent on the instances (used for adaptive capping while racing)
         """
-        # get next instances left for the challenger
+        # Get next instances left for the challenger
         # Line 8
         inc_inst_seeds = set(runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True))
         chall_inst_seeds = set(runhistory.get_runs_for_config(challenger, only_max_observed_budget=True))
+
         # Line 10
         missing_runs = sorted(inc_inst_seeds - chall_inst_seeds)
 
@@ -794,6 +795,7 @@ class Intensifier(AbstractIntensifier):
         self.rng.shuffle(missing_runs)
         if N < 0:
             raise ValueError("Argument N must not be smaller than zero, but is %s" % str(N))
+
         to_run = missing_runs[: min(N, len(missing_runs))]
         missing_runs = missing_runs[min(N, len(missing_runs)) :]
 
@@ -803,6 +805,7 @@ class Intensifier(AbstractIntensifier):
         # cost used by incumbent for going over all runs in inst_seed_pairs
         inc_sum_cost = runhistory.sum_cost(config=incumbent, instance_seed_budget_keys=inst_seed_pairs, normalize=True)
         assert type(inc_sum_cost) == float
+
         return to_run, inc_sum_cost
 
     def get_next_challenger(

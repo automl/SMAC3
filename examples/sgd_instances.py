@@ -133,7 +133,11 @@ if __name__ == "__main__":
     print(f"Default cost: {round(np.mean(default_costs), 2)}")
 
     # Create our SMAC object and pass the scenario and the train method
-    smac = MultiFidelityFacade(scenario, model.train, overwrite=True)
+    smac = MultiFidelityFacade(
+        scenario,
+        model.train,
+        overwrite=True,
+    )
     incumbent = smac.optimize()
 
     # Calculate the mean cost of all instances for the incumbent

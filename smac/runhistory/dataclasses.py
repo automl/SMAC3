@@ -29,6 +29,9 @@ class InstanceSeedBudgetKey:
     seed: int
     budget: float
 
+    def __lt__(self, other: InstanceSeedBudgetKey) -> bool:
+        return self.budget < other.budget
+
 
 @dataclass(frozen=True)
 class RunValue:
@@ -44,7 +47,6 @@ class RunValue:
 class RunInfo:
     config: Configuration
     instance: str | None
-    # instance_specific: str | None
     seed: int
     budget: float = 0.0
-    source_id: int = 0  # What's that?
+    source: int = 0

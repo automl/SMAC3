@@ -237,7 +237,7 @@ class ParallelScheduler(AbstractIntensifier):
         inc_perf: float
             empirical performance of incumbent configuration
         """
-        return self.intensifier_instances[run_info.source_id].process_results(
+        return self.intensifier_instances[run_info.source].process_results(
             run_info=run_info,
             incumbent=incumbent,
             runhistory=runhistory,

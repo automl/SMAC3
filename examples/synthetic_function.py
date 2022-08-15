@@ -48,7 +48,11 @@ if __name__ == "__main__":
     print(f"Default value: {round(default_value, 2)}")
 
     # Now we use SMAC to find the best hyperparameters
-    smac = BlackBoxFacade(scenario, rosenbrock_2d)
+    smac = BlackBoxFacade(
+        scenario,
+        rosenbrock_2d,
+        overwrite=True,
+    )
     incumbent = smac.optimize()
 
     incumbent_value = rosenbrock_2d(incumbent)
