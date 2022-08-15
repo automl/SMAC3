@@ -37,6 +37,42 @@ def scenario4(configspace: ConfigurationSpace) -> Scenario:
     return Scenario(configspace, objectives=["test", "blub"])
 
 
+@pytest.fixture
+def scenario5(configspace: ConfigurationSpace) -> Scenario:
+    return Scenario(
+        configspace,
+        name="test_scenario",
+        output_directory=Path("smac3_output_test"),
+        n_trials=100,
+        seed=5,
+        instances=["i1", "i2", "i3"],
+        instance_features={"i1": [1, 2, 3], "i2": [4, 5, 6], "i3": [7, 8, 9]},
+        instance_order="shuffle_once",
+    )
+
+
+@pytest.fixture
+def scenario6(configspace: ConfigurationSpace) -> Scenario:
+    return Scenario(
+        configspace,
+        name="test_scenario",
+        output_directory=Path("smac3_output_test"),
+        instances=["i1", "i2", "i3"],
+        instance_features={"i1": [1, 2, 3], "i2": [4, 5], "i3": [7, 8, 9]},
+    )
+
+
+@pytest.fixture
+def scenario7(configspace: ConfigurationSpace) -> Scenario:
+    return Scenario(
+        configspace,
+        name="test_scenario",
+        output_directory=Path("smac3_output_test"),
+        instances=["i1", "i2", "i3"],
+        instance_features={"blub": [1, 2, 3], "i2": [4, 5, 6], "i3": [7, 8, 9]},
+    )
+
+
 def test_comparison(scenario1: Scenario, scenario2: Scenario, scenario3: Scenario) -> None:
     assert scenario1 == scenario2
     assert scenario1 != scenario3
@@ -74,3 +110,13 @@ def test_save_load(scenario1: Scenario, scenario3: Scenario) -> None:
     scenario3.save()
     reloaded_scenario = Scenario.load(scenario3.output_directory)
     assert scenario3 == reloaded_scenario
+
+
+def test_instances(scenario5: Scenario, scenario6: Scenario, scenario7: Scenario) -> None:
+    assert scenario5.count_instance_features() == 3
+
+    with pytest.raises(RuntimeError, match="Instances must have the same number of features"):
+        scenario6.count_instance_features()
+
+    with pytest.raises(RuntimeError, match="Instance blub is not specified"):
+        scenario7.count_instance_features()
