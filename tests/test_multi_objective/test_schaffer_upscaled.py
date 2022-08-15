@@ -1,21 +1,15 @@
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
-__license__ = "3-clause BSD"
-
-import unittest
+import pytest
 
 import numpy as np
 from ConfigSpace import ConfigurationSpace, Float
 
-from smac import (
-    AlgorithmConfigurationFacade,
-    BlackBoxFacade,
-    HyperparameterFacade,
-    Scenario,
-    multi_objective,
-)
+from smac import AlgorithmConfigurationFacade, BlackBoxFacade, HyperparameterFacade
 from smac.configspace import ConfigurationSpace
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.multi_objective.parego import ParEGO
+
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
 
 MIN_V = -2
 MAX_V = 2
@@ -46,58 +40,58 @@ def get_optimum():
 
 def tae(cfg):
     f1, f2 = schaffer(cfg["x"])
-    return {"metric1": f1, "metric2": f2}
+    return {"cost1": f1, "cost2": f2}
 
 
-class SchafferTest(unittest.TestCase):
-    def setUp(self):
-        self.cs = ConfigurationSpace()
-        self.cs.add_hyperparameter(Float("x", (MIN_V, MAX_V)))
+@pytest.fixture
+def configspace():
+    cs = ConfigurationSpace()
+    cs.add_hyperparameter(Float("x", (MIN_V, MAX_V)))
 
-        # Scenario object
-        self.scenario = Scenario(
-            self.cs,
-            n_trials=50,
-            objectives=["metric1", "metric2"],
-            output_directory="smac3_output_test",
+    return cs
+
+
+def test_mean_aggregation(make_scenario, configspace):
+    scenario = make_scenario(configspace, multi_objective=True)
+
+    for facade in [BlackBoxFacade, HyperparameterFacade, AlgorithmConfigurationFacade]:
+        smac = facade(
+            scenario=scenario,
+            target_algorithm=tae,
+            multi_objective_algorithm=MeanAggregationStrategy(scenario.seed),
+            overwrite=True,
         )
+        incumbent = smac.optimize()
 
-    def test_mean_aggregation(self):
-        for facade in [BlackBoxFacade, HyperparameterFacade, AlgorithmConfigurationFacade]:
-            smac = facade(
-                scenario=self.scenario,
-                target_algorithm=tae,
-                multi_objective_algorithm=MeanAggregationStrategy(self.scenario.seed),
-                overwrite=True,
-            )
-            incumbent = smac.optimize()
+        f1_inc, f2_inc = schaffer(incumbent["x"])
+        f1_opt, f2_opt = get_optimum()
+        f2_inc = f2_inc / UPSCALING_FACTOR
 
-            f1_inc, f2_inc = schaffer(incumbent["x"])
-            f1_opt, f2_opt = get_optimum()
-            f2_inc = f2_inc / UPSCALING_FACTOR
+        inc = f1_inc + f2_inc
+        opt = f1_opt + f2_opt
+        diff = abs(inc - opt)
 
-            inc = f1_inc + f2_inc
-            opt = f1_opt + f2_opt
-            diff = abs(inc - opt)
+        assert diff < 0.05
 
-            assert diff < 0.1
 
-    def test_parego(self):
-        for facade in [BlackBoxFacade, HyperparameterFacade, AlgorithmConfigurationFacade]:
-            smac = facade(
-                scenario=self.scenario,
-                target_algorithm=tae,
-                multi_objective_algorithm=ParEGO(seed=self.scenario.seed),
-                overwrite=True,
-            )
-            incumbent = smac.optimize()
+def test_parego(make_scenario, configspace):
+    scenario = make_scenario(configspace, multi_objective=True)
 
-            f1_inc, f2_inc = schaffer(incumbent["x"])
-            f1_opt, f2_opt = get_optimum()
-            f2_inc = f2_inc / UPSCALING_FACTOR
+    for facade in [BlackBoxFacade, HyperparameterFacade, AlgorithmConfigurationFacade]:
+        smac = facade(
+            scenario=scenario,
+            target_algorithm=tae,
+            multi_objective_algorithm=ParEGO(seed=scenario.seed),
+            overwrite=True,
+        )
+        incumbent = smac.optimize()
 
-            inc = f1_inc + f2_inc
-            opt = f1_opt + f2_opt
-            diff = abs(inc - opt)
+        f1_inc, f2_inc = schaffer(incumbent["x"])
+        f1_opt, f2_opt = get_optimum()
+        f2_inc = f2_inc / UPSCALING_FACTOR
 
-            assert diff < 0.1
+        inc = f1_inc + f2_inc
+        opt = f1_opt + f2_opt
+        diff = abs(inc - opt)
+
+        assert diff < 0.05

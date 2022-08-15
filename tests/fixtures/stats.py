@@ -1,5 +1,4 @@
 from typing import Callable
-from ConfigSpace import ConfigurationSpace
 from smac import Scenario
 from smac.utils.stats import Stats
 import pytest

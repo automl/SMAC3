@@ -35,16 +35,6 @@ or fitted with no ensemble. TODO: Easier example.
 
 Docs: https://smarie.github.io/python-pytest-cases/
 
-**Caching**
-Uses pytest's cache functionality for long training models so they can be shared between
-tests and between different test runs. This is primarly used with `cases` so that tests
-requiring the same kind of expensive case and used cached values.
-
-Use `pytest --cached` to use this feature.
-
-See `test/test_automl/cases.py` for example of how the fixtures from
-`test/fixtures/caching.py` can be used to cache objects between tests.
-
 **Fixtures**
 All fixtures in "test/fixtures" are known in every test file. We try to make use
 of fixture `factories` which can be used to construct objects in complicated ways,
@@ -74,7 +64,6 @@ short. A convention we use is to prefix them with `make`, for example,
 from typing import Any, Iterator, List, Optional
 
 import re
-import shutil
 import signal
 from pathlib import Path
 
@@ -208,10 +197,4 @@ def pytest_addoption(parser: Parser) -> None:
         action="store_true",
         default=False,
         help="Disable tests marked as slow",
-    )
-    parser.addoption(
-        "--cached",
-        action="store_true",
-        default=False,
-        help="Cache everything between invocations of pytest",
     )

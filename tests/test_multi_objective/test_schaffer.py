@@ -68,7 +68,7 @@ def test_mean_aggregation(make_scenario, configspace):
         opt = f1_opt + f2_opt
         diff = abs(inc - opt)
 
-        assert diff < 0.1
+        assert diff < 0.05
 
 
 def test_parego(make_scenario, configspace):
@@ -90,4 +90,4 @@ def test_parego(make_scenario, configspace):
         opt = f1_opt + f2_opt
         diff = abs(inc - opt)
 
-        assert diff < 0.1
+        assert diff < 0.05
