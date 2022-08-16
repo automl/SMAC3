@@ -7,8 +7,7 @@ from smac.chooser.random_chooser import (
     RandomConfigurationChooser,
 )
 from smac.configspace import Configuration
-from smac.facade import Facade
-from smac.initial_design import InitialDesign
+from smac.facade.facade import Facade
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.model.random_model import RandomModel

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional, Tuple
 
+import os
 import warnings
 
 from smac.chooser.chooser import ConfigurationChooser
@@ -143,7 +144,8 @@ class ParallelScheduler(AbstractIntensifier):
         if num_workers <= 1 and self.print_worker_warning:
             self.logger.warning(
                 f"{self.__class__.__name__} is executed with {num_workers} worker(s) only. "
-                "Consider to use pynisher to use all available workers."
+                f"However, your system supports up to {os.cpu_count()} workers. Consider increasing the workers "
+                "in the scenario."
             )
             self.print_worker_warning = False
 

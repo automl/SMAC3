@@ -5,7 +5,7 @@ from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.local_and_random_search import LocalAndSortedRandomSearch
 from smac.chooser.probability_chooser import ProbabilityConfigurationChooser
 from smac.configspace import Configuration
-from smac.facade import Facade
+from smac.facade.facade import Facade
 from smac.initial_design import InitialDesign
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensification.intensification import Intensifier

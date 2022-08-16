@@ -4,7 +4,7 @@ from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.local_and_random_search import LocalAndSortedRandomSearch
 from smac.chooser.probability_chooser import ProbabilityConfigurationChooser
 from smac.configspace import Configuration
-from smac.facade import Facade
+from smac.facade.facade import Facade
 from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.model.random_forest.random_forest_with_instances import (
