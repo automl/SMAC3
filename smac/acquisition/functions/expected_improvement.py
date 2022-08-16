@@ -3,7 +3,9 @@ from __future__ import annotations
 import numpy as np
 from scipy.stats import norm
 
-from smac.acquisition.functions.abstract_acquisition_function import AbstractAcquisitionFunction
+from smac.acquisition.functions.abstract_acquisition_function import (
+    AbstractAcquisitionFunction,
+)
 
 
 class EI(AbstractAcquisitionFunction):

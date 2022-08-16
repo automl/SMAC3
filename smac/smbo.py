@@ -6,8 +6,11 @@ import time
 
 import numpy as np
 
-from smac.acquisition.functions.abstract_acquisition_function import AbstractAcquisitionFunction
 from smac.acquisition.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition.functions.abstract_acquisition_function import (
+    AbstractAcquisitionFunction,
+)
+from smac.callback import Callback
 from smac.chooser.chooser import ConfigurationChooser
 from smac.chooser.random_chooser import RandomConfigurationChooser
 from smac.configspace import Configuration
@@ -15,16 +18,17 @@ from smac.constants import MAXINT
 from smac.initial_design import InitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.model.base_model import BaseModel
-from smac.runhistory import RunInfo, RunValue, RunInfoIntent, StatusType
-from smac.runhistory.runhistory import RunHistory
+from smac.runhistory import RunInfo, RunInfoIntent, RunValue, StatusType
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
+from smac.runhistory.runhistory import RunHistory
+from smac.runner.exceptions import (
+    FirstRunCrashedException,
+    TargetAlgorithmAbortException,
+)
 from smac.runner.runner import Runner
-
-from smac.runner.exceptions import FirstRunCrashedException, TargetAlgorithmAbortException
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 from smac.utils.stats import Stats
-from smac.callback import Callback
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

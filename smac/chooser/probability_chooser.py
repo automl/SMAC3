@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from smac.chooser import RandomConfigurationChooser
 from abc import ABC, abstractmethod
 from typing import Optional
 
 import logging
 
 import numpy as np
+
+from smac.chooser import RandomConfigurationChooser
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

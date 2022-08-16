@@ -3,18 +3,19 @@ from __future__ import annotations
 import numpy as np
 import sklearn.gaussian_process.kernels as kernels
 
+from smac.acquisition import AbstractAcquisitionOptimizer
 from smac.acquisition.functions import AbstractAcquisitionFunction
 from smac.acquisition.functions.expected_improvement import EI
-from smac.acquisition import AbstractAcquisitionOptimizer
-from smac.acquisition.local_and_random_search import (
-    LocalAndSortedRandomSearch,
-)
+from smac.acquisition.local_and_random_search import LocalAndSortedRandomSearch
 from smac.chooser.probability_chooser import ProbabilityConfigurationChooser
 from smac.configspace import Configuration
 from smac.facade import Facade
 from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.intensification.intensification import Intensifier
-from smac.model.gaussian_process.base_gaussian_process import BaseGaussianProcess, GaussianProcess
+from smac.model.gaussian_process.base_gaussian_process import (
+    BaseGaussianProcess,
+    GaussianProcess,
+)
 from smac.model.gaussian_process.kernels import (
     ConstantKernel,
     HammingKernel,

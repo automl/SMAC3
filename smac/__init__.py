@@ -23,7 +23,12 @@ version = "2.0.0"
 
 
 try:
-    from smac.facade import BlackBoxFacade, HyperparameterFacade, MultiFidelityFacade, AlgorithmConfigurationFacade
+    from smac.facade import (
+        AlgorithmConfigurationFacade,
+        BlackBoxFacade,
+        HyperparameterFacade,
+        MultiFidelityFacade,
+    )
     from smac.runhistory.runhistory import RunHistory
     from smac.scenario import Scenario
 

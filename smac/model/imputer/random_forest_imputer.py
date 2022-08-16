@@ -8,8 +8,8 @@ import numpy as np
 from scipy.stats import truncnorm
 
 import smac.model.imputer
-from smac.model.imputer import AbstractImputer
 from smac.model.base_model import BaseModel
+from smac.model.imputer import AbstractImputer
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"

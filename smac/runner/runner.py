@@ -14,7 +14,6 @@ from enum import Enum
 
 import numpy as np
 
-
 import smac
 from smac.configspace import Configuration
 from smac.constants import MAXINT

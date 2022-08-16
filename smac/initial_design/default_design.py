@@ -4,7 +4,6 @@ from typing import List
 
 from ConfigSpace import Configuration
 
-
 from smac.initial_design.initial_design import InitialDesign
 
 __copyright__ = "Copyright 2022, automl.org"

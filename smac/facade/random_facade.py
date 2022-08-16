@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from smac.acquisition.functions.expected_improvement import EI
-from smac.acquisition.random_search import (
-    AbstractAcquisitionOptimizer,
-    RandomSearch,
+from smac.acquisition.random_search import AbstractAcquisitionOptimizer, RandomSearch
+from smac.chooser.random_chooser import (
+    ProbabilityConfigurationChooser,
+    RandomConfigurationChooser,
 )
-from smac.chooser.random_chooser import ProbabilityConfigurationChooser, RandomConfigurationChooser
 from smac.configspace import Configuration
 from smac.facade import Facade
 from smac.initial_design import InitialDesign

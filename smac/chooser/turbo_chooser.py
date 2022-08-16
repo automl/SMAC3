@@ -4,8 +4,8 @@ import typing
 
 import numpy as np
 
-from smac.chooser.chooser import ConfigurationChooser
 from smac.acquisition.functions import TS
+from smac.chooser.chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.model.utils import get_types
 from smac.utils.subspaces.turbo_subspace import TuRBOSubSpace

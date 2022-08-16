@@ -8,8 +8,8 @@ from smac.chooser.chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_intensifier import AbstractIntensifier
-from smac.runhistory import RunInfo, RunValue, RunInfoIntent, StatusType
 from smac.intensification.parallel_scheduling import ParallelScheduler
+from smac.runhistory import RunInfo, RunInfoIntent, RunValue, StatusType
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger

@@ -1,6 +1,6 @@
 from __future__ import annotations
-from enum import Enum, IntEnum
 
+from enum import Enum, IntEnum
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

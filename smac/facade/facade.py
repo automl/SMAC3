@@ -8,28 +8,34 @@ from pathlib import Path
 import joblib
 import numpy as np
 
-from smac.acquisition.functions.abstract_acquisition_function import AbstractAcquisitionFunction
 from smac.acquisition.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition.functions.abstract_acquisition_function import (
+    AbstractAcquisitionFunction,
+)
+from smac.callback import Callback
 from smac.chooser.chooser import ConfigurationChooser
 from smac.chooser.random_chooser import RandomConfigurationChooser
 from smac.configspace import Configuration
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier
-from smac.model.imputer import AbstractImputer
-from smac.callback import Callback
 from smac.model.base_model import BaseModel
-from smac.model.random_forest.random_forest_with_instances import RandomForestWithInstances
+from smac.model.imputer import AbstractImputer
 from smac.model.imputer.random_forest_imputer import RandomForestImputer
-from smac.multi_objective.abstract_multi_objective_algorithm import AbstractMultiObjectiveAlgorithm
-from smac.runhistory.runhistory import RunHistory
+from smac.model.random_forest.random_forest_with_instances import (
+    RandomForestWithInstances,
+)
+from smac.multi_objective.abstract_multi_objective_algorithm import (
+    AbstractMultiObjectiveAlgorithm,
+)
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
-from smac.runner.runner import Runner
+from smac.runhistory.runhistory import RunHistory
 from smac.runner.dask_runner import DaskParallelRunner
+from smac.runner.runner import Runner
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.scenario import Scenario
 from smac.smbo import SMBO
-from smac.utils.logging import get_logger, setup_logging
 from smac.utils.data_structures import recursively_compare_dicts
+from smac.utils.logging import get_logger, setup_logging
 from smac.utils.stats import Stats
 
 logger = get_logger(__name__)

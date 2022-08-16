@@ -2,12 +2,11 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional, Tuple
 
-from smac import RunHistory
 from smac.chooser.chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_intensifier import AbstractIntensifier
-from smac.runhistory import RunInfo, RunValue, RunInfoIntent
+from smac.runhistory import RunHistory, RunInfo, RunInfoIntent, RunValue
 from smac.scenario import Scenario
 
 __copyright__ = "Copyright 2022, automl.org"

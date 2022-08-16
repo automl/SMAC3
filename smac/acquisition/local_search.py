@@ -10,8 +10,8 @@ import time
 
 import numpy as np
 
-from smac.acquisition.functions import AbstractAcquisitionFunction
 from smac.acquisition import AbstractAcquisitionOptimizer
+from smac.acquisition.functions import AbstractAcquisitionFunction
 from smac.configspace import (
     Configuration,
     ConfigurationSpace,

@@ -1,4 +1,6 @@
-from smac.acquisition.functions.abstract_acquisition_function import AbstractAcquisitionFunction
+from smac.acquisition.functions.abstract_acquisition_function import (
+    AbstractAcquisitionFunction,
+)
 from smac.acquisition.functions.confidence_bound import LCB
 from smac.acquisition.functions.expected_improvement import EI, EIPS
 from smac.acquisition.functions.integrated import IntegratedAcquisitionFunction

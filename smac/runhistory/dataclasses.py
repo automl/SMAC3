@@ -1,8 +1,11 @@
 from __future__ import annotations
+
 from typing import Any
+
 from dataclasses import dataclass
 
 from ConfigSpace import Configuration
+
 import smac
 
 __copyright__ = "Copyright 2022, automl.org"

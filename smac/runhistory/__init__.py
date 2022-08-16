@@ -1,7 +1,15 @@
-from smac.runhistory.dataclasses import RunKey, InstanceSeedBudgetKey, InstanceSeedKey, RunValue, RunInfo
-from smac.runhistory.enumerations import StatusType, DataOrigin, RunInfoIntent
+from smac.runhistory.dataclasses import (
+    InstanceSeedBudgetKey,
+    InstanceSeedKey,
+    RunInfo,
+    RunKey,
+    RunValue,
+)
+from smac.runhistory.enumerations import DataOrigin, RunInfoIntent, StatusType
+from smac.runhistory.runhistory import RunHistory
 
 __all__ = [
+    "RunHistory",
     "RunKey",
     "InstanceSeedBudgetKey",
     "InstanceSeedKey",

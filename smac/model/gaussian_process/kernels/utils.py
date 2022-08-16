@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-
 import numpy as np
 import scipy.spatial.distance
 import scipy.special

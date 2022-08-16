@@ -8,21 +8,28 @@ from itertools import chain
 import numpy as np
 from ConfigSpace.hyperparameters import NumericalHyperparameter
 
+from smac.acquisition import AbstractAcquisitionOptimizer
 from smac.acquisition.functions import AbstractAcquisitionFunction
 from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.functions.thompson import TS
-from smac.acquisition import AbstractAcquisitionOptimizer
 from smac.chooser.chooser import ConfigurationChooser
-from smac.chooser.random_chooser import NoCoolDownConfigurationChooser, RandomConfigurationChooser
+from smac.chooser.random_chooser import (
+    NoCoolDownConfigurationChooser,
+    RandomConfigurationChooser,
+)
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.model.base_model import BaseModel
-from smac.model.gaussian_process.augmented_local_gaussian_process import GloballyAugmentedLocalGaussianProcess
-from smac.model.random_forest.random_forest_with_instances import RandomForestWithInstances
+from smac.model.gaussian_process.augmented_local_gaussian_process import (
+    GloballyAugmentedLocalGaussianProcess,
+)
+from smac.model.random_forest.random_forest_with_instances import (
+    RandomForestWithInstances,
+)
 from smac.model.utils import get_types
-from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.encoder.boing_encoder import RunHistory2EPM4CostWithRaw
+from smac.runhistory.runhistory import RunHistory
 from smac.utils.stats import Stats
 from smac.utils.subspaces.boing_subspace import BOinGSubspace
 from smac.utils.subspaces.turbo_subspace import TuRBOSubSpace

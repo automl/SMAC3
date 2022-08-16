@@ -1,7 +1,24 @@
 from pathlib import Path
 
 
-def replace(file, starts_with, replace="") -> None:
+def replace(file, find: str, replace: str):
+    new_lines = []
+    with open(file) as f:
+        for line in f.readlines():
+            line = line.replace(find, replace)
+            new_lines += [line]
+
+    # Empty file
+    with open(file, "w") as f:
+        f.write("")
+
+    # Save file with new lines
+    with open(file, "a") as f:
+        for line in new_lines:
+            f.write(line)
+
+
+def replace_if_starts_with(file, starts_with, replace="") -> None:
     new_lines = []
     with open(file) as f:
         for line in f.readlines():
@@ -51,9 +68,9 @@ if __name__ == "__main__":
         if filename == "smac/__init__.py":
             continue
 
-        replace(filename, "__copyright__ =", '__copyright__ = "Copyright 2022, automl.org"')
-        replace(filename, "__author__ =")
-        replace(filename, "__maintainer__ =")
-        replace(filename, "__version__ =")
-        replace(filename, "__email__ =")
+        replace_if_starts_with(filename, "__copyright__ =", '__copyright__ = "Copyright 2022, automl.org"')
+        replace_if_starts_with(filename, "__author__ =")
+        replace_if_starts_with(filename, "__maintainer__ =")
+        replace_if_starts_with(filename, "__version__ =")
+        replace_if_starts_with(filename, "__email__ =")
         check(filename)

@@ -4,16 +4,18 @@ import abc
 from typing import Callable, Iterator, List, Optional, Tuple
 
 import copy
+
 import numpy as np
 
-
-from smac.acquisition.functions.abstract_acquisition_function import AbstractAcquisitionFunction
-from smac.chooser.random_chooser import RandomConfigurationChooser
+from smac.acquisition.functions.abstract_acquisition_function import (
+    AbstractAcquisitionFunction,
+)
 from smac.chooser.modulus_chooser import NoCoolDownConfigurationChooser
+from smac.chooser.random_chooser import RandomConfigurationChooser
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.runhistory.runhistory import RunHistory
-from smac.utils.stats import Stats
 from smac.utils.logging import get_logger
+from smac.utils.stats import Stats
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

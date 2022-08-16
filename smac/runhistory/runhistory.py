@@ -1,6 +1,17 @@
 from __future__ import annotations
 
-from typing import Any, Dict, Iterable, Iterator, List, Mapping, Optional, Tuple, Type, Union, cast
+from typing import (
+    Any,
+    Dict,
+    Iterable,
+    Iterator,
+    List,
+    Mapping,
+    Optional,
+    Type,
+    Union,
+    cast,
+)
 
 import collections
 import json
@@ -9,14 +20,13 @@ import numpy as np
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.multi_objective.utils import normalize_costs
-from smac.runhistory import (
-    DataOrigin,
+from smac.runhistory.dataclasses import (
     InstanceSeedBudgetKey,
     InstanceSeedKey,
     RunKey,
     RunValue,
-    StatusType,
 )
+from smac.runhistory.enumerations import DataOrigin, StatusType
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -95,7 +105,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         # a JSON file. Can be chosen to not be written to disk
         self.external: dict[RunKey, DataOrigin] = {}
         self.num_obj: int = -1  # type: int
-        self.objective_bounds: list[Tuple[float, float]] = []
+        self.objective_bounds: list[tuple[float, float]] = []
 
     def __contains__(self, k: object) -> bool:
         """Dictionary semantics for `k in runhistory`"""

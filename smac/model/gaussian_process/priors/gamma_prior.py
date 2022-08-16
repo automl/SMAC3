@@ -6,8 +6,8 @@ import warnings
 import numpy as np
 import scipy.stats as sps
 
-from smac.model.gaussian_process.priors.prior import Prior
 from smac.constants import VERY_SMALL_NUMBER
+from smac.model.gaussian_process.priors.prior import Prior
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

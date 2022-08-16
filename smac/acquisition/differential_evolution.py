@@ -3,7 +3,6 @@ from __future__ import annotations
 import abc
 from typing import Callable, Iterator, List, Optional, Set, Tuple, Union
 
-
 import numpy as np
 
 from smac.acquisition import AbstractAcquisitionOptimizer

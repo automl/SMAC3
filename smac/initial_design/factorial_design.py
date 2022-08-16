@@ -12,7 +12,6 @@ from ConfigSpace.hyperparameters import (
 )
 from ConfigSpace.util import deactivate_inactive_hyperparameters
 
-
 from smac.initial_design.initial_design import InitialDesign
 
 __copyright__ = "Copyright 2022, automl.org"
