@@ -76,7 +76,7 @@ def SH(make_scenario, make_stats, configspace_small):
     scenario = make_scenario(
         configspace_small,
         use_instances=True,
-        n_instances=5,
+        n_instances=3,
         deterministic=False,
         min_budget=2,
         max_budget=5,
@@ -93,7 +93,7 @@ def _SH(make_scenario, make_stats, configspace_small):
     scenario = make_scenario(
         configspace_small,
         use_instances=True,
-        n_instances=5,
+        n_instances=3,
         deterministic=False,
         min_budget=2,
         max_budget=5,
@@ -106,12 +106,83 @@ def _SH(make_scenario, make_stats, configspace_small):
 
 
 @pytest.fixture
+def make_private_SH(make_scenario, make_stats, configspace_small):
+    def _make(deterministic=False, min_budget=2, max_budget=5, eta=2, n_instances=3, n_seeds=2):
+        scenario = make_scenario(
+            configspace_small,
+            use_instances=True,
+            n_instances=n_instances,
+            deterministic=deterministic,
+            min_budget=min_budget,
+            max_budget=max_budget,
+        )
+        stats = make_stats(scenario)
+        intensifier = _SuccessiveHalving(scenario=scenario, eta=eta, n_seeds=n_seeds)
+        intensifier.stats = stats
+
+        return intensifier
+
+    return _make
+
+
+@pytest.fixture
+def _SH_no_budgets(make_scenario, make_stats, configspace_small):
+    scenario = make_scenario(
+        configspace_small,
+        use_instances=True,
+        n_instances=3,
+        deterministic=False,
+        min_budget=None,
+        max_budget=None,
+    )
+    stats = make_stats(scenario)
+    intensifier = _SuccessiveHalving(scenario=scenario, eta=2, n_seeds=2)
+    intensifier.stats = stats
+
+    return intensifier
+
+
+@pytest.fixture
+def _SH_real_valued_1(make_scenario, make_stats, configspace_small):
+    scenario = make_scenario(
+        configspace_small,
+        use_instances=True,
+        n_instances=1,
+        deterministic=True,
+        min_budget=1,
+        max_budget=10,
+    )
+    stats = make_stats(scenario)
+    intensifier = _SuccessiveHalving(scenario=scenario, eta=2)
+    intensifier.stats = stats
+
+    return intensifier
+
+
+@pytest.fixture
+def _SH_real_valued_2(make_scenario, make_stats, configspace_small):
+    scenario = make_scenario(
+        configspace_small,
+        use_instances=True,
+        n_instances=1,
+        deterministic=True,
+        min_budget=9,
+        max_budget=10,
+    )
+    stats = make_stats(scenario)
+    intensifier = _SuccessiveHalving(scenario=scenario, eta=2)
+    intensifier.stats = stats
+
+    return intensifier
+
+
+@pytest.fixture
 def configs(configspace_small):
     configs = configspace_small.sample_configuration(20)
     return (configs[16], configs[15], configs[2], configs[3])
 
 
-def test_initialization(SH):
+def test_init(SH):
     """Makes sure that a proper _SH is created"""
 
     # We initialize the SH with zero intensifier_instances
@@ -121,7 +192,7 @@ def test_initialization(SH):
     assert SH._add_new_instance(num_workers=1)
 
     # Parameters properly passed to _SH
-    assert len(SH.intensifier_instances[0].instance_seed_pairs) == 10
+    assert len(SH.intensifier_instances[0].instance_seed_pairs) == 6
     assert SH.intensifier_instances[0].min_budget == 2
     assert SH.intensifier_instances[0].max_budget == 5
 
@@ -402,103 +473,51 @@ def test_parallel_same_as_serial_SH(SH, _SH, configs):
     assert configs_sh_rh == configs_psh_rh
 
 
+def test_init_1(make_private_SH):
+    """
+    Test parameter initializations for successive halving - instance as budget.
+    """
+    _SH = make_private_SH(deterministic=False, min_budget=None, max_budget=None, n_seeds=2)
+
+    assert len(_SH.instance_seed_pairs) == 6  # since instance-seed pairs
+    assert len(_SH.instances) == 3
+    assert _SH.min_budget == 1
+    assert _SH.max_budget == 6
+    assert _SH.n_configs_in_stage == [4.0, 2.0, 1.0]
+    assert _SH.instance_as_budget
+    assert _SH.repeat_configs
+
+
+def test_init_2(make_private_SH):
+    """
+    Test parameter initialiations for successive halving - real-valued budget
+    """
+    _SH = make_private_SH(deterministic=False, min_budget=1, max_budget=10, n_instances=1, n_seeds=1)
+
+    assert len(_SH.instance_seed_pairs) == 1  # since instance-seed pairs
+    assert _SH.min_budget == 1
+    assert _SH.max_budget == 10
+    assert _SH.n_configs_in_stage == [8.0, 4.0, 2.0, 1.0]
+    assert list(_SH.all_budgets) == [1.25, 2.5, 5.0, 10.0]
+    assert not _SH.instance_as_budget
+    assert not _SH.repeat_configs
+
+
+def test_init_3(make_private_SH):
+    """
+    Test parameter initialiations for successive halving - real-valued budget, high initial budget
+    """
+    _SH = make_private_SH(deterministic=True, min_budget=9, max_budget=10, n_instances=1, n_seeds=1)
+    assert len(_SH.instance_seed_pairs) == 1  # since instance-seed pairs
+    assert _SH.min_budget == 9
+    assert _SH.max_budget == 10
+    assert _SH.n_configs_in_stage == [1.0]
+    assert list(_SH.all_budgets) == [10.0]
+    assert not _SH.instance_as_budget
+    assert not _SH.repeat_configs
+
+
 '''
-
-    rh = RunHistory()
-    cs = get_config_space()
-    config1 = Configuration(cs, values={"a": 0, "b": 100})
-    config2 = Configuration(cs, values={"a": 100, "b": 0})
-    config3 = Configuration(cs, values={"a": 100, "b": 100})
-    config4 = Configuration(cs, values={"a": 0, "b": 0})
-
-    scen = Scenario(
-        {
-            "cutoff_time": 2,
-            "cs": cs,
-            "run_obj": "runtime",
-            "output_dir": "",
-            "deterministic": False,
-            "limit_resources": True,
-        }
-    )
-    stats = Stats(scenario=scen)
-    stats.start_timing()
-
-    logger = logging.getLogger(__module__ + "." + __class__.__name__)
-
-def test_init_1(self):
-    """
-    test parameter initializations for successive halving - instance as budget
-    """
-    intensifier = _SuccessiveHalving(
-        stats=stats,
-        traj_logger=TrajLogger(output_dir=None, stats=stats),
-        rng=np.random.RandomState(12345),
-        deterministic=False,
-        run_obj_time=False,
-        instances=[1, 2, 3],
-        n_seeds=2,
-        min_budget=None,
-        max_budget=None,
-        eta=2,
-    )
-
-    assert len(intensifier.instance_seed_pairs), 6)  # since instance-seed pairs
-    assert len(intensifier.instances), 3)
-    assert intensifier.min_budget, 1)
-    assert intensifier.max_budget, 6)
-    assertListEqual(intensifier.n_configs_in_stage, [4.0, 2.0, 1.0])
-    assert intensifier.instance_as_budget)
-    assert intensifier.repeat_configs)
-
-def test_init_2(self):
-    """
-    test parameter initialiations for successive halving - real-valued budget
-    """
-    intensifier = _SuccessiveHalving(
-        stats=stats,
-        traj_logger=TrajLogger(output_dir=None, stats=stats),
-        rng=np.random.RandomState(12345),
-        deterministic=True,
-        run_obj_time=False,
-        instances=[1],
-        min_budget=1,
-        max_budget=10,
-        eta=2,
-    )
-
-    assert len(intensifier.instance_seed_pairs), 1)  # since instance-seed pairs
-    assert intensifier.min_budget, 1)
-    assert intensifier.max_budget, 10)
-    assertListEqual(intensifier.n_configs_in_stage, [8.0, 4.0, 2.0, 1.0])
-    assertListEqual(list(intensifier.all_budgets), [1.25, 2.5, 5.0, 10.0])
-    assertFalse(intensifier.instance_as_budget)
-    assertFalse(intensifier.repeat_configs)
-
-def test_init_3(self):
-    """
-    test parameter initialiations for successive halving - real-valued budget, high initial budget
-    """
-    intensifier = _SuccessiveHalving(
-        stats=stats,
-        traj_logger=TrajLogger(output_dir=None, stats=stats),
-        rng=np.random.RandomState(12345),
-        deterministic=True,
-        run_obj_time=False,
-        instances=[1],
-        min_budget=9,
-        max_budget=10,
-        eta=2,
-    )
-
-    assert len(intensifier.instance_seed_pairs), 1)  # since instance-seed pairs
-    assert intensifier.min_budget, 9)
-    assert intensifier.max_budget, 10)
-    assertListEqual(intensifier.n_configs_in_stage, [1.0])
-    assertListEqual(list(intensifier.all_budgets), [10.0])
-    assertFalse(intensifier.instance_as_budget)
-    assertFalse(intensifier.repeat_configs)
-
 def test_init_4(self):
     """
     test wrong parameter initializations for successive halving
@@ -915,7 +934,7 @@ def test_get_next_run_2(self):
     )
     assert run_info.config, config1)
     assert len(intensifier.configs_to_run), 0)
-    assertFalse(intensifier.new_challenger)
+    assert not intensifier.new_challenger)
 
 def test_update_stage(self):
     """
@@ -1265,7 +1284,7 @@ def test_evaluate_challenger_capping(self, patch):
     assert list(runhistory.data.values())[3][2], StatusType.CAPPED)
     assert len(intensifier.success_challengers), 0)
     # top_k() should not be called since all configs were capped
-    assertFalse(patch.called)
+    assert not patch.called)
 
     # now the SH iteration should begin a new iteration since all configs were capped!
     assert intensifier.sh_iters, 1)
@@ -1992,7 +2011,7 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(self)
     pending_processing, incumbent = _exhaust_stage_execution(intensifier, target_algorithm, challengers, incumbent)
 
     # We have configurations pending, so iteration should NOT be done
-    assertFalse(intensifier.iteration_done)
+    assert not intensifier.iteration_done)
 
     # Make sure we launched all configurations we were meant to:
     # all_budgets=[2.5 5. ] n_configs_in_stage=[2.0, 1.0]
@@ -2015,7 +2034,7 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(self)
             run_value=run_value,
             log_trajectory=False,
         )
-    assertFalse(intensifier.iteration_done)
+    assert not intensifier.iteration_done)
 
     # we transition to stage 1, where the budget is 5
     assert intensifier.stage, 1)
@@ -2034,7 +2053,7 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(self)
     assert len(set(config_inst_seed[4:])), 3)
 
     # because there are configurations pending, no iteration should be done
-    assertFalse(intensifier.iteration_done)
+    assert not intensifier.iteration_done)
 
     # Finish the pending runs
     for run_info in pending_processing:
@@ -2077,7 +2096,7 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(se
     )
 
     # we do not want to test instance as budget
-    assertFalse(intensifier.instance_as_budget)
+    assert not intensifier.instance_as_budget)
 
     # Run until there are no more configurations to be proposed
     # Skip running some configurations to emulate the fact that runs finish on different time
@@ -2088,7 +2107,7 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(se
     pending_processing, incumbent = _exhaust_stage_execution(intensifier, target_algorithm, challengers, incumbent)
 
     # We have configurations pending, so iteration should NOT be done
-    assertFalse(intensifier.iteration_done)
+    assert not intensifier.iteration_done)
 
     # Make sure we launched all configurations we were meant to:
     # all_budgets=[2.5 5. ] n_configs_in_stage=[2.0, 1.0]
@@ -2111,7 +2130,7 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(se
             run_value=run_value,
             log_trajectory=False,
         )
-    assertFalse(intensifier.iteration_done)
+    assert not intensifier.iteration_done)
 
     # we transition to stage 1, where the budget is 5
     assert intensifier.stage, 1)
@@ -2148,8 +2167,8 @@ def test_budget_initialization(self):
         max_budget=81,
         eta=3,
     )
-    assertListEqual([1, 3, 9, 27, 81], intensifier.all_budgets.tolist())
-    assertListEqual([81, 27, 9, 3, 1], intensifier.n_configs_in_stage)
+    assert [1, 3, 9, 27, 81], intensifier.all_budgets.tolist())
+    assert [81, 27, 9, 3, 1], intensifier.n_configs_in_stage)
 
     to_check = [
         # minb, maxb, eta, n_configs_in_stage, all_budgets
