@@ -1,6 +1,2 @@
-# class BOinGAsker(Asker):
-#    ...
-#
-#
-# class BOinGSMBO(BaseSMBO, BOinGAsker, Teller):
+# class BOinGSMBO(BaseSMBO):
 #    ...

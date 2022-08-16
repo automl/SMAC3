@@ -591,7 +591,6 @@ def test_evaluate_challenger_2(make_scenario, make_stats, configspace_small, run
 
     config0 = configs[16]
     config1 = configs[15]
-    config2 = configs[2]
 
     assert intensifier.n_iters == 0
     assert intensifier.stage == IntensifierStage.RUN_FIRST_CONFIG
