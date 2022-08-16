@@ -1,6 +1,7 @@
 from __future__ import annotations
+from abc import abstractmethod
 
-from typing import Callable, Type
+from typing import Callable, Iterator, Type
 
 import time
 
@@ -11,8 +12,9 @@ from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
 from smac.callback import Callback
-from smac.chooser.chooser import ConfigurationChooser
-from smac.chooser.random_chooser import RandomConfigurationChooser
+
+# from smac.chooser.chooser import ConfigurationChooser
+# from smac.chooser.random_chooser import RandomConfigurationChooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.initial_design import InitialDesign
@@ -21,14 +23,13 @@ from smac.model.base_model import BaseModel
 from smac.runhistory import RunInfo, RunInfoIntent, RunValue, StatusType
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory
-from smac.runner.exceptions import (
-    FirstRunCrashedException,
-    TargetAlgorithmAbortException,
-)
 from smac.runner.runner import Runner
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 from smac.utils.stats import Stats
+from smac.loop.asker import Asker
+from smac.loop.teller import Teller
+from smac.random_design.random_design import RandomDesign
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -37,7 +38,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class SMBO:
+class BaseSMBO:
     """Interface that contains the main Bayesian optimization loop.
 
     Parameters
@@ -68,7 +69,7 @@ class SMBO:
         Random number generator
     runner : smac.tae.base.BaseRunner Object
         target algorithm run executor
-    random_configuration_chooser
+    random_design
         Chooser for random configuration -- one of
         * ChooserNoCoolDown(modulus)
         * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)
@@ -90,7 +91,6 @@ class SMBO:
     intensifier
     rng
     initial_design_configs
-    configuration_chooser
     runner
     """
 
@@ -106,8 +106,7 @@ class SMBO:
         model: BaseModel,
         acquisition_optimizer: AbstractAcquisitionOptimizer,
         acquisition_function: AbstractAcquisitionFunction,
-        configuration_chooser: ConfigurationChooser,
-        random_configuration_chooser: RandomConfigurationChooser,
+        random_design: RandomDesign,
         seed: int = 0,
     ):
         # Changed in 2.0: We don't restore the incumbent anymore but derive it directly from
@@ -124,8 +123,7 @@ class SMBO:
         self.model = model
         self.acquisition_optimizer = acquisition_optimizer
         self.acquisition_function = acquisition_function
-        self.configuration_chooser = configuration_chooser
-        self.random_configuration_chooser = random_configuration_chooser
+        self.random_design = random_design
         self.runner = runner
 
         self.seed = seed
@@ -267,107 +265,6 @@ class SMBO:
         )
         return time_left
 
-    def _incorporate_run_results(self, run_info: RunInfo, run_value: RunValue, time_left: float) -> None:
-        """The SMBO submits a config-run-request via a RunInfo object. When that config run is
-        completed, a RunValue, which contains all the relevant information obtained after running a
-        job, is returned. This method incorporates the status of that run into the stats/runhistory
-        objects so that other consumers can advance with their task.
-
-        Additionally, it checks for a new incumbent via the intensifier process results,
-        which also has the side effect of moving the intensifier to a new state
-
-        Parameters
-        ----------
-        run_info: RunInfo
-            Describes the run (config) from which to process the results
-        result: RunValue
-            Contains relevant information regarding the execution of a config
-        time_left: float
-            time in [sec] available to perform intensify
-        """
-        # We removed `abort_on_first_run_crash` and therefore we expect the first
-        # run to always succeed.
-        if self.stats.finished == 0 and run_value.status == StatusType.CRASHED:
-            additional_info = ""
-            if "traceback" in run_value.additional_info:
-                additional_info = "\n\n" + run_value.additional_info["traceback"]
-
-            raise FirstRunCrashedException("The first run crashed. Please check your setup again." + additional_info)
-
-        # Update SMAC stats
-        self.stats.target_algorithm_walltime_used += float(run_value.time)
-        self.stats.finished += 1
-
-        logger.debug(
-            f"Status: {run_value.status}, cost: {run_value.cost}, time: {run_value.time}, "
-            f"Additional: {run_value.additional_info}"
-        )
-
-        self.runhistory.add(
-            config=run_info.config,
-            cost=run_value.cost,
-            time=run_value.time,
-            status=run_value.status,
-            instance=run_info.instance,
-            seed=run_info.seed,
-            budget=run_info.budget,
-            starttime=run_value.starttime,
-            endtime=run_value.endtime,
-            force_update=True,
-            additional_info=run_value.additional_info,
-        )
-        self.stats.n_configs = len(self.runhistory.config_ids)
-
-        if run_value.status == StatusType.ABORT:
-            raise TargetAlgorithmAbortException(
-                "The target algorithm was aborted. The last incumbent can be found in the trajectory file."
-            )
-        elif run_value.status == StatusType.STOP:
-            self._stop = True
-            return
-
-        # Update the intensifier with the result of the runs
-        self.incumbent, _ = self.intensifier.process_results(
-            run_info=run_info,
-            run_value=run_value,
-            incumbent=self.incumbent,
-            runhistory=self.runhistory,
-            time_bound=max(self._min_time, time_left),
-        )
-
-        # Gracefully end optimization if termination cost is reached
-        if self.scenario.termination_cost_threshold != np.inf:
-            if not isinstance(run_value.cost, list):
-                cost = [run_value.cost]
-            else:
-                cost = run_value.cost
-
-            if not isinstance(self.scenario.termination_cost_threshold, list):
-                cost_threshold = [self.scenario.termination_cost_threshold]
-            else:
-                cost_threshold = self.scenario.termination_cost_threshold
-
-            if len(cost) != len(cost_threshold):
-                raise RuntimeError("You must specify a termination cost threshold for each objective.")
-
-            if all(cost[i] < cost_threshold[i] for i in range(len(cost))):
-                self._stop = True
-
-        for callback in self._callbacks:
-            response = callback.on_iteration_end(smbo=self, info=run_info, value=run_value)
-
-            # If a callback returns False, the optimization loop should be interrupted
-            # the other callbacks are still being called.
-            if response is False:
-                logger.debug("An callback returned False. Abort is requested.")
-                self._stop = True
-
-        # We always save immediately
-        # TODO: Performance issues if we always save?
-        self.save()
-
-        return
-
     def register_callback(self, callback: Callback) -> None:
         self._callbacks += [callback]
 
@@ -400,7 +297,7 @@ class SMBO:
             intent, run_info = self.intensifier.get_next_run(
                 challengers=self.initial_design_configs,
                 incumbent=self.incumbent,
-                chooser=self.configuration_chooser,
+                ask=self.ask,
                 runhistory=self.runhistory,
                 repeat_configs=self.intensifier.repeat_configs,
                 num_workers=self.runner.num_workers(),
@@ -470,7 +367,7 @@ class SMBO:
             for run_info, run_value in self.runner.get_finished_runs():
                 # Add the results of the run to the run history
                 # Additionally check for new incumbent
-                self._incorporate_run_results(run_info, run_value, time_left)
+                self.tell(run_info, run_value, time_left)
 
             logger.debug(
                 "Remaining budget: %f (wallclock time), %f (target algorithm time), %f (target algorithm runs)"
@@ -496,7 +393,7 @@ class SMBO:
                     for run_info, run_value in self.runner.get_finished_runs():
                         # Add the results of the run to the run history
                         # Additionally check for new incumbent
-                        self._incorporate_run_results(run_info, run_value, time_left)
+                        self.tell(run_info, run_value, time_left)
 
                 # Break from the intensification loop, as there are no more resources.
                 break
@@ -510,6 +407,36 @@ class SMBO:
 
         return self.incumbent
 
+    @abstractmethod
+    def ask(self) -> Iterator[Configuration]:
+        """Choose next candidate solution with Bayesian optimization. The suggested configurations
+        depend on the surrogate model acquisition optimizer/function.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def tell(self, run_info: RunInfo, run_value: RunValue, time_left: float, save: bool = True) -> None:
+        """The SMBO submits a config-run-request via a RunInfo object. When that config run is
+        completed, a RunValue, which contains all the relevant information obtained after running a
+        job, is returned. This method incorporates the status of that run into the stats/runhistory
+        objects so that other consumers can advance with their task.
+
+        Additionally, it checks for a new incumbent via the intensifier process results,
+        which also has the side effect of moving the intensifier to a new state
+
+        Parameters
+        ----------
+        run_info: RunInfo
+            Describes the run (config) from which to process the results.
+        result: RunValue
+            Contains relevant information regarding the execution of a config.
+        time_left: float
+            How much time in seconds is left to perform intensification.
+        save : bool, optional to True
+            Whether the runhistory should be saved.
+        """
+        raise NotImplementedError
+
     def save(self) -> None:
         """Saves the current stats and runhistory."""
         self.stats.save()
@@ -517,3 +444,11 @@ class SMBO:
         path = self.scenario.output_directory
         if path is not None:
             self.runhistory.save_json(fn=str(path / "runhistory.json"))
+
+
+class SMBO(Asker, Teller, BaseSMBO):
+    def __init__(self, *args, **kwargs):
+
+        BaseSMBO.__init__(self, *args, **kwargs)
+        Asker.__init__(self)
+        Teller.__init__(self)

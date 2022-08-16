@@ -7,7 +7,7 @@ from smac.acquisition import AbstractAcquisitionOptimizer
 from smac.acquisition.functions import AbstractAcquisitionFunction
 from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.local_and_random_search import LocalAndSortedRandomSearch
-from smac.chooser.probability_chooser import ProbabilityConfigurationChooser
+from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.configspace import Configuration
 from smac.facade.facade import Facade
 from smac.initial_design.sobol_design import SobolInitialDesign
@@ -215,10 +215,10 @@ class BlackBoxFacade(Facade):
         return initial_design
 
     @staticmethod
-    def get_random_configuration_chooser(
+    def get_random_design(
         scenario: Scenario, *, random_probability: float = 0.08447232371720552
-    ) -> ProbabilityConfigurationChooser:
-        return ProbabilityConfigurationChooser(seed=scenario.seed, prob=random_probability)
+    ) -> ProbabilityRandomDesign:
+        return ProbabilityRandomDesign(seed=scenario.seed, probability=random_probability)
 
     @staticmethod
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm | None:

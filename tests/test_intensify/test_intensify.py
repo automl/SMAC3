@@ -139,7 +139,7 @@ def test_race_challenger_large(make_scenario, make_stats, configspace_small, run
         if intensifier.continue_challenger:
             config = intensifier.current_challenger
         else:
-            config, _ = intensifier.get_next_challenger(challengers=[configs[1], configs[2]], chooser=None)
+            config, _ = intensifier.get_next_challenger(challengers=[configs[1], configs[2]], ask=None)
 
         incumbent, instance, seed = intensifier._get_next_racer(
             challenger=config, incumbent=configs[0], runhistory=runhistory
@@ -203,7 +203,7 @@ def test_race_challenger_large_blocked_seed(make_scenario, make_stats, configspa
         if intensifier.continue_challenger:
             config = intensifier.current_challenger
         else:
-            config, _ = intensifier.get_next_challenger(challengers=[configs[1], configs[2]], chooser=None)
+            config, _ = intensifier.get_next_challenger(challengers=[configs[1], configs[2]], ask=None)
 
         incumbent, instance, seed = intensifier._get_next_racer(
             challenger=config, incumbent=configs[0], runhistory=runhistory
@@ -380,7 +380,7 @@ def testget_next_challenger(make_scenario, make_stats, configspace_small, runhis
     intensifier.stage = IntensifierStage.RUN_CHALLENGER
 
     # get a new challenger to evaluate
-    config, new = intensifier.get_next_challenger(challengers=[configs[0], configs[1]], chooser=None)
+    config, new = intensifier.get_next_challenger(challengers=[configs[0], configs[1]], ask=None)
 
     assert config == configs[0] == intensifier.current_challenger
     assert intensifier._challenger_id == 1
@@ -389,7 +389,7 @@ def testget_next_challenger(make_scenario, make_stats, configspace_small, runhis
 
     # when already evaluating a challenger, return the same challenger
     intensifier.to_run = [(1, 1, 0)]
-    config, new = intensifier.get_next_challenger(challengers=[configs[1]], chooser=None)
+    config, new = intensifier.get_next_challenger(challengers=[configs[1]], ask=None)
     assert config == configs[0] == intensifier.current_challenger
     assert intensifier._challenger_id, 1
     assert not new
@@ -409,7 +409,7 @@ def test_generate_challenger(make_scenario, make_stats, configspace_small, runhi
     intensifier._set_stats(stats)
     configs = configspace_small.sample_configuration(3)
 
-    gen = intensifier._generate_challengers(challengers=[configs[0], configs[1]], chooser=None)
+    gen = intensifier._generate_challengers(challengers=[configs[0], configs[1]], ask=None)
 
     assert next(gen) == configs[0]
     assert next(gen) == configs[1]
@@ -417,7 +417,7 @@ def test_generate_challenger(make_scenario, make_stats, configspace_small, runhi
         next(gen)
 
     smac = AlgorithmConfigurationFacade(scenario, target, overwrite=True)
-    gen = intensifier._generate_challengers(challengers=None, chooser=smac.configuration_chooser)
+    gen = intensifier._generate_challengers(challengers=None, ask=smac.optimizer.ask)
 
     assert next(gen).get_dictionary() == {"a": 5489, "b": 0.007257005721594277, "c": "dog"}
 
@@ -426,7 +426,7 @@ def test_generate_challenger(make_scenario, make_stats, configspace_small, runhi
 
     # when both are none, raise error
     with pytest.raises(ValueError, match="No .* provided"):
-        intensifier._generate_challengers(challengers=None, chooser=None)
+        intensifier._generate_challengers(challengers=None, ask=None)
 
 
 def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, runhistory):
@@ -457,7 +457,7 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
         challengers=[config2],
         incumbent=None,
         runhistory=runhistory,
-        chooser=None,
+        ask=None,
     )
     assert run_info.config == config2
     assert intensifier.stage == IntensifierStage.PROCESS_FIRST_CONFIG_RUN
@@ -486,7 +486,7 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
         ],  # since incumbent is run, no configs required
         incumbent=inc,
         runhistory=runhistory,
-        chooser=None,
+        ask=None,
     )
 
     # no new TA runs as there are no more instances to run
@@ -547,7 +547,7 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
         challengers=None,  # don't need a new list here as old one is cont'd
         incumbent=inc,
         runhistory=runhistory,
-        chooser=None,
+        ask=None,
     )
     assert run_info.config == config0
     assert intensifier.stage == IntensifierStage.RUN_CHALLENGER
@@ -612,7 +612,7 @@ def test_evaluate_challenger_2(make_scenario, make_stats, configspace_small, run
         challengers=[config1],
         incumbent=config0,
         runhistory=runhistory,
-        chooser=None,
+        ask=None,
     )
     run_value = evaluate_challenger(run_info, target_algorithm, stats, runhistory)
     inc, perf = intensifier.process_results(
@@ -653,7 +653,7 @@ def test_no_new_intensification_wo_challenger_run(make_scenario, make_stats, con
         challengers=[config2],
         incumbent=None,
         runhistory=runhistory,
-        chooser=None,
+        ask=None,
     )
     assert run_info.config == config2
     assert intensifier.stage == IntensifierStage.PROCESS_FIRST_CONFIG_RUN
@@ -683,7 +683,7 @@ def test_no_new_intensification_wo_challenger_run(make_scenario, make_stats, con
         challengers=[config2],  # since incumbent is run, no configs required
         incumbent=inc,
         runhistory=runhistory,
-        chooser=None,
+        ask=None,
     )
 
     assert run_info.config is None
@@ -711,19 +711,15 @@ def test_no_new_intensification_wo_challenger_run(make_scenario, make_stats, con
     # In this scenario, the intensifier produces a SKIP intent as an indication
     # that a new iteration must be initiated, and for code simplicity,
     # relies on a new call to get_next_run to yield more configurations
-    intent, run_info = intensifier.get_next_run(
-        challengers=[config0], incumbent=inc, runhistory=runhistory, chooser=None
-    )
+    intent, run_info = intensifier.get_next_run(challengers=[config0], incumbent=inc, runhistory=runhistory, ask=None)
     assert intent == RunInfoIntent.SKIP
 
     # This doesn't return a config because the array of configs is exhausted
     intensifier.stage = IntensifierStage.RUN_CHALLENGER
-    config, _ = intensifier.get_next_challenger(challengers=None, chooser=None)
+    config, _ = intensifier.get_next_challenger(challengers=None, ask=None)
     assert config is None
     # This finally gives a runable configuration
-    intent, run_info = intensifier.get_next_run(
-        challengers=[config1], incumbent=inc, runhistory=runhistory, chooser=None
-    )
+    intent, run_info = intensifier.get_next_run(challengers=[config1], incumbent=inc, runhistory=runhistory, ask=None)
     run_value = evaluate_challenger(run_info, target_algorithm, stats, runhistory)
     inc, perf = intensifier.process_results(
         run_info=run_info,

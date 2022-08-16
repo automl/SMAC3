@@ -12,10 +12,10 @@ from smac.acquisition import AbstractAcquisitionOptimizer
 from smac.acquisition.functions import AbstractAcquisitionFunction
 from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.functions.thompson import TS
-from smac.chooser.chooser import ConfigurationChooser
-from smac.chooser.random_chooser import (
+from smac.random_design.chooser import ConfigurationChooser
+from smac.random_design.random_design import (
     NoCoolDownConfigurationChooser,
-    RandomConfigurationChooser,
+    RandomDesign,
 )
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration

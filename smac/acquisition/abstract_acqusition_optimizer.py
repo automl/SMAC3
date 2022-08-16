@@ -10,8 +10,8 @@ import numpy as np
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.chooser.modulus_chooser import NoCoolDownConfigurationChooser
-from smac.chooser.random_chooser import RandomConfigurationChooser
+from smac.random_design.modulus_design import NoCoolDownRandomDesign
+from smac.random_design.random_design import RandomDesign
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.logging import get_logger
@@ -56,7 +56,7 @@ class AbstractAcquisitionOptimizer(metaclass=abc.ABCMeta):
         self,
         previous_configs: List[Configuration],
         num_points: int | None = None,
-        random_configuration_chooser: RandomConfigurationChooser | None = None,
+        random_design: RandomDesign | None = None,
     ) -> Iterator[Configuration]:
         """Maximize acquisition function using ``_maximize``.
 
@@ -66,11 +66,11 @@ class AbstractAcquisitionOptimizer(metaclass=abc.ABCMeta):
             Previous evaluated configurations.
         num_points: int
             Number of points to be sampled. If `num_points` is not specified, `self.challengers` is used.
-        random_configuration_chooser: ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser, optional
+        random_design: ~smac.optimizer.random_design.RandomConfigurationChooser, optional
             part of the returned ChallengerList such
             that we can interleave random configurations
-            by a scheme defined by the random_configuration_chooser;
-            random_configuration_chooser.next_smbo_iteration()
+            by a scheme defined by the random_design;
+            random_design.next_smbo_iteration()
             is called at the end of this function
 
         Returns
@@ -85,10 +85,10 @@ class AbstractAcquisitionOptimizer(metaclass=abc.ABCMeta):
             assert num_points is not None
             return [t[1] for t in self._maximize(previous_configs, num_points)]
 
-        challengers = ChallengerList(next_configs_by_acq_value, self.configspace, random_configuration_chooser)
+        challengers = ChallengerList(next_configs_by_acq_value, self.configspace, random_design)
 
-        if random_configuration_chooser is not None:
-            random_configuration_chooser.next_smbo_iteration()
+        if random_design is not None:
+            random_design.next_smbo_iteration()
 
         return challengers
 
@@ -166,26 +166,26 @@ class ChallengerList(Iterator):
         self,
         challenger_callback: Callable,
         configuration_space: ConfigurationSpace,
-        random_configuration_chooser: RandomConfigurationChooser | None = NoCoolDownConfigurationChooser(modulus=2.0),
+        random_design: RandomDesign | None = NoCoolDownRandomDesign(modulus=2.0),
     ):
         self.challengers_callback = challenger_callback
         self.challengers = None  # type: Optional[List[Configuration]]
         self.configuration_space = configuration_space
         self._index = 0
         self._iteration = 1  # 1-based to prevent from starting with a random configuration
-        self.random_configuration_chooser = random_configuration_chooser
+        self.random_design = random_design
 
     def __next__(self) -> Configuration:
         if self.challengers is not None and self._index == len(self.challengers):
             raise StopIteration
-        elif self.random_configuration_chooser is None:
+        elif self.random_design is None:
             if self.challengers is None:
                 self.challengers = self.challengers_callback()
             config = self.challengers[self._index]
             self._index += 1
             return config
         else:
-            if self.random_configuration_chooser.check(self._iteration):
+            if self.random_design.check(self._iteration):
                 config = self.configuration_space.sample_configuration()
                 config.origin = "Random Search"
             else:

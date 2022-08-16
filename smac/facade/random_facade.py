@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.random_search import AbstractAcquisitionOptimizer, RandomSearch
-from smac.chooser.random_chooser import (
+from smac.random_design.random_design import (
     ProbabilityConfigurationChooser,
-    RandomConfigurationChooser,
+    RandomDesign,
 )
 from smac.configspace import Configuration
 from smac.facade.facade import Facade
@@ -51,7 +51,7 @@ class RandomFacade(Facade):
     - get_acquisition_function
     - get_intensifier
     - get_initial_design
-    - get_random_configuration_chooser
+    - get_random_design
     - get_multi_objective_algorithm
     """
 
@@ -95,11 +95,11 @@ class RandomFacade(Facade):
         )
 
     @staticmethod
-    def get_random_configuration_chooser(
+    def get_random_design(
         scenario: Scenario,
         *,
         random_probability: float = 0.5,
-    ) -> RandomConfigurationChooser:
+    ) -> RandomDesign:
         return ProbabilityConfigurationChooser(prob=random_probability, seed=scenario.seed)
 
     @staticmethod

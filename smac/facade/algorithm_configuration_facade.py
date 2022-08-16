@@ -3,7 +3,7 @@ from __future__ import annotations
 from smac.acquisition.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
 from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.local_and_random_search import LocalAndSortedRandomSearch
-from smac.chooser.probability_chooser import ProbabilityConfigurationChooser
+from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.configspace import Configuration
 from smac.facade.facade import Facade
 from smac.initial_design import InitialDesign
@@ -102,12 +102,12 @@ class AlgorithmConfigurationFacade(Facade):
         )
 
     @staticmethod
-    def get_random_configuration_chooser(
+    def get_random_design(
         scenario: Scenario,
         *,
         random_probability: float = 0.5,
-    ) -> ProbabilityConfigurationChooser:
-        return ProbabilityConfigurationChooser(prob=random_probability, seed=scenario.seed)
+    ) -> ProbabilityRandomDesign:
+        return ProbabilityRandomDesign(probability=random_probability, seed=scenario.seed)
 
     @staticmethod
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm | None:

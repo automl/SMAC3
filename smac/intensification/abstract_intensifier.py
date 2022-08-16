@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-from typing import Any, Iterator, List, Mapping, Optional, Tuple
+from typing import Any, Callable, Iterator, List, Mapping, Optional, Tuple
 
 import time
 from collections import OrderedDict
 
 import numpy as np
 
-from smac.chooser.chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.runhistory import RunInfo, RunInfoIntent, RunValue
 from smac.runhistory.runhistory import RunHistory
@@ -125,7 +124,7 @@ class AbstractIntensifier:
         self,
         challengers: list[Configuration] | None,
         incumbent: Configuration,
-        chooser: ConfigurationChooser | None,
+        ask: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
@@ -202,7 +201,7 @@ class AbstractIntensifier:
     def _next_challenger(
         self,
         challengers: list[Configuration] | None,
-        chooser: ConfigurationChooser | None,
+        ask: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
     ) -> Optional[Configuration]:
@@ -234,12 +233,12 @@ class AbstractIntensifier:
             # iterate over challengers provided
             self.logger.debug("Using challengers provided")
             chall_gen = (c for c in challengers)
-        elif chooser:
+        elif ask:
             # generating challengers on-the-fly if optimizer is given
             self.logger.debug("Generating new challenger from optimizer")
-            chall_gen = chooser.ask()
+            chall_gen = ask()
         else:
-            raise ValueError("No configurations/chooser provided. Cannot generate challenger!")
+            raise ValueError("No configurations/ask function provided. Cannot generate challenger!")
 
         self.logger.debug("Time to select next challenger: %.4f" % (time.time() - start_time))
 

@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from typing import List, Optional, Tuple
+from typing import Callable, Iterator, List, Optional, Tuple
 
 import numpy as np
 
-from smac.chooser.chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.intensification.parallel_scheduling import ParallelScheduler
@@ -332,13 +331,13 @@ class _Hyperband(_SuccessiveHalving):
         self,
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: Optional[ConfigurationChooser],
+        ask: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
     ) -> Tuple[RunInfoIntent, RunInfo]:
         """Selects which challenger to use based on the iteration stage and set the iteration
-        parameters. First iteration will choose configurations from the ``chooser`` or input
+        parameters. First iteration will choose configurations from the ``ask`` or input
         challengers, while the later iterations pick top configurations from the previously selected
         challengers in that iteration.
 
@@ -384,7 +383,7 @@ class _Hyperband(_SuccessiveHalving):
         intent, run_info = self.sh_intensifier.get_next_run(
             challengers=challengers,
             incumbent=incumbent,
-            chooser=chooser,
+            ask=ask,
             runhistory=runhistory,
             repeat_configs=self.sh_intensifier.repeat_configs,
         )

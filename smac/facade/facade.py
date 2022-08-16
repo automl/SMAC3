@@ -13,8 +13,7 @@ from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
 from smac.callback import Callback
-from smac.chooser.chooser import ConfigurationChooser
-from smac.chooser.random_chooser import RandomConfigurationChooser
+from smac.random_design.random_design import RandomDesign
 from smac.configspace import Configuration
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier
@@ -33,7 +32,7 @@ from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.runner import Runner
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.scenario import Scenario
-from smac.smbo import SMBO
+from smac.loop import SMBO
 from smac.utils.data_structures import recursively_compare_dicts
 from smac.utils.logging import get_logger, setup_logging
 from smac.utils.stats import Stats
@@ -51,8 +50,7 @@ class Facade:
         acquisition_function: AbstractAcquisitionFunction | None = None,
         acquisition_optimizer: AbstractAcquisitionOptimizer | None = None,
         initial_design: InitialDesign | None = None,
-        configuration_chooser: ConfigurationChooser | None = None,
-        random_configuration_chooser: RandomConfigurationChooser | None = None,
+        random_design: RandomDesign | None = None,
         intensifier: AbstractIntensifier | None = None,
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
         # Level of logging; if path passed: yaml file expected; if none: use default logging from logging.yml
@@ -75,11 +73,8 @@ class Facade:
         if initial_design is None:
             initial_design = self.get_initial_design(scenario)
 
-        if configuration_chooser is None:
-            configuration_chooser = self.get_configuration_chooser(scenario)
-
-        if random_configuration_chooser is None:
-            random_configuration_chooser = self.get_random_configuration_chooser(scenario)
+        if random_design is None:
+            random_design = self.get_random_design(scenario)
 
         if intensifier is None:
             intensifier = self.get_intensifier(scenario)
@@ -141,8 +136,7 @@ class Facade:
         self.acquisition_function = acquisition_function
         self.acquisition_optimizer = acquisition_optimizer
         self.initial_design = initial_design
-        self.configuration_chooser = configuration_chooser
-        self.random_configuration_chooser = random_configuration_chooser
+        self.random_design = random_design
         self.intensifier = intensifier
         self.multi_objective_algorithm = multi_objective_algorithm
         self.runhistory = runhistory
@@ -151,21 +145,7 @@ class Facade:
         self.seed = scenario.seed
 
         # Create optimizer using the previously defined objects
-        self.optimizer = SMBO(
-            scenario=self.scenario,
-            stats=self.stats,
-            runner=self.runner,
-            initial_design=self.initial_design,
-            runhistory=self.runhistory,
-            runhistory_encoder=self.runhistory_encoder,
-            intensifier=self.intensifier,
-            model=self.model,
-            acquisition_function=self.acquisition_function,
-            acquisition_optimizer=self.acquisition_optimizer,
-            configuration_chooser=self.configuration_chooser,
-            random_configuration_chooser=self.random_configuration_chooser,
-            seed=self.seed,
-        )
+        self._init_optimizer()
 
         # Register callbacks here
         for callback in callbacks:
@@ -191,6 +171,22 @@ class Facade:
         # Runhistory and stats are saved by `SMBO` as they change over time.
         self.scenario.save()
 
+    def _init_optimizer(self) -> None:
+        self.optimizer = SMBO(
+            scenario=self.scenario,
+            stats=self.stats,
+            runner=self.runner,
+            initial_design=self.initial_design,
+            runhistory=self.runhistory,
+            runhistory_encoder=self.runhistory_encoder,
+            intensifier=self.intensifier,
+            model=self.model,
+            acquisition_function=self.acquisition_function,
+            acquisition_optimizer=self.acquisition_optimizer,
+            random_design=self.random_design,
+            seed=self.seed,
+        )
+
     def _update_dependencies(self) -> None:
         # We add some more dependencies.
         # This is the easiest way to incorporate dependencies, although it might be a bit hacky.
@@ -199,11 +195,12 @@ class Facade:
         self.runhistory_encoder._set_imputer(self._get_imputer())
         self.acquisition_function._set_model(self.model)
         self.acquisition_optimizer._set_acquisition_function(self.acquisition_function)
-        self.configuration_chooser._set_smbo(self.optimizer)
 
         # TODO: self.runhistory_encoder.set_success_states etc. for different intensifier?
 
     def _validate(self) -> None:
+        assert self.optimizer
+
         # Make sure the same acquisition function is used
         assert self.acquisition_function == self.acquisition_optimizer.acquisition_function
 
@@ -298,7 +295,7 @@ class Facade:
             # "intensifier": self.intensifier.get_meta(),
             # "model": self.model.get_meta(),
             # "acquisition_function": self.acquisition_function.get_meta(),
-            # "random_configuration_chooser": self.random_configuration_chooser.get_meta(),
+            # "random_design": self.random_design.get_meta(),
         }
 
         return meta
@@ -352,12 +349,8 @@ class Facade:
         raise NotImplementedError
 
     @staticmethod
-    def get_configuration_chooser(scenario: Scenario) -> ConfigurationChooser:
-        return ConfigurationChooser()
-
-    @staticmethod
     @abstractmethod
-    def get_random_configuration_chooser(scenario: Scenario) -> RandomConfigurationChooser:
+    def get_random_design(scenario: Scenario) -> RandomDesign:
         raise NotImplementedError
 
     @staticmethod

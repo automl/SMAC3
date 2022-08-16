@@ -117,7 +117,7 @@ def test_get_next_run_wait(make_scenario, make_stats, configspace_small, runhist
         intent, run_info = scheduler.get_next_run(
             challengers=None,
             incumbent=None,
-            chooser=None,
+            ask=None,
             runhistory=None,
             repeat_configs=False,
             num_workers=1,
@@ -160,7 +160,7 @@ def test_get_next_run_add_instance(make_scenario, make_stats, configspace_small,
         intent, run_info = scheduler.get_next_run(
             challengers=None,
             incumbent=None,
-            chooser=None,
+            ask=None,
             runhistory=None,
             repeat_configs=False,
             num_workers=1,

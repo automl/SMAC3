@@ -7,13 +7,13 @@ import logging
 
 import numpy as np
 
-from smac.chooser.random_chooser import RandomConfigurationChooser
+from smac.random_design.random_design import RandomDesign
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class NoCoolDownConfigurationChooser(RandomConfigurationChooser):
+class NoCoolDownRandomDesign(RandomDesign):
     """Interleave a random configuration after a constant number of configurations found by Bayesian
     optimization.
 
@@ -40,7 +40,7 @@ class NoCoolDownConfigurationChooser(RandomConfigurationChooser):
         return iteration % self.modulus < 1
 
 
-class LinearCoolDownConfigurationChooser(RandomConfigurationChooser):
+class LinearCoolDownRandomDesign(RandomDesign):
     """Interleave a random configuration, decreasing the fraction of random configurations over
     time.
 

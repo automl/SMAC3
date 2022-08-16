@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.local_and_random_search import LocalAndSortedRandomSearch
-from smac.chooser.probability_chooser import ProbabilityConfigurationChooser
+from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.configspace import Configuration
 from smac.facade.facade import Facade
 from smac.initial_design.sobol_design import SobolInitialDesign
@@ -107,10 +107,12 @@ class HyperparameterFacade(Facade):
         )
 
     @staticmethod
-    def get_random_configuration_chooser(
-        scenario: Scenario, *, probability: float = 0.2
-    ) -> ProbabilityConfigurationChooser:
-        return ProbabilityConfigurationChooser(prob=probability)
+    def get_random_design(
+        scenario: Scenario,
+        *,
+        probability: float = 0.2,
+    ) -> ProbabilityRandomDesign:
+        return ProbabilityRandomDesign(probability=probability)
 
     @staticmethod
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm | None:

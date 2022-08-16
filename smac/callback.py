@@ -4,7 +4,7 @@ from abc import abstractmethod
 from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    from smac.smbo import SMBO
+    from smac.loop import SMBO
 
 from smac.runhistory import RunInfo, RunValue
 

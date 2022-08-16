@@ -11,8 +11,8 @@ from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
 from smac.acquisition import AbstractAcquisitionOptimizer, LocalAndSortedRandomSearch
 from smac.acquisition.functions import EI, AbstractAcquisitionFunction
-from smac.chooser.boing_chooser import BOinGConfigurationChooser
-from smac.chooser.random_chooser import ProbabilityConfigurationChooser
+from smac.random_design.boing_chooser import BOinGConfigurationChooser
+from smac.random_design.random_design import ProbabilityConfigurationChooser
 from smac.facade.hyperparameter_facade import HyperparameterFacade
 from smac.model.base_model import BaseModel
 from smac.model.gaussian_process.augmented_local_gaussian_process import (
@@ -53,7 +53,7 @@ class BOinGFacade(HyperparameterFacade):
         return transformer
 
     @staticmethod
-    def get_random_configuration_chooser(
+    def get_random_design(
         scenario: Scenario,
         *,
         probability: float = 0.08447232371720552,

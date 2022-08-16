@@ -5,7 +5,6 @@ from typing import Dict, List, Optional, Tuple
 import os
 import warnings
 
-from smac.chooser.chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.runhistory import RunInfo, RunInfoIntent, RunValue
@@ -51,7 +50,7 @@ class ParallelScheduler(AbstractIntensifier):
         * None - use as is given by the user
         * shuffle_once - shuffle once and use across all SH run (default)
         * shuffle - shuffle before every SH run
-    inst_seed_pairs : List[Tuple[str, int]], optional
+    instance_seed_pairs : List[Tuple[str, int]], optional
         Do not set this argument, it will only be used by hyperband!
     min_challenger: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
@@ -103,7 +102,7 @@ class ParallelScheduler(AbstractIntensifier):
         self,
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: Optional[ConfigurationChooser],
+        ask: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = False,
         num_workers: int = 1,
@@ -161,7 +160,7 @@ class ParallelScheduler(AbstractIntensifier):
             intent, run_info = self.intensifier_instances[i].get_next_run(
                 challengers=challengers,
                 incumbent=incumbent,
-                chooser=chooser,
+                ask=ask,
                 runhistory=runhistory,
                 repeat_configs=repeat_configs,
             )
@@ -179,7 +178,7 @@ class ParallelScheduler(AbstractIntensifier):
             return self.intensifier_instances[len(self.intensifier_instances) - 1].get_next_run(
                 challengers=challengers,
                 incumbent=incumbent,
-                chooser=chooser,
+                ask=ask,
                 runhistory=runhistory,
                 repeat_configs=repeat_configs,
             )

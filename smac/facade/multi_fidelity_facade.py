@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from smac.chooser.chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.facade.hyperparameter_facade import HyperparameterFacade
 from smac.initial_design.random_design import RandomInitialDesign

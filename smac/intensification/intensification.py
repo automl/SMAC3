@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-from typing import Iterator, List, Optional, Tuple, cast
+from typing import Callable, Iterator, List, Optional, Tuple, cast
 
 from collections import Counter
 from enum import Enum
 
 import numpy as np
 
-from smac.chooser.chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_intensifier import AbstractIntensifier
@@ -169,7 +168,7 @@ class Intensifier(AbstractIntensifier):
         self,
         challengers: list[Configuration] | None,
         incumbent: Configuration,
-        chooser: ConfigurationChooser | None,
+        ask: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
@@ -237,7 +236,7 @@ class Intensifier(AbstractIntensifier):
                 logger.info("No incumbent provided in the first run. Sampling a new challenger...")
                 challenger, self.new_challenger = self.get_next_challenger(
                     challengers=challengers,
-                    chooser=chooser,
+                    ask=ask,
                 )
                 incumbent = challenger
             else:
@@ -293,7 +292,7 @@ class Intensifier(AbstractIntensifier):
             # challenger
             challenger, self.new_challenger = self.get_next_challenger(
                 challengers=challengers,
-                chooser=chooser,
+                ask=ask,
             )
 
         # No new challengers are available for this iteration,
@@ -788,9 +787,9 @@ class Intensifier(AbstractIntensifier):
 
         # for adaptive capping
         # because of efficiency computed here
-        # inst_seed_pairs = list(inc_inst_seeds - set(missing_runs))
-        # cost used by incumbent for going over all runs in inst_seed_pairs
-        # inc_sum_cost = runhistory.sum_cost(config=incumbent, instance_seed_budget_keys=inst_seed_pairs, normalize=True)
+        # instance_seed_pairs = list(inc_inst_seeds - set(missing_runs))
+        # cost used by incumbent for going over all runs in instance_seed_pairs
+        # inc_sum_cost = runhistory.sum_cost(config=incumbent, instance_seed_budget_keys=instance_seed_pairs, normalize=True)
         # assert type(inc_sum_cost) == float
 
         return to_run  # , inc_sum_cost
@@ -798,7 +797,7 @@ class Intensifier(AbstractIntensifier):
     def get_next_challenger(
         self,
         challengers: list[Configuration] | None,
-        chooser: ConfigurationChooser | None,
+        ask: Callable[[], Iterator[Configuration]] | None,
     ) -> tuple[Configuration | None, bool]:
         """This function returns the next challenger, that should be exercised though lines 8-17.
 
@@ -835,7 +834,7 @@ class Intensifier(AbstractIntensifier):
 
             # this is a new intensification run, get the next list of configurations to run
             if self.update_configs_to_run:
-                configs_to_run = self._generate_challengers(challengers=challengers, chooser=chooser)
+                configs_to_run = self._generate_challengers(challengers=challengers, ask=ask)
                 self.configs_to_run = cast(Iterator[Optional[Configuration]], configs_to_run)
                 self.update_configs_to_run = False
 
@@ -862,7 +861,7 @@ class Intensifier(AbstractIntensifier):
     def _generate_challengers(
         self,
         challengers: list[Configuration] | None,
-        chooser: ConfigurationChooser | None,
+        ask: Callable[[], Iterator[Configuration]] | None,
     ) -> Iterator[Optional[Configuration]]:
         """Retuns a sequence of challengers to use in intensification If challengers are not
         provided, then optimizer will be used to generate the challenger list.
@@ -884,12 +883,12 @@ class Intensifier(AbstractIntensifier):
             # iterate over challengers provided
             logger.debug("Using provided challengers...")
             chall_gen = iter(challengers)
-        elif chooser:
+        elif ask:
             # generating challengers on-the-fly if optimizer is given
             logger.debug("Generating new challenger from optimizer...")
-            chall_gen = chooser.ask()
+            chall_gen = ask()
         else:
-            raise ValueError("No configurations/chooser provided. Can not generate challenger!")
+            raise ValueError("No configurations/ask function provided. Can not generate challenger!")
 
         return chall_gen
 

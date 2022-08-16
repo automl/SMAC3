@@ -1,12 +1,26 @@
-from smac.runhistory import InstanceSeedBudgetKey
+class B:
+    def __init__(self, text) -> None:
+        self.haha2 = text
+
+    pass
 
 
-k1 = InstanceSeedBudgetKey(instance=1, seed=1, budget=5)
-k2 = InstanceSeedBudgetKey(instance=1, seed=5, budget=5)
-k3 = InstanceSeedBudgetKey(instance=7, seed=5, budget=5)
+class C:
+    def __init__(self) -> None:
+        self.haha = "yooo"
 
-s1 = set([k1])
-s2 = set([k1, k2, k3])
+    def yes(self):
+        return self.blub
 
-print(s2 - s1)
-sorted(s2 - s1)
+
+class A(B, C):
+    def __init__(self) -> None:
+        # super(C).__init__()
+        B.__init__(self, "hey")
+        C.__init__(self)
+        self.blub = "YES"
+
+
+classA = A()
+print(classA.yes())
+print(classA.haha)

@@ -36,7 +36,7 @@ def test_get_next_run(intensifier, runhistory, configs):
         incumbent=None,
         runhistory=runhistory,
         num_workers=1,
-        chooser=None,
+        ask=None,
     )
     assert intent == RunInfoIntent.RUN
 
@@ -65,7 +65,7 @@ def test_get_next_run_waits_if_no_workers(intensifier, runhistory, configs):
         incumbent=None,
         runhistory=runhistory,
         num_workers=1,
-        chooser=None,
+        ask=None,
     )
 
     # Same as above
@@ -90,7 +90,7 @@ def test_get_next_run_waits_if_no_workers(intensifier, runhistory, configs):
         incumbent=None,
         runhistory=runhistory,
         num_workers=1,
-        chooser=None,
+        ask=None,
     )
     assert intent == RunInfoIntent.WAIT
 
@@ -114,7 +114,7 @@ def test_process_results(intensifier, runhistory, configs):
         incumbent=None,
         runhistory=runhistory,
         num_workers=1,
-        chooser=None,
+        ask=None,
     )
 
     run_value = RunValue(

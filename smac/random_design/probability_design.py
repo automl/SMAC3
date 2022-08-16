@@ -7,13 +7,13 @@ import logging
 
 import numpy as np
 
-from smac.chooser.random_chooser import RandomConfigurationChooser
+from smac.random_design.random_design import RandomDesign
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class ProbabilityConfigurationChooser(RandomConfigurationChooser):
+class ProbabilityRandomDesign(RandomDesign):
     """Interleave a random configuration according to a given probability.
 
     Parameters
@@ -24,9 +24,9 @@ class ProbabilityConfigurationChooser(RandomConfigurationChooser):
         Random state
     """
 
-    def __init__(self, prob: float, seed: int = 0):
+    def __init__(self, probability: float, seed: int = 0):
         super().__init__(seed)
-        self.prob = prob
+        self.prob = probability
 
     def next_smbo_iteration(self) -> None:
         """Does nothing."""
@@ -40,7 +40,7 @@ class ProbabilityConfigurationChooser(RandomConfigurationChooser):
             return False
 
 
-class ProbabilityCoolDownConfigurationChooser(RandomConfigurationChooser):
+class ProbabilityCoolDownRandomDesign(RandomDesign):
     """Interleave a random configuration according to a given probability which is decreased over
     time.
 
@@ -54,10 +54,10 @@ class ProbabilityCoolDownConfigurationChooser(RandomConfigurationChooser):
         Random state
     """
 
-    def __init__(self, prob: float, cool_down_fac: float, seed: int = 0):
+    def __init__(self, probability: float, factor: float, seed: int = 0):
         super().__init__(seed)
-        self.prob = prob
-        self.cool_down_fac = cool_down_fac
+        self.prob = probability
+        self.cool_down_fac = factor
 
     def next_smbo_iteration(self) -> None:
         """Set the probability to the current value multiplied by the `cool_down_fac`."""

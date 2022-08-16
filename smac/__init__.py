@@ -22,7 +22,7 @@ copyright = f"""
 version = "2.0.0"
 
 
-try:
+if 1 == 1:  # try:
     from smac.facade import (
         AlgorithmConfigurationFacade,
         BlackBoxFacade,
@@ -40,5 +40,5 @@ try:
         "MultiFidelityFacade",
         "AlgorithmConfigurationFacade",
     ]
-except ModuleNotFoundError:
-    pass
+# except ModuleNotFoundError:
+#    pass

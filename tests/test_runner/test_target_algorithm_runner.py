@@ -143,7 +143,7 @@ def test_call(configspace_small, make_stats, make_scenario):
 
 
 def test_multi_objective(configspace_small, make_stats, make_scenario):
-    scenario = make_scenario(configspace_small, multi_objective=True)
+    scenario = make_scenario(configspace_small, use_multi_objective=True)
     stats = make_stats(scenario)
 
     # We always expect a list of costs (although a dict is returned).

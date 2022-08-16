@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from typing import Dict, List, Optional, Set, Tuple, Union
+from typing import Callable, Dict, Iterator, List, Optional, Set, Tuple, Union
 
 import numpy as np
 
-from smac.chooser.chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_intensifier import AbstractIntensifier
@@ -79,7 +78,7 @@ class SuccessiveHalving(ParallelScheduler):
         * None - use as is given by the user
         * shuffle_once - shuffle once and use across all SH run (default)
         * shuffle - shuffle before every SH run
-    inst_seed_pairs : List[Tuple[str, int]], optional
+    instance_seed_pairs : List[Tuple[str, int]], optional
         Do not set this argument, it will only be used by hyperband!
     min_challenger: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
@@ -200,7 +199,7 @@ class SuccessiveHalving(ParallelScheduler):
             min_challenger=self.min_challenger,
             intensify_percentage=self.intensify_percentage,
             incumbent_selection=self.incumbent_selection,
-            inst_seed_pairs=self.instance_seed_pairs,
+            instance_seed_pairs=self.instance_seed_pairs,
             identifier=len(self.intensifier_instances),
             seed=self.seed,
             n_seeds=self.n_seeds,
@@ -281,7 +280,7 @@ class _SuccessiveHalving(AbstractIntensifier):
         * None - use as is given by the user
         * shuffle_once - shuffle once and use across all SH run (default)
         * shuffle - shuffle before every SH run
-    inst_seed_pairs : List[Tuple[str, int]], optional
+    instance_seed_pairs : List[Tuple[str, int]], optional
         Do not set this argument, it will only be used by hyperband!
     min_challenger: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
@@ -587,7 +586,7 @@ class _SuccessiveHalving(AbstractIntensifier):
         # already launched tasks are processed.
 
         # 1: We first query if we have launched everything already (All M * N tasks)
-        all_config_inst_seed_launched = self._all_config_inst_seed_pairs_launched(
+        all_config_inst_seed_launched = self._all_config_instance_seed_pairs_launched(
             runhistory=runhistory,
             activate_configuration_being_intensified=self.running_challenger,
         )
@@ -655,7 +654,7 @@ class _SuccessiveHalving(AbstractIntensifier):
         self,
         challengers: list[Configuration] | None,
         incumbent: Configuration,
-        chooser: ConfigurationChooser | None,
+        ask: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
@@ -704,7 +703,7 @@ class _SuccessiveHalving(AbstractIntensifier):
         # smbo. To prevent launching more configs, than the ones needed, we query if
         # there is room for more configurations, else we wait for process_results()
         # to trigger a new stage
-        if self._all_config_inst_seed_pairs_launched(runhistory, self.running_challenger):
+        if self._all_config_instance_seed_pairs_launched(runhistory, self.running_challenger):
             return RunInfoIntent.WAIT, RunInfo(
                 config=None,
                 instance=None,
@@ -742,7 +741,7 @@ class _SuccessiveHalving(AbstractIntensifier):
                 # first stage, so sample from configurations/chooser provided
                 challenger = self._next_challenger(
                     challengers=challengers,
-                    chooser=chooser,
+                    ask=ask,
                     runhistory=runhistory,
                     repeat_configs=repeat_configs,
                 )
@@ -1176,7 +1175,7 @@ class _SuccessiveHalving(AbstractIntensifier):
         top_configs = configs_sorted[:k]
         return top_configs
 
-    def _all_config_inst_seed_pairs_launched(
+    def _all_config_instance_seed_pairs_launched(
         self,
         runhistory: RunHistory,
         activate_configuration_being_intensified: Optional[Configuration],

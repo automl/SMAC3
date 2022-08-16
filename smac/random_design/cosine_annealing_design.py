@@ -7,13 +7,13 @@ import logging
 
 import numpy as np
 
-from smac.chooser.random_chooser import RandomConfigurationChooser
+from smac.random_design.random_design import RandomDesign
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class CosineAnnealingConfigurationChooser(RandomConfigurationChooser):
+class CosineAnnealingRandomDesign(RandomDesign):
     """Interleave a random configuration according to a given probability which is decreased
     according to a cosine annealing schedule.
 

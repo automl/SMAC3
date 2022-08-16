@@ -2,11 +2,10 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional, Tuple
 
-from smac.chooser.chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_intensifier import AbstractIntensifier
-from smac.runhistory import RunHistory, RunInfo, RunInfoIntent, RunValue
+from smac.runhistory import RunInfo, RunValue, RunInfoIntent, RunHistory
 from smac.scenario import Scenario
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -118,7 +117,7 @@ class SimpleIntensifier(AbstractIntensifier):
         self,
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: Optional[ConfigurationChooser],
+        ask: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
@@ -155,7 +154,7 @@ class SimpleIntensifier(AbstractIntensifier):
         # We always sample from the configs provided or the EPM
         challenger = self._next_challenger(
             challengers=challengers,
-            chooser=chooser,
+            ask=ask,
             runhistory=runhistory,
             repeat_configs=repeat_configs,
         )
