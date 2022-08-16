@@ -1,12 +1,6 @@
-import collections
-import logging
-import time
-import unittest
 import pytest
 
 import numpy as np
-from ConfigSpace import Configuration, ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 from smac.intensification.intensification import Intensifier, IntensifierStage
@@ -122,7 +116,7 @@ def test_race_challenger_large(make_scenario, make_stats, configspace_small, run
     scenario = make_scenario(configspace_small, use_instances=True, deterministic=True)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
-    intensifier._set_stats(stats)
+    intensifier.stats = stats
     target_algorithm = TargetAlgorithmRunner(target, scenario, stats)
     configs = configspace_small.sample_configuration(3)
 
