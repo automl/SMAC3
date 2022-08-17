@@ -113,7 +113,7 @@ if __name__ == "__main__":
 
     scenario = Scenario(
         model.configspace,
-        walltime_limit=60,  # We want to optimize for one minute
+        walltime_limit=40,  # We want to optimize for 40 seconds
         n_trials=5000,  # We want to try max 5000 different configurations
         min_budget=1,  # Use min one instance
         max_budget=45,  # Use max 45 instances (if we have a lot of instances we could constraint it)

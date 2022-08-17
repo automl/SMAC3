@@ -55,11 +55,11 @@ Glossary
         Trial is a single run of a target algorithm on a combination of configuration, seed, budget and/or instance.
 
     PCS
-        `ConfigurationSpace <https://automl.github.io/ConfigSpace/master/API-Doc.html>`_ can be written/read from a PCS file.
+        `ConfigurationSpace <https://automl.github.io/ConfigSpace/main>`_ can be written/read from a PCS file.
 
     EPM
         Empirical Performance Models. Empirical performance models are regression models that characterize a given
-        algorithm’s performance across problem instances and/or parameter settings. These models can predict the
+        algorithm's performance across problem instances and/or parameter settings. These models can predict the
         performance of algorithms on previously unseen input, including previously unseen problem instances and or
         previously untested parameter settings and are useful for analyzing of how an algorithm performs under different
         conditions, select promising configurations for a new problem instance, or surrogate benchmarks.

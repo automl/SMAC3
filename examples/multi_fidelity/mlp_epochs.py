@@ -126,8 +126,8 @@ if __name__ == "__main__":
     # Define our environment variables
     scenario = Scenario(
         mlp.configspace,
-        walltime_limit=60,  # After one minute, we stop the optimization
-        n_trials=100,  # Evaluate max 100 different configurations
+        walltime_limit=40,  # After 40 seconds, we stop the optimization
+        n_trials=100,  # Evaluate max 100 different trials
         min_budget=5,  # Train the MLP for at least 5 epochs
         max_budget=25,  # Train the MLP for at most 25 epochs
     )
