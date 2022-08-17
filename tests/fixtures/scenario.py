@@ -21,7 +21,7 @@ def make_scenario() -> Callable:
 
         instances = None
         instance_features = None
-        if use_instances:
+        if use_instances and n_instances > 0:
             instances = []
             instance_features = {}
             for i in range(n_instances):

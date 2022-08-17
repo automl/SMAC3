@@ -448,7 +448,8 @@ class _SuccessiveHalving(AbstractIntensifier):
             Used internally when HB uses SH as a subrouting
         """
         if eta <= 1:
-            raise ValueError("eta must be greater than 1")
+            raise ValueError("The parameter `eta` must be greater than 1.")
+
         self.eta = eta
 
         # Budgets
@@ -465,7 +466,7 @@ class _SuccessiveHalving(AbstractIntensifier):
             if min_budget is None or max_budget is None:
                 raise ValueError(
                     "Successive Halving with real-valued budget (i.e., only 1 instance) "
-                    "requires parameters min_budget and max_budget for intensification!"
+                    "requires parameters `min_budget` and `max_budget` for intensification!"
                 )
 
             self.min_budget = min_budget
@@ -479,7 +480,7 @@ class _SuccessiveHalving(AbstractIntensifier):
             self.instance_as_budget = True
 
             if self.max_budget > len(self.instance_seed_pairs):
-                raise ValueError("Max budget cannot be greater than the number of instance-seed pairs.")
+                raise ValueError("Max budget can not be greater than the number of instance-seed pairs.")
             if self.max_budget < len(self.instance_seed_pairs):
                 self.logger.warning(
                     "Max budget (%d) does not include all instance-seed pairs (%d)."
@@ -1165,7 +1166,7 @@ class _SuccessiveHalving(AbstractIntensifier):
             # list which wrongly trigger the below if
             if set(cur_run_key) != set(run_key):
                 raise ValueError(
-                    "Cannot compare configs that were run on different instances-seeds-budgets: %s vs %s"
+                    "Can not compare configs that were run on different instances-seeds-budgets: %s vs %s"
                     % (run_key, cur_run_key)
                 )
             config_costs[c] = runhistory.get_cost(c)

@@ -107,7 +107,7 @@ def _SH(make_scenario, make_stats, configspace_small):
 
 @pytest.fixture
 def make_private_SH(make_scenario, make_stats, configspace_small):
-    def _make(deterministic=False, min_budget=2, max_budget=5, eta=2, n_instances=3, n_seeds=2):
+    def _make(deterministic=False, min_budget=2, max_budget=5, eta=2, n_instances=3, n_seeds=1, min_challenger=1):
         scenario = make_scenario(
             configspace_small,
             use_instances=True,
@@ -117,63 +117,12 @@ def make_private_SH(make_scenario, make_stats, configspace_small):
             max_budget=max_budget,
         )
         stats = make_stats(scenario)
-        intensifier = _SuccessiveHalving(scenario=scenario, eta=eta, n_seeds=n_seeds)
+        intensifier = _SuccessiveHalving(scenario=scenario, eta=eta, n_seeds=n_seeds, min_challenger=1)
         intensifier.stats = stats
 
         return intensifier
 
     return _make
-
-
-@pytest.fixture
-def _SH_no_budgets(make_scenario, make_stats, configspace_small):
-    scenario = make_scenario(
-        configspace_small,
-        use_instances=True,
-        n_instances=3,
-        deterministic=False,
-        min_budget=None,
-        max_budget=None,
-    )
-    stats = make_stats(scenario)
-    intensifier = _SuccessiveHalving(scenario=scenario, eta=2, n_seeds=2)
-    intensifier.stats = stats
-
-    return intensifier
-
-
-@pytest.fixture
-def _SH_real_valued_1(make_scenario, make_stats, configspace_small):
-    scenario = make_scenario(
-        configspace_small,
-        use_instances=True,
-        n_instances=1,
-        deterministic=True,
-        min_budget=1,
-        max_budget=10,
-    )
-    stats = make_stats(scenario)
-    intensifier = _SuccessiveHalving(scenario=scenario, eta=2)
-    intensifier.stats = stats
-
-    return intensifier
-
-
-@pytest.fixture
-def _SH_real_valued_2(make_scenario, make_stats, configspace_small):
-    scenario = make_scenario(
-        configspace_small,
-        use_instances=True,
-        n_instances=1,
-        deterministic=True,
-        min_budget=9,
-        max_budget=10,
-    )
-    stats = make_stats(scenario)
-    intensifier = _SuccessiveHalving(scenario=scenario, eta=2)
-    intensifier.stats = stats
-
-    return intensifier
 
 
 @pytest.fixture
@@ -517,75 +466,44 @@ def test_init_3(make_private_SH):
     assert not _SH.repeat_configs
 
 
-'''
-def test_init_4(self):
+def test_init_4(make_private_SH):
     """
-    test wrong parameter initializations for successive halving
+    Test wrong parameter initializations for successive halving
     """
-
-    # runtime as budget (no param provided)
-    with assertRaisesRegex(
+    with pytest.raises(
         ValueError,
-        "requires parameters min_budget and max_budget for intensification!",
+        match="requires parameters `min_budget` and `max_budget` for intensification!",
     ):
-        _SuccessiveHalving(
-            stats=stats,
-            traj_logger=TrajLogger(output_dir=None, stats=stats),
-            rng=np.random.RandomState(12345),
-            deterministic=True,
-            run_obj_time=False,
-            cutoff=10,
-            instances=[1],
-        )
+        make_private_SH(deterministic=True, min_budget=None, max_budget=None, n_instances=1, n_seeds=1)
 
     # eta < 1
-    with assertRaisesRegex(ValueError, "eta must be greater than 1"):
-        _SuccessiveHalving(
-            stats=stats,
-            traj_logger=TrajLogger(output_dir=None, stats=stats),
-            rng=np.random.RandomState(12345),
-            deterministic=True,
-            run_obj_time=False,
-            cutoff=10,
-            instances=[1],
-            eta=0,
-        )
+    with pytest.raises(ValueError, match="The parameter `eta` must be greater than 1."):
+        make_private_SH(deterministic=True, min_budget=None, max_budget=None, n_instances=1, n_seeds=1, eta=0)
 
     # max budget > instance-seed pairs
-    with assertRaisesRegex(
+    with pytest.raises(
         ValueError,
-        "Max budget cannot be greater than the number of instance-seed pairs",
+        match="Max budget can not be greater than the number of instance-seed pairs.",
     ):
-        _SuccessiveHalving(
-            stats=stats,
-            traj_logger=TrajLogger(output_dir=None, stats=stats),
-            rng=np.random.RandomState(12345),
-            deterministic=True,
-            run_obj_time=False,
-            cutoff=10,
-            instances=[1, 2, 3],
-            min_budget=1,
-            max_budget=5,
-            n_seeds=1,
-        )
+        make_private_SH(deterministic=True, min_budget=1, max_budget=5, n_instances=3, n_seeds=1)
 
-def test_top_k_1(self):
+
+def test_top_k_1(make_private_SH, runhistory, configs):
     """
     test _top_k() for configs with same instance-seed-budget keys
     """
-    intensifier = _SuccessiveHalving(
-        stats=stats,
-        traj_logger=None,
-        rng=np.random.RandomState(12345),
-        instances=[1, 2],
-        min_budget=1,
-    )
+    intensifier = make_private_SH(n_instances=2, min_budget=1, max_budget=4, n_seeds=2)
+    config1 = configs[0]
+    config2 = configs[1]
+    config3 = configs[2]
+    config4 = configs[3]
+
     runhistory.add(
         config=config1,
         cost=1,
         time=1,
         status=StatusType.SUCCESS,
-        instance=1,
+        instance="i1",
         seed=None,
         additional_info=None,
     )
@@ -594,7 +512,7 @@ def test_top_k_1(self):
         cost=1,
         time=1,
         status=StatusType.SUCCESS,
-        instance=2,
+        instance="i2",
         seed=None,
         additional_info=None,
     )
@@ -603,7 +521,7 @@ def test_top_k_1(self):
         cost=2,
         time=2,
         status=StatusType.SUCCESS,
-        instance=1,
+        instance="i1",
         seed=None,
         additional_info=None,
     )
@@ -612,7 +530,7 @@ def test_top_k_1(self):
         cost=2,
         time=2,
         status=StatusType.SUCCESS,
-        instance=2,
+        instance="i2",
         seed=None,
         additional_info=None,
     )
@@ -621,7 +539,7 @@ def test_top_k_1(self):
         cost=3,
         time=3,
         status=StatusType.SUCCESS,
-        instance=1,
+        instance="i1",
         seed=None,
         additional_info=None,
     )
@@ -630,7 +548,7 @@ def test_top_k_1(self):
         cost=3,
         time=3,
         status=StatusType.SUCCESS,
-        instance=2,
+        instance="i2",
         seed=None,
         additional_info=None,
     )
@@ -639,7 +557,7 @@ def test_top_k_1(self):
         cost=0.5,
         time=0.5,
         status=StatusType.SUCCESS,
-        instance=1,
+        instance="i1",
         seed=None,
         additional_info=None,
     )
@@ -648,7 +566,7 @@ def test_top_k_1(self):
         cost=0.5,
         time=0.5,
         status=StatusType.SUCCESS,
-        instance=2,
+        instance="i2",
         seed=None,
         additional_info=None,
     )
@@ -659,25 +577,22 @@ def test_top_k_1(self):
     )
 
     # Check that config4 is also before config1 (as it has the lower cost)
-    assert conf, [config4, config1])
+    assert conf == [config4, config1]
 
-def test_top_k_2(self):
-    """
-    test _top_k() for configs with different instance-seed-budget keys
-    """
-    intensifier = _SuccessiveHalving(
-        stats=stats,
-        traj_logger=None,
-        rng=np.random.RandomState(12345),
-        instances=[1, 2],
-        min_budget=1,
-    )
+
+def test_top_k_2(make_private_SH, runhistory, configs):
+    """Test _top_k() for configs with different instance-seed-budget keys"""
+    intensifier = make_private_SH(n_instances=2, min_budget=1, max_budget=4, n_seeds=2)
+    config1 = configs[0]
+    config2 = configs[1]
+    config3 = configs[2]
+
     runhistory.add(
         config=config1,
         cost=1,
         time=1,
         status=StatusType.SUCCESS,
-        instance=1,
+        instance="i1",
         seed=None,
         additional_info=None,
     )
@@ -686,35 +601,31 @@ def test_top_k_2(self):
         cost=10,
         time=10,
         status=StatusType.SUCCESS,
-        instance=2,
+        instance="i2",
         seed=None,
         additional_info=None,
     )
 
-    with assertRaisesRegex(ValueError, "Cannot compare configs"):
+    with pytest.raises(ValueError, match="Can not compare configs"):
         intensifier._top_k(
             configs=[config2, config1, config3],
             k=1,
             runhistory=runhistory,
         )
 
-def test_top_k_3(self):
-    """
-    test _top_k() for not enough configs to generate for the next budget
-    """
-    intensifier = _SuccessiveHalving(
-        stats=stats,
-        traj_logger=None,
-        rng=np.random.RandomState(12345),
-        instances=[1],
-        min_budget=1,
-    )
+
+def test_top_k_3(make_private_SH, runhistory, configs):
+    """Test _top_k() for not enough configs to generate for the next budget"""
+    intensifier = make_private_SH(n_instances=1, min_budget=1, max_budget=4, n_seeds=1)
+    config1 = configs[0]
+    config2 = configs[1]
+
     runhistory.add(
         config=config1,
         cost=1,
         time=1,
         status=StatusType.SUCCESS,
-        instance=1,
+        instance="i1",
         seed=None,
         additional_info=None,
     )
@@ -723,37 +634,31 @@ def test_top_k_3(self):
         cost=1,
         time=1,
         status=StatusType.CRASHED,
-        instance=1,
+        instance="i1",
         seed=None,
         additional_info=None,
     )
     configs = intensifier._top_k(configs=[config1], k=2, runhistory=runhistory)
 
     # top_k should return whatever configuration is possible
-    assert configs, [config1])
+    assert configs == [config1]
 
-def test_top_k_4(self):
-    """
-    test _top_k() for not enough configs to generate for the next budget
-    """
-    intensifier = _SuccessiveHalving(
-        stats=stats,
-        traj_logger=None,
-        run_obj_time=False,
-        rng=np.random.RandomState(12345),
-        eta=2,
-        num_initial_challengers=4,
-        instances=[1],
-        min_budget=1,
-        max_budget=10,
-    )
-    intensifier._update_stage(rh)
+
+def test_top_k_4(make_private_SH, runhistory, configs):
+    """Test _top_k() for not enough configs to generate for the next budget"""
+    intensifier = make_private_SH(n_instances=1, min_budget=1, max_budget=10, n_seeds=1, eta=2, min_challenger=4)
+    config1 = configs[0]
+    config2 = configs[1]
+    config3 = configs[2]
+    config4 = configs[3]
+
+    intensifier._update_stage(runhistory)
     runhistory.add(
         config=config1,
         cost=1,
         time=1,
         status=StatusType.SUCCESS,
-        instance=1,
+        instance="i1",
         seed=None,
         budget=1,
         additional_info=None,
@@ -763,7 +668,7 @@ def test_top_k_4(self):
         cost=1,
         time=1,
         status=StatusType.DONOTADVANCE,
-        instance=1,
+        instance="i1",
         seed=None,
         budget=1,
         additional_info=None,
@@ -773,7 +678,7 @@ def test_top_k_4(self):
         cost=1,
         time=1,
         status=StatusType.DONOTADVANCE,
-        instance=1,
+        instance="i1",
         seed=None,
         budget=1,
         additional_info=None,
@@ -783,7 +688,7 @@ def test_top_k_4(self):
         cost=1,
         time=1,
         status=StatusType.DONOTADVANCE,
-        instance=1,
+        instance="i1",
         seed=None,
         budget=1,
         additional_info=None,
@@ -792,26 +697,28 @@ def test_top_k_4(self):
     intensifier.fail_challengers.add(config2)
     intensifier.fail_challengers.add(config3)
     intensifier.fail_challengers.add(config4)
-    intensifier._update_stage(rh)
-    assert intensifier.fail_chal_offset, 1)  # we miss one challenger for this round
+    intensifier._update_stage(runhistory)
+    assert intensifier.fail_chal_offset == 3  # we miss three challenger for this round
+
     configs = intensifier._top_k(configs=[config1], k=2, runhistory=runhistory)
-    assert configs, [config1])
+    assert configs == [config1]
 
     runhistory.add(
         config=config1,
         cost=1,
         time=1,
         status=StatusType.DONOTADVANCE,
-        instance=1,
+        instance="i1",
         seed=None,
         budget=intensifier.all_budgets[1],
         additional_info=None,
     )
     intensifier.fail_challengers.add(config2)
-    intensifier._update_stage(rh)
-    assert intensifier.stage, 0)  # going back, since there are not enough to advance
+    intensifier._update_stage(runhistory)
+    assert intensifier.stage == 0  # Going back, since there are not enough to advance
 
-def test_get_next_run_1(self):
+
+def test_get_next_run_1(make_private_SH, runhistory, configs):
     """
     test get_next_run for a presently running configuration
     """
@@ -819,22 +726,10 @@ def test_get_next_run_1(self):
     def target(x):
         return 1
 
-    target_algorithm = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=stats, run_obj="quality")
-
-    target_algorithm.runhistory = rh
-
-    intensifier = _SuccessiveHalving(
-        stats=stats,
-        traj_logger=None,
-        rng=np.random.RandomState(12345),
-        deterministic=True,
-        run_obj_time=False,
-        cutoff=1,
-        instances=[1, 2],
-        min_budget=1,
-        max_budget=2,
-        eta=2,
-    )
+    intensifier = make_private_SH(deterministic=False, n_instances=2, min_budget=1, max_budget=2, n_seeds=1, eta=2)
+    target_algorithm = TargetAlgorithmRunner(target, intensifier.scenario, intensifier.stats)
+    config1 = configs[0]
+    config2 = configs[1]
 
     # next challenger from a list
     intent, run_info = intensifier.get_next_run(
@@ -853,8 +748,8 @@ def test_get_next_run_1(self):
         status=StatusType.RUNNING,
         additional_info=None,
     )
-    assert run_info.config, config1)
-    assert intensifier.new_challenger)
+    assert run_info.config == config1
+    assert intensifier.new_challenger
 
     # In the parallel scenario, we cannot wait for a configuration
     # to be evaluated before moving to the next configuration in the same
@@ -877,13 +772,13 @@ def test_get_next_run_1(self):
         status=StatusType.RUNNING,
         additional_info=None,
     )
-    assert run_info_new.config, config2)
-    assert intensifier.running_challenger, run_info_new.config)
-    assert intensifier.new_challenger)
+    assert run_info_new.config == config2
+    assert intensifier.running_challenger == run_info_new.config
+    assert intensifier.new_challenger
 
     # evaluating configuration
-    assertIsNotNone(run_info.config)
-    result = evaluate_challenger(run_info, target_algorithm, stats, rh)
+    assert run_info.config is not None
+    run_value = evaluate_challenger(run_info, target_algorithm, intensifier.stats, runhistory)
     inc, inc_value = intensifier.process_results(
         run_info=run_info,
         incumbent=None,
@@ -896,30 +791,19 @@ def test_get_next_run_1(self):
     # We already launched run_info_new. We expect 2 configs each with 1 seed/instance
     # 1 has finished and already processed. We have not even run run_info_new
     # So we cannot advance to a new stage
-    intent, run_info = intensifier.get_next_run(
-        challengers=[config2], ask=None, incumbent=inc, runhistory=runhistory
-    )
-    assertIsNone(run_info.config)
-    assert intent, RunInfoIntent.WAIT)
-    assert len(intensifier.success_challengers), 1)
-    assert intensifier.new_challenger)
+    intent, run_info = intensifier.get_next_run(challengers=[config2], ask=None, incumbent=inc, runhistory=runhistory)
+    assert run_info.config is None
+    assert intent == RunInfoIntent.WAIT
+    assert len(intensifier.success_challengers) == 1
+    assert intensifier.new_challenger
 
-def test_get_next_run_2(self):
+
+def test_get_next_run_2(make_private_SH, configs, runhistory):
     """
     test get_next_run for higher stages of SH iteration
     """
-    intensifier = _SuccessiveHalving(
-        stats=stats,
-        traj_logger=None,
-        rng=np.random.RandomState(12345),
-        deterministic=True,
-        run_obj_time=False,
-        cutoff=1,
-        instances=[1],
-        min_budget=1,
-        max_budget=2,
-        eta=2,
-    )
+    intensifier = make_private_SH(deterministic=True, n_instances=1, min_budget=1, max_budget=2, n_seeds=1, eta=2)
+    config1 = configs[0]
 
     intensifier._update_stage(runhistory=None)
     intensifier.stage += 1
@@ -932,34 +816,24 @@ def test_get_next_run_2(self):
         runhistory=runhistory,
         incumbent=None,
     )
-    assert run_info.config, config1)
-    assert len(intensifier.configs_to_run), 0)
-    assert not intensifier.new_challenger)
+    assert run_info.config == config1
+    assert len(intensifier.configs_to_run) == 0
+    assert not intensifier.new_challenger
 
-def test_update_stage(self):
-    """
-    test update_stage - initializations for all tracking variables
-    """
-    intensifier = _SuccessiveHalving(
-        stats=stats,
-        traj_logger=None,
-        rng=np.random.RandomState(12345),
-        deterministic=True,
-        run_obj_time=False,
-        cutoff=1,
-        instances=[1],
-        min_budget=1,
-        max_budget=2,
-        eta=2,
-    )
+
+def test_update_stage(make_private_SH, runhistory, configs):
+    """Test update_stage - initializations for all tracking variables."""
+    intensifier = make_private_SH(deterministic=True, n_instances=1, min_budget=1, max_budget=2, n_seeds=1, eta=2)
+    config1 = configs[0]
+    config2 = configs[1]
 
     # first stage update
     intensifier._update_stage(runhistory=None)
 
-    assert intensifier.stage, 0)
-    assert intensifier.sh_iters, 0)
-    assert intensifier.running_challenger, None)
-    assert intensifier.success_challengers, set())
+    assert intensifier.stage == 0
+    assert intensifier.sh_iters == 0
+    assert intensifier.running_challenger is None
+    assert intensifier.success_challengers == set()
 
     # higher stages
     runhistory.add(config1, 1, 1, StatusType.SUCCESS)
@@ -967,90 +841,79 @@ def test_update_stage(self):
     intensifier.success_challengers = {config1, config2}
     intensifier._update_stage(runhistory=runhistory)
 
-    assert intensifier.stage, 1)
-    assert intensifier.sh_iters, 0)
-    assert intensifier.configs_to_run, [config1])
+    assert intensifier.stage == 1
+    assert intensifier.sh_iters == 0
+    assert intensifier.configs_to_run == [config1]
 
     # next iteration
     intensifier.success_challengers = {config1}
     intensifier._update_stage(runhistory=runhistory)
 
-    assert intensifier.stage, 0)
-    assert intensifier.sh_iters, 1)
-    assertIsInstance(intensifier.configs_to_run, list)
-    assert len(intensifier.configs_to_run), 0)
+    assert intensifier.stage == 0
+    assert intensifier.sh_iters == 1
+    assert isinstance(intensifier.configs_to_run, list)
+    assert len(intensifier.configs_to_run) == 0
 
-@unittest.mock.patch.object(_SuccessiveHalving, "_top_k")
-def test_update_stage_2(self, top_k_mock):
+
+'''
+# @unittest.mock.patch.object(_SuccessiveHalving, "_top_k")
+def test_update_stage_2(make_private_SH, runhistory, configs):
     """
     test update_stage - everything good is in state do not advance
     """
 
-    intensifier = _SuccessiveHalving(
-        stats=stats,
-        traj_logger=None,
-        rng=np.random.RandomState(12345),
-        deterministic=True,
-        run_obj_time=False,
-        cutoff=1,
-        min_budget=1,
-        max_budget=4,
-        eta=2,
-        instances=None,
-    )
+    intensifier = make_private_SH(deterministic=True, n_instances=0, min_budget=1, max_budget=4, n_seeds=1, eta=2)
+    config1 = configs[0]
+    config2 = configs[1]
+    config3 = configs[2]
+    config4 = configs[3]
 
     # update variables
-    intensifier._update_stage(runhistory=None)
+    intensifier._update_stage(runhistory=runhistory)
 
     intensifier.success_challengers.add(config1)
     intensifier.success_challengers.add(config2)
     intensifier.do_not_advance_challengers.add(config3)
     intensifier.do_not_advance_challengers.add(config4)
 
-    top_k_mock.return_value = [config1, config3]
+    # top_k_mock.return_value = [config1, config3]
+    intensifier.return_value = [config1, config3]
 
     # Test that we update the stage as there is one configuration advanced to the next budget
-    assert intensifier.stage, 0)
-    intensifier._update_stage(runhistory=None)
-    assert intensifier.stage, 1)
-    assert intensifier.configs_to_run, [config1])
-    assert intensifier.fail_chal_offset, 1)
-    assert len(intensifier.success_challengers), 0)
-    assert len(intensifier.do_not_advance_challengers), 0)
+    assert intensifier.stage == 0
+    intensifier._update_stage(runhistory=runhistory)
+    assert intensifier.stage == 1
+    assert intensifier.configs_to_run == [config1]
+    assert intensifier.fail_chal_offset == 1
+    assert len(intensifier.success_challengers) == 0
+    assert len(intensifier.do_not_advance_challengers) == 0
 
-    intensifier = _SuccessiveHalving(
-        stats=stats,
-        traj_logger=None,
-        rng=np.random.RandomState(12345),
-        deterministic=True,
-        run_obj_time=False,
-        cutoff=1,
-        min_budget=1,
-        max_budget=4,
-        eta=2,
-        instances=None,
-    )
+    intensifier = make_private_SH(deterministic=True, n_instances=0, min_budget=1, max_budget=4, eta=2)
 
     # update variables
-    intensifier._update_stage(runhistory=None)
+    intensifier._update_stage(runhistory=runhistory)
 
     intensifier.success_challengers.add(config1)
     intensifier.success_challengers.add(config2)
     intensifier.do_not_advance_challengers.add(config3)
     intensifier.do_not_advance_challengers.add(config4)
 
-    top_k_mock.return_value = [config3, config4]
+    intensifier.return_value = [config3, config4]
+    # top_k_mock.return_value = [config3, config4]
 
     # Test that we update the stage as there is no configuration advanced to the next budget
-    assert intensifier.stage, 0)
-    intensifier._update_stage(runhistory=None)
-    assert intensifier.stage, 0)
-    assert intensifier.configs_to_run, [])
-    assert intensifier.fail_chal_offset, 0)
-    assert len(intensifier.success_challengers), 0)
-    assert len(intensifier.do_not_advance_challengers), 0)
+    assert intensifier.stage == 0
+    intensifier._update_stage(runhistory=runhistory)
+    assert intensifier.stage == 0
+    assert intensifier.configs_to_run == []
+    assert intensifier.fail_chal_offset == 0
+    assert len(intensifier.success_challengers) == 0
+    assert len(intensifier.do_not_advance_challengers) == 0
 
-    top_k_mock.return_value = []
+    # top_k_mock.return_value = []
+    intensifier.return_value = []
+
+
 
 def test_evaluate_challenger_1(self):
     """
@@ -1063,18 +926,8 @@ def test_evaluate_challenger_1(self):
     target_algorithm = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=stats, run_obj="quality")
     target_algorithm.runhistory = rh
 
-    intensifier = _SuccessiveHalving(
-        stats=stats,
-        traj_logger=TrajLogger(output_dir=None, stats=stats),
-        rng=np.random.RandomState(12345),
-        deterministic=True,
-        run_obj_time=False,
-        cutoff=1,
-        instances=[None],
-        min_budget=0.25,
-        max_budget=0.5,
-        eta=2,
-    )
+    # instances = [None]??? 
+    intensifier = make_private_SH(deterministic=True, n_instances=0, min_budget=0.25, max_budget=0.5, eta=2)
     intensifier._update_stage(runhistory=None)
 
     runhistory.add(
@@ -1138,18 +991,8 @@ def test_evaluate_challenger_2(self):
     target_algorithm = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=stats, run_obj="runtime")
     target_algorithm.runhistory = rh
 
-    intensifier = _SuccessiveHalving(
-        stats=stats,
-        traj_logger=TrajLogger(output_dir=None, stats=stats),
-        rng=np.random.RandomState(12345),
-        deterministic=True,
-        cutoff=1,
-        instances=[1, 2],
-        min_budget=1,
-        max_budget=2,
-        eta=2,
-        instance_order=None,
-    )
+
+    intensifier = make_private_SH(deterministic=True, n_instances=2, min_budget=1, max_budget=2, eta=2, instance_order=None)
 
     # config1 should be executed successfully and selected as incumbent
     intent, run_info = intensifier.get_next_run(
@@ -1291,7 +1134,7 @@ def test_evaluate_challenger_capping(self, patch):
     assert intensifier.stage, 0)
 
     # should raise an error as this is a new iteration but no configs were provided
-    with assertRaisesRegex(ValueError, "No configurations/chooser provided."):
+    with pytest.raises(ValueError, "No configurations/chooser provided."):
         intent, run_info = intensifier.get_next_run(
             challengers=None,
             ask=None,
@@ -1402,7 +1245,7 @@ def test_evaluate_challenger_capping_2(self):
     assert intensifier.sh_iters, 1)
     assert intensifier.stage, 0)
 
-    with assertRaisesRegex(ValueError, "No configurations/chooser provided."):
+    with pytest.raises(ValueError, "No configurations/chooser provided."):
         intensifier.get_next_run(challengers=[], ask=None, incumbent=inc, runhistory=runhistory)
 
 def test_evaluate_challenger_3(self):
@@ -1583,7 +1426,7 @@ def test_incumbent_selection_default(self):
         cost=1,
         time=1,
         status=StatusType.SUCCESS,
-        instance=1,
+        instance="i1",
         seed=None,
         additional_info=None,
         budget=1,
@@ -1600,7 +1443,7 @@ def test_incumbent_selection_default(self):
         cost=1,
         time=1,
         status=StatusType.SUCCESS,
-        instance=1,
+        instance="i1",
         seed=None,
         additional_info=None,
         budget=2,
@@ -1614,7 +1457,7 @@ def test_incumbent_selection_default(self):
         cost=2,
         time=2,
         status=StatusType.SUCCESS,
-        instance=1,
+        instance="i1",
         seed=None,
         additional_info=None,
         budget=1,
@@ -1626,7 +1469,7 @@ def test_incumbent_selection_default(self):
         cost=2,
         time=2,
         status=StatusType.SUCCESS,
-        instance=1,
+        instance="i1",
         seed=None,
         additional_info=None,
         budget=2,
@@ -1640,7 +1483,7 @@ def test_incumbent_selection_default(self):
         cost=0.5,
         time=3,
         status=StatusType.SUCCESS,
-        instance=1,
+        instance="i1",
         seed=None,
         additional_info=None,
         budget=1,
@@ -1652,7 +1495,7 @@ def test_incumbent_selection_default(self):
         cost=0.5,
         time=3,
         status=StatusType.SUCCESS,
-        instance=1,
+        instance="i1",
         seed=None,
         additional_info=None,
         budget=2,
@@ -1676,7 +1519,7 @@ def test_incumbent_selection_default(self):
         cost=0.1,
         time=3,
         status=StatusType.SUCCESS,
-        instance=1,
+        instance="i1",
         seed=None,
         additional_info=None,
         budget=1,
@@ -1688,7 +1531,7 @@ def test_incumbent_selection_default(self):
         cost=0.1,
         time=3,
         status=StatusType.SUCCESS,
-        instance=1,
+        instance="i1",
         seed=None,
         additional_info=None,
         budget=2,
@@ -1717,7 +1560,7 @@ def test_incumbent_selection_designs(self):
 
     runhistory.add(
         config=config1,
-        instance=1,
+        instance="i1",
         seed=None,
         budget=1,
         cost=0.5,
@@ -1727,7 +1570,7 @@ def test_incumbent_selection_designs(self):
     )
     runhistory.add(
         config=config1,
-        instance=1,
+        instance="i1",
         seed=None,
         budget=2,
         cost=10,
@@ -1737,7 +1580,7 @@ def test_incumbent_selection_designs(self):
     )
     runhistory.add(
         config=config2,
-        instance=1,
+        instance="i1",
         seed=None,
         budget=2,
         cost=5,
@@ -1781,7 +1624,7 @@ def test_incumbent_selection_designs(self):
     # though config3 is run on a higher budget
     runhistory.add(
         config=config3,
-        instance=1,
+        instance="i1",
         seed=None,
         budget=2,
         cost=0.5,
@@ -1791,7 +1634,7 @@ def test_incumbent_selection_designs(self):
     )
     runhistory.add(
         config=config4,
-        instance=1,
+        instance="i1",
         seed=None,
         budget=1,
         cost=5,
@@ -1811,7 +1654,7 @@ def test_incumbent_selection_designs(self):
     # incumbent changes to config3 since that is run on the highest budget
     runhistory.add(
         config=config3,
-        instance=1,
+        instance="i1",
         seed=None,
         budget=4,
         cost=10,

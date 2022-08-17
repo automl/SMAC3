@@ -59,7 +59,7 @@ def test_race_challenger_1(make_scenario, make_stats, configspace_small, runhist
     scenario = make_scenario(configspace_small, use_instances=True)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
-    intensifier._set_stats(stats)
+    intensifier.stats = stats
     target_algorithm = TargetAlgorithmRunner(target, scenario, stats)
     configs = configspace_small.sample_configuration(3)
 
