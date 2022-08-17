@@ -1,7 +1,7 @@
 from __future__ import annotations
 from abc import abstractmethod
 
-from typing import Callable, Iterator, Type
+from typing import Any, Callable, Iterator, Type
 
 import time
 

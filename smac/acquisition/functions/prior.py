@@ -70,6 +70,12 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         self.rescale_acq = isinstance(acquisition_type, (LCB, TS))
         self.iteration_number = 0
 
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
+
     def update(self, **kwargs: Any) -> None:
         """Update the acquisition function attributes required for calculation.
 

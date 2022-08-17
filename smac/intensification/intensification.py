@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Callable, Iterator, List, Optional, Tuple, cast
+from typing import Any, Callable, Iterator, List, Optional, Tuple, cast
 
 from collections import Counter
 from enum import Enum
@@ -163,6 +163,12 @@ class Intensifier(AbstractIntensifier):
         self.to_run = []  # type: List[InstanceSeedBudgetKey]
         # self.inc_sum_cost = np.inf
         self.N = -1
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
 
     def get_next_run(
         self,

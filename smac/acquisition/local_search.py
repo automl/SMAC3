@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import abc
-from typing import Callable, Iterator, List, Optional, Set, Tuple, Union
+from typing import Any, Callable, Iterator, List, Optional, Set, Tuple, Union
 
 import copy
 import itertools
@@ -63,6 +63,12 @@ class LocalSearch(AbstractAcquisitionOptimizer):
         self.n_steps_plateau_walk = n_steps_plateau_walk
         self.vectorization_min_obtain = vectorization_min_obtain
         self.vectorization_max_obtain = vectorization_max_obtain
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
 
     def _maximize(
         self,

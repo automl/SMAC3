@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import abc
-from typing import Callable, Iterator, List, Optional, Set, Tuple, Union
+from typing import Any, Callable, Iterator, List, Optional, Set, Tuple, Union
 
 import copy
 import itertools
@@ -73,6 +73,12 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionOptimizer):
             seed=seed,
         )
         self.local_search_iterations = local_search_iterations
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
 
     def _set_acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
         self.acquisition_function = acquisition_function

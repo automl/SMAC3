@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import smac
 from smac.configspace import Configuration
@@ -20,55 +20,7 @@ class SerialRunner(Runner):
     configuration/instance/seed to a result.
 
     This class is expected to be extended via the implementation of
-    a run() method for the desired task.
-
-    Attributes
-    ----------
-    results
-    ta
-    stats
-    run_obj
-    par_factor
-    crash_cost
-    abort_i_first_run_crash
-
-    Parameters
-    ----------
-    ta : list
-        target algorithm command line as list of arguments
-    stats: Stats()
-         stats object to collect statistics about runtime and so on
-    objectives: list[str]
-        names of the objectives, by default it is a single objective parameter "cost"
-    run_obj: str
-        run objective of SMAC
-    par_factor: int
-        penalization factor
-    crash_cost : float | list[float]
-        Cost that is used in case of crashed runs (including runs that returned NaN or inf).
-    abort_on_first_run_crash: bool
-        if true and first run crashes, raise FirstRunCrashedException
-    """
-
-    def __init__(
-        self,
-        target_algorithm: list[str] | Callable,
-        scenario: smac.scenario.Scenario,
-        stats: Stats,
-        # objectives: list[str] = ["cost"],
-        # par_factor: int = 1,
-        # crash_cost: float | list[float] = float(MAXINT),
-        # abort_on_first_run_crash: bool = True,
-    ):
-        super(SerialRunner, self).__init__(
-            target_algorithm=target_algorithm,
-            scenario=scenario,
-            stats=stats,
-            # objectives=objectives,
-            # par_factor=par_factor,
-            # crash_cost=crash_cost,
-            # abort_on_first_run_crash=abort_on_first_run_crash,
-        )
+    a run() method for the desired task."""
 
     def submit_run(self, run_info: RunInfo) -> None:
         """This function submits a run_info object in a serial fashion.

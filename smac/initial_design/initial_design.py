@@ -162,10 +162,10 @@ class InitialDesign:
             if config.origin is None:
                 config.origin = "Initial design"
 
-        # add this incumbent right away to have an entry to time point 0
+        # Add this incumbent right away to have an entry to time point 0
         # self.traj_logger.add_entry(train_perf=2**31, incumbent_id=1, incumbent=self.configs[0])
 
-        # removing duplicates
+        # Removing duplicates
         # (Reference: https://stackoverflow.com/questions/7961363/removing-duplicates-in-lists)
         self.configs = list(OrderedDict.fromkeys(self.configs))
         return self.configs

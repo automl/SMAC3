@@ -117,6 +117,12 @@ class AbstractIntensifier:
         # to mark the end of an iteration
         self.iteration_done = False
 
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
+
     def _set_stats(self, stats: Stats) -> None:
         self.stats = stats
 

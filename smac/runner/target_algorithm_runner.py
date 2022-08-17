@@ -45,43 +45,26 @@ class TargetAlgorithmRunner(SerialRunner):
     the target algorithm.
     """
 
-    def __init__(
-        self,
-        target_algorithm: Callable,
-        scenario: smac.scenario.Scenario,
-        stats: Stats,
-        # objectives: list[str] = ["cost"],
-        # par_factor: int = 1,
-        # crash_cost: float | list[float] = float(MAXINT),
-        # abort_on_first_run_crash: bool = True,
-        # memory_limit: int | None = None,
-        # algorithm_walltime_limit: float | None = None,
-    ):
-        super().__init__(
-            target_algorithm=target_algorithm,
-            scenario=scenario,
-            stats=stats,
-            # objectives=objectives,
-            # par_factor=par_factor,
-            # crash_cost=crash_cost,
-            # abort_on_first_run_crash=abort_on_first_run_crash,
-        )
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-        signature = inspect.signature(target_algorithm).parameters
+        signature = inspect.signature(self.target_algorithm).parameters
         self._accepts_seed = "seed" in signature.keys()
         self._accepts_instance = "instance" in signature.keys()
         self._accepts_budget = "budget" in signature.keys()
 
-        if not callable(target_algorithm):
-            raise TypeError(f"Argument `target_algorithm` must be a callable but is type `{type(target_algorithm)}`.")
+        if not callable(self.target_algorithm):
+            raise TypeError(
+                f"Argument `target_algorithm` must be a callable but is type `{type(self.target_algorithm)}`."
+            )
 
-        self._target_algorithm = cast(Callable, target_algorithm)
+        self._target_algorithm = cast(Callable, self.target_algorithm)
 
         # Pynisher limitations
-        if (memory := scenario.trial_memory_limit) is not None:
+        if (memory := self.scenario.trial_memory_limit) is not None:
             memory = int(math.ceil(memory))
 
-        if (time := scenario.trial_walltime_limit) is not None:
+        if (time := self.scenario.trial_walltime_limit) is not None:
             time = int(math.ceil(time))
 
         self.memory_limit = memory

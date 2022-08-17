@@ -36,6 +36,12 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
         self._functions = []  # type: List[AbstractAcquisitionFunction]
         self.eta = None
 
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
+
     def update(self, **kwargs: Any) -> None:
         """Update the acquisition functions values.
 

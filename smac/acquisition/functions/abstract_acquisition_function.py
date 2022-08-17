@@ -38,6 +38,11 @@ class AbstractAcquisitionFunction(metaclass=abc.ABCMeta):
     def _set_model(self, model: BaseModel) -> None:
         self.model = model
 
+    @abc.abstractmethod
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        raise NotImplementedError
+
     def update(self, **kwargs: Any) -> None:
         """Update the acquisition function attributes required for calculation.
 

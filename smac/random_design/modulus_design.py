@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Any, Optional
 
 import logging
 
@@ -31,7 +31,13 @@ class NoCoolDownRandomDesign(RandomDesign):
             self.logger.warning("Using SMAC with random configurations only." "ROAR is the better choice for this.")
         self.modulus = modulus
 
-    def next_smbo_iteration(self) -> None:
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
+
+    def next_iteration(self) -> None:
         """Does nothing."""
         ...
 
@@ -73,7 +79,13 @@ class LinearCoolDownRandomDesign(RandomDesign):
         self.end_modulus = end_modulus
         self.last_iteration = 0
 
-    def next_smbo_iteration(self) -> None:
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
+
+    def next_iteration(self) -> None:
         """Change modulus."""
         self.modulus += self.modulus_increment
         self.modulus = min(self.modulus, self.end_modulus)

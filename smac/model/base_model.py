@@ -1,6 +1,7 @@
 from __future__ import annotations
+from abc import abstractmethod
 
-from typing import List, Optional, Tuple
+from typing import Any, List, Optional, Tuple
 
 import copy
 import warnings
@@ -110,6 +111,11 @@ class BaseModel:
         self.types = types
         # Initial types array which is used to reset the type array at every call to train()
         self._initial_types = copy.deepcopy(types)
+
+    @abstractmethod
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        raise NotImplementedError
 
     def train(self, X: np.ndarray, Y: np.ndarray) -> "BaseModel":
         """Trains the EPM on X and Y.

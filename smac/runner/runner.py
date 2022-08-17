@@ -112,6 +112,13 @@ class Runner(ABC):
         self.objectives = objectives
         self.n_objectives = scenario.count_objectives()
 
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+            "code": str(self.target_algorithm.__code__.co_code),
+        }
+
     @abstractmethod
     def submit_run(self, run_info: RunInfo) -> None:
         """This function submits a configuration embedded in a RunInfo object, and uses one of the

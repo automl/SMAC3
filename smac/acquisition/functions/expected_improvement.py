@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 
 import numpy as np
 from scipy.stats import norm
@@ -35,6 +36,12 @@ class EI(AbstractAcquisitionFunction):
         self.par = par
         self.eta = None
         self._required_updates = ("model", "eta")
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the EI value and its derivatives.

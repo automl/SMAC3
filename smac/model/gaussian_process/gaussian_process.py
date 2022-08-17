@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional, Tuple, Union, cast
+from typing import Any, List, Optional, Tuple, Union, cast
 
 import logging
 
@@ -90,6 +90,13 @@ class GaussianProcess(BaseGaussianProcess):
         self._n_ll_evals = 0
 
         self._set_has_conditions()
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+            # "kernel": self.kernel.get_meta(),
+        }
 
     def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> "GaussianProcess":
         """Computes the Cholesky decomposition of the covariance of X and estimates the GP

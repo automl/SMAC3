@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Any, Optional
 
 import logging
 
@@ -28,7 +28,7 @@ class ProbabilityRandomDesign(RandomDesign):
         super().__init__(seed)
         self.prob = probability
 
-    def next_smbo_iteration(self) -> None:
+    def next_iteration(self) -> None:
         """Does nothing."""
         ...
 
@@ -59,7 +59,13 @@ class ProbabilityCoolDownRandomDesign(RandomDesign):
         self.prob = probability
         self.cool_down_fac = factor
 
-    def next_smbo_iteration(self) -> None:
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
+
+    def next_iteration(self) -> None:
         """Set the probability to the current value multiplied by the `cool_down_fac`."""
         self.prob *= self.cool_down_fac
 

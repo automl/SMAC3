@@ -29,6 +29,12 @@ class MagicMixinKernel:
 
     prior = None  # type: Optional[Prior]
 
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
+
     def __call__(
         self,
         X: np.ndarray,
@@ -205,6 +211,12 @@ class SumKernel(MagicMixinKernel, kernels.Sum):
         self.set_active_dims(operate_on)
         self.has_conditions = has_conditions
 
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
+
     def _call(
         self,
         X: np.ndarray,
@@ -259,6 +271,12 @@ class ProductKernel(MagicMixinKernel, kernels.Product):
         super(ProductKernel, self).__init__(k1=k1, k2=k2)
         self.set_active_dims(operate_on)
         self.has_conditions = has_conditions
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
 
     def _call(
         self,
@@ -317,6 +335,12 @@ class ConstantKernel(MagicMixinKernel, kernels.ConstantKernel):
         self.set_active_dims(operate_on)
         self.prior = prior
         self.has_conditions = has_conditions
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
 
     def _call(
         self,

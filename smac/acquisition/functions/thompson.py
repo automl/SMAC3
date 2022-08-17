@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 
 import numpy as np
 
@@ -36,6 +37,12 @@ class TS(AbstractAcquisitionFunction):
         self.par = par
         self.num_data = None
         self._required_updates = ("model",)
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Sample a new value from a gaussian distribution whose mean and covariance values

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import os
 import warnings
@@ -97,6 +97,12 @@ class ParallelScheduler(AbstractIntensifier):
         # We have a pool of instances that yield configurations ot run
         self.intensifier_instances = {}  # type: Dict[int, AbstractIntensifier]
         self.print_worker_warning = True
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
 
     def get_next_run(
         self,

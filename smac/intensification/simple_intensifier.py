@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from smac.configspace import Configuration
 from smac.constants import MAXINT
@@ -55,6 +55,12 @@ class SimpleIntensifier(AbstractIntensifier):
         # are just W workers, there should be at max W active runs
         # Below variable tracks active runs not processed
         self.run_tracker = {}  # type: Dict[Tuple[Configuration, str, int, float], bool]
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
 
     def process_results(
         self,

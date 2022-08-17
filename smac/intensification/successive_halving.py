@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Callable, Dict, Iterator, List, Optional, Set, Tuple, Union
+from typing import Any, Callable, Dict, Iterator, List, Optional, Set, Tuple, Union
 
 import numpy as np
 
@@ -134,6 +134,12 @@ class SuccessiveHalving(ParallelScheduler):
         self.max_budget = scenario.max_budget
         self.eta = eta
         self.num_initial_challengers = num_initial_challengers
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
 
     def _get_intensifier_ranking(self, intensifier: AbstractIntensifier) -> Tuple[int, int]:
         """Given a intensifier, returns how advance it is. This metric will be used to determine

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import abc
-from typing import Callable, Iterator, List, Optional, Tuple
+from typing import Any, Callable, Iterator, List, Optional, Tuple
 
 import copy
 
@@ -49,6 +49,12 @@ class AbstractAcquisitionOptimizer(metaclass=abc.ABCMeta):
         self.challengers = challengers
         self.rng = np.random.RandomState(seed=seed)
 
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
+
     def _set_acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
         self.acquisition_function = acquisition_function
 
@@ -70,7 +76,7 @@ class AbstractAcquisitionOptimizer(metaclass=abc.ABCMeta):
             part of the returned ChallengerList such
             that we can interleave random configurations
             by a scheme defined by the random_design;
-            random_design.next_smbo_iteration()
+            random_design.next_iteration()
             is called at the end of this function
 
         Returns
@@ -88,7 +94,7 @@ class AbstractAcquisitionOptimizer(metaclass=abc.ABCMeta):
         challengers = ChallengerList(next_configs_by_acq_value, self.configspace, random_design)
 
         if random_design is not None:
-            random_design.next_smbo_iteration()
+            random_design.next_iteration()
 
         return challengers
 

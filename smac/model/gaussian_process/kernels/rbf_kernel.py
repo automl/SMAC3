@@ -36,6 +36,12 @@ class RBF(MagicMixinKernel, kernels.RBF):
         self.prior = prior
         self.has_conditions = has_conditions
 
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
+
     def _call(
         self,
         X: np.ndarray,

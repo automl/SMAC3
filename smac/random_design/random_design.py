@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Any, Optional
 
 import logging
 
@@ -17,10 +17,18 @@ class RandomDesign:
     """
 
     def __init__(self, seed: int = 0):
+        self.seed = seed
         self.rng = np.random.RandomState(seed=seed)
 
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+            "seed": self.seed,
+        }
+
     @abstractmethod
-    def next_smbo_iteration(self) -> None:
+    def next_iteration(self) -> None:
         """Indicate beginning of next SMBO iteration."""
         pass
 

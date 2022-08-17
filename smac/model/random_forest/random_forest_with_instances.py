@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional, Tuple
+from typing import Any, List, Optional, Tuple
 
 import numpy as np
 from pyrfr import regression
@@ -136,6 +136,12 @@ class RandomForestWithInstances(BaseRandomForest):
             eps_purity,
             self.seed,
         ]
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
 
     def _train(self, X: np.ndarray, y: np.ndarray) -> "RandomForestWithInstances":
         """Trains the random forest on X and y.

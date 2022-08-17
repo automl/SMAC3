@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Callable, Iterator, List, Optional, Tuple
+from typing import Any, Callable, Iterator, List, Optional, Tuple
 
 import numpy as np
 
@@ -106,6 +106,12 @@ class Hyperband(ParallelScheduler):
         self.min_budget = scenario.min_budget
         self.max_budget = scenario.max_budget
         self.eta = eta
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
 
     def _get_intensifier_ranking(self, intensifier: AbstractIntensifier) -> Tuple[int, int]:
         """Given a intensifier, returns how advance it is. This metric will be used to determine

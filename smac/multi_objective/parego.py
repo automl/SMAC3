@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 
 import numpy as np
 
@@ -13,6 +14,12 @@ class ParEGO(AggregationStrategy):
     ):
         super(ParEGO, self).__init__(seed=seed)
         self.rho = rho
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
 
     def __call__(self, values: list[float]) -> float:
         """

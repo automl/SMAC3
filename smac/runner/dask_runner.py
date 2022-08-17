@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import os
 import time
@@ -128,6 +128,13 @@ class DaskParallelRunner(Runner):
         self.futures = []  # type: List[Future]
 
         self.scheduler_info = self.client._get_scheduler_info()
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+            "code": self.target_algorithm.__code__.co_code,
+        }
 
     def submit_run(self, run_info: RunInfo) -> None:
         """This function submits a configuration embedded in a run_info object, and uses one of the

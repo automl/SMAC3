@@ -289,13 +289,16 @@ class Facade:
         """Generates a hash based on all kwargs of the facade. This is used for determine
         whether a run should be continued or not."""
         meta = {
-            "target_algorithm": {"code": str(self.runner.target_algorithm.__code__.co_code)},
+            "facade": {"name": self.__class__.__name__},
+            "runner": self.runner.get_meta(),
+            "model": self.model.get_meta(),
+            "acquisition_optimizer": self.acquisition_optimizer.get_meta(),
+            "acquisition_function": self.acquisition_function.get_meta(),
+            "intensifier": self.intensifier.get_meta(),
             "initial_design": self.initial_design.get_meta(),
-            # TODO: Create `get_meta` methods
-            # "intensifier": self.intensifier.get_meta(),
-            # "model": self.model.get_meta(),
-            # "acquisition_function": self.acquisition_function.get_meta(),
-            # "random_design": self.random_design.get_meta(),
+            "random_design": self.random_design.get_meta(),
+            "multi_objective_algorithm": self.multi_objective_algorithm.get_meta(),
+            "runhistory_encoder": self.runhistory_encoder.get_meta(),
         }
 
         return meta

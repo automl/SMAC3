@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import abc
-from typing import Mapping, Optional, Tuple
+from typing import Any, Mapping, Optional, Tuple
 
 import numpy as np
 
@@ -151,6 +151,12 @@ class AbstractRunHistoryEncoder:
         self.min_y = np.array([np.NaN] * self.n_objectives)
         self.max_y = np.array([np.NaN] * self.n_objectives)
         self.perc = np.array([np.NaN] * self.n_objectives)
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
 
     def _set_imputer(self, imputer: AbstractImputer | None) -> None:
         self.imputer = imputer
