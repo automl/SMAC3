@@ -1,6 +1,6 @@
 """
-Stochastic Gradient Descent on Instances
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Stochastic Gradient Descent On Multiple Datasets
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Example for optimizing a Multi-Layer Perceptron (MLP) across multiple (dataset) instances.
 

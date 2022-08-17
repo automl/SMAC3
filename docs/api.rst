@@ -5,16 +5,18 @@ API References
    :toctree: api
    :recursive:
 
-   smac.smbo
-   smac.scenario
+   smac.loop
+   smac.facade
    smac.model
    smac.acquisition
    smac.intensification
+   smac.initial_design
+   smac.random_design
    smac.runner
-   smac.chooser
-   smac.multi_objective
    smac.runhistory
+   smac.multi_objective
    smac.configspace
    smac.utils
+   smac.scenario
    smac.constants
-   smac.callbacks
+   smac.callback

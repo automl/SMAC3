@@ -1,6 +1,6 @@
 """
-Multi-Layer Perceptron with Multi-Fidelity
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Multi-Layer Perceptron Using Multiple Epochs
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets.
 Since we want to take advantage of Multi-Fidelity, the multi-fidelity facade is a good choice. By default,
