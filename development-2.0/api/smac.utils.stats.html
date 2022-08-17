@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>smac.utils.stats &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
@@ -149,28 +149,23 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/synthetic_function.html">
-     Synthetic Function
+    <a class="reference internal" href="../examples/basics/index.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/schaffer_multi_objective.html">
-     Schaffer Multi-Objective
+    <a class="reference internal" href="../examples/commandline/index.html">
+     Commandline
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/svm_cv.html">
-     Support Vector Machine with Cross-Validation
+    <a class="reference internal" href="../examples/multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="../examples/multi_objective/index.html">
+     Multi-Objective
     </a>
    </li>
   </ul>
@@ -208,13 +203,13 @@ style="width: 100%;">
   </label>
   <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.smbo.html">
-     smac.smbo
+    <a class="reference internal" href="smac.loop.html">
+     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.scenario.html">
-     smac.scenario
+    <a class="reference internal" href="smac.facade.html">
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2">
@@ -233,23 +228,28 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="smac.runner.html">
      smac.runner
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.chooser.html">
-     smac.chooser
+    <a class="reference internal" href="smac.runhistory.html">
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.multi_objective.html">
      smac.multi_objective
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.runhistory.html">
-     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
@@ -263,8 +263,18 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="smac.constants.html">
      smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.callback.html">
+     smac.callback
     </a>
    </li>
   </ul>
@@ -324,10 +334,6 @@ style="width: 100%;">
 <span id="smac-utils-stats"></span><h1>smac.utils.stats<a class="headerlink" href="#module-smac.utils.stats" title="Permalink to this heading">¶</a></h1>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.utils.stats.Stats" title="smac.utils.stats.Stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Stats</span></code></a>(scenario)</p></td>
 <td><p>All statistics collected during run.</p></td>
@@ -347,7 +353,7 @@ style="width: 100%;">
 <span class="sig-name descname"><span class="pre">get_remaing_walltime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/stats.html#Stats.get_remaing_walltime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.stats.Stats.get_remaing_walltime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subtracts the runtime configuration budget with the used wallclock time.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
 </dd>
 </dl>
@@ -358,7 +364,7 @@ style="width: 100%;">
 <span class="sig-name descname"><span class="pre">get_remaining_cputime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/stats.html#Stats.get_remaining_cputime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.stats.Stats.get_remaining_cputime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subtracts the ta running budget with the used time.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
 </dd>
 </dl>
@@ -369,7 +375,7 @@ style="width: 100%;">
 <span class="sig-name descname"><span class="pre">get_remaining_trials</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/stats.html#Stats.get_remaining_trials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.stats.Stats.get_remaining_trials" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subtract the target algorithm runs in the scenario with the used ta runs.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
 </dl>
@@ -380,7 +386,7 @@ style="width: 100%;">
 <span class="sig-name descname"><span class="pre">get_used_walltime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/stats.html#Stats.get_used_walltime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.stats.Stats.get_used_walltime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns used wallclock time.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
 </dd>
 </dl>
@@ -392,7 +398,7 @@ style="width: 100%;">
 <dd><p>Check whether the configuration budget for time budget, ta_budget and submitted
 is exhausted.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
 </dd>
 </dl>
@@ -403,7 +409,7 @@ is exhausted.</p>
 <span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/stats.html#Stats.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.stats.Stats.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load all attributes from dictionary in file into stats-object.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -414,10 +420,10 @@ is exhausted.</p>
 <span class="sig-name descname"><span class="pre">print</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/stats.html#Stats.print"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.stats.Stats.print" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints all statistics.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>debug</strong> (<em>bool</em>) – use logging.debug instead of logging.info if set to true</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -428,7 +434,7 @@ is exhausted.</p>
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/stats.html#Stats.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.stats.Stats.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save all relevant attributes to json-dictionary.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -440,7 +446,7 @@ is exhausted.</p>
 <dd><p>Starts the timer (for the runtime configuration budget).</p>
 <p>Substracting wallclock time used so we can continue loaded Stats.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -451,10 +457,10 @@ is exhausted.</p>
 <span class="sig-name descname"><span class="pre">update_average_configs_per_intensify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_configs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/stats.html#Stats.update_average_configs_per_intensify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.stats.Stats.update_average_configs_per_intensify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates statistics how many configurations on average per used in intensify.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>n_configs</strong> (<em>int</em>) – Number of configurations in current intensify.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>

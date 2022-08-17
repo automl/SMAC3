@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>smac.acquisition.abstract_acqusition_optimizer &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
@@ -149,28 +149,23 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/synthetic_function.html">
-     Synthetic Function
+    <a class="reference internal" href="../examples/basics/index.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/schaffer_multi_objective.html">
-     Schaffer Multi-Objective
+    <a class="reference internal" href="../examples/commandline/index.html">
+     Commandline
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/svm_cv.html">
-     Support Vector Machine with Cross-Validation
+    <a class="reference internal" href="../examples/multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="../examples/multi_objective/index.html">
+     Multi-Objective
     </a>
    </li>
   </ul>
@@ -208,13 +203,13 @@ style="width: 100%;">
   </label>
   <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.smbo.html">
-     smac.smbo
+    <a class="reference internal" href="smac.loop.html">
+     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.scenario.html">
-     smac.scenario
+    <a class="reference internal" href="smac.facade.html">
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2">
@@ -233,23 +228,28 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="smac.runner.html">
      smac.runner
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.chooser.html">
-     smac.chooser
+    <a class="reference internal" href="smac.runhistory.html">
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.multi_objective.html">
      smac.multi_objective
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.runhistory.html">
-     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
@@ -263,8 +263,18 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="smac.constants.html">
      smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.callback.html">
+     smac.callback
     </a>
    </li>
   </ul>
@@ -324,10 +334,6 @@ style="width: 100%;">
 <span id="smac-acquisition-abstract-acqusition-optimizer"></span><h1>smac.acquisition.abstract_acqusition_optimizer<a class="headerlink" href="#module-smac.acquisition.abstract_acqusition_optimizer" title="Permalink to this heading">¶</a></h1>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer" title="smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractAcquisitionOptimizer</span></code></a>(configspace[, ...])</p></td>
 <td><p>Abstract class for the acquisition maximization.</p></td>
@@ -348,7 +354,7 @@ style="width: 100%;">
 <p>In order to use this class it has to be subclassed and the method
 <code class="docutils literal notranslate"><span class="pre">_maximize</span></code> must be implemented.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>configspace</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – </p></li>
 <li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction" title="smac.acquisition.functions.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </p></li>
@@ -358,25 +364,36 @@ style="width: 100%;">
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/abstract_acqusition_optimizer.html#AbstractAcquisitionOptimizer.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer.get_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the meta data of the created object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer.maximize">
-<span class="sig-name descname"><span class="pre">maximize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">previous_configs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_configuration_chooser</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/abstract_acqusition_optimizer.html#AbstractAcquisitionOptimizer.maximize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer.maximize" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">maximize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">previous_configs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/abstract_acqusition_optimizer.html#AbstractAcquisitionOptimizer.maximize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer.maximize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maximize acquisition function using <code class="docutils literal notranslate"><span class="pre">_maximize</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>previous_configs</strong> (<em>List</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – Previous evaluated configurations.</p></li>
 <li><p><strong>num_points</strong> (<em>int</em>) – Number of points to be sampled. If <cite>num_points</cite> is not specified, <cite>self.challengers</cite> is used.</p></li>
-<li><p><strong>random_configuration_chooser</strong> (<em>RandomConfigurationChooser</em><em>, </em><em>optional</em>) – part of the returned ChallengerList such
+<li><p><strong>random_design</strong> (<em>RandomConfigurationChooser</em><em>, </em><em>optional</em>) – part of the returned ChallengerList such
 that we can interleave random configurations
-by a scheme defined by the random_configuration_chooser;
-random_configuration_chooser.next_smbo_iteration()
+by a scheme defined by the random_design;
+random_design.next_iteration()
 is called at the end of this function</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>challengers</strong> – An iterable consisting of <a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.configspace.Configuration</span></code></a>.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Iterator[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
 </dd>
 </dl>
@@ -386,7 +403,7 @@ is called at the end of this function</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.acquisition.abstract_acqusition_optimizer.ChallengerList">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.abstract_acqusition_optimizer.</span></span><span class="sig-name descname"><span class="pre">ChallengerList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">challenger_callback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_configuration_chooser=&lt;smac.chooser.modulus_chooser.NoCoolDownConfigurationChooser</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/abstract_acqusition_optimizer.html#ChallengerList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.abstract_acqusition_optimizer.ChallengerList" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.abstract_acqusition_optimizer.</span></span><span class="sig-name descname"><span class="pre">ChallengerList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">challenger_callback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design=&lt;smac.random_design.modulus_design.NoCoolDownRandomDesign</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/abstract_acqusition_optimizer.html#ChallengerList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.abstract_acqusition_optimizer.ChallengerList" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Iterator</span></code></p>
 <p>Helper class to interleave random configurations in a list of challengers.</p>
 <p>Provides an iterator which returns a random configuration in each second
@@ -394,7 +411,7 @@ iteration. Reduces time necessary to generate a list of new challengers
 as one does not need to sample several hundreds of random configurations
 in each iteration which are never looked at.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>challenger_callback</strong> (<em>Callable</em>) – Callback function which returns a list of challengers (without interleaved random configurations, must a be a
 closure: <a class="reference external" href="https://www.programiz.com/python-programming/closure">https://www.programiz.com/python-programming/closure</a>)</p></li>

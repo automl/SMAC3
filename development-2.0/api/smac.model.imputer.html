@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>smac.model.imputer &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
@@ -149,28 +149,23 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/synthetic_function.html">
-     Synthetic Function
+    <a class="reference internal" href="../examples/basics/index.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/schaffer_multi_objective.html">
-     Schaffer Multi-Objective
+    <a class="reference internal" href="../examples/commandline/index.html">
+     Commandline
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/svm_cv.html">
-     Support Vector Machine with Cross-Validation
+    <a class="reference internal" href="../examples/multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="../examples/multi_objective/index.html">
+     Multi-Objective
     </a>
    </li>
   </ul>
@@ -208,13 +203,13 @@ style="width: 100%;">
   </label>
   <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.smbo.html">
-     smac.smbo
+    <a class="reference internal" href="smac.loop.html">
+     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.scenario.html">
-     smac.scenario
+    <a class="reference internal" href="smac.facade.html">
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2 current active">
@@ -233,23 +228,28 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="smac.runner.html">
      smac.runner
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.chooser.html">
-     smac.chooser
+    <a class="reference internal" href="smac.runhistory.html">
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.multi_objective.html">
      smac.multi_objective
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.runhistory.html">
-     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
@@ -263,8 +263,18 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="smac.constants.html">
      smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.callback.html">
+     smac.callback
     </a>
    </li>
   </ul>
@@ -332,7 +342,7 @@ style="width: 100%;">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">impute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">censored_X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">censored_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncensored_X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncensored_y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/imputer/abstract_imputer.html#AbstractImputer.impute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.imputer.AbstractImputer.impute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Imputes censored runs and returns new y values.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>censored_X</strong> (<em>np.ndarray</em><em> [</em><em>N</em><em>, </em><em>M</em><em>]</em>) – Feature array of all censored runs.</p></li>
 <li><p><strong>censored_y</strong> (<em>np.ndarray</em><em> [</em><em>N</em><em>, </em><em>1</em><em>]</em>) – Target values for all runs censored runs.</p></li>
@@ -340,10 +350,10 @@ style="width: 100%;">
 <li><p><strong>uncensored_y</strong> (<em>np.ndarray</em><em> [</em><em>N</em><em>, </em><em>1</em><em>]</em>) – Target values for all non-censored runs.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>imputed_y</strong> – Same shape as censored_y [N, 1]</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
@@ -362,7 +372,7 @@ style="width: 100%;">
 predictions of the random forest.</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Will be used to draw a seed (currently not used)</p></li>
 <li><p><strong>algorithm_walltime_limit</strong> (<em>float</em>) – algorithm_walltime_limit value for this scenario (upper runnning time limit)</p></li>
@@ -377,7 +387,7 @@ predictions of the random forest.</p>
 <dt class="sig sig-object py" id="smac.model.imputer.RandomForestImputer.max_iter">
 <span class="sig-name descname"><span class="pre">max_iter</span></span><a class="headerlink" href="#smac.model.imputer.RandomForestImputer.max_iter" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int</p>
 </dd>
 </dl>
@@ -387,7 +397,7 @@ predictions of the random forest.</p>
 <dt class="sig sig-object py" id="smac.model.imputer.RandomForestImputer.change_threshold">
 <span class="sig-name descname"><span class="pre">change_threshold</span></span><a class="headerlink" href="#smac.model.imputer.RandomForestImputer.change_threshold" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -397,7 +407,7 @@ predictions of the random forest.</p>
 <dt class="sig sig-object py" id="smac.model.imputer.RandomForestImputer.algorithm_walltime_limit">
 <span class="sig-name descname"><span class="pre">algorithm_walltime_limit</span></span><a class="headerlink" href="#smac.model.imputer.RandomForestImputer.algorithm_walltime_limit" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -407,7 +417,7 @@ predictions of the random forest.</p>
 <dt class="sig sig-object py" id="smac.model.imputer.RandomForestImputer.threshold">
 <span class="sig-name descname"><span class="pre">threshold</span></span><a class="headerlink" href="#smac.model.imputer.RandomForestImputer.threshold" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -418,7 +428,7 @@ predictions of the random forest.</p>
 <span class="sig-name descname"><span class="pre">seed</span></span><a class="headerlink" href="#smac.model.imputer.RandomForestImputer.seed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Created by drawing random int from rng</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int</p>
 </dd>
 </dl>
@@ -429,7 +439,7 @@ predictions of the random forest.</p>
 <span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#smac.model.imputer.RandomForestImputer.model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predictive model (i.e. RandomForestWithInstances)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>BaseEPM</p>
 </dd>
 </dl>
@@ -439,7 +449,7 @@ predictions of the random forest.</p>
 <dt class="sig sig-object py" id="smac.model.imputer.RandomForestImputer.var_threshold">
 <span class="sig-name descname"><span class="pre">var_threshold</span></span><a class="headerlink" href="#smac.model.imputer.RandomForestImputer.var_threshold" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -450,7 +460,7 @@ predictions of the random forest.</p>
 <span class="sig-name descname"><span class="pre">impute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">censored_X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">censored_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncensored_X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncensored_y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/imputer/random_forest_imputer.html#RandomForestImputer.impute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.imputer.RandomForestImputer.impute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Imputes censored runs and returns new y values.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>censored_X</strong> (<em>np.ndarray</em><em> [</em><em>N</em><em>, </em><em>M</em><em>]</em>) – Feature array of all censored runs.</p></li>
 <li><p><strong>censored_y</strong> (<em>np.ndarray</em><em> [</em><em>N</em><em>, </em><em>1</em><em>]</em>) – Target values for all runs censored runs.</p></li>
@@ -458,10 +468,10 @@ predictions of the random forest.</p>
 <li><p><strong>uncensored_y</strong> (<em>np.ndarray</em><em> [</em><em>N</em><em>, </em><em>1</em><em>]</em>) – Target values for all non-censored runs.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>imputed_y</strong> – Same shape as censored_y [N, 1]</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
@@ -471,10 +481,6 @@ predictions of the random forest.</p>
 
 <p class="rubric">Modules</p>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="smac.model.imputer.abstract_imputer.html#module-smac.model.imputer.abstract_imputer" title="smac.model.imputer.abstract_imputer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.model.imputer.abstract_imputer</span></code></a></p></td>
 <td><p></p></td>

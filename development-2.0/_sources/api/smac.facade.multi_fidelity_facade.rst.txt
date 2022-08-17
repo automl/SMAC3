@@ -1,0 +1,29 @@
+smac.facade.multi\_fidelity\_facade
+===================================
+
+.. automodule:: smac.facade.multi_fidelity_facade
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      MultiFidelityFacade
+   
+   
+
+   
+   
+   
+
+
+

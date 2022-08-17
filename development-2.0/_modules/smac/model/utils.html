@@ -146,28 +146,23 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/synthetic_function.html">
-     Synthetic Function
+    <a class="reference internal" href="../../../examples/basics/index.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/schaffer_multi_objective.html">
-     Schaffer Multi-Objective
+    <a class="reference internal" href="../../../examples/commandline/index.html">
+     Commandline
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/svm_cv.html">
-     Support Vector Machine with Cross-Validation
+    <a class="reference internal" href="../../../examples/multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="../../../examples/multi_objective/index.html">
+     Multi-Objective
     </a>
    </li>
   </ul>
@@ -205,13 +200,13 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../api/smac.smbo.html">
-     smac.smbo
+    <a class="reference internal" href="../../../api/smac.loop.html">
+     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../api/smac.scenario.html">
-     smac.scenario
+    <a class="reference internal" href="../../../api/smac.facade.html">
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2">
@@ -230,23 +225,28 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../../../api/smac.runner.html">
      smac.runner
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../api/smac.chooser.html">
-     smac.chooser
+    <a class="reference internal" href="../../../api/smac.runhistory.html">
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../api/smac.multi_objective.html">
      smac.multi_objective
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../api/smac.runhistory.html">
-     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
@@ -260,8 +260,18 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../../../api/smac.constants.html">
      smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.callback.html">
+     smac.callback
     </a>
    </li>
   </ul>
@@ -331,18 +341,18 @@ style="width: 100%;">
 
 
 <div class="viewcode-block" id="get_types"><a class="viewcode-back" href="../../../api/smac.model.utils.html#smac.model.utils.get_types">[docs]</a><span class="k">def</span> <span class="nf">get_types</span><span class="p">(</span>
-    <span class="n">config_space</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
-    <span class="n">instance_features</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]:</span>
+    <span class="n">configspace</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
+    <span class="n">instance_features</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]:</span>
     <span class="sd">&quot;&quot;&quot;Return the types of the hyperparameters and the bounds of the</span>
 <span class="sd">    hyperparameters and instance features.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Extract types vector for rf from config space and the bounds</span>
-    <span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">config_space</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span>
+    <span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span>
     <span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">types</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">config_space</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()):</span>
-        <span class="n">parents</span> <span class="o">=</span> <span class="n">config_space</span><span class="o">.</span><span class="n">get_parents_of</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()):</span>
+        <span class="n">parents</span> <span class="o">=</span> <span class="n">configspace</span><span class="o">.</span><span class="n">get_parents_of</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">can_be_inactive</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
@@ -419,32 +429,33 @@ style="width: 100%;">
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Unknown hyperparameter type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">param</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="n">instance_features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">types</span> <span class="o">=</span> <span class="n">types</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">instance_features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">n_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">instance_features</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">types</span> <span class="o">=</span> <span class="n">types</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_features</span>
 
     <span class="k">return</span> <span class="n">types</span><span class="p">,</span> <span class="n">bounds</span></div>
 
 
 <div class="viewcode-block" id="check_subspace_points"><a class="viewcode-back" href="../../../api/smac.model.utils.html#smac.model.utils.check_subspace_points">[docs]</a><span class="k">def</span> <span class="nf">check_subspace_points</span><span class="p">(</span>
     <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">cont_dims</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
-    <span class="n">cat_dims</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
-    <span class="n">bounds_cont</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">bounds_cat</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">cont_dims</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="n">cat_dims</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="n">bounds_cont</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">bounds_cat</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">expand_bound</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check which points are place inside a given subspace</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    X: typing.Optional[np.ndarray(N,D)],</span>
+<span class="sd">    X: Optional[np.ndarray(N,D)],</span>
 <span class="sd">        points to be checked, where D = D_cont + D_cat</span>
-<span class="sd">    cont_dims: typing.Union[np.ndarray(D_cont), typing.List]</span>
+<span class="sd">    cont_dims: Union[np.ndarray(D_cont), List]</span>
 <span class="sd">        which dimensions represent continuous hyperparameters</span>
-<span class="sd">    cat_dims: typing.Union[np.ndarray(D_cat), typing.List]</span>
+<span class="sd">    cat_dims: Union[np.ndarray(D_cat), List]</span>
 <span class="sd">        which dimensions represent categorical hyperparameters</span>
-<span class="sd">    bounds_cont: typing.optional[typing.List[typing.Tuple]]</span>
+<span class="sd">    bounds_cont: optional[List[Tuple]]</span>
 <span class="sd">        subspaces bounds of categorical hyperparameters, its length is the number of continuous hyperparameters</span>
-<span class="sd">    bounds_cat: typing.Optional[typing.List[typing.Tuple]]</span>
+<span class="sd">    bounds_cat: Optional[List[Tuple]]</span>
 <span class="sd">        subspaces bounds of continuous hyperparameters, its length is the number of categorical hyperparameters</span>
 <span class="sd">    expand_bound: bool</span>
 <span class="sd">        if the bound needs to be expanded to contain more points rather than the points inside the subregion</span>

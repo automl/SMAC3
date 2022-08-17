@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Package Overview &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
@@ -149,28 +149,23 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="examples/synthetic_function.html">
-     Synthetic Function
+    <a class="reference internal" href="examples/basics/index.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="examples/schaffer_multi_objective.html">
-     Schaffer Multi-Objective
+    <a class="reference internal" href="examples/commandline/index.html">
+     Commandline
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="examples/svm_cv.html">
-     Support Vector Machine with Cross-Validation
+    <a class="reference internal" href="examples/multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="examples/multi_objective/index.html">
+     Multi-Objective
     </a>
    </li>
   </ul>
@@ -208,13 +203,13 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="api/smac.smbo.html">
-     smac.smbo
+    <a class="reference internal" href="api/smac.loop.html">
+     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="api/smac.scenario.html">
-     smac.scenario
+    <a class="reference internal" href="api/smac.facade.html">
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2">
@@ -233,23 +228,28 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="api/smac.runner.html">
      smac.runner
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="api/smac.chooser.html">
-     smac.chooser
+    <a class="reference internal" href="api/smac.runhistory.html">
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="api/smac.multi_objective.html">
      smac.multi_objective
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="api/smac.runhistory.html">
-     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
@@ -263,8 +263,18 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="api/smac.constants.html">
      smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.callback.html">
+     smac.callback
     </a>
    </li>
   </ul>
@@ -344,8 +354,8 @@ style="width: 100%;">
 <h1>Package Overview<a class="headerlink" href="#package-overview" title="Permalink to this heading">¶</a></h1>
 <p>SMAC supports you in determining well-performing hyperparameter configurations for your algorithms.
 By being a robust and flexible framework for <a class="reference internal" href="glossary.html#term-BO"><span class="xref std std-term">BO</span></a>, SMAC can improve performance within few function evaluations.
-It offers several <a class="reference internal" href="advanced_usage/old/facades.html#facades"><span class="std std-ref">Facades</span></a> and pre-sets for typical use cases, such as optimizing
-hyperparameters, solving low dimensional continuous (artificial) global optimization problems and configuring algorithms to perform well across multiple problem <a class="reference internal" href="advanced_usage/old/instances.html#instances-and-features"><span class="std std-ref">Instances</span></a>.</p>
+It offers several <span class="xref std std-ref">Facades</span> and pre-sets for typical use cases, such as optimizing
+hyperparameters, solving low dimensional continuous (artificial) global optimization problems and configuring algorithms to perform well across multiple problem <span class="xref std std-ref">Instances</span>.</p>
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this heading">¶</a></h2>
 <p>SMAC has following characteristics and capabilities:</p>
@@ -355,18 +365,18 @@ hyperparameters, solving low dimensional continuous (artificial) global optimiza
 <dt>Optimize <a class="reference internal" href="glossary.html#term-BB"><span class="xref std std-term">Black-Box</span></a> functions</dt><dd><p>Optimization is only aware of input and output. It is agnostic to internals of the function.</p>
 </dd>
 <dt>Flexible hyperparameters</dt><dd><p>Use categorical, continuous or hierarchical hyperparameters with the well-integrated
-<a class="reference external" href="https://automl.github.io/ConfigSpace/master/API-Doc.html">ConfigurationSpace</a>. SMAC can
+<a class="reference external" href="https://automl.github.io/ConfigSpace">ConfigurationSpace</a>. SMAC can
 optimize up to 100
 hyperparameters efficiently.</p>
 </dd>
 <dt>Any objectives</dt><dd><p>Optimization with any <a class="reference internal" href="glossary.html#term-Objective"><span class="xref std std-term">objective</span></a> (e.g., quality or runtime) is possible.</p>
 </dd>
-<dt><a class="reference internal" href="advanced_usage/old/multi_objective.html#multi-objective-optimization"><span class="std std-ref">Multi-Objective</span></a></dt><dd><p>Optimize any number of objectives using scalarized multi-ojective algorithms.</p>
+<dt><span class="xref std std-ref">Multi-Objective</span></dt><dd><p>Optimize any number of objectives using scalarized multi-ojective algorithms.</p>
 </dd>
 <dt><a class="reference internal" href="glossary.html#term-MF"><span class="xref std std-term">Multi-Fidelity</span></a> Optimization</dt><dd><p>Judge configurations on multiple <a class="reference internal" href="glossary.html#term-Budget"><span class="xref std std-term">budgets</span></a> to discard unsuitable configurations
 early on. This will result in a massive speed-up, depending on the budgets.</p>
 </dd>
-<dt><a class="reference internal" href="advanced_usage/old/instances.html#instances-and-features"><span class="std std-ref">Instances</span></a></dt><dd><p>Find well-performing hyperparameter configurations not only for one instance (e.g. dataset) of
+<dt><span class="xref std std-ref">Instances</span></dt><dd><p>Find well-performing hyperparameter configurations not only for one instance (e.g. dataset) of
 an algorithm, but for many.</p>
 </dd>
 <dt>Commandline (<a class="reference internal" href="glossary.html#term-CLI"><span class="xref std std-term">CLI</span></a>)</dt><dd><p>SMAC can not only be executed within a python file but also from the commandline. Consequently,
@@ -404,7 +414,7 @@ not only algorithms in python can be optimized but in other languages as well.</
 <section id="comparison">
 <h2>Comparison<a class="headerlink" href="#comparison" title="Permalink to this heading">¶</a></h2>
 <p>The following table provides an overview of SMAC’s capabilities in comparison with other optimization tools.</p>
-<table class="colwidths-given table">
+<table class="table">
 <colgroup>
 <col style="width: 14%" />
 <col style="width: 14%" />
@@ -419,7 +429,7 @@ not only algorithms in python can be optimized but in other languages as well.</
 <th class="head"><p>Complex Hyperparameter Spaces</p></th>
 <th class="head"><p>Multi-<a class="reference internal" href="glossary.html#term-Objective"><span class="xref std std-term">Objective</span></a></p></th>
 <th class="head"><p><a class="reference internal" href="glossary.html#term-MF"><span class="xref std std-term">Multi-Fidelity</span></a></p></th>
-<th class="head"><p><a class="reference internal" href="advanced_usage/old/instances.html#instances-and-features"><span class="std std-ref">Instances</span></a></p></th>
+<th class="head"><p><span class="xref std std-ref">Instances</span></p></th>
 <th class="head"><p><a class="reference internal" href="glossary.html#term-CLI"><span class="xref std std-term">CLI</span></a></p></th>
 <th class="head"><p>Parallelism</p></th>
 </tr>

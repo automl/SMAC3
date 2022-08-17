@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>smac.model.multi_objective_model &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
@@ -149,28 +149,23 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/synthetic_function.html">
-     Synthetic Function
+    <a class="reference internal" href="../examples/basics/index.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/schaffer_multi_objective.html">
-     Schaffer Multi-Objective
+    <a class="reference internal" href="../examples/commandline/index.html">
+     Commandline
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/svm_cv.html">
-     Support Vector Machine with Cross-Validation
+    <a class="reference internal" href="../examples/multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="../examples/multi_objective/index.html">
+     Multi-Objective
     </a>
    </li>
   </ul>
@@ -208,13 +203,13 @@ style="width: 100%;">
   </label>
   <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.smbo.html">
-     smac.smbo
+    <a class="reference internal" href="smac.loop.html">
+     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.scenario.html">
-     smac.scenario
+    <a class="reference internal" href="smac.facade.html">
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2 current active">
@@ -233,23 +228,28 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="smac.runner.html">
      smac.runner
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.chooser.html">
-     smac.chooser
+    <a class="reference internal" href="smac.runhistory.html">
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.multi_objective.html">
      smac.multi_objective
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.runhistory.html">
-     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
@@ -263,8 +263,18 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="smac.constants.html">
      smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.callback.html">
+     smac.callback
     </a>
    </li>
   </ul>
@@ -324,10 +334,6 @@ style="width: 100%;">
 <span id="smac-model-multi-objective-model"></span><h1>smac.model.multi_objective_model<a class="headerlink" href="#module-smac.model.multi_objective_model" title="Permalink to this heading">¶</a></h1>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.multi_objective_model.MultiObjectiveModel" title="smac.model.multi_objective_model.MultiObjectiveModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiObjectiveModel</span></code></a>(target_names, ...[, ...])</p></td>
 <td><p>Wrapper for the surrogate models to predict multiple targets.</p></td>
@@ -344,7 +350,7 @@ underlying model are mandatory. All other hyperparameters to
 model can be passed via kwargs. Consult the documentation of
 the corresponding model for the hyperparameters and their meanings.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>target_names</strong> (<em>list</em>) – List of str, each entry is the name of one target dimension. Length
 of the list will be <code class="docutils literal notranslate"><span class="pre">n_objectives</span></code>.</p></li>
@@ -373,7 +379,7 @@ Requires to set n_feats (&gt; pca_dims).</p></li>
 <span class="sig-name descname"><span class="pre">num_targets</span></span><a class="headerlink" href="#smac.model.multi_objective_model.MultiObjectiveModel.num_targets" title="Permalink to this definition">¶</a></dt>
 <dd><p>number of targets</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int</p>
 </dd>
 </dl>
@@ -384,7 +390,7 @@ Requires to set n_feats (&gt; pca_dims).</p></li>
 <span class="sig-name descname"><span class="pre">estimators</span></span><a class="headerlink" href="#smac.model.multi_objective_model.MultiObjectiveModel.estimators" title="Permalink to this definition">¶</a></dt>
 <dd><p>a list of estimators predicting different target values</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>List[BaseEPM]</p>
 </dd>
 </dl>
@@ -406,16 +412,16 @@ categorical choices and the second dimension is continuous than we
 have to pass [3, 0]. Note that we count starting from 0.</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>bounds</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</p></li>
 <li><p><strong>model_kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – model kwargs for initializing models</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>estimators</strong> – A list of estimators</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>List[BaseEPM]</p>
 </dd>
 </dl>
@@ -428,13 +434,13 @@ have to pass [3, 0]. Note that we count starting from 0.</p>
 <p>Returns the predictive mean and variance marginalised over all
 instances for a set of configurations.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray of shape =</em><em> [</em><em>n_features</em><em> (</em><em>config</em><em>)</em><em>, </em><em>]</em>) – </p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
 <li><p><strong>means</strong> (<em>np.ndarray of shape = [n_samples, n_objectives]</em>) – Predictive mean</p></li>
 <li><p><strong>vars</strong> (<em>np.ndarray  of shape = [n_samples, n_objectives]</em>) – Predictive variance</p></li>

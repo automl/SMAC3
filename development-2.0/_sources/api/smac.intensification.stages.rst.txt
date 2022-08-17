@@ -1,0 +1,29 @@
+smac.intensification.stages
+===========================
+
+.. automodule:: smac.intensification.stages
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      IntensifierStage
+   
+   
+
+   
+   
+   
+
+
+

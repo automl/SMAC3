@@ -1,0 +1,29 @@
+smac.facade.facade
+==================
+
+.. automodule:: smac.facade.facade
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Facade
+   
+   
+
+   
+   
+   
+
+
+

@@ -146,28 +146,23 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/synthetic_function.html">
-     Synthetic Function
+    <a class="reference internal" href="../../../examples/basics/index.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/schaffer_multi_objective.html">
-     Schaffer Multi-Objective
+    <a class="reference internal" href="../../../examples/commandline/index.html">
+     Commandline
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/svm_cv.html">
-     Support Vector Machine with Cross-Validation
+    <a class="reference internal" href="../../../examples/multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="../../../examples/multi_objective/index.html">
+     Multi-Objective
     </a>
    </li>
   </ul>
@@ -205,13 +200,13 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../api/smac.smbo.html">
-     smac.smbo
+    <a class="reference internal" href="../../../api/smac.loop.html">
+     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../api/smac.scenario.html">
-     smac.scenario
+    <a class="reference internal" href="../../../api/smac.facade.html">
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2">
@@ -230,23 +225,28 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../../../api/smac.runner.html">
      smac.runner
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../api/smac.chooser.html">
-     smac.chooser
+    <a class="reference internal" href="../../../api/smac.runhistory.html">
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../api/smac.multi_objective.html">
      smac.multi_objective
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../api/smac.runhistory.html">
-     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
@@ -260,8 +260,18 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../../../api/smac.constants.html">
      smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.callback.html">
+     smac.callback
     </a>
    </li>
   </ul>
@@ -306,27 +316,25 @@ style="width: 100%;">
   <h1>Source code for smac.intensification.abstract_intensifier</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">smac.chooser.chooser</span> <span class="kn">import</span> <span class="n">ConfigurationChooser</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory</span> <span class="kn">import</span> <span class="n">RunInfo</span><span class="p">,</span> <span class="n">RunValue</span><span class="p">,</span> <span class="n">RunInfoIntent</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory</span> <span class="kn">import</span> <span class="n">RunInfo</span><span class="p">,</span> <span class="n">RunInfoIntent</span><span class="p">,</span> <span class="n">RunValue</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">format_array</span><span class="p">,</span> <span class="n">get_logger</span>
 <span class="kn">from</span> <span class="nn">smac.utils.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
 
-
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2022, automl.org&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<div class="viewcode-block" id="AbstractIntensifier"><a class="viewcode-back" href="../../../api/smac.intensification.abstract_intensifier.html#smac.intensification.abstract_intensifier.AbstractIntensifier">[docs]</a><span class="k">class</span> <span class="nc">AbstractIntensifier</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractIntensifier"><a class="viewcode-back" href="../../../api/smac.intensification.abstract_intensifier.html#smac.intensification.AbstractIntensifier">[docs]</a><span class="k">class</span> <span class="nc">AbstractIntensifier</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Base class for all racing methods.</span>
 
 <span class="sd">    The &quot;intensification&quot; is designed to output a RunInfo object with enough information</span>
@@ -414,10 +422,10 @@ style="width: 100%;">
         <span class="c1"># else:</span>
         <span class="c1">#    self.instance_specifics = scenario.instance_specifics</span>
 
-        <span class="c1"># general attributes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">run_id</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Number of runs done in an iteration so far</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ta_time</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="c1"># General attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_run</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Number of runs done in an iteration so far</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_challenger_id</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_target_algorithm_time</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="c1"># attributes for sampling next configuration</span>
         <span class="c1"># Repeating configurations is discouraged for parallel runs</span>
@@ -425,18 +433,24 @@ style="width: 100%;">
         <span class="c1"># to mark the end of an iteration</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">iteration_done</span> <span class="o">=</span> <span class="kc">False</span>
 
+<div class="viewcode-block" id="AbstractIntensifier.get_meta"><a class="viewcode-back" href="../../../api/smac.intensification.abstract_intensifier.html#smac.intensification.AbstractIntensifier.get_meta">[docs]</a>    <span class="k">def</span> <span class="nf">get_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
     <span class="k">def</span> <span class="nf">_set_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="n">stats</span>
 
-<div class="viewcode-block" id="AbstractIntensifier.get_next_run"><a class="viewcode-back" href="../../../api/smac.intensification.abstract_intensifier.html#smac.intensification.abstract_intensifier.AbstractIntensifier.get_next_run">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_run</span><span class="p">(</span>
+<div class="viewcode-block" id="AbstractIntensifier.get_next_run"><a class="viewcode-back" href="../../../api/smac.intensification.abstract_intensifier.html#smac.intensification.AbstractIntensifier.get_next_run">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_run</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">challengers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]],</span>
+        <span class="n">challengers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
-        <span class="n">chooser</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ConfigurationChooser</span><span class="p">],</span>
+        <span class="n">ask</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
         <span class="n">repeat_configs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">RunInfoIntent</span><span class="p">,</span> <span class="n">RunInfo</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">RunInfoIntent</span><span class="p">,</span> <span class="n">RunInfo</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Abstract method for choosing the next challenger, to allow for different selections</span>
 <span class="sd">        across intensifiers uses ``_next_challenger()`` by default.</span>
 
@@ -468,14 +482,14 @@ style="width: 100%;">
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="AbstractIntensifier.process_results"><a class="viewcode-back" href="../../../api/smac.intensification.abstract_intensifier.html#smac.intensification.abstract_intensifier.AbstractIntensifier.process_results">[docs]</a>    <span class="k">def</span> <span class="nf">process_results</span><span class="p">(</span>
+<div class="viewcode-block" id="AbstractIntensifier.process_results"><a class="viewcode-back" href="../../../api/smac.intensification.abstract_intensifier.html#smac.intensification.AbstractIntensifier.process_results">[docs]</a>    <span class="k">def</span> <span class="nf">process_results</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">run_info</span><span class="p">:</span> <span class="n">RunInfo</span><span class="p">,</span>
-        <span class="n">incumbent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
+        <span class="n">run_value</span><span class="p">:</span> <span class="n">RunValue</span><span class="p">,</span>
+        <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
         <span class="n">time_bound</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">result</span><span class="p">:</span> <span class="n">RunValue</span><span class="p">,</span>
-        <span class="n">log_traj</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">log_trajectory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;The intensifier stage will be updated based on the results/status of a configuration</span>
 <span class="sd">        execution. Also, a incumbent will be determined.</span>
@@ -494,7 +508,7 @@ style="width: 100%;">
 <span class="sd">        result: RunValue</span>
 <span class="sd">            Contain the result (status and other methadata) of exercising</span>
 <span class="sd">            a challenger/incumbent.</span>
-<span class="sd">        log_traj: bool</span>
+<span class="sd">        log_trajectory: bool</span>
 <span class="sd">            Whether to log changes of incumbents in trajectory</span>
 
 <span class="sd">        Returns</span>
@@ -508,8 +522,8 @@ style="width: 100%;">
 
     <span class="k">def</span> <span class="nf">_next_challenger</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">challengers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]],</span>
-        <span class="n">chooser</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ConfigurationChooser</span><span class="p">],</span>
+        <span class="n">challengers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ask</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
         <span class="n">repeat_configs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
@@ -541,12 +555,12 @@ style="width: 100%;">
             <span class="c1"># iterate over challengers provided</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Using challengers provided&quot;</span><span class="p">)</span>
             <span class="n">chall_gen</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">challengers</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">chooser</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">ask</span><span class="p">:</span>
             <span class="c1"># generating challengers on-the-fly if optimizer is given</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Generating new challenger from optimizer&quot;</span><span class="p">)</span>
-            <span class="n">chall_gen</span> <span class="o">=</span> <span class="n">chooser</span><span class="o">.</span><span class="n">ask</span><span class="p">()</span>
+            <span class="n">chall_gen</span> <span class="o">=</span> <span class="n">ask</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No configurations/chooser provided. Cannot generate challenger!&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No configurations/ask function provided. Cannot generate challenger!&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Time to select next challenger: </span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
 
@@ -569,8 +583,8 @@ style="width: 100%;">
         <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
         <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
         <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
-        <span class="n">log_traj</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+        <span class="n">log_trajectory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Compare two configuration wrt the runhistory and return the one which performs better (or</span>
 <span class="sd">        None if the decision is not safe)</span>
 
@@ -590,7 +604,7 @@ style="width: 100%;">
 <span class="sd">            Challenger configuration</span>
 <span class="sd">        runhistory: smac.runhistory.runhistory.RunHistory</span>
 <span class="sd">            Stores all runs we ran so far</span>
-<span class="sd">        log_traj: bool</span>
+<span class="sd">        log_trajectory: bool</span>
 <span class="sd">            Whether to log changes of incumbents in trajectory</span>
 
 <span class="sd">        Returns</span>
@@ -632,7 +646,7 @@ style="width: 100%;">
                     <span class="sa">f</span><span class="s2">&quot;challenger (</span><span class="si">{</span><span class="n">chal_perf_format</span><span class="si">}</span><span class="s2">) on </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">chall_runs</span><span class="p">)</span><span class="si">}</span><span class="s2"> runs.&quot;</span>
                 <span class="p">)</span>
                 <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span>
-                <span class="k">if</span> <span class="n">log_traj</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">incumbent_changed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">log_trajectory</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">incumbent_changed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">add_incumbent</span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="n">chal_perf</span><span class="p">,</span> <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">)</span>
 
                 <span class="k">return</span> <span class="n">incumbent</span>
@@ -649,7 +663,7 @@ style="width: 100%;">
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_log_incumbent_changes</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">challenger</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">log_traj</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">log_trajectory</span><span class="p">:</span>
                 <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">add_incumbent</span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="n">chal_perf</span><span class="p">,</span> <span class="n">incumbent</span><span class="o">=</span><span class="n">challenger</span><span class="p">)</span>
 

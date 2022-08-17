@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>smac.model.random_forest &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
@@ -149,28 +149,23 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/synthetic_function.html">
-     Synthetic Function
+    <a class="reference internal" href="../examples/basics/index.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/schaffer_multi_objective.html">
-     Schaffer Multi-Objective
+    <a class="reference internal" href="../examples/commandline/index.html">
+     Commandline
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/svm_cv.html">
-     Support Vector Machine with Cross-Validation
+    <a class="reference internal" href="../examples/multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="../examples/multi_objective/index.html">
+     Multi-Objective
     </a>
    </li>
   </ul>
@@ -208,13 +203,13 @@ style="width: 100%;">
   </label>
   <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.smbo.html">
-     smac.smbo
+    <a class="reference internal" href="smac.loop.html">
+     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.scenario.html">
-     smac.scenario
+    <a class="reference internal" href="smac.facade.html">
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2 current active">
@@ -233,23 +228,28 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="smac.runner.html">
      smac.runner
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.chooser.html">
-     smac.chooser
+    <a class="reference internal" href="smac.runhistory.html">
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.multi_objective.html">
      smac.multi_objective
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.runhistory.html">
-     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
@@ -263,8 +263,18 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="smac.constants.html">
      smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.callback.html">
+     smac.callback
     </a>
    </li>
   </ul>
@@ -353,16 +363,16 @@ categorical choices and the second dimension is continuous than we
 have to pass [3, 0]. Note that we count starting from 0.</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>bounds</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</p></li>
 <li><p><strong>model_kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – model kwargs for initializing models</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>estimators</strong> – A list of Random Forests</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>List[BaseEPM]</p>
 </dd>
 </dl>
@@ -376,7 +386,7 @@ have to pass [3, 0]. Note that we count starting from 0.</p>
 <dd><p>Bases: <a class="reference internal" href="smac.model.random_forest.base_random_forest.html#smac.model.random_forest.base_random_forest.BaseRandomForest" title="smac.model.random_forest.base_random_forest.BaseRandomForest"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseRandomForest</span></code></a></p>
 <p>Random forest that takes instance features into account.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>types</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – Specifies the number of categorical values of an input dimension where
 the i-th entry corresponds to the i-th input dimension. Let’s say we
@@ -409,7 +419,7 @@ set n_feats (&gt; pca_dims).</p></li>
 <span class="sig-name descname"><span class="pre">rf_opts</span></span><a class="headerlink" href="#smac.model.random_forest.RandomForestWithInstances.rf_opts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Random forest hyperparameter</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>regression.rf_opts</p>
 </dd>
 </dl>
@@ -419,7 +429,7 @@ set n_feats (&gt; pca_dims).</p></li>
 <dt class="sig sig-object py" id="smac.model.random_forest.RandomForestWithInstances.n_points_per_tree">
 <span class="sig-name descname"><span class="pre">n_points_per_tree</span></span><a class="headerlink" href="#smac.model.random_forest.RandomForestWithInstances.n_points_per_tree" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int</p>
 </dd>
 </dl>
@@ -430,7 +440,7 @@ set n_feats (&gt; pca_dims).</p></li>
 <span class="sig-name descname"><span class="pre">rf</span></span><a class="headerlink" href="#smac.model.random_forest.RandomForestWithInstances.rf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Only available after training</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>regression.binary_rss_forest</p>
 </dd>
 </dl>
@@ -441,7 +451,7 @@ set n_feats (&gt; pca_dims).</p></li>
 <span class="sig-name descname"><span class="pre">hypers</span></span><a class="headerlink" href="#smac.model.random_forest.RandomForestWithInstances.hypers" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of random forest hyperparameters</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list</p>
 </dd>
 </dl>
@@ -451,7 +461,7 @@ set n_feats (&gt; pca_dims).</p></li>
 <dt class="sig sig-object py" id="smac.model.random_forest.RandomForestWithInstances.unlog_y">
 <span class="sig-name descname"><span class="pre">unlog_y</span></span><a class="headerlink" href="#smac.model.random_forest.RandomForestWithInstances.unlog_y" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
@@ -461,7 +471,7 @@ set n_feats (&gt; pca_dims).</p></li>
 <dt class="sig sig-object py" id="smac.model.random_forest.RandomForestWithInstances.seed">
 <span class="sig-name descname"><span class="pre">seed</span></span><a class="headerlink" href="#smac.model.random_forest.RandomForestWithInstances.seed" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int</p>
 </dd>
 </dl>
@@ -471,7 +481,7 @@ set n_feats (&gt; pca_dims).</p></li>
 <dt class="sig sig-object py" id="smac.model.random_forest.RandomForestWithInstances.types">
 <span class="sig-name descname"><span class="pre">types</span></span><a class="headerlink" href="#smac.model.random_forest.RandomForestWithInstances.types" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
@@ -481,7 +491,7 @@ set n_feats (&gt; pca_dims).</p></li>
 <dt class="sig sig-object py" id="smac.model.random_forest.RandomForestWithInstances.bounds">
 <span class="sig-name descname"><span class="pre">bounds</span></span><a class="headerlink" href="#smac.model.random_forest.RandomForestWithInstances.bounds" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list</p>
 </dd>
 </dl>
@@ -491,7 +501,7 @@ set n_feats (&gt; pca_dims).</p></li>
 <dt class="sig sig-object py" id="smac.model.random_forest.RandomForestWithInstances.rng">
 <span class="sig-name descname"><span class="pre">rng</span></span><a class="headerlink" href="#smac.model.random_forest.RandomForestWithInstances.rng" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>np.random.RandomState</p>
 </dd>
 </dl>
@@ -501,8 +511,19 @@ set n_feats (&gt; pca_dims).</p></li>
 <dt class="sig sig-object py" id="smac.model.random_forest.RandomForestWithInstances.logger">
 <span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#smac.model.random_forest.RandomForestWithInstances.logger" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>logging.logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.random_forest.RandomForestWithInstances.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/random_forest/random_forest_with_instances.html#RandomForestWithInstances.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.random_forest.RandomForestWithInstances.get_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the meta data of the created object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -522,13 +543,13 @@ it requires no distribution assumption
 to marginalize the uncertainty estimates</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em>) – [n_samples, n_features (config)]</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
 <li><p><strong>means</strong> (<em>np.ndarray of shape = [n_samples, 1]</em>) – Predictive mean</p></li>
 <li><p><strong>vars</strong> (<em>np.ndarray  of shape = [n_samples, 1]</em>) – Predictive variance</p></li>
@@ -542,10 +563,6 @@ to marginalize the uncertainty estimates</p>
 
 <p class="rubric">Modules</p>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="smac.model.random_forest.base_random_forest.html#module-smac.model.random_forest.base_random_forest" title="smac.model.random_forest.base_random_forest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.model.random_forest.base_random_forest</span></code></a></p></td>
 <td><p></p></td>

@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>smac.runhistory.runhistory &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
@@ -39,7 +39,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.configspace" href="smac.configspace.html" />
+    <link rel="next" title="smac.multi_objective" href="smac.multi_objective.html" />
     <link rel="prev" title="smac.runhistory.enumerations" href="smac.runhistory.enumerations.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
@@ -149,28 +149,23 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/synthetic_function.html">
-     Synthetic Function
+    <a class="reference internal" href="../examples/basics/index.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/schaffer_multi_objective.html">
-     Schaffer Multi-Objective
+    <a class="reference internal" href="../examples/commandline/index.html">
+     Commandline
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/svm_cv.html">
-     Support Vector Machine with Cross-Validation
+    <a class="reference internal" href="../examples/multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="../examples/multi_objective/index.html">
+     Multi-Objective
     </a>
    </li>
   </ul>
@@ -208,13 +203,13 @@ style="width: 100%;">
   </label>
   <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.smbo.html">
-     smac.smbo
+    <a class="reference internal" href="smac.loop.html">
+     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.scenario.html">
-     smac.scenario
+    <a class="reference internal" href="smac.facade.html">
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2">
@@ -233,23 +228,28 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="smac.runner.html">
      smac.runner
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.chooser.html">
-     smac.chooser
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.multi_objective.html">
-     smac.multi_objective
     </a>
    </li>
    <li class="toctree-l2 current active">
     <a class="reference internal" href="smac.runhistory.html">
      smac.runhistory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.multi_objective.html">
+     smac.multi_objective
     </a>
    </li>
    <li class="toctree-l2">
@@ -263,8 +263,18 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="smac.constants.html">
      smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.callback.html">
+     smac.callback
     </a>
    </li>
   </ul>
@@ -324,10 +334,6 @@ style="width: 100%;">
 <span id="smac-runhistory-runhistory"></span><h1>smac.runhistory.runhistory<a class="headerlink" href="#module-smac.runhistory.runhistory" title="Permalink to this heading">¶</a></h1>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RunHistory</span></code></a>([overwrite_existing_runs])</p></td>
 <td><p>Container for target algorithm run information.</p></td>
@@ -354,7 +360,7 @@ neither used nor tested.</p></li>
 <p>Guaranteed to be picklable.</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>overwrite_existing_runs</strong> (<em>bool</em><em> (</em><em>default=False</em><em>)</em>) – If set to <code class="docutils literal notranslate"><span class="pre">True</span></code> and a run of a configuration on an instance-budget-seed-pair already exists,
 it is overwritten. Allows to overwrites old results if pairs of algorithm-instance-seed were measured
 multiple times</p>
@@ -365,7 +371,7 @@ multiple times</p>
 <span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Internal data representation</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>collections.OrderedDict()</p>
 </dd>
 </dl>
@@ -376,7 +382,7 @@ multiple times</p>
 <span class="sig-name descname"><span class="pre">config_ids</span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.config_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maps config -&gt; id</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
@@ -387,7 +393,7 @@ multiple times</p>
 <span class="sig-name descname"><span class="pre">ids_config</span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.ids_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maps id -&gt; config</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
@@ -398,7 +404,7 @@ multiple times</p>
 <span class="sig-name descname"><span class="pre">num_runs_per_config</span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.num_runs_per_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maps config_id -&gt; number of runs</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
@@ -409,7 +415,7 @@ multiple times</p>
 <span class="sig-name descname"><span class="pre">__contains__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.__contains__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.__contains__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dictionary semantics for <cite>k in runhistory</cite></p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
 </dd>
 </dl>
@@ -420,7 +426,7 @@ multiple times</p>
 <span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.__getitem__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dictionary semantics for <cite>v = runhistory[k]</cite></p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.RunValue" title="smac.runhistory.dataclasses.RunValue"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunValue</span></code></a></p>
 </dd>
 </dl>
@@ -432,7 +438,7 @@ multiple times</p>
 <dd><p>Dictionary semantics for <cite>for k in runhistory.keys()</cite>, enables.</p>
 <p>.items()</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterator</span></code>[<a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.RunKey" title="smac.runhistory.dataclasses.RunKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunKey</span></code></a>]</p>
 </dd>
 </dl>
@@ -443,7 +449,7 @@ multiple times</p>
 <span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.__len__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.__len__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enables the <cite>len(runhistory)</cite></p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
 </dl>
@@ -455,7 +461,7 @@ multiple times</p>
 <dd><p>Adds a data of a new target algorithm (TA) run; it will update data if the same key
 values are used (config, instance, seed)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>dict</em><em> (or </em><em>other type -- depending on config space module</em><em>)</em>) – Parameter configuration</p></li>
 <li><p><strong>cost</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>float</em><em>, </em><em>list</em><em>, </em><em>np.ndarray</em><em>]</em>) – Cost of TA run (will be minimized)</p></li>
@@ -472,7 +478,7 @@ information from TA or fields such as start time and host_id)</p></li>
 <li><p><strong>force_update</strong> (<em>bool</em><em> (</em><em>default: False</em><em>)</em>) – Forces the addition of a config to the history</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -484,7 +490,7 @@ information from TA or fields such as start time and host_id)</p></li>
 <dd><p>Return the average cost of a configuration. This is the mean of costs of all instance-
 seed pairs.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – Configuration to calculate objective for.</p></li>
 <li><p><strong>instance_seed_budget_keys</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds-budget keys. If None, the run_history is
@@ -494,10 +500,10 @@ Only a float is returned if normalize is True. Warning: The value can change
 over time because the objective bounds are changing.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>Cost</strong> – Average cost. In case of multiple objectives, the mean of each objective is returned.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float | list[float]</p>
 </dd>
 </dl>
@@ -513,10 +519,10 @@ and self.runs_per_config accordingly.</p>
 <p>This method is only used for <code class="docutils literal notranslate"><span class="pre">merge_foreign_data</span></code> and should be removed.</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>instances</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of instances; if given, cost is only computed wrt to this instance set.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -527,11 +533,11 @@ and self.runs_per_config accordingly.</p>
 <span class="sig-name descname"><span class="pre">empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether or not the RunHistory is empty.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>emptiness</strong> – True if runs have been added to the RunHistory,
 False otherwise</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>
 </dd>
 </dl>
@@ -542,10 +548,10 @@ False otherwise</p>
 <span class="sig-name descname"><span class="pre">get_all_configs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_all_configs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_all_configs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all configurations in this RunHistory object.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>parameter configurations</strong></p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>list</p>
 </dd>
 </dl>
@@ -556,13 +562,13 @@ False otherwise</p>
 <span class="sig-name descname"><span class="pre">get_all_configs_per_budget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">budget_subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_all_configs_per_budget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_all_configs_per_budget" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all configs in this RunHistory object that have been run on one of these budgets.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>budget_subset</strong> (<em>list</em>) – </p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>parameter configurations</strong></p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list</p>
 </dd>
 </dl>
@@ -574,13 +580,13 @@ False otherwise</p>
 <dd><p>Returns empirical cost for a configuration. See the class docstring for how the costs are
 computed. The costs are not re-computed, but are read from cache.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – </p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>cost</strong> – Computed cost for configuration</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -596,13 +602,13 @@ runhistory contains budgets, only the highest budget for a configuration is retu
 <p>This is used by the pSMAC facade to determine the incumbent after the evaluation.</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>config</strong> (<em>Configuration from ConfigSpace</em>) – Parameter configuration</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>cost_per_inst</strong></p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Dict&lt;instance name&lt;str&gt;, cost&lt;float&gt;&gt;</p>
 </dd>
 </dl>
@@ -615,13 +621,13 @@ runhistory contains budgets, only the highest budget for a configuration is retu
 <p>See the class docstring for how the costs are computed. The costs are not re-computed,
 but are read from cache.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – </p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>min_cost</strong> – Computed cost for configuration</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -636,16 +642,16 @@ but are read from cache.</p>
 <p>This method ignores capped runs.</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>Configuration from ConfigSpace</em>) – Parameter configuration</p></li>
 <li><p><strong>only_max_observed_budget</strong> (<em>bool</em>) – Select only the maximally observed budget run for this configuration</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>instance_seed_budget_pairs</strong></p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list&lt;tuples of instance, seed, budget&gt;</p>
 </dd>
 </dl>
@@ -656,13 +662,13 @@ but are read from cache.</p>
 <span class="sig-name descname"><span class="pre">incremental_update_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.incremental_update_cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.incremental_update_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Incrementally updates the performance of a configuration by using a moving average.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – configuration to update cost based on all runs in runhistory</p></li>
 <li><p><strong>cost</strong> (<em>float</em>) – cost of new run of config</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -677,13 +683,13 @@ but are read from cache.</p>
 <p>Overwrites current runhistory!</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fn</strong> (<em>str</em>) – file name to load from</p></li>
 <li><p><strong>cs</strong> (<em>ConfigSpace</em>) – instance of configuration space</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -699,18 +705,18 @@ but are read from cache.</p>
 <p>In the case of multi-fidelity, the minimum cost per objectives is returned.</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – Configuration to calculate objective for.</p></li>
 <li><p><strong>instance_seed_budget_keys</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds-budget keys. If None, the run_history is
 queried for all runs of the given configuration.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>min_cost</strong> – Minimum cost of the config. In case of multi-objective, the minimum cost per objective
 is returned.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float | list[float]</p>
 </dd>
 </dl>
@@ -721,13 +727,13 @@ is returned.</p>
 <span class="sig-name descname"><span class="pre">save_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runhistory.json'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_external</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.save_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.save_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves runhistory on disk.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fn</strong> (<em>str</em>) – file name.</p></li>
 <li><p><strong>save_external</strong> (<em>bool</em>) – Whether to save external data in the runhistory file.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -739,7 +745,7 @@ is returned.</p>
 <dd><p>Return the sum of costs of a configuration. This is the sum of costs of all instance-seed
 pairs.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – Configuration to calculate objective for.</p></li>
 <li><p><strong>instance_seed_budget_keys</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds-budget keys. If None, the run_history is
@@ -749,11 +755,11 @@ Only a float is returned if normalize is True. Warning: The value can change
 over time because the objective bounds are changing.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>sum_cost</strong> – Sum of costs of config. In case of multiple objectives, the costs are summed up for each
 objective individually.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float | list[float]</p>
 </dd>
 </dl>
@@ -764,7 +770,7 @@ objective individually.</p>
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runhistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">DataOrigin.EXTERNAL_SAME_INSTANCES</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the current runhistory by adding new runs from a RunHistory.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>runhistory</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – Runhistory with additional data to be added to self</p></li>
 <li><p><strong>origin</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.DataOrigin" title="smac.runhistory.DataOrigin"><em>DataOrigin</em></a>) – If set to <code class="docutils literal notranslate"><span class="pre">INTERNAL</span></code> or <code class="docutils literal notranslate"><span class="pre">EXTERNAL_FULL</span></code> the data will be
@@ -772,7 +778,7 @@ added to the internal data structure self._config_id_to_inst_seed_budget
 and be available <code class="xref py py-meth docutils literal notranslate"><span class="pre">through</span> <span class="pre">get_runs_for_config()</span></code>.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -788,10 +794,10 @@ and also updates self.runs_per_config;</p>
 <p>This method ignores capped runs.</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – configuration to update cost based on all runs in runhistory</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -802,14 +808,14 @@ and also updates self.runs_per_config;</p>
 <span class="sig-name descname"><span class="pre">update_from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">DataOrigin.EXTERNAL_SAME_INSTANCES</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update_from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update_from_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the current runhistory by adding new runs from a json file.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fn</strong> (<em>str</em>) – File name to load from.</p></li>
 <li><p><strong>cs</strong> (<em>ConfigSpace</em>) – Instance of configuration space.</p></li>
 <li><p><strong>origin</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.DataOrigin" title="smac.runhistory.DataOrigin"><em>DataOrigin</em></a>) – What to store as data origin.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -832,10 +838,10 @@ and also updates self.runs_per_config;</p>
             <p class="prev-next-title">smac.runhistory.enumerations</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.configspace.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.multi_objective.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.configspace</p>
+        <p class="prev-next-title">smac.multi_objective</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

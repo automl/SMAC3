@@ -1,0 +1,29 @@
+smac.facade.blackbox\_facade
+============================
+
+.. automodule:: smac.facade.blackbox_facade
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BlackBoxFacade
+   
+   
+
+   
+   
+   
+
+
+

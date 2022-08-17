@@ -32,5 +32,6 @@
    smac.intensification.intensification
    smac.intensification.parallel_scheduling
    smac.intensification.simple_intensifier
+   smac.intensification.stages
    smac.intensification.successive_halving
 

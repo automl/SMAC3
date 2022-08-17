@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>smac.runner.serial_runner &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
@@ -149,28 +149,23 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/synthetic_function.html">
-     Synthetic Function
+    <a class="reference internal" href="../examples/basics/index.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/schaffer_multi_objective.html">
-     Schaffer Multi-Objective
+    <a class="reference internal" href="../examples/commandline/index.html">
+     Commandline
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/svm_cv.html">
-     Support Vector Machine with Cross-Validation
+    <a class="reference internal" href="../examples/multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="../examples/multi_objective/index.html">
+     Multi-Objective
     </a>
    </li>
   </ul>
@@ -208,13 +203,13 @@ style="width: 100%;">
   </label>
   <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.smbo.html">
-     smac.smbo
+    <a class="reference internal" href="smac.loop.html">
+     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.scenario.html">
-     smac.scenario
+    <a class="reference internal" href="smac.facade.html">
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2">
@@ -232,24 +227,29 @@ style="width: 100%;">
      smac.intensification
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
    <li class="toctree-l2 current active">
     <a class="reference internal" href="smac.runner.html">
      smac.runner
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.chooser.html">
-     smac.chooser
+    <a class="reference internal" href="smac.runhistory.html">
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.multi_objective.html">
      smac.multi_objective
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.runhistory.html">
-     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
@@ -263,8 +263,18 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="smac.constants.html">
      smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.callback.html">
+     smac.callback
     </a>
    </li>
   </ul>
@@ -324,10 +334,6 @@ style="width: 100%;">
 <span id="smac-runner-serial-runner"></span><h1>smac.runner.serial_runner<a class="headerlink" href="#module-smac.runner.serial_runner" title="Permalink to this heading">¶</a></h1>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.runner.serial_runner.SerialRunner" title="smac.runner.serial_runner.SerialRunner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SerialRunner</span></code></a>(target_algorithm, scenario, stats)</p></td>
 <td><p>Interface to submit and collect a job in a serial fashion.</p></td>
@@ -343,54 +349,6 @@ style="width: 100%;">
 configuration/instance/seed to a result.</p>
 <p>This class is expected to be extended via the implementation of
 a run() method for the desired task.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.serial_runner.SerialRunner.results">
-<span class="sig-name descname"><span class="pre">results</span></span><a class="headerlink" href="#smac.runner.serial_runner.SerialRunner.results" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.serial_runner.SerialRunner.ta">
-<span class="sig-name descname"><span class="pre">ta</span></span><a class="headerlink" href="#smac.runner.serial_runner.SerialRunner.ta" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.serial_runner.SerialRunner.stats">
-<span class="sig-name descname"><span class="pre">stats</span></span><a class="headerlink" href="#smac.runner.serial_runner.SerialRunner.stats" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.serial_runner.SerialRunner.run_obj">
-<span class="sig-name descname"><span class="pre">run_obj</span></span><a class="headerlink" href="#smac.runner.serial_runner.SerialRunner.run_obj" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.serial_runner.SerialRunner.par_factor">
-<span class="sig-name descname"><span class="pre">par_factor</span></span><a class="headerlink" href="#smac.runner.serial_runner.SerialRunner.par_factor" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.serial_runner.SerialRunner.crash_cost">
-<span class="sig-name descname"><span class="pre">crash_cost</span></span><a class="headerlink" href="#smac.runner.serial_runner.SerialRunner.crash_cost" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.serial_runner.SerialRunner.abort_i_first_run_crash">
-<span class="sig-name descname"><span class="pre">abort_i_first_run_crash</span></span><a class="headerlink" href="#smac.runner.serial_runner.SerialRunner.abort_i_first_run_crash" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ta</strong> (<em>list</em>) – target algorithm command line as list of arguments</p></li>
-<li><p><strong>stats</strong> (<a class="reference internal" href="smac.utils.stats.html#smac.utils.stats.Stats" title="smac.utils.stats.Stats"><em>Stats</em></a><em>(</em><em>)</em>) – stats object to collect statistics about runtime and so on</p></li>
-<li><p><strong>objectives</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – names of the objectives, by default it is a single objective parameter “cost”</p></li>
-<li><p><strong>run_obj</strong> (<em>str</em>) – run objective of SMAC</p></li>
-<li><p><strong>par_factor</strong> (<em>int</em>) – penalization factor</p></li>
-<li><p><strong>crash_cost</strong> (<em>float</em><em> | </em><em>list</em><em>[</em><em>float</em><em>]</em>) – Cost that is used in case of crashed runs (including runs that returned NaN or inf).</p></li>
-<li><p><strong>abort_on_first_run_crash</strong> (<em>bool</em>) – if true and first run crashes, raise FirstRunCrashedException</p></li>
-</ul>
-</dd>
-</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.serial_runner.SerialRunner.get_finished_runs">
 <span class="sig-name descname"><span class="pre">get_finished_runs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/serial_runner.html#SerialRunner.get_finished_runs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.serial_runner.SerialRunner.get_finished_runs" title="Permalink to this definition">¶</a></dt>
@@ -399,10 +357,10 @@ exercising the configurations. This class keeps populating results to self.resul
 call to get_finished runs is done. In this case, the self.results list is emptied and all
 RunValues produced by running self.run() are returned.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A list of RunInfo/RunValues pairs a submitted configuration.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>List[<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunInfo" title="smac.runhistory.RunInfo">RunInfo</a>, <a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunValue" title="smac.runhistory.RunValue">RunValue</a>]</p>
 </dd>
 </dl>
@@ -413,7 +371,7 @@ RunValues produced by running self.run() are returned.</p>
 <span class="sig-name descname"><span class="pre">num_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/serial_runner.html#SerialRunner.num_workers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.serial_runner.SerialRunner.num_workers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Total number of workers available.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
 </dl>
@@ -426,7 +384,7 @@ RunValues produced by running self.run() are returned.</p>
 Generally if the runner is serial, launching a run instantly returns it’s result. On
 parallel runners, there might be pending configurations to complete.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
 </dd>
 </dl>
@@ -437,7 +395,7 @@ parallel runners, there might be pending configurations to complete.</p>
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/serial_runner.html#SerialRunner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.serial_runner.SerialRunner.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the target algorithm with a configuration on a single instance with instance specifics.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – Configuration to be passed to the target algorithm.</p></li>
 <li><p><strong>instance</strong> (<em>str</em><em>, </em><em>defaults to None</em>) – The Problem instance.</p></li>
@@ -447,10 +405,10 @@ Handled by the target algorithm internally.</p></li>
 <li><p><strong>instance_specific</strong> (<em>str</em><em>, </em><em>defaults to &quot;0&quot;</em>) – Instance specific information (e.g., domain file or solution).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="smac.runhistory.enumerations.html#smac.runhistory.enumerations.StatusType" title="smac.runhistory.enumerations.StatusType"><code class="xref py py-class docutils literal notranslate"><span class="pre">StatusType</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>]</p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
 <li><p><strong>status</strong> (<em>StatusType</em>) – Status of the run.</p></li>
 <li><p><strong>cost</strong> (<em>float | list[float]</em>) – Cost, regret, quality, etc. of the run.</p></li>
@@ -472,10 +430,10 @@ method.</p>
 <p>Both result/exceptions can be completely determined in this
 step so both lists are properly filled.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>run_info</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunInfo" title="smac.runhistory.RunInfo"><em>RunInfo</em></a>) – An object containing the configuration and the necessary data to run it</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -487,7 +445,7 @@ step so both lists are properly filled.</p>
 <dd><p>SMBO/intensifier might need to wait for runs to finish before making a decision.
 For serial runs, no wait is needed as the result is immediately available.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>

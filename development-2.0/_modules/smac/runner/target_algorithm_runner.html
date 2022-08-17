@@ -146,28 +146,23 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/synthetic_function.html">
-     Synthetic Function
+    <a class="reference internal" href="../../../examples/basics/index.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/schaffer_multi_objective.html">
-     Schaffer Multi-Objective
+    <a class="reference internal" href="../../../examples/commandline/index.html">
+     Commandline
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/svm_cv.html">
-     Support Vector Machine with Cross-Validation
+    <a class="reference internal" href="../../../examples/multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="../../../examples/multi_objective/index.html">
+     Multi-Objective
     </a>
    </li>
   </ul>
@@ -205,13 +200,13 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../api/smac.smbo.html">
-     smac.smbo
+    <a class="reference internal" href="../../../api/smac.loop.html">
+     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../api/smac.scenario.html">
-     smac.scenario
+    <a class="reference internal" href="../../../api/smac.facade.html">
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2">
@@ -230,23 +225,28 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../../../api/smac.runner.html">
      smac.runner
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../api/smac.chooser.html">
-     smac.chooser
+    <a class="reference internal" href="../../../api/smac.runhistory.html">
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../api/smac.multi_objective.html">
      smac.multi_objective
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../api/smac.runhistory.html">
-     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
@@ -260,8 +260,18 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../../../api/smac.constants.html">
      smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.callback.html">
+     smac.callback
     </a>
    </li>
   </ul>
@@ -330,9 +340,6 @@ style="width: 100%;">
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="n">SingleObjectiveOutput</span> <span class="o">=</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span>
-<span class="n">MultiObjectiveOutput</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">]</span>
-
 
 <div class="viewcode-block" id="TargetAlgorithmRunner"><a class="viewcode-back" href="../../../api/smac.runner.target_algorithm_runner.html#smac.runner.TargetAlgorithmRunner">[docs]</a><span class="k">class</span> <span class="nc">TargetAlgorithmRunner</span><span class="p">(</span><span class="n">SerialRunner</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class to execute target algorithms which are python functions.</span>
@@ -354,48 +361,30 @@ style="width: 100%;">
 <span class="sd">    the target algorithm.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">target_algorithm</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
-        <span class="n">scenario</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">Scenario</span><span class="p">,</span>
-        <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
-        <span class="c1"># objectives: list[str] = [&quot;cost&quot;],</span>
-        <span class="c1"># par_factor: int = 1,</span>
-        <span class="c1"># crash_cost: float | list[float] = float(MAXINT),</span>
-        <span class="c1"># abort_on_first_run_crash: bool = True,</span>
-        <span class="c1"># memory_limit: int | None = None,</span>
-        <span class="c1"># algorithm_walltime_limit: float | None = None,</span>
-    <span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">target_algorithm</span><span class="o">=</span><span class="n">target_algorithm</span><span class="p">,</span>
-            <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
-            <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
-            <span class="c1"># objectives=objectives,</span>
-            <span class="c1"># par_factor=par_factor,</span>
-            <span class="c1"># crash_cost=crash_cost,</span>
-            <span class="c1"># abort_on_first_run_crash=abort_on_first_run_crash,</span>
-        <span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="n">signature</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">target_algorithm</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
+        <span class="n">signature</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_algorithm</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_seed</span> <span class="o">=</span> <span class="s2">&quot;seed&quot;</span> <span class="ow">in</span> <span class="n">signature</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_instance</span> <span class="o">=</span> <span class="s2">&quot;instance&quot;</span> <span class="ow">in</span> <span class="n">signature</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_budget</span> <span class="o">=</span> <span class="s2">&quot;budget&quot;</span> <span class="ow">in</span> <span class="n">signature</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">target_algorithm</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Argument `target_algorithm` must be a callable but is type `</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">target_algorithm</span><span class="p">)</span><span class="si">}</span><span class="s2">`.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_algorithm</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Argument `target_algorithm` must be a callable but is type `</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_algorithm</span><span class="p">)</span><span class="si">}</span><span class="s2">`.&quot;</span>
+            <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_target_algorithm</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Callable</span><span class="p">,</span> <span class="n">target_algorithm</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_target_algorithm</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Callable</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_algorithm</span><span class="p">)</span>
 
         <span class="c1"># Pynisher limitations</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">memory</span> <span class="o">:=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">trial_memory_limit</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">memory</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">trial_memory_limit</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">memory</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">memory</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="p">(</span><span class="n">time</span> <span class="o">:=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">trial_walltime_limit</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">time</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">trial_walltime_limit</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">time</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">memory_limit</span> <span class="o">=</span> <span class="n">memory</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">algorithm_walltime_limit</span> <span class="o">=</span> <span class="n">time</span>
-        <span class="bp">self</span>
 
 <div class="viewcode-block" id="TargetAlgorithmRunner.run"><a class="viewcode-back" href="../../../api/smac.runner.target_algorithm_runner.html#smac.runner.TargetAlgorithmRunner.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -505,7 +494,14 @@ style="width: 100%;">
         <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
         <span class="n">algorithm</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
         <span class="n">algorithm_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]],</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SingleObjectiveOutput</span> <span class="o">|</span> <span class="n">MultiObjectiveOutput</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span>
+        <span class="nb">float</span><span class="p">,</span>
+        <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span>
+        <span class="nb">tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">dict</span><span class="p">]],</span>
+        <span class="nb">tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">dict</span><span class="p">]],</span>
+    <span class="p">]:</span>
         <span class="k">return</span> <span class="n">algorithm</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">algorithm_kwargs</span><span class="p">)</span></div></div>
 </pre></div>
 

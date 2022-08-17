@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>smac.utils.subspaces &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
@@ -39,7 +39,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.constants" href="smac.constants.html" />
+    <link rel="next" title="smac.scenario" href="smac.scenario.html" />
     <link rel="prev" title="smac.utils.stats" href="smac.utils.stats.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
@@ -149,28 +149,23 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/synthetic_function.html">
-     Synthetic Function
+    <a class="reference internal" href="../examples/basics/index.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/schaffer_multi_objective.html">
-     Schaffer Multi-Objective
+    <a class="reference internal" href="../examples/commandline/index.html">
+     Commandline
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/svm_cv.html">
-     Support Vector Machine with Cross-Validation
+    <a class="reference internal" href="../examples/multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="../examples/multi_objective/index.html">
+     Multi-Objective
     </a>
    </li>
   </ul>
@@ -208,13 +203,13 @@ style="width: 100%;">
   </label>
   <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.smbo.html">
-     smac.smbo
+    <a class="reference internal" href="smac.loop.html">
+     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.scenario.html">
-     smac.scenario
+    <a class="reference internal" href="smac.facade.html">
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2">
@@ -233,23 +228,28 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="smac.runner.html">
      smac.runner
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.chooser.html">
-     smac.chooser
+    <a class="reference internal" href="smac.runhistory.html">
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.multi_objective.html">
      smac.multi_objective
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.runhistory.html">
-     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
@@ -263,8 +263,18 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="smac.constants.html">
      smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.callback.html">
+     smac.callback
     </a>
    </li>
   </ul>
@@ -324,10 +334,6 @@ style="width: 100%;">
 <span id="smac-utils-subspaces"></span><h1>smac.utils.subspaces<a class="headerlink" href="#module-smac.utils.subspaces" title="Permalink to this heading">¶</a></h1>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.utils.subspaces.ChallengerListLocal" title="smac.utils.subspaces.ChallengerListLocal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ChallengerListLocal</span></code></a>(cs_local, cs_global, ...)</p></td>
 <td><p></p></td>
@@ -352,7 +358,7 @@ this subspace is equivalent to the original configuration space. Additionally, t
 supports local BO that only works with a subset of the dimensions, where the missing values are filled by the
 corresponding values from incumbent_array.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config_space</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – raw Configuration space</p></li>
 <li><p><strong>bounds</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – raw bounds of the Configuration space, notice that here bounds denotes the bounds of the entire space</p></li>
@@ -375,16 +381,16 @@ resulted configurations</p></li>
 <span class="sig-name descname"><span class="pre">add_new_observations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/subspaces.html#LocalSubspace.add_new_observations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.subspaces.LocalSubspace.add_new_observations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add new observations to the subspace</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> (<em>np.ndarray</em><em>(</em><em>N</em><em>,</em><em>D</em><em>)</em><em>,</em>) – new feature vector of the observations, constructed by the global configuration space</p></li>
 <li><p><strong>y</strong> (<em>np.ndarray</em><em>(</em><em>N</em><em>)</em>) – new performances of the observations</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>indices_in_ss</strong> – indices of data that included in subspaces</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>np.ndarray(N)</p>
 </dd>
 </dl>
@@ -396,16 +402,16 @@ resulted configurations</p></li>
 <dd><p>Fit the forbidden to subspaces. If the target forbidden can be added to subspace, we return a new forbidden
 with exactly the same type of the input forbidden. Otherwise, None is returned.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cs_local</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – local configuration space of the subspace</p></li>
 <li><p><strong>forbidden</strong> (<em>AbstractForbiddenComponent</em>) – forbidden to check</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>forbidden_ss</strong> – forbidden in subspaces</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Optional[AbstractForbiddenComponent]</p>
 </dd>
 </dl>
@@ -416,10 +422,10 @@ with exactly the same type of the input forbidden. Otherwise, None is returned.<
 <span class="sig-name descname"><span class="pre">generate_challengers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">optimizer_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/subspaces.html#LocalSubspace.generate_challengers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.subspaces.LocalSubspace.generate_challengers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a list of challengers that will be transformed into the global configuration space</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>optimizer_kwargs</strong> (<em>Any</em>) – additional configurations passed to ‘self._generate_challengers’</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of challengers in the global configuration space</p>
 </dd>
 </dl>
@@ -430,13 +436,13 @@ with exactly the same type of the input forbidden. Otherwise, None is returned.<
 <span class="sig-name descname"><span class="pre">normalize_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/subspaces.html#LocalSubspace.normalize_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.subspaces.LocalSubspace.normalize_input" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize X to fit the local configuration space</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em>(</em><em>N</em><em>,</em><em>D</em><em>)</em>) – input X, configurations arrays</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>X_normalized</strong> – normalized input X</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>np.ndarray(N,D)</p>
 </dd>
 </dl>
@@ -447,10 +453,10 @@ with exactly the same type of the input forbidden. Otherwise, None is returned.<
 <span class="sig-name descname"><span class="pre">update_incumbent_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_incumbent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/subspaces.html#LocalSubspace.update_incumbent_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.subspaces.LocalSubspace.update_incumbent_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update a new incumbent array. The array is generated from the global configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>new_incumbent</strong> (<em>np.ndarray</em><em>(</em><em>D</em><em>)</em>) – new incumbent, which correspondences to the global configuration</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -461,13 +467,13 @@ with exactly the same type of the input forbidden. Otherwise, None is returned.<
 <span class="sig-name descname"><span class="pre">update_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predict_x_best</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_incumbent_array</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/subspaces.html#LocalSubspace.update_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.subspaces.LocalSubspace.update_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the model and acquisition function parameters</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>predict_x_best</strong> (<em>bool</em><em>,</em>) – if the incumbent is acquired by the predicted mean of a surrogate model</p></li>
 <li><p><strong>update_incumbent_array</strong> (<em>bool</em>) – if the incumbent_array of this subspace is replaced with the newly updated incumbent</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -477,10 +483,6 @@ with exactly the same type of the input forbidden. Otherwise, None is returned.<
 
 <p class="rubric">Modules</p>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 </tbody>
 </table>
@@ -499,10 +501,10 @@ with exactly the same type of the input forbidden. Otherwise, None is returned.<
             <p class="prev-next-title">smac.utils.stats</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.constants.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.scenario.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.constants</p>
+        <p class="prev-next-title">smac.scenario</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

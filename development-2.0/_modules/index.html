@@ -146,28 +146,23 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/synthetic_function.html">
-     Synthetic Function
+    <a class="reference internal" href="../examples/basics/index.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/schaffer_multi_objective.html">
-     Schaffer Multi-Objective
+    <a class="reference internal" href="../examples/commandline/index.html">
+     Commandline
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/svm_cv.html">
-     Support Vector Machine with Cross-Validation
+    <a class="reference internal" href="../examples/multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="../examples/multi_objective/index.html">
+     Multi-Objective
     </a>
    </li>
   </ul>
@@ -205,13 +200,13 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../api/smac.smbo.html">
-     smac.smbo
+    <a class="reference internal" href="../api/smac.loop.html">
+     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../api/smac.scenario.html">
-     smac.scenario
+    <a class="reference internal" href="../api/smac.facade.html">
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2">
@@ -230,23 +225,28 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../api/smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../api/smac.runner.html">
      smac.runner
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../api/smac.chooser.html">
-     smac.chooser
+    <a class="reference internal" href="../api/smac.runhistory.html">
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../api/smac.multi_objective.html">
      smac.multi_objective
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../api/smac.runhistory.html">
-     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
@@ -260,8 +260,18 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../api/smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../api/smac.constants.html">
      smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/smac.callback.html">
+     smac.callback
     </a>
    </li>
   </ul>
@@ -318,18 +328,22 @@ style="width: 100%;">
 <li><a href="smac/acquisition/local_and_random_search.html">smac.acquisition.local_and_random_search</a></li>
 <li><a href="smac/acquisition/local_search.html">smac.acquisition.local_search</a></li>
 <li><a href="smac/acquisition/random_search.html">smac.acquisition.random_search</a></li>
-<li><a href="smac/chooser/chooser.html">smac.chooser.chooser</a></li>
-<li><a href="smac/chooser/cosine_annealing_chooser.html">smac.chooser.cosine_annealing_chooser</a></li>
-<li><a href="smac/chooser/modulus_chooser.html">smac.chooser.modulus_chooser</a></li>
-<li><a href="smac/chooser/probability_chooser.html">smac.chooser.probability_chooser</a></li>
-<li><a href="smac/chooser/random_chooser.html">smac.chooser.random_chooser</a></li>
 <li><a href="smac/configspace/util.html">smac.configspace.util</a></li>
+<li><a href="smac/initial_design/default_design.html">smac.initial_design.default_design</a></li>
+<li><a href="smac/initial_design/factorial_design.html">smac.initial_design.factorial_design</a></li>
+<li><a href="smac/initial_design/initial_design.html">smac.initial_design.initial_design</a></li>
+<li><a href="smac/initial_design/latin_hypercube_design.html">smac.initial_design.latin_hypercube_design</a></li>
+<li><a href="smac/initial_design/random_design.html">smac.initial_design.random_design</a></li>
+<li><a href="smac/initial_design/sobol_design.html">smac.initial_design.sobol_design</a></li>
 <li><a href="smac/intensification/abstract_intensifier.html">smac.intensification.abstract_intensifier</a></li>
 <li><a href="smac/intensification/hyperband.html">smac.intensification.hyperband</a></li>
 <li><a href="smac/intensification/intensification.html">smac.intensification.intensification</a></li>
 <li><a href="smac/intensification/parallel_scheduling.html">smac.intensification.parallel_scheduling</a></li>
 <li><a href="smac/intensification/simple_intensifier.html">smac.intensification.simple_intensifier</a></li>
+<li><a href="smac/intensification/stages.html">smac.intensification.stages</a></li>
 <li><a href="smac/intensification/successive_halving.html">smac.intensification.successive_halving</a></li>
+<li><a href="smac/loop/base_smbo.html">smac.loop.base_smbo</a></li>
+<li><a href="smac/loop/smbo.html">smac.loop.smbo</a></li>
 <li><a href="smac/model/base_model.html">smac.model.base_model</a></li>
 <li><a href="smac/model/gaussian_process/base_gaussian_process.html">smac.model.gaussian_process.base_gaussian_process</a></li>
 <li><a href="smac/model/gaussian_process/gaussian_process.html">smac.model.gaussian_process.gaussian_process</a></li>
@@ -359,6 +373,10 @@ style="width: 100%;">
 <li><a href="smac/multi_objective/aggregation_strategy.html">smac.multi_objective.aggregation_strategy</a></li>
 <li><a href="smac/multi_objective/parego.html">smac.multi_objective.parego</a></li>
 <li><a href="smac/multi_objective/utils.html">smac.multi_objective.utils</a></li>
+<li><a href="smac/random_design/cosine_annealing_design.html">smac.random_design.cosine_annealing_design</a></li>
+<li><a href="smac/random_design/modulus_design.html">smac.random_design.modulus_design</a></li>
+<li><a href="smac/random_design/probability_design.html">smac.random_design.probability_design</a></li>
+<li><a href="smac/random_design/random_design.html">smac.random_design.random_design</a></li>
 <li><a href="smac/runhistory/dataclasses.html">smac.runhistory.dataclasses</a></li>
 <li><a href="smac/runhistory/encoder/boing_encoder.html">smac.runhistory.encoder.boing_encoder</a></li>
 <li><a href="smac/runhistory/encoder/eips_encoder.html">smac.runhistory.encoder.eips_encoder</a></li>
@@ -376,7 +394,6 @@ style="width: 100%;">
 <li><a href="smac/runner/serial_runner.html">smac.runner.serial_runner</a></li>
 <li><a href="smac/runner/target_algorithm_runner.html">smac.runner.target_algorithm_runner</a></li>
 <li><a href="smac/scenario.html">smac.scenario</a></li>
-<li><a href="smac/smbo.html">smac.smbo</a></li>
 <li><a href="smac/utils/logging.html">smac.utils.logging</a></li>
 <li><a href="smac/utils/stats.html">smac.utils.stats</a></li>
 <li><a href="smac/utils/subspaces.html">smac.utils.subspaces</a></li>

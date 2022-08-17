@@ -146,28 +146,23 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../examples/synthetic_function.html">
-     Synthetic Function
+    <a class="reference internal" href="../../../../examples/basics/index.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../examples/schaffer_multi_objective.html">
-     Schaffer Multi-Objective
+    <a class="reference internal" href="../../../../examples/commandline/index.html">
+     Commandline
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../examples/svm_cv.html">
-     Support Vector Machine with Cross-Validation
+    <a class="reference internal" href="../../../../examples/multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../../examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="../../../../examples/multi_objective/index.html">
+     Multi-Objective
     </a>
    </li>
   </ul>
@@ -205,13 +200,13 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../api/smac.smbo.html">
-     smac.smbo
+    <a class="reference internal" href="../../../../api/smac.loop.html">
+     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../api/smac.scenario.html">
-     smac.scenario
+    <a class="reference internal" href="../../../../api/smac.facade.html">
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2">
@@ -230,23 +225,28 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../../../../api/smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../api/smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../../../../api/smac.runner.html">
      smac.runner
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../api/smac.chooser.html">
-     smac.chooser
+    <a class="reference internal" href="../../../../api/smac.runhistory.html">
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../../api/smac.multi_objective.html">
      smac.multi_objective
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../../api/smac.runhistory.html">
-     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
@@ -260,8 +260,18 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../../../../api/smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../../../../api/smac.constants.html">
      smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../api/smac.callback.html">
+     smac.callback
     </a>
    </li>
   </ul>
@@ -311,7 +321,9 @@ style="width: 100%;">
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace.hyperparameters</span> <span class="kn">import</span> <span class="n">FloatHyperparameter</span>
 
-<span class="kn">from</span> <span class="nn">smac.acquisition.functions.abstract_acquisition_function</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionFunction</span>
+<span class="kn">from</span> <span class="nn">smac.acquisition.functions.abstract_acquisition_function</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="PriorAcquisitionFunction"><a class="viewcode-back" href="../../../../api/smac.acquisition.functions.prior.html#smac.acquisition.functions.PriorAcquisitionFunction">[docs]</a><span class="k">class</span> <span class="nc">PriorAcquisitionFunction</span><span class="p">(</span><span class="n">AbstractAcquisitionFunction</span><span class="p">):</span>
@@ -373,6 +385,12 @@ style="width: 100%;">
 
         <span class="bp">self</span><span class="o">.</span><span class="n">rescale_acq</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">acquisition_type</span><span class="p">,</span> <span class="p">(</span><span class="n">LCB</span><span class="p">,</span> <span class="n">TS</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">iteration_number</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="PriorAcquisitionFunction.get_meta"><a class="viewcode-back" href="../../../../api/smac.acquisition.functions.prior.html#smac.acquisition.functions.PriorAcquisitionFunction.get_meta">[docs]</a>    <span class="k">def</span> <span class="nf">get_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="p">}</span></div>
 
 <div class="viewcode-block" id="PriorAcquisitionFunction.update"><a class="viewcode-back" href="../../../../api/smac.acquisition.functions.prior.html#smac.acquisition.functions.PriorAcquisitionFunction.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Update the acquisition function attributes required for calculation.</span>

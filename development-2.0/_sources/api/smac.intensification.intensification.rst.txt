@@ -18,7 +18,6 @@ smac.intensification.intensification
    .. autosummary::
    
       Intensifier
-      IntensifierStage
    
    
 

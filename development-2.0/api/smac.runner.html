@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>smac.runner &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
@@ -40,7 +40,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.runner.dask_runner" href="smac.runner.dask_runner.html" />
-    <link rel="prev" title="smac.intensification.successive_halving" href="smac.intensification.successive_halving.html" />
+    <link rel="prev" title="smac.random_design.random_design" href="smac.random_design.random_design.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -149,28 +149,23 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/synthetic_function.html">
-     Synthetic Function
+    <a class="reference internal" href="../examples/basics/index.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/schaffer_multi_objective.html">
-     Schaffer Multi-Objective
+    <a class="reference internal" href="../examples/commandline/index.html">
+     Commandline
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/svm_cv.html">
-     Support Vector Machine with Cross-Validation
+    <a class="reference internal" href="../examples/multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/sgd_instances.html">
-     Stochastic Gradient Descent on Instances
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../examples/mlp_multi_fidelity.html">
-     Multi-Layer Perceptron with Multi-Fidelity
+    <a class="reference internal" href="../examples/multi_objective/index.html">
+     Multi-Objective
     </a>
    </li>
   </ul>
@@ -208,13 +203,13 @@ style="width: 100%;">
   </label>
   <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.smbo.html">
-     smac.smbo
+    <a class="reference internal" href="smac.loop.html">
+     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.scenario.html">
-     smac.scenario
+    <a class="reference internal" href="smac.facade.html">
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2">
@@ -232,24 +227,29 @@ style="width: 100%;">
      smac.intensification
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
      smac.runner
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.chooser.html">
-     smac.chooser
+    <a class="reference internal" href="smac.runhistory.html">
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.multi_objective.html">
      smac.multi_objective
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.runhistory.html">
-     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
@@ -263,8 +263,18 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="smac.constants.html">
      smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.callback.html">
+     smac.callback
     </a>
    </li>
   </ul>
@@ -354,7 +364,7 @@ collected.</p></li>
 </ol>
 <p>Dask works with Future object which are managed via the DaskParallelRunner.client.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>single_worker</strong> (<em>BaseRunner</em>) – A runner to run in a distributed fashion</p></li>
 <li><p><strong>n_workers</strong> (<em>int</em>) – Number of workers to use for distributed run. Will be ignored if <code class="docutils literal notranslate"><span class="pre">dask_client</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
@@ -422,7 +432,7 @@ worker directory must be set by the program/user starting the workers.</p></li>
 <dd><p>Make sure that when this object gets deleted, the client is terminated.
 This is only done if the client was created by the dask runner.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -436,11 +446,22 @@ exercising the configurations. This class keeps populating results to self.resul
 call to get_finished runs is done. In this case, the self.results list is emptied and all
 RunValues produced by running run() are returned.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A list of RunValues and RunInfo, which are the results of executing the submitted configurations.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>List[Tuple[<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunInfo" title="smac.runhistory.RunInfo">RunInfo</a>, <a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunValue" title="smac.runhistory.RunValue">RunValue</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.runner.DaskParallelRunner.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.DaskParallelRunner.get_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the meta data of the created object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -450,7 +471,7 @@ RunValues produced by running run() are returned.</p>
 <span class="sig-name descname"><span class="pre">num_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.num_workers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.DaskParallelRunner.num_workers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Total number of workers available. This number is dynamic as more resources can be allocated.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
 </dl>
@@ -463,7 +484,7 @@ RunValues produced by running run() are returned.</p>
 <p>Generally if the runner is serial, launching a run instantly returns it’s result. On
 parallel runners, there might be pending configurations to complete.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
 </dd>
 </dl>
@@ -475,7 +496,7 @@ parallel runners, there might be pending configurations to complete.</p>
 <dd><p>This method only complies with the abstract parent class. In the parallel case, we call
 the single worker run() method.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="smac.runhistory.enumerations.html#smac.runhistory.enumerations.StatusType" title="smac.runhistory.enumerations.StatusType"><code class="xref py py-class docutils literal notranslate"><span class="pre">StatusType</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>]</p>
 </dd>
 </dl>
@@ -496,10 +517,10 @@ capping check.</p>
 All results will be only available locally to each worker, so the
 main node needs to collect them.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>run_info</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunInfo" title="smac.runhistory.RunInfo"><em>RunInfo</em></a>) – An object containing the configuration and the necessary data to run it</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -511,7 +532,7 @@ main node needs to collect them.</p>
 <dd><p>SMBO/intensifier might need to wait for runs to finish before making a decision.</p>
 <p>This class waits until 1 run completes</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -556,7 +577,7 @@ example, the intensifier might not be able to select the next challenger
 until more results are available.</p></li>
 </ol>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ta</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>Callable</em><em>]</em>) – target algorithm</p></li>
 <li><p><strong>stats</strong> (<a class="reference internal" href="smac.utils.stats.html#smac.utils.stats.Stats" title="smac.utils.stats.Stats"><em>Stats</em></a>) – stats object to collect statistics about runtime/additional info</p></li>
@@ -606,10 +627,10 @@ exercising the configurations. This class keeps populating results to self.resul
 call to get_finished runs is done. In this case, the self.results list is emptied and all
 RunValues produced by running run() are returned.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.RunInfo" title="smac.runhistory.dataclasses.RunInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunInfo</span></code></a>, <a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.RunValue" title="smac.runhistory.dataclasses.RunValue"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunValue</span></code></a>]]</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>List[RunInfo, RunValue]</strong> (<em>A list of pais RunInfo/RunValues</em>)</p></li>
 <li><p><em>a submitted configuration</em></p></li>
@@ -620,11 +641,22 @@ RunValues produced by running run() are returned.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="smac.runner.Runner.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#Runner.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.Runner.get_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the meta data of the created object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.Runner.num_workers">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#Runner.num_workers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.Runner.num_workers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the active number of workers that will execute tae runs.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
 </dl>
@@ -637,7 +669,7 @@ RunValues produced by running run() are returned.</p>
 <p>Generally if the runner is serial, launching a run instantly returns it’s result. On
 parallel runners, there might be pending configurations to complete.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
 </dd>
 </dl>
@@ -648,7 +680,7 @@ parallel runners, there might be pending configurations to complete.</p>
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#Runner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.Runner.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the target algorithm with a configuration on a single instance with instance specifics.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – Configuration to be passed to the target algorithm.</p></li>
 <li><p><strong>instance</strong> (<em>str</em><em>, </em><em>defaults to None</em>) – The Problem instance.</p></li>
@@ -658,10 +690,10 @@ Handled by the target algorithm internally.</p></li>
 <li><p><strong>instance_specific</strong> (<em>str</em><em>, </em><em>defaults to &quot;0&quot;</em>) – Instance specific information (e.g., domain file or solution).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="smac.runhistory.enumerations.html#smac.runhistory.enumerations.StatusType" title="smac.runhistory.enumerations.StatusType"><code class="xref py py-class docutils literal notranslate"><span class="pre">StatusType</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>]</p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
 <li><p><strong>status</strong> (<em>StatusType</em>) – Status of the run.</p></li>
 <li><p><strong>cost</strong> (<em>float | list[float]</em>) – Cost, regret, quality, etc. of the run.</p></li>
@@ -680,14 +712,14 @@ Handled by the target algorithm internally.</p></li>
 <p>This function encapsulates common handling/processing, so that run() implementation
 is simplified.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>run_info</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunInfo" title="smac.runhistory.RunInfo"><em>RunInfo</em></a>) – Object that contains enough information to execute a configuration run in
 isolation.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.RunInfo" title="smac.runhistory.dataclasses.RunInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunInfo</span></code></a>, <a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.RunValue" title="smac.runhistory.dataclasses.RunValue"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunValue</span></code></a>]</p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
 <li><p><em>RunInfo</em> – An object containing the configuration launched.</p></li>
 <li><p><em>RunValue</em> – Contains information about the status/performance of config.</p></li>
@@ -710,10 +742,10 @@ executed is decided via the child class that implements a run() method.</p>
 <p>Because config submission can be a serial/parallel endeavor,
 it is expected to be implemented by a child class.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>run_info</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunInfo" title="smac.runhistory.RunInfo"><em>RunInfo</em></a>) – An object containing the configuration and the necessary data to run it</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -725,7 +757,7 @@ it is expected to be implemented by a child class.</p>
 <dd><p>SMBO/intensifier might need to wait for runs to finish before making a decision.</p>
 <p>This method waits until 1 run completes</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -742,54 +774,6 @@ it is expected to be implemented by a child class.</p>
 configuration/instance/seed to a result.</p>
 <p>This class is expected to be extended via the implementation of
 a run() method for the desired task.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.SerialRunner.results">
-<span class="sig-name descname"><span class="pre">results</span></span><a class="headerlink" href="#smac.runner.SerialRunner.results" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.SerialRunner.ta">
-<span class="sig-name descname"><span class="pre">ta</span></span><a class="headerlink" href="#smac.runner.SerialRunner.ta" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.SerialRunner.stats">
-<span class="sig-name descname"><span class="pre">stats</span></span><a class="headerlink" href="#smac.runner.SerialRunner.stats" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.SerialRunner.run_obj">
-<span class="sig-name descname"><span class="pre">run_obj</span></span><a class="headerlink" href="#smac.runner.SerialRunner.run_obj" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.SerialRunner.par_factor">
-<span class="sig-name descname"><span class="pre">par_factor</span></span><a class="headerlink" href="#smac.runner.SerialRunner.par_factor" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.SerialRunner.crash_cost">
-<span class="sig-name descname"><span class="pre">crash_cost</span></span><a class="headerlink" href="#smac.runner.SerialRunner.crash_cost" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.SerialRunner.abort_i_first_run_crash">
-<span class="sig-name descname"><span class="pre">abort_i_first_run_crash</span></span><a class="headerlink" href="#smac.runner.SerialRunner.abort_i_first_run_crash" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ta</strong> (<em>list</em>) – target algorithm command line as list of arguments</p></li>
-<li><p><strong>stats</strong> (<a class="reference internal" href="smac.utils.stats.html#smac.utils.stats.Stats" title="smac.utils.stats.Stats"><em>Stats</em></a><em>(</em><em>)</em>) – stats object to collect statistics about runtime and so on</p></li>
-<li><p><strong>objectives</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – names of the objectives, by default it is a single objective parameter “cost”</p></li>
-<li><p><strong>run_obj</strong> (<em>str</em>) – run objective of SMAC</p></li>
-<li><p><strong>par_factor</strong> (<em>int</em>) – penalization factor</p></li>
-<li><p><strong>crash_cost</strong> (<em>float</em><em> | </em><em>list</em><em>[</em><em>float</em><em>]</em>) – Cost that is used in case of crashed runs (including runs that returned NaN or inf).</p></li>
-<li><p><strong>abort_on_first_run_crash</strong> (<em>bool</em>) – if true and first run crashes, raise FirstRunCrashedException</p></li>
-</ul>
-</dd>
-</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.SerialRunner.get_finished_runs">
 <span class="sig-name descname"><span class="pre">get_finished_runs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/serial_runner.html#SerialRunner.get_finished_runs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.SerialRunner.get_finished_runs" title="Permalink to this definition">¶</a></dt>
@@ -798,10 +782,10 @@ exercising the configurations. This class keeps populating results to self.resul
 call to get_finished runs is done. In this case, the self.results list is emptied and all
 RunValues produced by running self.run() are returned.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A list of RunInfo/RunValues pairs a submitted configuration.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>List[<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunInfo" title="smac.runhistory.RunInfo">RunInfo</a>, <a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunValue" title="smac.runhistory.RunValue">RunValue</a>]</p>
 </dd>
 </dl>
@@ -812,7 +796,7 @@ RunValues produced by running self.run() are returned.</p>
 <span class="sig-name descname"><span class="pre">num_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/serial_runner.html#SerialRunner.num_workers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.SerialRunner.num_workers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Total number of workers available.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
 </dl>
@@ -825,7 +809,7 @@ RunValues produced by running self.run() are returned.</p>
 Generally if the runner is serial, launching a run instantly returns it’s result. On
 parallel runners, there might be pending configurations to complete.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
 </dd>
 </dl>
@@ -836,7 +820,7 @@ parallel runners, there might be pending configurations to complete.</p>
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/serial_runner.html#SerialRunner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.SerialRunner.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the target algorithm with a configuration on a single instance with instance specifics.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – Configuration to be passed to the target algorithm.</p></li>
 <li><p><strong>instance</strong> (<em>str</em><em>, </em><em>defaults to None</em>) – The Problem instance.</p></li>
@@ -846,10 +830,10 @@ Handled by the target algorithm internally.</p></li>
 <li><p><strong>instance_specific</strong> (<em>str</em><em>, </em><em>defaults to &quot;0&quot;</em>) – Instance specific information (e.g., domain file or solution).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="smac.runhistory.enumerations.html#smac.runhistory.enumerations.StatusType" title="smac.runhistory.enumerations.StatusType"><code class="xref py py-class docutils literal notranslate"><span class="pre">StatusType</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>]</p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
 <li><p><strong>status</strong> (<em>StatusType</em>) – Status of the run.</p></li>
 <li><p><strong>cost</strong> (<em>float | list[float]</em>) – Cost, regret, quality, etc. of the run.</p></li>
@@ -871,10 +855,10 @@ method.</p>
 <p>Both result/exceptions can be completely determined in this
 step so both lists are properly filled.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>run_info</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunInfo" title="smac.runhistory.RunInfo"><em>RunInfo</em></a>) – An object containing the configuration and the necessary data to run it</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -886,7 +870,7 @@ step so both lists are properly filled.</p>
 <dd><p>SMBO/intensifier might need to wait for runs to finish before making a decision.
 For serial runs, no wait is needed as the result is immediately available.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -904,7 +888,7 @@ assumes that all further runs will surely fail.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runner.TargetAlgorithmRunner">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runner.</span></span><span class="sig-name descname"><span class="pre">TargetAlgorithmRunner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_algorithm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/target_algorithm_runner.html#TargetAlgorithmRunner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.TargetAlgorithmRunner" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runner.</span></span><span class="sig-name descname"><span class="pre">TargetAlgorithmRunner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/target_algorithm_runner.html#TargetAlgorithmRunner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.TargetAlgorithmRunner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.runner.serial_runner.html#smac.runner.serial_runner.SerialRunner" title="smac.runner.serial_runner.SerialRunner"><code class="xref py py-class docutils literal notranslate"><span class="pre">SerialRunner</span></code></a></p>
 <p>Class to execute target algorithms which are python functions.</p>
 <p>Evaluate function for given configuration and resource limit.</p>
@@ -925,8 +909,8 @@ the target algorithm.</p>
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/target_algorithm_runner.html#TargetAlgorithmRunner.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.TargetAlgorithmRunner.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call self as a function.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>] | <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>] | <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>] | <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>] | <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>] | <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>] | <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -936,7 +920,7 @@ the target algorithm.</p>
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/target_algorithm_runner.html#TargetAlgorithmRunner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.TargetAlgorithmRunner.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls the target algorithm with pynisher (if algorithm walltime limit or memory limit is set) or without.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<a class="reference internal" href="smac.runhistory.enumerations.html#smac.runhistory.enumerations.StatusType" title="smac.runhistory.enumerations.StatusType"><code class="xref py py-class docutils literal notranslate"><span class="pre">StatusType</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</p>
 </dd>
 </dl>
@@ -946,10 +930,6 @@ the target algorithm.</p>
 
 <p class="rubric">Modules</p>
 <table class="autosummary longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="smac.runner.dask_runner.html#module-smac.runner.dask_runner" title="smac.runner.dask_runner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.runner.dask_runner</span></code></a></p></td>
 <td><p></p></td>
@@ -976,11 +956,11 @@ the target algorithm.</p>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.intensification.successive_halving.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.random_design.random_design.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.intensification.successive_halving</p>
+            <p class="prev-next-title">smac.random_design.random_design</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="smac.runner.dask_runner.html" title="next page">

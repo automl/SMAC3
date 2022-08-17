@@ -1,0 +1,34 @@
+﻿smac.loop
+=========
+
+.. automodule:: smac.loop
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   smac.loop.base_smbo
+   smac.loop.boing
+   smac.loop.smbo
+   smac.loop.turbo
+
