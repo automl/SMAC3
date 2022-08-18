@@ -336,7 +336,7 @@ style="width: 100%;">
 <div class="viewcode-block" id="Scenario"><a class="viewcode-back" href="../../api/smac.scenario.html#smac.scenario.Scenario">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Scenario</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The scenario manages enviroment variables and therefore gives context in which frame the optimization is performed.</span>
+<span class="sd">    The scenario manages environment variables and therefore gives context in which frame the optimization is performed.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -349,7 +349,8 @@ style="width: 100%;">
 <span class="sd">        The directory in which to save the output. The files are saved in `./output_directory/name/seed`.</span>
 <span class="sd">    deterministic : bool, defaults to False</span>
 <span class="sd">        If deterministic is set to true, only one seed is passed to the target algorithm.</span>
-<span class="sd">        Otherwise, multiple seeds are passed to the target algorithm to ensure generalization.</span>
+<span class="sd">        Otherwise, multiple seeds (if n_seeds of the intensifier is greater than 1) are passed</span>
+<span class="sd">        to the target algorithm to ensure generalization.</span>
 <span class="sd">    objective : str | list[str] | None, defaults to &quot;cost&quot;</span>
 <span class="sd">        The objective(s) to optimize. This argument is required for multi-objective optimization.</span>
 <span class="sd">    crash_cost : float | list[float], defaults to np.inf</span>
@@ -364,10 +365,10 @@ style="width: 100%;">
 <span class="sd">        The maximum CPU time in seconds that SMAC is allowed to run.</span>
 <span class="sd">    trial_walltime_limit : float | None, defaults to None</span>
 <span class="sd">        The maximum time in seconds that a trial is allowed to run. If not specified,</span>
-<span class="sd">        no contraints are enforced. Ohterwise, the process will be spawned by pynisher.</span>
+<span class="sd">        no constraints are enforced. Otherwise, the process will be spawned by pynisher.</span>
 <span class="sd">    trial_memory_limit : int | None, defaults to None</span>
 <span class="sd">        The maximum memory in MB that a trial is allowed to use. If not specified,</span>
-<span class="sd">        no contraints are enforced. Otherwise, the process will be spawned by pynisher.</span>
+<span class="sd">        no constraints are enforced. Otherwise, the process will be spawned by pynisher.</span>
 <span class="sd">    n_trials : int, defaults to 100</span>
 <span class="sd">        The maximum number of trials (combination of configuration, seed, budget, and instance, depending on the task)</span>
 <span class="sd">        to run.</span>

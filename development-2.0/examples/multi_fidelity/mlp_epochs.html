@@ -372,7 +372,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][hyperband.py:437] Finished Hyperband iteration-step 2-1 with initial budget 8.
 [INFO][successive_halving.py:497] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
 [INFO][successive_halving.py:641] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
-[INFO][successive_halving.py:1050] Challenger (0.0345) is better than incumbent (0.0384) on budget 25.0000.
+[INFO][successive_halving.py:1050] Challenger (0.0345) is better than incumbent (0.0406) on budget 25.0000.
 [INFO][abstract_intensifier.py:365] Changes in incumbent:
 [INFO][abstract_intensifier.py:368] --- activation: &#39;tanh&#39; -&gt; &#39;relu&#39;
 [INFO][abstract_intensifier.py:368] --- batch_size: 155 -&gt; 117
@@ -386,8 +386,17 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][successive_halving.py:641] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
 [INFO][hyperband.py:437] Finished Hyperband iteration-step 3-1 with initial budget 8.
 [INFO][successive_halving.py:497] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
-[INFO][facade.py:324] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 5, &#39;n_neurons&#39;: 52, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 117, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.008282754423021153}
-[INFO][facade.py:325] Estimated cost: 0.03450789229340745
+[INFO][successive_halving.py:641] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+[INFO][successive_halving.py:1050] Challenger (0.0189) is better than incumbent (0.0345) on budget 25.0000.
+[INFO][abstract_intensifier.py:365] Changes in incumbent:
+[INFO][abstract_intensifier.py:368] --- batch_size: 117 -&gt; 91
+[INFO][abstract_intensifier.py:368] --- learning_rate_init: 0.008282754423021153 -&gt; 0.006390670908394775
+[INFO][abstract_intensifier.py:368] --- n_neurons: 52 -&gt; 183
+[INFO][successive_halving.py:641] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+[INFO][hyperband.py:437] Finished Hyperband iteration-step 3-2 with initial budget 25.
+[INFO][successive_halving.py:497] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
+[INFO][facade.py:324] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 5, &#39;n_neurons&#39;: 183, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 91, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.006390670908394775}
+[INFO][facade.py:325] Estimated cost: 0.01892138656762621
 Incumbent value: 0.03
 </pre></div>
 </div>
@@ -526,7 +535,7 @@ Incumbent value: 0.03
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent value: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">incumbent_value</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  44.168 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  48.000 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-multi-fidelity-mlp-epochs-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/3353159c6767d1d5326aab14abe38400/mlp_epochs.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">mlp_epochs.py</span></code></a></p>
