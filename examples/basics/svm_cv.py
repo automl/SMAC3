@@ -17,6 +17,7 @@ from sklearn import datasets, svm
 from sklearn.model_selection import cross_val_score
 
 from smac import HyperparameterFacade, Scenario
+from smac.initial_design import SobolInitialDesign
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -28,7 +29,7 @@ iris = datasets.load_iris()
 
 class SVM:
     @property
-    def configspace(self):
+    def configspace(self) -> ConfigurationSpace:
         # Build Configuration Space which defines all parameters and their ranges
         cs = ConfigurationSpace(seed=0)
 
@@ -80,18 +81,21 @@ if __name__ == "__main__":
     # Next, we create an object, holding general information about the run
     scenario = Scenario(
         configspace,
-        n_trials=50,  # We want 50 target algorithm evaluations
+        n_trials=50,  # We want to run max 50 trials (combination of config and seed)
     )
 
     # We want to run only five initial configurations
     initial_design = HyperparameterFacade.get_initial_design(scenario, n_configs=5)
+
+    # You can also initialize from the class directly to have full control
+    initial_design = SobolInitialDesign(scenario, n_configs=5)
 
     # Now we use SMAC to find the best hyperparameters
     smac = HyperparameterFacade(
         scenario,
         classifier.train,
         initial_design=initial_design,
-        overwrite=False,  # If the run exists, we do not overwrite it
+        overwrite=False,  # If the run exists, we do not overwrite it but continue the run
     )
 
     incumbent = smac.optimize()

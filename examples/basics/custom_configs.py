@@ -26,7 +26,7 @@ iris = datasets.load_iris()
 
 class SVM:
     @property
-    def configspace(self):
+    def configspace(self) -> ConfigurationSpace:
         # Build Configuration Space which defines all parameters and their ranges
         cs = ConfigurationSpace(seed=0)
 
@@ -87,8 +87,8 @@ if __name__ == "__main__":
     # Next, we create an object, holding general information about the run
     scenario = Scenario(
         configspace,
-        # We want to run at least 50 trials (combination of config and seed) on top of what's already in the runhistory
-        n_trials=200,
+        # We want to run max 100 trials (combination of config and seed) on top of what's already in the runhistory
+        n_trials=100,
     )
 
     intensifier = HyperparameterFacade.get_intensifier(

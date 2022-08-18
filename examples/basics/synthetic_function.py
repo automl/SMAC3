@@ -18,42 +18,48 @@ __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-def rosenbrock_2d(x: Configuration) -> float:
-    """The 2-dimensional Rosenbrock function as a toy model.
-    The Rosenbrock function is well know in the optimization community and
-    often serves as a toy problem. It can be defined for arbitrary
-    dimensions. The minimium is always at x_i = 1 with a function value of
-    zero. All input parameters are continuous. The search domain for
-    all x's is the interval [-5, 10].
-    """
-    x1 = x["x0"]
-    x2 = x["x1"]
+class Rosenbrock2D:
+    @property
+    def configspace(self) -> ConfigurationSpace:
+        cs = ConfigurationSpace(seed=0)
+        x0 = Float("x0", (-5, 10), default=-3)
+        x1 = Float("x1", (-5, 10), default=-4)
+        cs.add_hyperparameters([x0, x1])
 
-    cost = 100.0 * (x2 - x1**2.0) ** 2.0 + (1 - x1) ** 2.0
-    return cost
+        return cs
+
+    def train(self, config: Configuration) -> float:
+        """The 2-dimensional Rosenbrock function as a toy model.
+        The Rosenbrock function is well know in the optimization community and
+        often serves as a toy problem. It can be defined for arbitrary
+        dimensions. The minimium is always at x_i = 1 with a function value of
+        zero. All input parameters are continuous. The search domain for
+        all x's is the interval [-5, 10].
+        """
+        x1 = config["x0"]
+        x2 = config["x1"]
+
+        cost = 100.0 * (x2 - x1**2.0) ** 2.0 + (1 - x1) ** 2.0
+        return cost
 
 
 if __name__ == "__main__":
-    # Build configuration space which defines all parameters and their ranges
-    configspace = ConfigurationSpace()
-    x0 = Float("x0", (-5, 10), default=-3)
-    x1 = Float("x1", (-5, 10), default=-4)
-    configspace.add_hyperparameters([x0, x1])
+    model = Rosenbrock2D()
 
     # Scenario object
-    scenario = Scenario(configspace, n_trials=100)
+    scenario = Scenario(model.configspace, n_trials=100)
 
     # Example call of the target algorithm
-    default_value = rosenbrock_2d(configspace.get_default_configuration())
+    default_value = model.train(model.configspace.get_default_configuration())
     print(f"Default value: {round(default_value, 2)}")
 
     # Now we use SMAC to find the best hyperparameters
     smac = BlackBoxFacade(
         scenario,
-        rosenbrock_2d,
+        model.train,
         overwrite=True,
     )
     incumbent = smac.optimize()
 
-    incumbent_value = rosenbrock_2d(incumbent)
+    incumbent_value = model.train(incumbent)
     print(f"Incumbent value: {round(incumbent_value, 2)}")
