@@ -1,6 +1,6 @@
 """
-Start with Custom Configurations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Start with Pre-Evaluated Configurations
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This example shows how to incorporate evaluated configurations into SMAC.
 """

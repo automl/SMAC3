@@ -5,7 +5,6 @@ API References
    :toctree: api
    :recursive:
 
-   smac.loop
    smac.facade
    smac.model
    smac.acquisition
@@ -15,6 +14,7 @@ API References
    smac.runner
    smac.runhistory
    smac.multi_objective
+   smac.loop
    smac.configspace
    smac.utils
    smac.scenario

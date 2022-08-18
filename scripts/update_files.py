@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-def replace(file, find: str, replace: str):
+def replace(file: str, find: str, replace: str) -> None:
     new_lines = []
     with open(file) as f:
         for line in f.readlines():
@@ -18,7 +18,7 @@ def replace(file, find: str, replace: str):
             f.write(line)
 
 
-def replace_if_starts_with(file, starts_with, replace="") -> None:
+def replace_if_starts_with(file: str, starts_with: str, replace: str = "") -> None:
     new_lines = []
     with open(file) as f:
         for line in f.readlines():
@@ -39,7 +39,7 @@ def replace_if_starts_with(file, starts_with, replace="") -> None:
             f.write(line)
 
 
-def check(file) -> None:
+def check(file: str) -> None:
     has_copyright = False
     has_license = False
 

@@ -1,6 +1,7 @@
 import automl_sphinx_theme
 
 from smac import copyright, author, version, name
+from sphinx_gallery.sorting import FileNameSortKey
 
 # from smac.cli.cmd_reader import CMDReader
 
@@ -17,6 +18,7 @@ options = {
     # "ignore_pattern": ".*pcs$|.*scenario.txt$|.*spear_qcp$",
     "sphinx_gallery_conf": {
         "plot_gallery": True,
+        "within_subsection_order": FileNameSortKey,
         "filename_pattern": "/",  # We want to execute all files in `examples`
     },
 }
