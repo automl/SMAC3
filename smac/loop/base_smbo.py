@@ -130,6 +130,7 @@ class BaseSMBO:
         self.initial_design_configs: list[Configuration] = []
 
         # Internal variable - if this is set to True it will gracefully stop SMAC
+        self._finished = False
         self._stop = False
         self._min_time = 10**-5
         self._callbacks: list[Callback] = []
@@ -141,13 +142,27 @@ class BaseSMBO:
 
         # Initialization, depends on input
         if self.stats.submitted == 0 and self.incumbent is None:
-            logger.info("Running initial design...")
-            # Intensifier initialization
-            self.initial_design_configs = self.initial_design.select_configurations()
+            if len(self.runhistory) == 0:
+                logger.info("Running initial design...")
+                # Intensifier initialization
+                self.initial_design_configs = self.initial_design.select_configurations()
 
-            # to be on the safe side, never return an empty list of initial configs
-            if not self.initial_design_configs:
-                self.initial_design_configs = [self.configspace.get_default_configuration()]
+                # to be on the safe side, never return an empty list of initial configs
+                if not self.initial_design_configs:
+                    self.initial_design_configs = [self.configspace.get_default_configuration()]
+            else:
+                logger.info(
+                    f"Initial design is skipped since {len(self.runhistory)} entries are found in the runhistory."
+                )
+
+                self.incumbent = self.runhistory.get_incumbent()
+                self.initial_design_configs = self.runhistory.get_configs()
+
+                logger.info(
+                    f"Added {len(self.initial_design_configs)} configs from the runhistory as initial design and "
+                    "determined the incumbent."
+                )
+
         else:
             # Restoring state!
             if self.incumbent is None:
@@ -274,6 +289,10 @@ class BaseSMBO:
         incumbent: np.array(1, H)
             The best found configuration.
         """
+        # We return the incumbent if we already finished the optimization process
+        if self._finished:
+            return self.incumbent
+
         # Make sure we use the right incumbent
         self.incumbent = self.stats.get_incumbent()
 
@@ -430,6 +449,7 @@ class BaseSMBO:
         for callback in self._callbacks:
             callback.on_end(self)
 
+        self._finished = True
         return self.incumbent
 
     @abstractmethod

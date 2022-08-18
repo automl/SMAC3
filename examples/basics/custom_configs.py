@@ -1,15 +1,12 @@
 """
-Support Vector Machine with Cross-Validation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Start with Custom Configurations
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-An example of optimizing a simple support vector machine on the IRIS benchmark. We use the hyperparameter optimization 
-facade, which uses a random forest as its surrogate model. It is able to scale to higher evaluation budgets and a higher 
-number of dimensions. Also, you can use mixed data types as well as conditional hyperparameters by nature.
-
-The hyperparameter facade only supports a single fidelity approach. Therefore, only the configuration (not a budget like
-iterations) is passed to the target algorithm.
+This example shows how to incorporate evaluated configurations into SMAC.
 """
 
+import copy
+import time
 import numpy as np
 from ConfigSpace import Categorical, Configuration, ConfigurationSpace, Float, Integer
 from ConfigSpace.conditions import InCondition
@@ -17,6 +14,7 @@ from sklearn import datasets, svm
 from sklearn.model_selection import cross_val_score
 
 from smac import HyperparameterFacade, Scenario
+from smac.runhistory import RunHistory, StatusType
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -72,28 +70,41 @@ if __name__ == "__main__":
     classifier = SVM()
     configspace = classifier.configspace
     default_config = configspace.get_default_configuration()
+    seed = 99
 
     # Example call of the target algorithm
     default_value = classifier.train(default_config)
     print(f"Default value: {round(default_value, 2)}")
 
+    # Now we create an empty runhistory to add random configurations with our values to start with
+    runhistory = RunHistory()
+    for config in configspace.sample_configuration(10):
+        start_time = time.time()
+        cost = classifier.train(copy.deepcopy(config), seed)
+        train_time = time.time() - start_time
+        runhistory.add(config, cost=cost, time=train_time, seed=seed, status=StatusType.SUCCESS)
+
     # Next, we create an object, holding general information about the run
     scenario = Scenario(
         configspace,
-        n_trials=50,  # We want 50 target algorithm evaluations
+        # We want to run at least 50 trials (combination of config and seed) on top of what's already in the runhistory
+        n_trials=200,
     )
 
-    # We want to run only five initial configurations
-    initial_design = HyperparameterFacade.get_initial_design(scenario, n_configs=5)
+    intensifier = HyperparameterFacade.get_intensifier(
+        scenario,
+        max_config_calls=2,  # We only want to use two seeds per config
+    )
 
-    # Now we use SMAC to find the best hyperparameters
+    # We use the hyperparameter facade to run SMAC
     smac = HyperparameterFacade(
         scenario,
         classifier.train,
-        initial_design=initial_design,
-        overwrite=False,  # If the run exists, we do not overwrite it
+        intensifier=intensifier,
+        runhistory=runhistory,
+        overwrite=True,  # Disables to continue the run
     )
-
     incumbent = smac.optimize()
+
     incumbent_value = classifier.train(incumbent)
     print(f"Incumbent value: {round(incumbent_value, 2)}")

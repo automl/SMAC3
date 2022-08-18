@@ -104,7 +104,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         # Store whether a datapoint is "external", which means it was read from
         # a JSON file. Can be chosen to not be written to disk
         self.external: dict[RunKey, DataOrigin] = {}
-        self.num_obj: int = -1  # type: int
+        self.n_objectives: int = -1
         self.objective_bounds: list[tuple[float, float]] = []
 
     def __contains__(self, k: object) -> bool:
@@ -162,13 +162,13 @@ class RunHistory(Mapping[RunKey, RunValue]):
                 if not isinstance(costs, Iterable):
                     costs = [costs]
 
-                assert len(costs) == self.num_obj
+                assert len(costs) == self.n_objectives
                 all_costs.append(costs)
 
         all_costs = np.array(all_costs, dtype=float)  # type: ignore[assignment]
 
         if len(all_costs) == 0:
-            self.objective_bounds = [(np.inf, -np.inf)] * self.num_obj
+            self.objective_bounds = [(np.inf, -np.inf)] * self.n_objectives
             return
 
         min_values = np.min(all_costs, axis=0)
@@ -280,7 +280,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         budget: float = 0.0,
         starttime: float = 0.0,
         endtime: float = 0.0,
-        additional_info: dict[str, Any] | None = None,
+        additional_info: dict[str, Any] = {},
         origin: DataOrigin = DataOrigin.INTERNAL,
         force_update: bool = False,
     ) -> None:
@@ -325,7 +325,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         # Squeeze is important to reduce arrays with one element
         # to scalars.
         cost_array = np.asarray(cost).squeeze()
-        num_obj = np.size(cost_array)
+        n_objectives = np.size(cost_array)
 
         # Get the config id
         config_id_tmp = self.config_ids.get(config)
@@ -337,17 +337,17 @@ class RunHistory(Mapping[RunKey, RunValue]):
         else:
             config_id = cast(int, config_id_tmp)
 
-        if self.num_obj == -1:
-            self.num_obj = num_obj
-        elif self.num_obj != num_obj:
+        if self.n_objectives == -1:
+            self.n_objectives = n_objectives
+        elif self.n_objectives != n_objectives:
             raise ValueError(
-                f"Cost is not of the same length ({num_obj}) as the number " f"of objectives ({self.num_obj})"
+                f"Cost is not of the same length ({n_objectives}) as the number " f"of objectives ({self.n_objectives})"
             )
 
         # Let's always work with floats; Makes it easier to deal with later on
         # array.tolist() returns a scalar if the array has one element.
         c = cost_array.tolist()
-        if self.num_obj == 1:
+        if self.n_objectives == 1:
             c = float(c)
         else:
             c = [float(i) for i in c]
@@ -382,7 +382,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         #    # overwrite capped runs with uncapped runs
         #    self._add(k, v, status, origin)
         # elif status == StatusType.CAPPED and self.data[k].status == StatusType.CAPPED:
-        #    if self.num_obj > 1:
+        #    if self.n_objectives > 1:
         #        raise RuntimeError("Not supported yet.")
         #
         #    # Overwrite if censored with a larger cutoff
@@ -427,9 +427,9 @@ class RunHistory(Mapping[RunKey, RunValue]):
         config_id = self.config_ids[config]
         n_runs = self.num_runs_per_config.get(config_id, 0)
 
-        if self.num_obj > 1:
+        if self.n_objectives > 1:
             costs = np.array(cost)
-            old_costs = self._cost_per_config.get(config_id, np.array([0.0 for _ in range(self.num_obj)]))
+            old_costs = self._cost_per_config.get(config_id, np.array([0.0 for _ in range(self.n_objectives)]))
             old_costs = np.array(old_costs)
 
             new_costs = ((old_costs * n_runs) + costs) / (n_runs + 1)  # type: ignore
@@ -459,7 +459,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         # For example, _cost_per_config always holds the value on the highest budget
         cost = self._cost_per_config.get(config_id, np.nan)  # type: ignore[arg-type] # noqa F821
 
-        if self.num_obj > 1:
+        if self.n_objectives > 1:
             assert type(cost) == list
             # We have to normalize the costs here
             costs = normalize_costs(cost, self.objective_bounds)
@@ -467,6 +467,21 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
         assert type(cost) == float
         return float(cost)
+
+    def get_configs(self) -> list[Configuration]:
+        return list(self.config_ids.keys())
+
+    def get_incumbent(self) -> Configuration | None:
+        """Returns the incumbent configuration calculated by `get_cost`."""
+        incumbent = None
+        lowest_cost = np.inf
+        for config in self.config_ids.keys():
+            cost = self.get_cost(config)
+            if cost < lowest_cost:
+                incumbent = config
+                lowest_cost = cost
+
+        return incumbent
 
     def get_min_cost(self, config: Configuration) -> float:
         """Returns the lowest empirical cost for a configuration, across all runs (budgets)
@@ -486,7 +501,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         config_id = self.config_ids.get(config)
         cost = self._min_cost_per_config.get(config_id, np.nan)  # type: ignore[arg-type] # noqa F821
 
-        if self.num_obj > 1:
+        if self.n_objectives > 1:
             assert type(cost) == list
             costs = normalize_costs(cost, self.objective_bounds)
 
@@ -524,7 +539,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         """
         costs = self._cost(config, instance_seed_budget_keys)
         if costs:
-            if self.num_obj > 1:
+            if self.n_objectives > 1:
                 # Each objective is averaged separately
                 # [[100, 200], [0, 0]] -> [50, 100]
                 averaged_costs = np.mean(costs, axis=0).tolist()
@@ -568,7 +583,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         """
         costs = self._cost(config, instance_seed_budget_keys)
         if costs:
-            if self.num_obj > 1:
+            if self.n_objectives > 1:
                 # Each objective is summed separately
                 # [[100, 200], [20, 10]] -> [120, 210]
                 summed_costs = np.sum(costs, axis=0).tolist()
@@ -611,7 +626,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         """
         costs = self._cost(config, instance_seed_budget_keys)
         if costs:
-            if self.num_obj > 1:
+            if self.n_objectives > 1:
                 # Each objective is viewed separately
                 # [[100, 200], [20, 500]] -> [20, 200]
                 min_costs = np.min(costs, axis=0).tolist()
@@ -752,30 +767,29 @@ class RunHistory(Mapping[RunKey, RunValue]):
         save_external : bool
             Whether to save external data in the runhistory file.
         """
-        data = [
-            (
-                [
-                    int(k.config_id),
-                    str(k.instance) if k.instance is not None else None,
-                    int(k.seed),
-                    float(k.budget) if k.budget is not None else 0,
-                ],
-                [v.cost, v.time, v.status, v.starttime, v.endtime, v.additional_info],
-            )
-            for k, v in self.data.items()
-            if save_external or self.external[k] == DataOrigin.INTERNAL
-        ]
+        data = []
+        for k, v in self.data.items():
+            if save_external or self.external[k] == DataOrigin.INTERNAL:
+                data += [
+                    (
+                        int(k.config_id),
+                        str(k.instance) if k.instance is not None else None,
+                        int(k.seed),
+                        float(k.budget) if k.budget is not None else 0,
+                        v.cost,
+                        v.time,
+                        v.status,
+                        v.starttime,
+                        v.endtime,
+                        v.additional_info,
+                    )
+                ]
 
-        config_ids_to_serialize = set([entry[0][0] for entry in data])
+        config_ids_to_serialize = set([entry[0] for entry in data])
         configs = {
             id_: conf.get_dictionary() for id_, conf in self.ids_config.items() if id_ in config_ids_to_serialize
         }
-
-        config_origins = {
-            id_: conf.origin
-            for id_, conf in self.ids_config.items()
-            if (id_ in config_ids_to_serialize and conf.origin is not None)
-        }
+        config_origins = {id_: conf.origin for id_, conf in self.ids_config.items()}
 
         with open(fn, "w") as fp:
             json.dump(
@@ -826,30 +840,31 @@ class RunHistory(Mapping[RunKey, RunValue]):
         self._n_id = len(self.config_ids)
 
         # important to use add method to use all data structure correctly
-        for k, v in all_data["data"]:
-            # Set num_obj first
-            if self.num_obj == -1:
-                if isinstance(v[0], float) or isinstance(v[0], int):
-                    self.num_obj = 1
+        for entry in all_data["data"]:
+            # Set n_objectives first
+            if self.n_objectives == -1:
+                if isinstance(entry[4], float) or isinstance(entry[4], int):
+                    self.n_objectives = 1
                 else:
-                    self.num_obj = len(np.asarray(list(map(float, v[0]))))
+                    self.n_objectives = len(entry[4])
 
-            if self.num_obj == 1:
-                cost: Union[np.ndarray, float] = float(v[0])
+            cost: list[float] | float
+            if self.n_objectives == 1:
+                cost = float(entry[4])
             else:
-                cost: Union[np.ndarray, float] = np.asarray(list(map(float, v[0])))  # type: ignore[no-redef]
+                cost = [float(x) for x in entry[4]]
 
             self.add(
-                config=self.ids_config[int(k[0])],
+                config=self.ids_config[int(entry[0])],
                 cost=cost,
-                time=float(v[1]),
-                status=StatusType(v[2]),
-                instance=k[1],
-                seed=int(k[2]),
-                budget=float(k[3]) if len(k) == 4 else 0,
-                starttime=v[3],
-                endtime=v[4],
-                additional_info=v[5],
+                time=float(entry[5]),
+                status=StatusType(entry[6]),
+                instance=entry[1],
+                seed=int(entry[2]),
+                budget=float(entry[3]),
+                starttime=entry[7],
+                endtime=entry[8],
+                additional_info=entry[9],
             )
 
     def update_from_json(

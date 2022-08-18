@@ -13,14 +13,6 @@ __license__ = "3-clause BSD"
 
 
 @dataclass(frozen=True)
-class RunKey:
-    config_id: int
-    instance: str | None = None
-    seed: int | None = None
-    budget: float = 0.0
-
-
-@dataclass(frozen=True)
 class InstanceSeedKey:
     instance: str
     seed: int
@@ -34,6 +26,14 @@ class InstanceSeedBudgetKey:
 
     def __lt__(self, other: InstanceSeedBudgetKey) -> bool:
         return self.budget < other.budget
+
+
+@dataclass(frozen=True)
+class RunKey:
+    config_id: int
+    instance: str | None = None
+    seed: int | None = None
+    budget: float = 0.0
 
 
 @dataclass(frozen=True)

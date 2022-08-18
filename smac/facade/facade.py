@@ -53,6 +53,7 @@ class Facade:
         random_design: RandomDesign | None = None,
         intensifier: AbstractIntensifier | None = None,
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
+        runhistory: RunHistory | None = None,
         # Level of logging; if path passed: yaml file expected; if none: use default logging from logging.yml
         logging_level: int | Path | None = None,
         callbacks: list[Callback] = [],
@@ -79,12 +80,14 @@ class Facade:
         if intensifier is None:
             intensifier = self.get_intensifier(scenario)
 
-        if multi_objective_algorithm is None:
+        if multi_objective_algorithm is None and scenario.count_objectives() > 1:
             multi_objective_algorithm = self.get_multi_objective_algorithm(scenario)
+
+        if runhistory is None:
+            runhistory = RunHistory()
 
         # Initialize empty stats and runhistory object
         stats = Stats(scenario)
-        runhistory = RunHistory()
 
         # Set the seed for configuration space
         scenario.configspace.seed(scenario.seed)
@@ -92,21 +95,11 @@ class Facade:
         # Prepare the algorithm executer
         runner: Runner
         if callable(target_algorithm):
-            # if isinstance(scenario.objectives, str):
-            #    objectives = [scenario.objectives]
-            # else:
-            #    objectives = scenario.objectives
-
-            # We wrap our algorithm with the AlgorithmExecuter to (potentially) use pynisher
-            # and to catch exceptions
+            # We wrap our algorithm with the AlgorithmExecuter to (potentially) use pynisher and catch exceptions
             runner = TargetAlgorithmRunner(
                 target_algorithm,
                 scenario=scenario,
                 stats=stats,
-                # crash_cost=scenario.crash_cost,
-                # objectives=objectives,
-                # memory_limit=scenario.memory_limit,
-                # algorithm_walltime_limit=scenario.algorithm_walltime_limit,
             )
         elif isinstance(target_algorithm, Runner):
             runner = target_algorithm
@@ -161,9 +154,9 @@ class Facade:
         self._validate()
 
         # Here we actually check whether the run should be continued or not.
-        # More precisely, we update our stats and runhistory object if all kwargs
+        # More precisely, we update our stats and runhistory object if all component arguments
         # and scenario/stats object are the same. For doing so, we create a specific hash.
-        # SMBO recognizes that stats is not empty and hence does not run initial design anymore.
+        # The SMBO object recognizes that stats is not empty and hence does not the run initial design anymore.
         # Since the runhistory is already updated, the model uses previous data directly.
         self._continue(overwrite)
 
@@ -224,6 +217,7 @@ class Facade:
 
                 # We update the runhistory and stats in-place.
                 # Stats use the output directory from the config directly.
+                self.runhistory.reset()
                 self.runhistory.load_json(str(old_runhistory_filename), cs=self.scenario.configspace)
                 self.stats.load()
 
@@ -286,8 +280,13 @@ class Facade:
         return None
 
     def get_meta(self) -> dict[str, dict[str, Any]]:
-        """Generates a hash based on all kwargs of the facade. This is used for determine
+        """Generates a hash based on all components of the facade. This is used for the run name or to determine
         whether a run should be continued or not."""
+
+        multi_objective_algorithm_meta = None
+        if self.multi_objective_algorithm is not None:
+            multi_objective_algorithm_meta = self.multi_objective_algorithm.get_meta()
+
         meta = {
             "facade": {"name": self.__class__.__name__},
             "runner": self.runner.get_meta(),
@@ -297,8 +296,8 @@ class Facade:
             "intensifier": self.intensifier.get_meta(),
             "initial_design": self.initial_design.get_meta(),
             "random_design": self.random_design.get_meta(),
-            "multi_objective_algorithm": self.multi_objective_algorithm.get_meta(),
             "runhistory_encoder": self.runhistory_encoder.get_meta(),
+            "multi_objective_algorithm": multi_objective_algorithm_meta,
         }
 
         return meta
@@ -358,10 +357,10 @@ class Facade:
 
     @staticmethod
     @abstractmethod
-    def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm | None:
+    def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
-    def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:
+    def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
         raise NotImplementedError
