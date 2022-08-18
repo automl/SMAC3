@@ -5,10 +5,10 @@
 
 Computation times
 =================
-**00:02.169** total execution time for **examples_basics** files:
+**00:02.921** total execution time for **examples_basics** files:
 
 +-----------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_basics_synthetic_function.py` (``synthetic_function.py``) | 00:01.153 | 0.0 MB |
+| :ref:`sphx_glr_examples_basics_svm_cv.py` (``svm_cv.py``)                         | 00:01.467 | 0.0 MB |
 +-----------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_basics_svm_cv.py` (``svm_cv.py``)                         | 00:01.016 | 0.0 MB |
+| :ref:`sphx_glr_examples_basics_synthetic_function.py` (``synthetic_function.py``) | 00:01.454 | 0.0 MB |
 +-----------------------------------------------------------------------------------+-----------+--------+

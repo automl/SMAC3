@@ -9,9 +9,21 @@ smac.loop.boing
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      subspace_extraction
+   
    
 
    
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BOinGSMBO
    
    
 

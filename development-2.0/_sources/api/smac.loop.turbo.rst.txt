@@ -13,6 +13,12 @@ smac.loop.turbo
 
    
    
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      TurBOSMBO
+   
    
 
    

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.loop.turbo &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>smac.utils.subspaces.boing_subspace &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -39,8 +39,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.facade" href="smac.facade.html" />
-    <link rel="prev" title="smac.loop.smbo" href="smac.loop.smbo.html" />
+    <link rel="next" title="smac.utils.subspaces.turbo_subspace" href="smac.utils.subspaces.turbo_subspace.html" />
+    <link rel="prev" title="smac.utils.subspaces" href="smac.utils.subspaces.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -202,7 +202,7 @@ style="width: 100%;">
    </i>
   </label>
   <ul class="current">
-   <li class="toctree-l2 current active">
+   <li class="toctree-l2">
     <a class="reference internal" href="smac.loop.html">
      smac.loop
     </a>
@@ -257,7 +257,7 @@ style="width: 100%;">
      smac.configspace
     </a>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 current active">
     <a class="reference internal" href="smac.utils.html">
      smac.utils
     </a>
@@ -330,57 +330,31 @@ style="width: 100%;">
               
               <div>
                 
-  <section id="module-smac.loop.turbo">
-<span id="smac-loop-turbo"></span><h1>smac.loop.turbo<a class="headerlink" href="#module-smac.loop.turbo" title="Permalink to this heading">¶</a></h1>
+  <section id="module-smac.utils.subspaces.boing_subspace">
+<span id="smac-utils-subspaces-boing-subspace"></span><h1>smac.utils.subspaces.boing_subspace<a class="headerlink" href="#module-smac.utils.subspaces.boing_subspace" title="Permalink to this heading">¶</a></h1>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.loop.turbo.TurBOSMBO" title="smac.loop.turbo.TurBOSMBO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TurBOSMBO</span></code></a>([length_init, length_min, ...])</p></td>
-<td><p>Interface to train the EPM and generate next configurations with TurBO:</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.utils.subspaces.boing_subspace.BOinGSubspace" title="smac.utils.subspaces.boing_subspace.BOinGSubspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BOinGSubspace</span></code></a>(config_space, bounds, hps_types)</p></td>
+<td><p>Subspace for BOinG optimizer.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
-<dt class="sig sig-object py" id="smac.loop.turbo.TurBOSMBO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.loop.turbo.</span></span><span class="sig-name descname"><span class="pre">TurBOSMBO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.00390625</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">success_tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">failure_tol_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_init_x_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_candidate_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/loop/turbo.html#TurBOSMBO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.loop.turbo.TurBOSMBO" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.loop.smbo.html#smac.loop.smbo.SMBO" title="smac.loop.smbo.SMBO"><code class="xref py py-class docutils literal notranslate"><span class="pre">SMBO</span></code></a></p>
-<dl class="simple">
-<dt>Interface to train the EPM and generate next configurations with TurBO:</dt><dd><p>D. Eriksson et al. Scalable Global Optimization via Local Bayesian Optimization
-<a class="reference external" href="https://papers.nips.cc/paper/2019/file/6c990b7aca7bc7058f5e98ea909e924b-Paper.pdf">https://papers.nips.cc/paper/2019/file/6c990b7aca7bc7058f5e98ea909e924b-Paper.pdf</a></p>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="smac.utils.subspaces.boing_subspace.BOinGSubspace">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.utils.subspaces.boing_subspace.</span></span><span class="sig-name descname"><span class="pre">BOinGSubspace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hps_types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds_ss_cont=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds_ss_cat=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_local=&lt;class</span> <span class="pre">'smac.model.gaussian_process.gpytorch.GloballyAugmentedLocalGaussianProcess'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_local_kwargs={}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acq_func_local=&lt;class</span> <span class="pre">'smac.acquisition.functions.expected_improvement.EI'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acq_func_local_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_data=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activate_dims=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent_array=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acq_optimizer_local=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acq_optimizer_local_kwargs=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/subspaces/boing_subspace.html#BOinGSubspace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.subspaces.boing_subspace.BOinGSubspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="smac.utils.subspaces.html#smac.utils.subspaces.LocalSubspace" title="smac.utils.subspaces.LocalSubspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">LocalSubspace</span></code></a></p>
+<p>Subspace for BOinG optimizer. Each time we create a new epm model for the subspace and optimize to maximize the
+acquisition function inside this subregion.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>length_init</strong> (<em>float</em>) – Initialized length after restarting</p></li>
-<li><p><strong>length_min</strong> (<em>float</em>) – If the subspace length is smaller than length_min, TurBO will restart</p></li>
-<li><p><strong>length_max</strong> (<em>float</em>) – The maximum length of subspace</p></li>
-<li><p><strong>success_tol</strong> (<em>int</em>) – Number of successful suggestions (suggested points become incumbent) required for expanding subspace</p></li>
-<li><p><strong>failure_tol_min</strong> (<em>int</em>) – The minimum number of failure suggestions (suggested points fails to become incumbent) required for shrinking
-subspace</p></li>
-<li><p><strong>n_init_x_params</strong> (<em>int</em>) – how many configurations will be used at most in the initial design (X*D). Used for restarting the subspace</p></li>
-<li><p><strong>n_candidate_max</strong> (<em>int</em>) – Maximal Number of points used as candidates</p></li>
-<li><p><strong>args</strong> – additional arguments for initialize base SMBO object</p></li>
-<li><p><strong>kwargs</strong> – additional arguments for initialize base SMBO object</p></li>
+<li><p><strong>acq_optimizer_local</strong> (<em>Optional</em><em>[</em><em>AcquisitionFunctionMaximizer</em><em>]</em>) – Subspace optimizer, used to give a set of suggested points. Unlike the optimizer implemented in epm_chooser,
+this optimizer does not require runhistory objects.</p></li>
+<li><p><strong>acq_optimizer_local_kwargs</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]) – Parameters for acq_optimizer_local</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.loop.turbo.TurBOSMBO.ask">
-<span class="sig-name descname"><span class="pre">ask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/loop/turbo.html#TurBOSMBO.ask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.loop.turbo.TurBOSMBO.ask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Choose next candidate solution with TuRBO</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>incumbent_value</strong> (<em>float</em>) – Cost value of incumbent configuration (required for acquisition function);
-If not given, it will be inferred from runhistory or predicted;
-if not given and runhistory is empty, it will raise a ValueError.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Iterator</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 </section>
@@ -391,17 +365,17 @@ if not given and runhistory is empty, it will raise a ValueError.</p>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.loop.smbo.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.utils.subspaces.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.loop.smbo</p>
+            <p class="prev-next-title">smac.utils.subspaces</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.facade.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.utils.subspaces.turbo_subspace.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.facade</p>
+        <p class="prev-next-title">smac.utils.subspaces.turbo_subspace</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

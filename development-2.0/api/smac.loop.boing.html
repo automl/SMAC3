@@ -332,6 +332,128 @@ style="width: 100%;">
                 
   <section id="module-smac.loop.boing">
 <span id="smac-loop-boing"></span><h1>smac.loop.boing<a class="headerlink" href="#module-smac.loop.boing" title="Permalink to this heading">¶</a></h1>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.loop.boing.subspace_extraction" title="smac.loop.boing.subspace_extraction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subspace_extraction</span></code></a>(X, challenger, model, ...)</p></td>
+<td><p>Extract a subspace that contains at least num_min points but no more than num_max points</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.loop.boing.BOinGSMBO" title="smac.loop.boing.BOinGSMBO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BOinGSMBO</span></code></a>([model_local, ...])</p></td>
+<td><p>Interface to train the EPM and generate next configurations with both global and local models.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="smac.loop.boing.BOinGSMBO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.loop.boing.</span></span><span class="sig-name descname"><span class="pre">BOinGSMBO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_local=&lt;class</span> <span class="pre">'smac.model.gaussian_process.gpytorch.GloballyAugmentedLocalGaussianProcess'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_func_local=&lt;class</span> <span class="pre">'smac.acquisition.functions.expected_improvement.EI'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_local_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_func_local_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acq_optimizer_local=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acq_optimizer_local_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_configs_local_fracs=0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_configs_local=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_switching=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">turbo_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/loop/boing.html#BOinGSMBO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.loop.boing.BOinGSMBO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="smac.loop.smbo.html#smac.loop.smbo.SMBO" title="smac.loop.smbo.SMBO"><code class="xref py py-class docutils literal notranslate"><span class="pre">SMBO</span></code></a></p>
+<p>Interface to train the EPM and generate next configurations with both global and local models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_local</strong> (<em>Type</em><em>[</em><a class="reference internal" href="smac.model.html#smac.model.BaseModel" title="smac.model.BaseModel"><em>BaseModel</em></a><em>]</em><em>,</em>) – local empirical performance model, used in subspace. Since the subspace might have different amount of
+hyperparameters compared to the search space. We only instantiate them under the subspace.</p></li>
+<li><p><strong>model_local_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>] </em><em>= None</em><em>,</em>) – parameters for initializing a local model</p></li>
+<li><p><strong>acquisition_func_local</strong> (<a class="reference internal" href="smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction" title="smac.acquisition.functions.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a><em> | </em><em>Type</em><em>[</em><a class="reference internal" href="smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction" title="smac.acquisition.functions.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a><em>]</em><em>,</em>) – local acquisition function,  used in subspace</p></li>
+<li><p><strong>acquisition_func_local_kwargs</strong> (<em>Dict</em><em> | </em><em>None = None</em><em>,</em>) – parameters for initializing a local acquisition function optimizer</p></li>
+<li><p><strong>acq_optimizer_local</strong> (<a class="reference internal" href="smac.acquisition.html#smac.acquisition.AbstractAcquisitionOptimizer" title="smac.acquisition.AbstractAcquisitionOptimizer"><em>AbstractAcquisitionOptimizer</em></a><em> | </em><em>None = None</em><em>,</em>) – Optimizer of acquisition function of local models, same as above, since an acquisition function optimizer
+requires</p></li>
+<li><p><strong>acq_optimizer_local_kwargs</strong> (<em>Dict</em><em> | </em><em>None = None</em><em>,</em>) – parameters for the optimizer of acquisition function of local models</p></li>
+<li><p><strong>max_configs_local_fracs</strong> (<em>float</em>) – <p>The maximal number of fractions of samples to be included in the subspace. If the number of samples in the
+subspace is greater than this value and n_min_config_inner, the subspace will be cropped to fit the</p>
+<blockquote>
+<div><p>requirement</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>min_configs_local</strong> (<em>int</em><em> | </em><em>None</em><em>,</em>) – Minimum number of samples included in the inner loop model</p></li>
+<li><p><strong>do_switching</strong> (<em>bool = False</em>) – if we want to switch between turbo and boing or do a pure BOinG search</p></li>
+<li><p><strong>turbo_kwargs</strong> (<em>Dict</em><em> | </em><em>None = None</em>) – parameters for building a turbo optimizer, for details, please refer to smac.loop.turbo</p></li>
+<li><p><strong>args</strong> – additional arguments for initialize base SMBO object</p></li>
+<li><p><strong>kwargs</strong> – additional arguments for initialize base SMBO object</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.loop.boing.BOinGSMBO.ask">
+<span class="sig-name descname"><span class="pre">ask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/loop/boing.html#BOinGSMBO.ask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.loop.boing.BOinGSMBO.ask" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Choose next candidate solution with Bayesian optimization. We use TurBO optimizer or BOinG to suggest</dt><dd><p>the next configuration.</p>
+</dd>
+</dl>
+<p>If we switch local model between TurBO and BOinG, we gradually increase the probability to switch to another
+optimizer if we cannot make further process. (Or if TurBO find a new incumbent, we will switch to BOinG to do
+further exploitation)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterator</span></code>[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.loop.boing.BOinGSMBO.restart_TuRBOinG">
+<span class="sig-name descname"><span class="pre">restart_TuRBOinG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_raw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/loop/boing.html#BOinGSMBO.restart_TuRBOinG"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.loop.boing.BOinGSMBO.restart_TuRBOinG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restart a new TurBO Optimizer, the bounds of the TurBO Optimizer is determined by a RF, we randomly sample 20
+points and extract subspaces that contain at least self.min_configs_local points, and we select the subspace
+with the largest volume to construct a turbo optimizer
+:type X: <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>
+:param X: previous evaluated configurations
+:type X: np.ndarray (N, D)
+:type Y: <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>
+:param Y: performances of previous evaluated configurations (transformed by rh2epm transformer)
+:type Y: np.ndarray (N,)
+:type Y_raw: <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>
+:param Y_raw: performances of previous evaluated configurations (raw values, not transformed)
+:type Y_raw: np.ndarray (N,)
+:type train_model: <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>
+:param train_model: if we retrain the model with the given X and Y
+:type train_model: bool</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="smac.loop.boing.subspace_extraction">
+<span class="sig-prename descclassname"><span class="pre">smac.loop.boing.</span></span><span class="sig-name descname"><span class="pre">subspace_extraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">challenger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cont_dims</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/loop/boing.html#subspace_extraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.loop.boing.subspace_extraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract a subspace that contains at least num_min points but no more than num_max points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em><em> (</em><em>N</em><em>, </em><em>D</em><em>)</em>) – points used to train the model</p></li>
+<li><p><strong>challenger</strong> (<em>np.ndarray</em><em> (</em><em>1</em><em>, </em><em>D</em><em>)</em>) – the challenger where the subspace would grow</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="smac.model.random_forest.html#smac.model.random_forest.RandomForestWithInstances" title="smac.model.random_forest.RandomForestWithInstances"><em>RandomForestWithInstances</em></a>) – a rf model</p></li>
+<li><p><strong>num_min</strong> (<em>int</em>) – minimal number of points to be included in the subspace</p></li>
+<li><p><strong>num_max</strong> (<em>int</em>) – maximal number of points to be included in the subspace</p></li>
+<li><p><strong>bounds</strong> (<em>np.ndarray</em><em>(</em><em>D</em><em>, </em><em>2</em><em>)</em>) – bounds of the entire space, D = D_cat + D_cont</p></li>
+<li><p><strong>cat_dims</strong> (<em>np.ndarray</em><em> (</em><em>D_cat</em><em>)</em>) – categorical dimensions</p></li>
+<li><p><strong>cont_dims</strong> (<em>np.ndarray</em><em>(</em><em>D_cont</em><em>)</em>) – </p></li>
+<li><p><strong>dimensions</strong> (<em>continuous</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>union_bounds_cont</strong> (<em>np.ndarray(D_cont, 2),</em>) – the continuous bounds of the subregion</p></li>
+<li><p><em>union_bounds_cat, List[Tuple],</em> – the categorical bounds of the subregion</p></li>
+<li><p><em>in_ss_dims</em> – indices of the points that lie inside the subregion</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
