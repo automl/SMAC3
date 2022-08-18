@@ -47,6 +47,23 @@ Basics
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example shows how to incorporate evaluated configurations into SMAC.">
+
+.. only:: html
+
+  .. image:: /examples/basics/images/thumb/sphx_glr_custom_configs_thumb.png
+    :alt: Start with Custom Configurations
+
+  :ref:`sphx_glr_examples_basics_custom_configs.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Start with Custom Configurations</div>
+    </div>
+
+
+.. raw:: html
+
     </div>
 
 
@@ -55,4 +72,5 @@ Basics
 
    /examples/basics/synthetic_function
    /examples/basics/svm_cv
+   /examples/basics/custom_configs
 

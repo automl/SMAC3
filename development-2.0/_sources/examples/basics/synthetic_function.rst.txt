@@ -39,13 +39,13 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
 
     Default value: 16916.0
     [INFO][initial_design.py:85] Ignoring `configs` and `n_configs` since `n_configs_per_hyperparameter` is given.
-    [INFO][base_smbo.py:144] Running initial design...
+    [INFO][base_smbo.py:146] Running initial design...
     [INFO][initial_design.py:155] Retrieving 20 configurations for the initial design.
-    [INFO][intensification.py:242] No incumbent provided in the first run. Sampling a new challenger...
-    [INFO][intensification.py:441] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-    [INFO][intensification.py:601] Updated estimated cost of incumbent on 1 runs: 1102.7878
-    [INFO][intensification.py:601] Updated estimated cost of incumbent on 2 runs: 1102.7878
-    [INFO][intensification.py:601] Updated estimated cost of incumbent on 3 runs: 1102.7878
+    [INFO][intensification.py:244] No incumbent provided in the first run. Sampling a new challenger...
+    [INFO][intensification.py:443] First run and no incumbent provided. Challenger is assumed to be the incumbent.
+    [INFO][intensification.py:603] Updated estimated cost of incumbent on 1 runs: 1102.7878
+    [INFO][intensification.py:603] Updated estimated cost of incumbent on 2 runs: 1102.7878
+    [INFO][intensification.py:603] Updated estimated cost of incumbent on 3 runs: 1102.7878
     [INFO][abstract_intensifier.py:345] Challenger (5.4656) is better than incumbent (1102.7878) on 3 runs.
     [INFO][abstract_intensifier.py:365] Changes in incumbent:
     [INFO][abstract_intensifier.py:368] --- x0: -0.9968221839517355 -> 0.03135360777378082
@@ -54,8 +54,8 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
     [INFO][abstract_intensifier.py:365] Changes in incumbent:
     [INFO][abstract_intensifier.py:368] --- x0: 0.03135360777378082 -> 3.1521441831066923
     [INFO][abstract_intensifier.py:368] --- x1: -0.21179260686039925 -> 9.991027821936083
-    [INFO][facade.py:324] Final Incumbent: {'x0': 3.1521441831066923, 'x1': 9.991027821936083}
-    [INFO][facade.py:325] Estimated cost: 4.934388186264153
+    [INFO][facade.py:323] Final Incumbent: {'x0': 3.1521441831066923, 'x1': 9.991027821936083}
+    [INFO][facade.py:324] Estimated cost: 4.934388186264153
     Incumbent value: 4.93
 
 
@@ -119,7 +119,7 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.918 seconds)
+   **Total running time of the script:** ( 0 minutes  0.881 seconds)
 
 
 .. _sphx_glr_download_examples_basics_synthetic_function.py:

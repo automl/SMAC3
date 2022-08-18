@@ -328,14 +328,6 @@ style="width: 100%;">
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<div class="viewcode-block" id="RunKey"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.RunKey">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">RunKey</span><span class="p">:</span>
-    <span class="n">config_id</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span></div>
-
-
 <div class="viewcode-block" id="InstanceSeedKey"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.InstanceSeedKey">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">InstanceSeedKey</span><span class="p">:</span>
     <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span>
@@ -350,6 +342,14 @@ style="width: 100%;">
 
     <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">InstanceSeedBudgetKey</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">budget</span></div>
+
+
+<div class="viewcode-block" id="RunKey"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.RunKey">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">RunKey</span><span class="p">:</span>
+    <span class="n">config_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span></div>
 
 
 <div class="viewcode-block" id="RunValue"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.RunValue">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

@@ -403,11 +403,13 @@ style="width: 100%;">
 <span class="sd">    run_limit : int</span>
 <span class="sd">        Maximum number of target algorithm runs per call to intensify.</span>
 <span class="sd">    max_config_calls : int</span>
-<span class="sd">        Maximum number of runs per config (summed over all calls to</span>
-<span class="sd">        intensifiy).</span>
+<span class="sd">        Maximum number of runs per config (summed over all calls to intensifiy). Each passed and evaluated instance and</span>
+<span class="sd">        seed combination is considered a run. Seeds are drawn uniformly at random if the target algorithm is</span>
+<span class="sd">        non-deterministic. Otherwise, the same seed is used.</span>
 <span class="sd">    min_config_calls : int</span>
-<span class="sd">        Minimum number of run per config (summed over all calls to</span>
-<span class="sd">        intensify).</span>
+<span class="sd">        Minimum number of run per config (summed over all calls to intensify). Each passed and evaluated instance and</span>
+<span class="sd">        seed combination is considered a run. Seeds are drawn uniformly at random if the target algorithm is</span>
+<span class="sd">        non-deterministic. Otherwise, the same seed is used.</span>
 <span class="sd">    min_challenger: int</span>
 <span class="sd">        minimal number of challengers to be considered</span>
 <span class="sd">        (even if time_bound is exhausted earlier)</span>
@@ -789,7 +791,7 @@ style="width: 100%;">
             <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_challenger_run</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_run</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_limit</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Maximum #runs for intensification reached&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Maximum number of runs for intensification reached.&quot;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_next_iteration</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_target_algorithm_time_bound</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">elapsed_time</span> <span class="o">-</span> <span class="n">time_bound</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>

@@ -541,10 +541,12 @@ can sometimes prevent over-tuning</p></li>
 <li><p><strong>use_target_algorithm_time_bound</strong> (<em>bool</em><em>,</em>) – if true, trust time reported by the target algorithms instead of
 measuring the wallclock time for limiting the time of intensification</p></li>
 <li><p><strong>run_limit</strong> (<em>int</em>) – Maximum number of target algorithm runs per call to intensify.</p></li>
-<li><p><strong>max_config_calls</strong> (<em>int</em>) – Maximum number of runs per config (summed over all calls to
-intensifiy).</p></li>
-<li><p><strong>min_config_calls</strong> (<em>int</em>) – Minimum number of run per config (summed over all calls to
-intensify).</p></li>
+<li><p><strong>max_config_calls</strong> (<em>int</em>) – Maximum number of runs per config (summed over all calls to intensifiy). Each passed and evaluated instance and
+seed combination is considered a run. Seeds are drawn uniformly at random if the target algorithm is
+non-deterministic. Otherwise, the same seed is used.</p></li>
+<li><p><strong>min_config_calls</strong> (<em>int</em>) – Minimum number of run per config (summed over all calls to intensify). Each passed and evaluated instance and
+seed combination is considered a run. Seeds are drawn uniformly at random if the target algorithm is
+non-deterministic. Otherwise, the same seed is used.</p></li>
 <li><p><strong>min_challenger</strong> (<em>int</em>) – minimal number of challengers to be considered
 (even if time_bound is exhausted earlier)</p></li>
 </ul>
