@@ -50,7 +50,7 @@ class SMBO(BaseSMBO):
 
         logger.debug("Search for next configuration...")
         X, Y, X_configurations = self._collect_data()
-        previous_configs = self.runhistory.get_all_configs()
+        previous_configs = self.runhistory.get_configs()
 
         if X.shape[0] == 0:
             # Only return a single point to avoid an overly high number of
@@ -178,7 +178,7 @@ class SMBO(BaseSMBO):
         )
 
     def _get_evaluated_configs(self) -> list[Configuration]:
-        return self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
+        return self.runhistory.get_configs_per_budget(budget_subset=self.currently_considered_budgets)
 
     def _get_x_best(self, predict: bool, X: np.ndarray) -> tuple[np.ndarray, float]:
         """Get value, configuration, and array representation of the "best" configuration.
@@ -214,7 +214,7 @@ class SMBO(BaseSMBO):
             best_observation = costs[0][0]
             # won't need log(y) if EPM was already trained on log(y)
         else:
-            all_configs = self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
+            all_configs = self.runhistory.get_configs_per_budget(budget_subset=self.currently_considered_budgets)
             x_best = self.incumbent
             x_best_array = convert_configurations_to_array(all_configs)
             best_observation = self.runhistory.get_cost(x_best)

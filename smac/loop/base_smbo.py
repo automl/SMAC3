@@ -488,4 +488,4 @@ class BaseSMBO:
 
         path = self.scenario.output_directory
         if path is not None:
-            self.runhistory.save_json(fn=str(path / "runhistory.json"))
+            self.runhistory.save_json(str(path / "runhistory.json"))

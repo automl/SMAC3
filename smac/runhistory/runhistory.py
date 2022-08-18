@@ -697,9 +697,9 @@ class RunHistory(Mapping[RunKey, RunValue]):
         instance_seed_budget_pairs : list<tuples of instance, seed, budget>
         """
         config_id = self.config_ids.get(config)
-        assert isinstance(config_id, int)
-
-        runs = self._config_id_to_inst_seed_budget.get(config_id, {}).copy()
+        runs = {}
+        if config_id is not None:
+            runs = self._config_id_to_inst_seed_budget[config_id].copy()
 
         # Select only the max budget run if specified
         if only_max_observed_budget:

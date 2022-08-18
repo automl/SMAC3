@@ -232,7 +232,7 @@ class AbstractIntensifier:
         """
         start_time = time.time()
 
-        used_configs = set(runhistory.get_all_configs())
+        used_configs = set(runhistory.get_configs())
 
         chall_gen: Iterator[Optional[Configuration]]
         if challengers:

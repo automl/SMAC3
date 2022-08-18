@@ -218,7 +218,7 @@ class Facade:
                 # We update the runhistory and stats in-place.
                 # Stats use the output directory from the config directly.
                 self.runhistory.reset()
-                self.runhistory.load_json(str(old_runhistory_filename), cs=self.scenario.configspace)
+                self.runhistory.load_json(str(old_runhistory_filename), configspace=self.scenario.configspace)
                 self.stats.load()
 
                 # Reset runhistory and stats if first run was not successful
@@ -248,7 +248,7 @@ class Facade:
                     # However, we should ensure that we use the same configspace.
                     assert self.scenario.configspace == old_scenario.configspace
 
-                    self.runhistory.load_json(str(old_runhistory_filename), cs=self.scenario.configspace)
+                    self.runhistory.load_json(str(old_runhistory_filename), configspace=self.scenario.configspace)
                     self.stats.load()
                 else:
                     raise RuntimeError("SMAC run was stopped by the user.")
