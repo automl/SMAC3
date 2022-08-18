@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.facade.facade &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>smac.facade.boing_facade &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -39,8 +39,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.facade.hyperparameter_facade" href="smac.facade.hyperparameter_facade.html" />
-    <link rel="prev" title="smac.facade.boing_facade" href="smac.facade.boing_facade.html" />
+    <link rel="next" title="smac.facade.facade" href="smac.facade.facade.html" />
+    <link rel="prev" title="smac.facade.blackbox_facade" href="smac.facade.blackbox_facade.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -330,16 +330,45 @@ style="width: 100%;">
               
               <div>
                 
-  <section id="module-smac.facade.facade">
-<span id="smac-facade-facade"></span><h1>smac.facade.facade<a class="headerlink" href="#module-smac.facade.facade" title="Permalink to this heading">¶</a></h1>
+  <section id="module-smac.facade.boing_facade">
+<span id="smac-facade-boing-facade"></span><h1>smac.facade.boing_facade<a class="headerlink" href="#module-smac.facade.boing_facade" title="Permalink to this heading">¶</a></h1>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Facade</span></code>(scenario, target_algorithm, *[, ...])</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.facade.boing_facade.BOinGFacade" title="smac.facade.boing_facade.BOinGFacade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BOinGFacade</span></code></a>(scenario, target_algorithm, *[, ...])</p></td>
+<td><p>SMAC wrapper for BO inside Grove(BOinG):</p></td>
 </tr>
 </tbody>
 </table>
+<dl class="py class">
+<dt class="sig sig-object py" id="smac.facade.boing_facade.BOinGFacade">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.boing_facade.</span></span><span class="sig-name descname"><span class="pre">BOinGFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_algorithm</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/boing_facade.html#BOinGFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.boing_facade.BOinGFacade" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">HyperparameterFacade</span></code></p>
+<dl class="simple">
+<dt>SMAC wrapper for BO inside Grove(BOinG):</dt><dd><p>Deng and Lindauer, Searching in the Forest for Local Bayesian Optimization
+<a class="reference external" href="https://arxiv.org/abs/2111.05834">https://arxiv.org/abs/2111.05834</a></p>
+</dd>
+</dl>
+<p>BOiNG is a two-stages optimizer: at the first stage, the global optimizer extracts the global optimum with a random
+forest (RF) model. Then in the second stage, the optimizer constructs a local model in the vicinity of the
+configuration suggested by the global surrogate model.</p>
+<p>Its Hyperparameter settings follow the implementation from smac.facade.smac_bb_facade.SMAC4BB:
+Hyperparameters are chosen according to the best configuration for Gaussian process maximum likelihood found in
+“Towards Assessing the Impact of Bayesian Optimization’s Own Hyperparameters” by Lindauer et al., presented at the
+DSO workshop 2019 (<a class="reference external" href="https://arxiv.org/abs/1908.06674">https://arxiv.org/abs/1908.06674</a>).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.facade.boing_facade.BOinGFacade.get_lgpga_local_components">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_lgpga_local_components</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/boing_facade.html#BOinGFacade.get_lgpga_local_components"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.boing_facade.BOinGFacade.get_lgpga_local_components" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function to construct the required components that could be implemented to construct a LGPGA model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -348,17 +377,17 @@ style="width: 100%;">
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.facade.boing_facade.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.facade.blackbox_facade.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.facade.boing_facade</p>
+            <p class="prev-next-title">smac.facade.blackbox_facade</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.facade.hyperparameter_facade.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.facade.facade.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.facade.hyperparameter_facade</p>
+        <p class="prev-next-title">smac.facade.facade</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
