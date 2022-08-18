@@ -103,10 +103,7 @@ class RandomFacade(Facade):
         return ProbabilityConfigurationChooser(prob=random_probability, seed=scenario.seed)
 
     @staticmethod
-    def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm | None:
-        if len(scenario.objectives) <= 1:
-            return None
-
+    def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
         return MeanAggregationStrategy(scenario.seed)
 
     @staticmethod

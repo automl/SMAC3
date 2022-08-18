@@ -87,11 +87,13 @@ class Intensifier(AbstractIntensifier):
     run_limit : int
         Maximum number of target algorithm runs per call to intensify.
     max_config_calls : int
-        Maximum number of runs per config (summed over all calls to
-        intensifiy).
+        Maximum number of runs per config (summed over all calls to intensifiy). Each passed and evaluated instance and
+        seed combination is considered a run. Seeds are drawn uniformly at random if the target algorithm is
+        non-deterministic. Otherwise, the same seed is used.
     min_config_calls : int
-        Minimum number of run per config (summed over all calls to
-        intensify).
+        Minimum number of run per config (summed over all calls to intensify). Each passed and evaluated instance and
+        seed combination is considered a run. Seeds are drawn uniformly at random if the target algorithm is
+        non-deterministic. Otherwise, the same seed is used.
     min_challenger: int
         minimal number of challengers to be considered
         (even if time_bound is exhausted earlier)
@@ -473,7 +475,7 @@ class Intensifier(AbstractIntensifier):
             and self.num_challenger_run > 0
         ):
             if self.num_run > self.run_limit:
-                logger.debug("Maximum #runs for intensification reached")
+                logger.debug("Maximum number of runs for intensification reached.")
                 self._next_iteration()
 
             if not self.use_target_algorithm_time_bound and self.elapsed_time - time_bound >= 0:

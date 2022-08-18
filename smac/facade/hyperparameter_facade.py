@@ -115,10 +115,7 @@ class HyperparameterFacade(Facade):
         return ProbabilityRandomDesign(probability=probability)
 
     @staticmethod
-    def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm | None:
-        if len(scenario.objectives) <= 1:
-            return None
-
+    def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
         return MeanAggregationStrategy(scenario.seed)
 
     @staticmethod

@@ -44,9 +44,3 @@ class MultiFidelityFacade(HyperparameterFacade):
             n_configs_per_hyperparameter=n_configs_per_hyperparamter,
             max_config_ratio=max_config_ratio,
         )
-
-    @staticmethod
-    def get_configuration_chooser(scenario: Scenario) -> ConfigurationChooser:
-        # MultiFidelityFacade requires at least D+1 number of samples to build a model
-        min_samples_model = len(scenario.configspace.get_hyperparameters()) + 1
-        return ConfigurationChooser(min_samples_model=min_samples_model)
