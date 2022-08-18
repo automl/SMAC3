@@ -20,7 +20,7 @@ logger = get_logger(__name__)
 @dataclass(frozen=True)
 class Scenario:
     """
-    The scenario manages enviroment variables and therefore gives context in which frame the optimization is performed.
+    The scenario manages environment variables and therefore gives context in which frame the optimization is performed.
 
     Parameters
     ----------
@@ -33,7 +33,8 @@ class Scenario:
         The directory in which to save the output. The files are saved in `./output_directory/name/seed`.
     deterministic : bool, defaults to False
         If deterministic is set to true, only one seed is passed to the target algorithm.
-        Otherwise, multiple seeds are passed to the target algorithm to ensure generalization.
+        Otherwise, multiple seeds (if n_seeds of the intensifier is greater than 1) are passed
+        to the target algorithm to ensure generalization.
     objective : str | list[str] | None, defaults to "cost"
         The objective(s) to optimize. This argument is required for multi-objective optimization.
     crash_cost : float | list[float], defaults to np.inf
@@ -48,10 +49,10 @@ class Scenario:
         The maximum CPU time in seconds that SMAC is allowed to run.
     trial_walltime_limit : float | None, defaults to None
         The maximum time in seconds that a trial is allowed to run. If not specified,
-        no contraints are enforced. Ohterwise, the process will be spawned by pynisher.
+        no constraints are enforced. Otherwise, the process will be spawned by pynisher.
     trial_memory_limit : int | None, defaults to None
         The maximum memory in MB that a trial is allowed to use. If not specified,
-        no contraints are enforced. Otherwise, the process will be spawned by pynisher.
+        no constraints are enforced. Otherwise, the process will be spawned by pynisher.
     n_trials : int, defaults to 100
         The maximum number of trials (combination of configuration, seed, budget, and instance, depending on the task)
         to run.
