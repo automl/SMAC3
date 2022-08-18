@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, Type, Union
+from typing import Dict, Type
 
 import numpy as np
 from botorch.models.kernels.categorical import CategoricalKernel
@@ -11,16 +11,14 @@ from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
 from smac.acquisition import AbstractAcquisitionOptimizer, LocalAndSortedRandomSearch
 from smac.acquisition.functions import EI, AbstractAcquisitionFunction
-from smac.random_design.boing_chooser import BOinGConfigurationChooser
-from smac.random_design.random_design import ProbabilityConfigurationChooser
+from smac.loop.boing import BOinGSMBO
+from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.facade.hyperparameter_facade import HyperparameterFacade
 from smac.model.base_model import BaseModel
-from smac.model.gaussian_process.augmented_local_gaussian_process import (
-    GloballyAugmentedLocalGaussianProcess,
-)
+from smac.model.gaussian_process.gpytorch import GloballyAugmentedLocalGaussianProcess
 from smac.runhistory.encoder.boing_encoder import (
-    RunHistory2EPM4CostWithRaw,
-    RunHistory2EPM4ScaledLogCostWithRaw,
+    RunHistoryRawEncoder,
+    RunHistoryLogScaledEncoder,
 )
 from smac.scenario import Scenario
 
@@ -42,8 +40,8 @@ class BOinGFacade(HyperparameterFacade):
     """
 
     @staticmethod
-    def get_runhistory_encoder(scenario: Scenario) -> RunHistory2EPM4CostWithRaw:
-        transformer = RunHistory2EPM4ScaledLogCostWithRaw(
+    def get_runhistory_encoder(scenario: Scenario) -> RunHistoryRawEncoder:
+        transformer = RunHistoryLogScaledEncoder(
             scenario=scenario,
             n_params=len(scenario.configspace.get_hyperparameters()),
             scale_percentage=5,
@@ -54,11 +52,9 @@ class BOinGFacade(HyperparameterFacade):
 
     @staticmethod
     def get_random_design(
-        scenario: Scenario,
-        *,
-        probability: float = 0.08447232371720552,
-    ) -> ProbabilityConfigurationChooser:
-        return ProbabilityConfigurationChooser(prob=probability)
+        scenario: Scenario, *, random_probability: float = 0.08447232371720552
+    ) -> ProbabilityRandomDesign:
+        return ProbabilityRandomDesign(seed=scenario.seed, probability=random_probability)
 
     @staticmethod
     def get_acquisition_optimizer(
@@ -75,21 +71,19 @@ class BOinGFacade(HyperparameterFacade):
         )
         return optimizer
 
-    @staticmethod
-    def get_configuration_chooser(
-        predict_x_best: bool = True,
-        min_samples_model: int = 1,
-        model_local: Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
-        model_local_kwargs: Dict | None = None,
-        acquisition_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = EI,
-        acquisition_func_local_kwargs: Dict | None = None,
-        acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
-        acq_optimizer_local_kwargs: Dict | None = None,
-        max_configs_local_fracs: float = 0.5,
-        min_configs_local: int | None = None,
-        do_switching: bool = False,
-        turbo_kwargs: Dict | None = None,
-    ):
+    def _init_optimizer(self,
+                        min_samples_model: int = 1,
+                        model_local: Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
+                        model_local_kwargs: Dict | None = None,
+                        acquisition_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
+                        acquisition_func_local_kwargs: Dict | None = None,
+                        acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
+                        acq_optimizer_local_kwargs: Dict | None = None,
+                        max_configs_local_fracs: float = 0.5,
+                        min_configs_local: int | None = None,
+                        do_switching: bool = False,
+                        turbo_kwargs: Dict | None = None,
+                        ) -> None:
         """
         Parameters
         ----------
@@ -120,8 +114,19 @@ class BOinGFacade(HyperparameterFacade):
         if model_local_kwargs is None and model_local.__name__ == "GloballyAugmentedLocalGaussianProcess":
             model_local_kwargs = BOinGFacade.get_lgpga_local_components()
 
-        return BOinGConfigurationChooser(
-            predict_x_best=predict_x_best,
+        self.optimizer = BOinGSMBO(
+            scenario=self.scenario,
+            stats=self.stats,
+            runner=self.runner,
+            initial_design=self.initial_design,
+            runhistory=self.runhistory,
+            runhistory_encoder=self.runhistory_encoder,
+            intensifier=self.intensifier,
+            model=self.model,
+            acquisition_function=self.acquisition_function,
+            acquisition_optimizer=self.acquisition_optimizer,
+            random_design=self.random_design,
+            seed=self.seed,
             min_samples_model=min_samples_model,
             model_local=model_local,
             model_local_kwargs=model_local_kwargs,
@@ -131,6 +136,7 @@ class BOinGFacade(HyperparameterFacade):
             min_configs_local=min_configs_local,
             do_switching=do_switching,
             turbo_kwargs=turbo_kwargs,
+
         )
 
     @staticmethod
