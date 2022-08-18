@@ -14,15 +14,15 @@ __license__ = "3-clause BSD"
 
 @dataclass(frozen=True)
 class InstanceSeedKey:
-    instance: str
-    seed: int
+    instance: str | None = None
+    seed: int | None = None
 
 
 @dataclass(frozen=True)
 class InstanceSeedBudgetKey:
-    instance: str
-    seed: int
-    budget: float
+    instance: str | None = None
+    seed: int | None = None
+    budget: float = 0.0
 
     def __lt__(self, other: InstanceSeedBudgetKey) -> bool:
         return self.budget < other.budget
@@ -40,7 +40,7 @@ class RunKey:
 class RunValue:
     cost: float | list[float]
     time: float
-    status: smac.runhistory.dataclasses.StatusType
+    status: smac.runhistory.enumerations.StatusType
     starttime: float
     endtime: float
     additional_info: dict[str, Any]

@@ -2,14 +2,9 @@ from __future__ import annotations
 
 from typing import (
     Any,
-    Dict,
     Iterable,
     Iterator,
-    List,
     Mapping,
-    Optional,
-    Type,
-    Union,
     cast,
 )
 
@@ -116,10 +111,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         return self.data[k]
 
     def __iter__(self) -> Iterator[RunKey]:
-        """Dictionary semantics for `for k in runhistory.keys()`, enables.
-
-        .items()
-        """
+        """Dictionary semantics for `for k in runhistory.keys()`."""
         return iter(self.data.keys())
 
     def __len__(self) -> int:
@@ -141,12 +133,11 @@ class RunHistory(Mapping[RunKey, RunValue]):
         self,
         key: str,
         obj: Any,
-        # encoder: Type[json.JSONEncoder],
         runkey: RunKey,
         runvalue: RunValue,
     ) -> None:
         try:
-            json.dumps(obj)  # , cls=encoder)
+            json.dumps(obj)
         except Exception as e:
             raise ValueError(
                 "Cannot add %s: %s of type %s to runhistory because it raises an error during JSON encoding, "
@@ -231,8 +222,8 @@ class RunHistory(Mapping[RunKey, RunValue]):
     def _cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: Optional[Iterable[InstanceSeedBudgetKey]] = None,
-    ) -> list[list[float] | list[list[float]]]:
+        instance_seed_budget_keys: Iterable[InstanceSeedBudgetKey] | None = None,
+    ) -> list[float | list[float]]:
         """Returns a list of all costs for the given config for further calculations.
         The costs are directly taken from the runhistory data.
 
@@ -251,7 +242,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         """
         try:
             id_ = self.config_ids[config]
-        except KeyError:  # challenger was not running so far
+        except KeyError:  # Challenger was not running so far
             return []
 
         if instance_seed_budget_keys is None:
@@ -414,7 +405,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         all_inst_seed_budgets = list(dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=False)))
         self._min_cost_per_config[config_id] = self.min_cost(config, all_inst_seed_budgets)
 
-    def incremental_update_cost(self, config: Configuration, cost: Union[np.ndarray, list, float, int]) -> None:
+    def incremental_update_cost(self, config: Configuration, cost: float | list[float]) -> None:
         """Incrementally updates the performance of a configuration by using a moving average.
 
         Parameters
@@ -432,11 +423,14 @@ class RunHistory(Mapping[RunKey, RunValue]):
             old_costs = self._cost_per_config.get(config_id, np.array([0.0 for _ in range(self.n_objectives)]))
             old_costs = np.array(old_costs)
 
-            new_costs = ((old_costs * n_runs) + costs) / (n_runs + 1)  # type: ignore
+            new_costs = ((old_costs * n_runs) + costs) / (n_runs + 1)
             self._cost_per_config[config_id] = new_costs.tolist()
         else:
             old_cost = self._cost_per_config.get(config_id, 0.0)
-            self._cost_per_config[config_id] = ((old_cost * n_runs) + cost) / (n_runs + 1)  # type: ignore
+
+            assert isinstance(cost, float)
+            assert isinstance(old_cost, float)
+            self._cost_per_config[config_id] = ((old_cost * n_runs) + cost) / (n_runs + 1)
 
         self.num_runs_per_config[config_id] = n_runs + 1
 
@@ -460,28 +454,14 @@ class RunHistory(Mapping[RunKey, RunValue]):
         cost = self._cost_per_config.get(config_id, np.nan)  # type: ignore[arg-type] # noqa F821
 
         if self.n_objectives > 1:
-            assert type(cost) == list
+            assert isinstance(cost, list)
+
             # We have to normalize the costs here
             costs = normalize_costs(cost, self.objective_bounds)
             return float(np.mean(costs))
 
-        assert type(cost) == float
+        assert isinstance(cost, float)
         return float(cost)
-
-    def get_configs(self) -> list[Configuration]:
-        return list(self.config_ids.keys())
-
-    def get_incumbent(self) -> Configuration | None:
-        """Returns the incumbent configuration calculated by `get_cost`."""
-        incumbent = None
-        lowest_cost = np.inf
-        for config in self.config_ids.keys():
-            cost = self.get_cost(config)
-            if cost < lowest_cost:
-                incumbent = config
-                lowest_cost = cost
-
-        return incumbent
 
     def get_min_cost(self, config: Configuration) -> float:
         """Returns the lowest empirical cost for a configuration, across all runs (budgets)
@@ -514,7 +494,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
     def average_cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: Optional[Iterable[InstanceSeedBudgetKey]] = None,
+        instance_seed_budget_keys: Iterable[InstanceSeedBudgetKey] | None = None,
         normalize: bool = False,
     ) -> float | list[float]:
         """Return the average cost of a configuration. This is the mean of costs of all instance-
@@ -599,7 +579,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
     def min_cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: Optional[Iterable[InstanceSeedBudgetKey]] = None,
+        instance_seed_budget_keys: Iterable[InstanceSeedBudgetKey] | None = None,
         normalize: bool = False,
     ) -> float | list[float]:
         """Return the minimum cost of a configuration.
@@ -641,7 +621,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
         return np.nan
 
-    def compute_all_costs(self, instances: Optional[List[str]] = None) -> None:
+    def compute_all_costs(self, instances: list[str] | None = None) -> None:
         """Computes the cost of all configurations from scratch and overwrites self.cost_perf_config
         and self.runs_per_config accordingly.
 
@@ -651,23 +631,25 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
         Parameters
         ----------
-        instances: List[str]
+        instances: list[str]
             List of instances; if given, cost is only computed wrt to this instance set.
         """
         self._cost_per_config = {}
         self.num_runs_per_config = {}
         for config, config_id in self.config_ids.items():
-            # removing duplicates while keeping the order
+            # Removing duplicates while keeping the order
             inst_seed_budgets = list(dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=True)))
             if instances is not None:
-                inst_seed_budgets = list(filter(lambda x: x.instance in cast(List, instances), inst_seed_budgets))
+                inst_seed_budgets = list(filter(lambda x: x.instance in cast(list, instances), inst_seed_budgets))
 
             if inst_seed_budgets:  # can be empty if never saw any runs on <instances>
                 self._cost_per_config[config_id] = self.average_cost(config, inst_seed_budgets)
                 self._min_cost_per_config[config_id] = self.min_cost(config, inst_seed_budgets)
                 self.num_runs_per_config[config_id] = len(inst_seed_budgets)
 
-    def get_instance_costs_for_config(self, config: Configuration) -> Dict[str, List[float]]:
+    '''
+    # TODO: Still needed?
+    def get_instance_costs_for_config(self, config: Configuration) -> Dict[str, list[float]]:
         """Returns the average cost per instance (across seeds) for a configuration. If the
         runhistory contains budgets, only the highest budget for a configuration is returned.
 
@@ -685,16 +667,18 @@ class RunHistory(Mapping[RunKey, RunValue]):
         cost_per_inst: Dict<instance name<str>, cost<float>>
         """
         runs_ = self.get_runs_for_config(config, only_max_observed_budget=True)
-        cost_per_inst = {}  # type: Dict[str, List[float]]
+        cost_per_inst = {}  # type: Dict[str, list[float]]
         for inst, seed, budget in runs_:
             cost_per_inst[inst] = cost_per_inst.get(inst, [])
             rkey = RunKey(self.config_ids[config], inst, seed, budget)
             vkey = self.data[rkey]
             cost_per_inst[inst].append(vkey.cost)
         cost_per_inst = dict([(inst, np.mean(costs)) for inst, costs in cost_per_inst.items()])
+        
         return cost_per_inst
+    '''
 
-    def get_runs_for_config(self, config: Configuration, only_max_observed_budget: bool) -> List[InstanceSeedBudgetKey]:
+    def get_runs_for_config(self, config: Configuration, only_max_observed_budget: bool) -> list[InstanceSeedBudgetKey]:
         """Return all runs (instance seed pairs) for a configuration.
 
         Note
@@ -713,6 +697,8 @@ class RunHistory(Mapping[RunKey, RunValue]):
         instance_seed_budget_pairs : list<tuples of instance, seed, budget>
         """
         config_id = self.config_ids.get(config)
+        assert isinstance(config_id, int)
+
         runs = self._config_id_to_inst_seed_budget.get(config_id, {}).copy()
 
         # Select only the max budget run if specified
@@ -724,16 +710,16 @@ class RunHistory(Mapping[RunKey, RunValue]):
         rval = [InstanceSeedBudgetKey(k.instance, k.seed, budget) for k, v in runs.items() for budget in v]
         return rval
 
-    def get_all_configs(self) -> List[Configuration]:
+    def get_configs(self) -> list[Configuration]:
         """Return all configurations in this RunHistory object.
 
         Returns
         -------
-            parameter configurations: list
+        parameter configurations: list
         """
         return list(self.config_ids.keys())
 
-    def get_all_configs_per_budget(
+    def get_configs_per_budget(
         self,
         budget_subset: list | None = None,
     ) -> list[Configuration]:
@@ -748,7 +734,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         parameter configurations: list
         """
         if budget_subset is None:
-            return self.get_all_configs()
+            return self.get_configs()
 
         configs = []
         for key in self.data.keys():
@@ -757,12 +743,24 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
         return configs
 
-    def save_json(self, fn: str = "runhistory.json", save_external: bool = False) -> None:
+    def get_incumbent(self) -> Configuration | None:
+        """Returns the incumbent configuration. The config with the lowest cost calculated by `get_cost` is returned."""
+        incumbent = None
+        lowest_cost = np.inf
+        for config in self.config_ids.keys():
+            cost = self.get_cost(config)
+            if cost < lowest_cost:
+                incumbent = config
+                lowest_cost = cost
+
+        return incumbent
+
+    def save_json(self, filename: str = "runhistory.json", save_external: bool = False) -> None:
         """Saves runhistory on disk.
 
         Parameters
         ----------
-        fn : str
+        filename : str
             file name.
         save_external : bool
             Whether to save external data in the runhistory file.
@@ -774,7 +772,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
                     (
                         int(k.config_id),
                         str(k.instance) if k.instance is not None else None,
-                        int(k.seed),
+                        k.seed,
                         float(k.budget) if k.budget is not None else 0,
                         v.cost,
                         v.time,
@@ -786,20 +784,26 @@ class RunHistory(Mapping[RunKey, RunValue]):
                 ]
 
         config_ids_to_serialize = set([entry[0] for entry in data])
-        configs = {
-            id_: conf.get_dictionary() for id_, conf in self.ids_config.items() if id_ in config_ids_to_serialize
-        }
-        config_origins = {id_: conf.origin for id_, conf in self.ids_config.items()}
+        configs = {}
+        config_origins = {}
+        for id_, config in self.ids_config.items():
+            if id_ in config_ids_to_serialize:
+                configs[id_] = config.get_dictionary()
 
-        with open(fn, "w") as fp:
+            config_origins[id_] = config.origin
+
+        with open(filename, "w") as fp:
             json.dump(
-                {"data": data, "configs": configs, "config_origins": config_origins},
+                {
+                    "data": data,
+                    "configs": configs,
+                    "config_origins": config_origins,
+                },
                 fp,
-                # cls=EnumEncoder,
                 indent=2,
             )
 
-    def load_json(self, fn: str, cs: ConfigurationSpace) -> None:
+    def load_json(self, filename: str, configspace: ConfigurationSpace) -> None:
         """Load and runhistory in json representation from disk.
 
         Warning
@@ -808,38 +812,32 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
         Parameters
         ----------
-        fn : str
+        filename : str
             file name to load from
-        cs : ConfigSpace
+        configspace : ConfigSpace
             instance of configuration space
         """
         try:
-            with open(fn) as fp:
+            with open(filename) as fp:
                 all_data = json.load(fp)
         except Exception as e:
-            logger.warning(
-                "Encountered exception %s while reading runhistory from %s. " "Not adding any runs!",
-                e,
-                fn,
-            )
+            logger.warning(f"Encountered exception {e} while reading runhistory from {filename}. Not adding any runs!")
             return
 
         config_origins = all_data.get("config_origins", {})
 
-        # self.ids_config = {}
-        # for id_, values in all_data["configs"].items():
-        #    print(values)
-        #    self.ids_config[id_] = Configuration(cs, values=values, origin=config_origins.get(id_, None))
-
-        self.ids_config = {
-            int(id_): Configuration(cs, values=values, origin=config_origins.get(id_, None))
-            for id_, values in all_data["configs"].items()
-        }
+        self.ids_config = {}
+        for id_, values in all_data["configs"].items():
+            self.ids_config[int(id_)] = Configuration(
+                configspace,
+                values=values,
+                origin=config_origins.get(id_, None),
+            )
 
         self.config_ids = {config: id_ for id_, config in self.ids_config.items()}
         self._n_id = len(self.config_ids)
 
-        # important to use add method to use all data structure correctly
+        # Important to use add method to use all data structure correctly
         for entry in all_data["data"]:
             # Set n_objectives first
             if self.n_objectives == -1:
@@ -890,7 +888,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
     def update(
         self,
-        runhistory: "RunHistory",
+        runhistory: RunHistory,
         origin: DataOrigin = DataOrigin.EXTERNAL_SAME_INSTANCES,
     ) -> None:
         """Updates the current runhistory by adding new runs from a RunHistory.
@@ -906,22 +904,19 @@ class RunHistory(Mapping[RunKey, RunValue]):
         """
         # Configurations might be already known, but by a different ID. This
         # does not matter here because the add() method handles this
-        # correctly by assigning an ID to unknown configurations and re-using
-        #  the ID
+        # correctly by assigning an ID to unknown configurations and re-using the ID.
         for key, value in runhistory.data.items():
-            config_id, instance, seed, budget = key
-            cost, time, status, start, end, additional_info = value
-            config = runhistory.ids_config[config_id]
+            config = runhistory.ids_config[key.config_id]
             self.add(
                 config=config,
-                cost=cost,
-                time=time,
-                status=status,
-                instance=instance,
-                starttime=start,
-                endtime=end,
-                seed=seed,
-                budget=budget,
-                additional_info=additional_info,
+                cost=value.cost,
+                time=value.time,
+                status=value.status,
+                instance=key.instance,
+                starttime=value.starttime,
+                endtime=value.endtime,
+                seed=key.seed,
+                budget=key.budget,
+                additional_info=value.additional_info,
                 origin=origin,
             )
