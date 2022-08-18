@@ -8,12 +8,10 @@ import numpy as np
 from ConfigSpace import ConfigurationSpace
 
 from smac.acquisition import AbstractAcquisitionOptimizer, LocalAndSortedRandomSearch
-from smac.acquisition_function import EI, AbstractAcquisitionFunction
+from smac.acquisition.functions import EI, AbstractAcquisitionFunction
 from smac.configspace import Configuration
 from smac.model.base_model import BaseModel
-from smac.model.gaussian_process.augmented_local_gaussian_process import (
-    GloballyAugmentedLocalGaussianProcess,
-)
+from smac.model.gaussian_process.gpytorch import GloballyAugmentedLocalGaussianProcess
 from smac.utils.subspaces import LocalSubspace
 
 

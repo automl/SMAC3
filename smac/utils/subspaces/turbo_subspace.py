@@ -10,12 +10,11 @@ from ConfigSpace.hyperparameters import NumericalHyperparameter
 from ConfigSpace.util import deactivate_inactive_hyperparameters
 from scipy.stats.qmc import LatinHypercube, Sobol
 
-from smac.acquisition_function import TS, AbstractAcquisitionFunction
+from smac.acquisition import AbstractAcquisitionOptimizer
+from smac.acquisition.functions import AbstractAcquisitionFunction, TS
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.model.base_model import BaseModel
-from smac.model.gaussian_process.augmented_local_gaussian_process import (
-    GloballyAugmentedLocalGaussianProcess,
-)
+from smac.model.gaussian_process.gpytorch import GloballyAugmentedLocalGaussianProcess
 from smac.model.gaussian_process.base_gaussian_process import GaussianProcess
 from smac.model.gaussian_process.gpytorch import GPyTorchGaussianProcess
 from smac.model.gaussian_process.mcmc_gaussian_process import MCMCGaussianProcess
@@ -244,7 +243,7 @@ class TuRBOSubSpace(LocalSubspace):
             configs.append(conf)
 
         if _sorted:
-            return self._sort_configs_by_acq_value(configs)
+            return AbstractAcquisitionOptimizer._sort_configs_by_acq_value(self, configs)
         else:
             return [(0, configs[i]) for i in range(len(configs))]
 
@@ -296,28 +295,3 @@ class TuRBOSubSpace(LocalSubspace):
         """
         super(TuRBOSubSpace, self).add_new_observations(X, y)
         self.num_valid_observations += len(y)
-
-    def _sort_configs_by_acq_value(self, configs: List[Configuration]) -> List[Tuple[float, Configuration]]:
-        """Sort the given configurations by acquisition value
-        comes from smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
-
-        Parameters
-        ----------
-        configs : list(Configuration)
-
-        Returns
-        -------
-        list: (acquisition value, Candidate solutions),
-                ordered by their acquisition function value
-        """
-        acq_values = self.acquisition_function(configs)
-
-        # From here
-        # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
-        random = self.rng.rand(len(acq_values))
-        # Last column is primary sort key!
-        indices = np.lexsort((random.flatten(), acq_values.flatten()))
-
-        # Cannot use zip here because the indices array cannot index the
-        # rand_configs list, because the second is a pure python list
-        return [(acq_values[ind][0], configs[ind]) for ind in indices[::-1]]
