@@ -40,7 +40,7 @@ class RunKey:
 class RunValue:
     cost: float | list[float]
     time: float
-    status: smac.runhistory.enumerations.StatusType
+    status: smac.runhistory.StatusType
     starttime: float
     endtime: float
     additional_info: dict[str, Any]

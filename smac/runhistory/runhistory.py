@@ -184,7 +184,6 @@ class RunHistory(Mapping[RunKey, RunValue]):
         # Update objective bounds based on raw data
         self._update_objective_bounds()
 
-        # Capped data is added above
         # Do not register the cost until the run has completed
         if (
             origin
@@ -195,16 +194,16 @@ class RunHistory(Mapping[RunKey, RunValue]):
             and status != StatusType.RUNNING
         ):
             # Also add to fast data structure
-            is_k = InstanceSeedKey(k.instance, k.seed)
+            isk = InstanceSeedKey(k.instance, k.seed)
             self._config_id_to_inst_seed_budget[k.config_id] = self._config_id_to_inst_seed_budget.get(k.config_id, {})
 
-            if is_k not in self._config_id_to_inst_seed_budget[k.config_id].keys():
+            if isk not in self._config_id_to_inst_seed_budget[k.config_id].keys():
                 # Add new inst-seed-key with budget to main dict
-                self._config_id_to_inst_seed_budget[k.config_id][is_k] = [k.budget]
-            # Before it was k.budget not in is_k
-            elif k.budget != is_k.instance and k.budget != is_k.seed:
+                self._config_id_to_inst_seed_budget[k.config_id][isk] = [k.budget]
+            # Before it was k.budget not in isk
+            elif k.budget != isk.instance and k.budget != isk.seed:
                 # Append new budget to existing inst-seed-key dict
-                self._config_id_to_inst_seed_budget[k.config_id][is_k].append(k.budget)
+                self._config_id_to_inst_seed_budget[k.config_id][isk].append(k.budget)
 
             # If budget is used, then update cost instead of incremental updates
             if not self.overwrite_existing_runs and k.budget == 0:
@@ -699,6 +698,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         config_id = self.config_ids.get(config)
         runs = {}
         if config_id is not None:
+            print(self._config_id_to_inst_seed_budget)
             runs = self._config_id_to_inst_seed_budget[config_id].copy()
 
         # Select only the max budget run if specified

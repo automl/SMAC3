@@ -40,15 +40,8 @@ class BOinGFacade(HyperparameterFacade):
     """
 
     @staticmethod
-    def get_runhistory_encoder(scenario: Scenario) -> RunHistoryRawEncoder:
-        transformer = RunHistoryLogScaledEncoder(
-            scenario=scenario,
-            n_params=len(scenario.configspace.get_hyperparameters()),
-            scale_percentage=5,
-            seed=scenario.seed,
-        )
-
-        return transformer
+    def get_runhistory_encoder(scenario: Scenario) -> RunHistoryLogScaledEncoder:
+        return RunHistoryLogScaledEncoder(scenario, scale_percentage=5)
 
     @staticmethod
     def get_random_design(
@@ -71,19 +64,20 @@ class BOinGFacade(HyperparameterFacade):
         )
         return optimizer
 
-    def _init_optimizer(self,
-                        min_samples_model: int = 1,
-                        model_local: Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
-                        model_local_kwargs: Dict | None = None,
-                        acquisition_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
-                        acquisition_func_local_kwargs: Dict | None = None,
-                        acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
-                        acq_optimizer_local_kwargs: Dict | None = None,
-                        max_configs_local_fracs: float = 0.5,
-                        min_configs_local: int | None = None,
-                        do_switching: bool = False,
-                        turbo_kwargs: Dict | None = None,
-                        ) -> None:
+    def _init_optimizer(
+        self,
+        min_samples_model: int = 1,
+        model_local: Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
+        model_local_kwargs: Dict | None = None,
+        acquisition_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
+        acquisition_func_local_kwargs: Dict | None = None,
+        acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
+        acq_optimizer_local_kwargs: Dict | None = None,
+        max_configs_local_fracs: float = 0.5,
+        min_configs_local: int | None = None,
+        do_switching: bool = False,
+        turbo_kwargs: Dict | None = None,
+    ) -> None:
         """
         Parameters
         ----------
@@ -136,7 +130,6 @@ class BOinGFacade(HyperparameterFacade):
             min_configs_local=min_configs_local,
             do_switching=do_switching,
             turbo_kwargs=turbo_kwargs,
-
         )
 
     @staticmethod

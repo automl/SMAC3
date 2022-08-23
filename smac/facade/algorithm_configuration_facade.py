@@ -115,11 +115,4 @@ class AlgorithmConfigurationFacade(Facade):
 
     @staticmethod
     def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:
-        transformer = RunHistoryEncoder(
-            scenario=scenario,
-            n_params=len(scenario.configspace.get_hyperparameters()),
-            scale_percentage=5,
-            seed=scenario.seed,
-        )
-
-        return transformer
+        return RunHistoryEncoder(scenario)

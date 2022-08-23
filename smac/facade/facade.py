@@ -55,6 +55,7 @@ class Facade:
         intensifier: AbstractIntensifier | None = None,
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
         runhistory: RunHistory | None = None,
+        runhistory_encoder: RunHistoryEncoder | None = None,
         # Level of logging; if path passed: yaml file expected; if none: use default logging from logging.yml
         logging_level: int | Path | None = None,
         callbacks: list[Callback] = [],
@@ -86,6 +87,9 @@ class Facade:
 
         if runhistory is None:
             runhistory = RunHistory()
+
+        if runhistory_encoder is None:
+            runhistory_encoder = self.get_runhistory_encoder(scenario)
 
         # Initialize empty stats and runhistory object
         stats = Stats(scenario)
@@ -134,7 +138,7 @@ class Facade:
         self.intensifier = intensifier
         self.multi_objective_algorithm = multi_objective_algorithm
         self.runhistory = runhistory
-        self.runhistory_encoder = self.get_runhistory_encoder(scenario)
+        self.runhistory_encoder = runhistory_encoder
         self.stats = stats
         self.seed = scenario.seed
 
@@ -282,7 +286,7 @@ class Facade:
         return None
     """
 
-    def get_meta(self) -> dict[str, dict[str, Any]]:
+    def get_meta(self) -> dict[str, dict[str, Any] | None]:
         """Generates a hash based on all components of the facade. This is used for the run name or to determine
         whether a run should be continued or not."""
 

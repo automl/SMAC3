@@ -172,6 +172,7 @@ class SuccessiveHalving(ParallelScheduler):
         if hasattr(intensifier, "stage"):
             # Newly created _SuccessiveHalving objects have no stage
             stage = intensifier.stage
+
         return stage, len(intensifier.run_tracker)
 
     def _add_new_instance(self, num_workers: int) -> bool:
@@ -191,6 +192,7 @@ class SuccessiveHalving(ParallelScheduler):
         if len(self.intensifier_instances) >= num_workers:
             return False
 
+        assert self.stats
         sh = _SuccessiveHalving(
             scenario=self.scenario,
             # instances=self._instances,
