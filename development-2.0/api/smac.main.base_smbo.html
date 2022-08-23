@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.loop.base_smbo &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>smac.main.base_smbo &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -39,8 +39,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.loop.boing" href="smac.loop.boing.html" />
-    <link rel="prev" title="smac.loop" href="smac.loop.html" />
+    <link rel="next" title="smac.main.boing" href="smac.main.boing.html" />
+    <link rel="prev" title="smac.main" href="smac.main.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -207,6 +207,11 @@ style="width: 100%;">
      smac.facade
     </a>
    </li>
+   <li class="toctree-l2 current active">
+    <a class="reference internal" href="smac.main.html">
+     smac.main
+    </a>
+   </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.model.html">
      smac.model
@@ -245,11 +250,6 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="smac.multi_objective.html">
      smac.multi_objective
-    </a>
-   </li>
-   <li class="toctree-l2 current active">
-    <a class="reference internal" href="smac.loop.html">
-     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
@@ -330,19 +330,19 @@ style="width: 100%;">
               
               <div>
                 
-  <section id="module-smac.loop.base_smbo">
-<span id="smac-loop-base-smbo"></span><h1>smac.loop.base_smbo<a class="headerlink" href="#module-smac.loop.base_smbo" title="Permalink to this heading">¶</a></h1>
+  <section id="module-smac.main.base_smbo">
+<span id="smac-main-base-smbo"></span><h1>smac.main.base_smbo<a class="headerlink" href="#module-smac.main.base_smbo" title="Permalink to this heading">¶</a></h1>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.loop.base_smbo.BaseSMBO" title="smac.loop.base_smbo.BaseSMBO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseSMBO</span></code></a>(scenario, stats, runner, ...[, seed])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.main.base_smbo.BaseSMBO" title="smac.main.base_smbo.BaseSMBO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseSMBO</span></code></a>(scenario, stats, runner, ...[, seed])</p></td>
 <td><p>Interface that contains the main Bayesian optimization loop.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
-<dt class="sig sig-object py" id="smac.loop.base_smbo.BaseSMBO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.loop.base_smbo.</span></span><span class="sig-name descname"><span class="pre">BaseSMBO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/loop/base_smbo.html#BaseSMBO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.loop.base_smbo.BaseSMBO" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.main.base_smbo.BaseSMBO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.main.base_smbo.</span></span><span class="sig-name descname"><span class="pre">BaseSMBO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/base_smbo.html#BaseSMBO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.base_smbo.BaseSMBO" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Interface that contains the main Bayesian optimization loop.</p>
 <dl class="field-list simple">
@@ -372,58 +372,58 @@ data into EPM data</p></li>
 </dd>
 </dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.loop.base_smbo.BaseSMBO.incumbent">
-<span class="sig-name descname"><span class="pre">incumbent</span></span><a class="headerlink" href="#smac.loop.base_smbo.BaseSMBO.incumbent" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.main.base_smbo.BaseSMBO.incumbent">
+<span class="sig-name descname"><span class="pre">incumbent</span></span><a class="headerlink" href="#smac.main.base_smbo.BaseSMBO.incumbent" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.loop.base_smbo.BaseSMBO.config">
-<span class="sig-name descname"><span class="pre">config</span></span><a class="headerlink" href="#smac.loop.base_smbo.BaseSMBO.config" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.main.base_smbo.BaseSMBO.config">
+<span class="sig-name descname"><span class="pre">config</span></span><a class="headerlink" href="#smac.main.base_smbo.BaseSMBO.config" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.loop.base_smbo.BaseSMBO.config_space">
-<span class="sig-name descname"><span class="pre">config_space</span></span><a class="headerlink" href="#smac.loop.base_smbo.BaseSMBO.config_space" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.main.base_smbo.BaseSMBO.config_space">
+<span class="sig-name descname"><span class="pre">config_space</span></span><a class="headerlink" href="#smac.main.base_smbo.BaseSMBO.config_space" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.loop.base_smbo.BaseSMBO.stats">
-<span class="sig-name descname"><span class="pre">stats</span></span><a class="headerlink" href="#smac.loop.base_smbo.BaseSMBO.stats" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.main.base_smbo.BaseSMBO.stats">
+<span class="sig-name descname"><span class="pre">stats</span></span><a class="headerlink" href="#smac.main.base_smbo.BaseSMBO.stats" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.loop.base_smbo.BaseSMBO.initial_design">
-<span class="sig-name descname"><span class="pre">initial_design</span></span><a class="headerlink" href="#smac.loop.base_smbo.BaseSMBO.initial_design" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.main.base_smbo.BaseSMBO.initial_design">
+<span class="sig-name descname"><span class="pre">initial_design</span></span><a class="headerlink" href="#smac.main.base_smbo.BaseSMBO.initial_design" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.loop.base_smbo.BaseSMBO.runhistory">
-<span class="sig-name descname"><span class="pre">runhistory</span></span><a class="headerlink" href="#smac.loop.base_smbo.BaseSMBO.runhistory" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.main.base_smbo.BaseSMBO.runhistory">
+<span class="sig-name descname"><span class="pre">runhistory</span></span><a class="headerlink" href="#smac.main.base_smbo.BaseSMBO.runhistory" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.loop.base_smbo.BaseSMBO.intensifier">
-<span class="sig-name descname"><span class="pre">intensifier</span></span><a class="headerlink" href="#smac.loop.base_smbo.BaseSMBO.intensifier" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.main.base_smbo.BaseSMBO.intensifier">
+<span class="sig-name descname"><span class="pre">intensifier</span></span><a class="headerlink" href="#smac.main.base_smbo.BaseSMBO.intensifier" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.loop.base_smbo.BaseSMBO.rng">
-<span class="sig-name descname"><span class="pre">rng</span></span><a class="headerlink" href="#smac.loop.base_smbo.BaseSMBO.rng" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.main.base_smbo.BaseSMBO.rng">
+<span class="sig-name descname"><span class="pre">rng</span></span><a class="headerlink" href="#smac.main.base_smbo.BaseSMBO.rng" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.loop.base_smbo.BaseSMBO.initial_design_configs">
-<span class="sig-name descname"><span class="pre">initial_design_configs</span></span><a class="headerlink" href="#smac.loop.base_smbo.BaseSMBO.initial_design_configs" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.main.base_smbo.BaseSMBO.initial_design_configs">
+<span class="sig-name descname"><span class="pre">initial_design_configs</span></span><a class="headerlink" href="#smac.main.base_smbo.BaseSMBO.initial_design_configs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.loop.base_smbo.BaseSMBO.runner">
-<span class="sig-name descname"><span class="pre">runner</span></span><a class="headerlink" href="#smac.loop.base_smbo.BaseSMBO.runner" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.main.base_smbo.BaseSMBO.runner">
+<span class="sig-name descname"><span class="pre">runner</span></span><a class="headerlink" href="#smac.main.base_smbo.BaseSMBO.runner" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.loop.base_smbo.BaseSMBO.ask">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/loop/base_smbo.html#BaseSMBO.ask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.loop.base_smbo.BaseSMBO.ask" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.main.base_smbo.BaseSMBO.ask">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/base_smbo.html#BaseSMBO.ask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.base_smbo.BaseSMBO.ask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Choose next candidate solution with Bayesian optimization. The suggested configurations
 depend on the surrogate model acquisition optimizer/function.</p>
 <dl class="field-list simple">
@@ -434,8 +434,8 @@ depend on the surrogate model acquisition optimizer/function.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.loop.base_smbo.BaseSMBO.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/loop/base_smbo.html#BaseSMBO.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.loop.base_smbo.BaseSMBO.run" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.main.base_smbo.BaseSMBO.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/base_smbo.html#BaseSMBO.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.base_smbo.BaseSMBO.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the Bayesian optimization loop.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -448,8 +448,8 @@ depend on the surrogate model acquisition optimizer/function.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.loop.base_smbo.BaseSMBO.save">
-<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/loop/base_smbo.html#BaseSMBO.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.loop.base_smbo.BaseSMBO.save" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.main.base_smbo.BaseSMBO.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/base_smbo.html#BaseSMBO.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.base_smbo.BaseSMBO.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves the current stats and runhistory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -459,8 +459,8 @@ depend on the surrogate model acquisition optimizer/function.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.loop.base_smbo.BaseSMBO.tell">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/loop/base_smbo.html#BaseSMBO.tell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.loop.base_smbo.BaseSMBO.tell" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.main.base_smbo.BaseSMBO.tell">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/base_smbo.html#BaseSMBO.tell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.base_smbo.BaseSMBO.tell" title="Permalink to this definition">¶</a></dt>
 <dd><p>The SMBO submits a config-run-request via a RunInfo object. When that config run is
 completed, a RunValue, which contains all the relevant information obtained after running a
 job, is returned. This method incorporates the status of that run into the stats/runhistory
@@ -492,17 +492,17 @@ which also has the side effect of moving the intensifier to a new state</p>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.loop.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.main.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.loop</p>
+            <p class="prev-next-title">smac.main</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.loop.boing.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.main.boing.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.loop.boing</p>
+        <p class="prev-next-title">smac.main.boing</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

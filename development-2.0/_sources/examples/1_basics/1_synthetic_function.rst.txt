@@ -38,9 +38,9 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
  .. code-block:: none
 
     Default value: 16916.0
-    [INFO][initial_design.py:85] Ignoring `configs` and `n_configs` since `n_configs_per_hyperparameter` is given.
+    [INFO][initial_design.py:86] Ignoring `configs` and `n_configs` since `n_configs_per_hyperparameter` is given.
     [INFO][base_smbo.py:143] Running initial design...
-    [INFO][initial_design.py:155] Retrieving 20 configurations for the initial design.
+    [INFO][initial_design.py:157] Retrieving 20 configurations for the initial design.
     [INFO][intensification.py:244] No incumbent provided in the first run. Sampling a new challenger...
     [INFO][intensification.py:443] First run and no incumbent provided. Challenger is assumed to be the incumbent.
     [INFO][intensification.py:603] Updated estimated cost of incumbent on 1 runs: 1102.7878
@@ -125,7 +125,7 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.029 seconds)
+   **Total running time of the script:** ( 0 minutes  0.942 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_1_synthetic_function.py:

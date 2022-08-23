@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.loop.boing &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>smac.main.boing &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -205,6 +205,11 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.main.html">
+     smac.main
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../../../api/smac.model.html">
      smac.model
     </a>
@@ -242,11 +247,6 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="../../../api/smac.multi_objective.html">
      smac.multi_objective
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../api/smac.loop.html">
-     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
@@ -313,7 +313,7 @@ style="width: 100%;">
               
               <div>
                 
-  <h1>Source code for smac.loop.boing</h1><div class="highlight"><pre>
+  <h1>Source code for smac.main.boing</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Union</span>
@@ -330,7 +330,7 @@ style="width: 100%;">
 <span class="kn">from</span> <span class="nn">smac.acquisition.functions.thompson</span> <span class="kn">import</span> <span class="n">TS</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">smac.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
-<span class="kn">from</span> <span class="nn">smac.loop.smbo</span> <span class="kn">import</span> <span class="n">SMBO</span>
+<span class="kn">from</span> <span class="nn">smac.main.smbo</span> <span class="kn">import</span> <span class="n">SMBO</span>
 <span class="kn">from</span> <span class="nn">smac.model.base_model</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">smac.model.gaussian_process.gpytorch</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">GloballyAugmentedLocalGaussianProcess</span><span class="p">,</span>
@@ -351,7 +351,7 @@ style="width: 100%;">
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="BOinGSMBO"><a class="viewcode-back" href="../../../api/smac.loop.boing.html#smac.loop.boing.BOinGSMBO">[docs]</a><span class="k">class</span> <span class="nc">BOinGSMBO</span><span class="p">(</span><span class="n">SMBO</span><span class="p">):</span>
+<div class="viewcode-block" id="BOinGSMBO"><a class="viewcode-back" href="../../../api/smac.main.boing.html#smac.main.boing.BOinGSMBO">[docs]</a><span class="k">class</span> <span class="nc">BOinGSMBO</span><span class="p">(</span><span class="n">SMBO</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Interface to train the EPM and generate next configurations with both global and local models.</span>
 
@@ -386,19 +386,22 @@ style="width: 100%;">
 <span class="sd">    kwargs:</span>
 <span class="sd">        additional arguments for initialize base SMBO object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">model_local</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]</span> <span class="o">=</span> <span class="n">GloballyAugmentedLocalGaussianProcess</span><span class="p">,</span>
-            <span class="n">acquisition_func_local</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span> <span class="o">|</span> <span class="n">Type</span><span class="p">[</span><span class="n">AbstractAcquisitionFunction</span><span class="p">]</span> <span class="o">=</span> <span class="n">EI</span><span class="p">,</span>
-            <span class="n">model_local_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">acquisition_func_local_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">acq_optimizer_local</span><span class="p">:</span> <span class="n">AbstractAcquisitionOptimizer</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">acq_optimizer_local_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">max_configs_local_fracs</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
-            <span class="n">min_configs_local</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">do_switching</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="n">turbo_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model_local</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]</span> <span class="o">=</span> <span class="n">GloballyAugmentedLocalGaussianProcess</span><span class="p">,</span>
+        <span class="n">acquisition_func_local</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span> <span class="o">|</span> <span class="n">Type</span><span class="p">[</span><span class="n">AbstractAcquisitionFunction</span><span class="p">]</span> <span class="o">=</span> <span class="n">EI</span><span class="p">,</span>
+        <span class="n">model_local_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">acquisition_func_local_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">acq_optimizer_local</span><span class="p">:</span> <span class="n">AbstractAcquisitionOptimizer</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">acq_optimizer_local_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_configs_local_fracs</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">min_configs_local</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">do_switching</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">turbo_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">BOinGSMBO</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">RandomForestWithInstances</span><span class="p">):</span>
@@ -459,7 +462,7 @@ style="width: 100%;">
                 <span class="n">turbo_opt_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">turbo_kwargs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">turbo_optimizer</span> <span class="o">=</span> <span class="n">TuRBOSubSpace</span><span class="p">(</span><span class="o">**</span><span class="n">turbo_opt_kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="BOinGSMBO.restart_TuRBOinG"><a class="viewcode-back" href="../../../api/smac.loop.boing.html#smac.loop.boing.BOinGSMBO.restart_TuRBOinG">[docs]</a>    <span class="k">def</span> <span class="nf">restart_TuRBOinG</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y_raw</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">train_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="BOinGSMBO.restart_TuRBOinG"><a class="viewcode-back" href="../../../api/smac.main.boing.html#smac.main.boing.BOinGSMBO.restart_TuRBOinG">[docs]</a>    <span class="k">def</span> <span class="nf">restart_TuRBOinG</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y_raw</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">train_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Restart a new TurBO Optimizer, the bounds of the TurBO Optimizer is determined by a RF, we randomly sample 20</span>
 <span class="sd">        points and extract subspaces that contain at least self.min_configs_local points, and we select the subspace</span>
@@ -509,7 +512,7 @@ style="width: 100%;">
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">turbo_optimizer</span><span class="o">.</span><span class="n">add_new_observations</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">ss_data_indices</span><span class="p">],</span> <span class="n">Y_raw</span><span class="p">[</span><span class="n">ss_data_indices</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="BOinGSMBO.ask"><a class="viewcode-back" href="../../../api/smac.loop.boing.html#smac.loop.boing.BOinGSMBO.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+<div class="viewcode-block" id="BOinGSMBO.ask"><a class="viewcode-back" href="../../../api/smac.main.boing.html#smac.main.boing.BOinGSMBO.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Choose next candidate solution with Bayesian optimization. We use TurBO optimizer or BOinG to suggest</span>
 <span class="sd">         the next configuration.</span>
@@ -784,15 +787,15 @@ style="width: 100%;">
         <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="subspace_extraction"><a class="viewcode-back" href="../../../api/smac.loop.boing.html#smac.loop.boing.subspace_extraction">[docs]</a><span class="k">def</span> <span class="nf">subspace_extraction</span><span class="p">(</span>
-        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">challenger</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">model</span><span class="p">:</span> <span class="n">RandomForestWithInstances</span><span class="p">,</span>
-        <span class="n">num_min</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">num_max</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">bounds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">],</span>
-        <span class="n">cat_dims</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">cont_dims</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<div class="viewcode-block" id="subspace_extraction"><a class="viewcode-back" href="../../../api/smac.main.boing.html#smac.main.boing.subspace_extraction">[docs]</a><span class="k">def</span> <span class="nf">subspace_extraction</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">challenger</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">RandomForestWithInstances</span><span class="p">,</span>
+    <span class="n">num_min</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">num_max</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">bounds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">],</span>
+    <span class="n">cat_dims</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">cont_dims</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extract a subspace that contains at least num_min points but no more than num_max points</span>

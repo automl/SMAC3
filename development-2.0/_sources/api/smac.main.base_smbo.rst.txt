@@ -1,7 +1,7 @@
-smac.loop.base\_smbo
+smac.main.base\_smbo
 ====================
 
-.. automodule:: smac.loop.base_smbo
+.. automodule:: smac.main.base_smbo
 
    
    

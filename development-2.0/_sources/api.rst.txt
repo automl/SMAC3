@@ -6,6 +6,7 @@ API References
    :recursive:
 
    smac.facade
+   smac.main
    smac.model
    smac.acquisition
    smac.intensification
@@ -14,7 +15,6 @@ API References
    smac.runner
    smac.runhistory
    smac.multi_objective
-   smac.loop
    smac.configspace
    smac.utils
    smac.scenario

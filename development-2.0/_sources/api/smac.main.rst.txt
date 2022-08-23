@@ -1,7 +1,7 @@
-﻿smac.loop
+﻿smac.main
 =========
 
-.. automodule:: smac.loop
+.. automodule:: smac.main
 
    
    
@@ -27,8 +27,8 @@
    :toctree:
    :recursive:
 
-   smac.loop.base_smbo
-   smac.loop.boing
-   smac.loop.smbo
-   smac.loop.turbo
+   smac.main.base_smbo
+   smac.main.boing
+   smac.main.smbo
+   smac.main.turbo
 

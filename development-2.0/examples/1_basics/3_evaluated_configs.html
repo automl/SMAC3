@@ -208,6 +208,11 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../../api/smac.main.html">
+     smac.main
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../../api/smac.model.html">
      smac.model
     </a>
@@ -245,11 +250,6 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="../../api/smac.multi_objective.html">
      smac.multi_objective
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../api/smac.loop.html">
-     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
@@ -339,13 +339,18 @@ to download the full example code</p>
 <span id="sphx-glr-examples-1-basics-3-evaluated-configs-py"></span><h1>Start with Pre-Evaluated Configurations<a class="headerlink" href="#start-with-pre-evaluated-configurations" title="Permalink to this heading">¶</a></h1>
 <p>This example shows how to incorporate evaluated configurations into SMAC.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Default value: 0.03
-[INFO][initial_design.py:85] Ignoring `configs` and `n_configs` since `n_configs_per_hyperparameter` is given.
+[INFO][initial_design.py:86] Ignoring `configs` and `n_configs` since `n_configs_per_hyperparameter` is given.
 [INFO][base_smbo.py:151] Initial design is skipped since 10 entries are found in the runhistory.
 [INFO][base_smbo.py:158] Added 10 configs from the runhistory as initial design and determined the incumbent.
 [INFO][intensification.py:603] Updated estimated cost of incumbent on 2 runs: 0.02
-[INFO][facade.py:330] Final Incumbent: {&#39;C&#39;: 4.135997393839888, &#39;kernel&#39;: &#39;rbf&#39;, &#39;shrinking&#39;: True, &#39;gamma&#39;: &#39;value&#39;, &#39;gamma_value&#39;: 0.16521255145781252}
-[INFO][facade.py:331] Estimated cost: 0.019999999999999907
-Incumbent value: 0.02
+[INFO][abstract_intensifier.py:345] Challenger (0.0133) is better than incumbent (0.02) on 2 runs.
+[INFO][abstract_intensifier.py:365] Changes in incumbent:
+[INFO][abstract_intensifier.py:368] --- C: 4.135997393839888 -&gt; 0.4256053822493198
+[INFO][abstract_intensifier.py:368] --- gamma_value: 0.16521255145781252 -&gt; 1.325448240647653
+[INFO][abstract_intensifier.py:368] --- shrinking: True -&gt; False
+[INFO][facade.py:330] Final Incumbent: {&#39;C&#39;: 0.4256053822493198, &#39;kernel&#39;: &#39;rbf&#39;, &#39;shrinking&#39;: False, &#39;gamma&#39;: &#39;value&#39;, &#39;gamma_value&#39;: 1.325448240647653}
+[INFO][facade.py:331] Estimated cost: 0.013333333333333308
+Incumbent value: 0.01
 </pre></div>
 </div>
 <div class="line-block">
@@ -456,7 +461,7 @@ Incumbent value: 0.02
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent value: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">incumbent_value</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.685 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.577 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-3-evaluated-configs-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/ab0025518edf717821f88d8d2bf5bde5/3_evaluated_configs.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">3_evaluated_configs.py</span></code></a></p>

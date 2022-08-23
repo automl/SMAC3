@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.loop.smbo &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>smac.main.smbo &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -39,8 +39,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.loop.turbo" href="smac.loop.turbo.html" />
-    <link rel="prev" title="smac.loop.boing" href="smac.loop.boing.html" />
+    <link rel="next" title="smac.main.turbo" href="smac.main.turbo.html" />
+    <link rel="prev" title="smac.main.boing" href="smac.main.boing.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -207,6 +207,11 @@ style="width: 100%;">
      smac.facade
     </a>
    </li>
+   <li class="toctree-l2 current active">
+    <a class="reference internal" href="smac.main.html">
+     smac.main
+    </a>
+   </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.model.html">
      smac.model
@@ -245,11 +250,6 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="smac.multi_objective.html">
      smac.multi_objective
-    </a>
-   </li>
-   <li class="toctree-l2 current active">
-    <a class="reference internal" href="smac.loop.html">
-     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
@@ -330,24 +330,24 @@ style="width: 100%;">
               
               <div>
                 
-  <section id="module-smac.loop.smbo">
-<span id="smac-loop-smbo"></span><h1>smac.loop.smbo<a class="headerlink" href="#module-smac.loop.smbo" title="Permalink to this heading">¶</a></h1>
+  <section id="module-smac.main.smbo">
+<span id="smac-main-smbo"></span><h1>smac.main.smbo<a class="headerlink" href="#module-smac.main.smbo" title="Permalink to this heading">¶</a></h1>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.loop.smbo.SMBO" title="smac.loop.smbo.SMBO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SMBO</span></code></a>(*args, **kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.main.smbo.SMBO" title="smac.main.smbo.SMBO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SMBO</span></code></a>(*args, **kwargs)</p></td>
 <td><p>Interface to train the EPM and generate/choose next configurations.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
-<dt class="sig sig-object py" id="smac.loop.smbo.SMBO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.loop.smbo.</span></span><span class="sig-name descname"><span class="pre">SMBO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/loop/smbo.html#SMBO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.loop.smbo.SMBO" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.loop.base_smbo.html#smac.loop.base_smbo.BaseSMBO" title="smac.loop.base_smbo.BaseSMBO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseSMBO</span></code></a></p>
+<dt class="sig sig-object py" id="smac.main.smbo.SMBO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.main.smbo.</span></span><span class="sig-name descname"><span class="pre">SMBO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/smbo.html#SMBO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.smbo.SMBO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="smac.main.base_smbo.html#smac.main.base_smbo.BaseSMBO" title="smac.main.base_smbo.BaseSMBO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseSMBO</span></code></a></p>
 <p>Interface to train the EPM and generate/choose next configurations.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.loop.smbo.SMBO.ask">
-<span class="sig-name descname"><span class="pre">ask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/loop/smbo.html#SMBO.ask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.loop.smbo.SMBO.ask" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.main.smbo.SMBO.ask">
+<span class="sig-name descname"><span class="pre">ask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/smbo.html#SMBO.ask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.smbo.SMBO.ask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Choose next candidate solution with Bayesian optimization. The suggested configurations
 depend on the surrogate model acquisition optimizer/function.</p>
 <dl class="field-list simple">
@@ -358,8 +358,8 @@ depend on the surrogate model acquisition optimizer/function.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.loop.smbo.SMBO.tell">
-<span class="sig-name descname"><span class="pre">tell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/loop/smbo.html#SMBO.tell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.loop.smbo.SMBO.tell" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.main.smbo.SMBO.tell">
+<span class="sig-name descname"><span class="pre">tell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/smbo.html#SMBO.tell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.smbo.SMBO.tell" title="Permalink to this definition">¶</a></dt>
 <dd><p>The SMBO submits a config-run-request via a RunInfo object. When that config run is
 completed, a RunValue, which contains all the relevant information obtained after running a
 job, is returned. This method incorporates the status of that run into the stats/runhistory
@@ -391,17 +391,17 @@ which also has the side effect of moving the intensifier to a new state</p>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.loop.boing.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.main.boing.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.loop.boing</p>
+            <p class="prev-next-title">smac.main.boing</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.loop.turbo.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.main.turbo.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.loop.turbo</p>
+        <p class="prev-next-title">smac.main.turbo</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

@@ -1,7 +1,7 @@
-smac.loop.turbo
+smac.main.turbo
 ===============
 
-.. automodule:: smac.loop.turbo
+.. automodule:: smac.main.turbo
 
    
    

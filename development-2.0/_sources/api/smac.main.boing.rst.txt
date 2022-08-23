@@ -1,7 +1,7 @@
-smac.loop.boing
+smac.main.boing
 ===============
 
-.. automodule:: smac.loop.boing
+.. automodule:: smac.main.boing
 
    
    
