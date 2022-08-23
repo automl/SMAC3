@@ -33,7 +33,7 @@ from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.runner import Runner
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.scenario import Scenario
-from smac.loop import SMBO
+from smac.main import SMBO
 from smac.utils.data_structures import recursively_compare_dicts
 from smac.utils.logging import get_logger, setup_logging
 from smac.utils.stats import Stats

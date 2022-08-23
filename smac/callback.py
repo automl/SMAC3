@@ -14,22 +14,22 @@ class Callback:
         pass
 
     @abstractmethod
-    def on_start(self, smbo: smac.loop.BaseSMBO) -> None:
+    def on_start(self, smbo: smac.main.BaseSMBO) -> None:
         """Called before the optimization starts."""
         pass
 
     @abstractmethod
-    def on_end(self, smbo: smac.loop.BaseSMBO) -> None:
+    def on_end(self, smbo: smac.main.BaseSMBO) -> None:
         """Called after the optimization finished."""
         pass
 
     @abstractmethod
-    def on_iteration_start(self, smbo: smac.loop.BaseSMBO) -> None:
+    def on_iteration_start(self, smbo: smac.main.BaseSMBO) -> None:
         """Called before the next run is sampled."""
         pass
 
     @abstractmethod
-    def on_iteration_end(self, smbo: smac.loop.BaseSMBO, info: RunInfo, value: RunValue) -> bool | None:
+    def on_iteration_end(self, smbo: smac.main.BaseSMBO, info: RunInfo, value: RunValue) -> bool | None:
         """Called after the finished run is added to the runhistory. Optionally, return `False` to
         gracefully stop the optimization."""
         pass

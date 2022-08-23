@@ -4,7 +4,7 @@ from typing import Iterator
 
 from smac.acquisition.functions.thompson import TS
 from smac.configspace import Configuration
-from smac.loop.smbo import SMBO
+from smac.main.smbo import SMBO
 from smac.model.utils import get_types
 from smac.utils.logging import get_logger
 from smac.utils.subspaces.turbo_subspace import TuRBOSubSpace
@@ -41,15 +41,19 @@ class TurBOSMBO(SMBO):
     kwargs:
         additional arguments for initialize base SMBO object
     """
-    def __init__(self,
-                 length_init: float = 0.8,
-                 length_min: float = 0.5 ** 8,
-                 length_max: float = 1.6,
-                 success_tol: int = 3,
-                 failure_tol_min: int = 4,
-                 n_init_x_params: int = 2,
-                 n_candidate_max: int = 5000,
-                 *args, **kwargs):
+
+    def __init__(
+        self,
+        length_init: float = 0.8,
+        length_min: float = 0.5**8,
+        length_max: float = 1.6,
+        success_tol: int = 3,
+        failure_tol_min: int = 4,
+        n_init_x_params: int = 2,
+        n_candidate_max: int = 5000,
+        *args,
+        **kwargs,
+    ):
         super(TurBOSMBO, self).__init__(*args, **kwargs)
 
         types, bounds = get_types(self.configspace, instance_features=None)

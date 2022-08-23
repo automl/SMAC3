@@ -14,7 +14,7 @@ from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.functions.thompson import TS
 from smac.configspace import Configuration
 from smac.constants import MAXINT
-from smac.loop.smbo import SMBO
+from smac.main.smbo import SMBO
 from smac.model.base_model import BaseModel
 from smac.model.gaussian_process.gpytorch import (
     GloballyAugmentedLocalGaussianProcess,
@@ -70,19 +70,22 @@ class BOinGSMBO(SMBO):
     kwargs:
         additional arguments for initialize base SMBO object
     """
+
     def __init__(
-            self,
-            model_local: Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
-            acquisition_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
-            model_local_kwargs: Dict | None = None,
-            acquisition_func_local_kwargs: Dict | None = None,
-            acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
-            acq_optimizer_local_kwargs: Dict | None = None,
-            max_configs_local_fracs: float = 0.5,
-            min_configs_local: int | None = None,
-            do_switching: bool = False,
-            turbo_kwargs: Dict | None = None,
-            *args, **kwargs):
+        self,
+        model_local: Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
+        acquisition_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
+        model_local_kwargs: Dict | None = None,
+        acquisition_func_local_kwargs: Dict | None = None,
+        acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
+        acq_optimizer_local_kwargs: Dict | None = None,
+        max_configs_local_fracs: float = 0.5,
+        min_configs_local: int | None = None,
+        do_switching: bool = False,
+        turbo_kwargs: Dict | None = None,
+        *args,
+        **kwargs,
+    ):
         super(BOinGSMBO, self).__init__(*args, **kwargs)
 
         if not isinstance(self.model, RandomForestWithInstances):
@@ -469,14 +472,14 @@ class BOinGSMBO(SMBO):
 
 
 def subspace_extraction(
-        X: np.ndarray,
-        challenger: np.ndarray,
-        model: RandomForestWithInstances,
-        num_min: int,
-        num_max: int,
-        bounds: np.ndarray | List[Tuple],
-        cat_dims: np.ndarray,
-        cont_dims: np.ndarray,
+    X: np.ndarray,
+    challenger: np.ndarray,
+    model: RandomForestWithInstances,
+    num_min: int,
+    num_max: int,
+    bounds: np.ndarray | List[Tuple],
+    cat_dims: np.ndarray,
+    cont_dims: np.ndarray,
 ) -> Tuple[np.ndarray, List[Tuple], np.ndarray]:
     """
     Extract a subspace that contains at least num_min points but no more than num_max points

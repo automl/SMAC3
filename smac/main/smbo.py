@@ -8,7 +8,7 @@ import numpy as np
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
 from smac.utils.logging import get_logger
-from smac.loop.base_smbo import BaseSMBO
+from smac.main.base_smbo import BaseSMBO
 import numpy as np
 from smac.runhistory import RunInfo, RunValue, StatusType
 from smac.utils.logging import get_logger

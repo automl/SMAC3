@@ -1,4 +1,5 @@
 from __future__ import annotations
+from abc import abstractmethod
 
 from typing import Any, List
 
@@ -97,6 +98,7 @@ class InitialDesign:
                 f"Initial budget {self.n_configs} cannot be higher than the number of trials {scenario.n_trials}."
             )
 
+    @abstractmethod
     def _select_configurations(self) -> List[Configuration]:
         raise NotImplementedError
 

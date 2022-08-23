@@ -6,7 +6,7 @@ from contextlib import suppress
 from unittest.mock import patch
 
 from smac.cli.scenario import Scenario
-from smac.loop import SMBO
+from smac.main import SMBO
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
