@@ -356,15 +356,8 @@ style="width: 100%;">
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_runhistory_encoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistoryRawEncoder</span><span class="p">:</span>
-        <span class="n">transformer</span> <span class="o">=</span> <span class="n">RunHistoryLogScaledEncoder</span><span class="p">(</span>
-            <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
-            <span class="n">n_params</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()),</span>
-            <span class="n">scale_percentage</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-            <span class="n">seed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">transformer</span>
+    <span class="k">def</span> <span class="nf">get_runhistory_encoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistoryLogScaledEncoder</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RunHistoryLogScaledEncoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">scale_percentage</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_random_design</span><span class="p">(</span>
@@ -387,19 +380,20 @@ style="width: 100%;">
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">optimizer</span>
 
-    <span class="k">def</span> <span class="nf">_init_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                        <span class="n">min_samples_model</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-                        <span class="n">model_local</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]</span> <span class="o">=</span> <span class="n">GloballyAugmentedLocalGaussianProcess</span><span class="p">,</span>
-                        <span class="n">model_local_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                        <span class="n">acquisition_func_local</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span> <span class="o">|</span> <span class="n">Type</span><span class="p">[</span><span class="n">AbstractAcquisitionFunction</span><span class="p">]</span> <span class="o">=</span> <span class="n">EI</span><span class="p">,</span>
-                        <span class="n">acquisition_func_local_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                        <span class="n">acq_optimizer_local</span><span class="p">:</span> <span class="n">AbstractAcquisitionOptimizer</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                        <span class="n">acq_optimizer_local_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                        <span class="n">max_configs_local_fracs</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
-                        <span class="n">min_configs_local</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                        <span class="n">do_switching</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                        <span class="n">turbo_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                        <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_init_optimizer</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">min_samples_model</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">model_local</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]</span> <span class="o">=</span> <span class="n">GloballyAugmentedLocalGaussianProcess</span><span class="p">,</span>
+        <span class="n">model_local_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">acquisition_func_local</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span> <span class="o">|</span> <span class="n">Type</span><span class="p">[</span><span class="n">AbstractAcquisitionFunction</span><span class="p">]</span> <span class="o">=</span> <span class="n">EI</span><span class="p">,</span>
+        <span class="n">acquisition_func_local_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">acq_optimizer_local</span><span class="p">:</span> <span class="n">AbstractAcquisitionOptimizer</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">acq_optimizer_local_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_configs_local_fracs</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">min_configs_local</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">do_switching</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">turbo_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -452,7 +446,6 @@ style="width: 100%;">
             <span class="n">min_configs_local</span><span class="o">=</span><span class="n">min_configs_local</span><span class="p">,</span>
             <span class="n">do_switching</span><span class="o">=</span><span class="n">do_switching</span><span class="p">,</span>
             <span class="n">turbo_kwargs</span><span class="o">=</span><span class="n">turbo_kwargs</span><span class="p">,</span>
-
         <span class="p">)</span>
 
 <div class="viewcode-block" id="BOinGFacade.get_lgpga_local_components"><a class="viewcode-back" href="../../../api/smac.facade.boing_facade.html#smac.facade.boing_facade.BOinGFacade.get_lgpga_local_components">[docs]</a>    <span class="nd">@staticmethod</span>

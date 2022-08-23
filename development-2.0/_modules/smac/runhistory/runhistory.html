@@ -500,7 +500,6 @@ style="width: 100%;">
         <span class="c1"># Update objective bounds based on raw data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_objective_bounds</span><span class="p">()</span>
 
-        <span class="c1"># Capped data is added above</span>
         <span class="c1"># Do not register the cost until the run has completed</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="n">origin</span>
@@ -511,16 +510,16 @@ style="width: 100%;">
             <span class="ow">and</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">RUNNING</span>
         <span class="p">):</span>
             <span class="c1"># Also add to fast data structure</span>
-            <span class="n">is_k</span> <span class="o">=</span> <span class="n">InstanceSeedKey</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+            <span class="n">isk</span> <span class="o">=</span> <span class="n">InstanceSeedKey</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_config_id_to_inst_seed_budget</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_id_to_inst_seed_budget</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">,</span> <span class="p">{})</span>
 
-            <span class="k">if</span> <span class="n">is_k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_id_to_inst_seed_budget</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">isk</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_id_to_inst_seed_budget</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="c1"># Add new inst-seed-key with budget to main dict</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_config_id_to_inst_seed_budget</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">][</span><span class="n">is_k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">budget</span><span class="p">]</span>
-            <span class="c1"># Before it was k.budget not in is_k</span>
-            <span class="k">elif</span> <span class="n">k</span><span class="o">.</span><span class="n">budget</span> <span class="o">!=</span> <span class="n">is_k</span><span class="o">.</span><span class="n">instance</span> <span class="ow">and</span> <span class="n">k</span><span class="o">.</span><span class="n">budget</span> <span class="o">!=</span> <span class="n">is_k</span><span class="o">.</span><span class="n">seed</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_config_id_to_inst_seed_budget</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">][</span><span class="n">isk</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">budget</span><span class="p">]</span>
+            <span class="c1"># Before it was k.budget not in isk</span>
+            <span class="k">elif</span> <span class="n">k</span><span class="o">.</span><span class="n">budget</span> <span class="o">!=</span> <span class="n">isk</span><span class="o">.</span><span class="n">instance</span> <span class="ow">and</span> <span class="n">k</span><span class="o">.</span><span class="n">budget</span> <span class="o">!=</span> <span class="n">isk</span><span class="o">.</span><span class="n">seed</span><span class="p">:</span>
                 <span class="c1"># Append new budget to existing inst-seed-key dict</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_config_id_to_inst_seed_budget</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">][</span><span class="n">is_k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_config_id_to_inst_seed_budget</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">][</span><span class="n">isk</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
 
             <span class="c1"># If budget is used, then update cost instead of incremental updates</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_existing_runs</span> <span class="ow">and</span> <span class="n">k</span><span class="o">.</span><span class="n">budget</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -1015,6 +1014,7 @@ style="width: 100%;">
         <span class="n">config_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_ids</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
         <span class="n">runs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">config_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config_id_to_inst_seed_budget</span><span class="p">)</span>
             <span class="n">runs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_id_to_inst_seed_budget</span><span class="p">[</span><span class="n">config_id</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
         <span class="c1"># Select only the max budget run if specified</span>
