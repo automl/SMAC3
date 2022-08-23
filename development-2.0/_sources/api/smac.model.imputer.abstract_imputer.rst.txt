@@ -13,12 +13,6 @@ smac.model.imputer.abstract\_imputer
 
    
    
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      AbstractImputer
-   
    
 
    

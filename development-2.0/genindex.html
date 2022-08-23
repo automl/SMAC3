@@ -146,23 +146,23 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="examples/basics/index.html">
+    <a class="reference internal" href="examples/1_basics/index.html">
      Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="examples/commandline/index.html">
-     Commandline
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="examples/multi_fidelity/index.html">
+    <a class="reference internal" href="examples/2_multi_fidelity/index.html">
      Multi-Fidelity and Multi-Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="examples/multi_objective/index.html">
+    <a class="reference internal" href="examples/3_multi_objective/index.html">
      Multi-Objective
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="examples/4_commandline/index.html">
+     Commandline
     </a>
    </li>
   </ul>
@@ -199,11 +199,6 @@ style="width: 100%;">
    </i>
   </label>
   <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="api/smac.loop.html">
-     smac.loop
-    </a>
-   </li>
    <li class="toctree-l2">
     <a class="reference internal" href="api/smac.facade.html">
      smac.facade
@@ -247,6 +242,11 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="api/smac.multi_objective.html">
      smac.multi_objective
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="api/smac.loop.html">
+     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
@@ -349,6 +349,10 @@ style="width: 100%;">
       <ul>
         <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction.__call__">(smac.acquisition.functions.AbstractAcquisitionFunction method)</a>
 </li>
+        <li><a href="api/smac.multi_objective.abstract_multi_objective_algorithm.html#smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm.__call__">(smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm method)</a>
+</li>
+        <li><a href="api/smac.multi_objective.html#smac.multi_objective.AbstractMultiObjectiveAlgorithm.__call__">(smac.multi_objective.AbstractMultiObjectiveAlgorithm method)</a>
+</li>
         <li><a href="api/smac.multi_objective.aggregation_strategy.html#smac.multi_objective.aggregation_strategy.AggregationStrategy.__call__">(smac.multi_objective.aggregation_strategy.AggregationStrategy method)</a>
 </li>
         <li><a href="api/smac.multi_objective.aggregation_strategy.html#smac.multi_objective.aggregation_strategy.MeanAggregationStrategy.__call__">(smac.multi_objective.aggregation_strategy.MeanAggregationStrategy method)</a>
@@ -450,12 +454,6 @@ style="width: 100%;">
         <li><a href="api/smac.acquisition.abstract_acqusition_optimizer.html#smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer">(class in smac.acquisition.abstract_acqusition_optimizer)</a>
 </li>
       </ul></li>
-      <li><a href="api/smac.model.imputer.html#smac.model.imputer.AbstractImputer">AbstractImputer (class in smac.model.imputer)</a>
-
-      <ul>
-        <li><a href="api/smac.model.imputer.abstract_imputer.html#smac.model.imputer.abstract_imputer.AbstractImputer">(class in smac.model.imputer.abstract_imputer)</a>
-</li>
-      </ul></li>
       <li><a href="api/smac.intensification.html#smac.intensification.AbstractIntensifier">AbstractIntensifier (class in smac.intensification)</a>
 
       <ul>
@@ -468,6 +466,12 @@ style="width: 100%;">
         <li><a href="api/smac.multi_objective.abstract_multi_objective_algorithm.html#smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm">(class in smac.multi_objective.abstract_multi_objective_algorithm)</a>
 </li>
       </ul></li>
+      <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder">AbstractRunHistoryEncoder (class in smac.runhistory.encoder)</a>
+
+      <ul>
+        <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder">(class in smac.runhistory.encoder.abstract_encoder)</a>
+</li>
+      </ul></li>
       <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.add">add() (smac.runhistory.RunHistory method)</a>
 
       <ul>
@@ -478,10 +482,10 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.configspace.html#smac.configspace.ConfigurationSpace.add_conditions">add_conditions() (smac.configspace.ConfigurationSpace method)</a>
 </li>
-      <li><a href="api/smac.configspace.html#smac.configspace.ConfigurationSpace.add_configuration_space">add_configuration_space() (smac.configspace.ConfigurationSpace method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/smac.configspace.html#smac.configspace.ConfigurationSpace.add_configuration_space">add_configuration_space() (smac.configspace.ConfigurationSpace method)</a>
+</li>
       <li><a href="api/smac.configspace.html#smac.configspace.ConfigurationSpace.add_forbidden_clause">add_forbidden_clause() (smac.configspace.ConfigurationSpace method)</a>
 </li>
       <li><a href="api/smac.configspace.html#smac.configspace.ConfigurationSpace.add_forbidden_clauses">add_forbidden_clauses() (smac.configspace.ConfigurationSpace method)</a>
@@ -504,15 +508,11 @@ style="width: 100%;">
         <li><a href="api/smac.multi_objective.aggregation_strategy.html#smac.multi_objective.aggregation_strategy.AggregationStrategy">(class in smac.multi_objective.aggregation_strategy)</a>
 </li>
       </ul></li>
-      <li><a href="api/smac.model.imputer.random_forest_imputer.html#smac.model.imputer.random_forest_imputer.RandomForestImputer.algorithm_walltime_limit">algorithm_walltime_limit (smac.model.imputer.random_forest_imputer.RandomForestImputer attribute)</a>
-
-      <ul>
-        <li><a href="api/smac.model.imputer.html#smac.model.imputer.RandomForestImputer.algorithm_walltime_limit">(smac.model.imputer.RandomForestImputer attribute)</a>
-</li>
-      </ul></li>
       <li><a href="api/smac.loop.base_smbo.html#smac.loop.base_smbo.BaseSMBO.ask">ask() (smac.loop.base_smbo.BaseSMBO method)</a>
 
       <ul>
+        <li><a href="api/smac.loop.html#smac.loop.BaseSMBO.ask">(smac.loop.BaseSMBO method)</a>
+</li>
         <li><a href="api/smac.loop.boing.html#smac.loop.boing.BOinGSMBO.ask">(smac.loop.boing.BOinGSMBO method)</a>
 </li>
         <li><a href="api/smac.loop.html#smac.loop.SMBO.ask">(smac.loop.SMBO method)</a>
@@ -554,12 +554,16 @@ style="width: 100%;">
         <li><a href="api/smac.model.random_forest.base_random_forest.html#smac.model.random_forest.base_random_forest.BaseRandomForest">(class in smac.model.random_forest.base_random_forest)</a>
 </li>
       </ul></li>
-      <li><a href="api/smac.loop.base_smbo.html#smac.loop.base_smbo.BaseSMBO">BaseSMBO (class in smac.loop.base_smbo)</a>
+      <li><a href="api/smac.loop.html#smac.loop.BaseSMBO">BaseSMBO (class in smac.loop)</a>
+
+      <ul>
+        <li><a href="api/smac.loop.base_smbo.html#smac.loop.base_smbo.BaseSMBO">(class in smac.loop.base_smbo)</a>
 </li>
-      <li><a href="glossary.html#term-BB"><strong>BB</strong></a>
-</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="glossary.html#term-BB"><strong>BB</strong></a>
+</li>
       <li><a href="glossary.html#term-BO"><strong>BO</strong></a>
 </li>
       <li><a href="glossary.html#term-BOHB"><strong>BOHB</strong></a>
@@ -588,12 +592,6 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.utils.subspaces.html#smac.utils.subspaces.ChallengerListLocal">ChallengerListLocal (class in smac.utils.subspaces)</a>
 </li>
-      <li><a href="api/smac.model.imputer.random_forest_imputer.html#smac.model.imputer.random_forest_imputer.RandomForestImputer.change_threshold">change_threshold (smac.model.imputer.random_forest_imputer.RandomForestImputer attribute)</a>
-
-      <ul>
-        <li><a href="api/smac.model.imputer.html#smac.model.imputer.RandomForestImputer.change_threshold">(smac.model.imputer.RandomForestImputer attribute)</a>
-</li>
-      </ul></li>
       <li><a href="api/smac.random_design.cosine_annealing_design.html#smac.random_design.cosine_annealing_design.CosineAnnealingRandomDesign.check">check() (smac.random_design.cosine_annealing_design.CosineAnnealingRandomDesign method)</a>
 
       <ul>
@@ -641,7 +639,15 @@ style="width: 100%;">
 </li>
       </ul></li>
       <li><a href="api/smac.loop.base_smbo.html#smac.loop.base_smbo.BaseSMBO.config">config (smac.loop.base_smbo.BaseSMBO attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.loop.html#smac.loop.BaseSMBO.config">(smac.loop.BaseSMBO attribute)</a>
 </li>
+        <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.config">(smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder attribute)</a>
+</li>
+        <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.config">(smac.runhistory.encoder.AbstractRunHistoryEncoder attribute)</a>
+</li>
+      </ul></li>
       <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.config_ids">config_ids (smac.runhistory.RunHistory attribute)</a>
 
       <ul>
@@ -649,7 +655,11 @@ style="width: 100%;">
 </li>
       </ul></li>
       <li><a href="api/smac.loop.base_smbo.html#smac.loop.base_smbo.BaseSMBO.config_space">config_space (smac.loop.base_smbo.BaseSMBO attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.loop.html#smac.loop.BaseSMBO.config_space">(smac.loop.BaseSMBO attribute)</a>
 </li>
+      </ul></li>
       <li><a href="api/smac.initial_design.factorial_design.html#smac.initial_design.factorial_design.FactorialInitialDesign.configs">configs (smac.initial_design.factorial_design.FactorialInitialDesign attribute)</a>
 
       <ul>
@@ -726,6 +736,12 @@ style="width: 100%;">
       </ul></li>
       <li><a href="api/smac.utils.logging.html#smac.utils.logging.CustomFormatter">CustomFormatter (class in smac.utils.logging)</a>
 </li>
+      <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.cutoff_time">cutoff_time (smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.cutoff_time">(smac.runhistory.encoder.AbstractRunHistoryEncoder attribute)</a>
+</li>
+      </ul></li>
       <li><a href="glossary.html#term-CV"><strong>CV</strong></a>
 </li>
   </ul></td>
@@ -884,18 +900,6 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.configspace.html#smac.configspace.ConfigurationSpace.get_all_conditional_hyperparameters">get_all_conditional_hyperparameters() (smac.configspace.ConfigurationSpace method)</a>
 </li>
-      <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.get_all_configs">get_all_configs() (smac.runhistory.RunHistory method)</a>
-
-      <ul>
-        <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_all_configs">(smac.runhistory.runhistory.RunHistory method)</a>
-</li>
-      </ul></li>
-      <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.get_all_configs_per_budget">get_all_configs_per_budget() (smac.runhistory.RunHistory method)</a>
-
-      <ul>
-        <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_all_configs_per_budget">(smac.runhistory.runhistory.RunHistory method)</a>
-</li>
-      </ul></li>
       <li><a href="api/smac.configspace.html#smac.configspace.ConfigurationSpace.get_all_unconditional_hyperparameters">get_all_unconditional_hyperparameters() (smac.configspace.ConfigurationSpace method)</a>
 </li>
       <li><a href="api/smac.configspace.html#smac.configspace.Configuration.get_array">get_array() (smac.configspace.Configuration method)</a>
@@ -908,10 +912,28 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.configspace.html#smac.configspace.ConfigurationSpace.get_conditions">get_conditions() (smac.configspace.ConfigurationSpace method)</a>
 </li>
+      <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.get_configs">get_configs() (smac.runhistory.RunHistory method)</a>
+
+      <ul>
+        <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_configs">(smac.runhistory.runhistory.RunHistory method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.get_configs_per_budget">get_configs_per_budget() (smac.runhistory.RunHistory method)</a>
+
+      <ul>
+        <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_configs_per_budget">(smac.runhistory.runhistory.RunHistory method)</a>
+</li>
+      </ul></li>
       <li><a href="api/smac.model.base_model.html#smac.model.base_model.BaseModel.get_configspace">get_configspace() (smac.model.base_model.BaseModel method)</a>
 
       <ul>
         <li><a href="api/smac.model.html#smac.model.BaseModel.get_configspace">(smac.model.BaseModel method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.get_configurations">get_configurations() (smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder method)</a>
+
+      <ul>
+        <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.get_configurations">(smac.runhistory.encoder.AbstractRunHistoryEncoder method)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.get_cost">get_cost() (smac.runhistory.RunHistory method)</a>
@@ -956,12 +978,6 @@ style="width: 100%;">
 
       <ul>
         <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_incumbent">(smac.runhistory.runhistory.RunHistory method)</a>
-</li>
-      </ul></li>
-      <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.get_instance_costs_for_config">get_instance_costs_for_config() (smac.runhistory.RunHistory method)</a>
-
-      <ul>
-        <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_instance_costs_for_config">(smac.runhistory.runhistory.RunHistory method)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.facade.boing_facade.html#smac.facade.boing_facade.BOinGFacade.get_lgpga_local_components">get_lgpga_local_components() (smac.facade.boing_facade.BOinGFacade static method)</a>
@@ -1111,6 +1127,10 @@ style="width: 100%;">
 </li>
         <li><a href="api/smac.random_design.html#smac.random_design.RandomDesign.get_meta">(smac.random_design.RandomDesign method)</a>
 </li>
+        <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.get_meta">(smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder method)</a>
+</li>
+        <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.get_meta">(smac.runhistory.encoder.AbstractRunHistoryEncoder method)</a>
+</li>
         <li><a href="api/smac.runner.dask_runner.html#smac.runner.dask_runner.DaskParallelRunner.get_meta">(smac.runner.dask_runner.DaskParallelRunner method)</a>
 </li>
         <li><a href="api/smac.runner.html#smac.runner.DaskParallelRunner.get_meta">(smac.runner.DaskParallelRunner method)</a>
@@ -1246,14 +1266,22 @@ style="width: 100%;">
         <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.ids_config">(smac.runhistory.runhistory.RunHistory attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api/smac.model.imputer.abstract_imputer.html#smac.model.imputer.abstract_imputer.AbstractImputer.impute">impute() (smac.model.imputer.abstract_imputer.AbstractImputer method)</a>
+      <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.impute_censored_data">impute_censored_data (smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder attribute)</a>
 
       <ul>
-        <li><a href="api/smac.model.imputer.html#smac.model.imputer.AbstractImputer.impute">(smac.model.imputer.AbstractImputer method)</a>
+        <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.impute_censored_data">(smac.runhistory.encoder.AbstractRunHistoryEncoder attribute)</a>
 </li>
-        <li><a href="api/smac.model.imputer.random_forest_imputer.html#smac.model.imputer.random_forest_imputer.RandomForestImputer.impute">(smac.model.imputer.random_forest_imputer.RandomForestImputer method)</a>
+      </ul></li>
+      <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.impute_state">impute_state (smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.impute_state">(smac.runhistory.encoder.AbstractRunHistoryEncoder attribute)</a>
 </li>
-        <li><a href="api/smac.model.imputer.html#smac.model.imputer.RandomForestImputer.impute">(smac.model.imputer.RandomForestImputer method)</a>
+      </ul></li>
+      <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.imputer">imputer (smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.imputer">(smac.runhistory.encoder.AbstractRunHistoryEncoder attribute)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.incremental_update_cost">incremental_update_cost() (smac.runhistory.RunHistory method)</a>
@@ -1263,25 +1291,41 @@ style="width: 100%;">
 </li>
       </ul></li>
       <li><a href="api/smac.loop.base_smbo.html#smac.loop.base_smbo.BaseSMBO.incumbent">incumbent (smac.loop.base_smbo.BaseSMBO attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.loop.html#smac.loop.BaseSMBO.incumbent">(smac.loop.BaseSMBO attribute)</a>
 </li>
+      </ul></li>
       <li><a href="api/smac.loop.base_smbo.html#smac.loop.base_smbo.BaseSMBO.initial_design">initial_design (smac.loop.base_smbo.BaseSMBO attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.loop.html#smac.loop.BaseSMBO.initial_design">(smac.loop.BaseSMBO attribute)</a>
 </li>
+      </ul></li>
       <li><a href="api/smac.loop.base_smbo.html#smac.loop.base_smbo.BaseSMBO.initial_design_configs">initial_design_configs (smac.loop.base_smbo.BaseSMBO attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.loop.html#smac.loop.BaseSMBO.initial_design_configs">(smac.loop.BaseSMBO attribute)</a>
 </li>
+      </ul></li>
       <li><a href="api/smac.initial_design.html#smac.initial_design.InitialDesign">InitialDesign (class in smac.initial_design)</a>
 
       <ul>
         <li><a href="api/smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign">(class in smac.initial_design.initial_design)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.model.base_model.html#smac.model.base_model.BaseModel.instance_features">instance_features (smac.model.base_model.BaseModel attribute)</a>
 
       <ul>
         <li><a href="api/smac.model.html#smac.model.BaseModel.instance_features">(smac.model.BaseModel attribute)</a>
 </li>
+        <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.instance_features">(smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder attribute)</a>
+</li>
+        <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.instance_features">(smac.runhistory.encoder.AbstractRunHistoryEncoder attribute)</a>
+</li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.runhistory.html#smac.runhistory.InstanceSeedBudgetKey">InstanceSeedBudgetKey (class in smac.runhistory)</a>
 
       <ul>
@@ -1309,7 +1353,11 @@ style="width: 100%;">
 </li>
       </ul></li>
       <li><a href="api/smac.loop.base_smbo.html#smac.loop.base_smbo.BaseSMBO.intensifier">intensifier (smac.loop.base_smbo.BaseSMBO attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.loop.html#smac.loop.BaseSMBO.intensifier">(smac.loop.BaseSMBO attribute)</a>
 </li>
+      </ul></li>
       <li><a href="api/smac.intensification.stages.html#smac.intensification.stages.IntensifierStage">IntensifierStage (class in smac.intensification.stages)</a>
 </li>
       <li><a href="api/smac.utils.stats.html#smac.utils.stats.Stats.is_budget_exhausted">is_budget_exhausted() (smac.utils.stats.Stats method)</a>
@@ -1370,14 +1418,14 @@ style="width: 100%;">
         <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.load_json">(smac.runhistory.runhistory.RunHistory method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.acquisition.html#smac.acquisition.LocalAndSortedPriorRandomSearch">LocalAndSortedPriorRandomSearch (class in smac.acquisition)</a>
 
       <ul>
         <li><a href="api/smac.acquisition.local_and_random_search.html#smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch">(class in smac.acquisition.local_and_random_search)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.acquisition.html#smac.acquisition.LocalAndSortedRandomSearch">LocalAndSortedRandomSearch (class in smac.acquisition)</a>
 
       <ul>
@@ -1401,6 +1449,10 @@ style="width: 100%;">
 </li>
         <li><a href="api/smac.model.random_forest.html#smac.model.random_forest.RandomForestWithInstances.logger">(smac.model.random_forest.RandomForestWithInstances attribute)</a>
 </li>
+        <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.logger">(smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder attribute)</a>
+</li>
+        <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.logger">(smac.runhistory.encoder.AbstractRunHistoryEncoder attribute)</a>
+</li>
       </ul></li>
       <li><a href="api/smac.model.gaussian_process.priors.html#smac.model.gaussian_process.priors.LogNormalPrior">LogNormalPrior (class in smac.model.gaussian_process.priors)</a>
 
@@ -1418,12 +1470,6 @@ style="width: 100%;">
 
       <ul>
         <li><a href="api/smac.model.gaussian_process.kernels.matern_kernel.html#smac.model.gaussian_process.kernels.matern_kernel.Matern">(class in smac.model.gaussian_process.kernels.matern_kernel)</a>
-</li>
-      </ul></li>
-      <li><a href="api/smac.model.imputer.random_forest_imputer.html#smac.model.imputer.random_forest_imputer.RandomForestImputer.max_iter">max_iter (smac.model.imputer.random_forest_imputer.RandomForestImputer attribute)</a>
-
-      <ul>
-        <li><a href="api/smac.model.imputer.html#smac.model.imputer.RandomForestImputer.max_iter">(smac.model.imputer.RandomForestImputer attribute)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.acquisition.abstract_acqusition_optimizer.html#smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer.maximize">maximize() (smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer method)</a>
@@ -1458,10 +1504,6 @@ style="width: 100%;">
 
       <ul>
         <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction.model">(smac.acquisition.functions.AbstractAcquisitionFunction attribute)</a>
-</li>
-        <li><a href="api/smac.model.imputer.random_forest_imputer.html#smac.model.imputer.random_forest_imputer.RandomForestImputer.model">(smac.model.imputer.random_forest_imputer.RandomForestImputer attribute)</a>
-</li>
-        <li><a href="api/smac.model.imputer.html#smac.model.imputer.RandomForestImputer.model">(smac.model.imputer.RandomForestImputer attribute)</a>
 </li>
       </ul></li>
       <li>
@@ -1722,11 +1764,19 @@ style="width: 100%;">
       <ul>
         <li><a href="api/smac.model.html#smac.model.BaseModel.n_feats">(smac.model.BaseModel attribute)</a>
 </li>
+        <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.n_feats">(smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder attribute)</a>
+</li>
+        <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.n_feats">(smac.runhistory.encoder.AbstractRunHistoryEncoder attribute)</a>
+</li>
       </ul></li>
       <li><a href="api/smac.model.base_model.html#smac.model.base_model.BaseModel.n_params">n_params (smac.model.base_model.BaseModel attribute)</a>
 
       <ul>
         <li><a href="api/smac.model.html#smac.model.BaseModel.n_params">(smac.model.BaseModel attribute)</a>
+</li>
+        <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#id0">(smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder attribute)</a>, <a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.n_params">[1]</a>
+</li>
+        <li><a href="api/smac.runhistory.encoder.html#id0">(smac.runhistory.encoder.AbstractRunHistoryEncoder attribute)</a>, <a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.n_params">[1]</a>
 </li>
       </ul></li>
       <li><a href="api/smac.model.random_forest.random_forest_with_instances.html#smac.model.random_forest.random_forest_with_instances.RandomForestWithInstances.n_points_per_tree">n_points_per_tree (smac.model.random_forest.random_forest_with_instances.RandomForestWithInstances attribute)</a>
@@ -1959,12 +2009,6 @@ style="width: 100%;">
         <li><a href="api/smac.random_design.random_design.html#smac.random_design.random_design.RandomDesign">(class in smac.random_design.random_design)</a>
 </li>
       </ul></li>
-      <li><a href="api/smac.model.imputer.html#smac.model.imputer.RandomForestImputer">RandomForestImputer (class in smac.model.imputer)</a>
-
-      <ul>
-        <li><a href="api/smac.model.imputer.random_forest_imputer.html#smac.model.imputer.random_forest_imputer.RandomForestImputer">(class in smac.model.imputer.random_forest_imputer)</a>
-</li>
-      </ul></li>
       <li><a href="api/smac.model.random_forest.html#smac.model.random_forest.RandomForestWithInstances">RandomForestWithInstances (class in smac.model.random_forest)</a>
 
       <ul>
@@ -2026,9 +2070,15 @@ style="width: 100%;">
       <li><a href="api/smac.loop.base_smbo.html#smac.loop.base_smbo.BaseSMBO.rng">rng (smac.loop.base_smbo.BaseSMBO attribute)</a>
 
       <ul>
+        <li><a href="api/smac.loop.html#smac.loop.BaseSMBO.rng">(smac.loop.BaseSMBO attribute)</a>
+</li>
         <li><a href="api/smac.model.random_forest.random_forest_with_instances.html#smac.model.random_forest.random_forest_with_instances.RandomForestWithInstances.rng">(smac.model.random_forest.random_forest_with_instances.RandomForestWithInstances attribute)</a>
 </li>
         <li><a href="api/smac.model.random_forest.html#smac.model.random_forest.RandomForestWithInstances.rng">(smac.model.random_forest.RandomForestWithInstances attribute)</a>
+</li>
+        <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.rng">(smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder attribute)</a>
+</li>
+        <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.rng">(smac.runhistory.encoder.AbstractRunHistoryEncoder attribute)</a>
 </li>
       </ul></li>
       <li><a href="glossary.html#term-ROAR"><strong>ROAR</strong></a>
@@ -2036,6 +2086,8 @@ style="width: 100%;">
       <li><a href="api/smac.loop.base_smbo.html#smac.loop.base_smbo.BaseSMBO.run">run() (smac.loop.base_smbo.BaseSMBO method)</a>
 
       <ul>
+        <li><a href="api/smac.loop.html#smac.loop.BaseSMBO.run">(smac.loop.BaseSMBO method)</a>
+</li>
         <li><a href="api/smac.runner.dask_runner.html#smac.runner.dask_runner.DaskParallelRunner.run">(smac.runner.dask_runner.DaskParallelRunner method)</a>
 </li>
         <li><a href="api/smac.runner.html#smac.runner.DaskParallelRunner.run">(smac.runner.DaskParallelRunner method)</a>
@@ -2074,7 +2126,11 @@ style="width: 100%;">
 </li>
       </ul></li>
       <li><a href="api/smac.loop.base_smbo.html#smac.loop.base_smbo.BaseSMBO.runhistory">runhistory (smac.loop.base_smbo.BaseSMBO attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.loop.html#smac.loop.BaseSMBO.runhistory">(smac.loop.BaseSMBO attribute)</a>
 </li>
+      </ul></li>
       <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.RunHistoryEIPSEncoder">RunHistoryEIPSEncoder (class in smac.runhistory.encoder)</a>
 
       <ul>
@@ -2154,7 +2210,11 @@ style="width: 100%;">
 </li>
       </ul></li>
       <li><a href="api/smac.loop.base_smbo.html#smac.loop.base_smbo.BaseSMBO.runner">runner (smac.loop.base_smbo.BaseSMBO attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.loop.html#smac.loop.BaseSMBO.runner">(smac.loop.BaseSMBO attribute)</a>
 </li>
+      </ul></li>
       <li><a href="api/smac.runhistory.html#smac.runhistory.RunValue">RunValue (class in smac.runhistory)</a>
 
       <ul>
@@ -2184,6 +2244,8 @@ style="width: 100%;">
       <li><a href="api/smac.loop.base_smbo.html#smac.loop.base_smbo.BaseSMBO.save">save() (smac.loop.base_smbo.BaseSMBO method)</a>
 
       <ul>
+        <li><a href="api/smac.loop.html#smac.loop.BaseSMBO.save">(smac.loop.BaseSMBO method)</a>
+</li>
         <li><a href="api/smac.scenario.html#smac.scenario.Scenario.save">(smac.scenario.Scenario method)</a>
 </li>
         <li><a href="api/smac.utils.stats.html#smac.utils.stats.Stats.save">(smac.utils.stats.Stats method)</a>
@@ -2203,13 +2265,9 @@ style="width: 100%;">
       </ul></li>
       <li><a href="api/smac.scenario.html#smac.scenario.Scenario">Scenario (class in smac.scenario)</a>
 </li>
-      <li><a href="api/smac.model.imputer.random_forest_imputer.html#smac.model.imputer.random_forest_imputer.RandomForestImputer.seed">seed (smac.model.imputer.random_forest_imputer.RandomForestImputer attribute)</a>
+      <li><a href="api/smac.model.random_forest.random_forest_with_instances.html#smac.model.random_forest.random_forest_with_instances.RandomForestWithInstances.seed">seed (smac.model.random_forest.random_forest_with_instances.RandomForestWithInstances attribute)</a>
 
       <ul>
-        <li><a href="api/smac.model.imputer.html#smac.model.imputer.RandomForestImputer.seed">(smac.model.imputer.RandomForestImputer attribute)</a>
-</li>
-        <li><a href="api/smac.model.random_forest.random_forest_with_instances.html#smac.model.random_forest.random_forest_with_instances.RandomForestWithInstances.seed">(smac.model.random_forest.random_forest_with_instances.RandomForestWithInstances attribute)</a>
-</li>
         <li><a href="api/smac.model.random_forest.html#smac.model.random_forest.RandomForestWithInstances.seed">(smac.model.random_forest.RandomForestWithInstances attribute)</a>
 </li>
       </ul></li>
@@ -2643,8 +2701,6 @@ style="width: 100%;">
         <li><a href="api/smac.model.gaussian_process.kernels.utils.html#module-smac.model.gaussian_process.kernels.utils">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.model.gaussian_process.kernels.white_kernel
 
@@ -2652,6 +2708,8 @@ style="width: 100%;">
         <li><a href="api/smac.model.gaussian_process.kernels.white_kernel.html#module-smac.model.gaussian_process.kernels.white_kernel">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.model.gaussian_process.mcmc_gaussian_process
 
@@ -3058,6 +3116,8 @@ style="width: 100%;">
       <li><a href="api/smac.loop.base_smbo.html#smac.loop.base_smbo.BaseSMBO.stats">stats (smac.loop.base_smbo.BaseSMBO attribute)</a>
 
       <ul>
+        <li><a href="api/smac.loop.html#smac.loop.BaseSMBO.stats">(smac.loop.BaseSMBO attribute)</a>
+</li>
         <li><a href="api/smac.runner.dask_runner.html#smac.runner.dask_runner.DaskParallelRunner.stats">(smac.runner.dask_runner.DaskParallelRunner attribute)</a>
 </li>
         <li><a href="api/smac.runner.html#smac.runner.DaskParallelRunner.stats">(smac.runner.DaskParallelRunner attribute)</a>
@@ -3093,6 +3153,12 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.configspace.html#smac.configspace.ConfigurationSpace.substitute_hyperparameters_in_forbiddens">substitute_hyperparameters_in_forbiddens() (smac.configspace.ConfigurationSpace static method)</a>
 </li>
+      <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.success_states">success_states (smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.success_states">(smac.runhistory.encoder.AbstractRunHistoryEncoder attribute)</a>
+</li>
+      </ul></li>
       <li><a href="api/smac.intensification.html#smac.intensification.SuccessiveHalving">SuccessiveHalving (class in smac.intensification)</a>
 
       <ul>
@@ -3146,15 +3212,11 @@ style="width: 100%;">
       <li><a href="api/smac.loop.base_smbo.html#smac.loop.base_smbo.BaseSMBO.tell">tell() (smac.loop.base_smbo.BaseSMBO method)</a>
 
       <ul>
+        <li><a href="api/smac.loop.html#smac.loop.BaseSMBO.tell">(smac.loop.BaseSMBO method)</a>
+</li>
         <li><a href="api/smac.loop.html#smac.loop.SMBO.tell">(smac.loop.SMBO method)</a>
 </li>
         <li><a href="api/smac.loop.smbo.html#smac.loop.smbo.SMBO.tell">(smac.loop.smbo.SMBO method)</a>
-</li>
-      </ul></li>
-      <li><a href="api/smac.model.imputer.random_forest_imputer.html#smac.model.imputer.random_forest_imputer.RandomForestImputer.threshold">threshold (smac.model.imputer.random_forest_imputer.RandomForestImputer attribute)</a>
-
-      <ul>
-        <li><a href="api/smac.model.imputer.html#smac.model.imputer.RandomForestImputer.threshold">(smac.model.imputer.RandomForestImputer attribute)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.model.gaussian_process.priors.html#smac.model.gaussian_process.priors.TophatPrior">TophatPrior (class in smac.model.gaussian_process.priors)</a>
@@ -3171,6 +3233,12 @@ style="width: 100%;">
       </ul></li>
       <li><a href="api/smac.utils.stats.html#smac.utils.stats.TrajectoryItem">TrajectoryItem (class in smac.utils.stats)</a>
 </li>
+      <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.transform">transform() (smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder method)</a>
+
+      <ul>
+        <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.transform">(smac.runhistory.encoder.AbstractRunHistoryEncoder method)</a>
+</li>
+      </ul></li>
       <li><a href="api/smac.runhistory.encoder.boing_encoder.html#smac.runhistory.encoder.boing_encoder.RunHistoryRawEncoder.transform_raw_values">transform_raw_values() (smac.runhistory.encoder.boing_encoder.RunHistoryRawEncoder method)</a>
 
       <ul>
@@ -3181,9 +3249,13 @@ style="width: 100%;">
         <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.RunHistoryRawScaledEncoder.transform_raw_values">(smac.runhistory.encoder.RunHistoryRawScaledEncoder method)</a>
 </li>
       </ul></li>
-      <li><a href="api/smac.runhistory.encoder.boing_encoder.html#smac.runhistory.encoder.boing_encoder.RunHistoryRawEncoder.transform_response_values">transform_response_values() (smac.runhistory.encoder.boing_encoder.RunHistoryRawEncoder method)</a>
+      <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.transform_response_values">transform_response_values() (smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder method)</a>
 
       <ul>
+        <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.transform_response_values">(smac.runhistory.encoder.AbstractRunHistoryEncoder method)</a>
+</li>
+        <li><a href="api/smac.runhistory.encoder.boing_encoder.html#smac.runhistory.encoder.boing_encoder.RunHistoryRawEncoder.transform_response_values">(smac.runhistory.encoder.boing_encoder.RunHistoryRawEncoder method)</a>
+</li>
         <li><a href="api/smac.runhistory.encoder.eips_encoder.html#smac.runhistory.encoder.eips_encoder.RunHistoryEIPSEncoder.transform_response_values">(smac.runhistory.encoder.eips_encoder.RunHistoryEIPSEncoder method)</a>
 </li>
         <li><a href="api/smac.runhistory.encoder.encoder.html#smac.runhistory.encoder.encoder.RunHistoryEncoder.transform_response_values">(smac.runhistory.encoder.encoder.RunHistoryEncoder method)</a>
@@ -3307,10 +3379,6 @@ style="width: 100%;">
 
       <ul>
         <li><a href="api/smac.model.html#smac.model.BaseModel.var_threshold">(smac.model.BaseModel attribute)</a>
-</li>
-        <li><a href="api/smac.model.imputer.random_forest_imputer.html#smac.model.imputer.random_forest_imputer.RandomForestImputer.var_threshold">(smac.model.imputer.random_forest_imputer.RandomForestImputer attribute)</a>
-</li>
-        <li><a href="api/smac.model.imputer.html#smac.model.imputer.RandomForestImputer.var_threshold">(smac.model.imputer.RandomForestImputer attribute)</a>
 </li>
       </ul></li>
   </ul></td>

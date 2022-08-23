@@ -13,12 +13,6 @@ smac.model.imputer.random\_forest\_imputer
 
    
    
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      RandomForestImputer
-   
    
 
    

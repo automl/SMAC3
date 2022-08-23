@@ -146,23 +146,23 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/basics/index.html">
+    <a class="reference internal" href="../../../examples/1_basics/index.html">
      Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/commandline/index.html">
-     Commandline
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/multi_fidelity/index.html">
+    <a class="reference internal" href="../../../examples/2_multi_fidelity/index.html">
      Multi-Fidelity and Multi-Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/multi_objective/index.html">
+    <a class="reference internal" href="../../../examples/3_multi_objective/index.html">
      Multi-Objective
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../examples/4_commandline/index.html">
+     Commandline
     </a>
    </li>
   </ul>
@@ -199,11 +199,6 @@ style="width: 100%;">
    </i>
   </label>
   <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../api/smac.loop.html">
-     smac.loop
-    </a>
-   </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../api/smac.facade.html">
      smac.facade
@@ -247,6 +242,11 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="../../../api/smac.multi_objective.html">
      smac.multi_objective
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.loop.html">
+     smac.loop
     </a>
    </li>
    <li class="toctree-l2">
@@ -434,7 +434,7 @@ style="width: 100%;">
         <span class="k">except</span> <span class="n">WallTimeoutException</span><span class="p">:</span>
             <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">TIMEOUT</span>
         <span class="k">except</span> <span class="n">MemoryLimitException</span><span class="p">:</span>
-            <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">MEMOUT</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">MEMORYOUT</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">cost</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
             <span class="n">additional_info</span> <span class="o">=</span> <span class="p">{</span>

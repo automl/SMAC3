@@ -31,10 +31,10 @@ Basics
 
 .. only:: html
 
-  .. image:: /examples/basics/images/thumb/sphx_glr_synthetic_function_thumb.png
+  .. image:: /examples/1_basics/images/thumb/sphx_glr_1_synthetic_function_thumb.png
     :alt: Synthetic Function
 
-  :ref:`sphx_glr_examples_basics_synthetic_function.py`
+  :ref:`sphx_glr_examples_1_basics_1_synthetic_function.py`
 
 .. raw:: html
 
@@ -48,10 +48,10 @@ Basics
 
 .. only:: html
 
-  .. image:: /examples/basics/images/thumb/sphx_glr_svm_cv_thumb.png
+  .. image:: /examples/1_basics/images/thumb/sphx_glr_2_svm_cv_thumb.png
     :alt: Support Vector Machine with Cross-Validation
 
-  :ref:`sphx_glr_examples_basics_svm_cv.py`
+  :ref:`sphx_glr_examples_1_basics_2_svm_cv.py`
 
 .. raw:: html
 
@@ -65,30 +65,32 @@ Basics
 
 .. only:: html
 
-  .. image:: /examples/basics/images/thumb/sphx_glr_custom_configs_thumb.png
-    :alt: Start with Custom Configurations
+  .. image:: /examples/1_basics/images/thumb/sphx_glr_3_evaluated_configs_thumb.png
+    :alt: Start with Pre-Evaluated Configurations
 
-  :ref:`sphx_glr_examples_basics_custom_configs.py`
+  :ref:`sphx_glr_examples_1_basics_3_evaluated_configs.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Start with Custom Configurations</div>
+      <div class="sphx-glr-thumbnail-title">Start with Pre-Evaluated Configurations</div>
     </div>
 
 
 .. raw:: html
 
-    </div>
+    <div class="sphx-glr-thumbcontainer" tooltip="Full Customization">
 
-Commandline
------------
+.. only:: html
 
+  .. image:: /examples/1_basics/images/thumb/sphx_glr_4_full_customization_thumb.png
+    :alt: Full Customization
 
-
+  :ref:`sphx_glr_examples_1_basics_4_full_customization.py`
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbnails">
+      <div class="sphx-glr-thumbnail-title">Full Customization</div>
+    </div>
 
 
 .. raw:: html
@@ -112,10 +114,10 @@ Multi-Fidelity and Multi-Instances
 
 .. only:: html
 
-  .. image:: /examples/multi_fidelity/images/thumb/sphx_glr_mlp_epochs_thumb.png
+  .. image:: /examples/2_multi_fidelity/images/thumb/sphx_glr_1_mlp_epochs_thumb.png
     :alt: Multi-Layer Perceptron Using Multiple Epochs
 
-  :ref:`sphx_glr_examples_multi_fidelity_mlp_epochs.py`
+  :ref:`sphx_glr_examples_2_multi_fidelity_1_mlp_epochs.py`
 
 .. raw:: html
 
@@ -129,10 +131,10 @@ Multi-Fidelity and Multi-Instances
 
 .. only:: html
 
-  .. image:: /examples/multi_fidelity/images/thumb/sphx_glr_sgd_datasets_thumb.png
+  .. image:: /examples/2_multi_fidelity/images/thumb/sphx_glr_2_sgd_datasets_thumb.png
     :alt: Stochastic Gradient Descent On Multiple Datasets
 
-  :ref:`sphx_glr_examples_multi_fidelity_sgd_datasets.py`
+  :ref:`sphx_glr_examples_2_multi_fidelity_2_sgd_datasets.py`
 
 .. raw:: html
 
@@ -161,10 +163,10 @@ Multi-Objective
 
 .. only:: html
 
-  .. image:: /examples/multi_objective/images/thumb/sphx_glr_schaffer_thumb.png
+  .. image:: /examples/3_multi_objective/images/thumb/sphx_glr_1_schaffer_thumb.png
     :alt: 2D Schaffer Function
 
-  :ref:`sphx_glr_examples_multi_objective_schaffer.py`
+  :ref:`sphx_glr_examples_3_multi_objective_1_schaffer.py`
 
 .. raw:: html
 
@@ -176,15 +178,30 @@ Multi-Objective
 
     </div>
 
+Commandline
+-----------
+
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    </div>
+
 
 .. toctree::
    :hidden:
    :includehidden:
 
-   /examples/basics/index.rst
-   /examples/commandline/index.rst
-   /examples/multi_fidelity/index.rst
-   /examples/multi_objective/index.rst
+   /examples/1_basics/index.rst
+   /examples/2_multi_fidelity/index.rst
+   /examples/3_multi_objective/index.rst
+   /examples/4_commandline/index.rst
 
 
 .. only:: html
