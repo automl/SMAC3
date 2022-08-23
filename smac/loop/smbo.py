@@ -219,6 +219,7 @@ class SMBO(BaseSMBO):
             x_best_array = convert_configurations_to_array(all_configs)
             best_observation = self.runhistory.get_cost(x_best)
             best_observation_as_array = np.array(best_observation).reshape((1, 1))
+
             # It's unclear how to do this for inv scaling and potential future scaling.
             # This line should be changed if necessary
             best_observation = self.runhistory_encoder.transform_response_values(best_observation_as_array)

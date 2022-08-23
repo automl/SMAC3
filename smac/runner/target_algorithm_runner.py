@@ -118,7 +118,7 @@ class TargetAlgorithmRunner(SerialRunner):
         except WallTimeoutException:
             status = StatusType.TIMEOUT
         except MemoryLimitException:
-            status = StatusType.MEMOUT
+            status = StatusType.MEMORYOUT
         except Exception as e:
             cost = np.asarray(cost).squeeze().tolist()
             additional_info = {

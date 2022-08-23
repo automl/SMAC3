@@ -1,3 +1,4 @@
+'''
 from __future__ import annotations
 
 from typing import Optional
@@ -190,3 +191,4 @@ class RandomForestImputer(AbstractImputer):
             logger.critical("Imputed values are not finite, %s" % str(imputed_y))
 
         return np.reshape(imputed_y, [imputed_y.shape[0], 1])
+'''

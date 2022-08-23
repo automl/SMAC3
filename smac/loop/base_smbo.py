@@ -1,7 +1,7 @@
 from __future__ import annotations
 from abc import abstractmethod
 
-from typing import Any, Callable, Iterator, Type
+from typing import Iterator
 
 import time
 
@@ -12,9 +12,6 @@ from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
 from smac.callback import Callback
-
-# from smac.chooser.chooser import ConfigurationChooser
-# from smac.chooser.random_chooser import RandomConfigurationChooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.initial_design import InitialDesign
@@ -347,7 +344,7 @@ class BaseSMBO:
                 # completed and processed, it will be updated accordingly
                 self.runhistory.add(
                     config=run_info.config,
-                    cost=float(MAXINT) if n_objectives == 1 else np.full(n_objectives, float(MAXINT)),
+                    cost=float(MAXINT) if n_objectives == 1 else [float(MAXINT) for _ in range(n_objectives)],
                     time=0.0,
                     status=StatusType.RUNNING,
                     instance=run_info.instance,

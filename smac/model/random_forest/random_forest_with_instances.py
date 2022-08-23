@@ -7,8 +7,6 @@ from pyrfr import regression
 
 from smac.configspace import ConfigurationSpace
 from smac.constants import N_TREES, VERY_SMALL_NUMBER
-from smac.model.imputer import AbstractImputer
-from smac.model.imputer.random_forest_imputer import RandomForestImputer
 from smac.model.random_forest import BaseRandomForest
 
 __copyright__ = "Copyright 2022, automl.org"

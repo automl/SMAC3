@@ -120,8 +120,4 @@ class HyperparameterFacade(Facade):
 
     @staticmethod
     def get_runhistory_encoder(scenario: Scenario) -> RunHistoryLogScaledEncoder:
-        return RunHistoryLogScaledEncoder(
-            scenario,
-            n_params=len(scenario.configspace.get_hyperparameters()),
-            seed=scenario.seed,
-        )
+        return RunHistoryLogScaledEncoder(scenario)

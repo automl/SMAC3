@@ -1,20 +1,16 @@
 from __future__ import annotations
 
-import abc
-from typing import List, Mapping, Optional, Tuple
+from typing import Mapping, Tuple
 
 import numpy as np
 
-from smac import constants
 from smac.configspace import convert_configurations_to_array
-from smac.model.imputer import AbstractImputer
-from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.utils import normalize_costs
 from smac.runhistory.encoder import AbstractRunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
-from smac.runner.runner import StatusType
-from smac.scenario import Scenario
 from smac.utils.logging import get_logger
+from smac.scenario import Scenario
+from smac.runhistory.enumerations import StatusType
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -30,27 +26,8 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
         self,
         run_dict: Mapping[RunKey, RunValue],
         runhistory: RunHistory,
-        return_time_as_y: bool = False,
         store_statistics: bool = False,
-    ) -> Tuple[np.ndarray, np.ndarray]:
-        """Builds X,y matrixes from selected runs from runhistory.
-
-        Parameters
-        ----------
-        run_dict: dict: RunKey -> RunValue
-            dictionary from RunHistory.RunKey to RunHistory.RunValue
-        runhistory: RunHistory
-            runhistory object
-        return_time_as_y: bool
-            Return the time instead of cost as y value. Necessary to access the raw y values for imputation.
-        store_statistics: bool
-            Whether to store statistics about the data (to be used at subsequent calls)
-
-        Returns
-        -------
-        X: np.ndarray
-        Y: np.ndarray
-        """
+    ) -> tuple[np.ndarray, np.ndarray]:
         # First build nan-matrix of size #configs x #params+1
         n_rows = len(run_dict)
         n_cols = self.n_params
@@ -65,7 +42,8 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
             # Scaling is automatically done in configSpace
             conf = runhistory.ids_config[key.config_id]
             conf_vector = convert_configurations_to_array([conf])[0]
-            if self.n_features > 0:
+            if self.n_features > 0 and self.instance_features is not None:
+                assert isinstance(key.instance, str)
                 feats = self.instance_features[key.instance]
                 X[row, :] = np.hstack((conf_vector, feats))
             else:
@@ -74,6 +52,7 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
 
             if self.n_objectives > 1:
                 assert self.multi_objective_algorithm is not None
+                assert isinstance(run.cost, list)
 
                 # Let's normalize y here
                 # We use the objective_bounds calculated by the runhistory
@@ -81,10 +60,10 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
                 y_agg = self.multi_objective_algorithm(y_)
                 y[row] = y_agg
             else:
-                if return_time_as_y:
-                    y[row, 0] = run.time
-                else:
-                    y[row] = run.cost
+                # if return_time_as_y:
+                #    y[row, 0] = run.time
+                # else:
+                y[row] = run.cost
 
         if y.size > 0:
             if store_statistics:

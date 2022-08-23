@@ -1,3 +1,4 @@
+'''
 from __future__ import annotations
 
 from abc import abstractmethod
@@ -41,3 +42,4 @@ class AbstractImputer:
         imputed_y: np.ndarray
             Same shape as censored_y [N, 1]
         """
+'''

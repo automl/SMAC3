@@ -7,8 +7,6 @@ import numpy as np
 
 from smac import constants
 from smac.configspace import convert_configurations_to_array
-from smac.model.imputer import AbstractImputer
-from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.utils import normalize_costs
 from smac.runhistory.encoder import AbstractRunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
@@ -30,12 +28,9 @@ class RunHistoryEIPSEncoder(AbstractRunHistoryEncoder):
         self,
         run_dict: Mapping[RunKey, RunValue],
         runhistory: RunHistory,
-        return_time_as_y: bool = False,
         store_statistics: bool = False,
     ) -> Tuple[np.ndarray, np.ndarray]:
         """TODO."""
-        if return_time_as_y:
-            raise NotImplementedError()
         if store_statistics:
             # store_statistics is currently not necessary
             pass

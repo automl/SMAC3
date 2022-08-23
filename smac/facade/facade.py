@@ -18,8 +18,9 @@ from smac.configspace import Configuration
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.model.base_model import BaseModel
-from smac.model.imputer import AbstractImputer
-from smac.model.imputer.random_forest_imputer import RandomForestImputer
+
+# from smac.model.imputer import AbstractImputer
+# from smac.model.imputer.random_forest_imputer import RandomForestImputer
 from smac.model.random_forest.random_forest_with_instances import (
     RandomForestWithInstances,
 )
@@ -185,7 +186,7 @@ class Facade:
         # This is the easiest way to incorporate dependencies, although it might be a bit hacky.
         self.intensifier._set_stats(self.stats)
         self.runhistory_encoder._set_multi_objective_algorithm(self.multi_objective_algorithm)
-        self.runhistory_encoder._set_imputer(self._get_imputer())
+        # self.runhistory_encoder._set_imputer(self._get_imputer())
         self.acquisition_function._set_model(self.model)
         self.acquisition_optimizer._set_acquisition_function(self.acquisition_function)
 
@@ -253,6 +254,7 @@ class Facade:
                 else:
                     raise RuntimeError("SMAC run was stopped by the user.")
 
+    """
     def _get_imputer(self) -> AbstractImputer | None:
         assert self.model is not None
         assert self.scenario
@@ -278,6 +280,7 @@ class Facade:
             )
 
         return None
+    """
 
     def get_meta(self) -> dict[str, dict[str, Any]]:
         """Generates a hash based on all components of the facade. This is used for the run name or to determine

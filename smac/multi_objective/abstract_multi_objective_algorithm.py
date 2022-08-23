@@ -22,3 +22,7 @@ class AbstractMultiObjectiveAlgorithm(ABC):
             "name": self.__class__.__name__,
             "seed": self.seed,
         }
+
+    @abstractmethod
+    def __call__(self, values: list[float]) -> float:
+        raise NotImplementedError

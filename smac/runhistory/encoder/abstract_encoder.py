@@ -1,13 +1,14 @@
 from __future__ import annotations
 
-import abc
+from abc import abstractmethod
 from typing import Any, Mapping, Optional, Tuple
 
 import numpy as np
 
 from smac import constants
 from smac.configspace import convert_configurations_to_array
-from smac.model.imputer import AbstractImputer
+
+# from smac.model.imputer import AbstractImputer
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.utils import normalize_costs
 from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
@@ -23,7 +24,6 @@ logger = get_logger(__name__)
 
 
 class AbstractRunHistoryEncoder:
-    __metaclass__ = abc.ABCMeta
 
     """Abstract class for preprocessing data in order to train an EPM.
 
@@ -77,15 +77,14 @@ class AbstractRunHistoryEncoder:
     def __init__(
         self,
         scenario: Scenario,
-        n_params: int,
         success_states: list[StatusType] = [
             StatusType.SUCCESS,
             StatusType.CRASHED,
             StatusType.MEMORYOUT,
             StatusType.DONOTADVANCE,
         ],
-        impute_censored_data: bool = False,
-        impute_state: list[StatusType] | None = None,
+        # impute_censored_data: bool = False,
+        # impute_state: list[StatusType] | None = None,
         consider_for_higher_budgets_state: list[StatusType]
         | None = [
             StatusType.DONOTADVANCE,
@@ -94,27 +93,32 @@ class AbstractRunHistoryEncoder:
             StatusType.MEMORYOUT,
         ],  # TODO: Before it was None; I don't know if we can do that here...
         scale_percentage: int = 5,
-        seed: int = 0,
+        seed: int | None = None,
     ) -> None:
         # General arguments
         self.scenario = scenario
+
+        if seed is None:
+            seed = scenario.seed
+
+        self.seed = seed
         self.rng = np.random.RandomState(seed)
 
         self.scale_percentage = scale_percentage
         self.n_objectives = scenario.count_objectives()
 
         # Configuration
-        self.impute_censored_data = impute_censored_data
-        self.algorithm_walltime_limit = self.scenario.trial_walltime_limit  # type: ignore[attr-defined] # noqa F821
+        # self.impute_censored_data = impute_censored_data
+        self.algorithm_walltime_limit = self.scenario.trial_walltime_limit
 
-        if impute_state is None and impute_censored_data:
-            raise TypeError("No `impute_state` is given.")
+        # if impute_state is None and impute_censored_data:
+        #    raise TypeError("No `impute_state` is given.")
 
-        self.impute_state: list[StatusType]
-        if impute_state is None:
-            self.impute_state = []
-        else:
-            self.impute_state = impute_state
+        # self.impute_state: list[StatusType]
+        # if impute_state is None:
+        #    self.impute_state = []
+        # else:
+        #    self.impute_state = impute_state
 
         self.consider_for_higher_budgets_state: list[StatusType]
         if consider_for_higher_budgets_state is None:
@@ -122,15 +126,15 @@ class AbstractRunHistoryEncoder:
         else:
             self.consider_for_higher_budgets_state = consider_for_higher_budgets_state
 
-        if success_states is None:
-            raise TypeError("success_states not given")
+        # if success_states is None:
+        #    raise TypeError("success_states not given")
 
         self.success_states = success_states
 
         self.instances = scenario.instances
         self.instance_features = scenario.instance_features
         self.n_features = scenario.count_instance_features()
-        self.n_params = n_params
+        self.n_params = len(scenario.configspace.get_hyperparameters())
 
         # Sanity checks
         # if impute_censored_data and scenario.run_obj != "runtime":
@@ -139,13 +143,13 @@ class AbstractRunHistoryEncoder:
         #    raise NotImplementedError("Cannot impute censored data when not " "optimizing runtime")
 
         # Check imputer stuff
-        if impute_censored_data and self.imputer is None:
-            logger.critical("You want me to impute censored data, but " "I don't know how. imputer is None")
-            raise ValueError("impute_censored data, but no imputer given")
-        elif impute_censored_data and not isinstance(self.imputer, AbstractImputer):
-            raise ValueError(
-                "Given imputer is not an instance of " "smac.epm.base_imputer.Baseimputer, but %s" % type(self.imputer)
-            )
+        # if impute_censored_data and self.imputer is None:
+        #    logger.critical("You want me to impute censored data, but " "I don't know how. imputer is None")
+        #    raise ValueError("impute_censored data, but no imputer given")
+        # elif impute_censored_data and not isinstance(self.imputer, AbstractImputer):
+        #    raise ValueError(
+        #        "Given imputer is not an instance of " "smac.epm.base_imputer.Baseimputer, but %s" % type(self.imputer)
+        #    )
 
         # Learned statistics
         self.min_y = np.array([np.NaN] * self.n_objectives)
@@ -158,18 +162,17 @@ class AbstractRunHistoryEncoder:
             "name": self.__class__.__name__,
         }
 
-    def _set_imputer(self, imputer: AbstractImputer | None) -> None:
-        self.imputer = imputer
+    # def _set_imputer(self, imputer: AbstractImputer | None) -> None:
+    #    self.imputer = imputer
 
     def _set_multi_objective_algorithm(self, multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None) -> None:
         self.multi_objective_algorithm = multi_objective_algorithm
 
-    @abc.abstractmethod
+    @abstractmethod
     def _build_matrix(
         self,
         run_dict: Mapping[RunKey, RunValue],
         runhistory: RunHistory,
-        return_time_as_y: bool = False,
         store_statistics: bool = False,
     ) -> Tuple[np.ndarray, np.ndarray]:
         """Builds x,y matrixes from selected runs from runhistory.
@@ -192,7 +195,7 @@ class AbstractRunHistoryEncoder:
         """
         raise NotImplementedError()
 
-    def _get_s_run_dict(
+    def _get_successful_runs(
         self,
         runhistory: RunHistory,
         budget_subset: list | None = None,
@@ -200,7 +203,8 @@ class AbstractRunHistoryEncoder:
         # Get only successfully finished runs
         if budget_subset is not None:
             if len(budget_subset) != 1:
-                raise ValueError("Cannot yet handle getting runs from multiple budgets")
+                raise ValueError("Can not yet handle getting runs from multiple budgets.")
+
             s_run_dict = {
                 run: runhistory.data[run]
                 for run in runhistory.data.keys()
@@ -220,9 +224,10 @@ class AbstractRunHistoryEncoder:
                 for run in runhistory.data.keys()
                 if runhistory.data[run].status in self.success_states
             }
+
         return s_run_dict
 
-    def _get_t_run_dict(
+    def _get_timeout_runs(
         self,
         runhistory: RunHistory,
         budget_subset: list | None = None,
@@ -242,6 +247,7 @@ class AbstractRunHistoryEncoder:
                 if runhistory.data[run].status == StatusType.TIMEOUT
                 and runhistory.data[run].time >= self.algorithm_walltime_limit
             }
+
         return t_run_dict
 
     def get_configurations(
@@ -262,9 +268,9 @@ class AbstractRunHistoryEncoder:
         -------
         numpy.ndarray
         """
-        s_runs = self._get_s_run_dict(runhistory, budget_subset)
+        s_runs = self._get_successful_runs(runhistory, budget_subset)
         s_config_ids = set(s_run.config_id for s_run in s_runs)
-        t_runs = self._get_t_run_dict(runhistory, budget_subset)
+        t_runs = self._get_timeout_runs(runhistory, budget_subset)
         t_config_ids = set(t_run.config_id for t_run in t_runs)
         config_ids = s_config_ids | t_config_ids
         configurations = [runhistory.ids_config[config_id] for config_id in config_ids]
@@ -294,11 +300,11 @@ class AbstractRunHistoryEncoder:
         """
         logger.debug("Transforming runhistory into X, y format...")
 
-        s_run_dict = self._get_s_run_dict(runhistory, budget_subset)
+        s_run_dict = self._get_successful_runs(runhistory, budget_subset)
         X, Y = self._build_matrix(run_dict=s_run_dict, runhistory=runhistory, store_statistics=True)
 
         # Get real TIMEOUT runs
-        t_run_dict = self._get_t_run_dict(runhistory, budget_subset)
+        t_run_dict = self._get_timeout_runs(runhistory, budget_subset)
         # use penalization (e.g. PAR10) for EPM training
         store_statistics = True if np.any(np.isnan(self.min_y)) else False
         tX, tY = self._build_matrix(
@@ -312,7 +318,10 @@ class AbstractRunHistoryEncoder:
         if not s_run_dict:
             return tX, tY
 
-        if self.impute_censored_data:
+        if False:
+            pass
+            """
+            if self.impute_censored_data:
             # Get all censored runs
             if budget_subset is not None:
                 c_run_dict = {
@@ -364,6 +373,7 @@ class AbstractRunHistoryEncoder:
                 # Shuffle data to mix censored and imputed data
                 X = np.vstack((X, cen_X))
                 Y = np.concatenate((Y, imp_Y))  # type: ignore
+            """
         else:
             # If we do not impute, we also return TIMEOUT data
             X = np.vstack((X, tX))
@@ -372,7 +382,7 @@ class AbstractRunHistoryEncoder:
         logger.debug("Converted %d observations." % (X.shape[0]))
         return X, Y
 
-    @abc.abstractmethod
+    @abstractmethod
     def transform_response_values(
         self,
         values: np.ndarray,
@@ -390,6 +400,7 @@ class AbstractRunHistoryEncoder:
         """
         raise NotImplementedError
 
+    '''
     def get_X_y(self, runhistory: RunHistory) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
         Simple interface to obtain all data in runhistory in X, y format.
@@ -426,3 +437,4 @@ class AbstractRunHistoryEncoder:
             cen.append(v.status != StatusType.SUCCESS)
 
         return np.array(X), np.array(y), np.array(cen)
+    '''
