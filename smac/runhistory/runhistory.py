@@ -697,8 +697,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         """
         config_id = self.config_ids.get(config)
         runs = {}
-        if config_id is not None:
-            print(self._config_id_to_inst_seed_budget)
+        if config_id in self._config_id_to_inst_seed_budget:
             runs = self._config_id_to_inst_seed_budget[config_id].copy()
 
         # Select only the max budget run if specified
