@@ -334,7 +334,10 @@ style="width: 100%;">
 <span class="kn">from</span> <span class="nn">smac.model.gaussian_process.base_gaussian_process</span> <span class="kn">import</span> <span class="n">GaussianProcess</span>
 <span class="kn">from</span> <span class="nn">smac.model.gaussian_process.gpytorch</span> <span class="kn">import</span> <span class="n">GPyTorchGaussianProcess</span>
 <span class="kn">from</span> <span class="nn">smac.model.gaussian_process.mcmc_gaussian_process</span> <span class="kn">import</span> <span class="n">MCMCGaussianProcess</span>
+<span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span>
 <span class="kn">from</span> <span class="nn">smac.utils.subspaces</span> <span class="kn">import</span> <span class="n">LocalSubspace</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;The balance properties of Sobol&#39; points require&quot;</span> <span class="s2">&quot; n to be a power of 2.&quot;</span><span class="p">)</span>
 
@@ -445,7 +448,7 @@ style="width: 100%;">
 <span class="sd">        n_init_points: int</span>
 <span class="sd">            number of points required for initializing a new subspace</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Current length is smaller than the minimal value, a new TuRBO restarts&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Current length is smaller than the minimal value, a new TuRBO restarts&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">success_count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">failure_count</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -475,11 +478,11 @@ style="width: 100%;">
         <span class="c1"># We define a ``success&#39;&#39; as a candidate that improves upon $\xbest$, and a ``failure&#39;&#39; as a candidate that</span>
         <span class="c1"># does not.</span>
         <span class="k">if</span> <span class="n">optim_observation</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_y</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1e-3</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_y</span><span class="p">)):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;New suggested value is better than the incumbent, success_count increases&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;New suggested value is better than the incumbent, success_count increases&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">success_count</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">failure_count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;New suggested value is worse than the incumbent, failure_count increases&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;New suggested value is worse than the incumbent, failure_count increases&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">success_count</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">failure_count</span> <span class="o">+=</span> <span class="mi">1</span>
 
@@ -488,13 +491,13 @@ style="width: 100%;">
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">success_count</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">success_tol</span><span class="p">:</span>  <span class="c1"># Expand trust region</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="mf">2.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">length_max</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">success_count</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Subspace length expands to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Subspace length expands to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="c1"># After $\tau_{\text{fail}}$ consecutive failures, we halve the size of the TR: $\len \gets \len/2$.</span>
         <span class="c1"># We reset the success and failure counters to zero after we change the size of the TR.</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">failure_count</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">failure_tol</span><span class="p">:</span>  <span class="c1"># Shrink trust region</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/=</span> <span class="mf">2.0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">failure_count</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Subspace length shrinks to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Subspace length shrinks to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_generate_challengers</span><span class="p">(</span>  <span class="c1"># type: ignore[override]</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">_sorted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
