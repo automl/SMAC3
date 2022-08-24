@@ -37,6 +37,10 @@ class CosineAnnealingRandomDesign(RandomDesign):
         seed: int = 0,
     ):
         super().__init__(seed)
+        assert 0 < min_probability <= 1
+        assert 0 < max_probability <= 1
+        assert max_probability > min_probability
+        assert restart_iteration > 2
         self.max_probability = max_probability
         self.min_probability = min_probability
         self.restart_iteration = restart_iteration
@@ -67,7 +71,9 @@ class CosineAnnealingRandomDesign(RandomDesign):
             logger.error("Perform restart in next iteration!")
 
     def check(self, iteration: int) -> bool:
-        """Check if a random configuration should be interleaved."""
+        """Check if a random configuration should be interleaved. Iteration here relates
+        to the ith configuration evaluated in an SMBO iteration."""
+        assert iteration > 0
         if self.rng.rand() < self.probability:
             logger.error("Random Config")
             return True

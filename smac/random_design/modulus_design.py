@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from typing import Any
 
-import logging
-
 import numpy as np
 
 from smac.random_design.random_design import RandomDesign
@@ -23,15 +21,14 @@ class NoCoolDownRandomDesign(RandomDesign):
     ----------
     modulus : float
         Every modulus-th configuration will be at random.
-    seed: int
+    seed : int
         integer used to initialize random state (not used)
     """
 
     def __init__(self, modulus: float = 2.0, seed: int = 0):
         super().__init__(seed)
-
-        logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
-        if modulus <= 1.0:
+        assert modulus > 0
+        if modulus == 1.0:
             logger.warning("Using SMAC with random configurations only. ROAR is the better choice for this.")
         self.modulus = modulus
 
@@ -48,7 +45,9 @@ class NoCoolDownRandomDesign(RandomDesign):
         ...
 
     def check(self, iteration: int) -> bool:
-        """Checks if the next configuration should be at random."""
+        """Checks if the next configuration should be at random. Iteration here relates
+        to the ith configuration evaluated in an SMBO iteration."""
+        assert iteration > 0
         return iteration % self.modulus < 1
 
 
@@ -78,15 +77,16 @@ class LinearCoolDownRandomDesign(RandomDesign):
         seed: int = 0,
     ):
         super().__init__(seed)
-
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
+        assert start_modulus > 0
+        assert modulus_increment > 0
+        assert end_modulus > 0
+        assert end_modulus > start_modulus
         if start_modulus <= 1.0 and modulus_increment <= 0.0:
             logger.warning("Using SMAC with random configurations only. ROAR is the better choice for this.")
         self.modulus = start_modulus
         self.start_modulus = start_modulus
         self.modulus_increment = modulus_increment
         self.end_modulus = end_modulus
-        self.last_iteration = 0
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
@@ -102,12 +102,13 @@ class LinearCoolDownRandomDesign(RandomDesign):
         """Increase modulus."""
         self.modulus += self.modulus_increment
         self.modulus = min(self.modulus, self.end_modulus)
-        self.last_iteration = 0
 
     def check(self, iteration: int) -> bool:
-        """Check if the next configuration should be interleaved based on modulus."""
-        if (iteration - self.last_iteration) % self.modulus < 1:
-            self.last_iteration = iteration
+        """Check if the next configuration should be interleaved based on modulus.
+        Iteration here relates to the ith configuration evaluated in an SMBO
+        iteration."""
+        assert iteration > 0
+        if iteration % self.modulus < 1:
             return True
         else:
             return False

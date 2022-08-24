@@ -24,6 +24,7 @@ class ProbabilityRandomDesign(RandomDesign):
 
     def __init__(self, probability: float, seed: int = 0):
         super().__init__(seed)
+        assert probability > 0
         self.prob = probability
 
     def next_iteration(self) -> None:
@@ -39,7 +40,9 @@ class ProbabilityRandomDesign(RandomDesign):
         }
 
     def check(self, iteration: int) -> bool:
-        """Check if the next configuration should be at random."""
+        """Check if the next configuration should be at random. Iteration here relates
+        to the ith configuration evaluated in an SMBO iteration."""
+        assert iteration > 0
         if self.rng.rand() < self.prob:
             return True
         else:
@@ -62,6 +65,8 @@ class ProbabilityCoolDownRandomDesign(RandomDesign):
 
     def __init__(self, probability: float, factor: float, seed: int = 0):
         super().__init__(seed)
+        assert 0 < probability <= 1
+        assert factor > 0
         self.prob = probability
         self.cool_down_fac = factor
 
@@ -79,7 +84,9 @@ class ProbabilityCoolDownRandomDesign(RandomDesign):
         self.prob *= self.cool_down_fac
 
     def check(self, iteration: int) -> bool:
-        """Check if the next configuration should be at random."""
+        """Check if the next configuration should be at random. Iteration here relates
+        to the ith configuration evaluated in an SMBO iteration."""
+        assert iteration > 0
         if self.rng.rand() < self.prob:
             return True
         else:
