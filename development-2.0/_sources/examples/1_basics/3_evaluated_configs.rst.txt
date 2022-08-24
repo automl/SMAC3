@@ -33,17 +33,20 @@ This example shows how to incorporate evaluated configurations into SMAC.
  .. code-block:: none
 
     Default value: 0.03
-    [INFO][initial_design.py:91] Ignoring `configs` and `n_configs` since `n_configs_per_hyperparameter` is given.
+    [INFO][initial_design.py:92] Ignoring `configs` and `n_configs` since `n_configs_per_hyperparameter` is given.
     [INFO][base_smbo.py:151] Initial design is skipped since 10 entries are found in the runhistory.
     [INFO][base_smbo.py:158] Added 10 configs from the runhistory as initial design and determined the incumbent.
     [INFO][intensification.py:603] Updated estimated cost of incumbent on 2 runs: 0.02
     [INFO][abstract_intensifier.py:345] Challenger (0.0133) is better than incumbent (0.02) on 2 runs.
     [INFO][abstract_intensifier.py:365] Changes in incumbent:
-    [INFO][abstract_intensifier.py:368] --- C: 4.135997393839888 -> 0.4256053822493198
-    [INFO][abstract_intensifier.py:368] --- gamma_value: 0.16521255145781252 -> 1.325448240647653
+    [INFO][abstract_intensifier.py:368] --- C: 4.135997393839888 -> 0.2871109629679784
+    [INFO][abstract_intensifier.py:368] --- coef0: None -> 7.7016631182698605
+    [INFO][abstract_intensifier.py:368] --- degree: None -> 2
+    [INFO][abstract_intensifier.py:368] --- gamma_value: 0.16521255145781252 -> 0.13397758631857307
+    [INFO][abstract_intensifier.py:368] --- kernel: 'rbf' -> 'poly'
     [INFO][abstract_intensifier.py:368] --- shrinking: True -> False
-    [INFO][facade.py:330] Final Incumbent: {'C': 0.4256053822493198, 'kernel': 'rbf', 'shrinking': False, 'gamma': 'value', 'gamma_value': 1.325448240647653}
-    [INFO][facade.py:331] Estimated cost: 0.013333333333333308
+    [INFO][facade.py:347] Final Incumbent: {'C': 0.2871109629679784, 'kernel': 'poly', 'shrinking': False, 'coef0': 7.7016631182698605, 'degree': 2, 'gamma': 'value', 'gamma_value': 0.13397758631857307}
+    [INFO][facade.py:348] Estimated cost: 0.013333333333333308
     Incumbent value: 0.01
 
 
@@ -163,7 +166,7 @@ This example shows how to incorporate evaluated configurations into SMAC.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.547 seconds)
+   **Total running time of the script:** ( 0 minutes  2.654 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_3_evaluated_configs.py:

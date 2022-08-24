@@ -39,7 +39,7 @@ iterations) is passed to the target algorithm.
 
     Default value: 0.03
     [INFO][base_smbo.py:143] Running initial design...
-    [INFO][initial_design.py:174] Retrieving 5 configurations for the initial design.
+    [INFO][initial_design.py:181] Retrieving 5 configurations for the initial design.
     [INFO][intensification.py:244] No incumbent provided in the first run. Sampling a new challenger...
     [INFO][intensification.py:443] First run and no incumbent provided. Challenger is assumed to be the incumbent.
     [INFO][intensification.py:603] Updated estimated cost of incumbent on 1 runs: 0.0667
@@ -50,8 +50,8 @@ iterations) is passed to the target algorithm.
     [INFO][abstract_intensifier.py:368] --- kernel: 'rbf' -> 'linear'
     [INFO][abstract_intensifier.py:368] --- shrinking: True -> False
     [INFO][intensification.py:603] Updated estimated cost of incumbent on 3 runs: 0.0133
-    [INFO][facade.py:330] Final Incumbent: {'C': 1.2760639488343621, 'kernel': 'linear', 'shrinking': False}
-    [INFO][facade.py:331] Estimated cost: 0.013333333333333308
+    [INFO][facade.py:347] Final Incumbent: {'C': 1.2760639488343621, 'kernel': 'linear', 'shrinking': False}
+    [INFO][facade.py:348] Estimated cost: 0.013333333333333308
     Incumbent value: 0.01
 
 
@@ -159,7 +159,7 @@ iterations) is passed to the target algorithm.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.922 seconds)
+   **Total running time of the script:** ( 0 minutes  0.917 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_2_svm_cv.py:

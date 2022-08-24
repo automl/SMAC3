@@ -45,7 +45,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
     Default value: 0.38
     [INFO][base_smbo.py:143] Running initial design...
-    [INFO][initial_design.py:174] Retrieving 5 configurations for the initial design.
+    [INFO][initial_design.py:181] Retrieving 5 configurations for the initial design.
     [WARNING][parallel_scheduling.py:150] Hyperband is executed with 1 worker(s) only. However, your system supports up to 2 workers. Consider increasing the workers in the scenario.
     [WARNING][successive_halving.py:367] The target algorithm is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider setting `n_seeds` > 1.
     [INFO][successive_halving.py:499] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
@@ -90,8 +90,8 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     [INFO][successive_halving.py:643] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
     [INFO][hyperband.py:437] Finished Hyperband iteration-step 3-2 with initial budget 25.
     [INFO][successive_halving.py:499] Successive Halving configuration: budget type = REAL-VALUED, Initial budget = 5.00, Max. budget = 25.00, eta = 3.00
-    [INFO][facade.py:330] Final Incumbent: {'activation': 'relu', 'n_layer': 5, 'n_neurons': 183, 'solver': 'sgd', 'batch_size': 91, 'learning_rate': 'adaptive', 'learning_rate_init': 0.006390670908394775}
-    [INFO][facade.py:331] Estimated cost: 0.01892138656762621
+    [INFO][facade.py:347] Final Incumbent: {'activation': 'relu', 'n_layer': 5, 'n_neurons': 183, 'solver': 'sgd', 'batch_size': 91, 'learning_rate': 'adaptive', 'learning_rate_init': 0.006390670908394775}
+    [INFO][facade.py:348] Estimated cost: 0.01892138656762621
     Incumbent value: 0.03
 
 
@@ -238,7 +238,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  48.148 seconds)
+   **Total running time of the script:** ( 0 minutes  48.746 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_1_mlp_epochs.py:
