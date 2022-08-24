@@ -61,7 +61,7 @@ class RandomFacade(Facade):
         # As far as I understood it, EI won't be used anyway and the acquisition
         # function optimizer directly samples from the configspace.
 
-        return EI(par=par)
+        return EI(xi=par)
 
     @staticmethod
     def get_intensifier(
