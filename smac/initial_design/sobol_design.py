@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Any
-
 import warnings
 
 from ConfigSpace.configuration_space import Configuration
@@ -52,12 +50,6 @@ class SobolInitialDesign(InitialDesign):
             max_config_ratio=max_config_ratio,
             seed=seed,
         )
-
-    def get_meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
-        return {
-            "name": self.__class__.__name__,
-        }
 
     def _select_configurations(self) -> list[Configuration]:
         """Selects configurations to be evaluated from the initial design.

@@ -79,6 +79,7 @@ class InitialDesign:
         self.seed = seed
         self.rng = np.random.RandomState(seed)
         self.configs = configs
+        self.n_configs_per_hyperparameter = n_configs_per_hyperparameter
 
         n_params = len(self.configspace.get_hyperparameters())
         if configs is not None:
@@ -119,8 +120,7 @@ class InitialDesign:
             Array of hyperparameters originating from the initial design strategy.
             See e.g. scipy.qmc.LatinHypercube for details.
         origin : str | None, defaults to None
-            Originates from Configspace: Refers to
-            "Store information about the origin of this configuration."
+            Label for a configuration where it originated from.
         configspace : ConfigurationSpace
         """
 
@@ -163,10 +163,17 @@ class InitialDesign:
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
+
+        configs = None
+        if self.configs is not None:
+            configs = [config.get_dictionary() for config in self.configs]
+
         return {
             "name": self.__class__.__name__,
             "n_configs": self.n_configs,
             "seed": self.seed,
+            "configs": configs,
+            "n_configs_per_hyperparameter": self.n_configs_per_hyperparameter
         }
 
     def select_configurations(self) -> list[Configuration]:
