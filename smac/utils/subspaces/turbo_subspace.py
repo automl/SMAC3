@@ -18,7 +18,10 @@ from smac.model.gaussian_process.gpytorch import GloballyAugmentedLocalGaussianP
 from smac.model.gaussian_process.base_gaussian_process import GaussianProcess
 from smac.model.gaussian_process.gpytorch import GPyTorchGaussianProcess
 from smac.model.gaussian_process.mcmc_gaussian_process import MCMCGaussianProcess
+from smac.utils.logging import get_logger
 from smac.utils.subspaces import LocalSubspace
+
+logger = get_logger(__name__)
 
 warnings.filterwarnings("ignore", message="The balance properties of Sobol' points require" " n to be a power of 2.")
 
@@ -129,7 +132,7 @@ class TuRBOSubSpace(LocalSubspace):
         n_init_points: int
             number of points required for initializing a new subspace
         """
-        self.logger.debug("Current length is smaller than the minimal value, a new TuRBO restarts")
+        logger.debug("Current length is smaller than the minimal value, a new TuRBO restarts")
         self.success_count = 0
         self.failure_count = 0
 
@@ -159,11 +162,11 @@ class TuRBOSubSpace(LocalSubspace):
         # We define a ``success'' as a candidate that improves upon $\xbest$, and a ``failure'' as a candidate that
         # does not.
         if optim_observation < np.min(self.model_y) - 1e-3 * math.fabs(np.min(self.model_y)):
-            self.logger.debug("New suggested value is better than the incumbent, success_count increases")
+            logger.debug("New suggested value is better than the incumbent, success_count increases")
             self.success_count += 1
             self.failure_count = 0
         else:
-            self.logger.debug("New suggested value is worse than the incumbent, failure_count increases")
+            logger.debug("New suggested value is worse than the incumbent, failure_count increases")
             self.success_count = 0
             self.failure_count += 1
 
@@ -172,13 +175,13 @@ class TuRBOSubSpace(LocalSubspace):
         if self.success_count == self.success_tol:  # Expand trust region
             self.length = min([2.0 * self.length, self.length_max])
             self.success_count = 0
-            self.logger.debug(f"Subspace length expands to {self.length}")
+            logger.debug(f"Subspace length expands to {self.length}")
         # After $\tau_{\text{fail}}$ consecutive failures, we halve the size of the TR: $\len \gets \len/2$.
         # We reset the success and failure counters to zero after we change the size of the TR.
         elif self.failure_count == self.failure_tol:  # Shrink trust region
             self.length /= 2.0
             self.failure_count = 0
-            self.logger.debug(f"Subspace length shrinks to {self.length}")
+            logger.debug(f"Subspace length shrinks to {self.length}")
 
     def _generate_challengers(  # type: ignore[override]
         self, _sorted: bool = True
