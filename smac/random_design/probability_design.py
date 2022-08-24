@@ -1,16 +1,14 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from typing import Any, Optional
-
-import logging
-
-import numpy as np
+from typing import Any
 
 from smac.random_design.random_design import RandomDesign
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 
 class ProbabilityRandomDesign(RandomDesign):
@@ -19,9 +17,9 @@ class ProbabilityRandomDesign(RandomDesign):
     Parameters
     ----------
     prob : float
-        Probility of a random configuration
-    rng : np.random.RandomState
-        Random state
+        Probility that a configuration will be drawn at random
+    seed : int
+        Integer used to initialize random state
     """
 
     def __init__(self, probability: float, seed: int = 0):
@@ -31,6 +29,14 @@ class ProbabilityRandomDesign(RandomDesign):
     def next_iteration(self) -> None:
         """Does nothing."""
         ...
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+            "probability": self.prob,
+            "seed": self.seed,
+        }
 
     def check(self, iteration: int) -> bool:
         """Check if the next configuration should be at random."""
@@ -48,10 +54,10 @@ class ProbabilityCoolDownRandomDesign(RandomDesign):
     ----------
     prob : float
         Probility of a random configuration
-    cool_down_fac : float
+    factor : float
         Multiply the ``prob`` by ``cool_down_fac`` in each iteration
-    rng : np.random.RandomState
-        Random state
+    seed : int
+        Integer used to initialize random state
     """
 
     def __init__(self, probability: float, factor: float, seed: int = 0):
@@ -63,6 +69,9 @@ class ProbabilityCoolDownRandomDesign(RandomDesign):
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
+            "probability": self.prob,
+            "factor": self.cool_down_fac,
+            "seed": self.seed,
         }
 
     def next_iteration(self) -> None:

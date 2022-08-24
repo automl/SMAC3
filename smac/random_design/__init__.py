@@ -4,8 +4,8 @@ from smac.random_design.modulus_design import (
     NoCoolDownRandomDesign,
 )
 from smac.random_design.probability_design import (
-    ProbabilityRandomDesign,
     ProbabilityCoolDownRandomDesign,
+    ProbabilityRandomDesign,
 )
 from smac.random_design.random_design import RandomDesign
 
