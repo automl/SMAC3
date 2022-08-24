@@ -341,10 +341,10 @@ according to a cosine annealing schedule.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>max_probability</strong> (<em>float</em>) – Initial probility of a random configuration</p></li>
-<li><p><strong>min_probability</strong> (<em>float</em>) – Lowest probility of a random configuration</p></li>
+<li><p><strong>max_probability</strong> (<em>float</em>) – Initial (maximum) probability of a random configuration</p></li>
+<li><p><strong>min_probability</strong> (<em>float</em>) – Final (minimal) probability of a random configuration</p></li>
 <li><p><strong>restart_iteration</strong> (<em>int</em>) – Restart the annealing schedule every <code class="docutils literal notranslate"><span class="pre">restart_iteration</span></code> iterations.</p></li>
-<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – integer used to initialize the random state</p></li>
 </ul>
 </dd>
 </dl>

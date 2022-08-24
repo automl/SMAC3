@@ -348,18 +348,65 @@ style="width: 100%;">
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>acquisition_function</strong> (<em>AbstractAcquisitionFunction</em>) – </p></li>
 <li><p><strong>configspace</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – </p></li>
-<li><p><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </p></li>
-<li><p><strong>max_steps</strong> (<em>int</em>) – Maximum number of iterations that the local search will perform</p></li>
-<li><p><strong>n_steps_plateau_walk</strong> (<em>int</em>) – number of steps during a plateau walk before local search terminates</p></li>
-<li><p><strong>vectorization_min_obtain</strong> (<em>int</em>) – Minimal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
-reduce the overhead of SMAC</p></li>
-<li><p><strong>vectorization_max_obtain</strong> (<em>int</em>) – Maximal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
-reduce the overhead of SMAC</p></li>
+<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction" title="smac.acquisition.functions.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </p></li>
+<li><p><strong>max_steps</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Maximum number of iterations that the local search will perform.</p></li>
+<li><p><strong>n_steps_plateau_walk</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – Number of steps during a plateau walk before local search terminates.</p></li>
+<li><p><strong>vectorization_min_obtain</strong> (<em>int</em><em>, </em><em>defaults to 2</em>) – Minimal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
+reduce the overhead of SMAC.</p></li>
+<li><p><strong>vectorization_max_obtain</strong> (<em>int</em><em>, </em><em>defaults to 64</em>) – Maximal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
+reduce the overhead of SMAC.</p></li>
+<li><p><strong>challengers</strong> (<em>int</em><em>, </em><em>defaults to 5000</em>) – Number of challengers.</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>) – </p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.local_search.LocalSearch.max_steps">
+<span class="sig-name descname"><span class="pre">max_steps</span></span><a class="headerlink" href="#smac.acquisition.local_search.LocalSearch.max_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of iterations that the local search will perform.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.local_search.LocalSearch.n_steps_plateau_walk">
+<span class="sig-name descname"><span class="pre">n_steps_plateau_walk</span></span><a class="headerlink" href="#smac.acquisition.local_search.LocalSearch.n_steps_plateau_walk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of steps during a plateau walk before local search terminates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.local_search.LocalSearch.vectorization_min_obtain">
+<span class="sig-name descname"><span class="pre">vectorization_min_obtain</span></span><a class="headerlink" href="#smac.acquisition.local_search.LocalSearch.vectorization_min_obtain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
+reduce the overhead of SMAC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.local_search.LocalSearch.vectorization_max_obtain">
+<span class="sig-name descname"><span class="pre">vectorization_max_obtain</span></span><a class="headerlink" href="#smac.acquisition.local_search.LocalSearch.vectorization_max_obtain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
+reduce the overhead of SMAC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.acquisition.local_search.LocalSearch.get_meta">
 <span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/local_search.html#LocalSearch.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.local_search.LocalSearch.get_meta" title="Permalink to this definition">¶</a></dt>

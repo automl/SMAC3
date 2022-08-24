@@ -347,30 +347,30 @@ style="width: 100%;">
 <p>Abstract base class for acquisition function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>model</strong> (<em>BaseEPM</em>) – Models the objective function.</p>
+<dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="smac.model.html#smac.model.BaseModel" title="smac.model.BaseModel"><em>BaseModel</em></a>) – Models the objective function.</p>
 </dd>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction.model">
 <span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction.model" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction.logger">
-<span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction.logger" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.model.html#smac.model.BaseModel" title="smac.model.BaseModel">BaseModel</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configurations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/abstract_acquisition_function.html#AbstractAcquisitionFunction.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction.__call__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the acquisition value for a given X.</p>
+<dd><p>Compute the acquisition value for a given X.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>configurations</strong> (<em>list</em>) – The configurations where the acquisition function
+<dd class="field-odd"><p><strong>configurations</strong> (<em>list</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – The configurations where the acquisition function
 should be evaluated.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>acquisition values for X</p>
+<dd class="field-even"><p>Acquisition values for X</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>np.ndarray(N, 1)</p>
@@ -391,7 +391,7 @@ should be evaluated.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/abstract_acquisition_function.html#AbstractAcquisitionFunction.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/abstract_acquisition_function.html#AbstractAcquisitionFunction.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the acquisition function attributes required for calculation.</p>
 <p>This method will be called after fitting the model, but before maximizing the acquisition
 function. As an examples, EI uses it to update the current fmin.</p>
@@ -399,7 +399,7 @@ function. As an examples, EI uses it to update the current fmin.</p>
 are already present.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>kwargs</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>) – </p>
+<dd class="field-odd"><p><strong>kwargs</strong> (<em>Any</em>) – </p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>

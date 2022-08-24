@@ -346,6 +346,9 @@ style="width: 100%;">
 <span class="kn">from</span> <span class="nn">smac.model.gaussian_process.gpytorch</span> <span class="kn">import</span> <span class="n">GloballyAugmentedLocalGaussianProcess</span>
 <span class="kn">from</span> <span class="nn">smac.model.gaussian_process.kernels.boing</span> <span class="kn">import</span> <span class="n">construct_gp_kernel</span>
 <span class="kn">from</span> <span class="nn">smac.model.utils</span> <span class="kn">import</span> <span class="n">check_subspace_points</span>
+<span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="LocalSubspace"><a class="viewcode-back" href="../../../api/smac.utils.subspaces.html#smac.utils.subspaces.LocalSubspace">[docs]</a><span class="k">class</span> <span class="nc">LocalSubspace</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
@@ -400,7 +403,7 @@ style="width: 100%;">
         <span class="n">activate_dims</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">incumbent_array</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs_global</span> <span class="o">=</span> <span class="n">config_space</span>
         <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -776,7 +779,7 @@ style="width: 100%;">
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="c1"># Some times it could occur that LGPGA fails to predict the mean value of ss_x because of</span>
                 <span class="c1"># numerical issues</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fail to predict ss_x due to </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fail to predict ss_x due to </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">mu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ss_y</span>
             <span class="n">idx_eta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
             <span class="n">incumbent_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ss_x</span><span class="p">[</span><span class="n">idx_eta</span><span class="p">]</span>

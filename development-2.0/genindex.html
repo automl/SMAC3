@@ -339,6 +339,7 @@ style="width: 100%;">
  | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
+ | <a href="#X"><strong>X</strong></a>
  
 </div>
 <h2 id="_">_</h2>
@@ -554,10 +555,16 @@ style="width: 100%;">
         <li><a href="api/smac.main.base_smbo.html#smac.main.base_smbo.BaseSMBO">(class in smac.main.base_smbo)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="glossary.html#term-BB"><strong>BB</strong></a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/smac.acquisition.functions.confidence_bound.html#smac.acquisition.functions.confidence_bound.LCB.beta">beta (smac.acquisition.functions.confidence_bound.LCB attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.LCB.beta">(smac.acquisition.functions.LCB attribute)</a>
+</li>
+      </ul></li>
       <li><a href="glossary.html#term-BO"><strong>BO</strong></a>
 </li>
       <li><a href="glossary.html#term-BOHB"><strong>BOHB</strong></a>
@@ -800,16 +807,26 @@ style="width: 100%;">
         <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.empty">(smac.runhistory.runhistory.RunHistory method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="glossary.html#term-EPM"><strong>EPM</strong></a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.configspace.html#smac.configspace.ConfigurationSpace.estimate_size">estimate_size() (smac.configspace.ConfigurationSpace method)</a>
 </li>
       <li><a href="api/smac.model.multi_objective_model.html#smac.model.multi_objective_model.MultiObjectiveModel.estimators">estimators (smac.model.multi_objective_model.MultiObjectiveModel attribute)</a>
 
       <ul>
         <li><a href="api/smac.model.html#smac.model.MultiObjectiveModel.estimators">(smac.model.MultiObjectiveModel attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.EI.eta">eta (smac.acquisition.functions.EI attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.functions.expected_improvement.html#smac.acquisition.functions.expected_improvement.EI.eta">(smac.acquisition.functions.expected_improvement.EI attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.PI.eta">(smac.acquisition.functions.PI attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.probability_improvement.html#smac.acquisition.functions.probability_improvement.PI.eta">(smac.acquisition.functions.probability_improvement.PI attribute)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.model.gaussian_process.gpytorch.html#smac.model.gaussian_process.gpytorch.ExactGPModel">ExactGPModel (class in smac.model.gaussian_process.gpytorch)</a>
@@ -1412,6 +1429,26 @@ style="width: 100%;">
         <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.load_json">(smac.runhistory.runhistory.RunHistory method)</a>
 </li>
       </ul></li>
+      <li><a href="api/smac.acquisition.local_and_random_search.html#smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch.local_search">local_search (smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.local_and_random_search.html#smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch.local_search">(smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.html#smac.acquisition.LocalAndSortedPriorRandomSearch.local_search">(smac.acquisition.LocalAndSortedPriorRandomSearch attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.html#smac.acquisition.LocalAndSortedRandomSearch.local_search">(smac.acquisition.LocalAndSortedRandomSearch attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/smac.acquisition.local_and_random_search.html#smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch.local_search_iterations">local_search_iterations (smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.local_and_random_search.html#smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch.local_search_iterations">(smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.html#smac.acquisition.LocalAndSortedPriorRandomSearch.local_search_iterations">(smac.acquisition.LocalAndSortedPriorRandomSearch attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.html#smac.acquisition.LocalAndSortedRandomSearch.local_search_iterations">(smac.acquisition.LocalAndSortedRandomSearch attribute)</a>
+</li>
+      </ul></li>
       <li><a href="api/smac.acquisition.html#smac.acquisition.LocalAndSortedPriorRandomSearch">LocalAndSortedPriorRandomSearch (class in smac.acquisition)</a>
 
       <ul>
@@ -1434,13 +1471,15 @@ style="width: 100%;">
       </ul></li>
       <li><a href="api/smac.utils.subspaces.html#smac.utils.subspaces.LocalSubspace">LocalSubspace (class in smac.utils.subspaces)</a>
 </li>
-      <li><a href="api/smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction.logger">logger (smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction attribute)</a>
+      <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.EI.log">log (smac.acquisition.functions.EI attribute)</a>
 
       <ul>
-        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction.logger">(smac.acquisition.functions.AbstractAcquisitionFunction attribute)</a>
+        <li><a href="api/smac.acquisition.functions.expected_improvement.html#smac.acquisition.functions.expected_improvement.EI.log">(smac.acquisition.functions.expected_improvement.EI attribute)</a>
 </li>
-        <li><a href="api/smac.model.random_forest.random_forest_with_instances.html#smac.model.random_forest.random_forest_with_instances.RandomForestWithInstances.logger">(smac.model.random_forest.random_forest_with_instances.RandomForestWithInstances attribute)</a>
-</li>
+      </ul></li>
+      <li><a href="api/smac.model.random_forest.random_forest_with_instances.html#smac.model.random_forest.random_forest_with_instances.RandomForestWithInstances.logger">logger (smac.model.random_forest.random_forest_with_instances.RandomForestWithInstances attribute)</a>
+
+      <ul>
         <li><a href="api/smac.model.random_forest.html#smac.model.random_forest.RandomForestWithInstances.logger">(smac.model.random_forest.RandomForestWithInstances attribute)</a>
 </li>
         <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.logger">(smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder attribute)</a>
@@ -1454,6 +1493,28 @@ style="width: 100%;">
         <li><a href="api/smac.model.gaussian_process.priors.log_normal_prior.html#smac.model.gaussian_process.priors.log_normal_prior.LogNormalPrior">(class in smac.model.gaussian_process.priors.log_normal_prior)</a>
 </li>
       </ul></li>
+      <li><a href="api/smac.acquisition.functions.confidence_bound.html#smac.acquisition.functions.confidence_bound.LCB.long_name">long_name (smac.acquisition.functions.confidence_bound.LCB attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.EI.long_name">(smac.acquisition.functions.EI attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.EIPS.long_name">(smac.acquisition.functions.EIPS attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.expected_improvement.html#smac.acquisition.functions.expected_improvement.EI.long_name">(smac.acquisition.functions.expected_improvement.EI attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.expected_improvement.html#smac.acquisition.functions.expected_improvement.EIPS.long_name">(smac.acquisition.functions.expected_improvement.EIPS attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.LCB.long_name">(smac.acquisition.functions.LCB attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.PI.long_name">(smac.acquisition.functions.PI attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.probability_improvement.html#smac.acquisition.functions.probability_improvement.PI.long_name">(smac.acquisition.functions.probability_improvement.PI attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.thompson.html#smac.acquisition.functions.thompson.TS.long_name">(smac.acquisition.functions.thompson.TS attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.TS.long_name">(smac.acquisition.functions.TS attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -1464,6 +1525,12 @@ style="width: 100%;">
 
       <ul>
         <li><a href="api/smac.model.gaussian_process.kernels.matern_kernel.html#smac.model.gaussian_process.kernels.matern_kernel.Matern">(class in smac.model.gaussian_process.kernels.matern_kernel)</a>
+</li>
+      </ul></li>
+      <li><a href="api/smac.acquisition.local_search.html#smac.acquisition.local_search.LocalSearch.max_steps">max_steps (smac.acquisition.local_search.LocalSearch attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.html#smac.acquisition.LocalSearch.max_steps">(smac.acquisition.LocalSearch attribute)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.acquisition.abstract_acqusition_optimizer.html#smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer.maximize">maximize() (smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer method)</a>
@@ -1791,6 +1858,12 @@ style="width: 100%;">
         <li><a href="api/smac.model.random_forest.html#smac.model.random_forest.RandomForestWithInstances.n_points_per_tree">(smac.model.random_forest.RandomForestWithInstances attribute)</a>
 </li>
       </ul></li>
+      <li><a href="api/smac.acquisition.local_search.html#smac.acquisition.local_search.LocalSearch.n_steps_plateau_walk">n_steps_plateau_walk (smac.acquisition.local_search.LocalSearch attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.html#smac.acquisition.LocalSearch.n_steps_plateau_walk">(smac.acquisition.LocalSearch attribute)</a>
+</li>
+      </ul></li>
       <li><a href="api/smac.runner.dask_runner.html#smac.runner.dask_runner.DaskParallelRunner.n_workers">n_workers (smac.runner.dask_runner.DaskParallelRunner attribute)</a>
 
       <ul>
@@ -1835,6 +1908,16 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.utils.subspaces.html#smac.utils.subspaces.LocalSubspace.normalize_input">normalize_input() (smac.utils.subspaces.LocalSubspace method)</a>
 </li>
+      <li><a href="api/smac.acquisition.functions.confidence_bound.html#smac.acquisition.functions.confidence_bound.LCB.num_data">num_data (smac.acquisition.functions.confidence_bound.LCB attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.LCB.num_data">(smac.acquisition.functions.LCB attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.thompson.html#smac.acquisition.functions.thompson.TS.num_data">(smac.acquisition.functions.thompson.TS attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.TS.num_data">(smac.acquisition.functions.TS attribute)</a>
+</li>
+      </ul></li>
       <li><a href="api/smac.model.gaussian_process.kernels.boing.html#smac.model.gaussian_process.kernels.boing.FITCKernel.num_outputs_per_input">num_outputs_per_input() (smac.model.gaussian_process.kernels.boing.FITCKernel method)</a>
 </li>
       <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.num_runs_per_config">num_runs_per_config (smac.runhistory.RunHistory attribute)</a>
@@ -1885,6 +1968,12 @@ style="width: 100%;">
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/smac.acquisition.functions.thompson.html#smac.acquisition.functions.thompson.TS.par">par (smac.acquisition.functions.thompson.TS attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.TS.par">(smac.acquisition.functions.TS attribute)</a>
+</li>
+      </ul></li>
       <li><a href="api/smac.runner.dask_runner.html#smac.runner.dask_runner.DaskParallelRunner.par_factor">par_factor (smac.runner.dask_runner.DaskParallelRunner attribute)</a>
 
       <ul>
@@ -1965,6 +2054,18 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.model.gaussian_process.priors.prior.html#smac.model.gaussian_process.priors.prior.Prior">Prior (class in smac.model.gaussian_process.priors.prior)</a>
 </li>
+      <li><a href="api/smac.acquisition.local_and_random_search.html#smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch.prior_random_search">prior_random_search (smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.html#smac.acquisition.LocalAndSortedPriorRandomSearch.prior_random_search">(smac.acquisition.LocalAndSortedPriorRandomSearch attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/smac.acquisition.local_and_random_search.html#smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch.prior_sampling_fraction">prior_sampling_fraction (smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.html#smac.acquisition.LocalAndSortedPriorRandomSearch.prior_sampling_fraction">(smac.acquisition.LocalAndSortedPriorRandomSearch attribute)</a>
+</li>
+      </ul></li>
       <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.PriorAcquisitionFunction">PriorAcquisitionFunction (class in smac.acquisition.functions)</a>
 
       <ul>
@@ -2013,6 +2114,12 @@ style="width: 100%;">
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/smac.acquisition.local_and_random_search.html#smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch.random_search">random_search (smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.html#smac.acquisition.LocalAndSortedRandomSearch.random_search">(smac.acquisition.LocalAndSortedRandomSearch attribute)</a>
+</li>
+      </ul></li>
       <li><a href="api/smac.random_design.html#smac.random_design.RandomDesign">RandomDesign (class in smac.random_design)</a>
 
       <ul>
@@ -3349,6 +3456,12 @@ style="width: 100%;">
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/smac.acquisition.local_and_random_search.html#smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch.uniform_random_search">uniform_random_search (smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.html#smac.acquisition.LocalAndSortedPriorRandomSearch.uniform_random_search">(smac.acquisition.LocalAndSortedPriorRandomSearch attribute)</a>
+</li>
+      </ul></li>
       <li><a href="api/smac.model.random_forest.random_forest_with_instances.html#smac.model.random_forest.random_forest_with_instances.RandomForestWithInstances.unlog_y">unlog_y (smac.model.random_forest.random_forest_with_instances.RandomForestWithInstances attribute)</a>
 
       <ul>
@@ -3360,13 +3473,29 @@ style="width: 100%;">
       <ul>
         <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction.update">(smac.acquisition.functions.AbstractAcquisitionFunction method)</a>
 </li>
+        <li><a href="api/smac.acquisition.functions.confidence_bound.html#smac.acquisition.functions.confidence_bound.LCB.update">(smac.acquisition.functions.confidence_bound.LCB method)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.EI.update">(smac.acquisition.functions.EI method)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.expected_improvement.html#smac.acquisition.functions.expected_improvement.EI.update">(smac.acquisition.functions.expected_improvement.EI method)</a>
+</li>
         <li><a href="api/smac.acquisition.functions.integrated.html#smac.acquisition.functions.integrated.IntegratedAcquisitionFunction.update">(smac.acquisition.functions.integrated.IntegratedAcquisitionFunction method)</a>
 </li>
         <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.IntegratedAcquisitionFunction.update">(smac.acquisition.functions.IntegratedAcquisitionFunction method)</a>
 </li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.LCB.update">(smac.acquisition.functions.LCB method)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.PI.update">(smac.acquisition.functions.PI method)</a>
+</li>
         <li><a href="api/smac.acquisition.functions.prior.html#smac.acquisition.functions.prior.PriorAcquisitionFunction.update">(smac.acquisition.functions.prior.PriorAcquisitionFunction method)</a>
 </li>
         <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.PriorAcquisitionFunction.update">(smac.acquisition.functions.PriorAcquisitionFunction method)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.probability_improvement.html#smac.acquisition.functions.probability_improvement.PI.update">(smac.acquisition.functions.probability_improvement.PI method)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.thompson.html#smac.acquisition.functions.thompson.TS.update">(smac.acquisition.functions.thompson.TS method)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.TS.update">(smac.acquisition.functions.TS method)</a>
 </li>
         <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.update">(smac.runhistory.RunHistory method)</a>
 </li>
@@ -3407,10 +3536,22 @@ style="width: 100%;">
         <li><a href="api/smac.model.html#smac.model.BaseModel.var_threshold">(smac.model.BaseModel attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.model.gaussian_process.gpytorch.html#smac.model.gaussian_process.gpytorch.VariationalGaussianProcess">VariationalGaussianProcess (class in smac.model.gaussian_process.gpytorch)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/smac.acquisition.local_search.html#smac.acquisition.local_search.LocalSearch.vectorization_max_obtain">vectorization_max_obtain (smac.acquisition.local_search.LocalSearch attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.html#smac.acquisition.LocalSearch.vectorization_max_obtain">(smac.acquisition.LocalSearch attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/smac.acquisition.local_search.html#smac.acquisition.local_search.LocalSearch.vectorization_min_obtain">vectorization_min_obtain (smac.acquisition.local_search.LocalSearch attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.html#smac.acquisition.LocalSearch.vectorization_min_obtain">(smac.acquisition.LocalSearch attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -3437,6 +3578,26 @@ style="width: 100%;">
 
       <ul>
         <li><a href="api/smac.model.gaussian_process.kernels.white_kernel.html#smac.model.gaussian_process.kernels.white_kernel.WhiteKernel">(class in smac.model.gaussian_process.kernels.white_kernel)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="X">X</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.EI.xi">xi (smac.acquisition.functions.EI attribute)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.EIPS.xi">(smac.acquisition.functions.EIPS attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.expected_improvement.html#smac.acquisition.functions.expected_improvement.EI.xi">(smac.acquisition.functions.expected_improvement.EI attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.expected_improvement.html#smac.acquisition.functions.expected_improvement.EIPS.xi">(smac.acquisition.functions.expected_improvement.EIPS attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.PI.xi">(smac.acquisition.functions.PI attribute)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.probability_improvement.html#smac.acquisition.functions.probability_improvement.PI.xi">(smac.acquisition.functions.probability_improvement.PI attribute)</a>
 </li>
       </ul></li>
   </ul></td>

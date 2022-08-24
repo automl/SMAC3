@@ -328,7 +328,10 @@ style="width: 100%;">
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">smac.model.base_model</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">smac.model.gaussian_process.gpytorch</span> <span class="kn">import</span> <span class="n">GloballyAugmentedLocalGaussianProcess</span>
+<span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span>
 <span class="kn">from</span> <span class="nn">smac.utils.subspaces</span> <span class="kn">import</span> <span class="n">LocalSubspace</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="BOinGSubspace"><a class="viewcode-back" href="../../../../api/smac.utils.subspaces.boing_subspace.html#smac.utils.subspaces.boing_subspace.BOinGSubspace">[docs]</a><span class="k">class</span> <span class="nc">BOinGSubspace</span><span class="p">(</span><span class="n">LocalSubspace</span><span class="p">):</span>
@@ -480,7 +483,7 @@ style="width: 100%;">
             <span class="n">next_configs_by_acq_value</span> <span class="o">=</span> <span class="n">next_configs_random</span> <span class="o">+</span> <span class="n">configs_acq_local</span>
 
             <span class="n">next_configs_by_acq_value</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                 <span class="s2">&quot;First 5 acq func (origin) values of selected configurations: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                 <span class="nb">str</span><span class="p">([[</span><span class="n">_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">_</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">origin</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">next_configs_by_acq_value</span><span class="p">[:</span><span class="mi">5</span><span class="p">]]),</span>
             <span class="p">)</span>

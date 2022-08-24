@@ -317,12 +317,18 @@ style="width: 100%;">
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">abc</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">smac.acquisition</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionOptimizer</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span>
+
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2022, automl.org&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="DifferentialEvolution"><a class="viewcode-back" href="../../../api/smac.acquisition.differential_evolution.html#smac.acquisition.DifferentialEvolution">[docs]</a><span class="k">class</span> <span class="nc">DifferentialEvolution</span><span class="p">(</span><span class="n">AbstractAcquisitionOptimizer</span><span class="p">):</span>
@@ -333,7 +339,7 @@ style="width: 100%;">
         <span class="n">previous_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
         <span class="n">num_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">_sorted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;DifferentialEvolutionSolver.</span>
 
 <span class="sd">        Parameters</span>
@@ -347,12 +353,12 @@ style="width: 100%;">
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        challengers : List[Tuple[float, Configuration]]</span>
+<span class="sd">        challengers : list[tuple[float, Configuration]]</span>
 <span class="sd">            A list consisting of Tuple(acquisition_value, :class:`smac.configspace.Configuration`).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">scipy.optimize._differentialevolution</span> <span class="kn">import</span> <span class="n">DifferentialEvolutionSolver</span>
 
-        <span class="n">configs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">configs</span> <span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
             <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>

@@ -335,7 +335,7 @@ style="width: 100%;">
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch" title="smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LocalAndSortedPriorRandomSearch</span></code></a>(...[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch" title="smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LocalAndSortedPriorRandomSearch</span></code></a>(configspace, ...)</p></td>
 <td><p>Implements SMAC's default acquisition function optimization.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch" title="smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LocalAndSortedRandomSearch</span></code></a>(configspace[, ...])</p></td>
@@ -345,11 +345,11 @@ style="width: 100%;">
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.local_and_random_search.</span></span><span class="sig-name descname"><span class="pre">LocalAndSortedPriorRandomSearch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps_plateau_walk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_search_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prior_sampling_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">challengers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/local_and_random_search.html#LocalAndSortedPriorRandomSearch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.local_and_random_search.</span></span><span class="sig-name descname"><span class="pre">LocalAndSortedPriorRandomSearch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps_plateau_walk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_search_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prior_sampling_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">challengers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/local_and_random_search.html#LocalAndSortedPriorRandomSearch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.abstract_acqusition_optimizer.html#smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer" title="smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionOptimizer</span></code></a></p>
 <p>Implements SMAC’s default acquisition function optimization.</p>
 <p>This optimizer performs local search from the previous best points
-according, to the acquisition function, uses the acquisition function to
+according to the acquisition function, uses the acquisition function to
 sort randomly sampled configurations. Random configurations are
 interleaved by the main SMAC code. The random configurations are retrieved
 from two different ConfigurationSpaces - one which uses priors (e.g. NormalFloatHP)
@@ -358,20 +358,75 @@ space, i.e. with the priors removed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>acquisition_function</strong> (<em>AbstractAcquisitionFunction</em>) – </p></li>
 <li><p><strong>configspace</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – The original ConfigurationSpace specified by the user</p></li>
+<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction" title="smac.acquisition.functions.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </p></li>
 <li><p><strong>uniform_configspace</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – A version of the user-defined ConfigurationSpace where all parameters are
 uniform (or have their weights removed in the case of a categorical
 hyperparameter)</p></li>
-<li><p><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </p></li>
-<li><p><strong>max_steps</strong> (<em>int</em>) – [LocalSearch] Maximum number of steps that the local search will perform</p></li>
-<li><p><strong>n_steps_plateau_walk</strong> (<em>int</em>) – [LocalSearch] number of steps during a plateau walk before local search terminates</p></li>
-<li><p><strong>local_search_iterations</strong> (<em>int</em>) – [Local Search] number of local search iterations</p></li>
-<li><p><strong>prior_sampling_fraction</strong> (<em>float</em>) – The ratio of random samples that are taken from the user-defined ConfigurationSpace,
+<li><p><strong>max_steps</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – [LocalSearch] Maximum number of steps that the local search will perform</p></li>
+<li><p><strong>n_steps_plateau_walk</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – [LocalSearch] number of steps during a plateau walk before local search terminates</p></li>
+<li><p><strong>local_search_iterations</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – [Local Search] number of local search iterations</p></li>
+<li><p><strong>prior_sampling_fraction</strong> (<em>float</em><em>, </em><em>defaults to 0.5</em>) – The ratio of random samples that are taken from the user-defined ConfigurationSpace,
 as opposed to the uniform version.</p></li>
+<li><p><strong>challengers</strong> (<em>int</em><em>, </em><em>defaults to 5000</em>) – Number of challengers.</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>) – </p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch.prior_random_search">
+<span class="sig-name descname"><span class="pre">prior_random_search</span></span><a class="headerlink" href="#smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch.prior_random_search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search over the prior configuration space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.html#smac.acquisition.RandomSearch" title="smac.acquisition.RandomSearch">RandomSearch</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch.uniform_random_search">
+<span class="sig-name descname"><span class="pre">uniform_random_search</span></span><a class="headerlink" href="#smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch.uniform_random_search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search ove rthe normal configuration space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.html#smac.acquisition.RandomSearch" title="smac.acquisition.RandomSearch">RandomSearch</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch.local_search">
+<span class="sig-name descname"><span class="pre">local_search</span></span><a class="headerlink" href="#smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch.local_search" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.html#smac.acquisition.LocalSearch" title="smac.acquisition.LocalSearch">LocalSearch</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch.local_search_iterations">
+<span class="sig-name descname"><span class="pre">local_search_iterations</span></span><a class="headerlink" href="#smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch.local_search_iterations" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch.prior_sampling_fraction">
+<span class="sig-name descname"><span class="pre">prior_sampling_fraction</span></span><a class="headerlink" href="#smac.acquisition.local_and_random_search.LocalAndSortedPriorRandomSearch.prior_sampling_fraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>The ratio of random samples that are taken from the user-defined ConfigurationSpace,
+as opposed to the uniform version.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -386,15 +441,46 @@ interleaved by the main SMAC code.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>acquisition_function</strong> (<em>AbstractAcquisitionFunction</em>) – </p></li>
 <li><p><strong>configspace</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – </p></li>
-<li><p><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </p></li>
-<li><p><strong>max_steps</strong> (<em>int</em>) – [LocalSearch] Maximum number of steps that the local search will perform</p></li>
-<li><p><strong>n_steps_plateau_walk</strong> (<em>int</em>) – [LocalSearch] number of steps during a plateau walk before local search terminates</p></li>
-<li><p><strong>local_search_iterations</strong> (<em>int</em>) – [Local Search] number of local search iterations</p></li>
+<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction" title="smac.acquisition.functions.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – </p></li>
+<li><p><strong>max_steps</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – [LocalSearch] Maximum number of steps that the local search will perform.</p></li>
+<li><p><strong>n_steps_plateau_walk</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – [LocalSearch] number of steps during a plateau walk before local search terminates</p></li>
+<li><p><strong>local_search_iterations</strong> (<em>int</em><em>, </em><em>defauts to 0</em>) – [Local Search] number of local search iterations</p></li>
+<li><p><strong>challengers</strong> (<em>int</em><em>, </em><em>defaults to 5000</em>) – Number of challengers.</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>) – </p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch.random_search">
+<span class="sig-name descname"><span class="pre">random_search</span></span><a class="headerlink" href="#smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch.random_search" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.html#smac.acquisition.RandomSearch" title="smac.acquisition.RandomSearch">RandomSearch</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch.local_search">
+<span class="sig-name descname"><span class="pre">local_search</span></span><a class="headerlink" href="#smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch.local_search" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.html#smac.acquisition.LocalSearch" title="smac.acquisition.LocalSearch">LocalSearch</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch.local_search_iterations">
+<span class="sig-name descname"><span class="pre">local_search_iterations</span></span><a class="headerlink" href="#smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch.local_search_iterations" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch.get_meta">
 <span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/local_and_random_search.html#LocalAndSortedRandomSearch.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch.get_meta" title="Permalink to this definition">¶</a></dt>
