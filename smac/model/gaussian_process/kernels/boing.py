@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Dict, Tuple
 
 import copy
 import math
@@ -57,7 +57,7 @@ class MixedKernel(ProductKernel):
 
 def construct_gp_kernel(
     kernel_kwargs: Dict[str, Any], cont_dims: np.ndarray, cat_dims: np.ndarray
-) -> Union[Kernel, SKLKernels]:
+) -> Kernel | SKLKernels:
     """
     Construct a GP kernel with the given kernel init argument, the cont_dims, and cat_dims of the problem. Since the
     subspace might not have the same number of dimensions as the global search space.
@@ -79,7 +79,7 @@ def construct_gp_kernel(
         dimensions of categorical hyperparameters
     Returns
     -------
-    kernel: Union[Kernel, SKLKernels]
+    kernel: Kernel | SKLKernels
         constructed kernels
 
     """
@@ -133,7 +133,7 @@ class FITCKernel(Kernel):
         likelihood: GaussianLikelihood,
         X_out: torch.Tensor,
         y_out: torch.Tensor,
-        active_dims: Optional[Tuple[int]] = None,
+        active_dims: Tuple[int] | None = None,
     ):
         r"""A reimplementation of FITC Kernel that computes the posterior explicitly for globally augmented local GP.
         This should work exactly the same as a gpytorch.kernel.InducingPointKernel.
@@ -160,7 +160,7 @@ class FITCKernel(Kernel):
             outside the subspace
         y_out: torch.Tensor
             data observations outside the subregion
-        active_dims: typing.Optional[typing.Tuple[int]] = None
+        active_dims: Tuple[int] | None = None
             Set this if you want to compute the covariance of only a few input dimensions. The ints
             corresponds to the indices of the dimensions. Default: `None`.
         """
@@ -434,7 +434,7 @@ class FITCKernel(Kernel):
         return res
 
     def forward(
-        self, x1: torch.Tensor, x2: torch.Tensor, diag: bool = False, **kwargs: Dict
+        self, x1: torch.Tensor, x2: torch.Tensor, diag: bool = False, **kwargs: Any
     ) -> gpytorch.lazy.LazyTensor:
         """Compute the kernel function"""
         covar = self._get_covariance(x1, x2)
@@ -531,7 +531,7 @@ class FITCKernel(Kernel):
 
 
 class FITCMean(Mean):
-    def __init__(self, covar_module: FITCKernel, batch_shape: torch.Size = torch.Size(), **kwargs: Dict):
+    def __init__(self, covar_module: FITCKernel, batch_shape: torch.Size = torch.Size(), **kwargs: Any):
         """
         Read the posterior mean value of the given fitc kernel and serve as a prior mean value for the
         second stage
