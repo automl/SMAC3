@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, Type
+from typing import Callable, Dict, Type
 
 import numpy as np
 from botorch.models.kernels.categorical import CategoricalKernel
@@ -20,6 +20,7 @@ from smac.runhistory.encoder.boing_encoder import (
     RunHistoryRawEncoder,
     RunHistoryRawScaledEncoder,
 )
+from smac.runner.runner import Runner
 from smac.scenario import Scenario
 
 
@@ -41,8 +42,8 @@ class BOinGFacade(HyperparameterFacade):
     Parameters
     ----------
     model_local: Type[BaseModel],
-            local empirical performance model, used in subspace. Since the subspace might have different amount of
-            hyperparameters compared to the search space. We only instantiate them under the subspace.
+        local empirical performance model, used in subspace. Since the subspace might have different amount of
+        hyperparameters compared to the search space. We only instantiate them under the subspace.
     model_local_kwargs: Optional[Dict] = None,
         parameters for initializing a local model
     acquisition_func_local: AbstractAcquisitionFunction,
@@ -64,6 +65,9 @@ class BOinGFacade(HyperparameterFacade):
        parameters for building a turbo optimizer. For details, please refer to smac.utils.subspace.turbo
     """
     def __init__(self,
+                 scenario: Scenario,
+                 target_algorithm: Runner | Callable,
+                 *,
                  model_local: Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
                  model_local_kwargs: Dict | None = None,
                  acquisition_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
@@ -73,7 +77,8 @@ class BOinGFacade(HyperparameterFacade):
                  max_configs_local_fracs: float = 0.5,
                  min_configs_local: int | None = None,
                  do_switching: bool = False,
-                 turbo_kwargs: Dict | None = None, *args, **kwargs):
+                 turbo_kwargs: Dict | None = None,
+                 **kwargs):
         self.model_local = model_local
         if model_local_kwargs is None and issubclass(model_local, GPyTorchGaussianProcess):
             model_local_kwargs = self.get_lgpga_local_components()
@@ -87,7 +92,7 @@ class BOinGFacade(HyperparameterFacade):
         self.do_switching = do_switching
         self.turbo_kwargs = turbo_kwargs
         # we attach here an that allows the users to pass their own arguments to the boing optimizer
-        super().__init__(*args, **kwargs)
+        super().__init__(scenario=scenario,target_algorithm=target_algorithm, **kwargs)
 
     @staticmethod
     def get_runhistory_encoder(scenario: Scenario) -> RunHistoryRawEncoder:

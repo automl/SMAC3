@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 import logging
 import warnings
@@ -10,7 +10,7 @@ import gpytorch
 import numpy as np
 import torch
 from botorch.optim.numpy_converter import module_to_array, set_params_with_array
-from botorch.optim.utils import _scipy_objective_and_grad
+from botorch.optim.utils import _get_extra_mll_args, _scipy_objective_and_grad
 from gpytorch.constraints.constraints import Interval
 from gpytorch.distributions.multivariate_normal import MultivariateNormal
 from gpytorch.kernels import Kernel
@@ -19,7 +19,7 @@ from gpytorch.means import ZeroMean
 from gpytorch.mlls import ExactMarginalLogLikelihood
 from gpytorch.models import ExactGP
 from gpytorch.priors import HorseshoePrior
-from gpytorch.utils.errors import NotPSDError
+from gpytorch.utils.errors import NanError, NotPSDError
 from scipy import optimize
 from scipy.stats.qmc import LatinHypercube
 
@@ -75,9 +75,9 @@ class GPyTorchGaussianProcess(BaseGaussianProcess):
         kernel: Kernel,
         normalize_y: bool = True,
         n_opt_restarts: int = 10,
-        likelihood: Optional[FixedNoiseGaussianLikelihood] = None,
-        instance_features: Optional[np.ndarray] = None,
-        pca_components: Optional[int] = None,
+        likelihood: FixedNoiseGaussianLikelihood | None = None,
+        instance_features: np.ndarray | None = None,
+        pca_components: int | None = None,
     ):
         """
         A Gaussian Process written with GPyTorch, its interface is written to be compatible with partial sparse gaussian
@@ -186,8 +186,8 @@ class GPyTorchGaussianProcess(BaseGaussianProcess):
         return self
 
     def _get_gp(
-        self, X: Optional[np.ndarray] = None, y: Optional[np.ndarray] = None
-    ) -> Optional[ExactMarginalLogLikelihood]:
+        self, X: np.ndarray | None = None, y: np.ndarray | None = None
+    ) -> ExactMarginalLogLikelihood | None:
         """
         Get the GP model with the given X and y values. As GPyTorch requires the input data to initialize a new
         model, we also pass X and y here. X and y are set optional to ensure compatibility.
@@ -278,8 +278,8 @@ class GPyTorchGaussianProcess(BaseGaussianProcess):
         return theta_star
 
     def _predict(
-        self, X_test: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov"
-    ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
+        self, X_test: np.ndarray, cov_return_type: str | None = "diagonal_cov"
+    ) -> Tuple[np.ndarray, np.ndarray | None]:
         r"""
         Returns the predictive mean and variance of the objective function at
         the given test points.
@@ -458,11 +458,11 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
         seed: int,
         kernel: Kernel,
         num_inducing_points: int = 2,
-        likelihood: Optional[GaussianLikelihood] = None,
+        likelihood: GaussianLikelihood | None = None,
         normalize_y: bool = True,
         n_opt_restarts: int = 10,
-        instance_features: Optional[np.ndarray] = None,
-        pca_components: Optional[int] = None,
+        instance_features: np.ndarray | None = None,
+        pca_components: int | None = None,
     ):
         """
         The GP hyperparameters are obtained by optimizing the marginal log-likelihood and optimized with botorch
@@ -516,7 +516,7 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
 
     def _train(
         self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True
-    ) -> Union[AugmentedLocalGaussianProcess, GPyTorchGaussianProcess]:
+    ) -> AugmentedLocalGaussianProcess | GPyTorchGaussianProcess:
         """
         Update the hyperparameters of the partial sparse kernel. Depending on the number of inputs inside and
         outside the subregion, we initialize a  PartialSparseGaussianProcess or a GaussianProcessGPyTorch
@@ -736,11 +736,11 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
 
     def _get_gp(
         self,
-        X_in: Optional[np.ndarray] = None,
-        y_in: Optional[np.ndarray] = None,
-        X_out: Optional[np.ndarray] = None,
-        y_out: Optional[np.ndarray] = None,
-    ) -> Optional[ExactMarginalLogLikelihood]:
+        X_in: np.ndarray | None = None,
+        y_in: np.ndarray | None = None,
+        X_out: np.ndarray | None = None,
+        y_out: np.ndarray | None = None,
+    ) -> ExactMarginalLogLikelihood | None:
         """
         Construct a new GP model based on the inputs
         If both in and out are None: return an empty model
@@ -749,16 +749,16 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
 
         Parameters
         ----------
-        X_in: Optional[np.ndarray (N_in, D)]
+        X_in: np.ndarray (N_in, D) | None
             Input data points inside the subregion. The dimensionality of X_in is (N_in, D),
             with N_in as the number of points inside the subregion and D is the number of features. If it is not given,
             this function will return None to be compatible with the implementation of its parent class
-        y_in: Optional[np.ndarray (N_in,)]
+        y_in: np.ndarray (N_in,) | None
             The corresponding target values inside the subregion.
-        X_out: Optional[np.ndarray (N_out, D).
+        X_out: np.ndarray (N_out, D) | None
             Input data points outside the subregion. The dimensionality of X_out is (N_out, D). If it is not given, this
         function will return a vanilla Gaussian Process
-        y_out: Optional[np.ndarray (N_out)]
+        y_out: np.ndarray (N_out) | None
             The corresponding target values outside the subregion.
 
         Returns

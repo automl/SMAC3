@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Iterator, List, Optional, Tuple, Type, Union
+from typing import Any, Dict, Iterator, List, Tuple, Type
 
 import copy
 import inspect
@@ -58,15 +58,15 @@ class LocalSubspace(ABC):
         random state
     model_local: ~smac.epm.base_epm.BaseEPM
         model in subspace
-    model_local_kwargs: Optional[Dict]
+    model_local_kwargs: Dict | None
         argument for subspace model
     acq_func_local: ~smac.optimizer.ei_optimization.AbstractAcquisitionFunction
         local acquisition function
-    acq_func_local_kwargs: Optional[Dict]
+    acq_func_local_kwargs: Dict | None
         argument for acquisition function
-    activate_dims: Optional[np.ndarray]
+    activate_dims: np.ndarray | None
         activate dimensions in the subspace, if it is None, we preserve all the dimensions
-    incumbent_array: Optional[np.ndarray]
+    incumbent_array: np.ndarray | None
         incumbent array, used when activate_dims has less dimension and this value is used to complementary the
         resulted configurations
     """
@@ -76,16 +76,16 @@ class LocalSubspace(ABC):
         config_space: ConfigurationSpace,
         bounds: List[Tuple[float, float]],
         hps_types: List[int],
-        bounds_ss_cont: Optional[np.ndarray] = None,
-        bounds_ss_cat: Optional[List[Tuple]] = None,
-        model_local: Union[BaseModel, Type[BaseModel]] = GloballyAugmentedLocalGaussianProcess,
+        bounds_ss_cont: np.ndarray | None = None,
+        bounds_ss_cat: List[Tuple] | None = None,
+        model_local: BaseModel | Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
         model_local_kwargs: Dict = {},
-        acq_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = EI,
-        acq_func_local_kwargs: Optional[Dict] = None,
-        rng: Optional[np.random.RandomState] = None,
-        initial_data: Optional[Tuple[np.ndarray, np.ndarray]] = None,
-        activate_dims: Optional[np.ndarray] = None,
-        incumbent_array: Optional[np.ndarray] = None,
+        acq_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
+        acq_func_local_kwargs: Dict | None = None,
+        rng: np.random.RandomState | None = None,
+        initial_data: Tuple[np.ndarray, np.ndarray] | None = None,
+        activate_dims: np.ndarray | None = None,
+        incumbent_array: np.ndarray | None = None,
     ):
         logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.cs_global = config_space
@@ -389,7 +389,7 @@ class LocalSubspace(ABC):
     @staticmethod
     def fit_forbidden_to_ss(
         cs_local: ConfigurationSpace, forbidden: AbstractForbiddenComponent
-    ) -> Optional[AbstractForbiddenComponent]:
+    ) -> AbstractForbiddenComponent | None:
         """
         Fit the forbidden to subspaces. If the target forbidden can be added to subspace, we return a new forbidden
         with exactly the same type of the input forbidden. Otherwise, None is returned.
@@ -402,7 +402,7 @@ class LocalSubspace(ABC):
             forbidden to check
         Returns
         -------
-        forbidden_ss: Optional[AbstractForbiddenComponent]
+        forbidden_ss: AbstractForbiddenComponent | None
             forbidden in subspaces
 
         """
@@ -553,7 +553,7 @@ class LocalSubspace(ABC):
         )
 
     @abstractmethod
-    def _generate_challengers(self, **optimizer_kwargs: Dict) -> List[Tuple[float, Configuration]]:
+    def _generate_challengers(self, **optimizer_kwargs: Any) -> List[Tuple[float, Configuration]]:
         """Generate new challengers list for this subspace"""
         raise NotImplementedError
 
@@ -598,7 +598,7 @@ class ChallengerListLocal(Iterator):
         cs_global: ConfigurationSpace,
         challengers: List[Tuple[float, Configuration]],
         config_origin: str,
-        incumbent_array: Optional[np.ndarray] = None,
+        incumbent_array: np.ndarray | None = None,
     ):
         """
         A Challenger list to convert the configuration from the local configuration space to the global configuration
@@ -614,7 +614,7 @@ class ChallengerListLocal(Iterator):
             challenger lists
         config_origin: str
             configuration origin
-        incumbent_array: Optional[np.ndarray] = None,
+        incumbent_array: np.ndarray | None = None,
             global incumbent array, used when cs_local and cs_global have different number of dimensions and we need to
             supplement the missing values.
         """

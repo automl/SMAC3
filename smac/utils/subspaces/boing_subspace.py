@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, List, Optional, Tuple, Type, Union
+from typing import Dict, List, Tuple, Type
 
 import inspect
 
@@ -37,18 +37,18 @@ class BOinGSubspace(LocalSubspace):
         config_space: ConfigurationSpace,
         bounds: List[Tuple[float, float]],
         hps_types: List[int],
-        bounds_ss_cont: Optional[np.ndarray] = None,
-        bounds_ss_cat: Optional[List[Tuple]] = None,
-        model_local: Union[BaseModel, Type[BaseModel]] = GloballyAugmentedLocalGaussianProcess,
+        bounds_ss_cont: np.ndarray | None = None,
+        bounds_ss_cat: List[Tuple] | None = None,
+        model_local: BaseModel | Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
         model_local_kwargs: Dict = {},
-        acq_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = EI,
-        acq_func_local_kwargs: Optional[Dict] = None,
-        rng: Optional[np.random.RandomState] = None,
-        initial_data: Optional[Tuple[np.ndarray, np.ndarray]] = None,
-        activate_dims: Optional[np.ndarray] = None,
-        incumbent_array: Optional[np.ndarray] = None,
-        acq_optimizer_local: Optional[AbstractAcquisitionOptimizer] = None,
-        acq_optimizer_local_kwargs: Optional[dict] = None,
+        acq_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
+        acq_func_local_kwargs: Dict | None = None,
+        rng: np.random.RandomState | None = None,
+        initial_data: Tuple[np.ndarray, np.ndarray] | None = None,
+        activate_dims: np.ndarray | None = None,
+        incumbent_array: np.ndarray | None = None,
+        acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
+        acq_optimizer_local_kwargs: Dict | None = None,
     ):
         super(BOinGSubspace, self).__init__(
             config_space=config_space,
