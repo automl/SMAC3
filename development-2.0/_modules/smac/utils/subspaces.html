@@ -317,7 +317,7 @@ style="width: 100%;">
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Type</span>
 
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
@@ -374,15 +374,15 @@ style="width: 100%;">
 <span class="sd">        random state</span>
 <span class="sd">    model_local: ~smac.epm.base_epm.BaseEPM</span>
 <span class="sd">        model in subspace</span>
-<span class="sd">    model_local_kwargs: Optional[Dict]</span>
+<span class="sd">    model_local_kwargs: Dict | None</span>
 <span class="sd">        argument for subspace model</span>
 <span class="sd">    acq_func_local: ~smac.optimizer.ei_optimization.AbstractAcquisitionFunction</span>
 <span class="sd">        local acquisition function</span>
-<span class="sd">    acq_func_local_kwargs: Optional[Dict]</span>
+<span class="sd">    acq_func_local_kwargs: Dict | None</span>
 <span class="sd">        argument for acquisition function</span>
-<span class="sd">    activate_dims: Optional[np.ndarray]</span>
+<span class="sd">    activate_dims: np.ndarray | None</span>
 <span class="sd">        activate dimensions in the subspace, if it is None, we preserve all the dimensions</span>
-<span class="sd">    incumbent_array: Optional[np.ndarray]</span>
+<span class="sd">    incumbent_array: np.ndarray | None</span>
 <span class="sd">        incumbent array, used when activate_dims has less dimension and this value is used to complementary the</span>
 <span class="sd">        resulted configurations</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -392,16 +392,16 @@ style="width: 100%;">
         <span class="n">config_space</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
         <span class="n">bounds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
         <span class="n">hps_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
-        <span class="n">bounds_ss_cont</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">bounds_ss_cat</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">model_local</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]]</span> <span class="o">=</span> <span class="n">GloballyAugmentedLocalGaussianProcess</span><span class="p">,</span>
+        <span class="n">bounds_ss_cont</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">bounds_ss_cat</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">model_local</span><span class="p">:</span> <span class="n">BaseModel</span> <span class="o">|</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]</span> <span class="o">=</span> <span class="n">GloballyAugmentedLocalGaussianProcess</span><span class="p">,</span>
         <span class="n">model_local_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{},</span>
-        <span class="n">acq_func_local</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">AbstractAcquisitionFunction</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">AbstractAcquisitionFunction</span><span class="p">]]</span> <span class="o">=</span> <span class="n">EI</span><span class="p">,</span>
-        <span class="n">acq_func_local_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">rng</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">initial_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">activate_dims</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">incumbent_array</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">acq_func_local</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span> <span class="o">|</span> <span class="n">Type</span><span class="p">[</span><span class="n">AbstractAcquisitionFunction</span><span class="p">]</span> <span class="o">=</span> <span class="n">EI</span><span class="p">,</span>
+        <span class="n">acq_func_local_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">initial_data</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">activate_dims</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">incumbent_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs_global</span> <span class="o">=</span> <span class="n">config_space</span>
@@ -705,7 +705,7 @@ style="width: 100%;">
 <div class="viewcode-block" id="LocalSubspace.fit_forbidden_to_ss"><a class="viewcode-back" href="../../../api/smac.utils.subspaces.html#smac.utils.subspaces.LocalSubspace.fit_forbidden_to_ss">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">fit_forbidden_to_ss</span><span class="p">(</span>
         <span class="n">cs_local</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span> <span class="n">forbidden</span><span class="p">:</span> <span class="n">AbstractForbiddenComponent</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AbstractForbiddenComponent</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractForbiddenComponent</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fit the forbidden to subspaces. If the target forbidden can be added to subspace, we return a new forbidden</span>
 <span class="sd">        with exactly the same type of the input forbidden. Otherwise, None is returned.</span>
@@ -718,7 +718,7 @@ style="width: 100%;">
 <span class="sd">            forbidden to check</span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        forbidden_ss: Optional[AbstractForbiddenComponent]</span>
+<span class="sd">        forbidden_ss: AbstractForbiddenComponent | None</span>
 <span class="sd">            forbidden in subspaces</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -869,7 +869,7 @@ style="width: 100%;">
         <span class="p">)</span></div>
 
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">_generate_challengers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">optimizer_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
+    <span class="k">def</span> <span class="nf">_generate_challengers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">optimizer_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;Generate new challengers list for this subspace&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
@@ -914,7 +914,7 @@ style="width: 100%;">
         <span class="n">cs_global</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
         <span class="n">challengers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]],</span>
         <span class="n">config_origin</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">incumbent_array</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">incumbent_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A Challenger list to convert the configuration from the local configuration space to the global configuration</span>
@@ -930,7 +930,7 @@ style="width: 100%;">
 <span class="sd">            challenger lists</span>
 <span class="sd">        config_origin: str</span>
 <span class="sd">            configuration origin</span>
-<span class="sd">        incumbent_array: Optional[np.ndarray] = None,</span>
+<span class="sd">        incumbent_array: np.ndarray | None = None,</span>
 <span class="sd">            global incumbent array, used when cs_local and cs_global have different number of dimensions and we need to</span>
 <span class="sd">            supplement the missing values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

@@ -367,11 +367,11 @@ corresponding values from incumbent_array.</p>
 <li><p><strong>bounds_ss_cat</strong> (<em>List</em><em>[</em><em>Tuple</em><em>]</em>) – subspaces bounds of categorical hyperparameters, its length is the number of categorical hyperparameters</p></li>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – random state</p></li>
 <li><p><strong>model_local</strong> (<em>BaseEPM</em>) – model in subspace</p></li>
-<li><p><strong>model_local_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>]</em>) – argument for subspace model</p></li>
+<li><p><strong>model_local_kwargs</strong> (<em>Dict</em><em> | </em><em>None</em>) – argument for subspace model</p></li>
 <li><p><strong>acq_func_local</strong> (<em>AbstractAcquisitionFunction</em>) – local acquisition function</p></li>
-<li><p><strong>acq_func_local_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>]</em>) – argument for acquisition function</p></li>
-<li><p><strong>activate_dims</strong> (<em>Optional</em><em>[</em><em>np.ndarray</em><em>]</em>) – activate dimensions in the subspace, if it is None, we preserve all the dimensions</p></li>
-<li><p><strong>incumbent_array</strong> (<em>Optional</em><em>[</em><em>np.ndarray</em><em>]</em>) – incumbent array, used when activate_dims has less dimension and this value is used to complementary the
+<li><p><strong>acq_func_local_kwargs</strong> (<em>Dict</em><em> | </em><em>None</em>) – argument for acquisition function</p></li>
+<li><p><strong>activate_dims</strong> (<em>np.ndarray</em><em> | </em><em>None</em>) – activate dimensions in the subspace, if it is None, we preserve all the dimensions</p></li>
+<li><p><strong>incumbent_array</strong> (<em>np.ndarray</em><em> | </em><em>None</em>) – incumbent array, used when activate_dims has less dimension and this value is used to complementary the
 resulted configurations</p></li>
 </ul>
 </dd>
@@ -412,7 +412,7 @@ with exactly the same type of the input forbidden. Otherwise, None is returned.<
 <dd class="field-even"><p><strong>forbidden_ss</strong> – forbidden in subspaces</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Optional[AbstractForbiddenComponent]</p>
+<dd class="field-odd"><p>AbstractForbiddenComponent | None</p>
 </dd>
 </dl>
 </dd></dl>

@@ -316,7 +316,7 @@ style="width: 100%;">
   <h1>Source code for smac.model.gaussian_process.kernels.boing</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">math</span>
@@ -373,7 +373,7 @@ style="width: 100%;">
 
 <div class="viewcode-block" id="construct_gp_kernel"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.boing.html#smac.model.gaussian_process.kernels.boing.construct_gp_kernel">[docs]</a><span class="k">def</span> <span class="nf">construct_gp_kernel</span><span class="p">(</span>
     <span class="n">kernel_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">cont_dims</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cat_dims</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Kernel</span><span class="p">,</span> <span class="n">SKLKernels</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Kernel</span> <span class="o">|</span> <span class="n">SKLKernels</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Construct a GP kernel with the given kernel init argument, the cont_dims, and cat_dims of the problem. Since the</span>
 <span class="sd">    subspace might not have the same number of dimensions as the global search space.</span>
@@ -395,7 +395,7 @@ style="width: 100%;">
 <span class="sd">        dimensions of categorical hyperparameters</span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    kernel: Union[Kernel, SKLKernels]</span>
+<span class="sd">    kernel: Kernel | SKLKernels</span>
 <span class="sd">        constructed kernels</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -449,7 +449,7 @@ style="width: 100%;">
         <span class="n">likelihood</span><span class="p">:</span> <span class="n">GaussianLikelihood</span><span class="p">,</span>
         <span class="n">X_out</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">y_out</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-        <span class="n">active_dims</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">active_dims</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;A reimplementation of FITC Kernel that computes the posterior explicitly for globally augmented local GP.</span>
 <span class="sd">        This should work exactly the same as a gpytorch.kernel.InducingPointKernel.</span>
@@ -476,7 +476,7 @@ style="width: 100%;">
 <span class="sd">            outside the subspace</span>
 <span class="sd">        y_out: torch.Tensor</span>
 <span class="sd">            data observations outside the subregion</span>
-<span class="sd">        active_dims: typing.Optional[typing.Tuple[int]] = None</span>
+<span class="sd">        active_dims: Tuple[int] | None = None</span>
 <span class="sd">            Set this if you want to compute the covariance of only a few input dimensions. The ints</span>
 <span class="sd">            corresponds to the indices of the dimensions. Default: `None`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -750,7 +750,7 @@ style="width: 100%;">
         <span class="k">return</span> <span class="n">res</span></div>
 
 <div class="viewcode-block" id="FITCKernel.forward"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.boing.html#smac.model.gaussian_process.kernels.boing.FITCKernel.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">x2</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">diag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">x2</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">diag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">gpytorch</span><span class="o">.</span><span class="n">lazy</span><span class="o">.</span><span class="n">LazyTensor</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Compute the kernel function&quot;&quot;&quot;</span>
         <span class="n">covar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_covariance</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
@@ -847,7 +847,7 @@ style="width: 100%;">
 
 
 <div class="viewcode-block" id="FITCMean"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.boing.html#smac.model.gaussian_process.kernels.boing.FITCMean">[docs]</a><span class="k">class</span> <span class="nc">FITCMean</span><span class="p">(</span><span class="n">Mean</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">covar_module</span><span class="p">:</span> <span class="n">FITCKernel</span><span class="p">,</span> <span class="n">batch_shape</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Size</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Size</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">covar_module</span><span class="p">:</span> <span class="n">FITCKernel</span><span class="p">,</span> <span class="n">batch_shape</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Size</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Size</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Read the posterior mean value of the given fitc kernel and serve as a prior mean value for the</span>
 <span class="sd">        second stage</span>
