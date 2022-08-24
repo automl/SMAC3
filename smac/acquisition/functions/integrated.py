@@ -1,14 +1,18 @@
 from __future__ import annotations
 
-from typing import Any, List
-
+from typing import Any
 import copy
-
 import numpy as np
 
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
+from smac.utils.logging import get_logger
+
+__copyright__ = "Copyright 2022, automl.org"
+__license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 
 class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
@@ -17,24 +21,21 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
     See "Practical Bayesian Optimization of Machine Learning Algorithms" by Jasper Snoek et al.
     (https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf)
     for further details.
+
+    Parameters
+    ----------
+    long_name : str
+    acquisition_function : AbstractAcquisitionFunction
+    eta : float
+        Current incumbent value.
     """
 
-    def __init__(self, acquisition_function: AbstractAcquisitionFunction, **kwargs: Any):
-        """Constructor.
-
-        Parameters
-        ----------
-        model : BaseEPM
-            The model needs to implement an additional attribute ``models`` which contains the different models to
-            integrate over.
-        kwargs
-            Additional keyword arguments
-        """
+    def __init__(self, acquisition_function: AbstractAcquisitionFunction) -> None:
         super().__init__()
-        self.long_name = "Integrated Acquisition Function (%s)" % acquisition_function.__class__.__name__
-        self.acq = acquisition_function
-        self._functions = []  # type: List[AbstractAcquisitionFunction]
-        self.eta = None
+        self.long_name : str = f"Integrated Acquisition Function ({acquisition_function.__class__.__name__})"
+        self.acquisition_function : AbstractAcquisitionFunction = acquisition_function
+        self.eta: float | None = None
+        self._functions : list[AbstractAcquisitionFunction] = [] 
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
@@ -53,17 +54,15 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
 
         Parameters
         ----------
-        model : BaseEPM
-            The model needs to implement an additional attribute ``models`` which contains the different models to
-            integrate over.
-        kwargs
+        kwargs : Any
+            Keyword arguments for 
         """
         model = kwargs["model"]
         del kwargs["model"]
         if not hasattr(model, "models") or len(model.models) == 0:
             raise ValueError("IntegratedAcquisitionFunction requires at least one model to integrate!")
         if len(self._functions) == 0 or len(self._functions) != len(model.models):
-            self._functions = [copy.deepcopy(self.acq) for _ in model.models]
+            self._functions = [copy.deepcopy(self.acquisition_function) for _ in model.models]
         for submodel, func in zip(model.models, self._functions):
             func.update(model=submodel, **kwargs)
 

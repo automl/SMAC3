@@ -158,8 +158,8 @@ class BlackBoxFacade(Facade):
         return kernel
 
     @staticmethod
-    def get_acquisition_function(scenario: Scenario, par: float = 0.0) -> AbstractAcquisitionFunction:
-        return EI(par=par)
+    def get_acquisition_function(scenario: Scenario, xi: float = 0.0) -> AbstractAcquisitionFunction:
+        return EI(xi=xi)
 
     @staticmethod
     def get_acquisition_optimizer(

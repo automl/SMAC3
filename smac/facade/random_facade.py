@@ -56,12 +56,12 @@ class RandomFacade(Facade):
     """
 
     @staticmethod
-    def get_acquisition_function(scenario: Scenario, par: float = 0.0) -> EI:
+    def get_acquisition_function(scenario: Scenario, xi: float = 0.0) -> EI:
         # TODO: if we use EI, do we still select a configuration with random search?
         # As far as I understood it, EI won't be used anyway and the acquisition
         # function optimizer directly samples from the configspace.
 
-        return EI(par=par)
+        return EI(xi=xi)
 
     @staticmethod
     def get_intensifier(

@@ -6,43 +6,68 @@ import numpy as np
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
+from smac.model.base_model import BaseModel
+from smac.utils.logging import get_logger
+
+__copyright__ = "Copyright 2022, automl.org"
+__license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 
 class TS(AbstractAcquisitionFunction):
-    def __init__(self, par: float = 0.0):
-        r"""Do a Thompson Sampling for a given x over the best so far value as
-        acquisition value.
+    r"""Do a Thompson Sampling for a given x over the best so far value as
+    acquisition value.
 
-        Warning
-        -------
-        Thompson Sampling can only be used together with
-        smac.optimizer.ei_optimization.RandomSearch, please do not use
-        smac.optimizer.ei_optimization.LocalAndSortedRandomSearch to optimize TS
-        acquisition function!
+    Warning
+    -------
+    Thompson Sampling can only be used together with
+    smac.acquisition.random_search.RandomSearch, please do not use
+    smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch to optimize TS
+    acquisition function!
 
-        :math:`TS(X) ~ \mathcal{N}(\mu(\mathbf{X}),\sigma(\mathbf{X}))'
-        Returns -TS(X) as the acquisition_function optimizer maximizes the acquisition value.
+    :math:`TS(X) ~ \mathcal{N}(\mu(\mathbf{X}),\sigma(\mathbf{X}))'
+    Returns -TS(X) as the acquisition_function optimizer maximizes the acquisition value.
 
-        Parameters
-        ----------
-        model : BaseEPM
-            A model that implements at least
-                 - predict_marginalized_over_instances(X)
-        par : float, default=0.0
-            TS does not require par here, we only wants to make it consistent with
-            other acquisition functions.
-        """
+    Parameters
+    ----------
+    par : float, defaults to 0.0
+        TS does not require par here, we only wants to make it consistent with
+        other acquisition functions.
+
+    Attributes
+    ----------
+    long_name : str
+    par : float
+        Exploration/exploitation trade-off parameter.
+    num_data : int 
+        Number of data points (t).
+    """
+    def __init__(self, par: float = 0.0) -> None:
+        # TODO check if TS is used with RandomSearch only
         super(TS, self).__init__()
-        self.long_name = "Thompson Sampling"
-        self.par = par
-        self.num_data = None
-        self._required_updates = ("model",)
+        self.long_name : str = "Thompson Sampling"
+        self.par : float = par
+        self.num_data : int | None = None
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
         }
+
+    def update(self, model: BaseModel, num_data : int, par: float | None = None, **kwargs: Any) -> None:
+        """Update the acquisition function attributes required for calculation.
+
+        Parameters
+        ----------
+        model : BaseModel
+            Models the objective function.
+        """
+        self.model = model
+        self.num_data = num_data
+        if par is not None:
+            self.par = par
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Sample a new value from a gaussian distribution whose mean and covariance values

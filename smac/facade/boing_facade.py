@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, Type
+from typing import Callable, Dict, Type
 
 import numpy as np
 from botorch.models.kernels.categorical import CategoricalKernel
@@ -15,11 +15,12 @@ from smac.main.boing import BOinGSMBO
 from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.facade.hyperparameter_facade import HyperparameterFacade
 from smac.model.base_model import BaseModel
-from smac.model.gaussian_process.gpytorch import GloballyAugmentedLocalGaussianProcess
+from smac.model.gaussian_process.gpytorch import GloballyAugmentedLocalGaussianProcess, GPyTorchGaussianProcess
 from smac.runhistory.encoder.boing_encoder import (
     RunHistoryRawEncoder,
     RunHistoryRawScaledEncoder,
 )
+from smac.runner.runner import Runner
 from smac.scenario import Scenario
 
 
@@ -37,7 +38,61 @@ class BOinGFacade(HyperparameterFacade):
     Hyperparameters are chosen according to the best configuration for Gaussian process maximum likelihood found in
     "Towards Assessing the Impact of Bayesian Optimization's Own Hyperparameters" by Lindauer et al., presented at the
     DSO workshop 2019 (https://arxiv.org/abs/1908.06674).
+
+    Parameters
+    ----------
+    model_local: Type[BaseModel],
+        local empirical performance model, used in subspace. Since the subspace might have different amount of
+        hyperparameters compared to the search space. We only instantiate them under the subspace.
+    model_local_kwargs: Optional[Dict] = None,
+        parameters for initializing a local model
+    acquisition_func_local: AbstractAcquisitionFunction,
+        local acquisition function,  used in subspace
+    acquisition_func_local_kwargs: Optional[Dict] = None,
+        parameters for initializing a local acquisition function optimizer
+    acq_optimizer_local: Optional[AcquisitionFunctionMaximizer] = None,
+        Optimizer of acquisition function of local models, same as above
+    acq_optimizer_local_kwargs: typing: Optional[Dict] = None,
+        parameters for the optimizer of acquisition function of local models
+    max_configs_local_fracs : float
+        The maximal number of fractions of samples to be included in the subspace. If the number of samples in the
+        subspace is greater than this value and n_min_config_inner, the subspace will be cropped to fit the requirement
+    min_configs_local: int,
+        Minimum number of samples included in the inner loop model
+    do_switching: bool
+       if we want to switch between turbo and boing or do a pure BOinG search
+    turbo_kwargs: Optional[Dict] = None
+       parameters for building a turbo optimizer. For details, please refer to smac.utils.subspace.turbo
     """
+    def __init__(self,
+                 scenario: Scenario,
+                 target_algorithm: Runner | Callable,
+                 *,
+                 model_local: Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
+                 model_local_kwargs: Dict | None = None,
+                 acquisition_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
+                 acquisition_func_local_kwargs: Dict | None = None,
+                 acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
+                 acq_optimizer_local_kwargs: Dict | None = None,
+                 max_configs_local_fracs: float = 0.5,
+                 min_configs_local: int | None = None,
+                 do_switching: bool = False,
+                 turbo_kwargs: Dict | None = None,
+                 **kwargs):
+        self.model_local = model_local
+        if model_local_kwargs is None and issubclass(model_local, GPyTorchGaussianProcess):
+            model_local_kwargs = self.get_lgpga_local_components()
+        self.model_local_kwargs = model_local_kwargs
+        self.acquisition_func_local = acquisition_func_local
+        self.acquisition_func_local_kwargs = acquisition_func_local_kwargs
+        self.acq_optimizer_local = acq_optimizer_local
+        self.acq_optimizer_local_kwargs = acq_optimizer_local_kwargs
+        self.max_configs_local_fracs = max_configs_local_fracs
+        self.min_configs_local = min_configs_local
+        self.do_switching = do_switching
+        self.turbo_kwargs = turbo_kwargs
+        # we attach here an that allows the users to pass their own arguments to the boing optimizer
+        super().__init__(scenario=scenario,target_algorithm=target_algorithm, **kwargs)
 
     @staticmethod
     def get_runhistory_encoder(scenario: Scenario) -> RunHistoryRawEncoder:
@@ -66,47 +121,7 @@ class BOinGFacade(HyperparameterFacade):
 
     def _init_optimizer(
         self,
-        model_local: Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
-        model_local_kwargs: Dict | None = None,
-        acquisition_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
-        acquisition_func_local_kwargs: Dict | None = None,
-        acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
-        acq_optimizer_local_kwargs: Dict | None = None,
-        max_configs_local_fracs: float = 0.5,
-        min_configs_local: int | None = None,
-        do_switching: bool = False,
-        turbo_kwargs: Dict | None = None,
     ) -> None:
-        """
-        Parameters
-        ----------
-        model_local: Type[BaseModel],
-            local empirical performance model, used in subspace. Since the subspace might have different amount of
-            hyperparameters compared to the search space. We only instantiate them under the subspace.
-        model_local_kwargs: Optional[Dict] = None,
-            parameters for initializing a local model
-        acquisition_func_local: AbstractAcquisitionFunction,
-            local acquisition function,  used in subspace
-        acquisition_func_local_kwargs: Optional[Dict] = None,
-            parameters for initializing a local acquisition function optimizer
-        acq_optimizer_local: Optional[AcquisitionFunctionMaximizer] = None,
-            Optimizer of acquisition function of local models, same as above, since an acquisition function optimizer
-            requries
-        acq_optimizer_local_kwargs: typing: Optional[Dict] = None,
-            parameters for the optimizer of acquisition function of local models
-        max_configs_local_fracs : float
-            The maximal number of fractions of samples to be included in the subspace. If the number of samples in the
-            subspace is greater than this value and n_min_config_inner, the subspace will be cropped to fit the requirement
-        min_configs_local: int,
-            Minimum number of samples included in the inner loop model
-        do_switching: bool
-           if we want to switch between turbo and boing or do a pure BOinG search
-        turbo_kwargs: Optional[Dict] = None
-           parameters for building a turbo optimizer. For details, please refer to smac.utils.subspace.turbo
-        """
-        if model_local_kwargs is None and model_local.__name__ == "GloballyAugmentedLocalGaussianProcess":
-            model_local_kwargs = BOinGFacade.get_lgpga_local_components()
-
         self.optimizer = BOinGSMBO(
             scenario=self.scenario,
             stats=self.stats,
@@ -120,14 +135,14 @@ class BOinGFacade(HyperparameterFacade):
             acquisition_optimizer=self.acquisition_optimizer,
             random_design=self.random_design,
             seed=self.seed,
-            model_local=model_local,
-            model_local_kwargs=model_local_kwargs,
-            acquisition_func_local=acquisition_func_local,
-            acq_optimizer_local_kwargs=acquisition_func_local_kwargs,
-            max_configs_local_fracs=max_configs_local_fracs,
-            min_configs_local=min_configs_local,
-            do_switching=do_switching,
-            turbo_kwargs=turbo_kwargs,
+            model_local=self.model_local,
+            model_local_kwargs=self.model_local_kwargs,
+            acquisition_func_local=self.acquisition_func_local,
+            acq_optimizer_local_kwargs=self.acquisition_func_local_kwargs,
+            max_configs_local_fracs=self.max_configs_local_fracs,
+            min_configs_local=self.min_configs_local,
+            do_switching=self.do_switching,
+            turbo_kwargs=self.turbo_kwargs,
         )
 
     @staticmethod

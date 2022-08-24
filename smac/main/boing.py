@@ -167,13 +167,13 @@ class BOinGSMBO(SMBO):
         num_samples = 20
         union_ss = []
         union_indices = []
-        rand_samples = self.config_space.sample_configuration(num_samples)
+        rand_samples = self.configspace.sample_configuration(num_samples)
         for sample in rand_samples:
             sample_array = sample.get_array()
             union_bounds_cont, _, ss_data_indices = subspace_extraction(
                 X=X,
                 challenger=sample_array,
-                model=self.smbo.model,
+                model=self.model,
                 num_min=self.min_configs_local,
                 num_max=MAXINT,
                 bounds=self.bounds,
@@ -279,7 +279,7 @@ class BOinGSMBO(SMBO):
         if X.shape[0] < (self.min_configs_local / self.frac_to_start_bi):
             if len(self.configspace.get_conditions()) == 0:
                 self.model.train(X, Y)
-                cs = self.scenario.cs  # type: ignore
+                cs = self.scenario.configspace  # type: ignore
                 ss = BOinGSubspace(
                     config_space=cs,
                     bounds=self.bounds,
@@ -357,7 +357,7 @@ class BOinGSMBO(SMBO):
 
         if (
             X.shape[0] < (self.min_configs_local / self.frac_to_start_bi)
-            and len(self.config_space.get_conditions()) == 0
+            and len(self.configspace.get_conditions()) == 0
         ):
             return challengers_global
 

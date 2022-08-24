@@ -1,16 +1,16 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from typing import Any, Optional
-
-import logging
+from typing import Any
 
 import numpy as np
 
 from smac.random_design.random_design import RandomDesign
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 
 class CosineAnnealingRandomDesign(RandomDesign):
@@ -20,13 +20,13 @@ class CosineAnnealingRandomDesign(RandomDesign):
     Parameters
     ----------
     max_probability : float
-        Initial probility of a random configuration
+        Initial (maximum) probability of a random configuration
     min_probability : float
-        Lowest probility of a random configuration
+        Final (minimal) probability of a random configuration
     restart_iteration : int
         Restart the annealing schedule every ``restart_iteration`` iterations.
-    rng : np.random.RandomState
-        Random state
+    seed : int
+        integer used to initialize the random state
     """
 
     def __init__(
@@ -37,7 +37,10 @@ class CosineAnnealingRandomDesign(RandomDesign):
         seed: int = 0,
     ):
         super().__init__(seed)
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
+        assert 0 < min_probability <= 1
+        assert 0 < max_probability <= 1
+        assert max_probability > min_probability
+        assert restart_iteration > 2
         self.max_probability = max_probability
         self.min_probability = min_probability
         self.restart_iteration = restart_iteration
@@ -49,6 +52,9 @@ class CosineAnnealingRandomDesign(RandomDesign):
         return {
             "name": self.__class__.__name__,
             "seed": self.seed,
+            "max_probability": self.max_probability,
+            "min_probability": self.min_probability,
+            "restart_iteration": self.restart_iteration,
         }
 
     def next_iteration(self) -> None:
@@ -58,17 +64,19 @@ class CosineAnnealingRandomDesign(RandomDesign):
             * (self.max_probability - self.min_probability)
             * (1 + np.cos(self.iteration * np.pi / self.restart_iteration))
         )
-        self.logger.error("Probability for random configs: %f" % self.probability)
+        logger.error(f"Probability for random configs: {self.probability}")
         self.iteration += 1
         if self.iteration > self.restart_iteration:
             self.iteration = 0
-            self.logger.error("Perform restart in next iteration!")
+            logger.error("Perform restart in next iteration!")
 
     def check(self, iteration: int) -> bool:
-        """Check if a random configuration should be interleaved."""
+        """Check if a random configuration should be interleaved. Iteration here relates
+        to the ith configuration evaluated in an SMBO iteration."""
+        assert iteration > 0
         if self.rng.rand() < self.probability:
-            self.logger.error("Random Config")
+            logger.error("Random Config")
             return True
         else:
-            self.logger.error("Acq Config")
+            logger.error("Acq Config")
             return False

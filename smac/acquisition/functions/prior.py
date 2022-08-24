@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, List
+from typing import Any
 
 import numpy as np
 from ConfigSpace.hyperparameters import FloatHyperparameter
@@ -8,13 +8,43 @@ from ConfigSpace.hyperparameters import FloatHyperparameter
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
+from smac.utils.logging import get_logger
+
+__copyright__ = "Copyright 2022, automl.org"
+__license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 
 class PriorAcquisitionFunction(AbstractAcquisitionFunction):
     r"""Weight the acquisition function with a user-defined prior over the optimum.
 
-    See "PiBO: Augmenting Acquisition Functions with User Beliefs for Bayesian Optimization" by Carl
-    Hvarfner et al. (###nolinkyet###) for further details.
+    See "piBO: Augmenting Acquisition Functions with User Beliefs for Bayesian Optimization" by Carl
+    Hvarfner et al. [1]_ for further details.
+
+    References
+    ----------
+    .. [1] [piBO, Hvarfner et al., 2022](https://arxiv.org/pdf/2204.11051.pdf)
+
+    Parameters
+    ----------
+    decay_beta: float
+        Decay factor on the user prior - defaults to n_iterations / 10 if not specifed
+        otherwise.
+    prior_floor : float, defaults to 1e-12
+        Lowest possible value of the prior, to ensure non-negativity for all values
+        in the search space.
+    discretize : bool, defaults to False
+        Whether to discretize (bin) the densities for continous parameters. Triggered
+        for Random Forest models and continous hyperparameters to avoid a pathological case
+        where all Random Forest randomness is removed (RF surrogates require piecewise constant
+        acquisition functions to be well-behaved).
+    discrete_bins_factor : float, defaults to 10.0
+        If discretizing, the multiple on the number of allowed bins for
+        each parameter.
+
+    kwargs : Any
+        Additional keyword arguments
     """
 
     def __init__(
@@ -26,29 +56,11 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         discrete_bins_factor: float = 10.0,
         **kwargs: Any,
     ):
-        """Constructor
-
-        Parameters
-        ----------
-        decay_beta: Decay factor on the user prior - defaults to n_iterations / 10 if not specifed
-            otherwise.
-        prior_floor : Lowest possible value of the prior, to ensure non-negativity for all values
-            in the search space.
-        discretize : Whether to discretize (bin) the densities for continous parameters. Triggered
-            for Random Forest models and continous hyperparameters to avoid a pathological case
-            where all Random Forest randomness is removed (RF surrogates require piecewise constant
-            acquisition functions to be well-behaved)
-        discrete_bins_factor : If discretizing, the multiple on the number of allowed bins for
-            each parameter
-
-        kwargs
-            Additional keyword arguments
-        """
         super().__init__()
         self.long_name = "Prior Acquisition Function (%s)" % acquisition_function.__class__.__name__
-        self.acq = acquisition_function
-        self._functions = []  # type: List[AbstractAcquisitionFunction]
-        self.eta = None
+        self.acq : AbstractAcquisitionFunction = acquisition_function
+        self._functions : list[AbstractAcquisitionFunction]= [] 
+        self.eta : float | None = None
 
         # Problem here: We don't have our model at the init rn
         raise RuntimeError(":(")
@@ -76,19 +88,19 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             "name": self.__class__.__name__,
         }
 
-    def update(self, **kwargs: Any) -> None:
+    def update(self, eta: float, **kwargs: Any) -> None:
         """Update the acquisition function attributes required for calculation.
-
-        Updates the model, the accompanying acquisition function and tracks the iteration number.
 
         Parameters
         ----------
-        kwargs
-            Additional keyword arguments
+        eta : float
+            Current incumbent value.
         """
         self.iteration_number += 1
+        self.eta = eta
+        # Maybe the underlying acquisition function needs eta.
+        kwargs["eta"] = eta
         self.acq.update(**kwargs)
-        self.eta = kwargs.get("eta")
 
     def _compute_prior(self, X: np.ndarray) -> np.ndarray:
         """Computes the prior-weighted acquisition function values, where the prior on each

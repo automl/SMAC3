@@ -7,41 +7,65 @@ from scipy.stats import norm
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
+from smac.model.base_model import BaseModel
+from smac.utils.logging import get_logger
 
+__copyright__ = "Copyright 2022, automl.org"
+__license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 class EI(AbstractAcquisitionFunction):
-    r"""Computes for a given x the expected improvement as
-    acquisition value.
+    r"""Compute the expected improvement for a given x.
 
     :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]`,
     with :math:`f(X^+)` as the best location.
+
+    Parameters
+    ----------
+    xi : float, defaults to 0.0
+        Controls the balance between exploration and exploitation of the
+        acquisition function.
+    log : bool, defaults to False
+        Whether the function values are in log-space.
+
+    Attributes
+    ----------
+    long_name : str
+    log : bool
+        Whether the function values are in log-space.
+    xi : float
+        Exploration/exploitation trade-off parameter.
+    eta : float
+        Current incumbent value.
     """
-
-    # TODO: Rename par (exploration / exploitation parameter)
-    def __init__(self, par: float = 0.0, log: bool = False):
-        """Constructor.
-
-        Parameters
-        ----------
-        model : BaseEPM
-            A model that implements at least
-                 - predict_marginalized_over_instances(X)
-        par : float, default=0.0
-            Controls the balance between exploration and exploitation of the
-            acquisition function.
-        """
+    def __init__(self, xi: float = 0.0, log: bool = False) -> None:
         super(EI, self).__init__()
-        self.long_name = "Expected Improvement"
-        self.log = log
-        self.par = par
-        self.eta = None
-        self._required_updates = ("model", "eta")
+        self.long_name : str = "Expected Improvement"
+        self.log : bool = log
+        self.xi : float = xi
+        self.eta : float | None = None
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
         }
+
+    def update(self, model: BaseModel, eta: float, xi : float | None = None, **kwargs: Any) -> None:
+        """Update the acquisition function attributes required for calculation.
+
+        Parameters
+        ----------
+        model : BaseModel
+           Models the objective function.
+        eta : float
+            Current incumbent value.
+        """
+        self.model = model
+        self.eta = eta
+        if xi is not None:
+            self.xi = xi
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the EI value and its derivatives.
@@ -61,7 +85,7 @@ class EI(AbstractAcquisitionFunction):
         if self.eta is None:
             raise ValueError(
                 "No current best specified. Call update("
-                "eta=<int>) to inform the acquisition function "
+                "eta=<float>) to inform the acquisition function "
                 "about the current best value."
             )
 
@@ -73,15 +97,15 @@ class EI(AbstractAcquisitionFunction):
             s = np.sqrt(v)
 
             def calculate_f():
-                z = (self.eta - m - self.par) / s
-                return (self.eta - m - self.par) * norm.cdf(z) + s * norm.pdf(z)
+                z = (self.eta - m - self.xi) / s
+                return (self.eta - m - self.xi) * norm.cdf(z) + s * norm.pdf(z)
 
             if np.any(s == 0.0):
                 # if std is zero, we have observed x on all instances
                 # using a RF, std should be never exactly 0.0
                 # Avoid zero division by setting all zeros in s to one.
                 # Consider the corresponding results in f to be zero.
-                self.logger.warning("Predicted std is 0.0 for at least one sample.")
+                logger.warning("Predicted std is 0.0 for at least one sample.")
                 s_copy = np.copy(s)
                 s[s_copy == 0.0] = 1.0
                 f = calculate_f()
@@ -101,7 +125,7 @@ class EI(AbstractAcquisitionFunction):
 
             def calculate_log_ei():
                 # we expect that f_min is in log-space
-                f_min = self.eta - self.par
+                f_min = self.eta - self.xi
                 v = (f_min - m) / std
                 return (np.exp(f_min) * norm.cdf(v)) - (np.exp(0.5 * var_ + m) * norm.cdf(v - std))
 
@@ -110,7 +134,7 @@ class EI(AbstractAcquisitionFunction):
                 # using a RF, std should be never exactly 0.0
                 # Avoid zero division by setting all zeros in s to one.
                 # Consider the corresponding results in f to be zero.
-                self.logger.warning("Predicted std is 0.0 for at least one sample.")
+                logger.warning("Predicted std is 0.0 for at least one sample.")
                 std_copy = np.copy(std)
                 std[std_copy == 0.0] = 1.0
                 log_ei = calculate_log_ei()
@@ -125,24 +149,26 @@ class EI(AbstractAcquisitionFunction):
 
 
 class EIPS(EI):
-    def __init__(self, par: float = 0.0):
-        r"""Computes for a given x the expected improvement as
-        acquisition value.
-        :math:`EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}`,
-        with :math:`f(X^+)` as the best location and :math:`r(x)` as runtime.
+    r"""Computes for a given x the expected improvement as
+    acquisition value.
+    :math:`EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}`,
+    with :math:`f(X^+)` as the best location and :math:`r(x)` as runtime.
 
-        Parameters
-        ----------
-        model : BaseEPM
-            A model that implements at least
-                 - predict_marginalized_over_instances(X) returning a tuples of
-                   predicted cost and running time
-        par : float, default=0.0
-            Controls the balance between exploration and exploitation of the
-            acquisition function.
-        """
-        super(EIPS, self).__init__(par=par)
-        self.long_name = "Expected Improvement per Second"
+    Parameters
+    ----------
+    xi : float, defaults to 0.0
+        Controls the balance between exploration and exploitation of the
+        acquisition function.
+
+    Attributes
+    ----------
+    long_name : str
+    xi : float
+        Exploration/exploitation trade-off parameter.
+    """
+    def __init__(self, xi: float = 0.0) -> None:
+        super(EIPS, self).__init__(xi=xi)
+        self.long_name : str = "Expected Improvement per Second"
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the EIPS value.
@@ -182,8 +208,8 @@ class EIPS(EI):
             )
 
         def calculate_f():
-            z = (self.eta - m_cost - self.par) / s
-            f = (self.eta - m_cost - self.par) * norm.cdf(z) + s * norm.pdf(z)
+            z = (self.eta - m_cost - self.xi) / s
+            f = (self.eta - m_cost - self.xi) * norm.cdf(z) + s * norm.pdf(z)
             f = f / m_runtime
             return f
 
@@ -192,7 +218,7 @@ class EIPS(EI):
             # using a RF, std should be never exactly 0.0
             # Avoid zero division by setting all zeros in s to one.
             # Consider the corresponding results in f to be zero.
-            self.logger.warning("Predicted std is 0.0 for at least one sample.")
+            logger.warning("Predicted std is 0.0 for at least one sample.")
             s_copy = np.copy(s)
             s[s_copy == 0.0] = 1.0
             f = calculate_f()

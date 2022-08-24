@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-import abc
-from typing import Any, Callable, Iterator, List, Optional, Set, Tuple, Union
+from typing import Any, Callable, Iterator, Set
 
 import copy
 import itertools
@@ -32,32 +31,47 @@ class LocalSearch(AbstractAcquisitionOptimizer):
 
     Parameters
     ----------
-    acquisition_function : ~smac.acquisition.AbstractAcquisitionFunction
-    configspace : ~smac.configspace.ConfigurationSpace
-    rng : np.random.RandomState or int, optional
-    max_steps: int
-        Maximum number of iterations that the local search will perform
-    n_steps_plateau_walk: int
-        number of steps during a plateau walk before local search terminates
+    configspace : ConfigurationSpace
+    acquisition_function : AbstractAcquisitionFunction
+    max_steps: int | None, defaults to None
+        Maximum number of iterations that the local search will perform.
+    n_steps_plateau_walk: int, defaults to 10
+        Number of steps during a plateau walk before local search terminates.
+    vectorization_min_obtain : int, defaults to 2
+        Minimal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
+        reduce the overhead of SMAC.
+    vectorization_max_obtain : int, defaults to 64
+        Maximal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
+        reduce the overhead of SMAC.
+    challengers : int, defaults to 5000
+        Number of challengers.
+    seed : int, defaults to 0
+
+    Attributes
+    ----------
+    max_steps : int
+        Maximum number of iterations that the local search will perform.
+    n_steps_plateau_walk : int
+        Number of steps during a plateau walk before local search terminates.
     vectorization_min_obtain : int
         Minimal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
-        reduce the overhead of SMAC
+        reduce the overhead of SMAC.
     vectorization_max_obtain : int
         Maximal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
-        reduce the overhead of SMAC
+        reduce the overhead of SMAC.
     """
 
     def __init__(
         self,
         configspace: ConfigurationSpace,
         acquisition_function: AbstractAcquisitionFunction | None = None,
-        max_steps: Optional[int] = None,
+        max_steps: int | None = None,
         n_steps_plateau_walk: int = 10,
         vectorization_min_obtain: int = 2,
         vectorization_max_obtain: int = 64,
         challengers: int = 5000,
         seed: int = 0,
-    ):
+    ) -> None:
         super().__init__(configspace, acquisition_function, challengers=challengers, seed=seed)
         self.max_steps = max_steps
         self.n_steps_plateau_walk = n_steps_plateau_walk
@@ -72,27 +86,27 @@ class LocalSearch(AbstractAcquisitionOptimizer):
 
     def _maximize(
         self,
-        previous_configs: List[Configuration],
+        previous_configs: list[Configuration],
         num_points: int,
-        additional_start_points: list[Tuple[float, Configuration]] | None = None,
+        additional_start_points: list[tuple[float, Configuration]] | None = None,
     ) -> list[tuple[float, Configuration]]:
         """Starts a local search from the given startpoint and quits if either the max number of
         steps is reached or no neighbor with an higher improvement was found.
 
         Parameters
         ----------
-        previous_configs: List[Configuration]
+        previous_configs: list[Configuration]
             Previously evaluated configurations.
-        response_values: np.ndarray | List[float]
+        response_values: np.ndarray | list[float]
             response values of the configurations
         num_points: int
             number of points to be sampled
-        additional_start_points : Optional[List[Tuple[float, Configuration]]]
+        additional_start_points : Optional[list[tuple[float, Configuration]]]
             Additional start point
 
         Returns
         -------
-        List
+        list[tuple[float, Configuration]]
         """
         init_points = self._get_initial_points(num_points, previous_configs, additional_start_points)
         configs_acq = self._do_search(init_points)
@@ -110,9 +124,9 @@ class LocalSearch(AbstractAcquisitionOptimizer):
     def _get_initial_points(
         self,
         num_points: int,
-        previous_configs: List[Configuration],
-        additional_start_points: Optional[List[Tuple[float, Configuration]]],
-    ) -> List[Configuration]:
+        previous_configs: list[Configuration],
+        additional_start_points: list[tuple[float, Configuration]] | None,
+    ) -> list[Configuration]:
 
         if len(previous_configs) == 0:
             init_points = self.configspace.sample_configuration(size=num_points)
@@ -125,26 +139,26 @@ class LocalSearch(AbstractAcquisitionOptimizer):
     def _get_init_points_from_previous_configs(
         self,
         num_points: int,
-        previous_configs: List[Configuration],
-        additional_start_points: Optional[List[Tuple[float, Configuration]]],
-    ) -> List[Configuration]:
+        previous_configs: list[Configuration],
+        additional_start_points: list[tuple[float, Configuration]] | None,
+    ) -> list[Configuration]:
         """
         A function that generates a set of initial points from the previous configurations and additional points (if
         applicable). The idea is to decouple runhistory from the local search model and replace it with a more genreal
-        form (List[Configuration]).
+        form (list[Configuration]).
 
         Parameters
         ----------
         num_points: int
             Number of initial points to be generated
-        previous_configs: List[Configuration]
+        previous_configs: list[Configuration]
             Previous configuration from runhistory
-        additional_start_points: Optional[List[Tuple[float, Configuration]]]
+        additional_start_points: Optional[list[tuple[float, Configuration]]]
             if we want to specify another set of points as initial points
 
         Returns
         -------
-        init_points: List[Configuration]
+        init_points: list[Configuration]
             a set of initial points
         """
         assert self.acquisition_function is not None
@@ -185,7 +199,7 @@ class LocalSearch(AbstractAcquisitionOptimizer):
             additional_start_points = []
 
         init_points = []
-        init_points_as_set = set()  # type: Set[Configuration]
+        init_points_as_set : Set[Configuration] = set()
         for cand in itertools.chain(
             configs_previous_runs_sorted,
             previous_configs_sorted_by_cost,
@@ -198,8 +212,8 @@ class LocalSearch(AbstractAcquisitionOptimizer):
 
     def _do_search(
         self,
-        start_points: List[Configuration],
-    ) -> List[Tuple[float, Configuration]]:
+        start_points: list[Configuration],
+    ) -> list[tuple[float, Configuration]]:
         assert self.acquisition_function is not None
 
         # Gather data structure for starting points
@@ -240,7 +254,7 @@ class LocalSearch(AbstractAcquisitionOptimizer):
             )
             local_search_steps[i] += 1
         # Keeping track of configurations with equal acquisition value for plateau walking
-        neighbors_w_equal_acq = [[] for _ in range(num_candidates)]  # type: List[List[Configuration]]
+        neighbors_w_equal_acq : list[list[Configuration]] = [[] for _ in range(num_candidates)]
 
         num_iters = 0
         while np.any(active):
