@@ -1,20 +1,21 @@
 import unittest
 import unittest.mock
 
+import pytest
+
 import numpy as np
 
-from smac.optimizer.acquisition import (
+from smac.acquisition.functions import (
     EI,
     EIPS,
     LCB,
     PI,
     TS,
     IntegratedAcquisitionFunction,
-    LogEI,
     PriorAcquisitionFunction,
 )
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
@@ -104,30 +105,80 @@ class MockModelSampler(MockModelRNG):
         return self.rng.multivariate_normal(m, var, n_funcs).T
 
 
-class TestAcquisitionFunction(unittest.TestCase):
-    def setUp(self):
-        self.model = unittest.mock.Mock()
-        self.acq = EI(model=self.model)
+@pytest.fixture
+def model():
+    return MockModel()
 
-    def test_update_model_and_eta(self):
-        model = "abc"
-        self.assertIsNone(self.acq.eta)
-        self.acq.update(model=model, eta=0.1)
-        self.assertEqual(self.acq.model, model)
-        self.assertEqual(self.acq.eta, 0.1)
+@pytest.fixture
+def acquisition_function():
+    ei = EI()
+    ei._set_model(model=model)
+    return ei
 
-    def test_update_other(self):
-        self.acq.other = "other"
+def test_update_model_and_eta(model, acquisition_function):
+    model = "abc"
+    assert acquisition_function.eta is None
+    acquisition_function.update(model=model, eta=0.1)
+    assert acquisition_function.model == model
+    assert acquisition_function.eta == 0.1
 
-        with self.assertRaisesRegex(
-            ValueError,
-            r"Acquisition function EI needs to be updated with key model, but only got keys " r"\['other'\].",
+
+def test_update_with_kwargs(acquisition_function):
+    acquisition_function.update(model="abc", eta=0., other="hi there:)")
+    assert acquisition_function.model == "abc"
+
+
+def test_update_without_required(acquisition_function):
+    with pytest.raises(
+            TypeError,
         ):
-            self.acq.update(other=None)
+            acquisition_function.update(other=None)
 
-        model = "abc"
-        self.acq.update(model=model, eta=0.1, other=None)
-        self.assertEqual(self.acq.other, "other")
+# class TestAcquisitionFunction(unittest.TestCase):
+#     def setUp(self):
+#         self.model = unittest.mock.Mock()
+#         self.acq = EI(model=self.model)
+
+    # def test_update_model_and_eta(self):
+    #     model = "abc"
+    #     self.assertIsNone(self.acq.eta)
+    #     self.acq.update(model=model, eta=0.1)
+    #     self.assertEqual(self.acq.model, model)
+    #     self.assertEqual(self.acq.eta, 0.1)
+
+    # def test_update_other(self):
+    #     self.acq.other = "other"
+
+    #     with self.assertRaisesRegex(
+    #         ValueError,
+    #         r"Acquisition function EI needs to be updated with key model, but only got keys " r"\['other'\].",
+    #     ):
+    #         self.acq.update(other=None)
+
+    #     model = "abc"
+    #     self.acq.update(model=model, eta=0.1, other=None)
+    #     self.assertEqual(self.acq.other, "other")
+
+@pytest.fixture
+def multimodel():
+    model = MockModel()
+    model.models = [MockModel()] * 3
+    return model
+
+@pytest.fixture
+def acq_multi(multimodel, acquisition_function):
+    return acquisition_function._set_model(multimodel)
+
+@pytest.fixture
+def iaf(multimodel, acq_multi):
+    iaf = IntegratedAcquisitionFunction(acquisition_function=acq_multi)
+    iaf._set_model(model=multimodel)
+    return iaf
+
+def test_integrated_acquisition_function(multimodel, iaf):
+    iaf.update(model=multimodel, eta=2)
+    for func in iaf._functions:
+        assert func.eta == 2
 
 
 class TestIntegratedAcquisitionFunction(unittest.TestCase):
