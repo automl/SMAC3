@@ -1,12 +1,18 @@
 from __future__ import annotations
 
 import abc
-from typing import Callable, Iterator, List, Optional, Set, Tuple, Union
+from typing import Callable, Iterator, Optional, Set, Union
 
 import numpy as np
 
 from smac.acquisition import AbstractAcquisitionOptimizer
 from smac.configspace import Configuration
+from smac.utils.logging import get_logger
+
+__copyright__ = "Copyright 2022, automl.org"
+__license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 
 class DifferentialEvolution(AbstractAcquisitionOptimizer):
@@ -17,7 +23,7 @@ class DifferentialEvolution(AbstractAcquisitionOptimizer):
         previous_configs: list[Configuration],
         num_points: int,
         _sorted: bool = False,
-    ) -> list[Tuple[float, Configuration]]:
+    ) -> list[tuple[float, Configuration]]:
         """DifferentialEvolutionSolver.
 
         Parameters
@@ -31,12 +37,12 @@ class DifferentialEvolution(AbstractAcquisitionOptimizer):
 
         Returns
         -------
-        challengers : List[Tuple[float, Configuration]]
+        challengers : list[tuple[float, Configuration]]
             A list consisting of Tuple(acquisition_value, :class:`smac.configspace.Configuration`).
         """
         from scipy.optimize._differentialevolution import DifferentialEvolutionSolver
 
-        configs = []
+        configs : tuple[float, Configuration] = []
 
         def func(x: np.ndarray) -> np.ndarray:
             assert self.acquisition_function is not None
