@@ -318,8 +318,6 @@ style="width: 100%;">
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
-
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">smac.random_design.random_design</span> <span class="kn">import</span> <span class="n">RandomDesign</span>
@@ -339,15 +337,14 @@ style="width: 100%;">
 <span class="sd">    ----------</span>
 <span class="sd">    modulus : float</span>
 <span class="sd">        Every modulus-th configuration will be at random.</span>
-<span class="sd">    seed: int</span>
+<span class="sd">    seed : int</span>
 <span class="sd">        integer used to initialize random state (not used)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modulus</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
-
-        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">modulus</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">modulus</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">modulus</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Using SMAC with random configurations only. ROAR is the better choice for this.&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">modulus</span> <span class="o">=</span> <span class="n">modulus</span>
 
@@ -364,7 +361,9 @@ style="width: 100%;">
         <span class="o">...</span></div>
 
 <div class="viewcode-block" id="NoCoolDownRandomDesign.check"><a class="viewcode-back" href="../../../api/smac.random_design.modulus_design.html#smac.random_design.NoCoolDownRandomDesign.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if the next configuration should be at random.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Checks if the next configuration should be at random. Iteration here relates</span>
+<span class="sd">        to the ith configuration evaluated in an SMBO iteration.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">iteration</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="n">iteration</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">modulus</span> <span class="o">&lt;</span> <span class="mi">1</span></div></div>
 
 
@@ -394,15 +393,16 @@ style="width: 100%;">
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">start_modulus</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">assert</span> <span class="n">modulus_increment</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">assert</span> <span class="n">end_modulus</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">assert</span> <span class="n">end_modulus</span> <span class="o">&gt;</span> <span class="n">start_modulus</span>
         <span class="k">if</span> <span class="n">start_modulus</span> <span class="o">&lt;=</span> <span class="mf">1.0</span> <span class="ow">and</span> <span class="n">modulus_increment</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Using SMAC with random configurations only. ROAR is the better choice for this.&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">modulus</span> <span class="o">=</span> <span class="n">start_modulus</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start_modulus</span> <span class="o">=</span> <span class="n">start_modulus</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">modulus_increment</span> <span class="o">=</span> <span class="n">modulus_increment</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end_modulus</span> <span class="o">=</span> <span class="n">end_modulus</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_iteration</span> <span class="o">=</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="LinearCoolDownRandomDesign.get_meta"><a class="viewcode-back" href="../../../api/smac.random_design.modulus_design.html#smac.random_design.LinearCoolDownRandomDesign.get_meta">[docs]</a>    <span class="k">def</span> <span class="nf">get_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
@@ -417,13 +417,14 @@ style="width: 100%;">
 <div class="viewcode-block" id="LinearCoolDownRandomDesign.next_iteration"><a class="viewcode-back" href="../../../api/smac.random_design.modulus_design.html#smac.random_design.LinearCoolDownRandomDesign.next_iteration">[docs]</a>    <span class="k">def</span> <span class="nf">next_iteration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Increase modulus.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">modulus</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modulus_increment</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">modulus</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modulus</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_modulus</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_iteration</span> <span class="o">=</span> <span class="mi">0</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modulus</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modulus</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_modulus</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LinearCoolDownRandomDesign.check"><a class="viewcode-back" href="../../../api/smac.random_design.modulus_design.html#smac.random_design.LinearCoolDownRandomDesign.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Check if the next configuration should be interleaved based on modulus.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">iteration</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_iteration</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">modulus</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">last_iteration</span> <span class="o">=</span> <span class="n">iteration</span>
+        <span class="sd">&quot;&quot;&quot;Check if the next configuration should be interleaved based on modulus.</span>
+<span class="sd">        Iteration here relates to the ith configuration evaluated in an SMBO</span>
+<span class="sd">        iteration.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">iteration</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">iteration</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">modulus</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span></div></div>

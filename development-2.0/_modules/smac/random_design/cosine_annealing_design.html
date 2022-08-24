@@ -353,6 +353,10 @@ style="width: 100%;">
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">min_probability</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">max_probability</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="n">max_probability</span> <span class="o">&gt;</span> <span class="n">min_probability</span>
+        <span class="k">assert</span> <span class="n">restart_iteration</span> <span class="o">&gt;</span> <span class="mi">2</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_probability</span> <span class="o">=</span> <span class="n">max_probability</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_probability</span> <span class="o">=</span> <span class="n">min_probability</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">restart_iteration</span> <span class="o">=</span> <span class="n">restart_iteration</span>
@@ -383,7 +387,9 @@ style="width: 100%;">
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Perform restart in next iteration!&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CosineAnnealingRandomDesign.check"><a class="viewcode-back" href="../../../api/smac.random_design.cosine_annealing_design.html#smac.random_design.CosineAnnealingRandomDesign.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Check if a random configuration should be interleaved.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Check if a random configuration should be interleaved. Iteration here relates</span>
+<span class="sd">        to the ith configuration evaluated in an SMBO iteration.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">iteration</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">probability</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Random Config&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">True</span>

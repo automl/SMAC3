@@ -351,7 +351,8 @@ according to a cosine annealing schedule.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.random_design.CosineAnnealingRandomDesign.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/random_design/cosine_annealing_design.html#CosineAnnealingRandomDesign.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.random_design.CosineAnnealingRandomDesign.check" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if a random configuration should be interleaved.</p>
+<dd><p>Check if a random configuration should be interleaved. Iteration here relates
+to the ith configuration evaluated in an SMBO iteration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
@@ -404,7 +405,9 @@ there will be no adjustment to make sure that the <code class="docutils literal 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.random_design.LinearCoolDownRandomDesign.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/random_design/modulus_design.html#LinearCoolDownRandomDesign.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.random_design.LinearCoolDownRandomDesign.check" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the next configuration should be interleaved based on modulus.</p>
+<dd><p>Check if the next configuration should be interleaved based on modulus.
+Iteration here relates to the ith configuration evaluated in an SMBO
+iteration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
@@ -453,7 +456,8 @@ Bayesian optimization.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.random_design.NoCoolDownRandomDesign.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/random_design/modulus_design.html#NoCoolDownRandomDesign.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.random_design.NoCoolDownRandomDesign.check" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if the next configuration should be at random.</p>
+<dd><p>Checks if the next configuration should be at random. Iteration here relates
+to the ith configuration evaluated in an SMBO iteration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
@@ -503,7 +507,8 @@ time.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.random_design.ProbabilityCoolDownRandomDesign.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/random_design/probability_design.html#ProbabilityCoolDownRandomDesign.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.random_design.ProbabilityCoolDownRandomDesign.check" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the next configuration should be at random.</p>
+<dd><p>Check if the next configuration should be at random. Iteration here relates
+to the ith configuration evaluated in an SMBO iteration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
@@ -551,7 +556,8 @@ time.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.random_design.ProbabilityRandomDesign.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/random_design/probability_design.html#ProbabilityRandomDesign.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.random_design.ProbabilityRandomDesign.check" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the next configuration should be at random.</p>
+<dd><p>Check if the next configuration should be at random. Iteration here relates
+to the ith configuration evaluated in an SMBO iteration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
@@ -597,7 +603,8 @@ of challengers.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.random_design.RandomDesign.check">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/random_design/random_design.html#RandomDesign.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.random_design.RandomDesign.check" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the next configuration should be at random.</p>
+<dd><p>Check if the next configuration should be at random. Iteration here relates
+to the ith configuration evaluated in an SMBO iteration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
