@@ -6,9 +6,12 @@ import numpy as np
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 class LCB(AbstractAcquisitionFunction):
     r"""Computes the lower confidence bound for a given x over the best so far value as
@@ -48,7 +51,7 @@ class LCB(AbstractAcquisitionFunction):
     num_data : int | None
         Number of data points (t).
     """
-    def __init__(self, beta: float = 1.0):
+    def __init__(self, beta: float = 1.0) -> None:
         super(LCB, self).__init__()
         self.long_name : str = "Lower Confidence Bound"
         self.beta : float = beta
