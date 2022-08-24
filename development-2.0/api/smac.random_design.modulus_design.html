@@ -354,9 +354,10 @@ time.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>start_modulus</strong> (<em>float</em>) – Initially, every modulus-th configuration will be at random</p></li>
 <li><p><strong>modulus_increment</strong> (<em>float</em>) – Increase modulus by this amount in every iteration</p></li>
-<li><p><strong>end_modulus</strong> (<em>float</em>) – Highest modulus used in the chooser. If the value is reached before the optimization is over, it is not
-further increased. If it is not reached before the optimization is over, there will be no adjustment to make
-sure that the <code class="docutils literal notranslate"><span class="pre">end_modulus</span></code> is reached.</p></li>
+<li><p><strong>end_modulus</strong> (<em>float</em>) – The maximum modulus ever used in the chooser. If the value is reached before the optimization
+is over, it is not further increased. If it is not reached before the optimization is over,
+there will be no adjustment to make sure that the <code class="docutils literal notranslate"><span class="pre">end_modulus</span></code> is reached.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Integer used to initialize the random state (not used)</p></li>
 </ul>
 </dd>
 </dl>
@@ -385,7 +386,7 @@ sure that the <code class="docutils literal notranslate"><span class="pre">end_m
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.random_design.modulus_design.LinearCoolDownRandomDesign.next_iteration">
 <span class="sig-name descname"><span class="pre">next_iteration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/random_design/modulus_design.html#LinearCoolDownRandomDesign.next_iteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.random_design.modulus_design.LinearCoolDownRandomDesign.next_iteration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Change modulus.</p>
+<dd><p>Increase modulus.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
@@ -399,11 +400,14 @@ sure that the <code class="docutils literal notranslate"><span class="pre">end_m
 <dt class="sig sig-object py" id="smac.random_design.modulus_design.NoCoolDownRandomDesign">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.random_design.modulus_design.</span></span><span class="sig-name descname"><span class="pre">NoCoolDownRandomDesign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/random_design/modulus_design.html#NoCoolDownRandomDesign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.random_design.modulus_design.NoCoolDownRandomDesign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.random_design.random_design.html#smac.random_design.random_design.RandomDesign" title="smac.random_design.random_design.RandomDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomDesign</span></code></a></p>
-<p>Interleave a random configuration after a constant number of configurations found by Bayesian
-optimization.</p>
+<p>Interleave a random configuration after a constant number of configurations found by
+Bayesian optimization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>modulus</strong> (<em>float</em>) – Every modulus-th configuration will be at random.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>modulus</strong> (<em>float</em>) – Every modulus-th configuration will be at random.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – integer used to initialize random state (not used)</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py method">
