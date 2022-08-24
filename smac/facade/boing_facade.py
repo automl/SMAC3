@@ -92,7 +92,7 @@ class BOinGFacade(HyperparameterFacade):
         self.do_switching = do_switching
         self.turbo_kwargs = turbo_kwargs
         # we attach here an that allows the users to pass their own arguments to the boing optimizer
-        super().__init__(scenario=scenario,target_algorithm=target_algorithm, *args, **kwargs)
+        super().__init__(scenario=scenario,target_algorithm=target_algorithm, **kwargs)
 
     @staticmethod
     def get_runhistory_encoder(scenario: Scenario) -> RunHistoryRawEncoder:
