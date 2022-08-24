@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import os
 import time
@@ -87,14 +87,10 @@ class DaskParallelRunner(Runner):
         output_directory: str | None = None,
         dask_client: dask.distributed.Client | None = None,
     ):
-        super(DaskParallelRunner, self).__init__(
+        super().__init__(
             target_algorithm=single_worker.target_algorithm,
             scenario=single_worker.scenario,
             stats=single_worker.stats,
-            # objectives=single_worker.objectives,
-            # par_factor=single_worker.par_factor,
-            # crash_cost=single_worker.crash_cost,
-            # abort_on_first_run_crash=single_worker.abort_on_first_run_crash,
         )
 
         # The single worker, which is replicated on a need
@@ -125,7 +121,7 @@ class DaskParallelRunner(Runner):
         else:
             self.close_client_at_del = False
             self.client = dask_client
-        self.futures = []  # type: List[Future]
+        self.futures: list[Future] = []
 
         self.scheduler_info = self.client._get_scheduler_info()
 
@@ -246,7 +242,7 @@ class DaskParallelRunner(Runner):
         seed: int = 0,
         budget: float | None = None,
         # instance_specific: str = "0",
-    ) -> Tuple[StatusType, float | list[float], float, Dict]:
+    ) -> tuple[StatusType, float | list[float], float, dict]:
         """This method only complies with the abstract parent class. In the parallel case, we call
         the single worker run() method.
         """
