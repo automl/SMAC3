@@ -18,7 +18,7 @@ from smac.model.base_model import BaseModel
 from smac.model.gaussian_process.gpytorch import GloballyAugmentedLocalGaussianProcess
 from smac.runhistory.encoder.boing_encoder import (
     RunHistoryRawEncoder,
-    RunHistoryLogScaledEncoder,
+    RunHistoryRawScaledEncoder,
 )
 from smac.scenario import Scenario
 
@@ -40,8 +40,8 @@ class BOinGFacade(HyperparameterFacade):
     """
 
     @staticmethod
-    def get_runhistory_encoder(scenario: Scenario) -> RunHistoryLogScaledEncoder:
-        return RunHistoryLogScaledEncoder(scenario, scale_percentage=5)
+    def get_runhistory_encoder(scenario: Scenario) -> RunHistoryRawEncoder:
+        return RunHistoryRawScaledEncoder(scenario, scale_percentage=5)
 
     @staticmethod
     def get_random_design(
@@ -66,7 +66,6 @@ class BOinGFacade(HyperparameterFacade):
 
     def _init_optimizer(
         self,
-        min_samples_model: int = 1,
         model_local: Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
         model_local_kwargs: Dict | None = None,
         acquisition_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
@@ -121,7 +120,6 @@ class BOinGFacade(HyperparameterFacade):
             acquisition_optimizer=self.acquisition_optimizer,
             random_design=self.random_design,
             seed=self.seed,
-            min_samples_model=min_samples_model,
             model_local=model_local,
             model_local_kwargs=model_local_kwargs,
             acquisition_func_local=acquisition_func_local,
@@ -167,7 +165,4 @@ class BOinGFacade(HyperparameterFacade):
         likelihood = GaussianLikelihood(
             noise_prior=noise_prior, noise_constraint=Interval(1e-5, np.exp(2), transform=None)
         ).double()
-        return {
-            "model_local": GloballyAugmentedLocalGaussianProcess,
-            "model_local_kwargs": dict(kernel_kwargs=kernel_kwargs, likelihood=likelihood),
-        }
+        return dict(kernel_kwargs=kernel_kwargs, likelihood=likelihood)

@@ -359,7 +359,7 @@ class LocalSubspace(ABC):
         self.model = model
 
         if inspect.isclass(acq_func_local):
-            acq_func_kwargs = {"model": self.model}
+            acq_func_kwargs = {}
             if acq_func_local_kwargs is not None:
                 acq_func_kwargs.update(acq_func_local_kwargs)
             acquisition_function = acq_func_local(**acq_func_kwargs)  # type: ignore

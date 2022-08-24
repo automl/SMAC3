@@ -269,7 +269,7 @@ class BOinGSMBO(SMBO):
                 self.turbo_optimizer.add_new_observations(X[-num_new_observations:], Y_raw[-num_new_observations:])
 
                 return self.turbo_optimizer.generate_challengers()
-        previous_configs = self.runhistory.get_all_configs()
+        previous_configs = self.runhistory.get_configs()
         if X.shape[0] == 0:
             # Only return a single point to avoid an overly high number of
             # random search iterations
@@ -413,7 +413,7 @@ class BOinGSMBO(SMBO):
         logger.debug("contained {0} data of {1}".format(sum(ss_data_indices), Y_raw.size))
 
         ss = BOinGSubspace(
-            config_space=self.scenario.cs,  # type: ignore
+            config_space=self.configspace,
             bounds=self.bounds,
             hps_types=self.types,
             bounds_ss_cont=bounds_ss_cont,  # type: ignore[arg-type]

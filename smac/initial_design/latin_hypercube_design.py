@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import List
-
 from ConfigSpace.configuration_space import Configuration
 from ConfigSpace.hyperparameters import Constant
 from scipy.stats.qmc import LatinHypercube
@@ -17,13 +15,13 @@ class LatinHypercubeInitialDesign(InitialDesign):
 
     Attributes
     ----------
-    configs : List[Configuration]
+    configs : list[Configuration]
         List of configurations to be evaluated
         Don't pass configs to the constructor;
         otherwise factorial design is overwritten
     """
 
-    def _select_configurations(self) -> List[Configuration]:
+    def _select_configurations(self) -> list[Configuration]:
         """Selects a single configuration to run.
 
         Returns
