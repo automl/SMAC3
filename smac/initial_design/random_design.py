@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import List
-
 from ConfigSpace import Configuration
 
 from smac.initial_design.initial_design import InitialDesign
@@ -14,12 +12,12 @@ class RandomInitialDesign(InitialDesign):
     """Initial design that evaluates random configurations."""
 
     def _select_configurations(self) -> list[Configuration]:
-        """Select a random configuration.
+        """Select random configurations.
 
         Returns
         -------
-        config: Configuration()
-            Initial incumbent configuration
+        configs: list[Configuration]
+            The list of configurations to be evaluated in the initial design.
         """
         configs = self.configspace.sample_configuration(size=self.n_configs)
         if self.n_configs == 1:

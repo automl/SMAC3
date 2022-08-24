@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, List
+from typing import Any
 
 import warnings
 
@@ -18,11 +18,12 @@ __license__ = "3-clause BSD"
 class SobolInitialDesign(InitialDesign):
     """Sobol sequence design with a scrambled Sobol sequence.
 
-    See https://scipy.github.io/devdocs/reference/generated/scipy.stats.qmc.Sobol.html for further information
+    See https://scipy.github.io/devdocs/reference/generated/scipy.stats.qmc.Sobol.html
+    for further information
 
     Attributes
     ----------
-    configs : List[Configuration]
+    configs : list[Configuration]
         List of configurations to be evaluated
         Don't pass configs to the constructor;
         otherwise factorial design is overwritten
@@ -58,13 +59,13 @@ class SobolInitialDesign(InitialDesign):
             "name": self.__class__.__name__,
         }
 
-    def _select_configurations(self) -> List[Configuration]:
-        """Selects a single configuration to run.
+    def _select_configurations(self) -> list[Configuration]:
+        """Selects configurations to be evaluated from the initial design.
 
         Returns
         -------
-        config: Configuration
-            initial incumbent configuration
+        config: list[Configuration]:
+            List of the configurations to evaluate based on the initial design.
         """
         params = self.configspace.get_hyperparameters()
 

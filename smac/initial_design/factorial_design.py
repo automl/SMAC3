@@ -23,14 +23,14 @@ class FactorialInitialDesign(InitialDesign):
 
     Attributes
     ----------
-    configs : List[Configuration]
+    configs : list[Configuration]
         List of configurations to be evaluated
         Don't pass configs to the constructor;
         otherwise factorial design is overwritten
     """
 
     def _select_configurations(self) -> Configuration:
-        """Selects a single configuration to run.
+        """Selects the configurations to be evaluated from the initial design.
 
         Returns
         -------
