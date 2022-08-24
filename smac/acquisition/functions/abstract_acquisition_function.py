@@ -42,7 +42,7 @@ class AbstractAcquisitionFunction(metaclass=ABCMeta):
         raise NotImplementedError
 
     @abstractmethod
-    def update(self, *, **kwargs: Any) -> None:
+    def update(self, **kwargs: Any) -> None:
         """Update the acquisition function attributes required for calculation.
 
         This method will be called after fitting the model, but before maximizing the acquisition
