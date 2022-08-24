@@ -1,7 +1,7 @@
 from __future__ import annotations
-from abc import abstractmethod
 
-from typing import Any, List
+from typing import Any
+from abc import abstractmethod
 
 from collections import OrderedDict
 
@@ -35,25 +35,31 @@ class InitialDesign:
         Random state
     n_runs: int
         Number of iterations allowed for the target algorithm
-    configs: Optional[List[Configuration]]
+    configs: list[Configuration] | None
         List of initial configurations. Disables the arguments ``n_configs_per_hyperparameter`` if given.
         Either this, or ``n_configs_per_hyperparameter`` or ``n_configs`` must be provided.
-    n_configs_per_hyperparameter: int
+    n_configs_per_hyperparameter: int, defaults to 10
         how many configurations will be used at most in the initial design (X*D). Either
         this, or ``n_configs`` or ``configs`` must be provided. Disables the argument
         ``n_configs_per_hyperparameter`` if given.
-    max_config_ratio: float
+    max_config_ratio: float, defaults to 0.25
         use at most X*budget in the initial design. Not active if a time limit is given.
     n_configs : int, optional
         Maximal initial budget (disables the arguments ``n_configs_per_hyperparameter`` and ``configs``
         if both are given). Either this, or ``n_configs_per_hyperparameter`` or ``configs`` must be
         provided.
+    seed : int | None, default to None.
+        Random seed. If None, will use the seed from the scenario.
 
     Attributes
     ----------
     configspace : ConfigurationSpace
-    configs : List[Configuration]
+    configs : list[Configuration]
         List of configurations to be evaluated
+    n_configs : int
+        Number of configurations to be evaluated. It is dynamically computed.
+    seed
+    rng
     """
 
     def __init__(
@@ -63,7 +69,6 @@ class InitialDesign:
         n_configs: int | None = None,
         n_configs_per_hyperparameter: int | None = 10,
         max_config_ratio: float = 0.25,
-        # If seed none, then take seed from scenario
         seed: int | None = None,
     ):
         self.configspace = scenario.configspace
@@ -97,21 +102,33 @@ class InitialDesign:
             raise ValueError(
                 f"Initial budget {self.n_configs} cannot be higher than the number of trials {scenario.n_trials}."
             )
-
     @abstractmethod
-    def _select_configurations(self) -> List[Configuration]:
+    def _select_configurations(self) -> list[Configuration]:
+        """Selects the initial configurations. Depending on the implementation
+        of the initial_design."""
         raise NotImplementedError
 
     def _transform_continuous_designs(
         self, design: np.ndarray, origin: str, configspace: ConfigurationSpace
-    ) -> List[Configuration]:
+    ) -> list[Configuration]:
+        """Transforms the continuous designs into a discrete list of configurations.
+
+        Parameters
+        ----------
+        design : np.ndarray
+            Array of hyperparameters originating from the initial design strategy.
+            See e.g. scipy.qmc.LatinHypercube for details.
+        origin : str | None, defaults to None
+            Originates from Configspace: Refers to
+            "Store information about the origin of this configuration."
+        configspace : ConfigurationSpace
+        """
 
         params = configspace.get_hyperparameters()
         for idx, param in enumerate(params):
             if isinstance(param, NumericalHyperparameter):
                 continue
             elif isinstance(param, Constant):
-                # add a vector with zeros
                 design_ = np.zeros(np.array(design.shape) + np.array((0, 1)))
                 design_[:, :idx] = design[:, :idx]
                 design_[:, idx + 1 :] = design[:, idx:]
@@ -152,7 +169,7 @@ class InitialDesign:
             "seed": self.seed,
         }
 
-    def select_configurations(self) -> List[Configuration]:
+    def select_configurations(self) -> list[Configuration]:
         """Selects the initial configurations."""
         logger.info(f"Retrieving {self.n_configs} configurations for the initial design.")
         if self.n_configs == 0:
@@ -163,9 +180,6 @@ class InitialDesign:
         for config in self.configs:
             if config.origin is None:
                 config.origin = "Initial design"
-
-        # Add this incumbent right away to have an entry to time point 0
-        # self.traj_logger.add_entry(train_perf=2**31, incumbent_id=1, incumbent=self.configs[0])
 
         # Removing duplicates
         # (Reference: https://stackoverflow.com/questions/7961363/removing-duplicates-in-lists)
