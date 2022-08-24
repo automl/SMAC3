@@ -7,6 +7,7 @@ from scipy.stats import norm
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
+from smac.model.base_model import BaseModel
 
 
 class PI(AbstractAcquisitionFunction):
@@ -29,13 +30,25 @@ class PI(AbstractAcquisitionFunction):
         self.long_name = "Probability of Improvement"
         self.par = par
         self.eta = None
-        self._required_updates = ("model", "eta")
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
         }
+
+    def update(self, model: BaseModel, eta: float, **kwargs: Any) -> None:
+        """Update the acquisition function attributes required for calculation.
+
+        Parameters
+        ----------
+        model : BaseModel
+            Models the objective function.
+        eta : float
+            Current incumbent.
+        """
+        self.model = model
+        self.eta = eta
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the PI value.

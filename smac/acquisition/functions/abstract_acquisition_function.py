@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import abc
+from abc import abstractmethod, ABCMeta
 from typing import Any
 
 import numpy as np
@@ -17,7 +17,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class AbstractAcquisitionFunction(metaclass=abc.ABCMeta):
+class AbstractAcquisitionFunction(metaclass=ABCMeta):
     """Abstract base class for acquisition function.
 
     Parameters
@@ -32,17 +32,17 @@ class AbstractAcquisitionFunction(metaclass=abc.ABCMeta):
 
     def __init__(self) -> None:
         self.model: BaseModel | None = None
-        self._required_updates : tuple(str, ...) = ("model",)
 
     def _set_model(self, model: BaseModel) -> None:
         self.model = model
 
-    @abc.abstractmethod
+    @abstractmethod
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         raise NotImplementedError
 
-    def update(self, **kwargs: Any) -> None:
+    @abstractmethod
+    def update(self, *, **kwargs: Any) -> None:
         """Update the acquisition function attributes required for calculation.
 
         This method will be called after fitting the model, but before maximizing the acquisition
@@ -55,15 +55,7 @@ class AbstractAcquisitionFunction(metaclass=abc.ABCMeta):
         ----------
         kwargs : Any
         """
-        for key in self._required_updates:
-            if key not in kwargs:
-                raise ValueError(
-                    "Acquisition function %s needs to be updated with key %s, but only got "
-                    "keys %s." % (self.__class__.__name__, key, list(kwargs.keys()))
-                )
-        for key in kwargs:
-            if key in self._required_updates:
-                setattr(self, key, kwargs[key])
+        raise NotImplementedError
 
     def __call__(self, configurations: list[Configuration]) -> np.ndarray:
         """Compute the acquisition value for a given X.
@@ -89,7 +81,7 @@ class AbstractAcquisitionFunction(metaclass=abc.ABCMeta):
             acq[idx, :] = -np.finfo(float).max
         return acq
 
-    @abc.abstractmethod
+    @abstractmethod
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Compute the acquisition value for a given point X. This function has to be overwritten
         in a derived class.
@@ -107,4 +99,4 @@ class AbstractAcquisitionFunction(metaclass=abc.ABCMeta):
         np.ndarray(N,1)
             Acquisition function values wrt X
         """
-        raise NotImplementedError()
+        raise NotImplementedError

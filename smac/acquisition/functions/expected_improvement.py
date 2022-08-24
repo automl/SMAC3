@@ -7,6 +7,7 @@ from scipy.stats import norm
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
+from smac.model.base_model import BaseModel
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -35,6 +36,8 @@ class EI(AbstractAcquisitionFunction):
         Whether the function values are in log-space.
     xi : float
         Exploration/exploitation trade-off parameter.
+    eta : float
+        Current incumbent.
     """
     def __init__(self, xi: float = 0.0, log: bool = False) -> None:
         super(EI, self).__init__()
@@ -42,13 +45,25 @@ class EI(AbstractAcquisitionFunction):
         self.log : bool = log
         self.xi : float = xi
         self.eta : float | None = None
-        self._required_updates : tuple(str, ...) = ("model", "eta")
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
         }
+
+    def update(self, model: BaseModel, eta: float, **kwargs: Any) -> None:
+        """Update the acquisition function attributes required for calculation.
+
+        Parameters
+        ----------
+        model : BaseModel
+           Models the objective function.
+        eta : float
+            Current incumbent.
+        """
+        self.model = model
+        self.eta = eta
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the EI value and its derivatives.

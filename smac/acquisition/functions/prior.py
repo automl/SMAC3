@@ -76,19 +76,19 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             "name": self.__class__.__name__,
         }
 
-    def update(self, **kwargs: Any) -> None:
+    def update(self, eta: float, **kwargs: Any) -> None:
         """Update the acquisition function attributes required for calculation.
-
-        Updates the model, the accompanying acquisition function and tracks the iteration number.
 
         Parameters
         ----------
-        kwargs
-            Additional keyword arguments
+        eta : float
+            Current incumbent.
         """
         self.iteration_number += 1
+        self.eta = eta
+        # Maybe the underlying acquisition function needs eta.
+        kwargs["eta"] = eta
         self.acq.update(**kwargs)
-        self.eta = kwargs.get("eta")
 
     def _compute_prior(self, X: np.ndarray) -> np.ndarray:
         """Computes the prior-weighted acquisition function values, where the prior on each

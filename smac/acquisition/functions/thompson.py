@@ -6,6 +6,7 @@ import numpy as np
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
+from smac.model.base_model import BaseModel
 
 
 class TS(AbstractAcquisitionFunction):
@@ -36,13 +37,22 @@ class TS(AbstractAcquisitionFunction):
         self.long_name = "Thompson Sampling"
         self.par = par
         self.num_data = None
-        self._required_updates = ("model",)
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
         }
+
+    def update(self, model: BaseModel, **kwargs: Any) -> None:
+        """Update the acquisition function attributes required for calculation.
+
+        Parameters
+        ----------
+        model : BaseModel
+            Models the objective function.
+        """
+        self.model = model
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Sample a new value from a gaussian distribution whose mean and covariance values

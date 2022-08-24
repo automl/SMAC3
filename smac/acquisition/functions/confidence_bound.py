@@ -6,6 +6,7 @@ import numpy as np
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
+from smac.model.base_model import BaseModel
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -36,9 +37,6 @@ class LCB(AbstractAcquisitionFunction):
 
     Parameters
     ----------
-    model : BaseEPM
-        A model that implements at least
-                - predict_marginalized_over_instances(X)
     beta : float, defaults to 1.0
         Controls the balance between exploration and exploitation of the
         acquisition function.
@@ -56,13 +54,25 @@ class LCB(AbstractAcquisitionFunction):
         self.long_name : str = "Lower Confidence Bound"
         self.beta : float = beta
         self.num_data : int | None = None
-        self._required_updates : tuple(str, ...) = ("model", "num_data")
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
         }
+
+    def update(self, model: BaseModel, num_data: int, **kwargs: Any) -> None:
+        """Update the acquisition function attributes required for calculation.
+        
+        Parameters
+        ----------
+        model : BaseModel
+            Models the objective function.
+        num_data : int
+            Number of data points (t).
+        """
+        self.model = model
+        self.num_data = num_data
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the LCB value.
