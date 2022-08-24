@@ -585,7 +585,7 @@ style="width: 100%;">
                 <span class="bp">self</span><span class="o">.</span><span class="n">turbo_optimizer</span><span class="o">.</span><span class="n">add_new_observations</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="o">-</span><span class="n">num_new_observations</span><span class="p">:],</span> <span class="n">Y_raw</span><span class="p">[</span><span class="o">-</span><span class="n">num_new_observations</span><span class="p">:])</span>
 
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">turbo_optimizer</span><span class="o">.</span><span class="n">generate_challengers</span><span class="p">()</span>
-        <span class="n">previous_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_all_configs</span><span class="p">()</span>
+        <span class="n">previous_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_configs</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># Only return a single point to avoid an overly high number of</span>
             <span class="c1"># random search iterations</span>
@@ -729,7 +729,7 @@ style="width: 100%;">
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;contained </span><span class="si">{0}</span><span class="s2"> data of </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">ss_data_indices</span><span class="p">),</span> <span class="n">Y_raw</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
 
         <span class="n">ss</span> <span class="o">=</span> <span class="n">BOinGSubspace</span><span class="p">(</span>
-            <span class="n">config_space</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+            <span class="n">config_space</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span>
             <span class="n">bounds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
             <span class="n">hps_types</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">,</span>
             <span class="n">bounds_ss_cont</span><span class="o">=</span><span class="n">bounds_ss_cont</span><span class="p">,</span>  <span class="c1"># type: ignore[arg-type]</span>

@@ -388,8 +388,8 @@ style="width: 100%;">
 
         <span class="n">subspace_acq_func_opt_kwargs</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;acquisition_function&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function</span><span class="p">,</span>
-            <span class="s2">&quot;config_space&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs_local</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
-            <span class="s2">&quot;rng&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">)),</span>
+            <span class="s2">&quot;configspace&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs_local</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">),</span>
         <span class="p">}</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">acq_optimizer_local</span><span class="p">,</span> <span class="n">AbstractAcquisitionOptimizer</span><span class="p">):</span>
@@ -411,7 +411,7 @@ style="width: 100%;">
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># Here are the setting used by squirrel-optimizer</span>
                     <span class="c1"># https://github.com/automl/Squirrel-Optimizer-BBO-NeurIPS20-automlorg/blob/main/squirrel-optimizer/smac_optim.py</span>
-                    <span class="n">n_sls_iterations</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">local_search_iterations</span> <span class="o">=</span> <span class="p">{</span>
                         <span class="mi">1</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
                         <span class="mi">2</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
                         <span class="mi">3</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
@@ -423,7 +423,7 @@ style="width: 100%;">
                     <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs_local</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()),</span> <span class="mi">5</span><span class="p">)</span>
 
                     <span class="n">subspace_acq_func_opt_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-                        <span class="p">{</span><span class="s2">&quot;n_steps_plateau_walk&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;n_sls_iterations&quot;</span><span class="p">:</span> <span class="n">n_sls_iterations</span><span class="p">}</span>
+                        <span class="p">{</span><span class="s2">&quot;n_steps_plateau_walk&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;local_search_iterations&quot;</span><span class="p">:</span> <span class="n">local_search_iterations</span><span class="p">}</span>
                     <span class="p">)</span>
 
             <span class="k">elif</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">acq_optimizer_local</span><span class="p">,</span> <span class="n">AbstractAcquisitionOptimizer</span><span class="p">):</span>
@@ -457,7 +457,7 @@ style="width: 100%;">
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">previous_configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">Configuration</span><span class="p">(</span><span class="n">configuration_space</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cs_local</span><span class="p">,</span> <span class="n">vector</span><span class="o">=</span><span class="n">ss_x</span><span class="p">)</span> <span class="k">for</span> <span class="n">ss_x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ss_x</span><span class="p">]</span>
                 <span class="n">init_points_local</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer_local</span><span class="o">.</span><span class="n">local_search</span><span class="o">.</span><span class="n">_get_init_points_from_previous_configs</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer_local</span><span class="o">.</span><span class="n">n_sls_iterations</span><span class="p">,</span> <span class="n">previous_configs</span><span class="p">,</span> <span class="n">next_configs_random</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer_local</span><span class="o">.</span><span class="n">local_search_iterations</span><span class="p">,</span> <span class="n">previous_configs</span><span class="p">,</span> <span class="n">next_configs_random</span>
                 <span class="p">)</span>
 
             <span class="n">configs_acq_local</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer_local</span><span class="o">.</span><span class="n">local_search</span><span class="o">.</span><span class="n">_do_search</span><span class="p">(</span><span class="n">init_points_local</span><span class="p">)</span>
