@@ -5,18 +5,15 @@ __license__ = "3-clause BSD"
 
 
 from abc import ABC, abstractmethod
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable
 
-import math
 import time
 import traceback
-from enum import Enum
 
 import numpy as np
 
 import smac
 from smac.configspace import Configuration
-from smac.constants import MAXINT
 from smac.runhistory import RunInfo, RunValue, StatusType
 from smac.utils.logging import get_logger
 from smac.utils.stats import Stats
@@ -148,7 +145,7 @@ class Runner(ABC):
         instance: str | None = None,
         seed: int = 0,
         budget: float | None = None,
-    ) -> Tuple[StatusType, float | list[float], float, Dict]:
+    ) -> tuple[StatusType, float | list[float], float, dict]:
         """Runs the target algorithm with a configuration on a single instance with instance specifics.
 
         Parameters
@@ -181,7 +178,7 @@ class Runner(ABC):
     def run_wrapper(
         self,
         run_info: RunInfo,
-    ) -> Tuple[RunInfo, RunValue]:
+    ) -> tuple[RunInfo, RunValue]:
         """Wrapper around run() to exec and check the execution of a given config file.
 
         This function encapsulates common handling/processing, so that run() implementation
@@ -245,7 +242,7 @@ class Runner(ABC):
         )
 
     @abstractmethod
-    def get_finished_runs(self) -> List[Tuple[RunInfo, RunValue]]:
+    def get_finished_runs(self) -> list[tuple[RunInfo, RunValue]]:
         """This method returns any finished configuration, and returns a list with the results of
         exercising the configurations. This class keeps populating results to self.results until a
         call to get_finished runs is done. In this case, the self.results list is emptied and all
