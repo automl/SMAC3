@@ -336,7 +336,7 @@ style="width: 100%;">
 <dt class="sig sig-object py" id="smac.initial_design.DefaultInitialDesign">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.initial_design.</span></span><span class="sig-name descname"><span class="pre">DefaultInitialDesign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs_per_hyperparameter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_config_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/default_design.html#DefaultInitialDesign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.initial_design.DefaultInitialDesign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign" title="smac.initial_design.initial_design.InitialDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">InitialDesign</span></code></a></p>
-<p>Initial design that evaluates default configuration.</p>
+<p>Initial design that evaluates only the default configuration.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -352,7 +352,7 @@ Don’t pass configs to the constructor;
 otherwise factorial design is overwritten</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
+<dd class="field-odd"><p>list[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -370,15 +370,16 @@ otherwise factorial design is overwritten</p>
 <li><p><strong>configspace</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – configuration space object</p></li>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</p></li>
 <li><p><strong>n_runs</strong> (<em>int</em>) – Number of iterations allowed for the target algorithm</p></li>
-<li><p><strong>configs</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em><em>]</em>) – List of initial configurations. Disables the arguments <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code> if given.
+<li><p><strong>configs</strong> (<em>list</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>] </em><em>| </em><em>None</em>) – List of initial configurations. Disables the arguments <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code> if given.
 Either this, or <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code> or <code class="docutils literal notranslate"><span class="pre">n_configs</span></code> must be provided.</p></li>
-<li><p><strong>n_configs_per_hyperparameter</strong> (<em>int</em>) – how many configurations will be used at most in the initial design (X*D). Either
+<li><p><strong>n_configs_per_hyperparameter</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – how many configurations will be used at most in the initial design (X*D). Either
 this, or <code class="docutils literal notranslate"><span class="pre">n_configs</span></code> or <code class="docutils literal notranslate"><span class="pre">configs</span></code> must be provided. Disables the argument
 <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code> if given.</p></li>
-<li><p><strong>max_config_ratio</strong> (<em>float</em>) – use at most X*budget in the initial design. Not active if a time limit is given.</p></li>
+<li><p><strong>max_config_ratio</strong> (<em>float</em><em>, </em><em>defaults to 0.25</em>) – use at most X*budget in the initial design. Not active if a time limit is given.</p></li>
 <li><p><strong>n_configs</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximal initial budget (disables the arguments <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code> and <code class="docutils literal notranslate"><span class="pre">configs</span></code>
 if both are given). Either this, or <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code> or <code class="docutils literal notranslate"><span class="pre">configs</span></code> must be
 provided.</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>default to None.</em>) – Random seed. If None, will use the seed from the scenario.</p></li>
 </ul>
 </dd>
 </dl>
@@ -398,10 +399,31 @@ provided.</p></li>
 <dd><p>List of configurations to be evaluated</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
+<dd class="field-odd"><p>list[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.initial_design.InitialDesign.n_configs">
+<span class="sig-name descname"><span class="pre">n_configs</span></span><a class="headerlink" href="#smac.initial_design.InitialDesign.n_configs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of configurations to be evaluated. It is dynamically computed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.initial_design.InitialDesign.seed">
+<span class="sig-name descname"><span class="pre">seed</span></span><a class="headerlink" href="#smac.initial_design.InitialDesign.seed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.initial_design.InitialDesign.rng">
+<span class="sig-name descname"><span class="pre">rng</span></span><a class="headerlink" href="#smac.initial_design.InitialDesign.rng" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.initial_design.InitialDesign.get_meta">
@@ -420,7 +442,7 @@ provided.</p></li>
 <dd><p>Selects the initial configurations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code></a>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -440,7 +462,7 @@ Don’t pass configs to the constructor;
 otherwise factorial design is overwritten</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
+<dd class="field-odd"><p>list[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -459,7 +481,8 @@ otherwise factorial design is overwritten</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.initial_design.</span></span><span class="sig-name descname"><span class="pre">SobolInitialDesign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs_per_hyperparameter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_config_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/sobol_design.html#SobolInitialDesign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.initial_design.SobolInitialDesign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign" title="smac.initial_design.initial_design.InitialDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">InitialDesign</span></code></a></p>
 <p>Sobol sequence design with a scrambled Sobol sequence.</p>
-<p>See <a class="reference external" href="https://scipy.github.io/devdocs/reference/generated/scipy.stats.qmc.Sobol.html">https://scipy.github.io/devdocs/reference/generated/scipy.stats.qmc.Sobol.html</a> for further information</p>
+<p>See <a class="reference external" href="https://scipy.github.io/devdocs/reference/generated/scipy.stats.qmc.Sobol.html">https://scipy.github.io/devdocs/reference/generated/scipy.stats.qmc.Sobol.html</a>
+for further information</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.initial_design.SobolInitialDesign.configs">
 <span class="sig-name descname"><span class="pre">configs</span></span><a class="headerlink" href="#smac.initial_design.SobolInitialDesign.configs" title="Permalink to this definition">¶</a></dt>
@@ -468,7 +491,7 @@ Don’t pass configs to the constructor;
 otherwise factorial design is overwritten</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
+<dd class="field-odd"><p>list[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
 </dd>
 </dl>
 </dd></dl>

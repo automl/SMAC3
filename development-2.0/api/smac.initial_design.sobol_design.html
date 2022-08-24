@@ -345,7 +345,8 @@ style="width: 100%;">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.initial_design.sobol_design.</span></span><span class="sig-name descname"><span class="pre">SobolInitialDesign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs_per_hyperparameter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_config_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/sobol_design.html#SobolInitialDesign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.initial_design.sobol_design.SobolInitialDesign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign" title="smac.initial_design.initial_design.InitialDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">InitialDesign</span></code></a></p>
 <p>Sobol sequence design with a scrambled Sobol sequence.</p>
-<p>See <a class="reference external" href="https://scipy.github.io/devdocs/reference/generated/scipy.stats.qmc.Sobol.html">https://scipy.github.io/devdocs/reference/generated/scipy.stats.qmc.Sobol.html</a> for further information</p>
+<p>See <a class="reference external" href="https://scipy.github.io/devdocs/reference/generated/scipy.stats.qmc.Sobol.html">https://scipy.github.io/devdocs/reference/generated/scipy.stats.qmc.Sobol.html</a>
+for further information</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.initial_design.sobol_design.SobolInitialDesign.configs">
 <span class="sig-name descname"><span class="pre">configs</span></span><a class="headerlink" href="#smac.initial_design.sobol_design.SobolInitialDesign.configs" title="Permalink to this definition">¶</a></dt>
@@ -354,7 +355,7 @@ Don’t pass configs to the constructor;
 otherwise factorial design is overwritten</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
+<dd class="field-odd"><p>list[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
 </dd>
 </dl>
 </dd></dl>

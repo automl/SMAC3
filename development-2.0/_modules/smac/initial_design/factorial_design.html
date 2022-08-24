@@ -339,14 +339,14 @@ style="width: 100%;">
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    configs : List[Configuration]</span>
+<span class="sd">    configs : list[Configuration]</span>
 <span class="sd">        List of configurations to be evaluated</span>
 <span class="sd">        Don&#39;t pass configs to the constructor;</span>
 <span class="sd">        otherwise factorial design is overwritten</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">_select_configurations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Selects a single configuration to run.</span>
+        <span class="sd">&quot;&quot;&quot;Selects the configurations to be evaluated from the initial design.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>

@@ -351,15 +351,16 @@ style="width: 100%;">
 <li><p><strong>configspace</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – configuration space object</p></li>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</p></li>
 <li><p><strong>n_runs</strong> (<em>int</em>) – Number of iterations allowed for the target algorithm</p></li>
-<li><p><strong>configs</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em><em>]</em>) – List of initial configurations. Disables the arguments <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code> if given.
+<li><p><strong>configs</strong> (<em>list</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>] </em><em>| </em><em>None</em>) – List of initial configurations. Disables the arguments <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code> if given.
 Either this, or <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code> or <code class="docutils literal notranslate"><span class="pre">n_configs</span></code> must be provided.</p></li>
-<li><p><strong>n_configs_per_hyperparameter</strong> (<em>int</em>) – how many configurations will be used at most in the initial design (X*D). Either
+<li><p><strong>n_configs_per_hyperparameter</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – how many configurations will be used at most in the initial design (X*D). Either
 this, or <code class="docutils literal notranslate"><span class="pre">n_configs</span></code> or <code class="docutils literal notranslate"><span class="pre">configs</span></code> must be provided. Disables the argument
 <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code> if given.</p></li>
-<li><p><strong>max_config_ratio</strong> (<em>float</em>) – use at most X*budget in the initial design. Not active if a time limit is given.</p></li>
+<li><p><strong>max_config_ratio</strong> (<em>float</em><em>, </em><em>defaults to 0.25</em>) – use at most X*budget in the initial design. Not active if a time limit is given.</p></li>
 <li><p><strong>n_configs</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximal initial budget (disables the arguments <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code> and <code class="docutils literal notranslate"><span class="pre">configs</span></code>
 if both are given). Either this, or <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code> or <code class="docutils literal notranslate"><span class="pre">configs</span></code> must be
 provided.</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>default to None.</em>) – Random seed. If None, will use the seed from the scenario.</p></li>
 </ul>
 </dd>
 </dl>
@@ -379,10 +380,31 @@ provided.</p></li>
 <dd><p>List of configurations to be evaluated</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
+<dd class="field-odd"><p>list[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.initial_design.initial_design.InitialDesign.n_configs">
+<span class="sig-name descname"><span class="pre">n_configs</span></span><a class="headerlink" href="#smac.initial_design.initial_design.InitialDesign.n_configs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of configurations to be evaluated. It is dynamically computed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.initial_design.initial_design.InitialDesign.seed">
+<span class="sig-name descname"><span class="pre">seed</span></span><a class="headerlink" href="#smac.initial_design.initial_design.InitialDesign.seed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.initial_design.initial_design.InitialDesign.rng">
+<span class="sig-name descname"><span class="pre">rng</span></span><a class="headerlink" href="#smac.initial_design.initial_design.InitialDesign.rng" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.initial_design.initial_design.InitialDesign.get_meta">
@@ -401,7 +423,7 @@ provided.</p></li>
 <dd><p>Selects the initial configurations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code></a>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code></a>]</p>
 </dd>
 </dl>
 </dd></dl>
