@@ -65,7 +65,7 @@ class TuRBOFacade(BlackBoxFacade):
             failure_tol_min=failure_tol_min,
             n_init_x_params=n_init_x_params,
             n_candidate_max=n_candidate_max,
-            scenario=self.scenario,
+            scenario=self._scenario,
             stats=self.stats,
             runner=self.runner,
             initial_design=self.initial_design,

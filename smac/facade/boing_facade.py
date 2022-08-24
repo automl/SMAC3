@@ -123,7 +123,7 @@ class BOinGFacade(HyperparameterFacade):
         self,
     ) -> None:
         self.optimizer = BOinGSMBO(
-            scenario=self.scenario,
+            scenario=self._scenario,
             stats=self.stats,
             runner=self.runner,
             initial_design=self.initial_design,

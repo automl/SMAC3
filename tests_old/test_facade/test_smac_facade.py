@@ -447,7 +447,7 @@ class TestSMACFacade(unittest.TestCase):
                 tae_runner=rosenbrock_2d,
             )
             incumbent = smac.optimize()
-            return incumbent, smac.scenario.output_dir
+            return incumbent, smac._scenario.output_dir
 
         i1, output_dir = opt_rosenbrock()
         self.output_dirs.append(output_dir)

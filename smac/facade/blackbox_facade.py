@@ -42,7 +42,7 @@ class BlackBoxFacade(Facade):
         # # activate predict incumbent
         # self.solver.epm_chooser.predict_x_best = True
 
-        if self.scenario.instance_features is not None and len(self.scenario.instance_features) > 0:
+        if self._scenario.instance_features is not None and len(self._scenario.instance_features) > 0:
             raise NotImplementedError("The Black-Box GP cannot handle instances.")
 
         if not isinstance(self.model, BaseGaussianProcess):
