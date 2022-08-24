@@ -483,13 +483,13 @@ style="width: 100%;">
         <span class="n">num_samples</span> <span class="o">=</span> <span class="mi">20</span>
         <span class="n">union_ss</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">union_indices</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">rand_samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_space</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">(</span><span class="n">num_samples</span><span class="p">)</span>
+        <span class="n">rand_samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">(</span><span class="n">num_samples</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">rand_samples</span><span class="p">:</span>
             <span class="n">sample_array</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">get_array</span><span class="p">()</span>
             <span class="n">union_bounds_cont</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">ss_data_indices</span> <span class="o">=</span> <span class="n">subspace_extraction</span><span class="p">(</span>
                 <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
                 <span class="n">challenger</span><span class="o">=</span><span class="n">sample_array</span><span class="p">,</span>
-                <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">smbo</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+                <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
                 <span class="n">num_min</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_configs_local</span><span class="p">,</span>
                 <span class="n">num_max</span><span class="o">=</span><span class="n">MAXINT</span><span class="p">,</span>
                 <span class="n">bounds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
@@ -595,7 +595,7 @@ style="width: 100%;">
         <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_configs_local</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">frac_to_start_bi</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_conditions</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
-                <span class="n">cs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span>  <span class="c1"># type: ignore</span>
+                <span class="n">cs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span>  <span class="c1"># type: ignore</span>
                 <span class="n">ss</span> <span class="o">=</span> <span class="n">BOinGSubspace</span><span class="p">(</span>
                     <span class="n">config_space</span><span class="o">=</span><span class="n">cs</span><span class="p">,</span>
                     <span class="n">bounds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
@@ -673,7 +673,7 @@ style="width: 100%;">
 
         <span class="k">if</span> <span class="p">(</span>
             <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_configs_local</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">frac_to_start_bi</span><span class="p">)</span>
-            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_space</span><span class="o">.</span><span class="n">get_conditions</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_conditions</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span>
         <span class="p">):</span>
             <span class="k">return</span> <span class="n">challengers_global</span>
 
