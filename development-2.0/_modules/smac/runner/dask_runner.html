@@ -316,7 +316,7 @@ style="width: 100%;">
   <h1>Source code for smac.runner.dask_runner</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">time</span>
@@ -403,14 +403,10 @@ style="width: 100%;">
         <span class="n">output_directory</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">dask_client</span><span class="p">:</span> <span class="n">dask</span><span class="o">.</span><span class="n">distributed</span><span class="o">.</span><span class="n">Client</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">DaskParallelRunner</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">target_algorithm</span><span class="o">=</span><span class="n">single_worker</span><span class="o">.</span><span class="n">target_algorithm</span><span class="p">,</span>
             <span class="n">scenario</span><span class="o">=</span><span class="n">single_worker</span><span class="o">.</span><span class="n">scenario</span><span class="p">,</span>
             <span class="n">stats</span><span class="o">=</span><span class="n">single_worker</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
-            <span class="c1"># objectives=single_worker.objectives,</span>
-            <span class="c1"># par_factor=single_worker.par_factor,</span>
-            <span class="c1"># crash_cost=single_worker.crash_cost,</span>
-            <span class="c1"># abort_on_first_run_crash=single_worker.abort_on_first_run_crash,</span>
         <span class="p">)</span>
 
         <span class="c1"># The single worker, which is replicated on a need</span>
@@ -441,7 +437,7 @@ style="width: 100%;">
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close_client_at_del</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">dask_client</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">futures</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: List[Future]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">futures</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Future</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">scheduler_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_get_scheduler_info</span><span class="p">()</span>
 
@@ -562,7 +558,7 @@ style="width: 100%;">
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="c1"># instance_specific: str = &quot;0&quot;,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">StatusType</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">StatusType</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;This method only complies with the abstract parent class. In the parallel case, we call</span>
 <span class="sd">        the single worker run() method.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
