@@ -336,7 +336,7 @@ style="width: 100%;">
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.runner.runner.Runner" title="smac.runner.runner.Runner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Runner</span></code></a>(target_algorithm, scenario, stats)</p></td>
-<td><p>Interface class to handle the execution of SMAC' configurations.</p></td>
+<td><p>Interface class to handle the execution of SMAC configurations.</p></td>
 </tr>
 </tbody>
 </table>
@@ -344,7 +344,7 @@ style="width: 100%;">
 <dt class="sig sig-object py" id="smac.runner.runner.Runner">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runner.runner.</span></span><span class="sig-name descname"><span class="pre">Runner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_algorithm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#Runner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.Runner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
-<p>Interface class to handle the execution of SMAC’ configurations.</p>
+<p>Interface class to handle the execution of SMAC configurations.</p>
 <p>This interface defines how to interact with the SMBO loop.
 The complexity of running a configuration as well as handling the
 results is abstracted to the SMBO via a BaseRunner.</p>
@@ -371,45 +371,91 @@ until more results are available.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ta</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>Callable</em><em>]</em>) – target algorithm</p></li>
+<li><p><strong>target_algorithm</strong> (<em>Callable</em>) – The target algorithm to be run</p></li>
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – The scenario describes the runtime of SMAC</p></li>
 <li><p><strong>stats</strong> (<a class="reference internal" href="smac.utils.stats.html#smac.utils.stats.Stats" title="smac.utils.stats.Stats"><em>Stats</em></a>) – stats object to collect statistics about runtime/additional info</p></li>
-<li><p><strong>objectives</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – names of the objectives, by default it is a single objective parameter “cost”</p></li>
-<li><p><strong>run_obj</strong> (<em>str</em>) – run objective of SMAC</p></li>
-<li><p><strong>crash_cost</strong> (<em>float</em>) – cost that is used in case of crashed runs (including runs
-that returned NaN or inf)</p></li>
-<li><p><strong>abort_on_first_run_crash</strong> (<em>bool</em>) – if true and first run crashes, raise FirstRunCrashedException</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.results">
-<span class="sig-name descname"><span class="pre">results</span></span><a class="headerlink" href="#smac.runner.runner.Runner.results" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="smac.runner.runner.Runner.scenario">
+<span class="sig-name descname"><span class="pre">scenario</span></span><a class="headerlink" href="#smac.runner.runner.Runner.scenario" title="Permalink to this definition">¶</a></dt>
+<dd><p>The scenario the runner will use</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario">Scenario</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.ta">
-<span class="sig-name descname"><span class="pre">ta</span></span><a class="headerlink" href="#smac.runner.runner.Runner.ta" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="smac.runner.runner.Runner.results">
+<span class="sig-name descname"><span class="pre">results</span></span><a class="headerlink" href="#smac.runner.runner.Runner.results" title="Permalink to this definition">¶</a></dt>
+<dd><p>The RunInfo is an object containing the configuration and the necessary data
+to run it while the RunValue contains information about the status/performance
+of config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[tuple[<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunInfo" title="smac.runhistory.RunInfo">RunInfo</a>, <a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunValue" title="smac.runhistory.RunValue">RunValue</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.runner.runner.Runner.target_algorithm">
+<span class="sig-name descname"><span class="pre">target_algorithm</span></span><a class="headerlink" href="#smac.runner.runner.Runner.target_algorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>The algorithm to be called</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Callable</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.runner.runner.Runner.stats">
 <span class="sig-name descname"><span class="pre">stats</span></span><a class="headerlink" href="#smac.runner.runner.Runner.stats" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.par_factor">
-<span class="sig-name descname"><span class="pre">par_factor</span></span><a class="headerlink" href="#smac.runner.runner.Runner.par_factor" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Where stats are collected during the run</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.utils.stats.html#smac.utils.stats.Stats" title="smac.utils.stats.Stats">Stats</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.runner.runner.Runner.crash_cost">
 <span class="sig-name descname"><span class="pre">crash_cost</span></span><a class="headerlink" href="#smac.runner.runner.Runner.crash_cost" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The cost to give if the target_algorithm crashes or a list of costs if doing
+multi-objective</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float | list[float]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.abort_on_first_run_crash">
-<span class="sig-name descname"><span class="pre">abort_on_first_run_crash</span></span><a class="headerlink" href="#smac.runner.runner.Runner.abort_on_first_run_crash" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="smac.runner.runner.Runner.objectives">
+<span class="sig-name descname"><span class="pre">objectives</span></span><a class="headerlink" href="#smac.runner.runner.Runner.objectives" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the objective or objectives if doing multi-objective</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.runner.runner.Runner.n_objectives">
+<span class="sig-name descname"><span class="pre">n_objectives</span></span><a class="headerlink" href="#smac.runner.runner.Runner.n_objectives" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of objectives the target_algorithm uses</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.runner.Runner.get_finished_runs">
@@ -419,15 +465,11 @@ exercising the configurations. This class keeps populating results to self.resul
 call to get_finished runs is done. In this case, the self.results list is emptied and all
 RunValues produced by running run() are returned.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.RunInfo" title="smac.runhistory.dataclasses.RunInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunInfo</span></code></a>, <a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.RunValue" title="smac.runhistory.dataclasses.RunValue"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunValue</span></code></a>]]</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of pais RunInfo/RunValues a submitted configuration</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>List[RunInfo, RunValue]</strong> (<em>A list of pais RunInfo/RunValues</em>)</p></li>
-<li><p><em>a submitted configuration</em></p></li>
-</ul>
-</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[tuple[<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunInfo" title="smac.runhistory.RunInfo">RunInfo</a>, <a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunValue" title="smac.runhistory.RunValue">RunValue</a>]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -446,7 +488,7 @@ RunValues produced by running run() are returned.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.runner.Runner.num_workers">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#Runner.num_workers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.Runner.num_workers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the active number of workers that will execute tae runs.</p>
+<dd><p>Return the active number of workers that will execute target_algorithm runs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
@@ -475,11 +517,10 @@ parallel runners, there might be pending configurations to complete.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – Configuration to be passed to the target algorithm.</p></li>
-<li><p><strong>instance</strong> (<em>str</em><em>, </em><em>defaults to None</em>) – The Problem instance.</p></li>
+<li><p><strong>instance</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The Problem instance.</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>) – Random seed.</p></li>
-<li><p><strong>budget</strong> (<em>float</em><em>, </em><em>defaults to None</em>) – A positive, real-valued number representing an arbitrary limit to the target algorithm
-Handled by the target algorithm internally.</p></li>
-<li><p><strong>instance_specific</strong> (<em>str</em><em>, </em><em>defaults to &quot;0&quot;</em>) – Instance specific information (e.g., domain file or solution).</p></li>
+<li><p><strong>budget</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – A positive, real-valued number representing an arbitrary limit to the
+target algorithm handled by the target algorithm internally.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
