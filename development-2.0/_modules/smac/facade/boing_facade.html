@@ -316,7 +316,7 @@ style="width: 100%;">
   <h1>Source code for smac.facade.boing_facade</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Type</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Type</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">botorch.models.kernels.categorical</span> <span class="kn">import</span> <span class="n">CategoricalKernel</span>
@@ -336,6 +336,7 @@ style="width: 100%;">
     <span class="n">RunHistoryRawEncoder</span><span class="p">,</span>
     <span class="n">RunHistoryRawScaledEncoder</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">smac.runner.runner</span> <span class="kn">import</span> <span class="n">Runner</span>
 <span class="kn">from</span> <span class="nn">smac.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 
 
@@ -357,8 +358,8 @@ style="width: 100%;">
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    model_local: Type[BaseModel],</span>
-<span class="sd">            local empirical performance model, used in subspace. Since the subspace might have different amount of</span>
-<span class="sd">            hyperparameters compared to the search space. We only instantiate them under the subspace.</span>
+<span class="sd">        local empirical performance model, used in subspace. Since the subspace might have different amount of</span>
+<span class="sd">        hyperparameters compared to the search space. We only instantiate them under the subspace.</span>
 <span class="sd">    model_local_kwargs: Optional[Dict] = None,</span>
 <span class="sd">        parameters for initializing a local model</span>
 <span class="sd">    acquisition_func_local: AbstractAcquisitionFunction,</span>
@@ -380,6 +381,9 @@ style="width: 100%;">
 <span class="sd">       parameters for building a turbo optimizer. For details, please refer to smac.utils.subspace.turbo</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
+                 <span class="n">target_algorithm</span><span class="p">:</span> <span class="n">Runner</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">,</span>
+                 <span class="o">*</span><span class="p">,</span>
                  <span class="n">model_local</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]</span> <span class="o">=</span> <span class="n">GloballyAugmentedLocalGaussianProcess</span><span class="p">,</span>
                  <span class="n">model_local_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">acquisition_func_local</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span> <span class="o">|</span> <span class="n">Type</span><span class="p">[</span><span class="n">AbstractAcquisitionFunction</span><span class="p">]</span> <span class="o">=</span> <span class="n">EI</span><span class="p">,</span>
@@ -389,7 +393,8 @@ style="width: 100%;">
                  <span class="n">max_configs_local_fracs</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
                  <span class="n">min_configs_local</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">do_switching</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                 <span class="n">turbo_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                 <span class="n">turbo_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_local</span> <span class="o">=</span> <span class="n">model_local</span>
         <span class="k">if</span> <span class="n">model_local_kwargs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">model_local</span><span class="p">,</span> <span class="n">GPyTorchGaussianProcess</span><span class="p">):</span>
             <span class="n">model_local_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_lgpga_local_components</span><span class="p">()</span>
@@ -403,7 +408,7 @@ style="width: 100%;">
         <span class="bp">self</span><span class="o">.</span><span class="n">do_switching</span> <span class="o">=</span> <span class="n">do_switching</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">turbo_kwargs</span> <span class="o">=</span> <span class="n">turbo_kwargs</span>
         <span class="c1"># we attach here an that allows the users to pass their own arguments to the boing optimizer</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span><span class="n">target_algorithm</span><span class="o">=</span><span class="n">target_algorithm</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_runhistory_encoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistoryRawEncoder</span><span class="p">:</span>
