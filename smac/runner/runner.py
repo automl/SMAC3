@@ -22,7 +22,7 @@ logger = get_logger(__name__)
 
 
 class Runner(ABC):
-    """Interface class to handle the execution of SMAC' configurations.
+    """Interface class to handle the execution of SMAC configurations.
 
     This interface defines how to interact with the SMBO loop.
     The complexity of running a configuration as well as handling the
@@ -51,39 +51,39 @@ class Runner(ABC):
 
     Parameters
     ----------
-    ta : Union[List[str], Callable]
-        target algorithm
+    target_algorithm : Callable
+        The target algorithm to be run
+    scenario: Scenario
+        The scenario describes the runtime of SMAC
     stats: Stats
          stats object to collect statistics about runtime/additional info
-    objectives: List[str]
-        names of the objectives, by default it is a single objective parameter "cost"
-    run_obj: str
-        run objective of SMAC
-    crash_cost : float
-        cost that is used in case of crashed runs (including runs
-        that returned NaN or inf)
-    abort_on_first_run_crash: bool
-        if true and first run crashes, raise FirstRunCrashedException
 
     Attributes
     ----------
-    results
-    ta
-    stats
-    par_factor
-    crash_cost
-    abort_on_first_run_crash
+    scenario: Scenario
+        The scenario the runner will use
+    results: list[tuple[RunInfo, RunValue]]
+        The RunInfo is an object containing the configuration and the necessary data
+        to run it while the RunValue contains information about the status/performance
+        of config.
+    target_algorithm: Callable
+        The algorithm to be called
+    stats: Stats
+        Where stats are collected during the run
+    crash_cost: float | list[float]
+        The cost to give if the target_algorithm crashes or a list of costs if doing
+        multi-objective
+    objectives: str | list[str]
+        The name of the objective or objectives if doing multi-objective
+    n_objectives: int
+        The number of objectives the target_algorithm uses
     """
 
     def __init__(
         self,
-        target_algorithm: list[str] | Callable,
+        target_algorithm: Callable,
         scenario: smac.scenario.Scenario,
         stats: Stats,
-        # objectives: list[str] = ["cost"],
-        # par_factor: int = 1,
-        # crash_cost: float | list[float] = float(MAXINT),
-        # abort_on_first_run_crash: bool = True,
     ):
         self.scenario = scenario
 
@@ -92,13 +92,10 @@ class Runner(ABC):
         # put in this list and collected via process_finished_runs
         self.results: list[tuple[RunInfo, RunValue]] = []
 
-        # Below state the support for a Runner algorithm that
-        # implements a ta
+        # Below state the support for a Runner algorithm that implements a ta
         self.target_algorithm = target_algorithm
         self.stats = stats
-        # self.par_factor = par_factor
         self.crash_cost = scenario.crash_cost
-        # self.abort_on_first_run_crash = abort_on_first_run_crash
         self._supports_memory_limit = False
 
         if isinstance(scenario.objectives, str):
@@ -109,76 +106,7 @@ class Runner(ABC):
         self.objectives = objectives
         self.n_objectives = scenario.count_objectives()
 
-    def get_meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
-        return {
-            "name": self.__class__.__name__,
-            "code": str(self.target_algorithm.__code__.co_code),
-        }
-
-    @abstractmethod
-    def submit_run(self, run_info: RunInfo) -> None:
-        """This function submits a configuration embedded in a RunInfo object, and uses one of the
-        workers to produce a result (such result will eventually be available on the self.results
-        FIFO).
-
-        This interface method will be called by SMBO, with the expectation
-        that a function will be executed by a worker.
-
-        What will be executed is dictated by run_info, and "how" will it be
-        executed is decided via the child class that implements a run() method.
-
-        Because config submission can be a serial/parallel endeavor,
-        it is expected to be implemented by a child class.
-
-        Parameters
-        ----------
-        run_info: RunInfo
-            An object containing the configuration and the necessary data to run it
-        """
-        pass
-
-    @abstractmethod
-    def run(
-        self,
-        config: Configuration,
-        instance: str | None = None,
-        seed: int = 0,
-        budget: float | None = None,
-    ) -> tuple[StatusType, float | list[float], float, dict]:
-        """Runs the target algorithm with a configuration on a single instance with instance specifics.
-
-        Parameters
-        ----------
-        config : Configuration
-            Configuration to be passed to the target algorithm.
-        instance : str, defaults to None
-            The Problem instance.
-        seed : int, defaults to 0
-            Random seed.
-        budget : float, defaults to None
-            A positive, real-valued number representing an arbitrary limit to the target algorithm
-            Handled by the target algorithm internally.
-        instance_specific : str, defaults to "0"
-            Instance specific information (e.g., domain file or solution).
-
-        Returns
-        -------
-        status : StatusType
-            Status of the run.
-        cost : float | list[float]
-            Cost, regret, quality, etc. of the run.
-        runtime : float
-            The time the target algorithm took to run.
-        additional_info : dict
-            All further additional run information.
-        """
-        pass
-
-    def run_wrapper(
-        self,
-        run_info: RunInfo,
-    ) -> tuple[RunInfo, RunValue]:
+    def run_wrapper(self, run_info: RunInfo) -> tuple[RunInfo, RunValue]:
         """Wrapper around run() to exec and check the execution of a given config file.
 
         This function encapsulates common handling/processing, so that run() implementation
@@ -219,20 +147,20 @@ class Runner(ABC):
         end = time.time()
 
         if run_info.budget == 0 and status == StatusType.DONOTADVANCE:
-            raise ValueError("Cannot handle DONOTADVANCE state when using intensify or SH/HB on " "instances.")
+            raise ValueError("Cannot handle DONOTADVANCE state when using intensify or SH/HB on instances.")
 
         # Catch NaN or inf.
         if not np.all(np.isfinite(cost)):
             logger.warning(
-                f"Target algorithm returned infinity or nothing at all. Result is treated as CRASHED "
-                f"and cost is set to {self.crash_cost}."
+                "Target algorithm returned infinity or nothing at all. Result is treated as CRASHED"
+                f" and cost is set to {self.crash_cost}."
             )
             status = StatusType.CRASHED
 
         if status == StatusType.CRASHED:
             cost = self.crash_cost
 
-        return run_info, RunValue(
+        run_value = RunValue(
             status=status,
             cost=cost,
             time=runtime,
@@ -240,6 +168,71 @@ class Runner(ABC):
             starttime=start,
             endtime=end,
         )
+        return run_info, run_value
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+            "code": str(self.target_algorithm.__code__.co_code),
+        }
+
+    @abstractmethod
+    def submit_run(self, run_info: RunInfo) -> None:
+        """This function submits a configuration embedded in a RunInfo object, and uses one of the
+        workers to produce a result (such result will eventually be available on the self.results
+        FIFO).
+
+        This interface method will be called by SMBO, with the expectation
+        that a function will be executed by a worker.
+
+        What will be executed is dictated by run_info, and "how" will it be
+        executed is decided via the child class that implements a run() method.
+
+        Because config submission can be a serial/parallel endeavor,
+        it is expected to be implemented by a child class.
+
+        Parameters
+        ----------
+        run_info: RunInfo
+            An object containing the configuration and the necessary data to run it
+        """
+        ...
+
+    @abstractmethod
+    def run(
+        self,
+        config: Configuration,
+        instance: str | None = None,
+        seed: int = 0,
+        budget: float | None = None,
+    ) -> tuple[StatusType, float | list[float], float, dict]:
+        """Runs the target algorithm with a configuration on a single instance with instance specifics.
+
+        Parameters
+        ----------
+        config : Configuration
+            Configuration to be passed to the target algorithm.
+        instance : str | None, defaults to None
+            The Problem instance.
+        seed : int, defaults to 0
+            Random seed.
+        budget : float | None, defaults to None
+            A positive, real-valued number representing an arbitrary limit to the
+            target algorithm handled by the target algorithm internally.
+
+        Returns
+        -------
+        status : StatusType
+            Status of the run.
+        cost : float | list[float]
+            Cost, regret, quality, etc. of the run.
+        runtime : float
+            The time the target algorithm took to run.
+        additional_info : dict
+            All further additional run information.
+        """
+        ...
 
     @abstractmethod
     def get_finished_runs(self) -> list[tuple[RunInfo, RunValue]]:
@@ -250,10 +243,10 @@ class Runner(ABC):
 
         Returns
         -------
-            List[RunInfo, RunValue]: A list of pais RunInfo/RunValues
-            a submitted configuration
+        list[tuple[RunInfo, RunValue]]:
+            A list of pais RunInfo/RunValues a submitted configuration
         """
-        raise NotImplementedError()
+        ...
 
     @abstractmethod
     def wait(self) -> None:
@@ -261,7 +254,7 @@ class Runner(ABC):
 
         This method waits until 1 run completes
         """
-        pass
+        ...
 
     @abstractmethod
     def pending_runs(self) -> bool:
@@ -270,9 +263,9 @@ class Runner(ABC):
         Generally if the runner is serial, launching a run instantly returns it's result. On
         parallel runners, there might be pending configurations to complete.
         """
-        pass
+        ...
 
     @abstractmethod
     def num_workers(self) -> int:
-        """Return the active number of workers that will execute tae runs."""
-        pass
+        """Return the active number of workers that will execute target_algorithm runs."""
+        ...
