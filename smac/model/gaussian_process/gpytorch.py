@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import logging
 import warnings
@@ -10,7 +10,7 @@ import gpytorch
 import numpy as np
 import torch
 from botorch.optim.numpy_converter import module_to_array, set_params_with_array
-from botorch.optim.utils import _scipy_objective_and_grad
+from botorch.optim.utils import _get_extra_mll_args, _scipy_objective_and_grad
 from gpytorch.constraints.constraints import Interval
 from gpytorch.distributions.multivariate_normal import MultivariateNormal
 from gpytorch.kernels import Kernel
