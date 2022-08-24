@@ -73,6 +73,7 @@ class Facade:
 
 
     """
+
     def __init__(
         self,
         scenario: Scenario,
@@ -200,11 +201,11 @@ class Facade:
         self._scenario.save()
 
     @property
-    def runhistory(self):
+    def runhistory(self) -> RunHistory:
         return self._runhistory
 
     @property
-    def stats(self):
+    def stats(self) -> Stats:
         return self._stats
 
     def _init_optimizer(self) -> None:
@@ -236,7 +237,7 @@ class Facade:
         the components. This is the easiest way to incorporate dependencies, although
         it might be a bit hacky.
         """
-        self.intensifier._set_stats(self.stats)
+        self.intensifier.stats = self.stats
         self.runhistory_encoder._set_multi_objective_algorithm(self.multi_objective_algorithm)
         self.acquisition_function._set_model(self.model)
         self.acquisition_optimizer._set_acquisition_function(self.acquisition_function)
@@ -244,7 +245,7 @@ class Facade:
         # TODO: self.runhistory_encoder.set_success_states etc. for different intensifier?
 
     def _validate(self) -> None:
-        """Check if the composition is correct if there are dependencies, not necessarily """
+        """Check if the composition is correct if there are dependencies, not necessarily"""
         assert self.optimizer
 
         # Make sure the same acquisition function is used

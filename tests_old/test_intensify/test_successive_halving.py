@@ -12,7 +12,7 @@ from smac.cli.traj_logging import TrajLogger
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.intensification.successive_halving import (
     SuccessiveHalving,
-    _SuccessiveHalving,
+    SuccessiveHalvingWorker,
 )
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.utils.stats import Stats
@@ -89,7 +89,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(len(self.SH.intensifier_instances), 0)
 
         # Add an instance to check the _SH initialization
-        self.assertTrue(self.SH._add_new_instance(num_workers=1))
+        self.assertTrue(self.SH._add_new_instance(n_workers=1))
 
         # Parameters properly passed to _SH
         self.assertEqual(len(self.SH.intensifier_instances[0].inst_seed_pairs), 10)
@@ -175,7 +175,7 @@ class TestSuccessiveHalving(unittest.TestCase):
                 incumbent=None,
                 chooser=None,
                 run_history=self.rh,
-                num_workers=1,
+                n_workers=1,
             )
 
             # Regenerate challenger list
@@ -217,7 +217,7 @@ class TestSuccessiveHalving(unittest.TestCase):
                 incumbent=None,
                 chooser=None,
                 run_history=self.rh,
-                num_workers=2,
+                n_workers=2,
             )
 
             # Regenerate challenger list
@@ -254,25 +254,25 @@ class TestSuccessiveHalving(unittest.TestCase):
         # By default we do not create a _SH
         # test adding the first instance!
         self.assertEqual(len(self.SH.intensifier_instances), 0)
-        self.assertTrue(self.SH._add_new_instance(num_workers=1))
+        self.assertTrue(self.SH._add_new_instance(n_workers=1))
         self.assertEqual(len(self.SH.intensifier_instances), 1)
-        self.assertIsInstance(self.SH.intensifier_instances[0], _SuccessiveHalving)
+        self.assertIsInstance(self.SH.intensifier_instances[0], SuccessiveHalvingWorker)
         # A second call should not add a new _SH
-        self.assertFalse(self.SH._add_new_instance(num_workers=1))
+        self.assertFalse(self.SH._add_new_instance(n_workers=1))
 
         # We try with 2 _SH active
 
         # We effectively return true because we added a new _SH
-        self.assertTrue(self.SH._add_new_instance(num_workers=2))
+        self.assertTrue(self.SH._add_new_instance(n_workers=2))
 
         self.assertEqual(len(self.SH.intensifier_instances), 2)
-        self.assertIsInstance(self.SH.intensifier_instances[1], _SuccessiveHalving)
+        self.assertIsInstance(self.SH.intensifier_instances[1], SuccessiveHalvingWorker)
 
         # Trying to add a third one should return false
-        self.assertFalse(self.SH._add_new_instance(num_workers=2))
+        self.assertFalse(self.SH._add_new_instance(n_workers=2))
         self.assertEqual(len(self.SH.intensifier_instances), 2)
 
-    def _exhaust_run_and_get_incumbent(self, sh, rh, num_workers=2):
+    def _exhaust_run_and_get_incumbent(self, sh, rh, n_workers=2):
         """
         Runs all provided configs on all intensifier_instances and return the incumbent
         as a nice side effect runhistory/stats are properly filled
@@ -286,7 +286,7 @@ class TestSuccessiveHalving(unittest.TestCase):
                     incumbent=None,
                     chooser=None,
                     run_history=rh,
-                    num_workers=num_workers,
+                    n_workers=n_workers,
                 )
             except ValueError as e:
                 # Get configurations until you run out of them
@@ -326,7 +326,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         rh = RunHistory()
         stats = Stats(scenario=self.scen)
         stats.start_timing()
-        _SH = _SuccessiveHalving(
+        _SH = SuccessiveHalvingWorker(
             stats=stats,
             traj_logger=TrajLogger(output_dir=None, stats=stats),
             rng=np.random.RandomState(12345),
@@ -349,8 +349,8 @@ class TestSuccessiveHalving(unittest.TestCase):
         # Do the same for SH, but have multiple _SH in there
         # _add_new_instance returns true if it was able to add a new _SH
         # We call this method twice because we want 2 workers
-        self.assertTrue(self.SH._add_new_instance(num_workers=2))
-        self.assertTrue(self.SH._add_new_instance(num_workers=2))
+        self.assertTrue(self.SH._add_new_instance(n_workers=2))
+        self.assertTrue(self.SH._add_new_instance(n_workers=2))
         incumbent_psh, inc_perf_psh = self._exhaust_run_and_get_incumbent(self.SH, self.rh)
         self.assertEqual(incumbent, incumbent_psh)
 
@@ -417,7 +417,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         """
         test parameter initializations for successive halving - instance as budget
         """
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
@@ -442,7 +442,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         """
         test parameter initialiations for successive halving - real-valued budget
         """
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
@@ -466,7 +466,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         """
         test parameter initialiations for successive halving - real-valued budget, high initial budget
         """
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
@@ -496,7 +496,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
             ValueError,
             "requires parameters initial_budget and max_budget for intensification!",
         ):
-            _SuccessiveHalving(
+            SuccessiveHalvingWorker(
                 stats=self.stats,
                 traj_logger=TrajLogger(output_dir=None, stats=self.stats),
                 rng=np.random.RandomState(12345),
@@ -508,7 +508,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
 
         # eta < 1
         with self.assertRaisesRegex(ValueError, "eta must be greater than 1"):
-            _SuccessiveHalving(
+            SuccessiveHalvingWorker(
                 stats=self.stats,
                 traj_logger=TrajLogger(output_dir=None, stats=self.stats),
                 rng=np.random.RandomState(12345),
@@ -524,7 +524,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
             ValueError,
             "Max budget cannot be greater than the number of instance-seed pairs",
         ):
-            _SuccessiveHalving(
+            SuccessiveHalvingWorker(
                 stats=self.stats,
                 traj_logger=TrajLogger(output_dir=None, stats=self.stats),
                 rng=np.random.RandomState(12345),
@@ -541,7 +541,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         """
         test _top_k() for configs with same instance-seed-budget keys
         """
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=None,
             rng=np.random.RandomState(12345),
@@ -633,7 +633,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         """
         test _top_k() for configs with different instance-seed-budget keys
         """
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=None,
             rng=np.random.RandomState(12345),
@@ -670,7 +670,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         """
         test _top_k() for not enough configs to generate for the next budget
         """
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=None,
             rng=np.random.RandomState(12345),
@@ -704,13 +704,13 @@ class Test_SuccessiveHalving(unittest.TestCase):
         """
         test _top_k() for not enough configs to generate for the next budget
         """
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=None,
             run_obj_time=False,
             rng=np.random.RandomState(12345),
             eta=2,
-            num_initial_challengers=4,
+            n_initial_challengers=4,
             instances=[1],
             initial_budget=1,
             max_budget=10,
@@ -791,7 +791,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
 
         taf.runhistory = self.rh
 
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=None,
             rng=np.random.RandomState(12345),
@@ -876,7 +876,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         """
         test get_next_run for higher stages of SH iteration
         """
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=None,
             rng=np.random.RandomState(12345),
@@ -908,7 +908,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         """
         test update_stage - initializations for all tracking variables
         """
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=None,
             rng=np.random.RandomState(12345),
@@ -948,13 +948,13 @@ class Test_SuccessiveHalving(unittest.TestCase):
         self.assertIsInstance(intensifier.configs_to_run, list)
         self.assertEqual(len(intensifier.configs_to_run), 0)
 
-    @unittest.mock.patch.object(_SuccessiveHalving, "_top_k")
+    @unittest.mock.patch.object(SuccessiveHalvingWorker, "_top_k")
     def test_update_stage_2(self, top_k_mock):
         """
         test update_stage - everything good is in state do not advance
         """
 
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=None,
             rng=np.random.RandomState(12345),
@@ -986,7 +986,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         self.assertEqual(len(intensifier.success_challengers), 0)
         self.assertEqual(len(intensifier.do_not_advance_challengers), 0)
 
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=None,
             rng=np.random.RandomState(12345),
@@ -1031,7 +1031,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         taf = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
         taf.runhistory = self.rh
 
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
@@ -1106,7 +1106,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         taf = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime")
         taf.runhistory = self.rh
 
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
@@ -1167,7 +1167,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         self.assertEqual(inc, self.config1)
         self.assertEqual(list(self.rh.data.values())[2][2], StatusType.TIMEOUT)
 
-    @mock.patch.object(_SuccessiveHalving, "_top_k")
+    @mock.patch.object(SuccessiveHalvingWorker, "_top_k")
     def test_eval_challenger_capping(self, patch):
         """
         test eval_challenger with adaptive capping and all configurations capped/crashed
@@ -1189,7 +1189,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         )
         taf.runhistory = self.rh
 
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
@@ -1280,7 +1280,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         taf = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime")
         taf.runhistory = self.rh
 
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
@@ -1384,7 +1384,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         taf = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
         taf.runhistory = self.rh
 
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
@@ -1533,7 +1533,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         """
         test _compare_config for default incumbent selection design (highest budget so far)
         """
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=None,
             rng=np.random.RandomState(12345),
@@ -1629,7 +1629,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         self.assertEqual(inc, self.config3)
 
         # Test that the state is only based on the runhistory
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=None,
             rng=np.random.RandomState(12345),
@@ -1670,7 +1670,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         """
 
         # select best on any budget
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=None,
             rng=np.random.RandomState(12345),
@@ -1732,7 +1732,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         self.assertEqual(self.config1, inc)
 
         # select best on highest budget only
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=None,
             rng=np.random.RandomState(12345),
@@ -1808,7 +1808,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
 
         taf.runhistory = self.rh
         # select best on any budget
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=None,
             rng=np.random.RandomState(12345),
@@ -1955,7 +1955,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
 
         taf.runhistory = self.rh
         # select best on any budget
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=None,
             rng=np.random.RandomState(12345),
@@ -2051,7 +2051,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
 
         taf.runhistory = self.rh
         # select best on any budget
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=self.stats,
             traj_logger=None,
             rng=np.random.RandomState(12345),
@@ -2124,7 +2124,7 @@ class Test__SuccessiveHalving(unittest.TestCase):
         """
         Check computing budgets (only for non-instance cases)
         """
-        intensifier = _SuccessiveHalving(
+        intensifier = SuccessiveHalvingWorker(
             stats=None,
             traj_logger=None,
             rng=np.random.RandomState(12345),

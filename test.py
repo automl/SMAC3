@@ -1,26 +1,11 @@
-class B:
-    def __init__(self, text) -> None:
-        self.haha2 = text
+import numpy as np
 
-    pass
+seed = 0
 
-
-class C:
-    def __init__(self) -> None:
-        self.haha = "yooo"
-
-    def yes(self):
-        return self.blub
+rng = np.random.RandomState(seed)
 
 
-class A(B, C):
-    def __init__(self) -> None:
-        # super(C).__init__()
-        B.__init__(self, "hey")
-        C.__init__(self)
-        self.blub = "YES"
+blub = ["a", "b", "c"]
 
-
-classA = A()
-print(classA.yes())
-print(classA.haha)
+rng.shuffle(blub)
+print(blub)

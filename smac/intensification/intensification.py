@@ -130,7 +130,7 @@ class Intensifier(AbstractIntensifier):
 
         if scenario.deterministic:
             if min_challenger != 1:
-                self.logger.info("The number of minimal challengers is set to one for deterministic algorithms.")
+                logger.info("The number of minimal challengers is set to one for deterministic algorithms.")
 
             min_challenger = 1
 
@@ -179,7 +179,7 @@ class Intensifier(AbstractIntensifier):
         ask: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
-        num_workers: int = 1,
+        n_workers: int = 1,
     ) -> tuple[RunInfoIntent, RunInfo]:
         """This procedure is in charge of generating a RunInfo object to comply with lines 7 (in
         case stage is stage==RUN_INCUMBENT) or line 12 (In case of stage==RUN_CHALLENGER)
@@ -207,7 +207,7 @@ class Intensifier(AbstractIntensifier):
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
-        num_workers: int
+        n_workers: int
             the maximum number of workers available
             at a given time.
 
@@ -218,7 +218,7 @@ class Intensifier(AbstractIntensifier):
         run_info: RunInfo
             An object that encapsulates necessary information for a config run
         """
-        if num_workers > 1:
+        if n_workers > 1:
             raise ValueError("The selected intensifier does not support more than 1 worker.")
 
         # If this function is called, it means the iteration is
@@ -786,7 +786,7 @@ class Intensifier(AbstractIntensifier):
         missing_runs = sorted(inc_inst_seeds - chall_inst_seeds)
 
         # Line 11
-        self.rng.shuffle(missing_runs)
+        self.rng.shuffle(missing_runs)  # type: ignore
         if N < 0:
             raise ValueError("Argument N must not be smaller than zero, but is %s" % str(N))
 

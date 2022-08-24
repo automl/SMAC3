@@ -134,7 +134,7 @@ class TestParallelScheduler(unittest.TestCase):
                 chooser=None,
                 run_history=None,
                 repeat_configs=False,
-                num_workers=1,
+                n_workers=1,
             )
             self.assertEqual(intent, RunInfoIntent.WAIT)
 
@@ -178,7 +178,7 @@ class TestParallelScheduler(unittest.TestCase):
                 chooser=None,
                 run_history=None,
                 repeat_configs=False,
-                num_workers=1,
+                n_workers=1,
             )
             self.assertEqual(len(scheduler.intensifier_instances), 2)
             self.assertEqual(intent, RunInfoIntent.RUN)

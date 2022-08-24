@@ -16,7 +16,7 @@ def intensifier(make_scenario, make_stats, configspace_small):
     scenario = make_scenario(configspace_small)
     stats = make_stats(scenario)
     intensifier = SimpleIntensifier(scenario=scenario)
-    intensifier._set_stats(stats)
+    intensifier.stats = stats
 
     return intensifier
 
@@ -35,7 +35,7 @@ def test_get_next_run(intensifier, runhistory, configs):
         challengers=[configs[0]],
         incumbent=None,
         runhistory=runhistory,
-        num_workers=1,
+        n_workers=1,
         ask=None,
     )
     assert intent == RunInfoIntent.RUN
@@ -64,7 +64,7 @@ def test_get_next_run_waits_if_no_workers(intensifier, runhistory, configs):
         challengers=[configs[0], configs[1]],
         incumbent=None,
         runhistory=runhistory,
-        num_workers=1,
+        n_workers=1,
         ask=None,
     )
 
@@ -89,7 +89,7 @@ def test_get_next_run_waits_if_no_workers(intensifier, runhistory, configs):
         challengers=[configs[1]],
         incumbent=None,
         runhistory=runhistory,
-        num_workers=1,
+        n_workers=1,
         ask=None,
     )
     assert intent == RunInfoIntent.WAIT
@@ -113,7 +113,7 @@ def test_process_results(intensifier, runhistory, configs):
         challengers=[configs[0], configs[1]],
         incumbent=None,
         runhistory=runhistory,
-        num_workers=1,
+        n_workers=1,
         ask=None,
     )
 

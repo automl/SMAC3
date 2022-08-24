@@ -99,7 +99,6 @@ class Scenario:
     # Algorithm Configuration
     instances: list[str] | None = None
     instance_features: dict[str, list[float]] | None = None
-    instance_order: str | None = "shuffle_once"
 
     # Budgets
     min_budget: float | None = None
@@ -117,7 +116,7 @@ class Scenario:
             object.__setattr__(self, "seed", seed)
 
         # Assert correct instance order
-        assert self.instance_order in ["shuffle", "shuffle_once", None], "Invalid instance order."
+        # assert self.instance_order in ["shuffle", "shuffle_once", None], "Invalid instance order."
 
         # Change directory wrt name and seed
         self._change_output_directory()

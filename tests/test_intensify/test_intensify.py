@@ -181,7 +181,7 @@ def test_race_challenger_large_blocked_seed(make_scenario, make_stats, configspa
     scenario = make_scenario(configspace_small, use_instances=True, deterministic=False)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
-    intensifier._set_stats(stats)
+    intensifier.stats = stats
     target_algorithm = TargetAlgorithmRunner(target, scenario, stats)
     configs = configspace_small.sample_configuration(3)
 
@@ -249,7 +249,7 @@ def test_add_incumbent(make_scenario, make_stats, configspace_small, runhistory)
     scenario = make_scenario(configspace_small, use_instances=True, deterministic=True)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
-    intensifier._set_stats(stats)
+    intensifier.stats = stats
     target_algorithm = TargetAlgorithmRunner(target, scenario, stats)
     configs = configspace_small.sample_configuration(3)
 
@@ -306,7 +306,7 @@ def test_add_incumbent_non_deterministic(make_scenario, make_stats, configspace_
     scenario = make_scenario(configspace_small, use_instances=True, deterministic=False)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
-    intensifier._set_stats(stats)
+    intensifier.stats = stats
     target_algorithm = TargetAlgorithmRunner(target, scenario, stats)
     configs = configspace_small.sample_configuration(3)
 
@@ -374,7 +374,7 @@ def testget_next_challenger(make_scenario, make_stats, configspace_small, runhis
     scenario = make_scenario(configspace_small, use_instances=True, deterministic=True)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
-    intensifier._set_stats(stats)
+    intensifier.stats = stats
     configs = configspace_small.sample_configuration(3)
 
     intensifier.stage = IntensifierStage.RUN_CHALLENGER
@@ -406,7 +406,7 @@ def test_generate_challenger(make_scenario, make_stats, configspace_small, runhi
     scenario = make_scenario(configspace_small, use_instances=True, deterministic=True)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
-    intensifier._set_stats(stats)
+    intensifier.stats = stats
     configs = configspace_small.sample_configuration(3)
 
     gen = intensifier._generate_challengers(challengers=[configs[0], configs[1]], ask=None)
@@ -440,7 +440,7 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=1, deterministic=True)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario, race_against=None, run_limit=1)
-    intensifier._set_stats(stats)
+    intensifier.stats = stats
     target_algorithm = TargetAlgorithmRunner(target, scenario, stats)
     configs = configspace_small.sample_configuration(20)
 
@@ -585,7 +585,7 @@ def test_evaluate_challenger_2(make_scenario, make_stats, configspace_small, run
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=1, deterministic=True)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario, race_against=None, run_limit=1)
-    intensifier._set_stats(stats)
+    intensifier.stats = stats
     target_algorithm = TargetAlgorithmRunner(target, scenario, stats)
     configs = configspace_small.sample_configuration(20)
 
@@ -637,7 +637,7 @@ def test_no_new_intensification_wo_challenger_run(make_scenario, make_stats, con
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=1, deterministic=True)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario, race_against=None, run_limit=1, min_challenger=1)
-    intensifier._set_stats(stats)
+    intensifier.stats = stats
     target_algorithm = TargetAlgorithmRunner(target, scenario, stats)
     configs = configspace_small.sample_configuration(20)
 

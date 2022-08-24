@@ -10,8 +10,8 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
 from smac.intensification import RunInfoIntent
-from smac.intensification.hyperband import Hyperband, _Hyperband
-from smac.intensification.successive_halving import _SuccessiveHalving
+from smac.intensification.hyperband import Hyperband, HyperbandWorker
+from smac.intensification.successive_halving import SuccessiveHalvingWorker
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.runner.runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
@@ -79,7 +79,7 @@ class TestHyperband(unittest.TestCase):
         self.assertEqual(len(self.HB.intensifier_instances), 0)
 
         # Add an instance to check the_HB initialization
-        self.assertTrue(self.HB._add_new_instance(num_workers=1))
+        self.assertTrue(self.HB._add_new_instance(n_workers=1))
 
         # Some default init
         self.assertEqual(self.HB.intensifier_instances[0].hb_iters, 0)
@@ -172,7 +172,7 @@ class TestHyperband(unittest.TestCase):
                 incumbent=None,
                 chooser=None,
                 run_history=self.rh,
-                num_workers=1,
+                n_workers=1,
             )
 
             # Regenerate challenger list
@@ -230,7 +230,7 @@ class TestHyperband(unittest.TestCase):
                 incumbent=None,
                 chooser=None,
                 run_history=self.rh,
-                num_workers=2,
+                n_workers=2,
             )
             run_infos.append(run_info)
 
@@ -285,7 +285,7 @@ class TestHyperband(unittest.TestCase):
             incumbent=None,
             chooser=None,
             run_history=self.rh,
-            num_workers=2,
+            n_workers=2,
         )
         self.assertEqual(intent, RunInfoIntent.WAIT)
 
@@ -295,25 +295,25 @@ class TestHyperband(unittest.TestCase):
         # By default we do not create a_HB
         # test adding the first instance!
         self.assertEqual(len(self.HB.intensifier_instances), 0)
-        self.assertTrue(self.HB._add_new_instance(num_workers=1))
+        self.assertTrue(self.HB._add_new_instance(n_workers=1))
         self.assertEqual(len(self.HB.intensifier_instances), 1)
-        self.assertIsInstance(self.HB.intensifier_instances[0], _Hyperband)
+        self.assertIsInstance(self.HB.intensifier_instances[0], HyperbandWorker)
         # A second call should not add a new_HB instance
-        self.assertFalse(self.HB._add_new_instance(num_workers=1))
+        self.assertFalse(self.HB._add_new_instance(n_workers=1))
 
         # We try with 2_HB instance active
 
         # We effectively return true because we added a new_HB instance
-        self.assertTrue(self.HB._add_new_instance(num_workers=2))
+        self.assertTrue(self.HB._add_new_instance(n_workers=2))
 
         self.assertEqual(len(self.HB.intensifier_instances), 2)
-        self.assertIsInstance(self.HB.intensifier_instances[1], _Hyperband)
+        self.assertIsInstance(self.HB.intensifier_instances[1], HyperbandWorker)
 
         # Trying to add a third one should return false
-        self.assertFalse(self.HB._add_new_instance(num_workers=2))
+        self.assertFalse(self.HB._add_new_instance(n_workers=2))
         self.assertEqual(len(self.HB.intensifier_instances), 2)
 
-    def _exhaust_run_and_get_incumbent(self, sh, rh, num_workers=2):
+    def _exhaust_run_and_get_incumbent(self, sh, rh, n_workers=2):
         """
         Runs all provided configs on all intensifier_instances and return the incumbent
         as a nice side effect runhistory/stats are properly filled
@@ -327,7 +327,7 @@ class TestHyperband(unittest.TestCase):
                     incumbent=None,
                     chooser=None,
                     run_history=rh,
-                    num_workers=num_workers,
+                    n_workers=n_workers,
                 )
             except ValueError as e:
                 # Get configurations until you run out of them
@@ -367,7 +367,7 @@ class TestHyperband(unittest.TestCase):
         rh = RunHistory()
         stats = Stats(scenario=self.scen)
         stats.start_timing()
-        _HB = _Hyperband(
+        _HB = HyperbandWorker(
             stats=stats,
             traj_logger=TrajLogger(output_dir=None, stats=stats),
             rng=np.random.RandomState(12345),
@@ -378,7 +378,7 @@ class TestHyperband(unittest.TestCase):
             max_budget=5,
             eta=2,
         )
-        incumbent, inc_perf = self._exhaust_run_and_get_incumbent(_HB, rh, num_workers=1)
+        incumbent, inc_perf = self._exhaust_run_and_get_incumbent(_HB, rh, n_workers=1)
 
         # Just to make sure nothing has changed from the_HB instance side to make
         # this check invalid:
@@ -387,7 +387,7 @@ class TestHyperband(unittest.TestCase):
         self.assertEqual(inc_perf, 7.0)
 
         # Do the same for HB, but have multiple_HB instance in there
-        # This_HB instance will be created via num_workers==2
+        # This_HB instance will be created via n_workers==2
         # in self._exhaust_run_and_get_incumbent
         HB = Hyperband(
             stats=self.stats,
@@ -435,7 +435,7 @@ class Test_Hyperband(unittest.TestCase):
         """
         test initialization of all parameters and tracking variables
         """
-        intensifier = _Hyperband(
+        intensifier = HyperbandWorker(
             stats=self.stats,
             traj_logger=None,
             rng=np.random.RandomState(12345),
@@ -451,7 +451,7 @@ class Test_Hyperband(unittest.TestCase):
         self.assertEqual(intensifier.s, 3)
         self.assertEqual(intensifier.s_max, 3)
         self.assertEqual(intensifier.hb_iters, 0)
-        self.assertIsInstance(intensifier.sh_intensifier, _SuccessiveHalving)
+        self.assertIsInstance(intensifier.sh_intensifier, SuccessiveHalvingWorker)
         self.assertEqual(intensifier.sh_intensifier.initial_budget, 0.125)
         self.assertEqual(intensifier.sh_intensifier.n_configs_in_stage, [8.0, 4.0, 2.0, 1.0])
 
@@ -485,7 +485,7 @@ class Test_Hyperband(unittest.TestCase):
         taf = TargetAlgorithmRunner(ta=target, stats=self.stats)
         taf.runhistory = self.rh
 
-        intensifier = _Hyperband(
+        intensifier = HyperbandWorker(
             stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
@@ -556,7 +556,7 @@ class Test__Hyperband(unittest.TestCase):
         """
         Check computing budgets (only for non-instance cases)
         """
-        intensifier = _Hyperband(
+        intensifier = HyperbandWorker(
             stats=None,
             traj_logger=None,
             rng=np.random.RandomState(12345),
@@ -605,7 +605,7 @@ class Test__Hyperband(unittest.TestCase):
         ]
 
         for minb, maxb, eta, n_configs_in_stage, all_budgets in to_check:
-            intensifier = _Hyperband(
+            intensifier = HyperbandWorker(
                 stats=None,
                 traj_logger=None,
                 rng=np.random.RandomState(12345),

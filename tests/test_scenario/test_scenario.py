@@ -47,7 +47,6 @@ def scenario5(configspace: ConfigurationSpace) -> Scenario:
         seed=5,
         instances=["i1", "i2", "i3"],
         instance_features={"i1": [1, 2, 3], "i2": [4, 5, 6], "i3": [7, 8, 9]},
-        instance_order="shuffle_once",
     )
 
 

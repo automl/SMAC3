@@ -11,7 +11,7 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac.intensification.successive_halving import (
     SuccessiveHalving,
-    _SuccessiveHalving,
+    SuccessiveHalvingWorker,
 )
 from smac.runhistory import RunHistory, RunInfo, RunValue, RunInfoIntent
 from smac.runner.runner import StatusType
@@ -99,7 +99,7 @@ def _SH(make_scenario, make_stats, configspace_small):
         max_budget=5,
     )
     stats = make_stats(scenario)
-    intensifier = _SuccessiveHalving(scenario=scenario, eta=2, n_seeds=2)
+    intensifier = SuccessiveHalvingWorker(scenario=scenario, eta=2, n_seeds=2)
     intensifier.stats = stats
 
     return intensifier
@@ -107,7 +107,16 @@ def _SH(make_scenario, make_stats, configspace_small):
 
 @pytest.fixture
 def make_private_SH(make_scenario, make_stats, configspace_small):
-    def _make(deterministic=False, min_budget=2, max_budget=5, eta=2, n_instances=3, n_seeds=1, min_challenger=1):
+    def _make(
+        deterministic=False,
+        min_budget=2,
+        max_budget=5,
+        eta=2,
+        n_instances=3,
+        n_seeds=1,
+        min_challenger=1,
+        instance_order="shuffle_once",
+    ):
         scenario = make_scenario(
             configspace_small,
             use_instances=True,
@@ -117,10 +126,24 @@ def make_private_SH(make_scenario, make_stats, configspace_small):
             max_budget=max_budget,
         )
         stats = make_stats(scenario)
-        intensifier = _SuccessiveHalving(scenario=scenario, eta=eta, n_seeds=n_seeds, min_challenger=1)
+        intensifier = SuccessiveHalvingWorker(
+            scenario=scenario,
+            instance_order=instance_order,
+            min_challenger=min_challenger,
+            eta=eta,
+            n_seeds=n_seeds,
+        )
         intensifier.stats = stats
 
         return intensifier
+
+    return _make
+
+
+@pytest.fixture
+def make_target_algorithm():
+    def _make(scenario, stats, func):
+        return TargetAlgorithmRunner(target_algorithm=func, scenario=scenario, stats=stats)
 
     return _make
 
@@ -138,7 +161,7 @@ def test_init(SH):
     assert len(SH.intensifier_instances) == 0
 
     # Add an instance to check the _SH initialization
-    assert SH._add_new_instance(num_workers=1)
+    assert SH._add_new_instance(n_workers=1)
 
     # Parameters properly passed to _SH
     assert len(SH.intensifier_instances[0].instance_seed_pairs) == 6
@@ -217,7 +240,7 @@ def test_get_next_run_single_SH(SH, runhistory, configs):
             incumbent=None,
             ask=None,
             runhistory=runhistory,
-            num_workers=1,
+            n_workers=1,
         )
 
         # Regenerate challenger list
@@ -260,7 +283,7 @@ def test_get_next_run_dual_SH(SH, runhistory, configs):
             incumbent=None,
             ask=None,
             runhistory=runhistory,
-            num_workers=2,
+            n_workers=2,
         )
 
         # Regenerate challenger list
@@ -298,26 +321,26 @@ def test_add_new_instance(SH):
     # By default we do not create a _SH
     # test adding the first instance!
     assert len(SH.intensifier_instances) == 0
-    assert SH._add_new_instance(num_workers=1)
+    assert SH._add_new_instance(n_workers=1)
     assert len(SH.intensifier_instances) == 1
-    assert isinstance(SH.intensifier_instances[0], _SuccessiveHalving)
+    assert isinstance(SH.intensifier_instances[0], SuccessiveHalvingWorker)
     # A second call should not add a new _SH
-    assert not SH._add_new_instance(num_workers=1)
+    assert not SH._add_new_instance(n_workers=1)
 
     # We try with 2 _SH active
 
     # We effectively return true because we added a new _SH
-    assert SH._add_new_instance(num_workers=2)
+    assert SH._add_new_instance(n_workers=2)
 
     assert len(SH.intensifier_instances) == 2
-    assert isinstance(SH.intensifier_instances[1], _SuccessiveHalving)
+    assert isinstance(SH.intensifier_instances[1], SuccessiveHalvingWorker)
 
     # Trying to add a third one should return false
-    assert not SH._add_new_instance(num_workers=2)
+    assert not SH._add_new_instance(n_workers=2)
     assert len(SH.intensifier_instances) == 2
 
 
-def _exhaust_run_and_get_incumbent(SH, runhistory, configs, num_workers=2):
+def _exhaust_run_and_get_incumbent(SH, runhistory, configs, n_workers=2):
     """
     Runs all provided configs on all intensifier_instances and return the incumbent
     as a nice side effect runhistory/stats are properly filled
@@ -332,7 +355,7 @@ def _exhaust_run_and_get_incumbent(SH, runhistory, configs, num_workers=2):
                 incumbent=None,
                 ask=None,
                 runhistory=runhistory,
-                num_workers=num_workers,
+                n_workers=n_workers,
             )
         except ValueError as e:
             # Get configurations until you run out of them
@@ -383,8 +406,8 @@ def test_parallel_same_as_serial_SH(SH, _SH, configs):
     # Do the same for SH, but have multiple _SH in there
     # _add_new_instance returns true if it was able to add a new _SH
     # We call this method twice because we want 2 workers
-    assert SH._add_new_instance(num_workers=2)
-    assert SH._add_new_instance(num_workers=2)
+    assert SH._add_new_instance(n_workers=2)
+    assert SH._add_new_instance(n_workers=2)
     incumbent_psh, inc_perf_psh = _exhaust_run_and_get_incumbent(SH, runhistory2, configs)
     assert incumbent == incumbent_psh
 
@@ -646,7 +669,7 @@ def test_top_k_3(make_private_SH, runhistory, configs):
 
 def test_top_k_4(make_private_SH, runhistory, configs):
     """Test _top_k() for not enough configs to generate for the next budget"""
-    intensifier = make_private_SH(n_instances=1, min_budget=1, max_budget=10, n_seeds=1, eta=2, min_challenger=4)
+    intensifier = make_private_SH(n_instances=1, min_budget=1, max_budget=10, n_seeds=1, eta=2, min_challenger=1)
     config1 = configs[0]
     config2 = configs[1]
     config3 = configs[2]
@@ -698,7 +721,7 @@ def test_top_k_4(make_private_SH, runhistory, configs):
     intensifier.fail_challengers.add(config3)
     intensifier.fail_challengers.add(config4)
     intensifier._update_stage(runhistory)
-    assert intensifier.fail_chal_offset == 3  # we miss three challenger for this round
+    assert intensifier.fail_chal_offset == 3  # We miss three challenger for this round
 
     configs = intensifier._top_k(configs=[config1], k=2, runhistory=runhistory)
     assert configs == [config1]
@@ -912,23 +935,24 @@ def test_update_stage_2(make_private_SH, runhistory, configs):
 
     # top_k_mock.return_value = []
     intensifier.return_value = []
+'''
 
 
-
-def test_evaluate_challenger_1(self):
-    """
-    test evaluate_challenger with quality objective & real-valued budget
-    """
+def test_evaluate_challenger_1(make_private_SH, make_target_algorithm, runhistory, configs):
+    """Test evaluate_challenger with quality objective & real-valued budget."""
 
     def target(x: Configuration, instance: str, seed: int, budget: float):
         return 0.1 * budget
 
-    target_algorithm = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=stats, run_obj="quality")
-    target_algorithm.runhistory = rh
+    config1 = configs[0]
+    config2 = configs[1]
+    config3 = configs[2]
 
-    # instances = [None]??? 
+    # instances = [None]???
     intensifier = make_private_SH(deterministic=True, n_instances=0, min_budget=0.25, max_budget=0.5, eta=2)
     intensifier._update_stage(runhistory=None)
+
+    target_algorithm = make_target_algorithm(intensifier.scenario, intensifier.stats, target)
 
     runhistory.add(
         config=config1,
@@ -964,7 +988,7 @@ def test_evaluate_challenger_1(self):
         incumbent=config1,
         runhistory=runhistory,
     )
-    result = evaluate_challenger(run_info, target_algorithm, stats, rh)
+    run_value = evaluate_challenger(run_info, target_algorithm, target_algorithm.stats, runhistory)
     inc, inc_value = intensifier.process_results(
         run_info=run_info,
         incumbent=config1,
@@ -973,75 +997,13 @@ def test_evaluate_challenger_1(self):
         run_value=run_value,
     )
 
-    assert inc, config2)
-    assert inc_value, 0.05)
-    assert list(runhistory.data.keys())[-1][0], runhistory.config_ids[config2])
-    assert stats.inc_changed, 1)
-
-def test_evaluate_challenger_2(self):
-    """
-    test evaluate_challenger with runtime objective and adaptive capping
-    """
-
-    def target(x: Configuration, instance: str):
-        if x["a"] == 100 or instance == 2:
-            time.sleep(1.5)
-        return (x["a"] + 1) / 1000.0
-
-    target_algorithm = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=stats, run_obj="runtime")
-    target_algorithm.runhistory = rh
+    assert inc == config2
+    assert inc_value == 0.05
+    assert list(runhistory.data.keys())[-1].config_id == runhistory.config_ids[config2]
+    assert target_algorithm.stats.incumbent_changed == 1
 
 
-    intensifier = make_private_SH(deterministic=True, n_instances=2, min_budget=1, max_budget=2, eta=2, instance_order=None)
-
-    # config1 should be executed successfully and selected as incumbent
-    intent, run_info = intensifier.get_next_run(
-        challengers=[config1],
-        ask=None,
-        incumbent=None,
-        runhistory=runhistory,
-    )
-    result = evaluate_challenger(run_info, target_algorithm, stats, rh)
-    inc, inc_value = intensifier.process_results(
-        run_info=run_info,
-        incumbent=None,
-        runhistory=runhistory,
-        time_bound=np.inf,
-        run_value=run_value,
-    )
-    assert run_info.config, config1)
-    assert stats.inc_changed, 1)
-
-    # config2 should be capped and config1 should still be the incumbent
-
-    intent, run_info = intensifier.get_next_run(
-        challengers=[config2], ask=None, incumbent=inc, runhistory=runhistory
-    )
-    result = evaluate_challenger(run_info, target_algorithm, stats, rh)
-    inc, inc_value = intensifier.process_results(
-        run_info=run_info,
-        incumbent=inc,
-        runhistory=runhistory,
-        time_bound=np.inf,
-        run_value=run_value,
-    )
-    assert inc, config1)
-    assert stats.inc_changed, 1)
-    assert list(runhistory.data.values())[1][2], StatusType.CAPPED)
-
-    # config1 is selected for the next stage and allowed to timeout since this is the 1st run for this instance
-    intent, run_info = intensifier.get_next_run(challengers=[], ask=None, incumbent=inc, runhistory=runhistory)
-    result = evaluate_challenger(run_info, target_algorithm, stats, rh)
-    inc, inc_value = intensifier.process_results(
-        run_info=run_info,
-        incumbent=inc,
-        runhistory=runhistory,
-        time_bound=np.inf,
-        run_value=run_value,
-    )
-    assert inc, config1)
-    assert list(runhistory.data.values())[2][2], StatusType.TIMEOUT)
-
+'''
 @mock.patch.object(_SuccessiveHalving, "_top_k")
 def test_evaluate_challenger_capping(self, patch):
     """
@@ -1069,7 +1031,6 @@ def test_evaluate_challenger_capping(self, patch):
         traj_logger=TrajLogger(output_dir=None, stats=stats),
         rng=np.random.RandomState(12345),
         deterministic=True,
-        cutoff=1,
         instances=[1, 2],
         min_budget=1,
         max_budget=2,
@@ -1142,138 +1103,43 @@ def test_evaluate_challenger_capping(self, patch):
             runhistory=runhistory,
         )
 
-def test_evaluate_challenger_capping_2(self):
-    """
-    test evaluate_challenger for adaptive capping with all but one configuration capped
-    """
+'''
+'''
 
-    def target(x):
-        if x["a"] + x["b"] > 0:
-            time.sleep(1.5)
-        return x["a"]
-
-    target_algorithm = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=stats, run_obj="runtime")
-    target_algorithm.runhistory = rh
-
-    intensifier = _SuccessiveHalving(
-        stats=stats,
-        traj_logger=TrajLogger(output_dir=None, stats=stats),
-        rng=np.random.RandomState(12345),
-        deterministic=False,
-        cutoff=1,
-        instances=[1, 2],
-        n_seeds=2,
-        min_budget=1,
-        max_budget=4,
-        eta=2,
-        instance_order=None,
-    )
-
-    # first configuration run
-    intent, run_info = intensifier.get_next_run(
-        challengers=[config4],
-        ask=None,
-        incumbent=None,
-        runhistory=runhistory,
-    )
-    result = evaluate_challenger(run_info, target_algorithm, stats, rh)
-    inc, inc_value = intensifier.process_results(
-        run_info=run_info,
-        incumbent=None,
-        runhistory=runhistory,
-        time_bound=np.inf,
-        run_value=run_value,
-    )
-    assert inc, config4)
-
-    # remaining 3 runs should be capped
-    for i in [config1, config2, config3]:
-        intent, run_info = intensifier.get_next_run(
-            challengers=[i], ask=None, incumbent=inc, runhistory=runhistory
-        )
-        result = evaluate_challenger(run_info, target_algorithm, stats, rh)
-        inc, inc_value = intensifier.process_results(
-            run_info=run_info,
-            incumbent=inc,
-            runhistory=runhistory,
-            time_bound=np.inf,
-            run_value=run_value,
-        )
-
-    assert inc, config4)
-    assert list(runhistory.data.values())[1][2], StatusType.CAPPED)
-    assert list(runhistory.data.values())[2][2], StatusType.CAPPED)
-    assert list(runhistory.data.values())[3][2], StatusType.CAPPED)
-    assert intensifier.stage, 1)
-    assert intensifier.fail_chal_offset, 1)  # 2 configs expected, but 1 failure
-
-    # run next stage - should run only 1 configuration since other 3 were capped
-    # 1 runs for config1
-    intent, run_info = intensifier.get_next_run(challengers=[], ask=None, incumbent=inc, runhistory=runhistory)
-    assert run_info.config, config4)
-    result = evaluate_challenger(run_info, target_algorithm, stats, rh)
-    inc, inc_value = intensifier.process_results(
-        run_info=run_info,
-        incumbent=inc,
-        runhistory=runhistory,
-        time_bound=np.inf,
-        run_value=run_value,
-    )
-    assert intensifier.stage, 2)
-
-    # run next stage with only config1
-    # should go to next iteration since no more configurations left
-    for _ in range(2):
-        intent, run_info = intensifier.get_next_run(
-            challengers=[], ask=None, incumbent=inc, runhistory=runhistory
-        )
-        assert run_info.config, config4)
-        result = evaluate_challenger(run_info, target_algorithm, stats, rh)
-        inc, inc_value = intensifier.process_results(
-            run_info=run_info,
-            incumbent=inc,
-            runhistory=runhistory,
-            time_bound=np.inf,
-            run_value=run_value,
-        )
-
-    assert inc, config4)
-    assert 
-        len(runhistory.get_runs_for_config(config4, only_max_observed_budget=True)),
-        4,
-    )
-    assert intensifier.sh_iters, 1)
-    assert intensifier.stage, 0)
-
-    with pytest.raises(ValueError, "No configurations/chooser provided."):
-        intensifier.get_next_run(challengers=[], ask=None, incumbent=inc, runhistory=runhistory)
-
-def test_evaluate_challenger_3(self):
-    """
-    test evaluate_challenger for updating to next stage and shuffling instance order every run
-    """
+def test_evaluate_challenger_3(make_private_SH, make_target_algorithm, runhistory, configs):
+    """Test evaluate_challenger for updating to next stage and shuffling instance order every run."""
 
     def target(x: Configuration, instance: str):
         return (x["a"] + int(instance)) / 1000.0
 
-    target_algorithm = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=stats, run_obj="quality")
-    target_algorithm.runhistory = rh
+    config1 = configs[0]
+    config2 = configs[1]
+    config3 = configs[2]
 
-    intensifier = _SuccessiveHalving(
-        stats=stats,
-        traj_logger=TrajLogger(output_dir=None, stats=stats),
-        rng=np.random.RandomState(12345),
-        run_obj_time=False,
-        instances=[0, 1],
-        instance_order="shuffle",
-        eta=2,
+    # instances = [None]???
+    intensifier = make_private_SH(
         deterministic=True,
-        cutoff=1,
+        n_instances=2,
+        min_budget=None,
+        max_budget=None,
+        eta=2,
+        # instance_order="shuffle",
     )
+    # intensifier._update_stage(runhistory=None)
+    # intensifier._update_stage(runhistory=runhistory)
 
-    intensifier._update_stage(runhistory=runhistory)
+    blub = ["a", "b", "c", "d"]
 
-    assert intensifier.instance_seed_pairs, [(0, 0), (1, 0)])
+    intensifier.rng.shuffle(blub)
+    print(intensifier.instance_seed_pairs)
+    assert 1 == 2
+
+    print(intensifier.rng.seed)
+    print(intensifier.scenario.seed)
+
+    # target_algorithm = make_target_algorithm(intensifier.scenario, intensifier.stats, target)
+    assert intensifier.instance_seed_pairs == [("i1", 0), ("i2", 0)]
+    return
 
     intent, run_info = intensifier.get_next_run(
         challengers=[config1],
@@ -1293,7 +1159,7 @@ def test_evaluate_challenger_3(self):
         status=StatusType.RUNNING,
         additional_info=None,
     )
-    result = evaluate_challenger(run_info, target_algorithm, stats, rh, force_update=True)
+    run_value = evaluate_challenger(run_info, target_algorithm, target_algorithm.stats, runhistory, force_update=True)
     inc, inc_value = intensifier.process_results(
         run_info=run_info,
         incumbent=None,
@@ -1302,17 +1168,12 @@ def test_evaluate_challenger_3(self):
         run_value=run_value,
     )
 
-    assert inc, config1)
-    assert 
-        len(runhistory.get_runs_for_config(config1, only_max_observed_budget=True)),
-        1,
-    )
-    assert intensifier.configs_to_run, [])
-    assert intensifier.stage, 0)
+    assert inc == config1
+    assert len(runhistory.get_runs_for_config(config1, only_max_observed_budget=True)) == 1
+    assert intensifier.configs_to_run == []
+    assert intensifier.stage == 0
 
-    intent, run_info = intensifier.get_next_run(
-        challengers=[config2], ask=None, incumbent=inc, runhistory=runhistory
-    )
+    intent, run_info = intensifier.get_next_run(challengers=[config2], ask=None, incumbent=inc, runhistory=runhistory)
     runhistory.add(
         config=run_info.config,
         instance=run_info.instance,
@@ -1323,7 +1184,7 @@ def test_evaluate_challenger_3(self):
         status=StatusType.RUNNING,
         additional_info=None,
     )
-    result = evaluate_challenger(run_info, target_algorithm, stats, rh, force_update=True)
+    run_value = evaluate_challenger(run_info, target_algorithm, target_algorithm.stats, runhistory, force_update=True)
     inc, inc_value = intensifier.process_results(
         run_info=run_info,
         incumbent=inc,
@@ -1332,17 +1193,14 @@ def test_evaluate_challenger_3(self):
         run_value=run_value,
     )
 
-    assert inc, config1)
-    assert 
-        len(runhistory.get_runs_for_config(config2, only_max_observed_budget=True)),
-        1,
-    )
-    assert intensifier.configs_to_run, [config1])  # Incumbent is promoted to the next stage
-    assert intensifier.stage, 1)
+    assert inc == config1
+    assert len(runhistory.get_runs_for_config(config2, only_max_observed_budget=True)) == 1
+    # assert intensifier.configs_to_run == [config1]  # Incumbent is promoted to the next stage
+    assert intensifier.stage == 1
 
-    intent, run_info = intensifier.get_next_run(
-        challengers=[config3], ask=None, incumbent=inc, runhistory=runhistory
-    )
+    return
+
+    intent, run_info = intensifier.get_next_run(challengers=[config3], ask=None, incumbent=inc, runhistory=runhistory)
     runhistory.add(
         config=run_info.config,
         instance=run_info.instance,
@@ -1353,7 +1211,7 @@ def test_evaluate_challenger_3(self):
         status=StatusType.RUNNING,
         additional_info=None,
     )
-    result = evaluate_challenger(run_info, target_algorithm, stats, rh, force_update=True)
+    run_value = evaluate_challenger(run_info, target_algorithm, target_algorithm.stats, runhistory, force_update=True)
     inc, inc_value = intensifier.process_results(
         run_info=run_info,
         incumbent=inc,
@@ -1362,23 +1220,18 @@ def test_evaluate_challenger_3(self):
         run_value=run_value,
     )
 
-    assert inc, config1)
+    assert inc == config1
 
-    assert 
-        len(runhistory.get_runs_for_config(config1, only_max_observed_budget=True)),
-        2,
-    )
-    assert intensifier.sh_iters, 1)
-    assert stats.inc_changed, 1)
+    assert len(runhistory.get_runs_for_config(config1, only_max_observed_budget=True)) == 2
+    assert intensifier.sh_iters == 1
+    assert target_algorithm.stats.incumbent_changed == 1
 
     # For the 2nd SH iteration, we should still be able to run the old configurations again
     # since instance order is "shuffle"
 
-    assert intensifier.instance_seed_pairs, [(1, 0), (0, 0)])
+    assert intensifier.instance_seed_pairs == [(1, 0), (0, 0)]
 
-    intent, run_info = intensifier.get_next_run(
-        challengers=[config2], ask=None, incumbent=inc, runhistory=runhistory
-    )
+    intent, run_info = intensifier.get_next_run(challengers=[config2], ask=None, incumbent=inc, runhistory=runhistory)
     runhistory.add(
         config=run_info.config,
         instance=run_info.instance,
@@ -1389,7 +1242,7 @@ def test_evaluate_challenger_3(self):
         status=StatusType.RUNNING,
         additional_info=None,
     )
-    result = evaluate_challenger(run_info, target_algorithm, stats, rh, force_update=True)
+    run_value = evaluate_challenger(run_info, target_algorithm, target_algorithm.stats, runhistory, force_update=True)
     inc, inc_value = intensifier.process_results(
         run_info=run_info,
         incumbent=inc,
@@ -1398,11 +1251,10 @@ def test_evaluate_challenger_3(self):
         run_value=run_value,
     )
 
-    assert run_info.config, config2)
-    assert 
-        len(runhistory.get_runs_for_config(config2, only_max_observed_budget=True)),
-        2,
-    )
+    assert run_info.config == config2
+    assert len(runhistory.get_runs_for_config(config2, only_max_observed_budget=True)) == 2
+
+
 
 def test_incumbent_selection_default(self):
     """

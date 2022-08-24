@@ -314,7 +314,7 @@ class BaseSMBO:
                 ask=self.ask,
                 runhistory=self.runhistory,
                 repeat_configs=self.intensifier.repeat_configs,
-                num_workers=self.runner.num_workers(),
+                n_workers=self.runner.num_workers(),
             )
 
             # Remove config from initial design challengers to not repeat it again

@@ -120,7 +120,7 @@ def test_get_next_run_wait(make_scenario, make_stats, configspace_small, runhist
             ask=None,
             runhistory=None,
             repeat_configs=False,
-            num_workers=1,
+            n_workers=1,
         )
         assert intent == RunInfoIntent.WAIT
 
@@ -163,7 +163,7 @@ def test_get_next_run_add_instance(make_scenario, make_stats, configspace_small,
             ask=None,
             runhistory=None,
             repeat_configs=False,
-            num_workers=1,
+            n_workers=1,
         )
         assert len(scheduler.intensifier_instances) == 2
         assert intent == RunInfoIntent.RUN

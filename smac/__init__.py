@@ -40,5 +40,5 @@ try:
         "MultiFidelityFacade",
         "AlgorithmConfigurationFacade",
     ]
-except ModuleNotFoundError:
-    pass
+except ModuleNotFoundError as e:
+    print(e)

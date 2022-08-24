@@ -70,7 +70,7 @@ class TestSimpleIntensifier(unittest.TestCase):
             challengers=[self.config1],
             incumbent=None,
             run_history=self.rh,
-            num_workers=1,
+            n_workers=1,
             chooser=None,
         )
 
@@ -99,7 +99,7 @@ class TestSimpleIntensifier(unittest.TestCase):
             challengers=[self.config1, self.config2],
             incumbent=None,
             run_history=self.rh,
-            num_workers=1,
+            n_workers=1,
             chooser=None,
         )
 
@@ -124,7 +124,7 @@ class TestSimpleIntensifier(unittest.TestCase):
             challengers=[self.config2],
             incumbent=None,
             run_history=self.rh,
-            num_workers=1,
+            n_workers=1,
             chooser=None,
         )
         self.assertEqual(intent, RunInfoIntent.WAIT)
@@ -150,7 +150,7 @@ class TestSimpleIntensifier(unittest.TestCase):
             challengers=[self.config1, self.config2],
             incumbent=None,
             run_history=self.rh,
-            num_workers=1,
+            n_workers=1,
             chooser=None,
         )
         result = RunValue(

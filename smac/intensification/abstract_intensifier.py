@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Iterator, List, Mapping, Optional, Tuple
+from typing import Any, Callable, Iterator, Optional, Tuple
 
 import time
-from collections import OrderedDict
 
 import numpy as np
 
@@ -16,6 +15,8 @@ from smac.utils.stats import Stats
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 
 class AbstractIntensifier:
@@ -60,23 +61,17 @@ class AbstractIntensifier:
     def __init__(
         self,
         scenario: Scenario,
-        # instances: List[str],
-        # instance_specifics: Mapping[str, str] | None = None,
         min_config_calls: int = 1,
         max_config_calls: int = 2000,
         min_challenger: int = 1,
         intensify_percentage: float = 0.5,
         seed: int | None = None,
     ):
-        self.logger = get_logger(__name__)
         self.scenario = scenario
         self.stats: Stats | None = None
 
         if seed is None:
             seed = scenario.seed
-
-        # Intensify percentage must be between 0 and 1
-        assert intensify_percentage >= 0.0 and intensify_percentage <= 1.0
 
         self.seed = seed
         self.rng = np.random.RandomState(seed)
@@ -85,6 +80,9 @@ class AbstractIntensifier:
         self.max_config_calls = max_config_calls
         self.min_challenger = min_challenger
         self.intensify_percentage = intensify_percentage
+
+        # Intensify percentage must be between 0 and 1
+        assert intensify_percentage >= 0.0 and intensify_percentage <= 1.0
 
         # Instances
         instances: list[str]
@@ -99,12 +97,6 @@ class AbstractIntensifier:
         # We need at least one instance (we choose none here)
         if len(self.instances) == 0:
             self.instances = [None]
-
-        # self.instance_specifics: Mapping[str, str]
-        # if scenario.instance_specifics is None:
-        #    self.instance_specifics = {}
-        # else:
-        #    self.instance_specifics = scenario.instance_specifics
 
         # General attributes
         self.num_run = 0  # Number of runs done in an iteration so far
@@ -123,9 +115,6 @@ class AbstractIntensifier:
             "name": self.__class__.__name__,
         }
 
-    def _set_stats(self, stats: Stats) -> None:
-        self.stats = stats
-
     def get_next_run(
         self,
         challengers: list[Configuration] | None,
@@ -133,7 +122,7 @@ class AbstractIntensifier:
         ask: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
-        num_workers: int = 1,
+        n_workers: int = 1,
     ) -> tuple[RunInfoIntent, RunInfo]:
         """Abstract method for choosing the next challenger, to allow for different selections
         across intensifiers uses ``_next_challenger()`` by default.
@@ -153,7 +142,7 @@ class AbstractIntensifier:
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
-        num_workers: int
+        n_workers: int
             the maximum number of workers available
             at a given time.
 
@@ -210,7 +199,7 @@ class AbstractIntensifier:
         ask: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
-    ) -> Optional[Configuration]:
+    ) -> Configuration | None:
         """Retuns the next challenger to use in intensification If challenger is None, then
         optimizer will be used to generate the next challenger.
 
@@ -231,35 +220,34 @@ class AbstractIntensifier:
             next challenger to use
         """
         start_time = time.time()
-
         used_configs = set(runhistory.get_configs())
 
         chall_gen: Iterator[Optional[Configuration]]
         if challengers:
             # iterate over challengers provided
-            self.logger.debug("Using challengers provided")
+            logger.debug("Using challengers provided")
             chall_gen = (c for c in challengers)
         elif ask:
             # generating challengers on-the-fly if optimizer is given
-            self.logger.debug("Generating new challenger from optimizer")
+            logger.debug("Generating new challenger from optimizer")
             chall_gen = ask()
         else:
             raise ValueError("No configurations/ask function provided. Cannot generate challenger!")
 
-        self.logger.debug("Time to select next challenger: %.4f" % (time.time() - start_time))
+        logger.debug("Time to select next challenger: %.4f" % (time.time() - start_time))
 
-        # select challenger from the generators
+        # Select challenger from the generators
         assert chall_gen is not None
         for challenger in chall_gen:
-            # repetitions allowed
+            # Repetitions allowed
             if repeat_configs:
                 return challenger
 
-            # otherwise, select only a unique challenger
+            # Otherwise, select only a unique challenger
             if challenger not in used_configs:
                 return challenger
 
-        self.logger.debug("No valid challenger was generated!")
+        logger.debug("No valid challenger was generated!")
         return None
 
     def _compare_configs(
@@ -312,7 +300,7 @@ class AbstractIntensifier:
             chal_perf_format = format_array(chal_perf)
             inc_perf_format = format_array(inc_perf)
             # Incumbent beats challenger
-            self.logger.debug(
+            logger.debug(
                 f"Incumbent ({inc_perf_format}) is better than challenger "
                 f"({chal_perf_format}) on {len(chall_runs)} runs."
             )
@@ -325,7 +313,7 @@ class AbstractIntensifier:
                 chal_perf_format = format_array(chal_perf)
                 inc_perf_format = format_array(inc_perf)
 
-                self.logger.debug(
+                logger.debug(
                     f"Incumbent ({inc_perf_format}) is at least as good as the "
                     f"challenger ({chal_perf_format}) on {len(chall_runs)} runs."
                 )
@@ -342,7 +330,7 @@ class AbstractIntensifier:
             chal_perf_format = format_array(chal_perf)
             inc_perf_format = format_array(inc_perf)
 
-            self.logger.info(
+            logger.info(
                 f"Challenger ({chal_perf_format}) is better than incumbent ({inc_perf_format}) " f"on {n_samples} runs."
             )
             self._log_incumbent_changes(incumbent, challenger)
@@ -362,9 +350,9 @@ class AbstractIntensifier:
         challenger: Configuration,
     ) -> None:
         params = sorted([(param, incumbent[param], challenger[param]) for param in challenger.keys()])
-        self.logger.info("Changes in incumbent:")
+        logger.info("Changes in incumbent:")
         for param in params:
             if param[1] != param[2]:
-                self.logger.info("--- %s: %r -> %r" % param)
+                logger.info("--- %s: %r -> %r" % param)
             else:
-                self.logger.debug("--- %s remains unchanged: %r", param[0], param[1])
+                logger.debug("--- %s remains unchanged: %r", param[0], param[1])

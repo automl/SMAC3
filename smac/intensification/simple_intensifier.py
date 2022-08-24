@@ -1,15 +1,18 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Iterator
 
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.runhistory import RunInfo, RunValue, RunInfoIntent, RunHistory
 from smac.scenario import Scenario
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 
 class SimpleIntensifier(AbstractIntensifier):
@@ -33,19 +36,11 @@ class SimpleIntensifier(AbstractIntensifier):
     def __init__(
         self,
         scenario: Scenario,
-        # instances: List[str],
-        # instance_specifics: Mapping[str, str] = None,
-        # algorithm_walltime_limit: Optional[float] = None,
-        # deterministic: bool = False,
         seed: int | None = None,
     ) -> None:
 
         super().__init__(
             scenario=scenario,
-            # instances=instances,
-            # instance_specifics=instance_specifics,
-            # algorithm_walltime_limit=algorithm_walltime_limit,
-            # deterministic=deterministic,
             min_challenger=1,
             seed=seed,
         )
@@ -54,7 +49,7 @@ class SimpleIntensifier(AbstractIntensifier):
         # the workers. At any time, we want to make sure that if there
         # are just W workers, there should be at max W active runs
         # Below variable tracks active runs not processed
-        self.run_tracker = {}  # type: Dict[Tuple[Configuration, str, int, float], bool]
+        self.run_tracker: dict[tuple[Configuration, str | None, int, float], bool] = {}
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
@@ -77,7 +72,7 @@ class SimpleIntensifier(AbstractIntensifier):
         Parameters
         ----------
         run_info : RunInfo
-               A RunInfo containing the configuration that was evaluated
+            A RunInfo containing the configuration that was evaluated
         incumbent : Optional[Configuration]
             Best configuration seen so far
         runhistory : RunHistory
@@ -103,7 +98,7 @@ class SimpleIntensifier(AbstractIntensifier):
 
         # If The incumbent is None we use the challenger
         if not incumbent:
-            self.logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
+            logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
             incumbent = run_info.config
 
         self.num_run += 1
@@ -121,13 +116,13 @@ class SimpleIntensifier(AbstractIntensifier):
 
     def get_next_run(
         self,
-        challengers: Optional[List[Configuration]],
+        challengers: list[Configuration] | None,
         incumbent: Configuration,
         ask: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
-        num_workers: int = 1,
-    ) -> Tuple[RunInfoIntent, RunInfo]:
+        n_workers: int = 1,
+    ) -> tuple[RunInfoIntent, RunInfo]:
         """Selects which challenger to be used. As in a traditional BO loop, we sample from the EPM,
         which is the next configuration based on the acquisition function. The input data is read
         from the runhistory.
@@ -144,7 +139,7 @@ class SimpleIntensifier(AbstractIntensifier):
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
-        num_workers: int
+        n_workers: int
             the maximum number of workers available
             at a given time.
 
@@ -169,12 +164,11 @@ class SimpleIntensifier(AbstractIntensifier):
         # processed. If a value in this dict is false, it means that a worker
         # should still be processing this configuration.
         total_active_runs = len([v for v in self.run_tracker.values() if not v])
-        if total_active_runs >= num_workers:
+        if total_active_runs >= n_workers:
             # We only submit jobs if there is an idle worker
             return RunInfoIntent.WAIT, RunInfo(
                 config=None,
                 instance=None,
-                # instance_specific="0",
                 seed=0,
                 budget=0.0,
             )
@@ -182,7 +176,6 @@ class SimpleIntensifier(AbstractIntensifier):
         run_info = RunInfo(
             config=challenger,
             instance=self.instances[-1],
-            # instance_specific="0",
             seed=0 if self.deterministic else int(self.rng.randint(low=0, high=MAXINT, size=1)[0]),
             budget=0.0,
         )

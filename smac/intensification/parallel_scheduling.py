@@ -10,9 +10,12 @@ from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.runhistory import RunInfo, RunInfoIntent, RunValue
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 
 class ParallelScheduler(AbstractIntensifier):
@@ -41,7 +44,7 @@ class ParallelScheduler(AbstractIntensifier):
         maximum budget allowed for 1 run of successive halving
     eta : float
         'halving' factor after each iteration in a successive halving run. Defaults to 3
-    num_initial_challengers : Optional[int]
+    n_initial_challengers : Optional[int]
         number of challengers to consider for the initial budget. If None, calculated internally
     n_seeds : Optional[int]
         Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
@@ -72,15 +75,15 @@ class ParallelScheduler(AbstractIntensifier):
         # deterministic: bool = False,
         # min_budget: Optional[float] = None,
         # max_budget: Optional[float] = None,
-        eta: float = 3,
-        num_initial_challengers: int | None = None,
+        # eta: float = 3,
+        # n_initial_challengers: int | None = None,
         # instance_order: Optional[str] = "shuffle_once",
         min_challenger: int = 1,
         intensify_percentage: float = 0.5,
-        incumbent_selection: str = "highest_executed_budget",
-        instance_seed_pairs: list[Tuple[str, int]] | None = None,
+        # incumbent_selection: str = "highest_executed_budget",
+        # instance_seed_pairs: list[Tuple[str, int]] | None = None,
         seed: int | None = None,
-        n_seeds: int | None = None,
+        # n_seeds: int | None = None,
     ) -> None:
 
         super().__init__(
@@ -111,8 +114,8 @@ class ParallelScheduler(AbstractIntensifier):
         ask: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = False,
-        num_workers: int = 1,
-    ) -> Tuple[RunInfoIntent, RunInfo]:
+        n_workers: int = 1,
+    ) -> tuple[RunInfoIntent, RunInfo]:
         """This procedure decides from which instance to pick a config, in order to determine the
         next run.
 
@@ -134,7 +137,7 @@ class ParallelScheduler(AbstractIntensifier):
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
-        num_workers: int
+        n_workers: int
             the maximum number of workers available
             at a given time.
 
@@ -146,9 +149,9 @@ class ParallelScheduler(AbstractIntensifier):
             An object that encapsulates the minimum information to
             evaluate a configuration
         """
-        if num_workers <= 1 and self.print_worker_warning:
-            self.logger.warning(
-                f"{self.__class__.__name__} is executed with {num_workers} worker(s) only. "
+        if n_workers <= 1 and self.print_worker_warning:
+            logger.warning(
+                f"{self.__class__.__name__} is executed with {n_workers} worker(s) only. "
                 f"However, your system supports up to {os.cpu_count()} workers. Consider increasing the workers "
                 "in the scenario."
             )
@@ -159,7 +162,7 @@ class ParallelScheduler(AbstractIntensifier):
         # intensifier instances will also share configurations. The later
         # is not supported
         if repeat_configs:
-            raise ValueError("repeat_configs==True is not supported for parallel execution")
+            raise ValueError("repeat_configs is not supported for parallel execution")
 
         # First get a config to run from a SH instance
         for i in self._sort_instances_by_stage(self.intensifier_instances):
@@ -180,7 +183,7 @@ class ParallelScheduler(AbstractIntensifier):
 
         # If gotten to this point, we might look into adding a new
         # intensifier
-        if self._add_new_instance(num_workers):
+        if self._add_new_instance(n_workers):
             return self.intensifier_instances[len(self.intensifier_instances) - 1].get_next_run(
                 challengers=challengers,
                 incumbent=incumbent,
@@ -253,13 +256,13 @@ class ParallelScheduler(AbstractIntensifier):
             log_trajectory=log_trajectory,
         )
 
-    def _add_new_instance(self, num_workers: int) -> bool:
+    def _add_new_instance(self, n_workers: int) -> bool:
         """Decides if it is possible to add a new intensifier instance, and adds it. If a new
         intensifier instance is added, True is returned, else False.
 
         Parameters
         ----------
-        num_workers: int
+        n_workers: int
             the maximum number of workers available
             at a given time.
 
