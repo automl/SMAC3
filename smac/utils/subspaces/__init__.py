@@ -30,6 +30,9 @@ from smac.model.base_model import BaseModel
 from smac.model.gaussian_process.gpytorch import GloballyAugmentedLocalGaussianProcess
 from smac.model.gaussian_process.kernels.boing import construct_gp_kernel
 from smac.model.utils import check_subspace_points
+from smac.utils.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 class LocalSubspace(ABC):
@@ -84,7 +87,7 @@ class LocalSubspace(ABC):
         activate_dims: Optional[np.ndarray] = None,
         incumbent_array: Optional[np.ndarray] = None,
     ):
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
+        logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.cs_global = config_space
         if rng is None:
             self.rng = np.random.RandomState(1)
@@ -460,7 +463,7 @@ class LocalSubspace(ABC):
             except Exception as e:
                 # Some times it could occur that LGPGA fails to predict the mean value of ss_x because of
                 # numerical issues
-                self.logger.warning(f"Fail to predict ss_x due to {e}")
+                logger.warning(f"Fail to predict ss_x due to {e}")
                 mu = self.ss_y
             idx_eta = np.argmin(mu)
             incumbent_array = self.ss_x[idx_eta]

@@ -93,8 +93,8 @@ if __name__ == "__main__":
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")
     smac = TuRBOFacade(
-        scenario,
-        model.train,
+        scenario=scenario,
+        target_algorithm=model.train,
         overwrite=True,
     )
     smac.optimize()

@@ -12,7 +12,10 @@ from smac.acquisition.functions import EI, AbstractAcquisitionFunction
 from smac.configspace import Configuration
 from smac.model.base_model import BaseModel
 from smac.model.gaussian_process.gpytorch import GloballyAugmentedLocalGaussianProcess
+from smac.utils.logging import get_logger
 from smac.utils.subspaces import LocalSubspace
+
+logger = get_logger(__name__)
 
 
 class BOinGSubspace(LocalSubspace):
@@ -164,7 +167,7 @@ class BOinGSubspace(LocalSubspace):
             next_configs_by_acq_value = next_configs_random + configs_acq_local
 
             next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
-            self.logger.debug(
+            logger.debug(
                 "First 5 acq func (origin) values of selected configurations: %s",
                 str([[_[0], _[1].origin] for _ in next_configs_by_acq_value[:5]]),
             )
