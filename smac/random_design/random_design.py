@@ -1,19 +1,26 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from typing import Any, Optional
-
-import logging
+from abc import abstractmethod
+from typing import Any
 
 import numpy as np
 
+from smac.utils.logging import get_logger
+
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 
 class RandomDesign:
     """Abstract base of helper classes to configure interleaving of random configurations in a list
     of challengers.
+
+    Parameters
+    ----------
+    seed : int
+        Integer used to initialize random state
     """
 
     def __init__(self, seed: int = 0):
