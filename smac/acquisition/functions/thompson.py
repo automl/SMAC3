@@ -56,7 +56,7 @@ class TS(AbstractAcquisitionFunction):
             "name": self.__class__.__name__,
         }
 
-    def update(self, model: BaseModel, **kwargs: Any) -> None:
+    def update(self, model: BaseModel, num_data : int, par: float | None = None, **kwargs: Any) -> None:
         """Update the acquisition function attributes required for calculation.
 
         Parameters
@@ -65,6 +65,9 @@ class TS(AbstractAcquisitionFunction):
             Models the objective function.
         """
         self.model = model
+        self.num_data = num_data
+        if par is not None:
+            self.par = par
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Sample a new value from a gaussian distribution whose mean and covariance values

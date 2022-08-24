@@ -52,7 +52,7 @@ class EI(AbstractAcquisitionFunction):
             "name": self.__class__.__name__,
         }
 
-    def update(self, model: BaseModel, eta: float, **kwargs: Any) -> None:
+    def update(self, model: BaseModel, eta: float, xi : float | None = None, **kwargs: Any) -> None:
         """Update the acquisition function attributes required for calculation.
 
         Parameters
@@ -64,6 +64,8 @@ class EI(AbstractAcquisitionFunction):
         """
         self.model = model
         self.eta = eta
+        if xi is not None:
+            self.xi = xi
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the EI value and its derivatives.

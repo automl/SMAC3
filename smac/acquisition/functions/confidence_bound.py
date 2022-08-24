@@ -61,7 +61,7 @@ class LCB(AbstractAcquisitionFunction):
             "name": self.__class__.__name__,
         }
 
-    def update(self, model: BaseModel, num_data: int, **kwargs: Any) -> None:
+    def update(self, model: BaseModel, num_data: int, beta : float | None = None, **kwargs: Any) -> None:
         """Update the acquisition function attributes required for calculation.
         
         Parameters
@@ -73,6 +73,8 @@ class LCB(AbstractAcquisitionFunction):
         """
         self.model = model
         self.num_data = num_data
+        if beta is not None:
+            self.beta = beta
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the LCB value.
