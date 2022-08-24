@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import abc
-from typing import Any, List, Tuple
+from typing import Any
 
 import numpy as np
 
@@ -22,18 +22,17 @@ class AbstractAcquisitionFunction(metaclass=abc.ABCMeta):
 
     Parameters
     ----------
-    model : BaseEPM
+    model : BaseModel
         Models the objective function.
 
     Attributes
     ----------
-    model
-    logger
+    model : BaseModel
     """
 
     def __init__(self) -> None:
         self.model: BaseModel | None = None
-        self._required_updates = ("model",)  # type: Tuple[str, ...]
+        self._required_updates : tuple(str, ...) = ("model",)
 
     def _set_model(self, model: BaseModel) -> None:
         self.model = model
@@ -54,7 +53,7 @@ class AbstractAcquisitionFunction(metaclass=abc.ABCMeta):
 
         Parameters
         ----------
-        kwargs
+        kwargs : Any
         """
         for key in self._required_updates:
             if key not in kwargs:
@@ -66,19 +65,19 @@ class AbstractAcquisitionFunction(metaclass=abc.ABCMeta):
             if key in self._required_updates:
                 setattr(self, key, kwargs[key])
 
-    def __call__(self, configurations: List[Configuration]) -> np.ndarray:
-        """Computes the acquisition value for a given X.
+    def __call__(self, configurations: list[Configuration]) -> np.ndarray:
+        """Compute the acquisition value for a given X.
 
         Parameters
         ----------
-        configurations : list
+        configurations : list[Configuration]
             The configurations where the acquisition function
             should be evaluated.
 
         Returns
         -------
         np.ndarray(N, 1)
-            acquisition values for X
+            Acquisition values for X
         """
         X = convert_configurations_to_array(configurations)
         if len(X.shape) == 1:
@@ -92,7 +91,7 @@ class AbstractAcquisitionFunction(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def _compute(self, X: np.ndarray) -> np.ndarray:
-        """Computes the acquisition value for a given point X. This function has to be overwritten
+        """Compute the acquisition value for a given point X. This function has to be overwritten
         in a derived class.
 
         Parameters
