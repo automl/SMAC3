@@ -374,16 +374,60 @@ collected.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>single_worker</strong> (<em>BaseRunner</em>) – A runner to run in a distributed fashion</p></li>
+<li><p><strong>single_worker</strong> (<a class="reference internal" href="smac.runner.html#smac.runner.Runner" title="smac.runner.Runner"><em>Runner</em></a>) – A runner to run in a distributed fashion</p></li>
 <li><p><strong>n_workers</strong> (<em>int</em>) – Number of workers to use for distributed run. Will be ignored if <code class="docutils literal notranslate"><span class="pre">dask_client</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
-<li><p><strong>patience</strong> (<em>int</em>) – How much to wait for workers to be available if one fails</p></li>
-<li><p><strong>output_directory</strong> (<em>str</em><em>, </em><em>optional</em>) – If given, this will be used for the dask worker directory and for storing server information.
-If a dask client is passed, it will only be used for storing server information as the
-worker directory must be set by the program/user starting the workers.</p></li>
-<li><p><strong>dask_client</strong> (<em>dask.distributed.Client</em>) – User-created dask client, can be used to start a dask cluster and then attach SMAC to it.</p></li>
+<li><p><strong>patience</strong> (<em>int</em><em>, </em><em>default to 5</em>) – How much to wait for workers (seconds) to be available if one fails</p></li>
+<li><p><strong>output_directory</strong> (<em>str</em><em> , </em><em>optional</em>) – If given, this will be used for the dask worker directory and for storing server
+information. If a dask client is passed, it will only be used for storing server
+information as the worker directory must be set by the program/user starting the
+workers.</p></li>
+<li><p><strong>dask_client</strong> (<em>Client</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – User-created dask client, can be used to start a dask cluster and then attach
+SMAC to it. This will not be closed automatically and will have to be closed
+manually if provided explicitly.
+If None is provided (default), a local one will be created for you and closed
+upon completion.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.runner.dask_runner.DaskParallelRunner.single_worker">
+<span class="sig-name descname"><span class="pre">single_worker</span></span><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.single_worker" title="Permalink to this definition">¶</a></dt>
+<dd><p>The worker used and replicated on each node as required</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.runner.html#smac.runner.Runner" title="smac.runner.Runner">Runner</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.runner.dask_runner.DaskParallelRunner.n_workers">
+<span class="sig-name descname"><span class="pre">n_workers</span></span><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.n_workers" title="Permalink to this definition">¶</a></dt>
+<dd><p>The amount of workers to use</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.runner.dask_runner.DaskParallelRunner.patience">
+<span class="sig-name descname"><span class="pre">patience</span></span><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.patience" title="Permalink to this definition">¶</a></dt>
+<dd><p>How much to wait for workers (seconds) if one fails</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.runner.dask_runner.DaskParallelRunner.output_directory">
+<span class="sig-name descname"><span class="pre">output_directory</span></span><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.output_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Where to store the temporary worker output</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | None</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.runner.dask_runner.DaskParallelRunner.results">
 <span class="sig-name descname"><span class="pre">results</span></span><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.results" title="Permalink to this definition">¶</a></dt>
@@ -420,11 +464,6 @@ worker directory must be set by the program/user starting the workers.</p></li>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.dask_runner.DaskParallelRunner.n_workers">
-<span class="sig-name descname"><span class="pre">n_workers</span></span><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.n_workers" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="smac.runner.dask_runner.DaskParallelRunner.futures">
 <span class="sig-name descname"><span class="pre">futures</span></span><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.futures" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -437,8 +476,8 @@ worker directory must be set by the program/user starting the workers.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.dask_runner.DaskParallelRunner.__del__">
 <span class="sig-name descname"><span class="pre">__del__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.__del__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.__del__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make sure that when this object gets deleted, the client is terminated.
-This is only done if the client was created by the dask runner.</p>
+<dd><p>Make sure that when this object gets deleted, the client is terminated. This
+is only done if the client was created by the dask runner.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>

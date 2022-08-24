@@ -5,14 +5,14 @@
 
 Computation times
 =================
-**00:04.524** total execution time for **examples_1_basics** files:
+**00:04.535** total execution time for **examples_1_basics** files:
 
 +-----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_1_basics_3_evaluated_configs.py` (``3_evaluated_configs.py``)   | 00:02.681 | 0.0 MB |
+| :ref:`sphx_glr_examples_1_basics_3_evaluated_configs.py` (``3_evaluated_configs.py``)   | 00:02.668 | 0.0 MB |
 +-----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_1_basics_1_synthetic_function.py` (``1_synthetic_function.py``) | 00:00.938 | 0.0 MB |
+| :ref:`sphx_glr_examples_1_basics_1_synthetic_function.py` (``1_synthetic_function.py``) | 00:00.949 | 0.0 MB |
 +-----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_1_basics_2_svm_cv.py` (``2_svm_cv.py``)                         | 00:00.905 | 0.0 MB |
+| :ref:`sphx_glr_examples_1_basics_2_svm_cv.py` (``2_svm_cv.py``)                         | 00:00.917 | 0.0 MB |
 +-----------------------------------------------------------------------------------------+-----------+--------+
 | :ref:`sphx_glr_examples_1_basics_4_full_customization.py` (``4_full_customization.py``) | 00:00.000 | 0.0 MB |
 +-----------------------------------------------------------------------------------------+-----------+--------+

@@ -166,7 +166,7 @@ This example shows how to incorporate evaluated configurations into SMAC.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.681 seconds)
+   **Total running time of the script:** ( 0 minutes  2.668 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_3_evaluated_configs.py:

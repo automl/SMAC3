@@ -318,10 +318,9 @@ style="width: 100%;">
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">import</span> <span class="nn">dask</span>
 <span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="kn">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">Future</span><span class="p">,</span> <span class="n">wait</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
@@ -368,21 +367,35 @@ style="width: 100%;">
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    single_worker: BaseRunner</span>
+<span class="sd">    single_worker: Runner</span>
 <span class="sd">        A runner to run in a distributed fashion</span>
 <span class="sd">    n_workers: int</span>
 <span class="sd">        Number of workers to use for distributed run. Will be ignored if ``dask_client`` is not ``None``.</span>
-<span class="sd">    patience: int</span>
-<span class="sd">        How much to wait for workers to be available if one fails</span>
-<span class="sd">    output_directory: str, optional</span>
-<span class="sd">        If given, this will be used for the dask worker directory and for storing server information.</span>
-<span class="sd">        If a dask client is passed, it will only be used for storing server information as the</span>
-<span class="sd">        worker directory must be set by the program/user starting the workers.</span>
-<span class="sd">    dask_client: dask.distributed.Client</span>
-<span class="sd">        User-created dask client, can be used to start a dask cluster and then attach SMAC to it.</span>
+<span class="sd">    patience: int, default to 5</span>
+<span class="sd">        How much to wait for workers (seconds) to be available if one fails</span>
+<span class="sd">    output_directory: str , optional</span>
+<span class="sd">        If given, this will be used for the dask worker directory and for storing server</span>
+<span class="sd">        information. If a dask client is passed, it will only be used for storing server</span>
+<span class="sd">        information as the worker directory must be set by the program/user starting the</span>
+<span class="sd">        workers.</span>
+<span class="sd">    dask_client: Client | None, optional</span>
+<span class="sd">        User-created dask client, can be used to start a dask cluster and then attach</span>
+<span class="sd">        SMAC to it. This will not be closed automatically and will have to be closed</span>
+<span class="sd">        manually if provided explicitly.</span>
+<span class="sd">        If None is provided (default), a local one will be created for you and closed</span>
+<span class="sd">        upon completion.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
+<span class="sd">    single_worker: Runner</span>
+<span class="sd">        The worker used and replicated on each node as required</span>
+<span class="sd">    n_workers: int</span>
+<span class="sd">        The amount of workers to use</span>
+<span class="sd">    patience</span>
+<span class="sd">        How much to wait for workers (seconds) if one fails</span>
+<span class="sd">    output_directory: str | None</span>
+<span class="sd">        Where to store the temporary worker output</span>
+
 <span class="sd">    results</span>
 <span class="sd">    ta</span>
 <span class="sd">    stats</span>
@@ -390,7 +403,6 @@ style="width: 100%;">
 <span class="sd">    par_factor</span>
 <span class="sd">    crash_cost</span>
 <span class="sd">    abort_i_first_run_crash</span>
-<span class="sd">    n_workers</span>
 <span class="sd">    futures</span>
 <span class="sd">    client</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -400,8 +412,8 @@ style="width: 100%;">
         <span class="n">single_worker</span><span class="p">:</span> <span class="n">Runner</span><span class="p">,</span>
         <span class="n">n_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">patience</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
-        <span class="n">output_directory</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">dask_client</span><span class="p">:</span> <span class="n">dask</span><span class="o">.</span><span class="n">distributed</span><span class="o">.</span><span class="n">Client</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">output_directory</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dask_client</span><span class="p">:</span> <span class="n">Client</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">target_algorithm</span><span class="o">=</span><span class="n">single_worker</span><span class="o">.</span><span class="n">target_algorithm</span><span class="p">,</span>
@@ -409,37 +421,42 @@ style="width: 100%;">
             <span class="n">stats</span><span class="o">=</span><span class="n">single_worker</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="c1"># The single worker, which is replicated on a need</span>
-        <span class="c1"># basis to every compute node</span>
+        <span class="c1"># The single worker, which is replicated by `n_workers`</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">single_worker</span> <span class="o">=</span> <span class="n">single_worker</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span> <span class="o">=</span> <span class="n">n_workers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patience</span> <span class="o">=</span> <span class="n">patience</span>  <span class="c1"># How much time to wait for workers to be available</span>
 
-        <span class="c1"># How much time to wait for workers to be available</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">patience</span> <span class="o">=</span> <span class="n">patience</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_futures</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Future</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># The list of futures that dask will use</span>
 
         <span class="c1"># Where to store worker information temporarily</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span> <span class="o">=</span> <span class="n">output_directory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_directory</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output_directory</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_output_directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_directory</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_output_directory</span> <span class="o">=</span> <span class="n">output_directory</span>
 
-        <span class="c1"># Because a run() method can have pynisher, we need to prevent the multiprocessing</span>
-        <span class="c1"># workers to be instantiated as demonic - this cannot be passed via worker_kwargs</span>
-        <span class="n">dask</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">({</span><span class="s2">&quot;distributed.worker.daemon&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+        <span class="c1"># NOTE: The below line used to be done all the time but not sure if this</span>
+        <span class="c1">#   is needed anymore. If there ends up being issues, please comment this</span>
+        <span class="c1">#   line back in.</span>
+        <span class="c1">#</span>
+        <span class="c1">#   dask.config.set({&quot;distributed.worker.daemon&quot;: False})</span>
+        <span class="c1">#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler_file</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="k">if</span> <span class="n">dask_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">close_client_at_del</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_close_client_at_del</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span>
                 <span class="n">n_workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span><span class="p">,</span>
                 <span class="n">processes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="n">threads_per_worker</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                <span class="n">local_directory</span><span class="o">=</span><span class="n">output_directory</span><span class="p">,</span>
+                <span class="n">local_directory</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_output_directory</span><span class="p">),</span>
             <span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">scheduler_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span><span class="p">,</span> <span class="s2">&quot;.dask_scheduler_file&quot;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_scheduler_file</span><span class="p">(</span><span class="n">scheduler_file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler_file</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_directory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_directory</span> <span class="o">/</span> <span class="s2">&quot;.dask_scheduler_file&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">write_scheduler_file</span><span class="p">(</span><span class="n">scheduler_file</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scheduler_file</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">close_client_at_del</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">dask_client</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">futures</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Future</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">scheduler_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_get_scheduler_info</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_close_client_at_del</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="n">dask_client</span>
 
 <div class="viewcode-block" id="DaskParallelRunner.get_meta"><a class="viewcode-back" href="../../../api/smac.runner.dask_runner.html#smac.runner.DaskParallelRunner.get_meta">[docs]</a>    <span class="k">def</span> <span class="nf">get_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
@@ -470,25 +487,22 @@ style="width: 100%;">
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check for resources or block till one is available</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workers_available</span><span class="p">():</span>
-            <span class="n">futures</span> <span class="o">=</span> <span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">futures</span><span class="p">,</span> <span class="n">return_when</span><span class="o">=</span><span class="s2">&quot;FIRST_COMPLETED&quot;</span><span class="p">)</span>
-            <span class="n">futures</span><span class="o">.</span><span class="n">done</span>
+            <span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_futures</span><span class="p">,</span> <span class="n">return_when</span><span class="o">=</span><span class="s2">&quot;FIRST_COMPLETED&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_extract_completed_runs_from_futures</span><span class="p">()</span>
 
-        <span class="c1"># In code check to make sure that there are resources</span>
+        <span class="c1"># Check again to make sure that there are resources</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workers_available</span><span class="p">():</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No workers are available. This could mean workers crashed. Waiting for new workers...&quot;</span><span class="p">)</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patience</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workers_available</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;Tried to execute a job, but no worker was &quot;</span>
-                    <span class="s2">&quot;available. This likely means that a worker crashed &quot;</span>
-                    <span class="s2">&quot;or no workers were properly configured.&quot;</span>
+                    <span class="s2">&quot;Tried to execute a job, but no worker was ever available.&quot;</span>
+                    <span class="s2">&quot;This likely means that a worker crashed or no workers were properly configured.&quot;</span>
                 <span class="p">)</span>
 
         <span class="c1"># At this point we can submit the job</span>
-        <span class="c1"># For `pure=False`, see</span>
-        <span class="c1"># http://distributed.dask.org/en/stable/client.html#pure-functions-by-default</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">single_worker</span><span class="o">.</span><span class="n">run_wrapper</span><span class="p">,</span> <span class="n">run_info</span><span class="p">,</span> <span class="n">pure</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span></div>
+        <span class="n">future</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">single_worker</span><span class="o">.</span><span class="n">run_wrapper</span><span class="p">,</span> <span class="n">run_info</span><span class="o">=</span><span class="n">run_info</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_futures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">future</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DaskParallelRunner.get_finished_runs"><a class="viewcode-back" href="../../../api/smac.runner.dask_runner.html#smac.runner.DaskParallelRunner.get_finished_runs">[docs]</a>    <span class="k">def</span> <span class="nf">get_finished_runs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">RunInfo</span><span class="p">,</span> <span class="n">RunValue</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;This method returns any finished configuration, and returns a list with the results of</span>
@@ -512,12 +526,12 @@ style="width: 100%;">
 
     <span class="k">def</span> <span class="nf">_extract_completed_runs_from_futures</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;A run is over, when a future has done() equal true. This function collects the completed</span>
-<span class="sd">        futures and move them from self.futures to self.results.</span>
+<span class="sd">        futures and move them from self._futures to self.results.</span>
 
 <span class="sd">        We make sure futures never exceed the capacity of the scheduler</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># In code check to make sure we don;t exceed resource allocation</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">futures</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">nthreads</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_futures</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">nthreads</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                 <span class="s2">&quot;More running jobs than resources available. &quot;</span>
                 <span class="s2">&quot;Should not have more futures/runs in remote workers &quot;</span>
@@ -527,19 +541,18 @@ style="width: 100%;">
 
         <span class="c1"># A future is removed to the list of futures as an indication</span>
         <span class="c1"># that a worker is available to take in an extra job</span>
-        <span class="n">done_futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">futures</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">done</span><span class="p">()]</span>
+        <span class="n">done_futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_futures</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">done</span><span class="p">()]</span>
         <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">done_futures</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">())</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">future</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_futures</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">future</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DaskParallelRunner.wait"><a class="viewcode-back" href="../../../api/smac.runner.dask_runner.html#smac.runner.DaskParallelRunner.wait">[docs]</a>    <span class="k">def</span> <span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;SMBO/intensifier might need to wait for runs to finish before making a decision.</span>
 
 <span class="sd">        This class waits until 1 run completes</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">futures</span><span class="p">:</span>
-            <span class="n">futures</span> <span class="o">=</span> <span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">futures</span><span class="p">,</span> <span class="n">return_when</span><span class="o">=</span><span class="s2">&quot;FIRST_COMPLETED&quot;</span><span class="p">)</span>
-            <span class="n">futures</span><span class="o">.</span><span class="n">done</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_futures</span><span class="p">:</span>
+            <span class="n">futures</span> <span class="o">=</span> <span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_futures</span><span class="p">,</span> <span class="n">return_when</span><span class="o">=</span><span class="s2">&quot;FIRST_COMPLETED&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DaskParallelRunner.pending_runs"><a class="viewcode-back" href="../../../api/smac.runner.dask_runner.html#smac.runner.DaskParallelRunner.pending_runs">[docs]</a>    <span class="k">def</span> <span class="nf">pending_runs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Whether or not there are configs still running.</span>
@@ -547,9 +560,8 @@ style="width: 100%;">
 <span class="sd">        Generally if the runner is serial, launching a run instantly returns it&#39;s result. On</span>
 <span class="sd">        parallel runners, there might be pending configurations to complete.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># If there are futures available, it translates</span>
-        <span class="c1"># to runs still not finished/processed</span>
-        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">futures</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
+        <span class="c1"># If there are futures available, it translates to runs still not finished/processed</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_futures</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
 
 <div class="viewcode-block" id="DaskParallelRunner.run"><a class="viewcode-back" href="../../../api/smac.runner.dask_runner.html#smac.runner.DaskParallelRunner.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -572,21 +584,21 @@ style="width: 100%;">
 
 <div class="viewcode-block" id="DaskParallelRunner.num_workers"><a class="viewcode-back" href="../../../api/smac.runner.dask_runner.html#smac.runner.DaskParallelRunner.num_workers">[docs]</a>    <span class="k">def</span> <span class="nf">num_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Total number of workers available. This number is dynamic as more resources can be allocated.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">nthreads</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">nthreads</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
 
     <span class="k">def</span> <span class="nf">_workers_available</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Query if there are workers available, which means that there are resources to launch a dask job.&quot;&quot;&quot;</span>
-        <span class="n">total_compute_power</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">nthreads</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">futures</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">total_compute_power</span><span class="p">:</span>
+        <span class="n">total_compute_power</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">nthreads</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_futures</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">total_compute_power</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="DaskParallelRunner.__del__"><a class="viewcode-back" href="../../../api/smac.runner.dask_runner.html#smac.runner.DaskParallelRunner.__del__">[docs]</a>    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Make sure that when this object gets deleted, the client is terminated.</span>
-<span class="sd">        This is only done if the client was created by the dask runner.</span>
+        <span class="sd">&quot;&quot;&quot;Make sure that when this object gets deleted, the client is terminated. This</span>
+<span class="sd">        is only done if the client was created by the dask runner.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">close_client_at_del</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_close_client_at_del</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
 </pre></div>
 
               </div>
