@@ -6,7 +6,6 @@ from typing import Any, Callable
 from pathlib import Path
 
 import joblib
-import numpy as np
 
 from smac.acquisition.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
 from smac.acquisition.functions.abstract_acquisition_function import (
@@ -19,11 +18,6 @@ from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.model.base_model import BaseModel
 
-# from smac.model.imputer import AbstractImputer
-# from smac.model.imputer.random_forest_imputer import RandomForestImputer
-from smac.model.random_forest.random_forest_with_instances import (
-    RandomForestWithInstances,
-)
 from smac.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
 )
@@ -42,6 +36,43 @@ logger = get_logger(__name__)
 
 
 class Facade:
+    """Facade is an abstraction on top of the SMBO backend to organize the components
+    of a Bayesian Optimization loop in a configurable & separable manner to suit the
+    various needs of different hyperparameter optimization pipelines.
+
+    With the exception to scenario & target_algorithm, which are expected of the
+    user, the parameters: model, aacquisition_function, acquisition_optimizer,
+    initial_design, random_design, intensifier, multi_objective_algorithm,
+    runhistory and runhistory_encoder can either be explicitly specified in the
+    subclasses' get_* methods - defining a specific BO pipeline - or be instantiated
+    by the user to overwrite a pipelines components explicitly, before passing
+    them to the facade. For an example of the latter see the svm_cv.py.
+
+    Parameters
+    ----------
+    scenario: Scenario,
+    target_algorithm: Runner | Callable
+
+    model: BaseModel | None
+    acquisition_function: AcquisitionFunction | None
+    acquisition_optimizer: AcquisitionOptimizer | None
+    initial_design: InitialDesign | None
+    random_design: RandomDesign | None
+    intensifier: Intensifier | None
+    multi_objective_algorithm: MultiObjectiveAlgorithm | None
+    runhistory: RunHistory | None
+    runhistory_encoder: RunHistoryEncoder | None
+
+    logging_level: int | Path | None
+         Level of logging; if path passed: yaml file expected; if none: use default logging from logging.yml
+    callbacks: list[Callback] = [],
+    overwrite: bool defaults to False
+        When True, overwrites the results (Runhistory & Stats) if a previous run is found that is
+        inconsistent in the meta data with the current setup. In that case, the user is prompted
+        for the exact behaviour.
+
+
+    """
     def __init__(
         self,
         scenario: Scenario,
@@ -56,10 +87,8 @@ class Facade:
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
         runhistory: RunHistory | None = None,
         runhistory_encoder: RunHistoryEncoder | None = None,
-        # Level of logging; if path passed: yaml file expected; if none: use default logging from logging.yml
         logging_level: int | Path | None = None,
         callbacks: list[Callback] = [],
-        # Overwrites the results if they are already given; otherwise, the user is asked
         overwrite: bool = False,
     ):
         setup_logging(logging_level)
@@ -126,8 +155,9 @@ class Facade:
                 output_directory=str(scenario.output_directory),
             )
 
+        # TODO make these private attributes (also in smbo...)
         # Set variables globally
-        self.scenario = scenario
+        self._scenario = scenario
         self.configspace = scenario.configspace
         self.runner = runner
         self.model = model
@@ -137,9 +167,9 @@ class Facade:
         self.random_design = random_design
         self.intensifier = intensifier
         self.multi_objective_algorithm = multi_objective_algorithm
-        self.runhistory = runhistory
+        self._runhistory = runhistory
         self.runhistory_encoder = runhistory_encoder
-        self.stats = stats
+        self._stats = stats
         self.seed = scenario.seed
 
         # Create optimizer using the previously defined objects
@@ -153,7 +183,7 @@ class Facade:
         self._update_dependencies()
 
         # We have to update our meta data (basically arguments of the components)
-        self.scenario._set_meta(self.get_meta())
+        self._scenario._set_meta(self.get_meta())
 
         # We have to validate if the object compositions are correct and actually make sense
         self._validate()
@@ -167,11 +197,27 @@ class Facade:
 
         # And now we save our scenario object.
         # Runhistory and stats are saved by `SMBO` as they change over time.
-        self.scenario.save()
+        self._scenario.save()
+
+    @property
+    def runhistory(self):
+        return self._runhistory
+
+    @property
+    def stats(self):
+        return self._stats
 
     def _init_optimizer(self) -> None:
+        """
+        Filling the SMBO with all the pre-initialized components.
+
+        Attributes
+        ----------
+        optimizer: SMBO
+            A fully configured SMBO object
+        """
         self.optimizer = SMBO(
-            scenario=self.scenario,
+            scenario=self._scenario,
             stats=self.stats,
             runner=self.runner,
             initial_design=self.initial_design,
@@ -186,44 +232,43 @@ class Facade:
         )
 
     def _update_dependencies(self) -> None:
-        # We add some more dependencies.
-        # This is the easiest way to incorporate dependencies, although it might be a bit hacky.
+        """Convenience method to add some more dependencies. And ensure separable instantiation of
+        the components. This is the easiest way to incorporate dependencies, although
+        it might be a bit hacky.
+        """
         self.intensifier._set_stats(self.stats)
         self.runhistory_encoder._set_multi_objective_algorithm(self.multi_objective_algorithm)
-        # self.runhistory_encoder._set_imputer(self._get_imputer())
         self.acquisition_function._set_model(self.model)
         self.acquisition_optimizer._set_acquisition_function(self.acquisition_function)
 
         # TODO: self.runhistory_encoder.set_success_states etc. for different intensifier?
 
     def _validate(self) -> None:
+        """Check if the composition is correct if there are dependencies, not necessarily """
         assert self.optimizer
 
         # Make sure the same acquisition function is used
         assert self.acquisition_function == self.acquisition_optimizer.acquisition_function
-
-        # We have to check that if we use transform_y it's done everywhere
-        # For example, if we have LogEI, we also need to transform the data inside RunHistoryEncoder
 
     def _continue(self, overwrite: bool = False) -> None:
         """Update the runhistory and stats object if configs (inclusive meta data) are the same."""
         if overwrite:
             return
 
-        old_output_directory = self.scenario.output_directory
-        old_runhistory_filename = self.scenario.output_directory / "runhistory.json"
-        old_stats_filename = self.scenario.output_directory / "stats.json"
+        old_output_directory = self._scenario.output_directory
+        old_runhistory_filename = self._scenario.output_directory / "runhistory.json"
+        old_stats_filename = self._scenario.output_directory / "stats.json"
 
         if old_output_directory.exists() and old_runhistory_filename.exists() and old_stats_filename.exists():
             old_scenario = Scenario.load(old_output_directory)
 
-            if self.scenario == old_scenario:
+            if self._scenario == old_scenario:
                 logger.info("Continuing from previous run.")
 
                 # We update the runhistory and stats in-place.
                 # Stats use the output directory from the config directly.
                 self.runhistory.reset()
-                self.runhistory.load_json(str(old_runhistory_filename), configspace=self.scenario.configspace)
+                self.runhistory.load_json(str(old_runhistory_filename), configspace=self._scenario.configspace)
                 self.stats.load()
 
                 # Reset runhistory and stats if first run was not successful
@@ -232,9 +277,9 @@ class Facade:
                     self.runhistory.reset()
                     self.stats.reset()
             else:
-                diff = recursively_compare_dicts(self.scenario.__dict__, old_scenario.__dict__, level="scenario")
+                diff = recursively_compare_dicts(self._scenario.__dict__, old_scenario.__dict__, level="scenario")
                 logger.info(
-                    f"Found old run in `{self.scenario.output_directory}` but it is not the same as the current one:\n"
+                    f"Found old run in `{self._scenario.output_directory}` but it is not the same as the current one:\n"
                     f"{diff}"
                 )
 
@@ -251,40 +296,12 @@ class Facade:
                 elif feedback == "2":
                     # We overwrite runhistory and stats.
                     # However, we should ensure that we use the same configspace.
-                    assert self.scenario.configspace == old_scenario.configspace
+                    assert self._scenario.configspace == old_scenario.configspace
 
-                    self.runhistory.load_json(str(old_runhistory_filename), configspace=self.scenario.configspace)
+                    self.runhistory.load_json(str(old_runhistory_filename), configspace=self._scenario.configspace)
                     self.stats.load()
                 else:
                     raise RuntimeError("SMAC run was stopped by the user.")
-
-    """
-    def _get_imputer(self) -> AbstractImputer | None:
-        assert self.model is not None
-        assert self.scenario
-
-        # TODO: Can anyone tell me what the `par_factor` does?
-        par_factor = 10.0
-
-        if isinstance(self.model, RandomForestWithInstances):
-            if self.model.log_y:
-                algorithm_walltime_limit = np.log(np.nanmin([np.inf, np.float_(self.scenario.trial_walltime_limit)]))
-                threshold = algorithm_walltime_limit + np.log(par_factor)
-            else:
-                algorithm_walltime_limit = np.nanmin([np.inf, np.float_(self.scenario.trial_walltime_limit)])
-                threshold = algorithm_walltime_limit * par_factor
-
-            return RandomForestImputer(
-                model=self.model,
-                algorithm_walltime_limit=algorithm_walltime_limit,
-                max_iter=2,
-                threshold=threshold,
-                change_threshold=0.01,
-                seed=self.seed,
-            )
-
-        return None
-    """
 
     def get_meta(self) -> dict[str, dict[str, Any] | None]:
         """Generates a hash based on all components of the facade. This is used for the run name or to determine

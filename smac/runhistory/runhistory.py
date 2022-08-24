@@ -118,6 +118,10 @@ class RunHistory(Mapping[RunKey, RunValue]):
         """Enables the `len(runhistory)`"""
         return len(self.data)
 
+    def __eq__(self, other):
+        """enables to check equality of runhistory if the run is continued"""
+        return self.data == other.data
+
     def empty(self) -> bool:
         """Check whether or not the RunHistory is empty.
 
