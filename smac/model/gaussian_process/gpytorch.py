@@ -21,11 +21,13 @@ from gpytorch.models import ExactGP
 from gpytorch.priors import HorseshoePrior
 from gpytorch.utils.errors import NotPSDError
 from scipy import optimize
+from scipy.stats.qmc import LatinHypercube
 
 from smac.configspace import ConfigurationSpace
 from smac.constants import VERY_SMALL_NUMBER
 from smac.model.gaussian_process.base_gaussian_process import BaseGaussianProcess
-
+from smac.model.utils import check_subspace_points
+from smac.model.gaussian_process.kernels.boing import FITCKernel, FITCMean
 warnings.filterwarnings("ignore", module="gpytorch")
 
 logger = logging.getLogger(__name__)

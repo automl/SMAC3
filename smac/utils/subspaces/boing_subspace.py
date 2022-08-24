@@ -72,8 +72,8 @@ class BOinGSubspace(LocalSubspace):
 
         subspace_acq_func_opt_kwargs = {
             "acquisition_function": self.acquisition_function,
-            "config_space": self.cs_local,  # type: ignore[attr-defined] # noqa F821
-            "rng": np.random.RandomState(self.rng.randint(1, 2**20)),
+            "configspace": self.cs_local,  # type: ignore[attr-defined] # noqa F821
+            "seed": self.rng.randint(1, 2**20),
         }
 
         if isinstance(acq_optimizer_local, AbstractAcquisitionOptimizer):
@@ -95,7 +95,7 @@ class BOinGSubspace(LocalSubspace):
                 else:
                     # Here are the setting used by squirrel-optimizer
                     # https://github.com/automl/Squirrel-Optimizer-BBO-NeurIPS20-automlorg/blob/main/squirrel-optimizer/smac_optim.py
-                    n_sls_iterations = {
+                    local_search_iterations = {
                         1: 10,
                         2: 10,
                         3: 10,
@@ -107,7 +107,7 @@ class BOinGSubspace(LocalSubspace):
                     }.get(len(self.cs_local.get_hyperparameters()), 5)
 
                     subspace_acq_func_opt_kwargs.update(
-                        {"n_steps_plateau_walk": 5, "n_sls_iterations": n_sls_iterations}
+                        {"n_steps_plateau_walk": 5, "local_search_iterations": local_search_iterations}
                     )
 
             elif inspect.isclass(acq_optimizer_local, AbstractAcquisitionOptimizer):
@@ -141,7 +141,7 @@ class BOinGSubspace(LocalSubspace):
             else:
                 previous_configs = [Configuration(configuration_space=self.cs_local, vector=ss_x) for ss_x in self.ss_x]
                 init_points_local = self.acq_optimizer_local.local_search._get_init_points_from_previous_configs(
-                    self.acq_optimizer_local.n_sls_iterations, previous_configs, next_configs_random
+                    self.acq_optimizer_local.local_search_iterations, previous_configs, next_configs_random
                 )
 
             configs_acq_local = self.acq_optimizer_local.local_search._do_search(init_points_local)
