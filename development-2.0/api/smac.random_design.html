@@ -495,8 +495,8 @@ time.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>prob</strong> (<em>float</em>) – Probility of a random configuration</p></li>
-<li><p><strong>cool_down_fac</strong> (<em>float</em>) – Multiply the <code class="docutils literal notranslate"><span class="pre">prob</span></code> by <code class="docutils literal notranslate"><span class="pre">cool_down_fac</span></code> in each iteration</p></li>
-<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</p></li>
+<li><p><strong>factor</strong> (<em>float</em>) – Multiply the <code class="docutils literal notranslate"><span class="pre">prob</span></code> by <code class="docutils literal notranslate"><span class="pre">cool_down_fac</span></code> in each iteration</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Integer used to initialize random state</p></li>
 </ul>
 </dd>
 </dl>
@@ -543,8 +543,8 @@ time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>prob</strong> (<em>float</em>) – Probility of a random configuration</p></li>
-<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</p></li>
+<li><p><strong>prob</strong> (<em>float</em>) – Probility that a configuration will be drawn at random</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Integer used to initialize random state</p></li>
 </ul>
 </dd>
 </dl>
@@ -555,6 +555,17 @@ time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.random_design.ProbabilityRandomDesign.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/random_design/probability_design.html#ProbabilityRandomDesign.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.random_design.ProbabilityRandomDesign.get_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the meta data of the created object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -578,6 +589,11 @@ time.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Abstract base of helper classes to configure interleaving of random configurations in a list
 of challengers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – Integer used to initialize random state</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.random_design.RandomDesign.check">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/random_design/random_design.html#RandomDesign.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.random_design.RandomDesign.check" title="Permalink to this definition">¶</a></dt>

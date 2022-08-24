@@ -316,17 +316,15 @@ style="width: 100%;">
   <h1>Source code for smac.random_design.probability_design</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
-
-<span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">from</span> <span class="nn">smac.random_design.random_design</span> <span class="kn">import</span> <span class="n">RandomDesign</span>
+<span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2022, automl.org&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ProbabilityRandomDesign"><a class="viewcode-back" href="../../../api/smac.random_design.probability_design.html#smac.random_design.ProbabilityRandomDesign">[docs]</a><span class="k">class</span> <span class="nc">ProbabilityRandomDesign</span><span class="p">(</span><span class="n">RandomDesign</span><span class="p">):</span>
@@ -335,9 +333,9 @@ style="width: 100%;">
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    prob : float</span>
-<span class="sd">        Probility of a random configuration</span>
-<span class="sd">    rng : np.random.RandomState</span>
-<span class="sd">        Random state</span>
+<span class="sd">        Probility that a configuration will be drawn at random</span>
+<span class="sd">    seed : int</span>
+<span class="sd">        Integer used to initialize random state</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">probability</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
@@ -347,6 +345,14 @@ style="width: 100%;">
 <div class="viewcode-block" id="ProbabilityRandomDesign.next_iteration"><a class="viewcode-back" href="../../../api/smac.random_design.probability_design.html#smac.random_design.ProbabilityRandomDesign.next_iteration">[docs]</a>    <span class="k">def</span> <span class="nf">next_iteration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Does nothing.&quot;&quot;&quot;</span>
         <span class="o">...</span></div>
+
+<div class="viewcode-block" id="ProbabilityRandomDesign.get_meta"><a class="viewcode-back" href="../../../api/smac.random_design.probability_design.html#smac.random_design.ProbabilityRandomDesign.get_meta">[docs]</a>    <span class="k">def</span> <span class="nf">get_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="s2">&quot;probability&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">prob</span><span class="p">,</span>
+            <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+        <span class="p">}</span></div>
 
 <div class="viewcode-block" id="ProbabilityRandomDesign.check"><a class="viewcode-back" href="../../../api/smac.random_design.probability_design.html#smac.random_design.ProbabilityRandomDesign.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Check if the next configuration should be at random.&quot;&quot;&quot;</span>
@@ -364,10 +370,10 @@ style="width: 100%;">
 <span class="sd">    ----------</span>
 <span class="sd">    prob : float</span>
 <span class="sd">        Probility of a random configuration</span>
-<span class="sd">    cool_down_fac : float</span>
+<span class="sd">    factor : float</span>
 <span class="sd">        Multiply the ``prob`` by ``cool_down_fac`` in each iteration</span>
-<span class="sd">    rng : np.random.RandomState</span>
-<span class="sd">        Random state</span>
+<span class="sd">    seed : int</span>
+<span class="sd">        Integer used to initialize random state</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">probability</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
@@ -379,6 +385,9 @@ style="width: 100%;">
         <span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="s2">&quot;probability&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">prob</span><span class="p">,</span>
+            <span class="s2">&quot;factor&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cool_down_fac</span><span class="p">,</span>
+            <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="ProbabilityCoolDownRandomDesign.next_iteration"><a class="viewcode-back" href="../../../api/smac.random_design.probability_design.html#smac.random_design.ProbabilityCoolDownRandomDesign.next_iteration">[docs]</a>    <span class="k">def</span> <span class="nf">next_iteration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
