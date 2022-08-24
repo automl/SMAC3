@@ -58,8 +58,8 @@ class AlgorithmConfigurationFacade(Facade):
         )
 
     @staticmethod
-    def get_acquisition_function(scenario: Scenario, par: float = 0.0) -> EI:
-        return EI(xi=par)
+    def get_acquisition_function(scenario: Scenario, xi: float = 0.0) -> EI:
+        return EI(xi=xi)
 
     @staticmethod
     def get_acquisition_optimizer(scenario: Scenario) -> AbstractAcquisitionOptimizer:

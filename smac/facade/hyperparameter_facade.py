@@ -50,8 +50,8 @@ class HyperparameterFacade(Facade):
         )
 
     @staticmethod
-    def get_acquisition_function(scenario: Scenario, *, par: float = 0.0) -> EI:
-        return EI(xi=par, log=True)
+    def get_acquisition_function(scenario: Scenario, *, xi: float = 0.0) -> EI:
+        return EI(xi=xi, log=True)
 
     @staticmethod
     def get_acquisition_optimizer(
