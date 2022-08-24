@@ -24,15 +24,18 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
 
     Parameters
     ----------
+    long_name : str
     acquisition_function : AbstractAcquisitionFunction
+    eta : float
+        Current incumbent value.
     """
 
     def __init__(self, acquisition_function: AbstractAcquisitionFunction) -> None:
         super().__init__()
         self.long_name : str = f"Integrated Acquisition Function ({acquisition_function.__class__.__name__})"
-        self.acq : AbstractAcquisitionFunction = acquisition_function
-        self._functions : list[AbstractAcquisitionFunction] = [] 
+        self.acquisition_function : AbstractAcquisitionFunction = acquisition_function
         self.eta: float | None = None
+        self._functions : list[AbstractAcquisitionFunction] = [] 
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
@@ -59,7 +62,7 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
         if not hasattr(model, "models") or len(model.models) == 0:
             raise ValueError("IntegratedAcquisitionFunction requires at least one model to integrate!")
         if len(self._functions) == 0 or len(self._functions) != len(model.models):
-            self._functions = [copy.deepcopy(self.acq) for _ in model.models]
+            self._functions = [copy.deepcopy(self.acquisition_function) for _ in model.models]
         for submodel, func in zip(model.models, self._functions):
             func.update(model=submodel, **kwargs)
 

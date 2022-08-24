@@ -37,7 +37,7 @@ class EI(AbstractAcquisitionFunction):
     xi : float
         Exploration/exploitation trade-off parameter.
     eta : float
-        Current incumbent.
+        Current incumbent value.
     """
     def __init__(self, xi: float = 0.0, log: bool = False) -> None:
         super(EI, self).__init__()
@@ -60,7 +60,7 @@ class EI(AbstractAcquisitionFunction):
         model : BaseModel
            Models the objective function.
         eta : float
-            Current incumbent.
+            Current incumbent value.
         """
         self.model = model
         self.eta = eta
