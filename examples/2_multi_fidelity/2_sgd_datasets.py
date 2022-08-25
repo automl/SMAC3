@@ -119,7 +119,6 @@ if __name__ == "__main__":
         max_budget=45,  # Use max 45 instances (if we have a lot of instances we could constraint it)
         instances=dataset.get_instances(),
         instance_features=dataset.get_instance_features(),
-        instance_order="shuffle_once",  # Shuffle instances beforehand
     )
 
     # Calculate the mean cost of all instances for the default configuration

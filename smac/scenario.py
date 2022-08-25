@@ -115,13 +115,10 @@ class Scenario:
             seed = random.randint(0, 999999)
             object.__setattr__(self, "seed", seed)
 
-        # Assert correct instance order
-        # assert self.instance_order in ["shuffle", "shuffle_once", None], "Invalid instance order."
-
         # Change directory wrt name and seed
         self._change_output_directory()
 
-        # Set hashes
+        # Set empty meta
         object.__setattr__(self, "_meta", {})
 
     def __eq__(self, other: object) -> bool:
