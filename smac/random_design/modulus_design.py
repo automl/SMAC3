@@ -28,7 +28,7 @@ class NoCoolDownRandomDesign(RandomDesign):
     def __init__(self, modulus: float = 2.0, seed: int = 0):
         super().__init__(seed)
         assert modulus > 0
-        if modulus == 1.0:
+        if modulus <= 1.0:
             logger.warning("Using SMAC with random configurations only. ROAR is the better choice for this.")
         self.modulus = modulus
 
@@ -47,7 +47,7 @@ class NoCoolDownRandomDesign(RandomDesign):
     def check(self, iteration: int) -> bool:
         """Checks if the next configuration should be at random. Iteration here relates
         to the ith configuration evaluated in an SMBO iteration."""
-        assert iteration > 0
+        assert iteration >= 0
         return iteration % self.modulus < 1
 
 
@@ -107,7 +107,7 @@ class LinearCoolDownRandomDesign(RandomDesign):
         """Check if the next configuration should be interleaved based on modulus.
         Iteration here relates to the ith configuration evaluated in an SMBO
         iteration."""
-        assert iteration > 0
+        assert iteration >= 0
         if iteration % self.modulus < 1:
             return True
         else:
