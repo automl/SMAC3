@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.intensification.successive_halving &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>smac.intensification.hyperband_worker &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -39,8 +39,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.intensification.successive_halving_worker" href="smac.intensification.successive_halving_worker.html" />
-    <link rel="prev" title="smac.intensification.stages" href="smac.intensification.stages.html" />
+    <link rel="next" title="smac.intensification.intensification" href="smac.intensification.intensification.html" />
+    <link rel="prev" title="smac.intensification.hyperband" href="smac.intensification.hyperband.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -330,51 +330,27 @@ style="width: 100%;">
               
               <div>
                 
-  <section id="module-smac.intensification.successive_halving">
-<span id="smac-intensification-successive-halving"></span><h1>smac.intensification.successive_halving<a class="headerlink" href="#module-smac.intensification.successive_halving" title="Permalink to this heading">¶</a></h1>
+  <section id="module-smac.intensification.hyperband_worker">
+<span id="smac-intensification-hyperband-worker"></span><h1>smac.intensification.hyperband_worker<a class="headerlink" href="#module-smac.intensification.hyperband_worker" title="Permalink to this heading">¶</a></h1>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.intensification.successive_halving.SuccessiveHalving" title="smac.intensification.successive_halving.SuccessiveHalving"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SuccessiveHalving</span></code></a>(scenario[, ...])</p></td>
-<td><p>Races multiple challengers against an incumbent using Successive Halving method.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.intensification.hyperband_worker.HyperbandWorker" title="smac.intensification.hyperband_worker.HyperbandWorker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HyperbandWorker</span></code></a>(scenario[, ...])</p></td>
+<td><p>Races multiple challengers against an incumbent using Hyperband method.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
-<dt class="sig sig-object py" id="smac.intensification.successive_halving.SuccessiveHalving">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.intensification.successive_halving.</span></span><span class="sig-name descname"><span class="pre">SuccessiveHalving</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_pairs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'shuffle_once'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'highest_executed_budget'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_initial_challengers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_challenger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensify_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#SuccessiveHalving"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.successive_halving.SuccessiveHalving" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.intensification.parallel_scheduling.html#smac.intensification.parallel_scheduling.ParallelScheduler" title="smac.intensification.parallel_scheduling.ParallelScheduler"><code class="xref py py-class docutils literal notranslate"><span class="pre">ParallelScheduler</span></code></a></p>
-<p>Races multiple challengers against an incumbent using Successive Halving method.</p>
-<p>Implementation following the description in
-“BOHB: Robust and Efficient Hyperparameter Optimization at Scale” (Falkner et al. 2018)
-Supplementary reference: <a class="reference external" href="http://proceedings.mlr.press/v80/falkner18a/falkner18a-supp.pdf">http://proceedings.mlr.press/v80/falkner18a/falkner18a-supp.pdf</a></p>
-<p>Successive Halving intensifier (and Hyperband) can operate on two kinds of budgets:
-1. <strong>‘Instances’ as budget</strong>:</p>
-<blockquote>
-<div><p>When multiple instances are provided or when run objective is “runtime”, this is the criterion used as budget
-for successive halving iterations i.e., the budget determines how many instances the challengers are evaluated
-on at a time. Top challengers for the next iteration are selected based on the combined performance across
-all instances used.</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">min_budget</span></code> and <code class="docutils literal notranslate"><span class="pre">max_budget</span></code> are not provided, then they are set to 1 and total number
-of available instances respectively by default.</p>
-</div></blockquote>
-<ol class="arabic" start="2">
-<li><dl>
-<dt><strong>‘Real-valued’ budget</strong>:</dt><dd><p>This is used when there is only one instance provided and when run objective is “quality”,
-i.e., budget is a positive, real-valued number that can be passed to the target algorithm as an argument.
-It can be used to control anything by the target algorithm, Eg: number of epochs for training a neural network.</p>
-<p><code class="docutils literal notranslate"><span class="pre">min_budget</span></code> and <code class="docutils literal notranslate"><span class="pre">max_budget</span></code> are required parameters for this type of budget.</p>
-</dd>
-</dl>
-</li>
-</ol>
-<p>Examples for successive halving (and hyperband) can be found here:
-* Runtime objective and multiple instances <em>(instances as budget)</em>: <cite>examples/spear_qcp/SMAC4AC_SH_spear_qcp.py</cite>
-* Quality objective and multiple instances <em>(instances as budget)</em>: <cite>examples/SMAC4MF_sgd_instances.py</cite>
-* Quality objective and single instance <em>(real-valued budget)</em>: <cite>examples/SMAC4MF_mlp.py</cite></p>
-<p>This class instantiates <cite>_SuccessiveHalving</cite> objects on a need basis, that is, to
-prevent workers from being idle. The actual logic that implements the Successive halving method
-lies on the _SuccessiveHalving class.</p>
+<dt class="sig sig-object py" id="smac.intensification.hyperband_worker.HyperbandWorker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.intensification.hyperband_worker.</span></span><span class="sig-name descname"><span class="pre">HyperbandWorker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_pairs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'shuffle_once'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'highest_executed_budget'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_challenger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensify_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/hyperband_worker.html#HyperbandWorker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.hyperband_worker.HyperbandWorker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="smac.intensification.successive_halving_worker.html#smac.intensification.successive_halving_worker.SuccessiveHalvingWorker" title="smac.intensification.successive_halving_worker.SuccessiveHalvingWorker"><code class="xref py py-class docutils literal notranslate"><span class="pre">SuccessiveHalvingWorker</span></code></a></p>
+<p>Races multiple challengers against an incumbent using Hyperband method.</p>
+<p>This class contains the logic to implement:
+“BOHB: Robust and Efficient Hyperparameter Optimization at Scale” (Falkner et al. 2018)</p>
+<p>Objects from this class are meant to run on a single worker. <cite>Hyperband</cite> method,
+creates multiple _Hyperband instances to allow parallelism, and for this reason
+<cite>Hyperband</cite> should be considered the user interface whereas <cite>_Hyperband</cite> a private
+class with the actual implementation of the method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -382,18 +358,16 @@ lies on the _SuccessiveHalving class.</p>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – </p></li>
 <li><p><strong>instances</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – list of all instance ids</p></li>
 <li><p><strong>instance_specifics</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – mapping from instance name to instance specific string</p></li>
-<li><p><strong>algorithm_walltime_limit</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – algorithm_walltime_limit of TA runs</p></li>
+<li><p><strong>algorithm_walltime_limit</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – runtime algorithm_walltime_limit of TA runs</p></li>
 <li><p><strong>deterministic</strong> (<em>bool</em>) – whether the TA is deterministic or not</p></li>
 <li><p><strong>min_budget</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – minimum budget allowed for 1 run of successive halving</p></li>
 <li><p><strong>max_budget</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – maximum budget allowed for 1 run of successive halving</p></li>
 <li><p><strong>eta</strong> (<em>float</em>) – ‘halving’ factor after each iteration in a successive halving run. Defaults to 3</p></li>
-<li><p><strong>n_initial_challengers</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – number of challengers to consider for the initial budget. If None, calculated internally</p></li>
 <li><p><strong>n_seeds</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0</p></li>
 <li><p><strong>instance_order</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – how to order instances. Can be set to: [None, shuffle_once, shuffle]
 * None - use as is given by the user
 * shuffle_once - shuffle once and use across all SH run (default)
 * shuffle - shuffle before every SH run</p></li>
-<li><p><strong>instance_seed_pairs</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Do not set this argument, it will only be used by hyperband!</p></li>
 <li><p><strong>min_challenger</strong> (<em>int</em>) – minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
 raise an exception if a value larger than 1 is passed.</p></li>
 <li><p><strong>incumbent_selection</strong> (<em>str</em>) – How to select incumbent in successive halving. Only active for real-valued budgets.
@@ -401,16 +375,70 @@ Can be set to: [highest_executed_budget, highest_budget, any_budget]
 * highest_executed_budget - incumbent is the best in the highest budget run so far (default)
 * highest_budget - incumbent is selected only based on the highest budget
 * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget</p></li>
+<li><p><strong>identifier</strong> (<em>int</em>) – Allows to identify the _Hyperband instance in case of multiple ones</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.intensification.successive_halving.SuccessiveHalving.get_meta">
-<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#SuccessiveHalving.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.successive_halving.SuccessiveHalving.get_meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the meta data of the created object.</p>
+<dt class="sig sig-object py" id="smac.intensification.hyperband_worker.HyperbandWorker.get_next_run">
+<span class="sig-name descname"><span class="pre">get_next_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">challengers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/hyperband_worker.html#HyperbandWorker.get_next_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.hyperband_worker.HyperbandWorker.get_next_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects which challenger to use based on the iteration stage and set the iteration
+parameters. First iteration will choose configurations from the <code class="docutils literal notranslate"><span class="pre">ask</span></code> or input
+challengers, while the later iterations pick top configurations from the previously selected
+challengers in that iteration.</p>
+<p>If no new run is available, the method returns a configuration of None.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>challengers</strong> (<em>List</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – promising configurations</p></li>
+<li><p><strong>incumbent</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – incumbent configuration</p></li>
+<li><p><strong>chooser</strong> (<em>smac.optimizer.epm_configuration_chooser.EPMChooser</em>) – optimizer that generates next configurations to use for racing</p></li>
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – stores all runs we ran so far</p></li>
+<li><p><strong>repeat_configs</strong> (<em>bool</em>) – if False, an evaluated configuration will not be generated again</p></li>
+<li><p><strong>n_workers</strong> (<em>int</em>) – the maximum number of workers available
+at a given time.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<a class="reference internal" href="smac.runhistory.enumerations.html#smac.runhistory.enumerations.RunInfoIntent" title="smac.runhistory.enumerations.RunInfoIntent"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunInfoIntent</span></code></a>, <a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.RunInfo" title="smac.runhistory.dataclasses.RunInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunInfo</span></code></a>]</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>intent</strong> (<em>RunInfoIntent</em>) – Indicator of how to consume the RunInfo object</p></li>
+<li><p><strong>run_info</strong> (<em>RunInfo</em>) – An object that encapsulates necessary information for a config run</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.intensification.hyperband_worker.HyperbandWorker.process_results">
+<span class="sig-name descname"><span class="pre">process_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_trajectory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/hyperband_worker.html#HyperbandWorker.process_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.hyperband_worker.HyperbandWorker.process_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>The intensifier stage will be updated based on the results/status of a configuration
+execution. Also, a incumbent will be determined.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>run_info</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunInfo" title="smac.runhistory.RunInfo"><em>RunInfo</em></a>) – A RunInfo containing the configuration that was evaluated</p></li>
+<li><p><strong>incumbent</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – Best configuration seen so far</p></li>
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunHistory" title="smac.runhistory.RunHistory"><em>RunHistory</em></a>) – stores all runs we ran so far
+if False, an evaluated configuration will not be generated again</p></li>
+<li><p><strong>time_bound</strong> (<em>float</em>) – time in [sec] available to perform intensify</p></li>
+<li><p><strong>result</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunValue" title="smac.runhistory.RunValue"><em>RunValue</em></a>) – Contain the result (status and other methadata) of exercising
+a challenger/incumbent.</p></li>
+<li><p><strong>log_trajectory</strong> (<em>bool</em>) – Whether to log changes of incumbents in trajectory</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>incumbent</strong> (<em>Configuration</em>) – current (maybe new) incumbent configuration</p></li>
+<li><p><strong>inc_perf</strong> (<em>float</em>) – empirical performance of incumbent configuration</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -425,17 +453,17 @@ Can be set to: [highest_executed_budget, highest_budget, any_budget]
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.intensification.stages.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.intensification.hyperband.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.intensification.stages</p>
+            <p class="prev-next-title">smac.intensification.hyperband</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.intensification.successive_halving_worker.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.intensification.intensification.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.intensification.successive_halving_worker</p>
+        <p class="prev-next-title">smac.intensification.intensification</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

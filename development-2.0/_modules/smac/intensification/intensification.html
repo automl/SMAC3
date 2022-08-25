@@ -446,7 +446,7 @@ style="width: 100%;">
 
         <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">min_challenger</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;The number of minimal challengers is set to one for deterministic algorithms.&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;The number of minimal challengers is set to one for deterministic algorithms.&quot;</span><span class="p">)</span>
 
             <span class="n">min_challenger</span> <span class="o">=</span> <span class="mi">1</span>
 
@@ -495,7 +495,7 @@ style="width: 100%;">
         <span class="n">ask</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
         <span class="n">repeat_configs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">n_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">RunInfoIntent</span><span class="p">,</span> <span class="n">RunInfo</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;This procedure is in charge of generating a RunInfo object to comply with lines 7 (in</span>
 <span class="sd">        case stage is stage==RUN_INCUMBENT) or line 12 (In case of stage==RUN_CHALLENGER)</span>
@@ -523,7 +523,7 @@ style="width: 100%;">
 <span class="sd">            stores all runs we ran so far</span>
 <span class="sd">        repeat_configs : bool</span>
 <span class="sd">            if False, an evaluated configuration will not be generated again</span>
-<span class="sd">        num_workers: int</span>
+<span class="sd">        n_workers: int</span>
 <span class="sd">            the maximum number of workers available</span>
 <span class="sd">            at a given time.</span>
 
@@ -534,7 +534,7 @@ style="width: 100%;">
 <span class="sd">        run_info: RunInfo</span>
 <span class="sd">            An object that encapsulates necessary information for a config run</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">num_workers</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n_workers</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The selected intensifier does not support more than 1 worker.&quot;</span><span class="p">)</span>
 
         <span class="c1"># If this function is called, it means the iteration is</span>
@@ -1102,7 +1102,7 @@ style="width: 100%;">
         <span class="n">missing_runs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">inc_inst_seeds</span> <span class="o">-</span> <span class="n">chall_inst_seeds</span><span class="p">)</span>
 
         <span class="c1"># Line 11</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">missing_runs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">missing_runs</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="k">if</span> <span class="n">N</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Argument N must not be smaller than zero, but is </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
 

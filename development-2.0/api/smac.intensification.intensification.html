@@ -40,7 +40,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.intensification.parallel_scheduling" href="smac.intensification.parallel_scheduling.html" />
-    <link rel="prev" title="smac.intensification.hyperband" href="smac.intensification.hyperband.html" />
+    <link rel="prev" title="smac.intensification.hyperband_worker" href="smac.intensification.hyperband_worker.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -448,7 +448,7 @@ where a new configuration to intensify will be drawn from epm/initial challenger
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.intensification.intensification.Intensifier.get_next_run">
-<span class="sig-name descname"><span class="pre">get_next_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">challengers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier.get_next_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier.get_next_run" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_next_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">challengers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier.get_next_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier.get_next_run" title="Permalink to this definition">¶</a></dt>
 <dd><p>This procedure is in charge of generating a RunInfo object to comply with lines 7 (in
 case stage is stage==RUN_INCUMBENT) or line 12 (In case of stage==RUN_CHALLENGER)</p>
 <p>A RunInfo object encapsulates the necessary information for a worker
@@ -472,7 +472,7 @@ configuration to try was already executed.</p>
 <li><p><strong>chooser</strong> (<em>smac.optimizer.epm_configuration_chooser.EPMChooser</em>) – optimizer that generates next configurations to use for racing</p></li>
 <li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunHistory" title="smac.runhistory.RunHistory"><em>RunHistory</em></a>) – stores all runs we ran so far</p></li>
 <li><p><strong>repeat_configs</strong> (<em>bool</em>) – if False, an evaluated configuration will not be generated again</p></li>
-<li><p><strong>num_workers</strong> (<em>int</em>) – the maximum number of workers available
+<li><p><strong>n_workers</strong> (<em>int</em>) – the maximum number of workers available
 at a given time.</p></li>
 </ul>
 </dd>
@@ -541,11 +541,11 @@ a challenger/incumbent.</p></li>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.intensification.hyperband.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.intensification.hyperband_worker.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.intensification.hyperband</p>
+            <p class="prev-next-title">smac.intensification.hyperband_worker</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="smac.intensification.parallel_scheduling.html" title="next page">

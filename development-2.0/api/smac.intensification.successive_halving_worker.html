@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.intensification.abstract_intensifier &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>smac.intensification.successive_halving_worker &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -39,8 +39,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.intensification.hyperband" href="smac.intensification.hyperband.html" />
-    <link rel="prev" title="smac.intensification" href="smac.intensification.html" />
+    <link rel="next" title="smac.initial_design" href="smac.initial_design.html" />
+    <link rel="prev" title="smac.intensification.successive_halving" href="smac.intensification.successive_halving.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -330,65 +330,96 @@ style="width: 100%;">
               
               <div>
                 
-  <section id="module-smac.intensification.abstract_intensifier">
-<span id="smac-intensification-abstract-intensifier"></span><h1>smac.intensification.abstract_intensifier<a class="headerlink" href="#module-smac.intensification.abstract_intensifier" title="Permalink to this heading">¶</a></h1>
+  <section id="module-smac.intensification.successive_halving_worker">
+<span id="smac-intensification-successive-halving-worker"></span><h1>smac.intensification.successive_halving_worker<a class="headerlink" href="#module-smac.intensification.successive_halving_worker" title="Permalink to this heading">¶</a></h1>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.intensification.abstract_intensifier.AbstractIntensifier" title="smac.intensification.abstract_intensifier.AbstractIntensifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractIntensifier</span></code></a>(scenario[, ...])</p></td>
-<td><p>Base class for all racing methods.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.intensification.successive_halving_worker.SuccessiveHalvingWorker" title="smac.intensification.successive_halving_worker.SuccessiveHalvingWorker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SuccessiveHalvingWorker</span></code></a>(scenario[, ...])</p></td>
+<td><p>Races multiple challengers against an incumbent using Successive Halving method.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
-<dt class="sig sig-object py" id="smac.intensification.abstract_intensifier.AbstractIntensifier">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.intensification.abstract_intensifier.</span></span><span class="sig-name descname"><span class="pre">AbstractIntensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_challenger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensify_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/abstract_intensifier.html#AbstractIntensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.abstract_intensifier.AbstractIntensifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Base class for all racing methods.</p>
-<p>The “intensification” is designed to output a RunInfo object with enough information
-to run a given configuration (for example, the run info contains the instance/seed
-pair, as well as the associated resources).</p>
-<p>A worker can execute this RunInfo object and produce a RunValue object with the
-execution results. Each intensifier process the RunValue object and updates it’s
-internal state in preparation for the next iteration.</p>
-<p><strong>Note: Do not use directly</strong></p>
+<dt class="sig sig-object py" id="smac.intensification.successive_halving_worker.SuccessiveHalvingWorker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.intensification.successive_halving_worker.</span></span><span class="sig-name descname"><span class="pre">SuccessiveHalvingWorker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_pairs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'shuffle_once'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'highest_executed_budget'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_initial_challengers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_challenger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensify_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_all_budgets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_n_configs_in_stage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/successive_halving_worker.html#SuccessiveHalvingWorker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.successive_halving_worker.SuccessiveHalvingWorker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="smac.intensification.abstract_intensifier.html#smac.intensification.abstract_intensifier.AbstractIntensifier" title="smac.intensification.abstract_intensifier.AbstractIntensifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractIntensifier</span></code></a></p>
+<p>Races multiple challengers against an incumbent using Successive Halving method.</p>
+<p>This class contains the logic to implement:
+“BOHB: Robust and Efficient Hyperparameter Optimization at Scale” (Falkner et al. 2018)
+Supplementary reference: <a class="reference external" href="http://proceedings.mlr.press/v80/falkner18a/falkner18a-supp.pdf">http://proceedings.mlr.press/v80/falkner18a/falkner18a-supp.pdf</a></p>
+<p>The <cite>SuccessiveHalving</cite> class can create multiple <cite>_SuccessiveHalving</cite> objects, to
+allow parallelism in the method (up to the number of workers available). The user  interface
+is expected to be <cite>SuccessiveHalving</cite>, yet this class (<cite>_SuccessiveHalving</cite>) contains the
+actual single worker implementation of the SMAC4MF method.</p>
+<p>Successive Halving intensifier (and Hyperband) can operate on two kinds of budgets:</p>
+<ol class="arabic">
+<li><p><strong>‘Instances’ as budget</strong>:</p>
+<p>When multiple instances are provided or when run objective is “runtime”,
+this is the criterion used as budget
+for successive halving iterations i.e., the budget determines how many
+instances the challengers are evaluated
+on at a time. Top challengers for the next iteration are selected based
+on the combined performance across all instances used.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">min_budget</span></code> and <code class="docutils literal notranslate"><span class="pre">max_budget</span></code> are not provided, then they are
+set to 1 and total number of available instances respectively by default.</p>
+</li>
+<li><p><strong>‘Real-valued’ budget</strong>:</p>
+<p>This is used when there is only one instance provided and when run
+objective is “quality”, i.e. budget is a positive, real-valued number
+that can be passed to the target algorithm as an argument.
+It can be used to control anything by the target algorithm,
+Eg: number of epochs for training a neural network.</p>
+<p><code class="docutils literal notranslate"><span class="pre">min_budget</span></code> and <code class="docutils literal notranslate"><span class="pre">max_budget</span></code> are required parameters for
+this type of budget.</p>
+</li>
+</ol>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>stats</strong> (<a class="reference internal" href="smac.utils.stats.html#smac.utils.stats.Stats" title="smac.utils.stats.Stats"><em>Stats</em></a>) – stats object</p></li>
+<li><p><strong>stats</strong> (<em>smac.stats.stats.Stats</em>) – stats object</p></li>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – </p></li>
 <li><p><strong>instances</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – list of all instance ids</p></li>
 <li><p><strong>instance_specifics</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – mapping from instance name to instance specific string</p></li>
-<li><p><strong>algorithm_walltime_limit</strong> (<em>float</em>) – runtime algorithm_walltime_limit of TA runs</p></li>
+<li><p><strong>algorithm_walltime_limit</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – algorithm_walltime_limit of TA runs</p></li>
 <li><p><strong>deterministic</strong> (<em>bool</em>) – whether the TA is deterministic or not</p></li>
-<li><p><strong>min_config_calls</strong> (<em>int</em>) – Minimum number of run per config (summed over all calls to
-intensify).</p></li>
-<li><p><strong>max_config_calls</strong> (<em>int</em>) – Maximum number of runs per config (summed over all calls to
-intensifiy).</p></li>
-<li><p><strong>min_challenger</strong> (<em>int</em>) – minimal number of challengers to be considered (even if time_bound is exhausted earlier)</p></li>
-<li><p><strong>intensify_percentage</strong> (<em>float</em><em>, </em><em>defaults to 0.5</em>) – How much percentage of the time should configurations be intensified (evaluated on higher budgets or
-more instances).</p></li>
+<li><p><strong>min_budget</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – minimum budget allowed for 1 run of successive halving</p></li>
+<li><p><strong>max_budget</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – maximum budget allowed for 1 run of successive halving</p></li>
+<li><p><strong>eta</strong> (<em>float</em>) – ‘halving’ factor after each iteration in a successive halving run. Defaults to 3</p></li>
+<li><p><strong>_all_budgets</strong> (<em>Optional</em><em>[</em><em>np.ndarray</em><em>] </em><em>= None</em>) – Used internally when HB uses SH as a subrouting</p></li>
+<li><p><strong>_n_configs_in_stage</strong> (<em>Optional</em><em>[</em><em>np.ndarray</em><em>] </em><em>= None</em>) – Used internally when HB uses SH as a subrouting</p></li>
+<li><p><strong>n_initial_challengers</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – number of challengers to consider for the initial budget. If None, calculated internally</p></li>
+<li><p><strong>n_seeds</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0</p></li>
+<li><p><strong>instance_order</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – <p>how to order instances. Can be set to: [None, shuffle_once, shuffle]</p>
+<ul>
+<li><p>None - use as is given by the user</p></li>
+<li><p>shuffle_once - shuffle once and use across all SH run (default)</p></li>
+<li><p>shuffle - shuffle before every SH run</p></li>
+</ul>
+</p></li>
+<li><p><strong>instance_seed_pairs</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Do not set this argument, it will only be used by hyperband!</p></li>
+<li><p><strong>min_challenger</strong> (<em>int</em>) – minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
+raise an exception if a value larger than 1 is passed.</p></li>
+<li><p><strong>incumbent_selection</strong> (<em>str</em>) – <p>How to select incumbent in successive halving. Only active for real-valued budgets.
+Can be set to: [highest_executed_budget, highest_budget, any_budget]</p>
+<ul>
+<li><p>highest_executed_budget - incumbent is the best in the highest budget run so far (default)</p></li>
+<li><p>highest_budget - incumbent is selected only based on the highest budget</p></li>
+<li><p>any_budget - incumbent is the best on any budget i.e., best performance regardless of budget</p></li>
+</ul>
+</p></li>
+<li><p><strong>identifier</strong> (<em>int</em>) – Adds a numerical identifier on this SH instance. Used for debug and tagging
+logger messages properly</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.intensification.abstract_intensifier.AbstractIntensifier.get_meta">
-<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/abstract_intensifier.html#AbstractIntensifier.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.abstract_intensifier.AbstractIntensifier.get_meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the meta data of the created object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.intensification.abstract_intensifier.AbstractIntensifier.get_next_run">
-<span class="sig-name descname"><span class="pre">get_next_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">challengers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/abstract_intensifier.html#AbstractIntensifier.get_next_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.abstract_intensifier.AbstractIntensifier.get_next_run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract method for choosing the next challenger, to allow for different selections
-across intensifiers uses <code class="docutils literal notranslate"><span class="pre">_next_challenger()</span></code> by default.</p>
-<p>If no more challengers are available, the method should issue a SKIP via
-RunInfoIntent.SKIP, so that a new iteration can sample new configurations.</p>
+<dt class="sig sig-object py" id="smac.intensification.successive_halving_worker.SuccessiveHalvingWorker.get_next_run">
+<span class="sig-name descname"><span class="pre">get_next_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">challengers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/successive_halving_worker.html#SuccessiveHalvingWorker.get_next_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.successive_halving_worker.SuccessiveHalvingWorker.get_next_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects which challenger to use based on the iteration stage and set the iteration
+parameters. First iteration will choose configurations from the <code class="docutils literal notranslate"><span class="pre">chooser</span></code> or input
+challengers, while the later iterations pick top configurations from the previously selected
+challengers in that iteration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -406,8 +437,9 @@ at a given time.</p></li>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p><strong>run_info</strong> (<em>RunInfo</em>) – An object that encapsulates necessary information for a config run</p></li>
 <li><p><strong>intent</strong> (<em>RunInfoIntent</em>) – Indicator of how to consume the RunInfo object</p></li>
+<li><p><strong>run_info</strong> (<em>RunInfo</em>) – An object that encapsulates the minimum information to
+evaluate a configuration</p></li>
 </ul>
 </p>
 </dd>
@@ -415,8 +447,8 @@ at a given time.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.intensification.abstract_intensifier.AbstractIntensifier.process_results">
-<span class="sig-name descname"><span class="pre">process_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_trajectory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/abstract_intensifier.html#AbstractIntensifier.process_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.abstract_intensifier.AbstractIntensifier.process_results" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.intensification.successive_halving_worker.SuccessiveHalvingWorker.process_results">
+<span class="sig-name descname"><span class="pre">process_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_trajectory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/successive_halving_worker.html#SuccessiveHalvingWorker.process_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.successive_halving_worker.SuccessiveHalvingWorker.process_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>The intensifier stage will be updated based on the results/status of a configuration
 execution. Also, a incumbent will be determined.</p>
 <dl class="field-list simple">
@@ -433,11 +465,11 @@ a challenger/incumbent.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</p>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p><strong>incumbent</strong> (<em>Configuration()</em>) – current (maybe new) incumbent configuration</p></li>
+<li><p><strong>incumbent</strong> (<em>Configuration</em>) – current (maybe new) incumbent configuration</p></li>
 <li><p><strong>inc_perf</strong> (<em>float</em>) – empirical performance of incumbent configuration</p></li>
 </ul>
 </p>
@@ -455,17 +487,17 @@ a challenger/incumbent.</p></li>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.intensification.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.intensification.successive_halving.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.intensification</p>
+            <p class="prev-next-title">smac.intensification.successive_halving</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.intensification.hyperband.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.initial_design.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.intensification.hyperband</p>
+        <p class="prev-next-title">smac.initial_design</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

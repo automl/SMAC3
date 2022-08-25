@@ -326,9 +326,12 @@ style="width: 100%;">
 <span class="kn">from</span> <span class="nn">smac.runhistory</span> <span class="kn">import</span> <span class="n">RunInfo</span><span class="p">,</span> <span class="n">RunInfoIntent</span><span class="p">,</span> <span class="n">RunValue</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2022, automl.org&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ParallelScheduler"><a class="viewcode-back" href="../../../api/smac.intensification.parallel_scheduling.html#smac.intensification.ParallelScheduler">[docs]</a><span class="k">class</span> <span class="nc">ParallelScheduler</span><span class="p">(</span><span class="n">AbstractIntensifier</span><span class="p">):</span>
@@ -357,7 +360,7 @@ style="width: 100%;">
 <span class="sd">        maximum budget allowed for 1 run of successive halving</span>
 <span class="sd">    eta : float</span>
 <span class="sd">        &#39;halving&#39; factor after each iteration in a successive halving run. Defaults to 3</span>
-<span class="sd">    num_initial_challengers : Optional[int]</span>
+<span class="sd">    n_initial_challengers : Optional[int]</span>
 <span class="sd">        number of challengers to consider for the initial budget. If None, calculated internally</span>
 <span class="sd">    n_seeds : Optional[int]</span>
 <span class="sd">        Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0</span>
@@ -388,15 +391,15 @@ style="width: 100%;">
         <span class="c1"># deterministic: bool = False,</span>
         <span class="c1"># min_budget: Optional[float] = None,</span>
         <span class="c1"># max_budget: Optional[float] = None,</span>
-        <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="n">num_initial_challengers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="c1"># eta: float = 3,</span>
+        <span class="c1"># n_initial_challengers: int | None = None,</span>
         <span class="c1"># instance_order: Optional[str] = &quot;shuffle_once&quot;,</span>
         <span class="n">min_challenger</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">intensify_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
-        <span class="n">incumbent_selection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;highest_executed_budget&quot;</span><span class="p">,</span>
-        <span class="n">instance_seed_pairs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="c1"># incumbent_selection: str = &quot;highest_executed_budget&quot;,</span>
+        <span class="c1"># instance_seed_pairs: list[Tuple[str, int]] | None = None,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">n_seeds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="c1"># n_seeds: int | None = None,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -427,8 +430,8 @@ style="width: 100%;">
         <span class="n">ask</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
         <span class="n">repeat_configs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">RunInfoIntent</span><span class="p">,</span> <span class="n">RunInfo</span><span class="p">]:</span>
+        <span class="n">n_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">RunInfoIntent</span><span class="p">,</span> <span class="n">RunInfo</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;This procedure decides from which instance to pick a config, in order to determine the</span>
 <span class="sd">        next run.</span>
 
@@ -450,7 +453,7 @@ style="width: 100%;">
 <span class="sd">            stores all runs we ran so far</span>
 <span class="sd">        repeat_configs : bool</span>
 <span class="sd">            if False, an evaluated configuration will not be generated again</span>
-<span class="sd">        num_workers: int</span>
+<span class="sd">        n_workers: int</span>
 <span class="sd">            the maximum number of workers available</span>
 <span class="sd">            at a given time.</span>
 
@@ -462,9 +465,9 @@ style="width: 100%;">
 <span class="sd">            An object that encapsulates the minimum information to</span>
 <span class="sd">            evaluate a configuration</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">num_workers</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_worker_warning</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is executed with </span><span class="si">{</span><span class="n">num_workers</span><span class="si">}</span><span class="s2"> worker(s) only. &quot;</span>
+        <span class="k">if</span> <span class="n">n_workers</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_worker_warning</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is executed with </span><span class="si">{</span><span class="n">n_workers</span><span class="si">}</span><span class="s2"> worker(s) only. &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;However, your system supports up to </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span><span class="si">}</span><span class="s2"> workers. Consider increasing the workers &quot;</span>
                 <span class="s2">&quot;in the scenario.&quot;</span>
             <span class="p">)</span>
@@ -475,7 +478,7 @@ style="width: 100%;">
         <span class="c1"># intensifier instances will also share configurations. The later</span>
         <span class="c1"># is not supported</span>
         <span class="k">if</span> <span class="n">repeat_configs</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;repeat_configs==True is not supported for parallel execution&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;repeat_configs is not supported for parallel execution&quot;</span><span class="p">)</span>
 
         <span class="c1"># First get a config to run from a SH instance</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sort_instances_by_stage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intensifier_instances</span><span class="p">):</span>
@@ -496,7 +499,7 @@ style="width: 100%;">
 
         <span class="c1"># If gotten to this point, we might look into adding a new</span>
         <span class="c1"># intensifier</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_new_instance</span><span class="p">(</span><span class="n">num_workers</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_new_instance</span><span class="p">(</span><span class="n">n_workers</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier_instances</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intensifier_instances</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_next_run</span><span class="p">(</span>
                 <span class="n">challengers</span><span class="o">=</span><span class="n">challengers</span><span class="p">,</span>
                 <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
@@ -569,13 +572,13 @@ style="width: 100%;">
             <span class="n">log_trajectory</span><span class="o">=</span><span class="n">log_trajectory</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_add_new_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_add_new_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Decides if it is possible to add a new intensifier instance, and adds it. If a new</span>
 <span class="sd">        intensifier instance is added, True is returned, else False.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        num_workers: int</span>
+<span class="sd">        n_workers: int</span>
 <span class="sd">            the maximum number of workers available</span>
 <span class="sd">            at a given time.</span>
 

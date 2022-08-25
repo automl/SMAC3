@@ -39,7 +39,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.intensification.intensification" href="smac.intensification.intensification.html" />
+    <link rel="next" title="smac.intensification.hyperband_worker" href="smac.intensification.hyperband_worker.html" />
     <link rel="prev" title="smac.intensification.abstract_intensifier" href="smac.intensification.abstract_intensifier.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
@@ -335,14 +335,14 @@ style="width: 100%;">
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.intensification.hyperband.Hyperband" title="smac.intensification.hyperband.Hyperband"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Hyperband</span></code></a>(scenario[, eta, min_challenger, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.intensification.hyperband.Hyperband" title="smac.intensification.hyperband.Hyperband"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Hyperband</span></code></a>(scenario[, instance_seed_pairs, ...])</p></td>
 <td><p>Races multiple challengers against an incumbent using Hyperband method.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.intensification.hyperband.Hyperband">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.intensification.hyperband.</span></span><span class="sig-name descname"><span class="pre">Hyperband</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_challenger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensify_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'highest_executed_budget'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/hyperband.html#Hyperband"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.hyperband.Hyperband" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.intensification.hyperband.</span></span><span class="sig-name descname"><span class="pre">Hyperband</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_pairs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'shuffle_once'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'highest_executed_budget'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_challenger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensify_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/hyperband.html#Hyperband"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.hyperband.Hyperband" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.intensification.parallel_scheduling.html#smac.intensification.parallel_scheduling.ParallelScheduler" title="smac.intensification.parallel_scheduling.ParallelScheduler"><code class="xref py py-class docutils literal notranslate"><span class="pre">ParallelScheduler</span></code></a></p>
 <p>Races multiple challengers against an incumbent using Hyperband method.</p>
 <p>Implementation from “BOHB: Robust and Efficient Hyperparameter Optimization at Scale” (Falkner et al. 2018)</p>
@@ -406,10 +406,10 @@ Can be set to: [highest_executed_budget, highest_budget, any_budget]
             <p class="prev-next-title">smac.intensification.abstract_intensifier</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.intensification.intensification.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.intensification.hyperband_worker.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.intensification.intensification</p>
+        <p class="prev-next-title">smac.intensification.hyperband_worker</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

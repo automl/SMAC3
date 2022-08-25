@@ -31,7 +31,7 @@ digit-2 vs digit-3.
 If we use instance as our fidelity, we need to initialize scenario with argument instance. In this case the argument
 budget is no longer required by the target function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-152
+.. GENERATED FROM PYTHON SOURCE LINES 15-151
 
 
 
@@ -44,41 +44,30 @@ budget is no longer required by the target function.
     [INFO][initial_design.py:92] Ignoring `configs` and `n_configs` since `n_configs_per_hyperparameter` is given.
     [INFO][base_smbo.py:143] Running initial design...
     [INFO][initial_design.py:181] Retrieving 40 configurations for the initial design.
-    [WARNING][parallel_scheduling.py:150] Hyperband is executed with 1 worker(s) only. However, your system supports up to 2 workers. Consider increasing the workers in the scenario.
-    [WARNING][successive_halving.py:367] The target algorithm is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider setting `n_seeds` > 1.
-    [INFO][successive_halving.py:499] Successive Halving configuration: budget type = INSTANCES, Initial budget = 1.00, Max. budget = 45.00, eta = 3.00
-    [INFO][hyperband.py:437] Finished Hyperband iteration-step 1-1 with initial budget 1.
-    [INFO][successive_halving.py:499] Successive Halving configuration: budget type = INSTANCES, Initial budget = 1.00, Max. budget = 45.00, eta = 3.00
-    [INFO][successive_halving.py:811] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-    [INFO][abstract_intensifier.py:345] Challenger (0.0028) is better than incumbent (0.0056) on 1 runs.
-    [INFO][abstract_intensifier.py:365] Changes in incumbent:
-    [INFO][abstract_intensifier.py:368] --- alpha: 0.5488135039273248 -> 0.6027633760716439
-    [INFO][abstract_intensifier.py:368] --- eta0: 0.0006273927602293597 -> 0.03077201812975574
-    [INFO][abstract_intensifier.py:368] --- l1_ratio: 0.317983179393976 -> 0.06414749634878436
-    [INFO][abstract_intensifier.py:345] Challenger (0.0) is better than incumbent (0.0028) on 1 runs.
-    [INFO][abstract_intensifier.py:365] Changes in incumbent:
-    [INFO][abstract_intensifier.py:368] --- alpha: 0.6027633760716439 -> 0.07103605819788694
-    [INFO][abstract_intensifier.py:368] --- eta0: 0.03077201812975574 -> 0.00011076021254597257
-    [INFO][abstract_intensifier.py:368] --- l1_ratio: 0.06414749634878436 -> 0.2894060929472011
-    [INFO][abstract_intensifier.py:368] --- learning_rate: 'adaptive' -> 'invscaling'
-    [INFO][successive_halving.py:643] Finished Successive Halving iteration-step 1-1 with budget [1.67 / 45] and 27 evaluated challenger(s).
-    [INFO][successive_halving.py:643] Finished Successive Halving iteration-step 1-2 with budget [5.00 / 45] and 9 evaluated challenger(s).
-    [INFO][successive_halving.py:643] Finished Successive Halving iteration-step 1-3 with budget [15.00 / 45] and 3 evaluated challenger(s).
-    [INFO][successive_halving.py:643] Finished Successive Halving iteration-step 1-4 with budget [45.00 / 45] and 1 evaluated challenger(s).
-    [INFO][hyperband.py:437] Finished Hyperband iteration-step 1-2 with initial budget 5.
-    [INFO][successive_halving.py:499] Successive Halving configuration: budget type = INSTANCES, Initial budget = 1.00, Max. budget = 45.00, eta = 3.00
-    [INFO][successive_halving.py:643] Finished Successive Halving iteration-step 1-1 with budget [5.00 / 45] and 9 evaluated challenger(s).
-    [INFO][successive_halving.py:643] Finished Successive Halving iteration-step 1-2 with budget [15.00 / 45] and 3 evaluated challenger(s).
-    [INFO][successive_halving.py:643] Finished Successive Halving iteration-step 1-3 with budget [45.00 / 45] and 1 evaluated challenger(s).
-    [INFO][hyperband.py:437] Finished Hyperband iteration-step 1-3 with initial budget 15.
-    [INFO][successive_halving.py:499] Successive Halving configuration: budget type = INSTANCES, Initial budget = 1.00, Max. budget = 45.00, eta = 3.00
-    [INFO][successive_halving.py:643] Finished Successive Halving iteration-step 1-1 with budget [15.00 / 45] and 6 evaluated challenger(s).
-    [INFO][successive_halving.py:643] Finished Successive Halving iteration-step 1-2 with budget [45.00 / 45] and 2 evaluated challenger(s).
-    [INFO][hyperband.py:437] Finished Hyperband iteration-step 1-4 with initial budget 45.
-    [INFO][successive_halving.py:499] Successive Halving configuration: budget type = INSTANCES, Initial budget = 1.00, Max. budget = 45.00, eta = 3.00
-    [INFO][facade.py:347] Final Incumbent: {'alpha': 0.07103605819788694, 'eta0': 0.00011076021254597257, 'l1_ratio': 0.2894060929472011, 'learning_rate': 'invscaling'}
-    [INFO][facade.py:348] Estimated cost: 0.0
-    Incumbent cost: 0.02
+    [WARNING][parallel_scheduling.py:153] Hyperband is executed with 1 worker(s) only. However, your system supports up to 2 workers. Consider increasing the workers in the scenario.
+    [WARNING][successive_halving_worker.py:152] The target algorithm is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider setting `n_seeds` > 1.
+    [INFO][successive_halving_worker.py:277] Successive Halving configuration: budget type = INSTANCES, Initial budget = 1.00, Max. budget = 45.00, eta = 3.00
+    [INFO][hyperband_worker.py:252] Finished Hyperband iteration-step 1-1 with initial budget 1.
+    [INFO][successive_halving_worker.py:277] Successive Halving configuration: budget type = INSTANCES, Initial budget = 1.00, Max. budget = 45.00, eta = 3.00
+    [INFO][successive_halving_worker.py:582] First run and no incumbent provided. Challenger is assumed to be the incumbent.
+    [INFO][successive_halving_worker.py:423] Finished Successive Halving iteration-step 1-1 with budget [1.67 / 45] and 27 evaluated challenger(s).
+    [INFO][successive_halving_worker.py:423] Finished Successive Halving iteration-step 1-2 with budget [5.00 / 45] and 9 evaluated challenger(s).
+    [INFO][successive_halving_worker.py:423] Finished Successive Halving iteration-step 1-3 with budget [15.00 / 45] and 3 evaluated challenger(s).
+    [INFO][successive_halving_worker.py:423] Finished Successive Halving iteration-step 1-4 with budget [45.00 / 45] and 1 evaluated challenger(s).
+    [INFO][hyperband_worker.py:252] Finished Hyperband iteration-step 1-2 with initial budget 5.
+    [INFO][successive_halving_worker.py:277] Successive Halving configuration: budget type = INSTANCES, Initial budget = 1.00, Max. budget = 45.00, eta = 3.00
+    [INFO][successive_halving_worker.py:423] Finished Successive Halving iteration-step 1-1 with budget [5.00 / 45] and 9 evaluated challenger(s).
+    [INFO][successive_halving_worker.py:423] Finished Successive Halving iteration-step 1-2 with budget [15.00 / 45] and 3 evaluated challenger(s).
+    [INFO][successive_halving_worker.py:423] Finished Successive Halving iteration-step 1-3 with budget [45.00 / 45] and 1 evaluated challenger(s).
+    [INFO][hyperband_worker.py:252] Finished Hyperband iteration-step 1-3 with initial budget 15.
+    [INFO][successive_halving_worker.py:277] Successive Halving configuration: budget type = INSTANCES, Initial budget = 1.00, Max. budget = 45.00, eta = 3.00
+    [INFO][successive_halving_worker.py:423] Finished Successive Halving iteration-step 1-1 with budget [15.00 / 45] and 6 evaluated challenger(s).
+    [INFO][successive_halving_worker.py:423] Finished Successive Halving iteration-step 1-2 with budget [45.00 / 45] and 2 evaluated challenger(s).
+    [INFO][hyperband_worker.py:252] Finished Hyperband iteration-step 1-4 with initial budget 45.
+    [INFO][successive_halving_worker.py:277] Successive Halving configuration: budget type = INSTANCES, Initial budget = 1.00, Max. budget = 45.00, eta = 3.00
+    [INFO][facade.py:348] Final Incumbent: {'alpha': 0.5488135039273248, 'eta0': 0.0006273927602293597, 'l1_ratio': 0.317983179393976, 'learning_rate': 'adaptive'}
+    [INFO][facade.py:349] Estimated cost: 0.0
+    Incumbent cost: 0.01
 
 
 
@@ -196,7 +185,6 @@ budget is no longer required by the target function.
             max_budget=45,  # Use max 45 instances (if we have a lot of instances we could constraint it)
             instances=dataset.get_instances(),
             instance_features=dataset.get_instance_features(),
-            instance_order="shuffle_once",  # Shuffle instances beforehand
         )
 
         # Calculate the mean cost of all instances for the default configuration
@@ -230,7 +218,7 @@ budget is no longer required by the target function.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  44.777 seconds)
+   **Total running time of the script:** ( 0 minutes  49.325 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_2_sgd_datasets.py:

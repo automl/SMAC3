@@ -44,14 +44,14 @@ iterations) is passed to the target algorithm.
     [INFO][intensification.py:443] First run and no incumbent provided. Challenger is assumed to be the incumbent.
     [INFO][intensification.py:603] Updated estimated cost of incumbent on 1 runs: 0.0667
     [INFO][intensification.py:603] Updated estimated cost of incumbent on 2 runs: 0.0667
-    [INFO][abstract_intensifier.py:345] Challenger (0.0133) is better than incumbent (0.0667) on 2 runs.
-    [INFO][abstract_intensifier.py:365] Changes in incumbent:
-    [INFO][abstract_intensifier.py:368] --- C: 0.03992740880515713 -> 1.2760639488343621
-    [INFO][abstract_intensifier.py:368] --- kernel: 'rbf' -> 'linear'
-    [INFO][abstract_intensifier.py:368] --- shrinking: True -> False
+    [INFO][abstract_intensifier.py:333] Challenger (0.0133) is better than incumbent (0.0667) on 2 runs.
+    [INFO][abstract_intensifier.py:353] Changes in incumbent:
+    [INFO][abstract_intensifier.py:356] --- C: 0.03992740880515713 -> 1.2760639488343621
+    [INFO][abstract_intensifier.py:356] --- kernel: 'rbf' -> 'linear'
+    [INFO][abstract_intensifier.py:356] --- shrinking: True -> False
     [INFO][intensification.py:603] Updated estimated cost of incumbent on 3 runs: 0.0133
-    [INFO][facade.py:347] Final Incumbent: {'C': 1.2760639488343621, 'kernel': 'linear', 'shrinking': False}
-    [INFO][facade.py:348] Estimated cost: 0.013333333333333308
+    [INFO][facade.py:348] Final Incumbent: {'C': 1.2760639488343621, 'kernel': 'linear', 'shrinking': False}
+    [INFO][facade.py:349] Estimated cost: 0.013333333333333308
     Incumbent value: 0.01
 
 
@@ -159,7 +159,7 @@ iterations) is passed to the target algorithm.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.917 seconds)
+   **Total running time of the script:** ( 0 minutes  0.918 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_2_svm_cv.py:
