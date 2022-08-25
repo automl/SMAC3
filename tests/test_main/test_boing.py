@@ -166,6 +166,7 @@ def test_subspace_extraction():
 
     X_inc = np.array([0.4, 3])
     rf.train(X, Y)
+    _, bounds = get_types(cs)
 
     ss_extraction_kwargs = dict(X=X, challenger=X_inc, model=rf, bounds=bounds, cat_dims=[1], cont_dims=[0])
 
