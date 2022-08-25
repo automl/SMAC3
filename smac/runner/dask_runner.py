@@ -133,7 +133,7 @@ class DaskParallelRunner(AbstractRunner):
                 n_workers=self.n_workers,
                 processes=True,
                 threads_per_worker=1,
-                local_directory=str(self._output_directory),
+                local_directory=self._output_directory,
             )
             if self._output_directory is not None:
                 self._scheduler_file = self._output_directory / ".dask_scheduler_file"
