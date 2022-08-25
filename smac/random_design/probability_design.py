@@ -17,7 +17,7 @@ class ProbabilityRandomDesign(RandomDesign):
     Parameters
     ----------
     prob : float
-        Probility that a configuration will be drawn at random
+        Probability that a configuration will be drawn at random
     seed : int
         Integer used to initialize random state
     """

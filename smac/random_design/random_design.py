@@ -44,3 +44,4 @@ class RandomDesign:
         """Check if the next configuration should be at random. Iteration here relates
         to the ith configuration evaluated in an SMBO iteration."""
         pass
+

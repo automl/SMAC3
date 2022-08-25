@@ -20,6 +20,7 @@ class MultiFidelityFacade(HyperparameterFacade):
         intensify_percentage: float = 0.5,
         n_seeds: int = 1,
     ) -> Hyperband:
+        """Returns a Hyperband intensifier instance. Please check its documentation for details."""
         return Hyperband(
             scenario=scenario,
             eta=eta,
@@ -37,6 +38,7 @@ class MultiFidelityFacade(HyperparameterFacade):
         n_configs_per_hyperparamter: int = 10,
         max_config_ratio: float = 0.25,  # Use at most X*budget in the initial design
     ) -> RandomInitialDesign:
+        """Returns a random initial design instance. Please check its documentation for details."""
         return RandomInitialDesign(
             scenario=scenario,
             configs=configs,
