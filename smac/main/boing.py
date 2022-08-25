@@ -127,7 +127,7 @@ class BOinGSMBO(SMBO):
             # If we want to switch between BOinG and TurBO
             self.run_TuRBO = False
             self.failcount_BOinG = 0
-            self.failcount_TurBO = 0
+            self.failcount_TuRBO = 0
 
             turbo_model = copy.deepcopy(model_local)
             turbo_acq = TS
@@ -243,7 +243,7 @@ class BOinGSMBO(SMBO):
                             increment < -1e-3 * np.abs(self.optimal_value)
                             or np.abs(np.product(cfg_diff)) >= self.ss_threshold
                         ):
-                            self.failcount_TurBO -= 1
+                            self.failcount_TuRBO -= 1
                             # switch to BOinG as TurBO found a better model and we could do exploration
                             # also we halve the failcount of BOinG to avoid switching to TurBO too frequently
                             self.failcount_BOinG = self.failcount_BOinG // 2
@@ -251,11 +251,11 @@ class BOinGSMBO(SMBO):
                             logger.debug("Optimizer switches to BOinG!")
 
                     else:
-                        self.failcount_TurBO += 1
+                        self.failcount_TuRBO += 1
 
                     # The probability is a linear curve.
-                    prob_to_BOinG = 0.1 * self.failcount_TurBO
-                    logger.debug(f"failure_count TuRBO :{self.failcount_TurBO}")
+                    prob_to_BOinG = 0.1 * self.failcount_TuRBO
+                    logger.debug(f"failure_count TuRBO :{self.failcount_TuRBO}")
                     rand_value = self.rng.random()
 
                     if rand_value < prob_to_BOinG:
@@ -347,7 +347,7 @@ class BOinGSMBO(SMBO):
                 if rand_value < prob_to_TurBO:
                     self.run_TuRBO = True
                     logger.debug("Switch To TuRBO")
-                    self.failcount_TurBO = self.failcount_TurBO // 2
+                    self.failcount_TuRBO = self.failcount_TuRBO // 2
                     self.restart_TuRBOinG(X=X, Y=Y, Y_raw=Y_raw, train_model=False)
 
         challengers_global = self.acquisition_optimizer.maximize(

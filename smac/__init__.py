@@ -28,6 +28,7 @@ try:
         BlackBoxFacade,
         HyperparameterFacade,
         MultiFidelityFacade,
+        RandomFacade,
     )
     from smac.runhistory.runhistory import RunHistory
     from smac.scenario import Scenario

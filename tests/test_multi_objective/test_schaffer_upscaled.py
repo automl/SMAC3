@@ -58,7 +58,7 @@ def test_mean_aggregation(make_scenario, configspace):
         smac = facade(
             scenario=scenario,
             target_algorithm=tae,
-            multi_objective_algorithm=MeanAggregationStrategy(scenario.seed),
+            multi_objective_algorithm=MeanAggregationStrategy(scenario=scenario),
             overwrite=True,
         )
         incumbent = smac.optimize()
@@ -81,7 +81,7 @@ def test_parego(make_scenario, configspace):
         smac = facade(
             scenario=scenario,
             target_algorithm=tae,
-            multi_objective_algorithm=ParEGO(seed=scenario.seed),
+            multi_objective_algorithm=ParEGO(scenario=scenario),
             overwrite=True,
         )
         incumbent = smac.optimize()

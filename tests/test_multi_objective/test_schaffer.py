@@ -1,9 +1,9 @@
 import pytest
 
 import numpy as np
-from ConfigSpace import ConfigurationSpace, Float
+from ConfigSpace import Float
 
-from smac import AlgorithmConfigurationFacade, BlackBoxFacade, HyperparameterFacade
+from smac import AlgorithmConfigurationFacade, BlackBoxFacade, HyperparameterFacade, RandomFacade
 from smac.configspace import ConfigurationSpace
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.multi_objective.parego import ParEGO
@@ -52,11 +52,11 @@ def configspace():
 def test_mean_aggregation(make_scenario, configspace):
     scenario = make_scenario(configspace, use_multi_objective=True)
 
-    for facade in [BlackBoxFacade, HyperparameterFacade, AlgorithmConfigurationFacade]:
+    for facade in [BlackBoxFacade, HyperparameterFacade, AlgorithmConfigurationFacade, Ran]:
         smac = facade(
             scenario=scenario,
             target_algorithm=tae,
-            multi_objective_algorithm=MeanAggregationStrategy(scenario.seed),
+            multi_objective_algorithm=MeanAggregationStrategy(scenario=scenario),
             overwrite=True,
         )
         incumbent = smac.optimize()
@@ -78,7 +78,7 @@ def test_parego(make_scenario, configspace):
         smac = facade(
             scenario=scenario,
             target_algorithm=tae,
-            multi_objective_algorithm=ParEGO(seed=scenario.seed),
+            multi_objective_algorithm=ParEGO(scenario=scenario),
             overwrite=True,
         )
         incumbent = smac.optimize()

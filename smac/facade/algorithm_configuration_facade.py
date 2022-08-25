@@ -39,6 +39,7 @@ class AlgorithmConfigurationFacade(Facade):
         max_depth: int = 20,
         pca_components: int = 4,
     ) -> RandomForestWithInstances:
+        """Returns a RandomForestWithInstances surrogate model. Please check its documentation."""
         types, bounds = get_types(scenario.configspace, scenario.instance_features)
 
         return RandomForestWithInstances(
@@ -59,6 +60,7 @@ class AlgorithmConfigurationFacade(Facade):
 
     @staticmethod
     def get_acquisition_function(scenario: Scenario, xi: float = 0.0) -> EI:
+        """Returns an Expected Improvement acquisition function. Please check its documentation."""
         return EI(xi=xi)
 
     @staticmethod
@@ -79,6 +81,7 @@ class AlgorithmConfigurationFacade(Facade):
         max_config_calls=2000,
         intensify_percentage: float = 0.5,
     ) -> Intensifier:
+        """Returns an Intensifier. Please check its documentation."""
         intensifier = Intensifier(
             scenario=scenario,
             min_challenger=min_challenger,
@@ -96,6 +99,8 @@ class AlgorithmConfigurationFacade(Facade):
         *,
         configs: list[Configuration] | None = None,
     ) -> InitialDesign:
+        """Returns an DefaultInitialDesign, evaluating only the default configuration. Please check
+        its documentation."""
         return DefaultInitialDesign(
             scenario=scenario,
             configs=configs,
@@ -107,11 +112,15 @@ class AlgorithmConfigurationFacade(Facade):
         *,
         random_probability: float = 0.5,
     ) -> ProbabilityRandomDesign:
+        """Returns a ProbabilityRandomDesign for interleaving configurations selected from BO
+        with those of a RandomDesign. Please check its documentation."""
         return ProbabilityRandomDesign(probability=random_probability, seed=scenario.seed)
 
     @staticmethod
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
-        return MeanAggregationStrategy(scenario.seed)
+        """Returns a MultiObjectiveAlgorithm (MeanAggregationStrategy). Please check its
+        documentation."""
+        return MeanAggregationStrategy(scenario=scenario)
 
     @staticmethod
     def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:

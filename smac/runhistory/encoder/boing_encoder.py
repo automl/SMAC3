@@ -1,20 +1,12 @@
 from __future__ import annotations
 
-import abc
-from typing import List, Mapping, Optional, Tuple
-
 import copy
 
 import numpy as np
 
-from smac import constants
-from smac.configspace import convert_configurations_to_array
-from smac.multi_objective.utils import normalize_costs
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runhistory.encoder.log_scaled_encoder import RunHistoryLogScaledEncoder
-from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
-from smac.runner.runner import StatusType
-from smac.scenario import Scenario
+from smac.runhistory.runhistory import RunHistory
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
