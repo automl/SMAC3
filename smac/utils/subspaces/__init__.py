@@ -87,7 +87,6 @@ class LocalSubspace(ABC):
         activate_dims: np.ndarray | None = None,
         incumbent_array: np.ndarray | None = None,
     ):
-        logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.cs_global = config_space
         if rng is None:
             self.rng = np.random.RandomState(1)
