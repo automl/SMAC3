@@ -2,10 +2,7 @@ from __future__ import annotations
 
 from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.random_search import AbstractAcquisitionOptimizer, RandomSearch
-from smac.random_design.random_design import (
-    ProbabilityConfigurationChooser,
-    RandomDesign,
-)
+from smac.random_design import RandomDesign, ProbabilityRandomDesign
 from smac.configspace import Configuration
 from smac.facade.facade import Facade
 from smac.initial_design.default_design import DefaultInitialDesign
@@ -47,7 +44,8 @@ class RandomFacade(Facade):
     ----------
     Use a random model and random search for the optimization of the acquisition function.
 
-    Following defaults from :class:`~smac.facade.algorithm_configuration.AlgorithmConfigurationFacade` are used:
+    Following defaults from :class:
+    `~smac.facade.algorithm_configuration.AlgorithmConfigurationFacade` are used:
     - get_acquisition_function
     - get_intensifier
     - get_initial_design
@@ -100,7 +98,7 @@ class RandomFacade(Facade):
         *,
         random_probability: float = 0.5,
     ) -> RandomDesign:
-        return ProbabilityConfigurationChooser(prob=random_probability, seed=scenario.seed)
+        return ProbabilityRandomDesign(probability=random_probability, seed=scenario.seed)
 
     @staticmethod
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:

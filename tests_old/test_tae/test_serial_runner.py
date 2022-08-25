@@ -49,13 +49,13 @@ class TestSerialRunner(unittest.TestCase):
 
         # submit runs! then get the value
         runner.submit_run(run_info)
-        run_values = runner.get_finished_runs()
-        self.assertEqual(len(run_values), 1)
-        self.assertIsInstance(run_values, list)
-        self.assertIsInstance(run_values[0][0], RunInfo)
-        self.assertIsInstance(run_values[0][1], RunValue)
-        self.assertEqual(run_values[0][1].cost, 4)
-        self.assertEqual(run_values[0][1].status, StatusType.SUCCESS)
+        result = next(runner.iter_results(), None)
+
+        self.assertIsNotNone(result)
+        run_info, run_value = result
+
+        self.assertEqual(run_value.cost, 4)
+        self.assertEqual(run_value.status, StatusType.SUCCESS)
 
     def test_serial_runs(self):
 
@@ -83,7 +83,7 @@ class TestSerialRunner(unittest.TestCase):
             budget=0.0,
         )
         runner.submit_run(run_info)
-        run_values = runner.get_finished_runs()
+        run_values = list(runner.iter_results())
         self.assertEqual(len(run_values), 2)
 
         # To make sure runs launched serially, we just make sure that the end time of

@@ -314,7 +314,7 @@ class BaseSMBO:
                 ask=self.ask,
                 runhistory=self.runhistory,
                 repeat_configs=self.intensifier.repeat_configs,
-                n_workers=self.runner.num_workers(),
+                n_workers=self.runner.available_worker_count(),
             )
 
             # Remove config from initial design challengers to not repeat it again
@@ -378,7 +378,7 @@ class BaseSMBO:
                 raise NotImplementedError("No other RunInfoIntent has been coded!")
 
             # Check if there is any result, or else continue
-            for run_info, run_value in self.runner.get_finished_runs():
+            for run_info, run_value in self.runner.iter_results():
                 # Add the results of the run to the run history
                 # Additionally check for new incumbent
                 self.tell(run_info, run_value, time_left)
@@ -401,10 +401,10 @@ class BaseSMBO:
                 # The budget can be exhausted  for 2 reasons: number of ta runs or
                 # time. If the number of ta runs is reached, but there is still budget,
                 # wait for the runs to finish.
-                while self.runner.pending_runs():
+                while self.runner.is_running():
                     self.runner.wait()
 
-                    for run_info, run_value in self.runner.get_finished_runs():
+                    for run_info, run_value in self.runner.iter_results():
                         # Add the results of the run to the run history
                         # Additionally check for new incumbent
                         self.tell(run_info, run_value, time_left)

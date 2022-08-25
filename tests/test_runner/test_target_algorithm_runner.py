@@ -51,14 +51,14 @@ def test_run(configspace_small, make_stats, make_scenario):
 
     # submit runs! then get the value
     runner.submit_run(run_info)
-    run_values = runner.get_finished_runs()
+    result = next(runner.iter_results(), None)
 
-    assert len(run_values) == 1
-    assert isinstance(run_values, list)
-    assert isinstance(run_values[0][0], RunInfo)
-    assert isinstance(run_values[0][1], RunValue)
-    assert run_values[0][1].cost == 4
-    assert run_values[0][1].status == StatusType.SUCCESS
+    assert result is not None
+
+    run_info, run_value = result
+
+    assert run_value.cost == 4
+    assert run_value.status == StatusType.SUCCESS
 
 
 def test_serial_runs(configspace_small, make_stats, make_scenario):
@@ -84,7 +84,7 @@ def test_serial_runs(configspace_small, make_stats, make_scenario):
     )
     runner.submit_run(run_info)
 
-    run_values = runner.get_finished_runs()
+    run_values = list(runner.iter_results())
     assert len(run_values) == 2
 
     # To make sure runs launched serially, we just make sure that the end time of
@@ -114,11 +114,11 @@ def test_fail(configspace_small, make_stats, make_scenario):
         budget=0.0,
     )
     runner.submit_run(run_info)
-    run_info, result = runner.get_finished_runs()[0]
+    run_info, run_value = next(runner.iter_results())
 
     # Make sure the traceback message is included
-    assert "traceback" in result.additional_info
-    assert "RuntimeError" in result.additional_info["traceback"]
+    assert "traceback" in run_value.additional_info
+    assert "RuntimeError" in run_value.additional_info["traceback"]
 
 
 def test_call(configspace_small, make_stats, make_scenario):
