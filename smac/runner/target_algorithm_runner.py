@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union, cast
+from typing import Any, Callable
 
 import copy
 import inspect
@@ -11,13 +11,10 @@ import traceback
 import numpy as np
 from pynisher import MemoryLimitException, WallTimeoutException, limit
 
-import smac
 from smac.configspace import Configuration
-from smac.constants import MAXINT
 from smac.runner.runner import StatusType
 from smac.runner.serial_runner import SerialRunner
 from smac.utils.logging import get_logger
-from smac.utils.stats import Stats
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -55,10 +52,9 @@ class TargetAlgorithmRunner(SerialRunner):
 
         if not callable(self.target_algorithm):
             raise TypeError(
-                f"Argument `target_algorithm` must be a callable but is type `{type(self.target_algorithm)}`."
+                "Argument `target_algorithm` must be a callable but is type"
+                f"`{type(self.target_algorithm)}`."
             )
-
-        self._target_algorithm = cast(Callable, self.target_algorithm)
 
         # Pynisher limitations
         if (memory := self.scenario.trial_memory_limit) is not None:
@@ -81,7 +77,7 @@ class TargetAlgorithmRunner(SerialRunner):
         """Calls the target algorithm with pynisher (if algorithm walltime limit or memory limit is set) or without."""
 
         # The kwargs are passed to the target algorithm.
-        kwargs: Dict[str, Any] = {}
+        kwargs: dict[str, Any] = {}
         if self._accepts_seed:
             kwargs["seed"] = seed
         if self._accepts_instance:
@@ -98,13 +94,13 @@ class TargetAlgorithmRunner(SerialRunner):
         # If memory limit or walltime limit is set, we wanna use pynisher
         if self.memory_limit is not None or self.algorithm_walltime_limit is not None:
             target_algorithm = limit(
-                self._target_algorithm,
+                self.target_algorithm,
                 memory=self.memory_limit,
                 wall_time=self.algorithm_walltime_limit,
                 wrap_errors=True,  # Hard to describe; see https://github.com/automl/pynisher
             )
         else:
-            target_algorithm = self._target_algorithm
+            target_algorithm = self.target_algorithm
 
         # We don't want the user to change the configuration
         config_copy = copy.deepcopy(config)
@@ -177,13 +173,13 @@ class TargetAlgorithmRunner(SerialRunner):
         self,
         config: Configuration,
         algorithm: Callable,
-        algorithm_kwargs: Dict[str, Union[int, str, float, None]],
-    ) -> Union[
-        float,
-        list[float],
-        dict[str, float],
-        tuple[float, dict],
-        tuple[Union[list[float], dict]],
-        tuple[Union[dict[str, float], dict]],
-    ]:
+        algorithm_kwargs: dict[str, int | str | float | None],
+    ) -> (
+        float |
+        list[float] |
+        dict[str, float] |
+        tuple[float, dict] |
+        tuple[list[float] | dict] |
+        tuple[dict[str, float] | dict]
+    ):
         return algorithm(config, **algorithm_kwargs)

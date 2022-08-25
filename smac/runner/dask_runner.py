@@ -9,7 +9,7 @@ from dask.distributed import Client, Future, wait
 
 from smac.configspace import Configuration
 from smac.runhistory import RunInfo, RunValue, StatusType
-from smac.runner.runner import Runner
+from smac.runner.runner import AbstractRunner
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -19,7 +19,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class DaskParallelRunner(Runner):
+class DaskParallelRunner(AbstractRunner):
     """Interface to submit and collect a job in a distributed fashion.
 
     DaskParallelRunner is intended to comply with the bridge design pattern.
@@ -28,10 +28,10 @@ class DaskParallelRunner(Runner):
     implementations, DaskParallelRunner wraps a BaseRunner object which
     is then executed in parallel on n_workers.
 
-    This class then is constructed by passing a BaseRunner that implements
+    This class then is constructed by passing a AbstractRunner that implements
     a run() method, and is capable of doing so in a serial fashion. Then,
     this wrapper class called DaskParallelRunner uses dask to initialize
-    N number of BaseRunner that actively wait of a RunInfo to produce a
+    N number of AbstractRunner that actively wait of a RunInfo to produce a
     RunValue object.
 
     To be more precise, the work model is then:
@@ -51,7 +51,7 @@ class DaskParallelRunner(Runner):
 
     Parameters
     ----------
-    single_worker: Runner
+    single_worker: AbstractRunner
         A runner to run in a distributed fashion
     n_workers: int
         Number of workers to use for distributed run. Will be ignored if ``dask_client`` is not ``None``.
@@ -71,7 +71,7 @@ class DaskParallelRunner(Runner):
 
     Attributes
     ----------
-    single_worker: Runner
+    single_worker: AbstractRunner
         The worker used and replicated on each node as required
     n_workers: int
         The amount of workers to use
@@ -93,7 +93,7 @@ class DaskParallelRunner(Runner):
 
     def __init__(
         self,
-        single_worker: Runner,
+        single_worker: AbstractRunner,
         n_workers: int,
         patience: int = 5,
         output_directory: str | Path | None = None,

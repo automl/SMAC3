@@ -24,7 +24,7 @@ from smac.multi_objective.abstract_multi_objective_algorithm import (
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.dask_runner import DaskParallelRunner
-from smac.runner.runner import Runner
+from smac.runner.runner import AbstractRunner
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.scenario import Scenario
 from smac.main import SMBO
@@ -51,7 +51,7 @@ class Facade:
     Parameters
     ----------
     scenario: Scenario,
-    target_algorithm: Runner | Callable
+    target_algorithm: AbstractRunner | Callable
 
     model: BaseModel | None
     acquisition_function: AcquisitionFunction | None
@@ -77,7 +77,7 @@ class Facade:
     def __init__(
         self,
         scenario: Scenario,
-        target_algorithm: Runner | Callable,
+        target_algorithm: AbstractRunner | Callable,
         *,
         model: BaseModel | None = None,
         acquisition_function: AbstractAcquisitionFunction | None = None,
@@ -128,7 +128,7 @@ class Facade:
         scenario.configspace.seed(scenario.seed)
 
         # Prepare the algorithm executer
-        runner: Runner
+        runner: AbstractRunner
         if callable(target_algorithm):
             # We wrap our algorithm with the AlgorithmExecuter to (potentially) use pynisher and catch exceptions
             runner = TargetAlgorithmRunner(
@@ -136,7 +136,7 @@ class Facade:
                 scenario=scenario,
                 stats=stats,
             )
-        elif isinstance(target_algorithm, Runner):
+        elif isinstance(target_algorithm, AbstractRunner):
             runner = target_algorithm
         else:
             # TODO: Integrate ExecuteTARunOld again
