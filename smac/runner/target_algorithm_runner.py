@@ -75,7 +75,6 @@ class TargetAlgorithmRunner(SerialRunner):
         # instance_specific: str = "0",
     ) -> tuple[StatusType, float | list[float], float, dict]:
         """Calls the target algorithm with pynisher (if algorithm walltime limit or memory limit is set) or without."""
-
         # The kwargs are passed to the target algorithm.
         kwargs: dict[str, Any] = {}
         if self._accepts_seed:

@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Iterator
 
 import time
 from pathlib import Path
 
+import dask
 from dask.distributed import Client, Future, wait
 
 from smac.configspace import Configuration
@@ -43,7 +44,7 @@ class DaskParallelRunner(AbstractRunner):
         run() method coming from DaskParallelRunner.single_worker.run()
     3.  RunInfo objects are run in a distributed fashion, an their results are
         available locally to each worker. Such result is collected by
-        DaskParallelRunner.get_finished_runs() and then passed to the SMBO.
+        DaskParallelRunner.iter_results() and then passed to the SMBO.
     4.  Exceptions are also locally available to each worker and need to be
         collected.
 
@@ -52,12 +53,13 @@ class DaskParallelRunner(AbstractRunner):
     Parameters
     ----------
     single_worker: AbstractRunner
-        A runner to run in a distributed fashion
+        A runner to run in a distributed fashion, will be distributed using ``n_workers``
     n_workers: int
-        Number of workers to use for distributed run. Will be ignored if ``dask_client`` is not ``None``.
+        Number of workers to use for distributed run.
+        Will be ignored if ``dask_client`` is not ``None``.
     patience: int, default to 5
         How much to wait for workers (seconds) to be available if one fails
-    output_directory: str , optional
+    output_directory: str | Path, optional
         If given, this will be used for the dask worker directory and for storing server
         information. If a dask client is passed, it will only be used for storing server
         information as the worker directory must be set by the program/user starting the
@@ -68,35 +70,12 @@ class DaskParallelRunner(AbstractRunner):
         manually if provided explicitly.
         If None is provided (default), a local one will be created for you and closed
         upon completion.
-
-    Attributes
-    ----------
-    single_worker: AbstractRunner
-        The worker used and replicated on each node as required
-    n_workers: int
-        The amount of workers to use
-    patience
-        How much to wait for workers (seconds) if one fails
-    output_directory: str | None
-        Where to store the temporary worker output
-
-    results
-    ta
-    stats
-    run_obj
-    par_factor
-    crash_cost
-    abort_i_first_run_crash
-    futures
-    client
     """
 
     def __init__(
         self,
         single_worker: AbstractRunner,
-        n_workers: int,
         patience: int = 5,
-        output_directory: str | Path | None = None,
         dask_client: Client | None = None,
     ):
         super().__init__(
@@ -104,43 +83,35 @@ class DaskParallelRunner(AbstractRunner):
             scenario=single_worker.scenario,
             stats=single_worker.stats,
         )
+        # The single worker to hold on to and call run on
+        self._single_worker = single_worker
 
-        # The single worker, which is replicated by `n_workers`
-        self.single_worker = single_worker
-        self.n_workers = n_workers
-        self.patience = patience  # How much time to wait for workers to be available
+        # The list of futures that dask will use to indicate in progress runs
+        self._pending_runs: list[Future] = []
 
-        self._futures: list[Future] = []  # The list of futures that dask will use
-
-        # Where to store worker information temporarily
-        self._output_directory: Path | None
-        if isinstance(output_directory, str):
-            self._output_directory = Path(output_directory)
-        else:
-            self._output_directory = output_directory
-
-        # NOTE: The below line used to be done all the time but not sure if this
-        #   is needed anymore. If there ends up being issues, please comment this
-        #   line back in.
-        #
-        #   dask.config.set({"distributed.worker.daemon": False})
-        #
+        # Dask related variables
         self._scheduler_file: Path | None = None
+        self._patience = patience
+
+        self._client: Client
+        self._close_client_at_del: bool
 
         if dask_client is None:
+            dask.config.set({"distributed.worker.daemon": False})
             self._close_client_at_del = True
             self._client = Client(
-                n_workers=self.n_workers,
+                n_workers=self.scenario.n_workers,
                 processes=True,
                 threads_per_worker=1,
-                local_directory=self._output_directory,
+                local_directory=str(self.scenario.output_directory),
             )
-            if self._output_directory is not None:
-                self._scheduler_file = self._output_directory / ".dask_scheduler_file"
+            if self.scenario.output_directory is not None:
+                self._scheduler_file = self.scenario.output_directory / ".dask_scheduler_file"
                 self._client.write_scheduler_file(scheduler_file=str(self._scheduler_file))
         else:
-            self._close_client_at_del = False
+            # We just use their set up
             self._client = dask_client
+            self._close_client_at_del = False
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
@@ -170,82 +141,50 @@ class DaskParallelRunner(AbstractRunner):
             An object containing the configuration and the necessary data to run it
         """
         # Check for resources or block till one is available
-        if not self._workers_available():
-            wait(self._futures, return_when="FIRST_COMPLETED")
-            self._extract_completed_runs_from_futures()
+        if self.available_worker_count() <= 0:
+            wait(self._pending_runs, return_when="FIRST_COMPLETED")
+            self._process_pending_runs()
 
         # Check again to make sure that there are resources
-        if not self._workers_available():
+        if self.available_worker_count() <= 0:
             logger.warning("No workers are available. This could mean workers crashed. Waiting for new workers...")
-            time.sleep(self.patience)
-            if not self._workers_available():
-                raise ValueError(
+            time.sleep(self._patience)
+            if self.available_worker_count() <= 0:
+                raise RuntimeError(
                     "Tried to execute a job, but no worker was ever available."
                     "This likely means that a worker crashed or no workers were properly configured."
                 )
 
         # At this point we can submit the job
-        future = self._client.submit(self.single_worker.run_wrapper, run_info=run_info)
-        self._futures.append(future)
+        run = self._client.submit(self._single_worker.run_wrapper, run_info=run_info)
+        self._pending_runs.append(run)
 
-    def get_finished_runs(self) -> list[tuple[RunInfo, RunValue]]:
+    def iter_results(self) -> Iterator[tuple[RunInfo, RunValue]]:
         """This method returns any finished configuration, and returns a list with the results of
-        exercising the configurations. This class keeps populating results to self.results until a
-        call to get_finished runs is done. In this case, the self.results list is emptied and all
+        exercising the configurations. This class keeps populating results to self._reseults_queue until a
+        call to get_finished runs is done. In this case, the self._reseults_queue list is emptied and all
         RunValues produced by running run() are returned.
 
         Returns
         -------
-        List[Tuple[RunInfo, RunValue]]
+        Iterator[Tuple[RunInfo, RunValue]]
             A list of RunValues and RunInfo, which are the results of executing the submitted configurations.
         """
-        # Proactively see if more configs have finished
-        self._extract_completed_runs_from_futures()
-
-        results_list = []
-        while self.results:
-            results_list.append(self.results.pop())
-
-        return results_list
-
-    def _extract_completed_runs_from_futures(self) -> None:
-        """A run is over, when a future has done() equal true. This function collects the completed
-        futures and move them from self._futures to self.results.
-
-        We make sure futures never exceed the capacity of the scheduler
-        """
-        # In code check to make sure we don;t exceed resource allocation
-        if len(self._futures) > sum(self._client.nthreads().values()):
-            logger.warning(
-                "More running jobs than resources available. "
-                "Should not have more futures/runs in remote workers "
-                "than the number of workers. This could mean a worker "
-                "crashed and was not able to be recovered by dask. "
-            )
-
-        # A future is removed to the list of futures as an indication
-        # that a worker is available to take in an extra job
-        done_futures = [f for f in self._futures if f.done()]
-        for future in done_futures:
-            self.results.append(future.result())
-            self._futures.remove(future)
+        self._process_pending_runs()
+        while self._results_queue:
+            yield self._results_queue.pop()
 
     def wait(self) -> None:
         """SMBO/intensifier might need to wait for runs to finish before making a decision.
 
         This class waits until 1 run completes
         """
-        if self._futures:
-            futures = wait(self._futures, return_when="FIRST_COMPLETED")
+        if self.is_running():
+            wait(self._pending_runs, return_when="FIRST_COMPLETED")
 
-    def pending_runs(self) -> bool:
-        """Whether or not there are configs still running.
-
-        Generally if the runner is serial, launching a run instantly returns it's result. On
-        parallel runners, there might be pending configurations to complete.
-        """
-        # If there are futures available, it translates to runs still not finished/processed
-        return len(self._futures) > 0
+    def is_running(self) -> bool:
+        """Whether this runner is currently running something"""
+        return len(self._pending_runs) > 0
 
     def run(
         self,
@@ -253,33 +192,45 @@ class DaskParallelRunner(AbstractRunner):
         instance: str | None = None,
         seed: int = 0,
         budget: float | None = None,
-        # instance_specific: str = "0",
     ) -> tuple[StatusType, float | list[float], float, dict]:
-        """This method only complies with the abstract parent class. In the parallel case, we call
-        the single worker run() method.
+        """This method only complies with the abstract parent class. In the parallel
+        case, we call the single worker run() method.
         """
-        return self.single_worker.run(
-            config=config,
-            instance=instance,
-            seed=seed,
-            budget=budget,
-            # instance_specific=instance_specific,
-        )
+        return self._single_worker.run(config=config, instance=instance, seed=seed, budget=budget)
 
-    def num_workers(self) -> int:
+    def available_worker_count(self) -> int:
         """Total number of workers available. This number is dynamic as more resources can be allocated."""
-        return sum(self._client.nthreads().values())
+        return  sum(self._client.nthreads().values()) - len(self._pending_runs)
 
-    def _workers_available(self) -> bool:
-        """Query if there are workers available, which means that there are resources to launch a dask job."""
-        total_compute_power = sum(self._client.nthreads().values())
-        if len(self._futures) < total_compute_power:
-            return True
-        return False
+    def close(self, force: bool = False) -> None:
+        """Close the associated client"""
+        if self._close_client_at_del or force:
+            self._client.close()
+
+    def _process_pending_runs(self) -> None:
+        """A run is over, indiciated by done() equal true. This function collects
+        the completed runs and move them from self._pending_runs to self._reseults_queue.
+
+        We make sure pending runs never exceed the capacity of the scheduler
+        """
+        # In code check to make sure we don;t exceed resource allocation
+        if self.available_worker_count() < 0:
+            logger.warning(
+                "More running jobs than resources available. "
+                "Should not have more pending runs in remote workers "
+                "than the number of workers. This could mean a worker "
+                "crashed and was not able to be recovered by dask. "
+            )
+
+        # Move the done run from the worker to the results queue
+        done = [run for run in self._pending_runs if run.done()]
+        for run in done:
+            self._results_queue.append(run.result())
+            self._pending_runs.remove(run)
 
     def __del__(self) -> None:
         """Make sure that when this object gets deleted, the client is terminated. This
         is only done if the client was created by the dask runner.
         """
         if self._close_client_at_del:
-            self._client.close()
+            self.close()
