@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Iterator, List, Optional, Tuple, cast
+from typing import Any, Callable, Iterator, cast, Optional
 
 from collections import Counter
 
@@ -152,7 +152,7 @@ class Intensifier(AbstractIntensifier):
         self.update_configs_to_run = True
 
         # Racing related variables
-        self.to_run = []  # type: List[InstanceSeedBudgetKey]
+        self.to_run: list[InstanceSeedBudgetKey] = []
         # self.inc_sum_cost = np.inf
         self.N = -1
 
@@ -300,6 +300,7 @@ class Intensifier(AbstractIntensifier):
         if challenger is None:
             return RunInfoIntent.SKIP, RunInfo(
                 config=None,
+                instance=None,
                 seed=0,
                 budget=0.0,
             )
@@ -489,8 +490,8 @@ class Intensifier(AbstractIntensifier):
 
     def _get_next_instance(
         self,
-        pending_instances: list[str],
-    ) -> tuple[str, int]:
+        pending_instances: list[str | None],
+    ) -> tuple[str | None, int | None]:
         """Method to extract the next seed/instance in which a incumbent run most be evaluated.
 
         Parameters

@@ -50,6 +50,6 @@ class RunValue:
 class RunInfo:
     config: Configuration
     instance: str | None
-    seed: int
+    seed: int | None
     budget: float = 0.0
     source: int = 0

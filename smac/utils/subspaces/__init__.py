@@ -332,8 +332,8 @@ class LocalSubspace(ABC):
 
         model_kwargs = dict(
             configspace=self.cs_local,
-            types=[model_types[activate_dim] for activate_dim in activate_dims] if model_types is not None else None,
-            bounds=[model_bounds[activate_dim] for activate_dim in activate_dims] if model_bounds is not None else None,
+            # types=[model_types[activate_dim] for activate_dim in activate_dims] if model_types is not None else None,
+            # bounds=[model_bounds[activate_dim] for activate_dim in activate_dims] if model_bounds is not None else None,
             bounds_cont=np.array([[0, 1.0] for _ in range(len(activate_dims_cont))]),
             bounds_cat=self.bounds_ss_cat,
             seed=self.rng.randint(0, 2**20),

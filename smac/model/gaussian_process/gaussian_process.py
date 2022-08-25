@@ -63,19 +63,15 @@ class GaussianProcess(BaseGaussianProcess):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: List[int],
-        bounds: List[Tuple[float, float]],
-        seed: int,
         kernel: Kernel,
         normalize_y: bool = True,
         n_opt_restarts: int = 10,
-        instance_features: Optional[np.ndarray] = None,
-        pca_components: Optional[int] = None,
+        instance_features: dict[str, list[int | float]] | None = None,
+        pca_components: int | None = 7,
+        seed: int = 0,
     ):
         super().__init__(
             configspace=configspace,
-            types=types,
-            bounds=bounds,
             seed=seed,
             kernel=kernel,
             instance_features=instance_features,

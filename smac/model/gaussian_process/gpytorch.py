@@ -28,6 +28,7 @@ from smac.constants import VERY_SMALL_NUMBER
 from smac.model.gaussian_process.base_gaussian_process import BaseGaussianProcess
 from smac.model.utils import check_subspace_points
 from smac.model.gaussian_process.kernels.boing import FITCKernel, FITCMean
+
 warnings.filterwarnings("ignore", module="gpytorch")
 
 logger = logging.getLogger(__name__)
@@ -69,15 +70,13 @@ class GPyTorchGaussianProcess(BaseGaussianProcess):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: List[int],
-        bounds: List[Tuple[float, float]],
-        seed: int,
         kernel: Kernel,
         normalize_y: bool = True,
         n_opt_restarts: int = 10,
         likelihood: FixedNoiseGaussianLikelihood | None = None,
-        instance_features: np.ndarray | None = None,
-        pca_components: int | None = None,
+        instance_features: dict[str, list[int | float]] | None = None,
+        pca_components: int | None = 7,
+        seed: int = 0,
     ):
         """
         A Gaussian Process written with GPyTorch, its interface is written to be compatible with partial sparse gaussian
@@ -112,13 +111,11 @@ class GPyTorchGaussianProcess(BaseGaussianProcess):
             set n_feats (> pca_dims).
         """
         super(GPyTorchGaussianProcess, self).__init__(
-            configspace,
-            types,
-            bounds,
-            seed,
-            kernel,
-            instance_features,
-            pca_components,
+            configspace=configspace,
+            kernel=kernel,
+            instance_features=instance_features,
+            pca_components=pca_components,
+            seed=seed,
         )
         if likelihood is None:
             noise_prior = HorseshoePrior(0.1)
@@ -185,9 +182,7 @@ class GPyTorchGaussianProcess(BaseGaussianProcess):
         self.is_trained = True
         return self
 
-    def _get_gp(
-        self, X: np.ndarray | None = None, y: np.ndarray | None = None
-    ) -> ExactMarginalLogLikelihood | None:
+    def _get_gp(self, X: np.ndarray | None = None, y: np.ndarray | None = None) -> ExactMarginalLogLikelihood | None:
         """
         Get the GP model with the given X and y values. As GPyTorch requires the input data to initialize a new
         model, we also pass X and y here. X and y are set optional to ensure compatibility.
@@ -451,18 +446,16 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: List[int],
-        bounds: List[Tuple[float, float]],
         bounds_cont: np.ndarray,
         bounds_cat: List[Tuple],
-        seed: int,
         kernel: Kernel,
         num_inducing_points: int = 2,
         likelihood: GaussianLikelihood | None = None,
         normalize_y: bool = True,
         n_opt_restarts: int = 10,
-        instance_features: np.ndarray | None = None,
-        pca_components: int | None = None,
+        instance_features: dict[str, list[int | float]] | None = None,
+        pca_components: int | None = 7,
+        seed: int = 0,
     ):
         """
         The GP hyperparameters are obtained by optimizing the marginal log-likelihood and optimized with botorch
@@ -491,18 +484,16 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
         """
         super(GloballyAugmentedLocalGaussianProcess, self).__init__(
             configspace=configspace,
-            types=types,
-            bounds=bounds,
-            seed=seed,
             kernel=kernel,
             likelihood=likelihood,
             normalize_y=normalize_y,
             n_opt_restarts=n_opt_restarts,
             instance_features=instance_features,
             pca_components=pca_components,
+            seed=seed,
         )
-        self.cont_dims = np.where(np.array(types) == 0)[0]
-        self.cat_dims = np.where(np.array(types) != 0)[0]
+        self.cont_dims = np.where(np.array(self.types) == 0)[0]
+        self.cat_dims = np.where(np.array(self.types) != 0)[0]
         self.bounds_cont = bounds_cont
         self.bounds_cat = bounds_cat
         self.num_inducing_points = num_inducing_points

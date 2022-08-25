@@ -14,6 +14,7 @@ from sklearn.preprocessing import MinMaxScaler
 from smac.configspace import ConfigurationSpace
 from smac.constants import VERY_SMALL_NUMBER
 from smac.utils.logging import get_logger
+from smac.model.utils import get_types
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -77,14 +78,13 @@ class BaseModel:
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: list[int],
-        bounds: list[Tuple[float, float]],
-        seed: int,
-        instance_features: dict[str, list[int | float]] = None,
+        instance_features: dict[str, list[int | float]] | None = None,
         pca_components: int | None = 7,
+        seed: int = 0,
     ) -> None:
         self.configspace = configspace
         self.seed = seed
+        self.rng = np.random.RandomState(self.seed)
         self.instance_features = instance_features
         self.pca_components = pca_components
 
@@ -106,16 +106,18 @@ class BaseModel:
 
         # Never use a lower variance than this
         self.var_threshold = VERY_SMALL_NUMBER
-
-        self.bounds = bounds
-        self.types = types
+        self.types, self.bounds = get_types(configspace, instance_features)
         # Initial types array which is used to reset the type array at every call to train()
-        self._initial_types = copy.deepcopy(types)
+        self._initial_types = copy.deepcopy(self.types)
 
-    @abstractmethod
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
-        raise NotImplementedError
+        return {
+            "name": self.__class__.__name__,
+            "types": self.types,
+            "bounds": self.bounds,
+            "pca_components": self.pca_components,
+        }
 
     def train(self, X: np.ndarray, Y: np.ndarray) -> "BaseModel":
         """Trains the EPM on X and Y.

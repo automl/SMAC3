@@ -54,37 +54,33 @@ class MultiObjectiveModel(BaseModel):
 
     def __init__(
         self,
-        target_names: List[str],
+        target_names: list[str],
         configspace: ConfigurationSpace,
-        types: List[int],
-        bounds: List[Tuple[float, float]],
-        seed: int,
-        instance_features: Optional[np.ndarray] = None,
-        pca_components: Optional[int] = None,
+        instance_features: dict[str, list[int | float]] | None = None,
+        pca_components: int | None = 7,
+        seed: int = 0,
         model_kwargs: Optional[Dict[str, Any]] = None,
     ) -> None:
         super().__init__(
             configspace=configspace,
-            bounds=bounds,
-            types=types,
-            seed=seed,
             instance_features=instance_features,
             pca_components=pca_components,
+            seed=seed,
         )
+
         if model_kwargs is None:
             model_kwargs = {}
+
         self.target_names = target_names
         self.num_targets = len(self.target_names)
-        self.estimators: List[BaseModel] = self.construct_estimators(configspace, types, bounds, model_kwargs)
+        self.estimators: List[BaseModel] = self.construct_estimators(configspace, **model_kwargs)
 
     @abstractmethod
     def construct_estimators(
         self,
         configspace: ConfigurationSpace,
-        types: List[int],
-        bounds: List[Tuple[float, float]],
         model_kwargs: Dict[str, Any],
-    ) -> List[BaseModel]:
+    ) -> list[BaseModel]:
         """
         Construct a list of estimators. The number of the estimators equals 'self.num_targets'
         Parameters

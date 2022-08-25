@@ -25,10 +25,8 @@ class MultiObjectiveRandomForest(MultiObjectiveModel):
     def construct_estimators(
         self,
         configspace: ConfigurationSpace,
-        types: List[int],
-        bounds: List[Tuple[float, float]],
         model_kwargs: Dict[str, Any],
-    ) -> List[BaseModel]:
+    ) -> list[BaseModel]:
         """
         Construct a list of estimators. The number of the estimators equals 'self.num_targets'
         Parameters
@@ -50,4 +48,4 @@ class MultiObjectiveRandomForest(MultiObjectiveModel):
         estimators: List[BaseEPM]
             A list of Random Forests
         """
-        return [RandomForestWithInstances(configspace, types, bounds, **model_kwargs) for _ in range(self.num_targets)]
+        return [RandomForestWithInstances(configspace, **model_kwargs) for _ in range(self.num_targets)]

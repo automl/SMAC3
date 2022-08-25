@@ -20,24 +20,19 @@ class BaseGaussianProcess(BaseModel):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: List[int],
-        bounds: List[Tuple[float, float]],
-        seed: int,
         kernel: Kernel,
-        instance_features: Optional[np.ndarray] = None,
-        pca_components: Optional[int] = None,
+        instance_features: dict[str, list[int | float]] | None = None,
+        pca_components: int | None = 7,
+        seed: int = 0,
     ):
         """Abstract base class for all Gaussian process models."""
         super().__init__(
             configspace=configspace,
-            types=types,
-            bounds=bounds,
-            seed=seed,
             instance_features=instance_features,
             pca_components=pca_components,
+            seed=seed,
         )
 
-        self.rng = np.random.RandomState(seed)
         self.kernel = kernel
         self.gp = self._get_gp()
 

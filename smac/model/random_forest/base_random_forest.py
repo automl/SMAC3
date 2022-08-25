@@ -21,25 +21,20 @@ class BaseRandomForest(BaseModel):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: List[int],
-        bounds: List[Tuple[float, float]],
-        seed: int,
-        instance_features: Optional[np.ndarray] = None,
-        pca_components: Optional[int] = None,
+        instance_features: dict[str, list[int | float]] | None = None,
+        pca_components: int | None = 7,
+        seed: int = 0,
     ) -> None:
         """Abstract base class for all random forest models."""
         super().__init__(
             configspace=configspace,
-            types=types,
-            bounds=bounds,
-            seed=seed,
             instance_features=instance_features,
             pca_components=pca_components,
+            seed=seed,
         )
 
-        self.rng = np.random.RandomState(seed)
-        self.conditional = dict()  # type: Dict[int, bool]
-        self.impute_values = dict()  # type: Dict[int, float]
+        self.conditional: dict[int, bool] = dict()
+        self.impute_values: dict[int, float] = dict()
 
     def _impute_inactive(self, X: np.ndarray) -> np.ndarray:
         X = X.copy()

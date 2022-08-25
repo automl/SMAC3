@@ -6,9 +6,12 @@ import numpy as np
 
 from smac.configspace import ConfigurationSpace
 from smac.model.base_model import BaseModel
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 
 class RandomModel(BaseModel):
@@ -37,25 +40,6 @@ class RandomModel(BaseModel):
         set n_feats (> pca_dims).
     """
 
-    def __init__(
-        self,
-        configspace: ConfigurationSpace,
-        types: List[int],
-        bounds: List[Tuple[float, float]],
-        seed: int,
-        instance_features: Optional[np.ndarray] = None,
-        pca_components: Optional[int] = None,
-    ) -> None:
-        super().__init__(
-            configspace=configspace,
-            types=types,
-            bounds=bounds,
-            seed=seed,
-            instance_features=instance_features,
-            pca_components=pca_components,
-        )
-        self.rng = np.random.RandomState(self.seed)
-
     def _train(self, X: np.ndarray, Y: np.ndarray) -> "RandomModel":
         """Pseudo training on X and Y.
 
@@ -72,7 +56,7 @@ class RandomModel(BaseModel):
         if not isinstance(Y, np.ndarray):
             raise NotImplementedError("Y has to be of type np.ndarray")
 
-        self.logger.debug("(Pseudo) Fit model to data")
+        logger.debug("(Pseudo) Fit model to data")
         return self
 
     def _predict(self, X: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov") -> Tuple[np.ndarray, np.ndarray]:
@@ -96,4 +80,5 @@ class RandomModel(BaseModel):
 
         if not isinstance(X, np.ndarray):
             raise NotImplementedError("X has to be of type np.ndarray")
+
         return self.rng.rand(len(X), 1), self.rng.rand(len(X), 1)

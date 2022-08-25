@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Iterator
+from typing import Any, Iterator
 
 import numpy as np
 
@@ -9,9 +9,7 @@ from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
 from smac.utils.logging import get_logger
 from smac.main.base_smbo import BaseSMBO
-import numpy as np
 from smac.runhistory import RunInfo, RunValue, StatusType
-from smac.utils.logging import get_logger
 from smac.runner.exceptions import (
     FirstRunCrashedException,
     TargetAlgorithmAbortException,
@@ -28,7 +26,7 @@ logger = get_logger(__name__)
 class SMBO(BaseSMBO):
     """Interface to train the EPM and generate/choose next configurations."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
 
         self.initial_design_configs: list[Configuration] = []
@@ -49,7 +47,7 @@ class SMBO(BaseSMBO):
         # Cost value of incumbent configuration (required for acquisition function).
         # If not given, it will be inferred from runhistory or predicted.
         # If not given and runhistory is empty, it will raise a ValueError.
-        incumbent_value: float = None
+        incumbent_value: float | None = None
 
         logger.debug("Search for next configuration...")
         X, Y, X_configurations = self._collect_data()
@@ -89,7 +87,7 @@ class SMBO(BaseSMBO):
         )
 
         for callback in self._callbacks:
-            callback.on_ask_end(self, challengers)
+            callback.on_ask_end(self, list(challengers))
 
         return challengers
 

@@ -110,15 +110,11 @@ class RandomFacade(Facade):
         *,
         pca_components: int = 4,
     ) -> RandomModel:
-        types, bounds = get_types(scenario.configspace, scenario.instance_features)
-
         return RandomModel(
             configspace=scenario.configspace,
-            types=types,
-            bounds=bounds,
-            seed=scenario.seed,
             instance_features=scenario.instance_features,
             pca_components=pca_components,
+            seed=scenario.seed,
         )
 
     @staticmethod

@@ -78,9 +78,6 @@ class MCMCGaussianProcess(BaseGaussianProcess):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: List[int],
-        bounds: List[Tuple[float, float]],
-        seed: int,
         kernel: Kernel,
         n_mcmc_walkers: int = 20,
         chain_length: int = 50,
@@ -88,17 +85,16 @@ class MCMCGaussianProcess(BaseGaussianProcess):
         normalize_y: bool = True,
         mcmc_sampler: str = "emcee",
         average_samples: bool = False,
-        instance_features: Optional[np.ndarray] = None,
-        pca_components: Optional[int] = None,
+        instance_features: dict[str, list[int | float]] | None = None,
+        pca_components: int | None = 7,
+        seed: int = 0,
     ):
         super().__init__(
             configspace=configspace,
-            types=types,
-            bounds=bounds,
-            seed=seed,
             kernel=kernel,
             instance_features=instance_features,
             pca_components=pca_components,
+            seed=seed,
         )
 
         self.n_mcmc_walkers = n_mcmc_walkers
@@ -244,8 +240,6 @@ class MCMCGaussianProcess(BaseGaussianProcess):
             kernel.theta = sample
             model = GaussianProcess(
                 configspace=self.configspace,
-                types=self.types,
-                bounds=self.bounds,
                 kernel=kernel,
                 normalize_y=False,
                 seed=self.rng.randint(low=0, high=10000),
@@ -261,8 +255,6 @@ class MCMCGaussianProcess(BaseGaussianProcess):
             kernel.theta = self.p0
             model = GaussianProcess(
                 configspace=self.configspace,
-                types=self.types,
-                bounds=self.bounds,
                 kernel=kernel,
                 normalize_y=False,
                 seed=self.rng.randint(low=0, high=10000),

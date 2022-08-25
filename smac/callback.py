@@ -4,6 +4,7 @@ from abc import abstractmethod
 
 import smac
 from smac.runhistory import RunInfo, RunValue
+from ConfigSpace import Configuration
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

@@ -27,20 +27,18 @@ def test_init(make_scenario):
     )
     tae = lambda x: x
     with pytest.raises(ValueError) as excinfo:
-        BOinGFacade(scenario=scenario,
-                    target_algorithm=tae,
-                    model=BlackBoxFacade.get_model(scenario))
+        BOinGFacade(scenario=scenario, target_algorithm=tae, model=BlackBoxFacade.get_model(scenario))
         assert excinfo.values == "BOinG only supports RandomForestWithInstances as its global optimizer"
 
     with pytest.raises(ValueError) as excinfo:
-        BOinGFacade(scenario=scenario,
-                    target_algorithm=tae,
-                    runhistory_encoder=HyperparameterFacade.get_runhistory_encoder(scenario))
+        BOinGFacade(
+            scenario=scenario,
+            target_algorithm=tae,
+            runhistory_encoder=HyperparameterFacade.get_runhistory_encoder(scenario),
+        )
         assert excinfo.values == "BOinG only supports RunHistory2EPM4CostWithRaw as its rh transformer"
 
-    facade = BOinGFacade(scenario=scenario,
-                         target_algorithm=tae,
-                         overwrite=True)
+    facade = BOinGFacade(scenario=scenario, target_algorithm=tae, overwrite=True)
     assert not hasattr(facade.optimizer, "turbo_optimizer")
 
     facade.do_switching = True
@@ -57,11 +55,7 @@ def test_chooser_next(make_scenario):
     rh = RunHistory()
     rh.add(config, 10, 10, StatusType.SUCCESS)
     tae = lambda x: x
-    facade = BOinGFacade(scenario=scenario,
-                         runhistory=rh,
-                         target_algorithm=tae,
-                         do_switching=False,
-                         overwrite=True)
+    facade = BOinGFacade(scenario=scenario, runhistory=rh, target_algorithm=tae, do_switching=False, overwrite=True)
     optimizer = facade.optimizer
 
     x = next(optimizer.ask())
@@ -95,12 +89,14 @@ def test_do_switching(make_scenario):
     tae = lambda x: x
     turbo_kwargs = {"failure_tol_min": 1, "length_min": 0.6}
 
-    facade = BOinGFacade(scenario=scenario,
-                         runhistory=rh,
-                         target_algorithm=tae,
-                         do_switching=True,
-                         turbo_kwargs=turbo_kwargs,
-                         overwrite=True)
+    facade = BOinGFacade(
+        scenario=scenario,
+        runhistory=rh,
+        target_algorithm=tae,
+        do_switching=True,
+        turbo_kwargs=turbo_kwargs,
+        overwrite=True,
+    )
     optimizer = facade.optimizer
 
     for i in range(15):
@@ -118,15 +114,14 @@ def test_do_switching(make_scenario):
 
     optimizer.failcount_BOinG = 19
     # in this case, prob_to_TurBO becomes 1
-    with patch(
-            "smac.main.boing.BOinGSMBO." "restart_TuRBOinG"
-    ) as mk:
+    with patch("smac.main.boing.BOinGSMBO." "restart_TuRBOinG") as mk:
         next(optimizer.ask())
         assert optimizer.run_TuRBO is True
         assert mk.called is True
 
     # switch to TuRBO
     from smac.utils.subspaces.turbo_subspace import TuRBOSubSpace
+
     for i in range(1000):
         with patch.object(smac.utils.subspaces.turbo_subspace.TuRBOSubSpace, "generate_challengers", return_value=None):
             optimizer.ask()
@@ -156,16 +151,13 @@ def test_subspace_extraction():
     cs.add_hyperparameter(UniformFloatHyperparameter("x0", 0.0, 1.0))
     cs.add_hyperparameter(CategoricalHyperparameter("x1", [0, 1, 2, 3, 4, 5]))
 
-    types, bounds = get_types(cs)
     rf = RandomForestWithInstances(
         cs,
-        types=types,
-        bounds=bounds,
-        seed=0,
         num_trees=10,
         ratio_features=1.0,
         min_samples_split=2,
         min_samples_leaf=1,
+        seed=0,
     )
 
     X = np.array([[0.0, 0], [0.2, 1], [0.3, 2], [0.7, 5], [0.6, 3]])

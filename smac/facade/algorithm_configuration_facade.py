@@ -40,11 +40,7 @@ class AlgorithmConfigurationFacade(Facade):
         pca_components: int = 4,
     ) -> RandomForestWithInstances:
         """Returns a RandomForestWithInstances surrogate model. Please check its documentation."""
-        types, bounds = get_types(scenario.configspace, scenario.instance_features)
-
         return RandomForestWithInstances(
-            types=types,
-            bounds=bounds,
             log_y=False,
             num_trees=n_trees,
             do_bootstrapping=bootstrapping,

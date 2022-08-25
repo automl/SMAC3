@@ -77,9 +77,6 @@ class RandomForestWithInstances(BaseRandomForest):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: list[int],
-        bounds: list[Tuple[float, float]],
-        seed: int,
         log_y: bool = False,
         num_trees: int = N_TREES,
         do_bootstrapping: bool = True,
@@ -90,16 +87,15 @@ class RandomForestWithInstances(BaseRandomForest):
         max_depth: int = 2**20,
         eps_purity: float = 1e-8,
         max_num_nodes: int = 2**20,
-        instance_features: Optional[np.ndarray] = None,
-        pca_components: Optional[int] = None,
+        instance_features: dict[str, list[int | float]] | None = None,
+        pca_components: int | None = 7,
+        seed: int = 0,
     ) -> None:
         super().__init__(
             configspace=configspace,
-            types=types,
-            bounds=bounds,
-            seed=seed,
             instance_features=instance_features,
             pca_components=pca_components,
+            seed=seed,
         )
 
         self.log_y = log_y
@@ -109,7 +105,7 @@ class RandomForestWithInstances(BaseRandomForest):
         self.rf_opts = regression.forest_opts()
         self.rf_opts.num_trees = num_trees
         self.rf_opts.do_bootstrapping = do_bootstrapping
-        max_features = 0 if ratio_features > 1.0 else max(1, int(len(types) * ratio_features))
+        max_features = 0 if ratio_features > 1.0 else max(1, int(len(self.types) * ratio_features))
         self.rf_opts.tree_opts.max_features = max_features
         self.rf_opts.tree_opts.min_samples_to_split = min_samples_split
         self.rf_opts.tree_opts.min_samples_in_leaf = min_samples_leaf

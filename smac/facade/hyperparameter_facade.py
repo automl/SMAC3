@@ -34,11 +34,7 @@ class HyperparameterFacade(Facade):
     ) -> RandomForestWithInstances:
         """Returns a RandomForestWithInstances surrogate model. Please check the
         its documentation for details."""
-        types, bounds = get_types(scenario.configspace)
-
         return RandomForestWithInstances(
-            types=types,
-            bounds=bounds,
             log_y=True,
             num_trees=n_trees,
             do_bootstrapping=bootstrapping,
