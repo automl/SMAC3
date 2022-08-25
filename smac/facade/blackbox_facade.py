@@ -36,13 +36,15 @@ __license__ = "3-clause BSD"
 
 class BlackBoxFacade(Facade):
     def _validate(self) -> None:
+        """Ensure that the SMBO configuration with all its (updated) dependencies is valid."""
         super()._validate()
         # TODO what about these? vvv
         # self.solver.scenario.acq_opt_challengers = 1000  # type: ignore[attr-defined] # noqa F821
         # # activate predict incumbent
         # self.solver.epm_chooser.predict_x_best = True
 
-        if self._scenario.instance_features is not None and len(self._scenario.instance_features) > 0:
+        if self._scenario.instance_features is not None and len(
+                self._scenario.instance_features) > 0:
             raise NotImplementedError("The Black-Box GP cannot handle instances.")
 
         if not isinstance(self.model, BaseGaussianProcess):
@@ -54,8 +56,13 @@ class BlackBoxFacade(Facade):
 
     @staticmethod
     def get_model(
-        scenario: Scenario, *, model_type: str = "gp", kernel: kernels.Kernel | None = None
+            scenario: Scenario,
+            *,
+            model_type: str = "gp",
+            kernel: kernels.Kernel | None = None
     ) -> BaseGaussianProcess:
+        """Returns a Gaussian Process surrogate model. Please check its documentation for
+        detials."""
         available_model_types = ["gp", "gp_mcmc"]
         if model_type not in available_model_types:
             raise ValueError(f"model_type {model_type} not in available model types")
@@ -72,7 +79,7 @@ class BlackBoxFacade(Facade):
                 bounds=bounds,
                 kernel=kernel,
                 normalize_y=True,
-                seed=rng.integers(low=0, high=2**20),
+                seed=rng.integers(low=0, high=2 ** 20),
             )
         elif model_type == "gp_mcmc":
             n_mcmc_walkers = 3 * len(kernel.theta)
@@ -88,7 +95,7 @@ class BlackBoxFacade(Facade):
                 chain_length=250,
                 burnin_steps=250,
                 normalize_y=True,
-                seed=rng.integers(low=0, high=2**20),
+                seed=rng.integers(low=0, high=2 ** 20),
             )
         else:
             raise ValueError("Unknown model type %s" % model_type)
@@ -97,6 +104,9 @@ class BlackBoxFacade(Facade):
 
     @staticmethod
     def get_kernel(scenario: Scenario) -> kernels.Kernel:
+        """Returns a kernel for the Gaussian Process surrogate model.
+        The kernel is a composite of kernels depending on the type of hyperparameters:
+        categorical (HammingKernel), continuous (Matern), and noise kernels (White). """
         types, bounds = get_types(scenario.configspace, instance_features=None)
         cont_dims = np.where(np.array(types) == 0)[0]
         cat_dims = np.where(np.array(types) != 0)[0]
@@ -122,14 +132,16 @@ class BlackBoxFacade(Facade):
         if len(cont_dims) > 0:
             exp_kernel = Matern(
                 np.ones([len(cont_dims)]),
-                [(np.exp(-6.754111155189306), np.exp(0.0858637988771976)) for _ in range(len(cont_dims))],
+                [(np.exp(-6.754111155189306), np.exp(0.0858637988771976)) for _ in
+                 range(len(cont_dims))],
                 nu=2.5,
                 operate_on=cont_dims,
             )
         if len(cat_dims) > 0:
             ham_kernel = HammingKernel(
                 np.ones([len(cat_dims)]),
-                [(np.exp(-6.754111155189306), np.exp(0.0858637988771976)) for _ in range(len(cat_dims))],
+                [(np.exp(-6.754111155189306), np.exp(0.0858637988771976)) for _ in
+                 range(len(cat_dims))],
                 operate_on=cat_dims,
             )
 
@@ -153,21 +165,28 @@ class BlackBoxFacade(Facade):
             kernel = cov_amp * ham_kernel + noise_kernel
 
         else:
-            raise ValueError("The number of continuous and categorical hyperparameters must be greater than zero.")
+            raise ValueError(
+                "The number of continuous and categorical hyperparameters must be greater than zero.")
 
         return kernel
 
     @staticmethod
-    def get_acquisition_function(scenario: Scenario, xi: float = 0.0) -> AbstractAcquisitionFunction:
+    def get_acquisition_function(scenario: Scenario,
+                                 xi: float = 0.0) -> AbstractAcquisitionFunction:
+        """Returns the acquisition function instance (EI: Expected Improvement) for the Black-Box
+        facade.
+        """
         return EI(xi=xi)
 
     @staticmethod
     def get_acquisition_optimizer(
-        scenario: Scenario,
-        *,
-        local_search_iterations: int = 10,
-        challengers: int = 1000,
+            scenario: Scenario,
+            *,
+            local_search_iterations: int = 10,
+            challengers: int = 1000,
     ) -> AbstractAcquisitionOptimizer:
+        """Returns the acquisition optimizer instance (LocalAndSOrtedRandomSearch) for the
+        Black-Box facade. Please check its documentation for detials."""
         optimizer = LocalAndSortedRandomSearch(
             configspace=scenario.configspace,
             local_search_iterations=local_search_iterations,
@@ -178,13 +197,15 @@ class BlackBoxFacade(Facade):
 
     @staticmethod
     def get_intensifier(
-        scenario: Scenario,
-        *,
-        min_challenger: int = 1,
-        min_config_calls: int = 1,
-        max_config_calls: int = 3,
-        intensify_percentage: float = 0.5,
+            scenario: Scenario,
+            *,
+            min_challenger: int = 1,
+            min_config_calls: int = 1,
+            max_config_calls: int = 3,
+            intensify_percentage: float = 0.5,
     ) -> Intensifier:
+        """Returns the Intensifier instance  for the Black-Box facade. Please check its
+        documentation for details."""
         intensifier = Intensifier(
             scenario=scenario,
             min_challenger=min_challenger,
@@ -198,13 +219,15 @@ class BlackBoxFacade(Facade):
 
     @staticmethod
     def get_initial_design(
-        scenario: Scenario,
-        *,
-        configs: list[Configuration] | None = None,
-        n_configs: int | None = None,
-        n_configs_per_hyperparamter: int = 10,
-        max_config_ratio: float = 0.25,  # Use at most X*budget in the initial design
+            scenario: Scenario,
+            *,
+            configs: list[Configuration] | None = None,
+            n_configs: int | None = None,
+            n_configs_per_hyperparamter: int = 10,
+            max_config_ratio: float = 0.25,  # Use at most X*budget in the initial design
     ) -> SobolInitialDesign:
+        """Returns a Sobol design instance for the Black-Box facade.
+        Please check its documentation."""
         initial_design = SobolInitialDesign(
             scenario=scenario,
             configs=configs,
@@ -216,14 +239,19 @@ class BlackBoxFacade(Facade):
 
     @staticmethod
     def get_random_design(
-        scenario: Scenario, *, random_probability: float = 0.08447232371720552
+            scenario: Scenario, *, random_probability: float = 0.08447232371720552
     ) -> ProbabilityRandomDesign:
+        """Returns a random design instance (ProbabilityRandomDesign) for the Black-Box facade,
+        detailing the interleaving of configurations derived from BO's acquisition with those
+        from random search. Please check its documentation."""
         return ProbabilityRandomDesign(seed=scenario.seed, probability=random_probability)
 
     @staticmethod
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
+        """Returns the multi-objective algorithm instance (MeanAggregationStrategy) for the
+        Black-Box facade."""
         return MeanAggregationStrategy(scenario.seed)
 
     @staticmethod
-    def get_runhistory_encoder(scenario: Scenario):
+    def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:
         return RunHistoryEncoder(scenario)
