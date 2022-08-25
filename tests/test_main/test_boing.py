@@ -39,7 +39,8 @@ def test_init(make_scenario):
         assert excinfo.values == "BOinG only supports RunHistory2EPM4CostWithRaw as its rh transformer"
 
     facade = BOinGFacade(scenario=scenario,
-                         target_algorithm=tae)
+                         target_algorithm=tae,
+                         overwrite=True)
     assert not hasattr(facade.optimizer, "turbo_optimizer")
 
     facade.do_switching = True
@@ -59,7 +60,8 @@ def test_chooser_next(make_scenario):
     facade = BOinGFacade(scenario=scenario,
                          runhistory=rh,
                          target_algorithm=tae,
-                         do_switching=False, )
+                         do_switching=False,
+                         overwrite=True)
     optimizer = facade.optimizer
 
     x = next(optimizer.ask())
@@ -97,7 +99,8 @@ def test_do_switching(make_scenario):
                          runhistory=rh,
                          target_algorithm=tae,
                          do_switching=True,
-                         turbo_kwargs=turbo_kwargs,)
+                         turbo_kwargs=turbo_kwargs,
+                         overwrite=True)
     optimizer = facade.optimizer
 
     for i in range(15):

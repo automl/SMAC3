@@ -91,7 +91,7 @@ class BOinGFacade(HyperparameterFacade):
         self.min_configs_local = min_configs_local
         self.do_switching = do_switching
         self.turbo_kwargs = turbo_kwargs
-        # we attach here an that allows the users to pass their own arguments to the boing optimizer
+        # we attach here to allow the users to pass their own arguments to the boing optimizer
         super().__init__(scenario=scenario, target_algorithm=target_algorithm, **kwargs)
 
     @staticmethod
@@ -102,7 +102,7 @@ class BOinGFacade(HyperparameterFacade):
     def get_random_design(
         scenario: Scenario, *, probability: float = 0.08447232371720552
     ) -> ProbabilityRandomDesign:
-        return super().get_random_design(probability=probability)
+        return super(BOinGFacade, BOinGFacade).get_random_design(scenario=scenario, probability=probability)
 
     @staticmethod
     def get_acquisition_optimizer(
