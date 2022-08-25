@@ -14,6 +14,7 @@ def make_scenario() -> Callable:
         n_instances: int = 3,
         min_budget: int = 2,
         max_budget: int = 5,
+        n_workers: int = 1,
     ) -> Scenario:
         objectives = "cost"
         if use_multi_objective:
@@ -37,6 +38,7 @@ def make_scenario() -> Callable:
             deterministic=deterministic,
             walltime_limit=30,
             n_trials=100,
+            n_workers=n_workers,
             instances=instances,
             instance_features=instance_features,
             min_budget=min_budget,

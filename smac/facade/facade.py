@@ -152,11 +152,7 @@ class Facade:
                 n_workers = available_workers
 
             # We use a dask runner for parallelization
-            runner = DaskParallelRunner(
-                runner,
-                n_workers=n_workers,
-                output_directory=str(scenario.output_directory),
-            )
+            runner = DaskParallelRunner(single_worker=runner)
 
         # TODO make these private attributes (also in smbo...)
         # Set variables globally
