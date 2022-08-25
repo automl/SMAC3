@@ -1,37 +1,28 @@
 import pytest
-import unittest
 from unittest.mock import patch
 
 import numpy as np
-import torch
 from ConfigSpace import (
     CategoricalHyperparameter,
     ConfigurationSpace,
     UniformFloatHyperparameter,
 )
-from gpytorch.constraints.constraints import Interval
-from gpytorch.kernels import MaternKernel, ScaleKernel
-from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
-from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
 import smac
-from smac.scenario import Scenario
-from smac.model.gaussian_process.gpytorch import GloballyAugmentedLocalGaussianProcess
 from smac.model.random_forest.random_forest_with_instances import RandomForestWithInstances
-from smac.model.utils import check_subspace_points, get_types
+from smac.model.utils import get_types
 from smac.facade.boing_facade import BOinGFacade
 from smac.facade.blackbox_facade import BlackBoxFacade
 from smac.facade.hyperparameter_facade import HyperparameterFacade
-from smac.main.boing import BOinGSMBO, subspace_extraction
+from smac.main.boing import subspace_extraction
 from smac.model.utils import check_subspace_points
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.encoder.boing_encoder import RunHistoryRawScaledEncoder
 from smac.runner.runner import StatusType
 from smac.utils import _test_helpers
 
 
-def test_init():
-    scenario = Scenario(
+def test_init(make_scenario):
+    scenario = make_scenario(
         configspace=_test_helpers.get_branin_config_space(),
     )
     tae = lambda x: x
@@ -56,9 +47,9 @@ def test_init():
     assert hasattr(facade.optimizer, "turbo_optimizer")
 
 
-def test_chooser_next():
+def test_chooser_next(make_scenario):
     configspace = _test_helpers.get_branin_config_space()
-    scenario = Scenario(
+    scenario = make_scenario(
         configspace=configspace,
     )
     config = scenario.configspace.sample_configuration()
@@ -90,10 +81,10 @@ def test_chooser_next():
     assert x.origin == "TuRBO"
 
 
-def test_do_switching():
+def test_do_switching(make_scenario):
     seed = 42
     configspace = _test_helpers.get_branin_config_space()
-    scenario = Scenario(
+    scenario = make_scenario(
         configspace=configspace,
     )
     config = scenario.configspace.sample_configuration()

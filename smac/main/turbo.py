@@ -13,7 +13,7 @@ from smac.utils.subspaces.turbo_subspace import TuRBOSubSpace
 logger = get_logger(__name__)
 
 
-class TurBOSMBO(SMBO):
+class TuRBOSMBO(SMBO):
     """
     Interface to train the EPM and generate next configurations with TurBO:
         D. Eriksson et al. Scalable Global Optimization via Local Bayesian Optimization
@@ -54,7 +54,7 @@ class TurBOSMBO(SMBO):
         *args,
         **kwargs,
     ):
-        super(TurBOSMBO, self).__init__(*args, **kwargs)
+        super(TuRBOSMBO, self).__init__(*args, **kwargs)
 
         types, bounds = get_types(self.configspace, instance_features=None)
 
@@ -97,7 +97,6 @@ class TurBOSMBO(SMBO):
         if len(self.turbo.init_configs) > 0:
             self.turbo.add_new_observations(X[-num_new_bservations:], Y[-num_new_bservations:])
             return self.turbo.generate_challengers()
-
         self.turbo.adjust_length(new_observations)
 
         self.turbo.add_new_observations(X[-num_new_bservations:], Y[-num_new_bservations:])

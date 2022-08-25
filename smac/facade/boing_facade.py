@@ -92,7 +92,7 @@ class BOinGFacade(HyperparameterFacade):
         self.do_switching = do_switching
         self.turbo_kwargs = turbo_kwargs
         # we attach here an that allows the users to pass their own arguments to the boing optimizer
-        super().__init__(scenario=scenario,target_algorithm=target_algorithm, **kwargs)
+        super().__init__(scenario=scenario, target_algorithm=target_algorithm, **kwargs)
 
     @staticmethod
     def get_runhistory_encoder(scenario: Scenario) -> RunHistoryRawEncoder:
@@ -100,9 +100,9 @@ class BOinGFacade(HyperparameterFacade):
 
     @staticmethod
     def get_random_design(
-        scenario: Scenario, *, random_probability: float = 0.08447232371720552
+        scenario: Scenario, *, probability: float = 0.08447232371720552
     ) -> ProbabilityRandomDesign:
-        return ProbabilityRandomDesign(seed=scenario.seed, probability=random_probability)
+        return super().get_random_design(probability=probability)
 
     @staticmethod
     def get_acquisition_optimizer(
