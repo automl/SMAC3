@@ -32,6 +32,8 @@ class HyperparameterFacade(Facade):
         min_samples_leaf: int = 1,
         max_depth: int = 2**20,
     ) -> RandomForestWithInstances:
+        """Returns a RandomForestWithInstances surrogate model. Please check the
+        its documentation for details."""
         types, bounds = get_types(scenario.configspace)
 
         return RandomForestWithInstances(
@@ -51,6 +53,8 @@ class HyperparameterFacade(Facade):
 
     @staticmethod
     def get_acquisition_function(scenario: Scenario, *, xi: float = 0.0) -> EI:
+        """Returns an Expected Improvement acquisition function. Please check its documentation
+        for details."""
         return EI(xi=xi, log=True)
 
     @staticmethod
@@ -60,6 +64,8 @@ class HyperparameterFacade(Facade):
         local_search_iterations: int = 10,
         challengers: int = 10000,
     ) -> LocalAndSortedRandomSearch:
+        """Local and sorted random search acquisition optimizer. Defines the optimization
+        strategy for the acquisition function. Please check its documentation."""
         optimizer = LocalAndSortedRandomSearch(
             scenario.configspace,
             local_search_iterations=local_search_iterations,
@@ -78,6 +84,8 @@ class HyperparameterFacade(Facade):
         max_config_calls: int = 3,
         intensify_percentage: float = 0.5,
     ) -> Intensifier:
+        """Returns an intensifier instance. Defining how to challenge the incumbent on multiple
+        problem instances. Please check its documentation for details."""
         intensifier = Intensifier(
             scenario=scenario,
             min_challenger=min_challenger,
@@ -98,6 +106,7 @@ class HyperparameterFacade(Facade):
         n_configs_per_hyperparamter: int = 10,
         max_config_ratio: float = 0.25,  # Use at most X*budget in the initial design
     ) -> SobolInitialDesign:
+        """Returns an Sobol initial design instance. Please check its documentation for details."""
         return SobolInitialDesign(
             scenario=scenario,
             configs=configs,
@@ -112,10 +121,13 @@ class HyperparameterFacade(Facade):
         *,
         probability: float = 0.2,
     ) -> ProbabilityRandomDesign:
+        """Returns a ProbabilityRandomDesign instance for interleaving BO derived configurations
+        with random ones. Please check its documentation for details."""
         return ProbabilityRandomDesign(probability=probability)
 
     @staticmethod
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
+        """Returns a multi-objective algorithm instance. Please check its documentation for details."""
         return MeanAggregationStrategy(scenario.seed)
 
     @staticmethod

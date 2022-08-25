@@ -5,7 +5,7 @@ __license__ = "3-clause BSD"
 
 
 from abc import ABC, abstractmethod
-from typing import Any, Callable
+from typing import Any, Callable, Iterator
 
 import time
 import traceback
@@ -41,8 +41,8 @@ class AbstractRunner(ABC):
           really the algorithm to translate a RunInfo to a RunValue, i.e.
           a configuration to an actual result.
 
-    2. A completed run is collected via get_finished_runs(), which returns
-       any finished runs, if any.
+    2. A completed run is collected via iter_results(), which iterates and
+       consumes any finished runs, if any.
 
     3. This interface also offers the method wait() as a mechanism to make
        sure we have enough data in the next iteration to make a decision. For
@@ -89,8 +89,8 @@ class AbstractRunner(ABC):
 
         # The results is a FIFO structure, implemented via a list
         # (because the Queue lock is not pickable). Finished runs are
-        # put in this list and collected via process_finished_runs
-        self.results: list[tuple[RunInfo, RunValue]] = []
+        # put in this list and collected via _process_pending_runs
+        self._results_queue: list[tuple[RunInfo, RunValue]] = []
 
         # Below state the support for a Runner algorithm that implements a ta
         self.target_algorithm = target_algorithm
@@ -180,7 +180,7 @@ class AbstractRunner(ABC):
     @abstractmethod
     def submit_run(self, run_info: RunInfo) -> None:
         """This function submits a configuration embedded in a RunInfo object, and uses one of the
-        workers to produce a result (such result will eventually be available on the self.results
+        workers to produce a result (such result will eventually be available on the self._results_queue
         FIFO).
 
         This interface method will be called by SMBO, with the expectation
@@ -235,15 +235,16 @@ class AbstractRunner(ABC):
         ...
 
     @abstractmethod
-    def get_finished_runs(self) -> list[tuple[RunInfo, RunValue]]:
-        """This method returns any finished configuration, and returns a list with the results of
-        exercising the configurations. This class keeps populating results to self.results until a
-        call to get_finished runs is done. In this case, the self.results list is emptied and all
-        RunValues produced by running run() are returned.
+    def iter_results(self) -> Iterator[tuple[RunInfo, RunValue]]:
+        """This method returns any finished configuration, and returns a list with the
+        results of exercising the configurations. This class keeps populating results
+        to self._results_queue until a call to get_finished runs is done. In this case,
+        the self._results_queue list is emptied and all RunValues produced by running
+        run() are returned.
 
         Returns
         -------
-        list[tuple[RunInfo, RunValue]]:
+        Iterator[tuple[RunInfo, RunValue]]:
             A list of pais RunInfo/RunValues a submitted configuration
         """
         ...
@@ -257,7 +258,7 @@ class AbstractRunner(ABC):
         ...
 
     @abstractmethod
-    def pending_runs(self) -> bool:
+    def is_running(self) -> bool:
         """Whether or not there are configs still running.
 
         Generally if the runner is serial, launching a run instantly returns it's result. On
@@ -266,6 +267,6 @@ class AbstractRunner(ABC):
         ...
 
     @abstractmethod
-    def num_workers(self) -> int:
-        """Return the active number of workers that will execute target_algorithm runs."""
+    def available_worker_count(self) -> int:
+        """Return the number of available workers"""
         ...

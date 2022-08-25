@@ -111,6 +111,8 @@ class BOinGFacade(HyperparameterFacade):
         local_search_iterations: int = 10,
         challengers: int = 1000,
     ) -> AbstractAcquisitionOptimizer:
+        """Returns the acquisition optimizer instance for finding the next candidate configuration
+        based on the acquisition function."""
         optimizer = LocalAndSortedRandomSearch(
             configspace=scenario.configspace,
             local_search_iterations=local_search_iterations,
@@ -122,6 +124,7 @@ class BOinGFacade(HyperparameterFacade):
     def _init_optimizer(
         self,
     ) -> None:
+        """Configure the BOinGSMBO optimizer, that defines the particular BO loop."""
         self.optimizer = BOinGSMBO(
             scenario=self._scenario,
             stats=self.stats,

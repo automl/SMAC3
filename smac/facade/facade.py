@@ -34,6 +34,8 @@ from smac.utils.stats import Stats
 
 logger = get_logger(__name__)
 
+__copyright__ = "Copyright 2022, automl.org"
+__license__ = "3-clause BSD"
 
 class Facade:
     """Facade is an abstraction on top of the SMBO backend to organize the components
@@ -54,12 +56,12 @@ class Facade:
     target_algorithm: AbstractRunner | Callable
 
     model: BaseModel | None
-    acquisition_function: AcquisitionFunction | None
-    acquisition_optimizer: AcquisitionOptimizer | None
+    acquisition_function: AbstractAcquisitionFunction | None
+    acquisition_optimizer: AbstractAcquisitionOptimizer | None
     initial_design: InitialDesign | None
     random_design: RandomDesign | None
-    intensifier: Intensifier | None
-    multi_objective_algorithm: MultiObjectiveAlgorithm | None
+    intensifier: AbstractIntensifier | None
+    multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None
     runhistory: RunHistory | None
     runhistory_encoder: RunHistoryEncoder | None
 
@@ -150,11 +152,7 @@ class Facade:
                 n_workers = available_workers
 
             # We use a dask runner for parallelization
-            runner = DaskParallelRunner(
-                runner,
-                n_workers=n_workers,
-                output_directory=str(scenario.output_directory),
-            )
+            runner = DaskParallelRunner(single_worker=runner)
 
         # TODO make these private attributes (also in smbo...)
         # Set variables globally
@@ -353,39 +351,54 @@ class Facade:
     @staticmethod
     @abstractmethod
     def get_model(scenario: Scenario) -> BaseModel:
+        """Returns the surrogate cost model instance used in the BO loop."""
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def get_acquisition_function(scenario: Scenario) -> AbstractAcquisitionFunction:
+        """Returns the acquisition function instance used in the BO loop,
+        defining the exploration/exploitation trade-off."""
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def get_acquisition_optimizer(scenario: Scenario) -> AbstractAcquisitionOptimizer:
+        """Returns the acquisition optimizer instance to be used in the BO loop,
+        specifying how the acquisition function instance is optimized."""
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def get_intensifier(scenario: Scenario) -> AbstractIntensifier:
+        """Returns the intensifier instance to be used in the BO loop,
+        specifying how to challenge the incumbent configuration on other problem instances."""
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def get_initial_design(scenario: Scenario) -> InitialDesign:
+        """Returns an instance of the initial design class to be used in the BO loop,
+        specifying how the configurations the BO loop is 'warm-started' with are selected."""
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def get_random_design(scenario: Scenario) -> RandomDesign:
+        """Returns an instance of the random design class to be used in the BO loop,
+        specifying how to interleave the BO iterations with randomly selected configurations."""
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:
+        """Returns an instance of the runhistory encoder class to be used in the BO loop,
+        specifying how the runhistory is to be prepared for the next surrogate model."""
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
+        """Returns the multi-objective algorithm instance to be used in the BO loop,
+        specifying the scalarization strategy for multiple objectives' costs"""
         raise NotImplementedError
