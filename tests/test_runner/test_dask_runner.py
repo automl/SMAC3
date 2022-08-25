@@ -114,7 +114,7 @@ def test_parallel_runs(make_dummy_ta: Callable[..., TargetAlgorithmRunner]) -> N
 
     # The iter results could have freed up two so we only check it's one or greater
     assert first is not None
-    assert runner.available_worker_count() >= 1  
+    assert runner.available_worker_count() >= 1
 
     # Again, the runs might take slightly different time depending if we have
     # heterogeneous workers, so calling wait 2 times is a guarantee that 2
