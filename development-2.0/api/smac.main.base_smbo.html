@@ -361,7 +361,7 @@ data into EPM data</p></li>
 <li><p><strong>acquisition_function</strong> (<em>AcquisitionFunction</em>) – Object that implements the AbstractAcquisitionFunction (i.e., infill criterion for acquisition_optimizer)</p></li>
 <li><p><strong>restore_incumbent</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – incumbent to be used from the start. ONLY used to restore states.</p></li>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</p></li>
-<li><p><strong>runner</strong> (<em>smac.tae.base.BaseRunner Object</em>) – target algorithm run executor</p></li>
+<li><p><strong>runner</strong> (<a class="reference internal" href="smac.runner.html#smac.runner.AbstractRunner" title="smac.runner.AbstractRunner"><em>AbstractRunner</em></a>) – target algorithm run executor</p></li>
 <li><p><strong>random_design</strong> (<a class="reference internal" href="smac.random_design.random_design.html#smac.random_design.random_design.RandomDesign" title="smac.random_design.random_design.RandomDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomDesign</span></code></a>) – Chooser for random configuration – one of
 * ChooserNoCoolDown(modulus)
 * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)</p></li>

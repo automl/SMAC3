@@ -17,7 +17,7 @@ smac.runner.runner
 
    .. autosummary::
    
-      Runner
+      AbstractRunner
    
    
 

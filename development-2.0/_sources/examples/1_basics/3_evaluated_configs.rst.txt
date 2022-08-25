@@ -37,14 +37,9 @@ This example shows how to incorporate evaluated configurations into SMAC.
     [INFO][base_smbo.py:151] Initial design is skipped since 10 entries are found in the runhistory.
     [INFO][base_smbo.py:158] Added 10 configs from the runhistory as initial design and determined the incumbent.
     [INFO][intensification.py:603] Updated estimated cost of incumbent on 2 runs: 0.02
-    [INFO][abstract_intensifier.py:333] Challenger (0.0133) is better than incumbent (0.02) on 2 runs.
-    [INFO][abstract_intensifier.py:353] Changes in incumbent:
-    [INFO][abstract_intensifier.py:356] --- C: 4.135997393839888 -> 0.4256053822493198
-    [INFO][abstract_intensifier.py:356] --- gamma_value: 0.16521255145781252 -> 1.325448240647653
-    [INFO][abstract_intensifier.py:356] --- shrinking: True -> False
-    [INFO][facade.py:348] Final Incumbent: {'C': 0.4256053822493198, 'kernel': 'rbf', 'shrinking': False, 'gamma': 'value', 'gamma_value': 1.325448240647653}
-    [INFO][facade.py:349] Estimated cost: 0.013333333333333308
-    Incumbent value: 0.01
+    [INFO][facade.py:348] Final Incumbent: {'C': 4.135997393839888, 'kernel': 'rbf', 'shrinking': True, 'gamma': 'value', 'gamma_value': 0.16521255145781252}
+    [INFO][facade.py:349] Estimated cost: 0.019999999999999907
+    Incumbent value: 0.02
 
 
 
@@ -163,7 +158,7 @@ This example shows how to incorporate evaluated configurations into SMAC.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.555 seconds)
+   **Total running time of the script:** ( 0 minutes  2.334 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_3_evaluated_configs.py:

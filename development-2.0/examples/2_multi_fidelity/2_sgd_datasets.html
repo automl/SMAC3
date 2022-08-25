@@ -354,6 +354,11 @@ budget is no longer required by the target function.</p>
 [INFO][hyperband_worker.py:252] Finished Hyperband iteration-step 1-1 with initial budget 1.
 [INFO][successive_halving_worker.py:277] Successive Halving configuration: budget type = INSTANCES, Initial budget = 1.00, Max. budget = 45.00, eta = 3.00
 [INFO][successive_halving_worker.py:582] First run and no incumbent provided. Challenger is assumed to be the incumbent.
+[INFO][abstract_intensifier.py:333] Challenger (0.0112) is better than incumbent (0.0196) on 1 runs.
+[INFO][abstract_intensifier.py:353] Changes in incumbent:
+[INFO][abstract_intensifier.py:356] --- alpha: 0.5488135039273248 -&gt; 0.6027633760716439
+[INFO][abstract_intensifier.py:356] --- eta0: 0.0006273927602293597 -&gt; 0.03077201812975574
+[INFO][abstract_intensifier.py:356] --- l1_ratio: 0.317983179393976 -&gt; 0.06414749634878436
 [INFO][successive_halving_worker.py:423] Finished Successive Halving iteration-step 1-1 with budget [1.67 / 45] and 27 evaluated challenger(s).
 [INFO][successive_halving_worker.py:423] Finished Successive Halving iteration-step 1-2 with budget [5.00 / 45] and 9 evaluated challenger(s).
 [INFO][successive_halving_worker.py:423] Finished Successive Halving iteration-step 1-3 with budget [15.00 / 45] and 3 evaluated challenger(s).
@@ -369,8 +374,8 @@ budget is no longer required by the target function.</p>
 [INFO][successive_halving_worker.py:423] Finished Successive Halving iteration-step 1-2 with budget [45.00 / 45] and 2 evaluated challenger(s).
 [INFO][hyperband_worker.py:252] Finished Hyperband iteration-step 1-4 with initial budget 45.
 [INFO][successive_halving_worker.py:277] Successive Halving configuration: budget type = INSTANCES, Initial budget = 1.00, Max. budget = 45.00, eta = 3.00
-[INFO][facade.py:348] Final Incumbent: {&#39;alpha&#39;: 0.5488135039273248, &#39;eta0&#39;: 0.0006273927602293597, &#39;l1_ratio&#39;: 0.317983179393976, &#39;learning_rate&#39;: &#39;adaptive&#39;}
-[INFO][facade.py:349] Estimated cost: 0.0
+[INFO][facade.py:348] Final Incumbent: {&#39;alpha&#39;: 0.6027633760716439, &#39;eta0&#39;: 0.03077201812975574, &#39;l1_ratio&#39;: 0.06414749634878436, &#39;learning_rate&#39;: &#39;adaptive&#39;}
+[INFO][facade.py:349] Estimated cost: 0.006249006102246613
 Incumbent cost: 0.01
 </pre></div>
 </div>
@@ -514,7 +519,7 @@ Incumbent cost: 0.01
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">incumbent_costs</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  49.325 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  49.700 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-2-sgd-datasets-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/88e1c1ee9fc33236ebfa159898782a73/2_sgd_datasets.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_sgd_datasets.py</span></code></a></p>

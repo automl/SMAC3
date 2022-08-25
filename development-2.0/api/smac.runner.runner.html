@@ -335,19 +335,19 @@ style="width: 100%;">
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.runner.runner.Runner" title="smac.runner.runner.Runner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Runner</span></code></a>(target_algorithm, scenario, stats)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.runner.runner.AbstractRunner" title="smac.runner.runner.AbstractRunner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractRunner</span></code></a>(target_algorithm, scenario, stats)</p></td>
 <td><p>Interface class to handle the execution of SMAC configurations.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runner.runner.</span></span><span class="sig-name descname"><span class="pre">Runner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_algorithm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#Runner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.Runner" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.runner.AbstractRunner">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runner.runner.</span></span><span class="sig-name descname"><span class="pre">AbstractRunner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_algorithm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#AbstractRunner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.AbstractRunner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>Interface class to handle the execution of SMAC configurations.</p>
 <p>This interface defines how to interact with the SMBO loop.
 The complexity of running a configuration as well as handling the
-results is abstracted to the SMBO via a BaseRunner.</p>
+results is abstracted to the SMBO via a AbstractRunner.</p>
 <p>From SMBO perspective, launching a configuration follows a
 submit/collect scheme as follows:</p>
 <ol class="arabic simple">
@@ -356,7 +356,7 @@ submit/collect scheme as follows:</p>
 <li><p>Submit_run internally calls run_wrapper(), a method that
 contains common processing functions among different runners,
 for example, handling capping and stats checking.</p></li>
-<li><p>A class that implements BaseRunner defines run() which is
+<li><p>A class that implements AbstractRunner defines run() which is
 really the algorithm to translate a RunInfo to a RunValue, i.e.
 a configuration to an actual result.</p></li>
 </ol>
@@ -378,8 +378,8 @@ until more results are available.</p></li>
 </dd>
 </dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.scenario">
-<span class="sig-name descname"><span class="pre">scenario</span></span><a class="headerlink" href="#smac.runner.runner.Runner.scenario" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.runner.AbstractRunner.scenario">
+<span class="sig-name descname"><span class="pre">scenario</span></span><a class="headerlink" href="#smac.runner.runner.AbstractRunner.scenario" title="Permalink to this definition">¶</a></dt>
 <dd><p>The scenario the runner will use</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -389,8 +389,8 @@ until more results are available.</p></li>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.results">
-<span class="sig-name descname"><span class="pre">results</span></span><a class="headerlink" href="#smac.runner.runner.Runner.results" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.runner.AbstractRunner.results">
+<span class="sig-name descname"><span class="pre">results</span></span><a class="headerlink" href="#smac.runner.runner.AbstractRunner.results" title="Permalink to this definition">¶</a></dt>
 <dd><p>The RunInfo is an object containing the configuration and the necessary data
 to run it while the RunValue contains information about the status/performance
 of config.</p>
@@ -402,8 +402,8 @@ of config.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.target_algorithm">
-<span class="sig-name descname"><span class="pre">target_algorithm</span></span><a class="headerlink" href="#smac.runner.runner.Runner.target_algorithm" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.runner.AbstractRunner.target_algorithm">
+<span class="sig-name descname"><span class="pre">target_algorithm</span></span><a class="headerlink" href="#smac.runner.runner.AbstractRunner.target_algorithm" title="Permalink to this definition">¶</a></dt>
 <dd><p>The algorithm to be called</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -413,8 +413,8 @@ of config.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.stats">
-<span class="sig-name descname"><span class="pre">stats</span></span><a class="headerlink" href="#smac.runner.runner.Runner.stats" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.runner.AbstractRunner.stats">
+<span class="sig-name descname"><span class="pre">stats</span></span><a class="headerlink" href="#smac.runner.runner.AbstractRunner.stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Where stats are collected during the run</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -424,8 +424,8 @@ of config.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.crash_cost">
-<span class="sig-name descname"><span class="pre">crash_cost</span></span><a class="headerlink" href="#smac.runner.runner.Runner.crash_cost" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.runner.AbstractRunner.crash_cost">
+<span class="sig-name descname"><span class="pre">crash_cost</span></span><a class="headerlink" href="#smac.runner.runner.AbstractRunner.crash_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>The cost to give if the target_algorithm crashes or a list of costs if doing
 multi-objective</p>
 <dl class="field-list simple">
@@ -436,8 +436,8 @@ multi-objective</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.objectives">
-<span class="sig-name descname"><span class="pre">objectives</span></span><a class="headerlink" href="#smac.runner.runner.Runner.objectives" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.runner.AbstractRunner.objectives">
+<span class="sig-name descname"><span class="pre">objectives</span></span><a class="headerlink" href="#smac.runner.runner.AbstractRunner.objectives" title="Permalink to this definition">¶</a></dt>
 <dd><p>The name of the objective or objectives if doing multi-objective</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -447,8 +447,8 @@ multi-objective</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.n_objectives">
-<span class="sig-name descname"><span class="pre">n_objectives</span></span><a class="headerlink" href="#smac.runner.runner.Runner.n_objectives" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.runner.AbstractRunner.n_objectives">
+<span class="sig-name descname"><span class="pre">n_objectives</span></span><a class="headerlink" href="#smac.runner.runner.AbstractRunner.n_objectives" title="Permalink to this definition">¶</a></dt>
 <dd><p>The number of objectives the target_algorithm uses</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -458,8 +458,8 @@ multi-objective</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.get_finished_runs">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_finished_runs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#Runner.get_finished_runs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.Runner.get_finished_runs" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.runner.AbstractRunner.get_finished_runs">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_finished_runs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#AbstractRunner.get_finished_runs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.AbstractRunner.get_finished_runs" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method returns any finished configuration, and returns a list with the results of
 exercising the configurations. This class keeps populating results to self.results until a
 call to get_finished runs is done. In this case, the self.results list is emptied and all
@@ -475,8 +475,8 @@ RunValues produced by running run() are returned.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.get_meta">
-<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#Runner.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.Runner.get_meta" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.runner.AbstractRunner.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#AbstractRunner.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.AbstractRunner.get_meta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the meta data of the created object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -486,8 +486,8 @@ RunValues produced by running run() are returned.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.num_workers">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#Runner.num_workers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.Runner.num_workers" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.runner.AbstractRunner.num_workers">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#AbstractRunner.num_workers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.AbstractRunner.num_workers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the active number of workers that will execute target_algorithm runs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -497,8 +497,8 @@ RunValues produced by running run() are returned.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.pending_runs">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pending_runs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#Runner.pending_runs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.Runner.pending_runs" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.runner.AbstractRunner.pending_runs">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pending_runs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#AbstractRunner.pending_runs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.AbstractRunner.pending_runs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether or not there are configs still running.</p>
 <p>Generally if the runner is serial, launching a run instantly returns it’s result. On
 parallel runners, there might be pending configurations to complete.</p>
@@ -510,8 +510,8 @@ parallel runners, there might be pending configurations to complete.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.run">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#Runner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.Runner.run" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.runner.AbstractRunner.run">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#AbstractRunner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.AbstractRunner.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the target algorithm with a configuration on a single instance with instance specifics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -539,8 +539,8 @@ target algorithm handled by the target algorithm internally.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.run_wrapper">
-<span class="sig-name descname"><span class="pre">run_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#Runner.run_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.Runner.run_wrapper" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.runner.AbstractRunner.run_wrapper">
+<span class="sig-name descname"><span class="pre">run_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#AbstractRunner.run_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.AbstractRunner.run_wrapper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper around run() to exec and check the execution of a given config file.</p>
 <p>This function encapsulates common handling/processing, so that run() implementation
 is simplified.</p>
@@ -563,8 +563,8 @@ isolation.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.submit_run">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">submit_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#Runner.submit_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.Runner.submit_run" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.runner.AbstractRunner.submit_run">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">submit_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#AbstractRunner.submit_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.AbstractRunner.submit_run" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function submits a configuration embedded in a RunInfo object, and uses one of the
 workers to produce a result (such result will eventually be available on the self.results
 FIFO).</p>
@@ -585,8 +585,8 @@ it is expected to be implemented by a child class.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.runner.runner.Runner.wait">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#Runner.wait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.Runner.wait" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.runner.AbstractRunner.wait">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/runner.html#AbstractRunner.wait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.runner.AbstractRunner.wait" title="Permalink to this definition">¶</a></dt>
 <dd><p>SMBO/intensifier might need to wait for runs to finish before making a decision.</p>
 <p>This method waits until 1 run completes</p>
 <dl class="field-list simple">

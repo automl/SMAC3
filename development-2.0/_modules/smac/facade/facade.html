@@ -340,7 +340,7 @@ style="width: 100%;">
 <span class="kn">from</span> <span class="nn">smac.runhistory.encoder.encoder</span> <span class="kn">import</span> <span class="n">RunHistoryEncoder</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.runner.dask_runner</span> <span class="kn">import</span> <span class="n">DaskParallelRunner</span>
-<span class="kn">from</span> <span class="nn">smac.runner.runner</span> <span class="kn">import</span> <span class="n">Runner</span>
+<span class="kn">from</span> <span class="nn">smac.runner.runner</span> <span class="kn">import</span> <span class="n">AbstractRunner</span>
 <span class="kn">from</span> <span class="nn">smac.runner.target_algorithm_runner</span> <span class="kn">import</span> <span class="n">TargetAlgorithmRunner</span>
 <span class="kn">from</span> <span class="nn">smac.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.main</span> <span class="kn">import</span> <span class="n">SMBO</span>
@@ -367,7 +367,7 @@ style="width: 100%;">
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    scenario: Scenario,</span>
-<span class="sd">    target_algorithm: Runner | Callable</span>
+<span class="sd">    target_algorithm: AbstractRunner | Callable</span>
 
 <span class="sd">    model: BaseModel | None</span>
 <span class="sd">    acquisition_function: AcquisitionFunction | None</span>
@@ -393,7 +393,7 @@ style="width: 100%;">
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
-        <span class="n">target_algorithm</span><span class="p">:</span> <span class="n">Runner</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">,</span>
+        <span class="n">target_algorithm</span><span class="p">:</span> <span class="n">AbstractRunner</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">model</span><span class="p">:</span> <span class="n">BaseModel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -444,7 +444,7 @@ style="width: 100%;">
         <span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
 
         <span class="c1"># Prepare the algorithm executer</span>
-        <span class="n">runner</span><span class="p">:</span> <span class="n">Runner</span>
+        <span class="n">runner</span><span class="p">:</span> <span class="n">AbstractRunner</span>
         <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">target_algorithm</span><span class="p">):</span>
             <span class="c1"># We wrap our algorithm with the AlgorithmExecuter to (potentially) use pynisher and catch exceptions</span>
             <span class="n">runner</span> <span class="o">=</span> <span class="n">TargetAlgorithmRunner</span><span class="p">(</span>
@@ -452,7 +452,7 @@ style="width: 100%;">
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
                 <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target_algorithm</span><span class="p">,</span> <span class="n">Runner</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target_algorithm</span><span class="p">,</span> <span class="n">AbstractRunner</span><span class="p">):</span>
             <span class="n">runner</span> <span class="o">=</span> <span class="n">target_algorithm</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># TODO: Integrate ExecuteTARunOld again</span>

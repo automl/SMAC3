@@ -322,14 +322,14 @@ style="width: 100%;">
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">smac.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory</span> <span class="kn">import</span> <span class="n">RunInfo</span><span class="p">,</span> <span class="n">RunValue</span><span class="p">,</span> <span class="n">StatusType</span>
-<span class="kn">from</span> <span class="nn">smac.runner.runner</span> <span class="kn">import</span> <span class="n">Runner</span>
+<span class="kn">from</span> <span class="nn">smac.runner.runner</span> <span class="kn">import</span> <span class="n">AbstractRunner</span>
 <span class="kn">from</span> <span class="nn">smac.utils.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2022, automl.org&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<div class="viewcode-block" id="SerialRunner"><a class="viewcode-back" href="../../../api/smac.runner.serial_runner.html#smac.runner.SerialRunner">[docs]</a><span class="k">class</span> <span class="nc">SerialRunner</span><span class="p">(</span><span class="n">Runner</span><span class="p">):</span>
+<div class="viewcode-block" id="SerialRunner"><a class="viewcode-back" href="../../../api/smac.runner.serial_runner.html#smac.runner.SerialRunner">[docs]</a><span class="k">class</span> <span class="nc">SerialRunner</span><span class="p">(</span><span class="n">AbstractRunner</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Interface to submit and collect a job in a serial fashion.</span>
 
 <span class="sd">    It dictates what a worker should do to convert a</span>
