@@ -3,11 +3,12 @@ from typing import Any
 
 import numpy as np
 
-from smac.multi_objective.aggregation_strategy import AggregationStrategy
+from smac.multi_objective.abstract_multi_objective_algorithm import AbstractMultiObjectiveAlgorithm
 from smac.scenario import Scenario
 
 
-class ParEGO(AggregationStrategy):
+class ParEGO(AbstractMultiObjectiveAlgorithm):
+
     def __init__(
         self,
         scenario: Scenario,
@@ -27,15 +28,14 @@ class ParEGO(AggregationStrategy):
             "rho": self.rho,
         }
 
-    def update_on_iteration_start(self):
+    def update_on_iteration_start(self) -> None:
         """Update the internal state for each SMAC SMBO iteration."""
         self.theta = self.rng.rand(self.num_objectives)
         # Normalize st all theta values sum up to 1
         self.theta = self.theta / (np.sum(self.theta) + 1e-10)
 
     def __call__(self, values: list[float]) -> float:
-        """
-        Transform a multi-objective loss to a single loss.
+        """Transform a multi-objective loss to a single loss.
 
         Parameters
         ----------
