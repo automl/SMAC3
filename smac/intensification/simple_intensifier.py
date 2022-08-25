@@ -175,7 +175,7 @@ class SimpleIntensifier(AbstractIntensifier):
 
         run_info = RunInfo(
             config=challenger,
-            instance=self.instances[-1],
+            instance=None if self.instances is None else self.instances[-1],
             seed=0 if self.deterministic else int(self.rng.randint(low=0, high=MAXINT, size=1)[0]),
             budget=0.0,
         )

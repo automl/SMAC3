@@ -106,7 +106,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
     def __init__(
         self,
         scenario: Scenario,
-        instance_seed_pairs: list[tuple[str, int]] | None = None,
+        instance_seed_pairs: list[tuple[str | None, int]] | None = None,
         instance_order: str | None = "shuffle_once",
         incumbent_selection: str = "highest_executed_budget",
         n_initial_challengers: int | None = None,
@@ -137,11 +137,12 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         self.n_seeds = n_seeds if n_seeds else 1
         self.instance_order = instance_order
 
-        if len(self.instances) == 1 and self.n_seeds > 1:
+        if self.instances is not None and len(self.instances) == 1 and self.n_seeds > 1:
             raise NotImplementedError("The case multiple seeds and one instance can not be handled yet!")
 
         # If instances are coming from Hyperband, skip the instance preprocessing section
         # it is already taken care by Hyperband.
+        self.instance_seed_pairs: list[tuple[str | None, int]]
         if instance_seed_pairs is None:
             # Set seed(s) for all SH runs. Currently user gives the number of seeds to consider.
             if self.deterministic:
@@ -156,7 +157,10 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                     )
 
             # storing instances & seeds as tuples
-            self.instance_seed_pairs = [(i, s) for s in seeds for i in self.instances]
+            if self.instances is not None:
+                self.instance_seed_pairs = [(i, s) for s in seeds for i in self.instances]
+            else:
+                self.instance_seed_pairs = [(None, s) for s in seeds]
 
             # determine instance-seed pair order
             if self.instance_order == "shuffle_once":
@@ -213,18 +217,14 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
     def _init_sh_params(
         self,
         eta: float,
-        n_initial_challengers: Optional[int] = None,
-        _all_budgets: Optional[np.ndarray] = None,
-        _n_configs_in_stage: Optional[np.ndarray] = None,
+        n_initial_challengers: int | None = None,
+        _all_budgets: np.ndarray | None = None,
+        _n_configs_in_stage: np.ndarray | None = None,
     ) -> None:
         """Initialize Successive Halving parameters.
 
         Parameters
         ----------
-        min_budget : Optional[float]
-            minimum budget allowed for 1 run of successive halving
-        max_budget : Optional[float]
-            maximum budget allowed for 1 run of successive halving
         eta : float
             'halving' factor after each iteration in a successive halving run
         n_initial_challengers : Optional[int]
@@ -248,7 +248,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
 
         # If only 1 instance was provided & quality objective, then use algorithm_walltime_limit as budget
         # else, use instances as budget
-        if len(self.instance_seed_pairs) <= 1:
+        if self.instance_seed_pairs is None or len(self.instance_seed_pairs) <= 1:
             # budget with algorithm_walltime_limit
             if min_budget is None or max_budget is None:
                 raise ValueError(
@@ -357,9 +357,9 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # if result.status == StatusType.CAPPED and run_info.config == self.running_challenger:
         #    self.current_instance_indices[run_info.config] = np.inf
         # else:
-        self._target_algorithm_time = self._target_algorithm_time  # type: float # make mypy happy
+        self._target_algorithm_time = self._target_algorithm_time
         self._target_algorithm_time += run_value.time
-        self.num_run = self.num_run  # type: int # make mypy happy
+        self.num_run = self.num_run
         self.num_run += 1
 
         # 0: Before moving to a new stage, we have to complete M x N tasks, where M is the
@@ -957,7 +957,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
     def _all_config_instance_seed_pairs_launched(
         self,
         runhistory: RunHistory,
-        activate_configuration_being_intensified: Optional[Configuration],
+        activate_configuration_being_intensified: Configuration | None,
     ) -> bool:
         """When running SH, M configs might require N instances. Before moving to the next stage, we
         need to make sure that tasks (each of the MxN jobs) are launched.
