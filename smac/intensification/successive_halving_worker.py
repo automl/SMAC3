@@ -337,6 +337,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         inc_perf: float
             empirical performance of incumbent configuration
         """
+
         # Mark the fact that we processed this configuration
         self.run_tracker[(run_info.config, run_info.instance, run_info.seed, run_info.budget)] = True
 
@@ -634,12 +635,12 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
             self.sh_iters = 0
             self.stage = 0
             # to track challengers across stages
-            self.configs_to_run = []  # type: List[Configuration]
+            self.configs_to_run: list[Configuration] = []
             self.current_instance_indices = {}
             self.running_challenger = None
-            self.success_challengers = set()  # successful configs
-            self.do_not_advance_challengers = set()  # configs which are successful, but should not be advanced
-            self.fail_challengers = set()  # capped configs and other failures
+            self.success_challengers = set()  # Successful configs
+            self.do_not_advance_challengers = set()  # Configs which are successful, but should not be advanced
+            self.fail_challengers = set()  # Failures configs
             self.fail_chal_offset = 0
         else:
             self.stage += 1

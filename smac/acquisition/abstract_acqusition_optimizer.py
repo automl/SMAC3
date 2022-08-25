@@ -87,7 +87,7 @@ class AbstractAcquisitionOptimizer(metaclass=abc.ABCMeta):
         if num_points is None:
             num_points = self.challengers
 
-        def next_configs_by_acq_value() -> List[Configuration]:
+        def next_configs_by_acq_value() -> list[Configuration]:
             assert num_points is not None
             return [t[1] for t in self._maximize(previous_configs, num_points)]
 
