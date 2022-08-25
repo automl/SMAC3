@@ -21,12 +21,12 @@ from smac.utils.stats import Stats
 logger = get_logger(__name__)
 
 
-class Runner(ABC):
+class AbstractRunner(ABC):
     """Interface class to handle the execution of SMAC configurations.
 
     This interface defines how to interact with the SMBO loop.
     The complexity of running a configuration as well as handling the
-    results is abstracted to the SMBO via a BaseRunner.
+    results is abstracted to the SMBO via a AbstractRunner.
 
     From SMBO perspective, launching a configuration follows a
     submit/collect scheme as follows:
@@ -37,7 +37,7 @@ class Runner(ABC):
           contains common processing functions among different runners,
           for example, handling capping and stats checking.
 
-       2. A class that implements BaseRunner defines run() which is
+       2. A class that implements AbstractRunner defines run() which is
           really the algorithm to translate a RunInfo to a RunValue, i.e.
           a configuration to an actual result.
 

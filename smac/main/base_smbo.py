@@ -20,7 +20,7 @@ from smac.model.base_model import BaseModel
 from smac.runhistory import RunInfo, RunInfoIntent, RunValue, StatusType
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory
-from smac.runner.runner import Runner
+from smac.runner.runner import AbstractRunner
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 from smac.utils.stats import Stats
@@ -62,7 +62,7 @@ class BaseSMBO:
         incumbent to be used from the start. ONLY used to restore states.
     rng: np.random.RandomState
         Random number generator
-    runner : smac.tae.base.BaseRunner Object
+    runner : AbstractRunner
         target algorithm run executor
     random_design
         Chooser for random configuration -- one of
@@ -93,7 +93,7 @@ class BaseSMBO:
         self,
         scenario: Scenario,
         stats: Stats,
-        runner: Runner,
+        runner: AbstractRunner,
         initial_design: InitialDesign,
         runhistory: RunHistory,
         runhistory_encoder: RunHistoryEncoder,

@@ -20,7 +20,7 @@ from smac.runhistory.encoder.boing_encoder import (
     RunHistoryRawEncoder,
     RunHistoryRawScaledEncoder,
 )
-from smac.runner.runner import Runner
+from smac.runner.runner import AbstractRunner
 from smac.scenario import Scenario
 
 
@@ -66,7 +66,7 @@ class BOinGFacade(HyperparameterFacade):
     """
     def __init__(self,
                  scenario: Scenario,
-                 target_algorithm: Runner | Callable,
+                 target_algorithm: AbstractRunner | Callable,
                  *,
                  model_local: Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
                  model_local_kwargs: Dict | None = None,

@@ -20,7 +20,7 @@ from smac.model.utils import get_types
 from smac.runhistory import RunInfo, RunKey, RunValue, StatusType
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory
-from smac.runner.runner import Runner
+from smac.runner.runner import AbstractRunner
 
 # from smac.runner.old.execute_ta_run_old import ExecuteTARunOld
 from smac.utils.stats import Stats
@@ -30,7 +30,7 @@ __license__ = "3-clause BSD"
 
 
 def _unbound_tae_starter(
-    tae: Runner,
+    tae: AbstractRunner,
     runhistory: Optional[RunHistory],
     run_info: RunInfo,
     *args: Any,
@@ -41,7 +41,7 @@ def _unbound_tae_starter(
 
     Parameters
     ----------
-    tae: BaseRunner
+    tae: AbstractRunner
         tae to be used
     runhistory: RunHistory
         runhistory to save
@@ -158,7 +158,7 @@ class Validator(object):
         n_jobs: int = 1,
         backend: str = "threading",
         runhistory: Optional[RunHistory] = None,
-        tae: Runner = None,
+        tae: AbstractRunner = None,
         output_fn: Optional[str] = None,
     ) -> RunHistory:
         """Validate configs on instances and save result in runhistory. If a runhistory is provided
@@ -186,7 +186,7 @@ class Validator(object):
             what backend joblib should use for parallel runs
         runhistory: RunHistory
             optional, RunHistory-object to reuse runs
-        tae: BaseRunner
+        tae: AbstractRunner
             tae to be used. if None, will initialize ExecuteTARunOld
         output_fn: str
             path to runhistory to be saved. if the suffix is not '.json', will
@@ -256,7 +256,7 @@ class Validator(object):
 
     def _validate_parallel(
         self,
-        tae: Runner,
+        tae: AbstractRunner,
         runs: List[_Run],
         n_jobs: int,
         backend: str,
@@ -266,7 +266,7 @@ class Validator(object):
 
         Parameters
         ----------
-        tae: BaseRunner
+        tae: AbstractRunner
             tae to be used for validation
         runs: list<_Run>
             list with _Run-objects

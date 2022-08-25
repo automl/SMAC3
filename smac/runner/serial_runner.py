@@ -6,14 +6,14 @@ import smac
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.runhistory import RunInfo, RunValue, StatusType
-from smac.runner.runner import Runner
+from smac.runner.runner import AbstractRunner
 from smac.utils.stats import Stats
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class SerialRunner(Runner):
+class SerialRunner(AbstractRunner):
     """Interface to submit and collect a job in a serial fashion.
 
     It dictates what a worker should do to convert a
