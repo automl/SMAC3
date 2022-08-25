@@ -4,7 +4,6 @@ from typing import Iterable
 
 import logging
 import logging.config
-import os
 from pathlib import Path
 
 import numpy as np
