@@ -43,6 +43,9 @@ class SMBO(BaseSMBO):
         depend on the surrogate model acquisition optimizer/function.
         """
 
+        for callback in self._callbacks:
+            callback.on_ask_start(self)
+
         # Cost value of incumbent configuration (required for acquisition function).
         # If not given, it will be inferred from runhistory or predicted.
         # If not given and runhistory is empty, it will raise a ValueError.
@@ -84,6 +87,9 @@ class SMBO(BaseSMBO):
             previous_configs,
             random_design=self.random_design,
         )
+
+        for callback in self._callbacks:
+            callback.on_ask_end(self, challengers)
 
         return challengers
 

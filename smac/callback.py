@@ -24,6 +24,20 @@ class Callback:
         pass
 
     @abstractmethod
+    def on_ask_start(self, smbo: smac.main.BaseSMBO) -> None:
+        """Called before the intensification asks for new configurations. Essentially, this callback is called
+        before the surrogate model is trained and before the acquisition function is called.
+        """
+        pass
+
+    @abstractmethod
+    def on_ask_end(self, smbo: smac.main.BaseSMBO, configurations: list[Configuration]) -> None:
+        """Called before the intensification asks for new configurations. Essentially, this callback is called
+        before the surrogate model is trained and before the acquisition function is called.
+        """
+        pass
+
+    @abstractmethod
     def on_iteration_start(self, smbo: smac.main.BaseSMBO) -> None:
         """Called before the next run is sampled."""
         pass

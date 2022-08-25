@@ -87,10 +87,14 @@ class AbstractIntensifier:
         assert intensify_percentage >= 0.0 and intensify_percentage <= 1.0
 
         # Set the instances
-        self.instances = scenario.instances
-        if scenario.instances is not None:
-            # Removing duplicates
-            self.instances = list(set(scenario.instances))
+        self.instances: list[str | None]
+        if scenario.instances is None:
+            # We need to include None here to tell whether None instance was evaluated or not
+            self.instances = [None]
+        else:
+            # Removing duplicates here
+            # Fun fact: When using a set here, it always included randomness
+            self.instances = list(dict.fromkeys(scenario.instances))
 
         # General attributes
         self.num_run = 0  # Number of runs done in an iteration so far
@@ -343,6 +347,7 @@ class AbstractIntensifier:
         incumbent: Configuration,
         challenger: Configuration,
     ) -> None:
+
         params = sorted([(param, incumbent[param], challenger[param]) for param in challenger.keys()])
         logger.info("Changes in incumbent:")
         for param in params:

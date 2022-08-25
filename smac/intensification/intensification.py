@@ -528,7 +528,7 @@ class Intensifier(AbstractIntensifier):
         self,
         incumbent: Configuration,
         runhistory: RunHistory,
-    ) -> list[str]:
+    ) -> list[str | None]:
         """Implementation of line 4 of Intensification.
 
         This method queries the inc runs in the run history
@@ -548,8 +548,8 @@ class Intensifier(AbstractIntensifier):
         inc_runs = runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True)
         inc_inst = [s.instance for s in inc_runs]
         inc_inst = list(Counter(inc_inst).items())
-
         inc_inst.sort(key=lambda x: x[1], reverse=True)
+
         try:
             max_runs = inc_inst[0][1]
         except IndexError:
@@ -557,7 +557,14 @@ class Intensifier(AbstractIntensifier):
             max_runs = 0
 
         inc_inst = [x[0] for x in inc_inst if x[1] == max_runs]
-        available_insts = list(sorted(set(self.instances) - set(inc_inst)))
+
+        # We basically sort the instances by their name
+        available_insts: list[str | None] = list(set(self.instances) - set(inc_inst))
+        if None in available_insts:
+            assert len(available_insts) == 1
+            available_insts = [None]
+        else:
+            available_insts = sorted(available_insts)  # type: ignore
 
         # If all instances were used n times, we can pick an instances
         # from the complete set again
