@@ -203,7 +203,7 @@ class TuRBOSubSpace(LocalSubspace):
             config_next = self.init_configs.pop()
             return [(0, config_next)]
 
-        self.model.train(self.model_x[-self.num_valid_observations :], self.model_y[-self.num_valid_observations :])
+        self.model.train(self.model_x[-self.num_valid_observations:], self.model_y[-self.num_valid_observations:])
         self.update_model(predict_x_best=False, update_incumbent_array=True)
 
         sobol_gen = Sobol(d=self.n_dims, scramble=True, seed=self.rng.randint(low=0, high=10000000))

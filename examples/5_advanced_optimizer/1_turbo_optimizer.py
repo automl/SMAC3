@@ -19,7 +19,7 @@ from smac.scenario import Scenario
 
 # Import components required by TuRBO optimizers
 from smac.facade.blackbox_facade import BlackBoxFacade
-from smac.main.turbo import TurBOSMBO
+from smac.main.turbo import TuRBOSMBO
 
 
 class Rosenbrock2D:
@@ -48,7 +48,7 @@ class Rosenbrock2D:
 
 
 class TuRBOFacade(BlackBoxFacade):
-    """A wrapper that allows to run TuRBO optimizer. Its arguments are described under smac.main.turbo.TurBOSMBO"""
+    """A wrapper that allows to run TuRBO optimizer. Its arguments are described under smac.main.turbo.TuRBOSMBO"""
     def _init_optimizer(self,
                         length_init=0.8,
                         length_min=0.5**8,
@@ -57,7 +57,7 @@ class TuRBOFacade(BlackBoxFacade):
                         failure_tol_min=4,
                         n_init_x_params=2,
                         n_candidate_max=5000) -> None:
-        self.optimizer = TurBOSMBO(
+        self.optimizer = TuRBOSMBO(
             length_init=length_init,
             length_min=length_min,
             length_max=length_max,
