@@ -76,7 +76,10 @@ disallow_untyped_decorators = true # ... even decorators
 disallow_incomplete_defs = true    # ... all types
 
 [[tool.mypy.overrides]]
-module = ["setuptools.*"]     # Add modules that give import errors here
+module = [
+    "setuptools.*",
+    "yaml.*"
+]     # Add modules that give import errors here
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]

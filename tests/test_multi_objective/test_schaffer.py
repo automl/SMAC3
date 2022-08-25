@@ -49,33 +49,33 @@ def configspace():
     return cs
 
 
-def test_mean_aggregation(make_scenario, configspace):
+@pytest.mark.parametrize("facade", [BlackBoxFacade, HyperparameterFacade,
+                                    AlgorithmConfigurationFacade, RandomFacade])
+def test_mean_aggregation(facade, make_scenario, configspace):
     scenario = make_scenario(configspace, use_multi_objective=True)
 
-    for facade in [BlackBoxFacade, HyperparameterFacade, AlgorithmConfigurationFacade,
-                   RandomFacade]:
-        smac = facade(
-            scenario=scenario,
-            target_algorithm=tae,
-            multi_objective_algorithm=MeanAggregationStrategy(scenario=scenario),
-            overwrite=True,
-        )
-        incumbent = smac.optimize()
+    smac = facade(
+        scenario=scenario,
+        target_algorithm=tae,
+        multi_objective_algorithm=MeanAggregationStrategy(scenario=scenario),
+        overwrite=True,
+    )
+    incumbent = smac.optimize()
 
-        f1_inc, f2_inc = schaffer(incumbent["x"])
-        f1_opt, f2_opt = get_optimum()
+    f1_inc, f2_inc = schaffer(incumbent["x"])
+    f1_opt, f2_opt = get_optimum()
 
-        inc = f1_inc + f2_inc
-        opt = f1_opt + f2_opt
-        diff = abs(inc - opt)
+    inc = f1_inc + f2_inc
+    opt = f1_opt + f2_opt
+    diff = abs(inc - opt)
 
-        assert diff < 0.05
+    assert diff < 0.05
 
 
 def test_parego(make_scenario, configspace):
     scenario = make_scenario(configspace, use_multi_objective=True)
 
-    for facade in [BlackBoxFacade, HyperparameterFacade, AlgorithmConfigurationFacade]:
+    for facade in [BlackBoxFacade, HyperparameterFacade, AlgorithmConfigurationFacade, RandomFacade]:
         smac = facade(
             scenario=scenario,
             target_algorithm=tae,
@@ -86,7 +86,7 @@ def test_parego(make_scenario, configspace):
 
         f1_inc, f2_inc = schaffer(incumbent["x"])
         f1_opt, f2_opt = get_optimum()
-
+        print(f1_opt, f2_opt)
         inc = f1_inc + f2_inc
         opt = f1_opt + f2_opt
         diff = abs(inc - opt)

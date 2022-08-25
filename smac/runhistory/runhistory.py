@@ -1,15 +1,9 @@
 from __future__ import annotations
 
-from typing import (
-    Any,
-    Iterable,
-    Iterator,
-    Mapping,
-    cast,
-)
+from typing import Any, Iterable, Iterator, Mapping, cast
 
-import collections
 import json
+from collections import OrderedDict
 
 import numpy as np
 
@@ -56,7 +50,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
     Attributes
     ----------
-    data : collections.OrderedDict()
+    data : OrderedDict()
         Internal data representation
     config_ids : dict
         Maps config -> id
@@ -66,22 +60,18 @@ class RunHistory(Mapping[RunKey, RunValue]):
         Maps config_id -> number of runs
     """
 
-    def __init__(
-        self,
-        overwrite_existing_runs: bool = False,
-    ) -> None:
+    def __init__(self, overwrite_existing_runs: bool = False) -> None:
         self.overwrite_existing_runs = overwrite_existing_runs
         self.reset()
 
     def reset(self) -> None:
-        # By having the data in a deterministic order we can do useful tests
-        # when we serialize the data and can assume it's still in the same
-        # order as it was added.
-        self.data: dict[RunKey, RunValue] = collections.OrderedDict()
+        """Reset this run history to it's default state"""
+        # By having the data in a deterministic order we can do useful tests when we
+        # serialize the data and can assume it's still in the same order as it was added.
+        self.data: dict[RunKey, RunValue] = OrderedDict()
 
-        # for fast access, we have also an unordered data structure
-        # to get all instance seed pairs of a configuration.
-        # This does not include capped runs.
+        # for fast access, we have also an unordered data structure to get all instance
+        # seed pairs of a configuration. This does not include capped runs.
         self._config_id_to_inst_seed_budget: dict[int, dict[InstanceSeedKey, list[float]]] = {}
 
         self.config_ids: dict[Configuration, int] = {}
@@ -118,8 +108,8 @@ class RunHistory(Mapping[RunKey, RunValue]):
         """Enables the `len(runhistory)`"""
         return len(self.data)
 
-    def __eq__(self, other):
-        """enables to check equality of runhistory if the run is continued"""
+    def __eq__(self, other: Any):
+        """Enables to check equality of runhistory if the run is continued"""
         return self.data == other.data
 
     def empty(self) -> bool:
@@ -179,8 +169,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
         Note
         ----
-        This method always calls `update_cost` in the multi-
-        objective setting.
+        This method always calls `update_cost` in the multi-objective setting.
         """
         self.data[k] = v
         self.external[k] = origin
@@ -322,32 +311,40 @@ class RunHistory(Mapping[RunKey, RunValue]):
         n_objectives = np.size(cost_array)
 
         # Get the config id
-        config_id_tmp = self.config_ids.get(config)
-        if config_id_tmp is None:
+        config_id = self.config_ids.get(config)
+
+        if config_id is None:
             self._n_id += 1
             self.config_ids[config] = self._n_id
-            config_id = cast(int, self.config_ids.get(config))
             self.ids_config[self._n_id] = config
-        else:
-            config_id = cast(int, config_id_tmp)
+
+            config_id = self._n_id
 
         if self.n_objectives == -1:
             self.n_objectives = n_objectives
         elif self.n_objectives != n_objectives:
             raise ValueError(
-                f"Cost is not of the same length ({n_objectives}) as the number " f"of objectives ({self.n_objectives})"
+                f"Cost is not of the same length ({n_objectives}) as the number of "
+                f" objectives ({self.n_objectives})"
             )
 
         # Let's always work with floats; Makes it easier to deal with later on
-        # array.tolist() returns a scalar if the array has one element.
+        # array.tolist(), it returns a scalar if the array has one element.
         c = cost_array.tolist()
         if self.n_objectives == 1:
             c = float(c)
         else:
             c = [float(i) for i in c]
 
-        k = RunKey(config_id, instance, seed, budget)
-        v = RunValue(c, time, status, starttime, endtime, additional_info)
+        k = RunKey(config_id=config_id, instance=instance, seed=seed, budget=budget)
+        v = RunValue(
+            cost=c,
+            time=time,
+            status=status,
+            starttime=starttime,
+            endtime=endtime,
+            additional_info=additional_info,
+        )
 
         # Construct keys and values for the data dictionary
         for key, value in (
@@ -649,37 +646,6 @@ class RunHistory(Mapping[RunKey, RunValue]):
                 self._cost_per_config[config_id] = self.average_cost(config, inst_seed_budgets)
                 self._min_cost_per_config[config_id] = self.min_cost(config, inst_seed_budgets)
                 self.num_runs_per_config[config_id] = len(inst_seed_budgets)
-
-    '''
-    # TODO: Still needed?
-    def get_instance_costs_for_config(self, config: Configuration) -> Dict[str, list[float]]:
-        """Returns the average cost per instance (across seeds) for a configuration. If the
-        runhistory contains budgets, only the highest budget for a configuration is returned.
-
-        Note
-        ----
-        This is used by the pSMAC facade to determine the incumbent after the evaluation.
-
-        Parameters
-        ----------
-        config : Configuration from ConfigSpace
-            Parameter configuration
-
-        Returns
-        -------
-        cost_per_inst: Dict<instance name<str>, cost<float>>
-        """
-        runs_ = self.get_runs_for_config(config, only_max_observed_budget=True)
-        cost_per_inst = {}  # type: Dict[str, list[float]]
-        for inst, seed, budget in runs_:
-            cost_per_inst[inst] = cost_per_inst.get(inst, [])
-            rkey = RunKey(self.config_ids[config], inst, seed, budget)
-            vkey = self.data[rkey]
-            cost_per_inst[inst].append(vkey.cost)
-        cost_per_inst = dict([(inst, np.mean(costs)) for inst, costs in cost_per_inst.items()])
-        
-        return cost_per_inst
-    '''
 
     def get_runs_for_config(self, config: Configuration, only_max_observed_budget: bool) -> list[InstanceSeedBudgetKey]:
         """Return all runs (instance seed pairs) for a configuration.
