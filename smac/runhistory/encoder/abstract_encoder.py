@@ -24,7 +24,6 @@ logger = get_logger(__name__)
 
 
 class AbstractRunHistoryEncoder:
-
     """Abstract class for preprocessing data in order to train an EPM.
 
     Parameters

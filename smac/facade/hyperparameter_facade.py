@@ -128,7 +128,7 @@ class HyperparameterFacade(Facade):
     @staticmethod
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
         """Returns a multi-objective algorithm instance. Please check its documentation for details."""
-        return MeanAggregationStrategy(scenario.seed)
+        return MeanAggregationStrategy(scenario=scenario)
 
     @staticmethod
     def get_runhistory_encoder(scenario: Scenario) -> RunHistoryLogScaledEncoder:

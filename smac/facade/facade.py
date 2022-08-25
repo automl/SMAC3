@@ -115,7 +115,7 @@ class Facade:
             intensifier = self.get_intensifier(scenario)
 
         if multi_objective_algorithm is None and scenario.count_objectives() > 1:
-            multi_objective_algorithm = self.get_multi_objective_algorithm(scenario)
+            multi_objective_algorithm = self.get_multi_objective_algorithm(scenario=scenario)
 
         if runhistory is None:
             runhistory = RunHistory()

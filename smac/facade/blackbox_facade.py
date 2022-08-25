@@ -250,7 +250,7 @@ class BlackBoxFacade(Facade):
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
         """Returns the multi-objective algorithm instance (MeanAggregationStrategy) for the
         Black-Box facade."""
-        return MeanAggregationStrategy(scenario.seed)
+        return MeanAggregationStrategy(scenario=scenario)
 
     @staticmethod
     def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:

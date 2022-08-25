@@ -178,6 +178,7 @@ class ChallengerList(Iterator):
         self.challengers = None  # type: Optional[List[Configuration]]
         self.configuration_space = configuration_space
         self._index = 0
+        # TODO: Double-check whether this is still true / necessary
         self._iteration = 1  # 1-based to prevent from starting with a random configuration
         self.random_design = random_design
 

@@ -102,7 +102,7 @@ class RandomFacade(Facade):
 
     @staticmethod
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
-        return MeanAggregationStrategy(scenario.seed)
+        return MeanAggregationStrategy(scenario=scenario)
 
     @staticmethod
     def get_model(

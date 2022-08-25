@@ -4,22 +4,34 @@ from typing import Any
 import numpy as np
 
 from smac.multi_objective.aggregation_strategy import AggregationStrategy
+from smac.scenario import Scenario
 
 
 class ParEGO(AggregationStrategy):
     def __init__(
         self,
+        scenario: Scenario,
+        seed: int | None = None,
         rho: float = 0.05,
-        seed: int = 0,
     ):
-        super(ParEGO, self).__init__(seed=seed)
+        super(ParEGO, self).__init__(scenario=scenario, seed=seed)
         self.rho = rho
+        self.theta = None
+        self.update_on_iteration_start()
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
+            "seed": self.seed,
+            "rho": self.rho,
         }
+
+    def update_on_iteration_start(self):
+        """Update the internal state for each SMAC SMBO iteration."""
+        self.theta = self.rng.rand(self.num_objectives)
+        # Normalize st all theta values sum up to 1
+        self.theta = self.theta / (np.sum(self.theta) + 1e-10)
 
     def __call__(self, values: list[float]) -> float:
         """
@@ -35,12 +47,6 @@ class ParEGO(AggregationStrategy):
         cost : float
             Combined cost.
         """
-        # Then we have to compute the weight
-        theta = self.rng.rand(len(values))
-
-        # Normalize st all theta values sum up to 1
-        theta = theta / (np.sum(theta) + 1e-10)
-
         # Weight the values
-        theta_f = theta * values
+        theta_f = self.theta * values
         return np.max(theta_f, axis=0) + self.rho * np.sum(theta_f, axis=0)

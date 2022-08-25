@@ -65,7 +65,6 @@ class AlgorithmConfigurationFacade(Facade):
 
     @staticmethod
     def get_acquisition_optimizer(scenario: Scenario) -> AbstractAcquisitionOptimizer:
-        """Returns a Local and Sorted Random Search acquisition optimizer. Please check its documentation."""
         optimizer = LocalAndSortedRandomSearch(
             scenario.configspace,
             seed=scenario.seed,
@@ -121,7 +120,7 @@ class AlgorithmConfigurationFacade(Facade):
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
         """Returns a MultiObjectiveAlgorithm (MeanAggregationStrategy). Please check its
         documentation."""
-        return MeanAggregationStrategy(scenario.seed)
+        return MeanAggregationStrategy(scenario=scenario)
 
     @staticmethod
     def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:
