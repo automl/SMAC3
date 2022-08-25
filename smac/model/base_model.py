@@ -1,7 +1,7 @@
 from __future__ import annotations
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 
-from typing import Any, List, Optional, Tuple
+from typing import Any, TypeVar
 
 import copy
 import warnings
@@ -23,7 +23,10 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class BaseModel:
+Self = TypeVar("Self", bound="BaseModel")
+
+
+class BaseModel(ABC):
     """Abstract implementation of the EPM API.
 
     **Note:** The input dimensionality of Y for training and the output dimensions
@@ -119,7 +122,7 @@ class BaseModel:
             "pca_components": self.pca_components,
         }
 
-    def train(self, X: np.ndarray, Y: np.ndarray) -> "BaseModel":
+    def train(self: Self, X: np.ndarray, Y: np.ndarray) -> Self:
         """Trains the EPM on X and Y.
 
         Parameters
@@ -139,7 +142,7 @@ class BaseModel:
         if X.shape[1] != self.n_params + self.n_features:
             raise ValueError("Feature mismatch: X should have %d features, but has %d" % (self.n_params, X.shape[1]))
         if X.shape[0] != Y.shape[0]:
-            raise ValueError("X.shape[0] (%s) != y.shape[0] (%s)" % (X.shape[0], Y.shape[0]))
+            raise ValueError("X.shape[0] ({}) != y.shape[0] ({})".format(X.shape[0], Y.shape[0]))
 
         # reduce dimensionality of features of larger than PCA_DIM
         if self.pca_components and X.shape[0] > self.pca.n_components and self.n_features >= self.pca_components:
@@ -155,7 +158,7 @@ class BaseModel:
                 # if X_feats.shape[0] < self.pca, X_feats.shape[1] ==
                 # X_feats.shape[0]
                 self.types = np.array(
-                    np.hstack((self.types[: self.n_params], np.zeros((X_feats.shape[1])))),
+                    np.hstack((self.types[: self.n_params], np.zeros(X_feats.shape[1]))),
                     dtype=np.uint,
                 )  # type: ignore
             self._apply_pca = True
@@ -166,7 +169,8 @@ class BaseModel:
 
         return self._train(X, Y)
 
-    def _train(self, X: np.ndarray, Y: np.ndarray) -> "BaseModel":
+    @abstractmethod
+    def _train(self: Self, X: np.ndarray, Y: np.ndarray) -> Self:
         """Trains the random forest on X and y.
 
         Parameters
@@ -181,11 +185,11 @@ class BaseModel:
         -------
         self
         """
-        raise NotImplementedError
+        ...
 
     def predict(
-        self, X: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov"
-    ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
+        self, X: np.ndarray, cov_return_type: str | None = "diagonal_cov"
+    ) -> tuple[np.ndarray, np.ndarray | None]:
         """Predict means and variances for given X.
 
         Parameters
@@ -238,8 +242,8 @@ class BaseModel:
         return mean, var
 
     def _predict(
-        self, X: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov"
-    ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
+        self, X: np.ndarray, cov_return_type: str | None = "diagonal_cov"
+    ) -> tuple[np.ndarray, np.ndarray | None]:
         """Predict means and variances for given X.
 
         Parameters
@@ -258,7 +262,7 @@ class BaseModel:
         """
         raise NotImplementedError()
 
-    def predict_marginalized_over_instances(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    def predict_marginalized_over_instances(self, X: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         """Predict mean and variance marginalized over all instances.
 
         Returns the predictive mean and variance marginalised over all

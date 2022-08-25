@@ -1,10 +1,7 @@
 from __future__ import annotations
 
-from typing import List, Optional, Tuple
-
 import numpy as np
 
-from smac.configspace import ConfigurationSpace
 from smac.model.base_model import BaseModel
 from smac.utils.logging import get_logger
 
@@ -40,7 +37,7 @@ class RandomModel(BaseModel):
         set n_feats (> pca_dims).
     """
 
-    def _train(self, X: np.ndarray, Y: np.ndarray) -> "RandomModel":
+    def _train(self, X: np.ndarray, Y: np.ndarray) -> RandomModel:
         """Pseudo training on X and Y.
 
         Parameters
@@ -59,7 +56,7 @@ class RandomModel(BaseModel):
         logger.debug("(Pseudo) Fit model to data")
         return self
 
-    def _predict(self, X: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov") -> Tuple[np.ndarray, np.ndarray]:
+    def _predict(self, X: np.ndarray, cov_return_type: str | None = "diagonal_cov") -> tuple[np.ndarray, np.ndarray]:
         """Predict means and variances for given X.
 
         Parameters
