@@ -42,7 +42,7 @@ class TargetAlgorithmRunner(SerialRunner):
     the target algorithm.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any):
         super().__init__(*args, **kwargs)
 
         signature = inspect.signature(self.target_algorithm).parameters
@@ -52,8 +52,7 @@ class TargetAlgorithmRunner(SerialRunner):
 
         if not callable(self.target_algorithm):
             raise TypeError(
-                "Argument `target_algorithm` must be a callable but is type"
-                f"`{type(self.target_algorithm)}`."
+                "Argument `target_algorithm` must be a callable but is type" f"`{type(self.target_algorithm)}`."
             )
 
         # Pynisher limitations
@@ -85,12 +84,13 @@ class TargetAlgorithmRunner(SerialRunner):
             kwargs["budget"] = budget
 
         # Presetting
-        cost = self.crash_cost
+        cost: float | list[float] = self.crash_cost
         runtime = 0.0
         additional_info = {}
         status = StatusType.CRASHED
 
         # If memory limit or walltime limit is set, we wanna use pynisher
+        target_algorithm: Callable
         if self.memory_limit is not None or self.algorithm_walltime_limit is not None:
             target_algorithm = limit(
                 self.target_algorithm,
@@ -126,38 +126,36 @@ class TargetAlgorithmRunner(SerialRunner):
             return status, cost, runtime, additional_info
 
         if isinstance(rval, tuple):
-            result = rval[0]
-            additional_info = rval[1]
+            result, additional_info = rval
         else:
-            result = rval
-            additional_info = {}
-
-        # We update cost based on our result
-        cost = result
+            result, additional_info = rval, {}
 
         # Do some sanity checking (for multi objective)
-        error = f"Returned costs {cost} does not match the number of objectives {self.objectives}."
+        error = f"Returned costs {result} does not match the number of objectives {self.objectives}."
 
         # If dict convert to array make sure the ordering is correct.
-        if isinstance(cost, dict):
-            if len(cost) != len(self.objectives):
+        if isinstance(result, dict):
+            if len(result) != len(self.objectives):
                 raise RuntimeError(error)
 
-            ordered_cost = []
+            ordered_cost: list[float] = []
             for name in self.objectives:
-                if name not in cost:
+                if name not in result:
                     raise RuntimeError(f"Objective {name} was not found in the returned costs.")
 
-                ordered_cost.append(cost[name])
-            cost = ordered_cost
+                ordered_cost.append(result[name])
 
-        if isinstance(cost, list):
-            if len(cost) != len(self.objectives):
+            result = ordered_cost
+
+        if isinstance(result, list):
+            if len(result) != len(self.objectives):
                 raise RuntimeError(error)
 
-        if isinstance(cost, float):
+        if isinstance(result, float):
             if isinstance(self.objectives, list) and len(self.objectives) != 1:
                 raise RuntimeError(error)
+
+        cost = result
 
         if cost is None:
             status = StatusType.CRASHED
@@ -174,11 +172,12 @@ class TargetAlgorithmRunner(SerialRunner):
         algorithm: Callable,
         algorithm_kwargs: dict[str, int | str | float | None],
     ) -> (
-        float |
-        list[float] |
-        dict[str, float] |
-        tuple[float, dict] |
-        tuple[list[float] | dict] |
-        tuple[dict[str, float] | dict]
+        float
+        | list[float]
+        | dict[str, float]
+        | tuple[float, dict]
+        | tuple[list[float], dict]
+        | tuple[dict[str, float], dict]
     ):
+        """Calls the algorithm"""
         return algorithm(config, **algorithm_kwargs)

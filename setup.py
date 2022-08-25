@@ -20,8 +20,9 @@ def read_file(filepath: str) -> str:
         return fh.read()
 
 
+torch_requirements = ["torch>=1.9.0", "gpytorch>=1.5.0", "pyro-ppl>=1.7.0", "botorch>=0.5.0"]
 extras_require = {
-    "gpytorch": ["torch>=1.9.0", "gpytorch>=1.5.0", "pyro-ppl>=1.7.0", "botorch>=0.5.0"],
+    "gpytorch": torch_requirements,
     "dev": [
         "setuptools",
         "types-setuptools",
@@ -39,6 +40,7 @@ extras_require = {
         "pydocstyle",
         "flake8",
         "pre-commit",
+        *torch_requirements,
     ],
 }
 

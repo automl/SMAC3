@@ -48,11 +48,11 @@ class SerialRunner(AbstractRunner):
             A list of RunInfo/RunValues pairs a submitted configuration.
         """
         while self._results_queue:
-            yield self._results_queue.pop()
+            yield self._results_queue.pop(0)  # TODO: Could switch to dequeue?
 
     def wait(self) -> None:
-        """
-        SMBO/intensifier might need to wait for runs to finish before making a decision.
+        """SMBO/intensifier might need to wait for runs to finish before making a decision.
+
         For serial runs, no wait is needed as the result is immediately available.
         """
         # There is no need to wait in serial runs. When launching a run via submit, as

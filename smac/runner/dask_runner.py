@@ -167,12 +167,12 @@ class DaskParallelRunner(AbstractRunner):
 
         Returns
         -------
-        Iterator[Tuple[RunInfo, RunValue]]
+        Iterator[tuple[RunInfo, RunValue]]
             A list of RunValues and RunInfo, which are the results of executing the submitted configurations.
         """
         self._process_pending_runs()
         while self._results_queue:
-            yield self._results_queue.pop()
+            yield self._results_queue.pop(0)
 
     def wait(self) -> None:
         """SMBO/intensifier might need to wait for runs to finish before making a decision.
@@ -200,7 +200,7 @@ class DaskParallelRunner(AbstractRunner):
 
     def available_worker_count(self) -> int:
         """Total number of workers available. This number is dynamic as more resources can be allocated."""
-        return  sum(self._client.nthreads().values()) - len(self._pending_runs)
+        return sum(self._client.nthreads().values()) - len(self._pending_runs)
 
     def close(self, force: bool = False) -> None:
         """Close the associated client"""
