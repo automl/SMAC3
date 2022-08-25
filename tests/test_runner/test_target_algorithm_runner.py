@@ -1,53 +1,92 @@
+from __future__ import annotations
+
+from typing import Callable
+
 import time
-from smac.runhistory import RunInfo, RunValue
+
+import pytest
+
+from ConfigSpace import Configuration, ConfigurationSpace
+from smac.runhistory import RunInfo
 from smac.runner.runner import StatusType
-from smac.runner.serial_runner import SerialRunner
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
+from smac.scenario import Scenario
+from smac.utils.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-def target(x, seed, instance):
+def target(x: float, seed: int, instance: str) -> tuple[float, dict]:
+    """Simple target function"""
     return x**2, {"key": seed, "instance": instance}
 
 
-def target_delayed(x, seed, instance):
+def target_delayed(x: float, seed: int, instance: str) -> tuple[float, dict]:
+    """Target function which sleeps for a second"""
     time.sleep(1)
     return x**2, {"key": seed, "instance": instance}
 
 
-def target_failed(x, seed, instance):
+def target_failed(x: float, seed: int, instance: str) -> tuple[float, dict]:
+    """Target function which fails"""
     raise RuntimeError("Failed.")
 
 
-def target_dummy(config, seed, instance, budget):
+def target_dummy(config: Configuration, seed: int, instance: str, budget: float) -> int:
+    """Target function just returning the seed"""
     return seed
 
 
-def target_multi_objective1(config, seed, instance, budget):
+def target_multi_objective1(
+    config: Configuration,
+    seed: int,
+    instance: str,
+    budget: float,
+) -> list[float]:
+    """Target function multi-objective return the seed twice"""
     return [seed, seed]
 
 
-def target_multi_objective2(config, seed, instance, budget):
+def target_multi_objective2(
+    config: Configuration,
+    seed: int,
+    instance: str,
+    budget: float,
+) -> dict[str, float]:
+    """Target function multi-objective return the seed twice as a dict"""
     return {"cost1": seed, "cost2": seed}
 
 
-def test_run(configspace_small, make_stats, make_scenario):
-    """Makes sure that we are able to run a configuration and
-    return the expected values/types"""
-    scenario = make_scenario(configspace_small)
-    stats = make_stats(scenario)
+@pytest.fixture
+def make_runner(
+    configspace_small: ConfigurationSpace,
+    make_scenario: Callable[..., Scenario],
+    make_stats: Callable[..., Stats],
+) -> Callable[..., TargetAlgorithmRunner]:
+    """Make a TargetAlgorithmRunner, ``make_dummy_ta(func)``"""
 
-    runner = TargetAlgorithmRunner(target_algorithm=target, scenario=scenario, stats=stats)
-    assert isinstance(runner, SerialRunner)
+    def _make(
+        target_algorithm: Callable,
+        use_multi_objective: bool = False,
+    ) -> TargetAlgorithmRunner:
+        scenario = make_scenario(
+            configspace=configspace_small,
+            use_multi_objective=use_multi_objective,
+        )
+        return TargetAlgorithmRunner(
+            target_algorithm=target_algorithm,
+            scenario=scenario,
+            stats=make_stats(scenario),
+        )
 
-    run_info = RunInfo(
-        config=2,
-        instance="test",
-        seed=0,
-        budget=0.0,
-    )
+    return _make
+
+
+def test_run(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
+    """Makes sure that we are able to run a config and return the expected values/types"""
+    runner = make_runner(target)
+    run_info = RunInfo(config=2, instance="test", seed=0, budget=0.0)
 
     # submit runs! then get the value
     runner.submit_run(run_info)
@@ -61,58 +100,36 @@ def test_run(configspace_small, make_stats, make_scenario):
     assert run_value.status == StatusType.SUCCESS
 
 
-def test_serial_runs(configspace_small, make_stats, make_scenario):
-    scenario = make_scenario(configspace_small)
-    stats = make_stats(scenario)
+def test_serial_runs(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
+    """Test submitting two runs in succession and that they complete after eachother in results"""
+    runner = make_runner(target_delayed)
 
-    runner = TargetAlgorithmRunner(target_algorithm=target_delayed, scenario=scenario, stats=stats)
-    assert isinstance(runner, SerialRunner)
-
-    run_info = RunInfo(
-        config=2,
-        instance="test",
-        seed=0,
-        budget=0.0,
-    )
+    run_info = RunInfo(config=2, instance="test2", seed=0, budget=0.0)
     runner.submit_run(run_info)
 
-    run_info = RunInfo(
-        config=3,
-        instance="test",
-        seed=0,
-        budget=0.0,
-    )
+    run_info = RunInfo(config=3, instance="test3", seed=0, budget=0.0)
     runner.submit_run(run_info)
 
-    run_values = list(runner.iter_results())
-    assert len(run_values) == 2
+    results = runner.iter_results()
 
-    # To make sure runs launched serially, we just make sure that the end time of
-    # a run is later than the other
-    # Results are returned in left to right
-    assert int(run_values[1][1].endtime) <= int(run_values[0][1].starttime)
+    first = next(results, None)
+    assert first is not None
 
-    # No wait time in serial runs!
-    start = time.time()
-    runner.wait()
+    second = next(results, None)
+    assert second is not None
 
-    # The run takes a second, so 0.5 is sufficient
-    assert time.time() - start < 0.5
+    # To make sure runs launched serially, we just make sure that the end time of a run
+    # is later than the other # Results are returned in left to right
+    _, first_run_value = first
+    _, second_run_value = second
+    assert int(first_run_value.endtime) <= int(second_run_value.starttime)
 
 
-def test_fail(configspace_small, make_stats, make_scenario):
-    scenario = make_scenario(configspace_small)
-    stats = make_stats(scenario)
+def test_fail(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
+    """Test traceback and error end up in the additional info of a failing run"""
+    runner = make_runner(target_failed)
+    run_info = RunInfo(config=2, instance="test", seed=0, budget=0.0)
 
-    runner = TargetAlgorithmRunner(target_algorithm=target_failed, scenario=scenario, stats=stats)
-    assert isinstance(runner, SerialRunner)
-
-    run_info = RunInfo(
-        config=2,
-        instance="test",
-        seed=0,
-        budget=0.0,
-    )
     runner.submit_run(run_info)
     run_info, run_value = next(runner.iter_results())
 
@@ -121,47 +138,28 @@ def test_fail(configspace_small, make_stats, make_scenario):
     assert "RuntimeError" in run_value.additional_info["traceback"]
 
 
-def test_call(configspace_small, make_stats, make_scenario):
-    scenario = make_scenario(configspace_small)
-    stats = make_stats(scenario)
-
-    runner = TargetAlgorithmRunner(target_algorithm=target_dummy, scenario=scenario, stats=stats)
-    assert isinstance(runner, SerialRunner)
-
-    config = configspace_small.get_default_configuration()
+def test_call(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
+    """Test call functionality returns things as expected"""
+    runner = make_runner(target_dummy)
+    config = runner.scenario.configspace.get_default_configuration()
 
     SEED = 2345
-    status, cost, _, _ = runner.run(
-        config=config,
-        instance=None,
-        seed=SEED,
-        budget=None,
-    )
+    status, cost, _, _ = runner.run(config=config, instance=None, seed=SEED, budget=None)
 
     assert cost == SEED
     assert status == StatusType.SUCCESS
 
 
-def test_multi_objective(configspace_small, make_stats, make_scenario):
-    scenario = make_scenario(configspace_small, use_multi_objective=True)
-    stats = make_stats(scenario)
-
+def test_multi_objective(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
+    """Test multiobjective function processed properly"""
     # We always expect a list of costs (although a dict is returned).
     # Internally, target algorithm runner maps the dict to a list of costs in the right order.
     for target in [target_multi_objective1, target_multi_objective2]:
-
-        runner = TargetAlgorithmRunner(target_algorithm=target, scenario=scenario, stats=stats)
-        assert isinstance(runner, SerialRunner)
-
-        config = configspace_small.get_default_configuration()
+        runner = make_runner(target, use_multi_objective=True)
+        config = runner.scenario.configspace.get_default_configuration()
 
         SEED = 2345
-        status, cost, _, _ = runner.run(
-            config=config,
-            instance=None,
-            seed=SEED,
-            budget=None,
-        )
+        status, cost, _, _ = runner.run(config=config, instance=None, seed=SEED, budget=None)
 
         assert isinstance(cost, list)
         assert cost == [SEED, SEED]
