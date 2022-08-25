@@ -30,7 +30,9 @@ class AbstractIntensifier:
     execution results. Each intensifier process the RunValue object and updates it's
     internal state in preparation for the next iteration.
 
-    **Note: Do not use directly**
+    Note
+    ----
+    Do not use  this class directly.
 
     Parameters
     ----------
@@ -84,19 +86,11 @@ class AbstractIntensifier:
         # Intensify percentage must be between 0 and 1
         assert intensify_percentage >= 0.0 and intensify_percentage <= 1.0
 
-        # Instances
-        instances: list[str]
-        if scenario.instances is None:
-            instances = []
-        else:
-            instances = scenario.instances
-
-        # Removing duplicates in the user provided instances
-        self.instances = list(set(instances))
-
-        # We need at least one instance (we choose none here)
-        if len(self.instances) == 0:
-            self.instances = [None]
+        # Set the instances
+        self.instances = scenario.instances
+        if scenario.instances is not None:
+            # Removing duplicates
+            self.instances = list(set(scenario.instances))
 
         # General attributes
         self.num_run = 0  # Number of runs done in an iteration so far

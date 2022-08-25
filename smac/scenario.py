@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Mapping
+from typing import Any
 
 import hashlib
 import json
@@ -42,7 +42,7 @@ class Scenario:
         a different cost.
     termination_cost_threshold : float | list[float], defaults to np.inf
         Defines a cost threshold when the optimization should stop. In case of multi-objective, each objective *must* be
-        associated with a different cost. The optimization stops when all objectives crossed the threshold.
+        associated with a cost. The optimization stops when all objectives crossed the threshold.
     walltime_limit : float, defaults to np.inf
         The maximum time in seconds that SMAC is allowed to run.
     cputime_limit : float, defaults to np.inf
@@ -151,7 +151,7 @@ class Scenario:
         ----
         Meta data are set when the facade is initialized.
         """
-        return self._meta
+        return self._meta  # type: ignore
 
     def count_objectives(self) -> int:
         """Counts the number of objectives."""
@@ -166,7 +166,7 @@ class Scenario:
         n_features = 0
         if self.instance_features is not None:
             for k, v in self.instance_features.items():
-                if k not in self.instances:
+                if self.instances is None or k not in self.instances:
                     raise RuntimeError(f"Instance {k} is not specified in instances.")
 
                 if n_features == 0:

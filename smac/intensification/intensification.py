@@ -3,9 +3,6 @@ from __future__ import annotations
 from typing import Any, Callable, Iterator, List, Optional, Tuple, cast
 
 from collections import Counter
-from enum import Enum
-
-import numpy as np
 
 from smac.configspace import Configuration
 from smac.constants import MAXINT
@@ -19,14 +16,7 @@ from smac.utils.logging import format_array, get_logger
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
-
 logger = get_logger(__name__)
-
-
-# class NoMoreChallengers(Exception):
-#    """Indicates that no more challengers are available for the intensification to proceed."""
-
-#   pass
 
 
 class Intensifier(AbstractIntensifier):
@@ -310,8 +300,6 @@ class Intensifier(AbstractIntensifier):
         if challenger is None:
             return RunInfoIntent.SKIP, RunInfo(
                 config=None,
-                instance=None,
-                # instance_specific="0",
                 seed=0,
                 budget=0.0,
             )
@@ -323,7 +311,6 @@ class Intensifier(AbstractIntensifier):
             return RunInfoIntent.SKIP, RunInfo(
                 config=None,
                 instance=None,
-                # instance_specific="0",
                 seed=0,
                 budget=0.0,
             )
@@ -627,7 +614,7 @@ class Intensifier(AbstractIntensifier):
         incumbent: Configuration,
         runhistory: RunHistory,
         log_trajectory: bool = True,
-    ) -> Tuple[Configuration, str, int]:
+    ) -> tuple[Configuration, str | None, int | None]:
         """Method to return the next config setting to aggressively race challenger against
         incumbent.
 
@@ -800,7 +787,7 @@ class Intensifier(AbstractIntensifier):
         # inc_sum_cost = runhistory.sum_cost(config=incumbent, instance_seed_budget_keys=instance_seed_pairs, normalize=True)
         # assert type(inc_sum_cost) == float
 
-        return to_run  # , inc_sum_cost
+        return to_run
 
     def get_next_challenger(
         self,

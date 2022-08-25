@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, Iterator, List, Tuple
 
 import os
-import warnings
 
 from smac.configspace import Configuration
 from smac.intensification.abstract_intensifier import AbstractIntensifier
@@ -69,36 +68,20 @@ class ParallelScheduler(AbstractIntensifier):
     def __init__(
         self,
         scenario: Scenario,
-        # instances: List[str],
-        # instance_specifics: Mapping[str, str] = None,
-        # algorithm_walltime_limit: Optional[float] = None,
-        # deterministic: bool = False,
-        # min_budget: Optional[float] = None,
-        # max_budget: Optional[float] = None,
-        # eta: float = 3,
-        # n_initial_challengers: int | None = None,
-        # instance_order: Optional[str] = "shuffle_once",
         min_challenger: int = 1,
         intensify_percentage: float = 0.5,
-        # incumbent_selection: str = "highest_executed_budget",
-        # instance_seed_pairs: list[Tuple[str, int]] | None = None,
         seed: int | None = None,
-        # n_seeds: int | None = None,
     ) -> None:
 
         super().__init__(
             scenario=scenario,
-            # instances=instances,
-            # instance_specifics=instance_specifics,
-            # algorithm_walltime_limit=algorithm_walltime_limit,
-            # deterministic=deterministic,
             min_challenger=min_challenger,
             intensify_percentage=intensify_percentage,
             seed=seed,
         )
 
         # We have a pool of instances that yield configurations ot run
-        self.intensifier_instances = {}  # type: Dict[int, AbstractIntensifier]
+        self.intensifier_instances: dict[int, AbstractIntensifier] = {}
         self.print_worker_warning = True
 
     def get_meta(self) -> dict[str, Any]:
@@ -109,7 +92,7 @@ class ParallelScheduler(AbstractIntensifier):
 
     def get_next_run(
         self,
-        challengers: Optional[List[Configuration]],
+        challengers: list[Configuration] | None,
         incumbent: Configuration,
         ask: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
@@ -198,7 +181,6 @@ class ParallelScheduler(AbstractIntensifier):
         return RunInfoIntent.WAIT, RunInfo(
             config=None,
             instance="0",
-            # instance_specific="0",
             seed=0,
             budget=0.0,
         )
@@ -211,7 +193,7 @@ class ParallelScheduler(AbstractIntensifier):
         runhistory: RunHistory,
         time_bound: float,
         log_trajectory: bool = True,
-    ) -> Tuple[Configuration, float]:
+    ) -> tuple[Configuration, float]:
         """The intensifier stage will be updated based on the results/status of a configuration
         execution.
 

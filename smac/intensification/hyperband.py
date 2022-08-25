@@ -63,7 +63,7 @@ class Hyperband(ParallelScheduler):
     def __init__(
         self,
         scenario: Scenario,
-        instance_seed_pairs: list[tuple[str, int]] | None = None,
+        instance_seed_pairs: list[tuple[str | None, int]] | None = None,
         instance_order: str | None = "shuffle_once",
         incumbent_selection: str = "highest_executed_budget",
         min_challenger: int = 1,
