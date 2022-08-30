@@ -29,7 +29,7 @@ class InstanceSeedBudgetKey:
 
 
 @dataclass(frozen=True)
-class RunKey:
+class TrialKey:
     config_id: int
     instance: str | None = None
     seed: int | None = None
@@ -37,7 +37,7 @@ class RunKey:
 
 
 @dataclass(frozen=True)
-class RunValue:
+class TrialValue:
     cost: float | list[float]
     time: float
     status: smac.runhistory.StatusType
@@ -47,7 +47,7 @@ class RunValue:
 
 
 @dataclass(frozen=True)
-class RunInfo:
+class TrialInfo:
     config: Configuration
     instance: str | None
     seed: int | None

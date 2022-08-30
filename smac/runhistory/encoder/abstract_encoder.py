@@ -11,7 +11,7 @@ from smac.configspace import convert_configurations_to_array
 # from smac.model.imputer import AbstractImputer
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.utils import normalize_costs
-from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
+from smac.runhistory.runhistory import RunHistory, TrialKey, TrialValue
 from smac.runner.runner import StatusType
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
@@ -170,7 +170,7 @@ class AbstractRunHistoryEncoder:
     @abstractmethod
     def _build_matrix(
         self,
-        run_dict: Mapping[RunKey, RunValue],
+        run_dict: Mapping[TrialKey, TrialValue],
         runhistory: RunHistory,
         store_statistics: bool = False,
     ) -> Tuple[np.ndarray, np.ndarray]:
@@ -198,7 +198,7 @@ class AbstractRunHistoryEncoder:
         self,
         runhistory: RunHistory,
         budget_subset: list | None = None,
-    ) -> dict[RunKey, RunValue]:
+    ) -> dict[TrialKey, TrialValue]:
         # Get only successfully finished runs
         if budget_subset is not None:
             if len(budget_subset) != 1:
@@ -230,7 +230,7 @@ class AbstractRunHistoryEncoder:
         self,
         runhistory: RunHistory,
         budget_subset: list | None = None,
-    ) -> dict[RunKey, RunValue]:
+    ) -> dict[TrialKey, TrialValue]:
         if budget_subset is not None:
             t_run_dict = {
                 run: runhistory.data[run]

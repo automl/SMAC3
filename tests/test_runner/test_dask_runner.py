@@ -8,7 +8,7 @@ import pytest
 from ConfigSpace import ConfigurationSpace
 from dask.distributed import Client
 
-from smac.runhistory import RunInfo, RunValue
+from smac.runhistory import TrialInfo, TrialValue
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
@@ -65,7 +65,7 @@ def test_run(make_dummy_ta: Callable[..., TargetAlgorithmRunner]) -> None:
     print(len(runner._pending_runs))
     print(sum(runner._client.nthreads().values()))
 
-    run_info = RunInfo(config=2, instance="test", seed=0, budget=0.0)
+    run_info = TrialInfo(config=2, instance="test", seed=0, budget=0.0)
 
     # Submit runs! then get the value
     runner.submit_run(run_info)
@@ -80,8 +80,8 @@ def test_run(make_dummy_ta: Callable[..., TargetAlgorithmRunner]) -> None:
     assert result is not None
 
     run_info, run_value = result
-    assert isinstance(run_info, RunInfo)
-    assert isinstance(run_value, RunValue)
+    assert isinstance(run_info, TrialInfo)
+    assert isinstance(run_value, TrialValue)
 
     assert run_value.cost == 4
     assert run_value.status == StatusType.SUCCESS
@@ -94,12 +94,12 @@ def test_parallel_runs(make_dummy_ta: Callable[..., TargetAlgorithmRunner]) -> N
 
     assert runner.available_worker_count() == 2
 
-    run_info = RunInfo(config=2, instance="test", seed=0, budget=0.0)
+    run_info = TrialInfo(config=2, instance="test", seed=0, budget=0.0)
     runner.submit_run(run_info)
 
     assert runner.available_worker_count() == 1
 
-    run_info = RunInfo(config=3, instance="test", seed=0, budget=0.0)
+    run_info = TrialInfo(config=3, instance="test", seed=0, budget=0.0)
     runner.submit_run(run_info)
 
     assert runner.available_worker_count() == 0
@@ -141,7 +141,7 @@ def test_additional_info_crash_msg(make_dummy_ta: Callable[..., TargetAlgorithmR
     single_worker = make_dummy_ta(target_failed, n_workers=2)
     runner = DaskParallelRunner(single_worker=single_worker)
 
-    run_info = RunInfo(config=2, instance="test", seed=0, budget=0.0)
+    run_info = TrialInfo(config=2, instance="test", seed=0, budget=0.0)
     runner.submit_run(run_info)
     runner.wait()
     run_info, run_value = next(runner.iter_results())

@@ -17,7 +17,7 @@ from smac.constants import MAXINT
 from smac.initial_design import InitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.model.base_model import BaseModel
-from smac.runhistory import RunInfo, RunInfoIntent, RunValue, StatusType
+from smac.runhistory import TrialInfo, RunInfoIntent, TrialValue, StatusType
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.runner import AbstractRunner
@@ -457,7 +457,7 @@ class BaseSMBO:
         raise NotImplementedError
 
     @abstractmethod
-    def tell(self, run_info: RunInfo, run_value: RunValue, time_left: float, save: bool = True) -> None:
+    def tell(self, run_info: TrialInfo, run_value: TrialValue, time_left: float, save: bool = True) -> None:
         """The SMBO submits a config-run-request via a RunInfo object. When that config run is
         completed, a RunValue, which contains all the relevant information obtained after running a
         job, is returned. This method incorporates the status of that run into the stats/runhistory

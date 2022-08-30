@@ -5,7 +5,7 @@ import numpy as np
 
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.intensification.parallel_scheduling import ParallelScheduler
-from smac.runhistory.runhistory import RunInfo, RunValue
+from smac.runhistory.runhistory import RunInfo, TrialValue
 from smac.runner.runner import StatusType
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -100,7 +100,7 @@ class TestParallelScheduler(unittest.TestCase):
             source_id=2,
         )
 
-        result = RunValue(cost=1, time=0.5, status=StatusType.SUCCESS, starttime=1, endtime=2, additional_info={})
+        result = TrialValue(cost=1, time=0.5, status=StatusType.SUCCESS, starttime=1, endtime=2, additional_info={})
 
         scheduler.process_results(run_info=run_info, result=result, incumbent=None, run_history=None, time_bound=None)
         self.assertIsNone(scheduler.intensifier_instances[0].process_results.call_args)

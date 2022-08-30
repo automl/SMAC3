@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Iterator
 
-from smac.runhistory import RunInfo, RunValue
+from smac.runhistory import TrialInfo, TrialValue
 from smac.runner.runner import AbstractRunner
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -18,7 +18,7 @@ class SerialRunner(AbstractRunner):
     the desired task.
     """
 
-    def submit_run(self, run_info: RunInfo) -> None:
+    def submit_run(self, run_info: TrialInfo) -> None:
         """This function submits a run_info object in a serial fashion.
 
         As there is a single worker for this task, this
@@ -35,7 +35,7 @@ class SerialRunner(AbstractRunner):
         """
         self._results_queue.append(self.run_wrapper(run_info))
 
-    def iter_results(self) -> Iterator[tuple[RunInfo, RunValue]]:
+    def iter_results(self) -> Iterator[tuple[TrialInfo, TrialValue]]:
         """This method returns any finished configuration, and returns a list with the
         results of exercising the configurations. This class keeps populating results to
         self._results_queue until a call to get_finished runs is done. In this case,

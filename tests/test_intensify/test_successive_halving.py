@@ -13,7 +13,7 @@ from smac.intensification.successive_halving import (
     SuccessiveHalving,
     SuccessiveHalvingWorker,
 )
-from smac.runhistory import RunHistory, RunInfo, RunValue, RunInfoIntent
+from smac.runhistory import RunHistory, TrialInfo, TrialValue, RunInfoIntent
 from smac.runner.runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.utils.stats import Stats
@@ -23,7 +23,7 @@ __license__ = "3-clause BSD"
 
 
 def evaluate_challenger(
-    run_info: RunInfo,
+    run_info: TrialInfo,
     target_algorithm: TargetAlgorithmRunner,
     stats: Stats,
     runhistory: RunHistory,
@@ -59,9 +59,9 @@ def evaluate_challenger(
     return result
 
 
-def target_from_run_info(run_info: RunInfo):
+def target_from_run_info(run_info: TrialInfo):
     value_from_config = sum([a for a in run_info.config.get_dictionary().values() if not isinstance(a, str)])
-    return RunValue(
+    return TrialValue(
         cost=value_from_config,
         time=0.5,
         status=StatusType.SUCCESS,
@@ -185,7 +185,7 @@ def test_process_results_via_sourceid(SH, runhistory, configs):
     # randomly create run_infos and push into SH. Then we will make
     # sure they got properly allocated
     for i in np.random.choice(list(range(10)), 30):
-        run_info = RunInfo(
+        run_info = TrialInfo(
             config=configs[0],
             instance="i1",
             seed=0,
@@ -197,7 +197,7 @@ def test_process_results_via_sourceid(SH, runhistory, configs):
         # That is we check only the proper _SH has this
         magic = time.time()
 
-        run_value = RunValue(
+        run_value = TrialValue(
             cost=1,
             time=0.5,
             status=StatusType.SUCCESS,

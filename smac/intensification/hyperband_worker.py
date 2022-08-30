@@ -5,7 +5,7 @@ from typing import Callable, Iterator
 import numpy as np
 
 from smac.intensification.successive_halving import SuccessiveHalvingWorker
-from smac.runhistory import RunInfo, RunInfoIntent, RunValue
+from smac.runhistory import TrialInfo, RunInfoIntent, TrialValue
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
@@ -101,8 +101,8 @@ class HyperbandWorker(SuccessiveHalvingWorker):
 
     def process_results(
         self,
-        run_info: RunInfo,
-        run_value: RunValue,
+        run_info: TrialInfo,
+        run_value: TrialValue,
         incumbent: Configuration | None,
         runhistory: RunHistory,
         time_bound: float,
@@ -162,7 +162,7 @@ class HyperbandWorker(SuccessiveHalvingWorker):
         runhistory: RunHistory,
         repeat_configs: bool = True,
         n_workers: int = 1,
-    ) -> tuple[RunInfoIntent, RunInfo]:
+    ) -> tuple[RunInfoIntent, TrialInfo]:
         """Selects which challenger to use based on the iteration stage and set the iteration
         parameters. First iteration will choose configurations from the ``ask`` or input
         challengers, while the later iterations pick top configurations from the previously selected

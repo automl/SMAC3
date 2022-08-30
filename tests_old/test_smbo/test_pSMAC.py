@@ -5,7 +5,7 @@ import shutil
 import unittest
 
 from smac.optimizer import pSMAC
-from smac.runhistory.runhistory import DataOrigin, RunHistory, RunKey
+from smac.runhistory.runhistory import DataOrigin, RunHistory, TrialKey
 from smac.runner.runner import StatusType
 from smac.utils import _test_helpers
 
@@ -137,9 +137,9 @@ class TestPSMAC(unittest.TestCase):
         configuration_space.seed(1)
         config = configuration_space.sample_configuration()
         runhistory.add(config, 1, 1, StatusType.SUCCESS, seed=1, instance_id="branin")
-        id_before = id(runhistory.data[RunKey(1, "branin", 1)])
+        id_before = id(runhistory.data[TrialKey(1, "branin", 1)])
         runhistory.update_from_json(other_runhistory_filename, configuration_space)
-        id_after = id(runhistory.data[RunKey(1, "branin", 1)])
+        id_after = id(runhistory.data[TrialKey(1, "branin", 1)])
         self.assertEqual(len(runhistory.data), 6)
         self.assertEqual(id_before, id_after)
 
@@ -152,9 +152,9 @@ class TestPSMAC(unittest.TestCase):
         # This is the former config_3
         config = configuration_space.sample_configuration()
         runhistory.add(config, 1, 1, StatusType.SUCCESS, seed=1, instance_id="branin")
-        id_before = id(runhistory.data[RunKey(1, "branin", 1)])
+        id_before = id(runhistory.data[TrialKey(1, "branin", 1)])
         runhistory.update_from_json(other_runhistory_filename, configuration_space)
-        id_after = id(runhistory.data[RunKey(1, "branin", 1)])
+        id_after = id(runhistory.data[TrialKey(1, "branin", 1)])
         self.assertEqual(len(runhistory.data), 7)
         self.assertEqual(id_before, id_after)
         self.assertEqual(sorted(list(runhistory.ids_config.keys())), [1, 2, 3, 4])

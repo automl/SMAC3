@@ -7,7 +7,7 @@ import numpy as np
 from smac.configspace import convert_configurations_to_array
 from smac.multi_objective.utils import normalize_costs
 from smac.runhistory.encoder import AbstractRunHistoryEncoder
-from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
+from smac.runhistory.runhistory import RunHistory, TrialKey, TrialValue
 from smac.utils.logging import get_logger
 from smac.scenario import Scenario
 from smac.runhistory.enumerations import StatusType
@@ -24,7 +24,7 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
 
     def _build_matrix(
         self,
-        run_dict: Mapping[RunKey, RunValue],
+        run_dict: Mapping[TrialKey, TrialValue],
         runhistory: RunHistory,
         store_statistics: bool = False,
     ) -> tuple[np.ndarray, np.ndarray]:

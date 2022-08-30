@@ -16,7 +16,7 @@ from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFac
 from smac.facade.hyperparameter_facade import SMAC4HPO
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.optimizer.acquisition import EI, LogEI
-from smac.runhistory.runhistory import RunInfo, RunValue
+from smac.runhistory.runhistory import RunInfo, TrialValue
 from smac.runhistory.encoder.encoder import RunhistoryTransformer, RunhistoryLogTransformer
 from smac.runner.runner import FirstRunCrashedException, StatusType
 from smac.runner.target_algorithm_runner import ExecuteTAFuncArray
@@ -503,7 +503,7 @@ class TestSMBO(unittest.TestCase):
             budget=0.0,
             source_id=0,
         )
-        result = RunValue(1.2345, 2.3456, "status", "starttime", "endtime", "additional_info")
+        result = TrialValue(1.2345, 2.3456, "status", "starttime", "endtime", "additional_info")
         time_left = 10
 
         smbo._incorporate_run_results(run_info=run_info, result=result, time_left=time_left)

@@ -5,7 +5,7 @@ from typing import Any, Callable, Iterator
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_intensifier import AbstractIntensifier
-from smac.runhistory import RunInfo, RunValue, RunInfoIntent, RunHistory
+from smac.runhistory import TrialInfo, TrialValue, RunInfoIntent, RunHistory
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
@@ -59,8 +59,8 @@ class SimpleIntensifier(AbstractIntensifier):
 
     def process_results(
         self,
-        run_info: RunInfo,
-        run_value: RunValue,
+        run_info: TrialInfo,
+        run_value: TrialValue,
         incumbent: Configuration | None,
         runhistory: RunHistory,
         time_bound: float,
@@ -122,7 +122,7 @@ class SimpleIntensifier(AbstractIntensifier):
         runhistory: RunHistory,
         repeat_configs: bool = True,
         n_workers: int = 1,
-    ) -> tuple[RunInfoIntent, RunInfo]:
+    ) -> tuple[RunInfoIntent, TrialInfo]:
         """Selects which challenger to be used. As in a traditional BO loop, we sample from the EPM,
         which is the next configuration based on the acquisition function. The input data is read
         from the runhistory.
@@ -166,14 +166,14 @@ class SimpleIntensifier(AbstractIntensifier):
         total_active_runs = len([v for v in self.run_tracker.values() if not v])
         if total_active_runs >= n_workers:
             # We only submit jobs if there is an idle worker
-            return RunInfoIntent.WAIT, RunInfo(
+            return RunInfoIntent.WAIT, TrialInfo(
                 config=None,
                 instance=None,
                 seed=0,
                 budget=0.0,
             )
 
-        run_info = RunInfo(
+        run_info = TrialInfo(
             config=challenger,
             instance=None if self.instances is None else self.instances[-1],
             seed=0 if self.deterministic else int(self.rng.randint(low=0, high=MAXINT, size=1)[0]),

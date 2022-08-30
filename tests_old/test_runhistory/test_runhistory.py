@@ -8,7 +8,7 @@ import unittest
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
-from smac.runhistory.runhistory import RunHistory, RunKey
+from smac.runhistory.runhistory import RunHistory, TrialKey
 from smac.runner.runner import StatusType
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -431,7 +431,7 @@ class RunHistoryMappingTest(unittest.TestCase):
         instance_id: Optional[str] = None,
         budget: float = 0.0,
         status=StatusType.SUCCESS,
-    ) -> RunKey:
+    ) -> TrialKey:
         """No easy way to generate a key before hand"""
         self.runhistory.add(
             config=self.cs.sample_configuration(),
@@ -442,7 +442,7 @@ class RunHistoryMappingTest(unittest.TestCase):
             budget=budget,
             status=status,
         )
-        return RunKey(
+        return TrialKey(
             config_id=self.runhistory._n_id,  # What's used internally during `add`
             instance_id=instance_id,
             seed=seed,

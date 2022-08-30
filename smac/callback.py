@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import abstractmethod
 
 import smac
-from smac.runhistory import RunInfo, RunValue
+from smac.runhistory import TrialInfo, TrialValue
 from ConfigSpace import Configuration
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -44,7 +44,7 @@ class Callback:
         pass
 
     @abstractmethod
-    def on_iteration_end(self, smbo: smac.main.BaseSMBO, info: RunInfo, value: RunValue) -> bool | None:
+    def on_iteration_end(self, smbo: smac.main.BaseSMBO, info: TrialInfo, value: TrialValue) -> bool | None:
         """Called after the finished run is added to the runhistory. Optionally, return `False` to
         gracefully stop the optimization."""
         pass

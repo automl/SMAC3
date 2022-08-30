@@ -7,7 +7,7 @@ import numpy as np
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_intensifier import AbstractIntensifier
-from smac.runhistory import RunInfo, RunInfoIntent, RunValue, StatusType
+from smac.runhistory import TrialInfo, RunInfoIntent, TrialValue, StatusType
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
@@ -303,8 +303,8 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
 
     def process_results(
         self,
-        run_info: RunInfo,
-        run_value: RunValue,
+        run_info: TrialInfo,
+        run_value: TrialValue,
         incumbent: Configuration | None,
         runhistory: RunHistory,
         time_bound: float,
@@ -448,7 +448,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         runhistory: RunHistory,
         repeat_configs: bool = True,
         n_workers: int = 1,
-    ) -> tuple[RunInfoIntent, RunInfo]:
+    ) -> tuple[RunInfoIntent, TrialInfo]:
         """Selects which challenger to use based on the iteration stage and set the iteration
         parameters. First iteration will choose configurations from the ``chooser`` or input
         challengers, while the later iterations pick top configurations from the previously selected
@@ -494,7 +494,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # there is room for more configurations, else we wait for process_results()
         # to trigger a new stage
         if self._all_config_instance_seed_pairs_launched(runhistory, self.running_challenger):
-            return RunInfoIntent.WAIT, RunInfo(
+            return RunInfoIntent.WAIT, TrialInfo(
                 config=None,
                 instance=None,
                 # instance_specific="0",
@@ -542,7 +542,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                     # There is a filtering on the above _next_challenger to return
                     # None if the proposed config us already in the run history
                     # To get a new config, we wait for more data
-                    return RunInfoIntent.WAIT, RunInfo(
+                    return RunInfoIntent.WAIT, TrialInfo(
                         config=None,
                         instance=None,
                         # instance_specific="0",
@@ -562,7 +562,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                     # which is triggered after the completion of a run
                     # If by there are no more configs to run (which is the case
                     # if we run into a IndexError),
-                    return RunInfoIntent.SKIP, RunInfo(
+                    return RunInfoIntent.SKIP, TrialInfo(
                         config=None,
                         instance=None,
                         # instance_specific="0",
@@ -610,7 +610,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # is called, we will like to run self.current_instance_indices + 1 for this configuration
         self.current_instance_indices[challenger] += 1
 
-        return RunInfoIntent.RUN, RunInfo(
+        return RunInfoIntent.RUN, TrialInfo(
             config=challenger,
             instance=instance,
             seed=seed,

@@ -12,8 +12,8 @@ from smac.multi_objective.utils import normalize_costs
 from smac.runhistory.dataclasses import (
     InstanceSeedBudgetKey,
     InstanceSeedKey,
-    RunKey,
-    RunValue,
+    TrialKey,
+    TrialValue,
 )
 from smac.runhistory.enumerations import DataOrigin, StatusType
 from smac.utils.logging import get_logger
@@ -24,7 +24,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class RunHistory(Mapping[RunKey, RunValue]):
+class RunHistory(Mapping[TrialKey, TrialValue]):
     """Container for target algorithm run information.
 
     Most importantly, the runhistory contains an efficient mapping from each evaluated configuration to the
@@ -68,7 +68,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         """Reset this run history to it's default state"""
         # By having the data in a deterministic order we can do useful tests when we
         # serialize the data and can assume it's still in the same order as it was added.
-        self.data: dict[RunKey, RunValue] = OrderedDict()
+        self.data: dict[TrialKey, TrialValue] = OrderedDict()
 
         # for fast access, we have also an unordered data structure to get all instance
         # seed pairs of a configuration. This does not include capped runs.
@@ -88,7 +88,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
         # Store whether a datapoint is "external", which means it was read from
         # a JSON file. Can be chosen to not be written to disk
-        self.external: dict[RunKey, DataOrigin] = {}
+        self.external: dict[TrialKey, DataOrigin] = {}
         self.n_objectives: int = -1
         self.objective_bounds: list[tuple[float, float]] = []
 
@@ -96,11 +96,11 @@ class RunHistory(Mapping[RunKey, RunValue]):
         """Dictionary semantics for `k in runhistory`"""
         return k in self.data
 
-    def __getitem__(self, k: RunKey) -> RunValue:
+    def __getitem__(self, k: TrialKey) -> TrialValue:
         """Dictionary semantics for `v = runhistory[k]`"""
         return self.data[k]
 
-    def __iter__(self) -> Iterator[RunKey]:
+    def __iter__(self) -> Iterator[TrialKey]:
         """Dictionary semantics for `for k in runhistory.keys()`."""
         return iter(self.data.keys())
 
@@ -127,8 +127,8 @@ class RunHistory(Mapping[RunKey, RunValue]):
         self,
         key: str,
         obj: Any,
-        runkey: RunKey,
-        runvalue: RunValue,
+        runkey: TrialKey,
+        runvalue: TrialValue,
     ) -> None:
         try:
             json.dumps(obj)
@@ -163,7 +163,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         for min_v, max_v in zip(min_values, max_values):
             self.objective_bounds += [(min_v, max_v)]
 
-    def _add(self, k: RunKey, v: RunValue, status: StatusType, origin: DataOrigin) -> None:
+    def _add(self, k: TrialKey, v: TrialValue, status: StatusType, origin: DataOrigin) -> None:
         """
         Actual function to add new entry to data structures.
 
@@ -242,7 +242,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
         costs = []
         for key in instance_seed_budget_keys:
-            k = RunKey(
+            k = TrialKey(
                 config_id=id_,
                 instance=key.instance,
                 seed=key.seed,
@@ -336,8 +336,8 @@ class RunHistory(Mapping[RunKey, RunValue]):
         else:
             c = [float(i) for i in c]
 
-        k = RunKey(config_id=config_id, instance=instance, seed=seed, budget=budget)
-        v = RunValue(
+        k = TrialKey(config_id=config_id, instance=instance, seed=seed, budget=budget)
+        v = TrialValue(
             cost=c,
             time=time,
             status=status,

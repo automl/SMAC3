@@ -9,7 +9,7 @@ from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.intensification.simple_intensifier import SimpleIntensifier
-from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
+from smac.runhistory.runhistory import RunHistory, RunInfo, TrialValue
 from smac.utils.stats import Stats
 from smac.runner.runner import StatusType
 
@@ -26,7 +26,7 @@ def get_config_space():
 
 def target_from_run_info(RunInfo):
     value_from_config = sum([a for a in RunInfo.config.get_dictionary().values()])
-    return RunValue(
+    return TrialValue(
         cost=value_from_config,
         time=0.5,
         status=StatusType.SUCCESS,
@@ -153,7 +153,7 @@ class TestSimpleIntensifier(unittest.TestCase):
             n_workers=1,
             chooser=None,
         )
-        result = RunValue(
+        result = TrialValue(
             cost=1,
             time=0.5,
             status=StatusType.SUCCESS,

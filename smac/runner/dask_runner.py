@@ -9,7 +9,7 @@ import dask
 from dask.distributed import Client, Future, wait
 
 from smac.configspace import Configuration
-from smac.runhistory import RunInfo, RunValue, StatusType
+from smac.runhistory import TrialInfo, TrialValue, StatusType
 from smac.runner.runner import AbstractRunner
 from smac.utils.logging import get_logger
 
@@ -120,7 +120,7 @@ class DaskParallelRunner(AbstractRunner):
             "code": self.target_algorithm.__code__.co_code,
         }
 
-    def submit_run(self, run_info: RunInfo) -> None:
+    def submit_run(self, run_info: TrialInfo) -> None:
         """This function submits a configuration embedded in a run_info object, and uses one of the
         workers to produce a result locally to each worker.
 
@@ -159,7 +159,7 @@ class DaskParallelRunner(AbstractRunner):
         run = self._client.submit(self._single_worker.run_wrapper, run_info=run_info)
         self._pending_runs.append(run)
 
-    def iter_results(self) -> Iterator[tuple[RunInfo, RunValue]]:
+    def iter_results(self) -> Iterator[tuple[TrialInfo, TrialValue]]:
         """This method returns any finished configuration, and returns a list with the results of
         exercising the configurations. This class keeps populating results to self._reseults_queue until a
         call to get_finished runs is done. In this case, the self._reseults_queue list is emptied and all

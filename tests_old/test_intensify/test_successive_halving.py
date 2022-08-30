@@ -14,7 +14,7 @@ from smac.intensification.successive_halving import (
     SuccessiveHalving,
     SuccessiveHalvingWorker,
 )
-from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
+from smac.runhistory.runhistory import RunHistory, RunInfo, TrialValue
 from smac.utils.stats import Stats
 from smac.runner.runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
@@ -34,7 +34,7 @@ def get_config_space():
 
 def target_from_run_info(RunInfo):
     value_from_config = sum([a for a in RunInfo.config.get_dictionary().values()])
-    return RunValue(
+    return TrialValue(
         cost=value_from_config,
         time=0.5,
         status=StatusType.SUCCESS,
@@ -121,7 +121,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             # That is we check only the proper _SH has this
             magic = time.time()
 
-            result = RunValue(
+            result = TrialValue(
                 cost=1,
                 time=0.5,
                 status=StatusType.SUCCESS,

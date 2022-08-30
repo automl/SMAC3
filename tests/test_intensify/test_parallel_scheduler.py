@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 
 from smac.intensification.parallel_scheduling import ParallelScheduler
-from smac.runhistory import RunInfo, RunValue, RunInfoIntent
+from smac.runhistory import TrialInfo, TrialValue, RunInfoIntent
 from smac.runner.runner import StatusType
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -79,7 +79,7 @@ def test_process_results(make_scenario, make_stats, configspace_small, runhistor
         2: mock.Mock(),
     }
 
-    run_info = RunInfo(
+    run_info = TrialInfo(
         config=None,
         instance=0,
         seed=0,
@@ -87,7 +87,7 @@ def test_process_results(make_scenario, make_stats, configspace_small, runhistor
         source=2,
     )
 
-    run_value = RunValue(cost=1, time=0.5, status=StatusType.SUCCESS, starttime=1, endtime=2, additional_info={})
+    run_value = TrialValue(cost=1, time=0.5, status=StatusType.SUCCESS, starttime=1, endtime=2, additional_info={})
 
     scheduler.process_results(run_info=run_info, run_value=run_value, incumbent=None, runhistory=None, time_bound=None)
     assert scheduler.intensifier_instances[0].process_results.call_args is None

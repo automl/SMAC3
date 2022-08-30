@@ -14,7 +14,7 @@ import numpy as np
 
 import smac
 from smac.configspace import Configuration
-from smac.runhistory import RunInfo, RunValue, StatusType
+from smac.runhistory import TrialInfo, TrialValue, StatusType
 from smac.utils.logging import get_logger
 from smac.utils.stats import Stats
 
@@ -90,7 +90,7 @@ class AbstractRunner(ABC):
         # The results is a FIFO structure, implemented via a list
         # (because the Queue lock is not pickable). Finished runs are
         # put in this list and collected via _process_pending_runs
-        self._results_queue: list[tuple[RunInfo, RunValue]] = []
+        self._results_queue: list[tuple[TrialInfo, TrialValue]] = []
 
         # Below state the support for a Runner algorithm that implements a ta
         self.target_algorithm = target_algorithm
@@ -106,7 +106,7 @@ class AbstractRunner(ABC):
         self.objectives = objectives
         self.n_objectives = scenario.count_objectives()
 
-    def run_wrapper(self, run_info: RunInfo) -> tuple[RunInfo, RunValue]:
+    def run_wrapper(self, run_info: TrialInfo) -> tuple[TrialInfo, TrialValue]:
         """Wrapper around run() to exec and check the execution of a given config file.
 
         This function encapsulates common handling/processing, so that run() implementation
@@ -160,7 +160,7 @@ class AbstractRunner(ABC):
         if status == StatusType.CRASHED:
             cost = self.crash_cost
 
-        run_value = RunValue(
+        run_value = TrialValue(
             status=status,
             cost=cost,
             time=runtime,
@@ -178,7 +178,7 @@ class AbstractRunner(ABC):
         }
 
     @abstractmethod
-    def submit_run(self, run_info: RunInfo) -> None:
+    def submit_run(self, run_info: TrialInfo) -> None:
         """This function submits a configuration embedded in a RunInfo object, and uses one of the
         workers to produce a result (such result will eventually be available on the self._results_queue
         FIFO).
@@ -235,7 +235,7 @@ class AbstractRunner(ABC):
         ...
 
     @abstractmethod
-    def iter_results(self) -> Iterator[tuple[RunInfo, RunValue]]:
+    def iter_results(self) -> Iterator[tuple[TrialInfo, TrialValue]]:
         """This method returns any finished configuration, and returns a list with the
         results of exercising the configurations. This class keeps populating results
         to self._results_queue until a call to get_finished runs is done. In this case,

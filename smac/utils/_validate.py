@@ -17,7 +17,7 @@ from smac.model.random_forest.random_forest_with_instances import (
     RandomForestWithInstances,
 )
 from smac.model.utils import get_types
-from smac.runhistory import RunInfo, RunKey, RunValue, StatusType
+from smac.runhistory import TrialInfo, TrialKey, TrialValue, StatusType
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.runner import AbstractRunner
@@ -32,10 +32,10 @@ __license__ = "3-clause BSD"
 def _unbound_tae_starter(
     tae: AbstractRunner,
     runhistory: Optional[RunHistory],
-    run_info: RunInfo,
+    run_info: TrialInfo,
     *args: Any,
     **kwargs: Any,
-) -> RunValue:
+) -> TrialValue:
     """Unbound function to be used by joblibs Parallel, since directly passing the TAE results in
     pickling-problems.
 
@@ -261,7 +261,7 @@ class Validator(object):
         n_jobs: int,
         backend: str,
         runhistory: Optional[RunHistory] = None,
-    ) -> List[RunValue]:
+    ) -> List[TrialValue]:
         """Validate runs with joblibs Parallel-interface.
 
         Parameters
@@ -288,7 +288,7 @@ class Validator(object):
             delayed(_unbound_tae_starter)(
                 tae,
                 runhistory,
-                RunInfo(
+                TrialInfo(
                     config=run.config,
                     instance=run.inst,
                     instance_specific="0",
@@ -511,7 +511,7 @@ class Validator(object):
                         inst_seed_config.pop(i)
                     # Add runs to runhistory
                     for c in configs_evaluated[:]:
-                        runkey = RunKey(runhistory.config_ids[c], i, seed)
+                        runkey = TrialKey(runhistory.config_ids[c], i, seed)
                         cost, time, status, start, end, additional_info = runhistory.data[runkey]
                         if status in [StatusType.CRASHED, StatusType.ABORT, StatusType.CAPPED]:
                             # Not properly executed target algorithm runs should be repeated

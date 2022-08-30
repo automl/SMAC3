@@ -7,7 +7,7 @@ import time
 import pytest
 
 from ConfigSpace import Configuration, ConfigurationSpace
-from smac.runhistory import RunInfo
+from smac.runhistory import TrialInfo
 from smac.runner.runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.scenario import Scenario
@@ -86,7 +86,7 @@ def make_runner(
 def test_run(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
     """Makes sure that we are able to run a config and return the expected values/types"""
     runner = make_runner(target)
-    run_info = RunInfo(config=2, instance="test", seed=0, budget=0.0)
+    run_info = TrialInfo(config=2, instance="test", seed=0, budget=0.0)
 
     # submit runs! then get the value
     runner.submit_run(run_info)
@@ -104,10 +104,10 @@ def test_serial_runs(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
     """Test submitting two runs in succession and that they complete after eachother in results"""
     runner = make_runner(target_delayed)
 
-    run_info = RunInfo(config=2, instance="test2", seed=0, budget=0.0)
+    run_info = TrialInfo(config=2, instance="test2", seed=0, budget=0.0)
     runner.submit_run(run_info)
 
-    run_info = RunInfo(config=3, instance="test3", seed=0, budget=0.0)
+    run_info = TrialInfo(config=3, instance="test3", seed=0, budget=0.0)
     runner.submit_run(run_info)
 
     results = runner.iter_results()
@@ -128,7 +128,7 @@ def test_serial_runs(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
 def test_fail(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
     """Test traceback and error end up in the additional info of a failing run"""
     runner = make_runner(target_failed)
-    run_info = RunInfo(config=2, instance="test", seed=0, budget=0.0)
+    run_info = TrialInfo(config=2, instance="test", seed=0, budget=0.0)
 
     runner.submit_run(run_info)
     run_info, run_value = next(runner.iter_results())

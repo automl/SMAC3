@@ -9,7 +9,7 @@ from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
 from smac.utils.logging import get_logger
 from smac.main.base_smbo import BaseSMBO
-from smac.runhistory import RunInfo, RunValue, StatusType
+from smac.runhistory import TrialInfo, TrialValue, StatusType
 from smac.runner.exceptions import (
     FirstRunCrashedException,
     TargetAlgorithmAbortException,
@@ -91,7 +91,7 @@ class SMBO(BaseSMBO):
 
         return challengers
 
-    def tell(self, run_info: RunInfo, run_value: RunValue, time_left: float, save: bool = True) -> None:
+    def tell(self, run_info: TrialInfo, run_value: TrialValue, time_left: float, save: bool = True) -> None:
         # We removed `abort_on_first_run_crash` and therefore we expect the first
         # run to always succeed.
         if self.stats.finished == 0 and run_value.status == StatusType.CRASHED:

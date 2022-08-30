@@ -4,7 +4,7 @@ import numpy as np
 
 from smac.runhistory import RunInfoIntent
 from smac.intensification.simple_intensifier import SimpleIntensifier
-from smac.runhistory import RunInfo, RunValue
+from smac.runhistory import TrialInfo, TrialValue
 from smac.runner.runner import StatusType
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -94,7 +94,7 @@ def test_get_next_run_waits_if_no_workers(intensifier, runhistory, configs):
     )
     assert intent == RunInfoIntent.WAIT
 
-    run_info2 = RunInfo(
+    run_info2 = TrialInfo(
         config=None,
         instance=None,
         seed=0,
@@ -117,7 +117,7 @@ def test_process_results(intensifier, runhistory, configs):
         ask=None,
     )
 
-    run_value = RunValue(
+    run_value = TrialValue(
         cost=1,
         time=0.5,
         status=StatusType.SUCCESS,
