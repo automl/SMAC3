@@ -497,7 +497,6 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
             return RunInfoIntent.WAIT, TrialInfo(
                 config=None,
                 instance=None,
-                # instance_specific="0",
                 seed=0,
                 budget=0.0,
                 source=self.identifier,
@@ -545,7 +544,6 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                     return RunInfoIntent.WAIT, TrialInfo(
                         config=None,
                         instance=None,
-                        # instance_specific="0",
                         seed=0,
                         budget=0.0,
                         source=self.identifier,

@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from typing import Any
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from ConfigSpace import Configuration
 
-import smac
+from smac.runhistory.enumerations import StatusType
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -36,14 +36,14 @@ class TrialKey:
     budget: float = 0.0
 
 
-@dataclass(frozen=True)
+@dataclass  # (frozen=True)
 class TrialValue:
     cost: float | list[float]
-    time: float
-    status: smac.runhistory.StatusType
-    starttime: float
-    endtime: float
-    additional_info: dict[str, Any]
+    time: float = 0.0
+    status: StatusType = StatusType.SUCCESS
+    starttime: float = 0.0
+    endtime: float = 0.0
+    additional_info: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -60,7 +60,6 @@ class TrajectoryItem:
     """Replaces `TrajEntry` from the original code."""
 
     cost: float
-    # incumbent_id: int  # TODO: Do we actually need the incumbent_id?
     incumbent: Configuration | dict[str, Any]
     walltime_used: float
     target_algorithm_walltime_used: float

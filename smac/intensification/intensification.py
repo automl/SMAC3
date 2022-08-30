@@ -257,14 +257,9 @@ class Intensifier(AbstractIntensifier):
                 # Lines 5-7
                 instance, seed = self._get_next_instance(pending_instances)
 
-                # instance_specific = "0"
-                # if instance is not None:
-                #    instance_specific = self.instance_specifics.get(instance, "0")
-
                 return RunInfoIntent.RUN, TrialInfo(
                     config=incumbent,
                     instance=instance,
-                    # instance_specific=instance_specific,
                     seed=seed,
                     budget=0.0,
                 )
@@ -350,7 +345,6 @@ class Intensifier(AbstractIntensifier):
                 return RunInfoIntent.SKIP, TrialInfo(
                     config=None,
                     instance=None,
-                    # instance_specific="0",
                     seed=0,
                     budget=0.0,
                 )
@@ -371,7 +365,6 @@ class Intensifier(AbstractIntensifier):
                 return RunInfoIntent.RUN, TrialInfo(
                     config=challenger,
                     instance=instance,
-                    # instance_specific=instance_specific,
                     seed=seed,
                     budget=0.0,
                 )

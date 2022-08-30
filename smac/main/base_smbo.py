@@ -181,21 +181,14 @@ class BaseSMBO:
 
         # Main BO loop
         while True:
+            start_time = time.time()
+
             for callback in self._callbacks:
                 callback.on_iteration_start(self)
 
-            start_time = time.time()
-
             # Sample next configuration for intensification.
             # Initial design runs are also included in the BO loop now.
-            intent, run_info = self._intensifier.get_next_run(
-                challengers=self._initial_design_configs,
-                incumbent=self._incumbent,
-                ask=self.ask,
-                runhistory=self._runhistory,
-                repeat_configs=self._intensifier.repeat_configs,
-                n_workers=self._runner.available_worker_count(),
-            )
+            intent, run_info = self.ask()
 
             # Remove config from initial design challengers to not repeat it again
             self._initial_design_configs = [c for c in self._initial_design_configs if c != run_info.config]
@@ -331,29 +324,29 @@ class BaseSMBO:
         return self._incumbent
 
     @abstractmethod
-    def ask(self) -> Iterator[Configuration]:
+    def get_next_configurations(self) -> Iterator[Configuration]:
         """Choose next candidate solution with Bayesian optimization. The suggested configurations
-        depend on the surrogate model acquisition optimizer/function.
-        """
+        depend on the surrogate model acquisition optimizer/function. This method is used by
+        the intensifier."""
         raise NotImplementedError
 
     @abstractmethod
-    def tell(self, run_info: TrialInfo, run_value: TrialValue, time_left: float, save: bool = True) -> None:
-        """The SMBO submits a config-run-request via a RunInfo object. When that config run is
-        completed, a RunValue, which contains all the relevant information obtained after running a
-        job, is returned. This method incorporates the status of that run into the stats/runhistory
-        objects so that other consumers can advance with their task.
+    def ask(self) -> tuple[RunInfoIntent, TrialInfo]:
+        """Asks the intensifier for the next trial."""
+        raise NotImplementedError
 
-        Additionally, it checks for a new incumbent via the intensifier process results,
-        which also has the side effect of moving the intensifier to a new state
+    @abstractmethod
+    def tell(self, info: TrialInfo, value: TrialValue, time_left: float | None = None, save: bool = True) -> None:
+        """Adds the result of a trial to the runhistory and updates the intensifier. Also,
+        the stats object is updated.
 
         Parameters
         ----------
-        run_info: RunInfo
-            Describes the run (config) from which to process the results.
-        result: RunValue
-            Contains relevant information regarding the execution of a config.
-        time_left: float
+        info: TrialInfo
+            Describes the trial from which to process the results.
+        value: TrialValue
+            Contains relevant information regarding the execution of a trial.
+        time_left: float | None
             How much time in seconds is left to perform intensification.
         save : bool, optional to True
             Whether the runhistory should be saved.

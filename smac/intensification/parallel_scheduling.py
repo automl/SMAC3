@@ -180,7 +180,7 @@ class ParallelScheduler(AbstractIntensifier):
         # wait, so we return a wait intent
         return RunInfoIntent.WAIT, TrialInfo(
             config=None,
-            instance="0",
+            instance=None,
             seed=0,
             budget=0.0,
         )

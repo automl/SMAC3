@@ -417,7 +417,7 @@ def test_generate_challenger(make_scenario, make_stats, configspace_small, runhi
         next(gen)
 
     smac = AlgorithmConfigurationFacade(scenario, target, overwrite=True)
-    gen = intensifier._generate_challengers(challengers=None, ask=smac._optimizer.ask)
+    gen = intensifier._generate_challengers(challengers=None, ask=smac.get_next_configurations)
 
     assert next(gen).get_dictionary() == {"a": 5489, "b": 0.007257005721594277, "c": "dog"}
 

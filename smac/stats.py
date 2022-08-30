@@ -181,7 +181,10 @@ class Stats:
         }
 
         assert self._scenario.output_directory
-        filename = self._scenario.output_directory / "stats.json"
+        filename = self._scenario.output_directory
+        filename.mkdir(parents=True, exist_ok=True)
+        filename = filename / "stats.json"
+
         logger.debug(f"Saving stats to `{filename}`")
 
         with open(filename, "w") as fh:

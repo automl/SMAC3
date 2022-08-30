@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Any, Callable
+from typing import Any, Callable, Iterator
 
 from pathlib import Path
 
@@ -22,7 +22,9 @@ from smac.model.abstract_model import AbstractModel
 from smac.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
 )
+from smac.runhistory.dataclasses import TrialInfo, TrialValue
 from smac.runhistory.encoder.abstract_encoder import AbstractRunHistoryEncoder
+from smac.runhistory.enumerations import RunInfoIntent
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.runner import AbstractRunner
@@ -73,8 +75,6 @@ class Facade:
         When True, overwrites the results (Runhistory & Stats) if a previous run is found that is
         inconsistent in the meta data with the current setup. In that case, the user is prompted
         for the exact behaviour.
-
-
     """
 
     def __init__(
@@ -192,48 +192,6 @@ class Facade:
     def stats(self) -> Stats:
         return self._optimizer._stats
 
-    def _get_optimizer(self) -> SMBO:
-        """
-        Filling the SMBO with all the pre-initialized components.
-
-        Attributes
-        ----------
-        optimizer: SMBO
-            A fully configured SMBO object
-        """
-        return SMBO(
-            scenario=self._scenario,
-            stats=self._stats,
-            runner=self._runner,
-            initial_design=self._initial_design,
-            runhistory=self._runhistory,
-            runhistory_encoder=self._runhistory_encoder,
-            intensifier=self._intensifier,
-            model=self._model,
-            acquisition_function=self._acquisition_function,
-            acquisition_optimizer=self._acquisition_optimizer,
-            random_design=self._random_design,
-            overwrite=self._overwrite,
-        )
-
-    def _update_dependencies(self) -> None:
-        """Convenience method to add some more dependencies. And ensure separable instantiation of
-        the components. This is the easiest way to incorporate dependencies, although
-        it might be a bit hacky.
-        """
-        self._intensifier.stats = self._stats
-        self._runhistory_encoder._set_multi_objective_algorithm(self._multi_objective_algorithm)
-        self._acquisition_function._set_model(self._model)
-        self._acquisition_optimizer._set_acquisition_function(self._acquisition_function)
-        # TODO: self._runhistory_encoder.set_success_states etc. for different intensifier?
-
-    def _validate(self) -> None:
-        """Checks if the composition is correct if there are dependencies, not necessarily"""
-        assert self._optimizer
-
-        # Make sure the same acquisition function is used
-        assert self._acquisition_function == self._acquisition_optimizer.acquisition_function
-
     def get_meta(self) -> dict[str, Any]:
         """Generates a hash based on all components of the facade. This is used for the run name or to determine
         whether a run should be continued or not."""
@@ -257,6 +215,33 @@ class Facade:
         }
 
         return meta
+
+    def get_next_configurations(self) -> Iterator[Configuration]:
+        """Choose next candidate solution with Bayesian optimization. The suggested configurations
+        depend on the surrogate model acquisition optimizer/function. This method is used by
+        the intensifier."""
+        return self._optimizer.get_next_configurations()
+
+    def ask(self) -> tuple[RunInfoIntent, TrialInfo]:
+        """Asks the intensifier for the next trial."""
+        return self._optimizer.ask()
+
+    def tell(self, info: TrialInfo, value: TrialValue, time_left: float | None = None, save: bool = True) -> None:
+        """Adds the result of a trial to the runhistory and updates the intensifier. Also,
+        the stats object is updated.
+
+        Parameters
+        ----------
+        info: TrialInfo
+            Describes the trial from which to process the results.
+        value: TrialValue
+            Contains relevant information regarding the execution of a trial.
+        time_left: float | None
+            How much time in seconds is left to perform intensification.
+        save : bool, optional to True
+            Whether the runhistory should be saved.
+        """
+        return self._optimizer.tell(info, value, time_left, save)
 
     def optimize(self) -> Configuration:
         """
@@ -335,3 +320,45 @@ class Facade:
         """Returns the multi-objective algorithm instance to be used in the BO loop,
         specifying the scalarization strategy for multiple objectives' costs"""
         raise NotImplementedError
+
+    def _get_optimizer(self) -> SMBO:
+        """
+        Filling the SMBO with all the pre-initialized components.
+
+        Attributes
+        ----------
+        optimizer: SMBO
+            A fully configured SMBO object
+        """
+        return SMBO(
+            scenario=self._scenario,
+            stats=self._stats,
+            runner=self._runner,
+            initial_design=self._initial_design,
+            runhistory=self._runhistory,
+            runhistory_encoder=self._runhistory_encoder,
+            intensifier=self._intensifier,
+            model=self._model,
+            acquisition_function=self._acquisition_function,
+            acquisition_optimizer=self._acquisition_optimizer,
+            random_design=self._random_design,
+            overwrite=self._overwrite,
+        )
+
+    def _update_dependencies(self) -> None:
+        """Convenience method to add some more dependencies. And ensure separable instantiation of
+        the components. This is the easiest way to incorporate dependencies, although
+        it might be a bit hacky.
+        """
+        self._intensifier.stats = self._stats
+        self._runhistory_encoder._set_multi_objective_algorithm(self._multi_objective_algorithm)
+        self._acquisition_function._set_model(self._model)
+        self._acquisition_optimizer._set_acquisition_function(self._acquisition_function)
+        # TODO: self._runhistory_encoder.set_success_states etc. for different intensifier?
+
+    def _validate(self) -> None:
+        """Checks if the composition is correct if there are dependencies, not necessarily"""
+        assert self._optimizer
+
+        # Make sure the same acquisition function is used
+        assert self._acquisition_function == self._acquisition_optimizer.acquisition_function

@@ -7,6 +7,7 @@ import numpy as np
 
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
+from smac.runhistory.enumerations import RunInfoIntent
 from smac.utils.logging import get_logger
 from smac.main.base_smbo import BaseSMBO
 from smac.runhistory import TrialInfo, TrialValue, StatusType
@@ -35,13 +36,9 @@ class SMBO(BaseSMBO):
             0.0,
         ]
 
-    def ask(self) -> Iterator[Configuration]:
-        """Choose next candidate solution with Bayesian optimization. The suggested configurations
-        depend on the surrogate model acquisition optimizer/function.
-        """
-
+    def get_next_configurations(self) -> Iterator[Configuration]:
         for callback in self._callbacks:
-            callback.on_ask_start(self)
+            callback.on_next_configurations_start(self)
 
         # Cost value of incumbent configuration (required for acquisition function).
         # If not given, it will be inferred from runhistory or predicted.
@@ -86,56 +83,81 @@ class SMBO(BaseSMBO):
         )
 
         for callback in self._callbacks:
-            callback.on_ask_end(self, list(challengers))
+            callback.on_next_configurations_end(self, list(challengers))
 
         return challengers
 
-    def tell(self, run_info: TrialInfo, run_value: TrialValue, time_left: float, save: bool = True) -> None:
-        # We removed `abort_on_first_run_crash` and therefore we expect the first
-        # run to always succeed.
-        if self._stats.finished == 0 and run_value.status == StatusType.CRASHED:
+    def ask(self) -> tuple[RunInfoIntent, TrialInfo]:
+        for callback in self._callbacks:
+            callback.on_ask_start(self)
+
+        intent, trial_info = self._intensifier.get_next_run(
+            challengers=self._initial_design_configs,
+            incumbent=self._incumbent,
+            ask=self.get_next_configurations,
+            runhistory=self._runhistory,
+            repeat_configs=self._intensifier.repeat_configs,
+            n_workers=self._runner.available_worker_count(),
+        )
+
+        for callback in self._callbacks:
+            callback.on_ask_end(self, trial_info)
+
+        return intent, trial_info
+
+    def tell(
+        self,
+        info: TrialInfo,
+        value: TrialValue,
+        time_left: float | None = None,
+        save: bool = True,
+    ) -> None:
+        # We expect the first run to always succeed.
+        if self._stats.finished == 0 and value.status == StatusType.CRASHED:
             additional_info = ""
-            if "traceback" in run_value.additional_info:
-                additional_info = "\n\n" + run_value.additional_info["traceback"]
+            if "traceback" in value.additional_info:
+                additional_info = "\n\n" + value.additional_info["traceback"]
 
             raise FirstRunCrashedException("The first run crashed. Please check your setup again." + additional_info)
 
         # Update SMAC stats
-        self._stats._target_algorithm_walltime_used += float(run_value.time)
+        self._stats._target_algorithm_walltime_used += float(value.time)
         self._stats._finished += 1
 
         logger.debug(
-            f"Status: {run_value.status}, cost: {run_value.cost}, time: {run_value.time}, "
-            f"Additional: {run_value.additional_info}"
+            f"Status: {value.status}, cost: {value.cost}, time: {value.time}, " f"Additional: {value.additional_info}"
         )
 
         self._runhistory.add(
-            config=run_info.config,
-            cost=run_value.cost,
-            time=run_value.time,
-            status=run_value.status,
-            instance=run_info.instance,
-            seed=run_info.seed,
-            budget=run_info.budget,
-            starttime=run_value.starttime,
-            endtime=run_value.endtime,
+            config=info.config,
+            cost=value.cost,
+            time=value.time,
+            status=value.status,
+            instance=info.instance,
+            seed=info.seed,
+            budget=info.budget,
+            starttime=value.starttime,
+            endtime=value.endtime,
             force_update=True,
-            additional_info=run_value.additional_info,
+            additional_info=value.additional_info,
         )
         self._stats._n_configs = len(self._runhistory.config_ids)
 
-        if run_value.status == StatusType.ABORT:
+        if value.status == StatusType.ABORT:
             raise TargetAlgorithmAbortException(
                 "The target algorithm was aborted. The last incumbent can be found in the trajectory file."
             )
-        elif run_value.status == StatusType.STOP:
+        elif value.status == StatusType.STOP:
             self._stop = True
             return
 
+        if time_left is None:
+            time_left = np.inf
+
         # Update the intensifier with the result of the runs
         self._incumbent, _ = self._intensifier.process_results(
-            run_info=run_info,
-            run_value=run_value,
+            run_info=info,
+            run_value=value,
             incumbent=self._incumbent,
             runhistory=self._runhistory,
             time_bound=max(self._min_time, time_left),
@@ -218,7 +240,7 @@ class SMBO(BaseSMBO):
             # won't need log(y) if EPM was already trained on log(y)
         else:
             all_configs = self._runhistory.get_configs_per_budget(budget_subset=self._currently_considered_budgets)
-            x_best = self.incumbent
+            x_best = self._incumbent
             x_best_array = convert_configurations_to_array(all_configs)
             best_observation = self._runhistory.get_cost(x_best)
             best_observation_as_array = np.array(best_observation).reshape((1, 1))
