@@ -7,6 +7,7 @@ from pathlib import Path
 
 import joblib
 
+import smac
 from smac.acquisition.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
@@ -36,6 +37,7 @@ logger = get_logger(__name__)
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
+
 
 class Facade:
     """Facade is an abstraction on top of the SMBO backend to organize the components
@@ -302,7 +304,7 @@ class Facade:
                 else:
                     raise RuntimeError("SMAC run was stopped by the user.")
 
-    def get_meta(self) -> dict[str, dict[str, Any] | None]:
+    def get_meta(self) -> dict[str, Any]:
         """Generates a hash based on all components of the facade. This is used for the run name or to determine
         whether a run should be continued or not."""
 
@@ -321,6 +323,7 @@ class Facade:
             "random_design": self.random_design.get_meta(),
             "runhistory_encoder": self.runhistory_encoder.get_meta(),
             "multi_objective_algorithm": multi_objective_algorithm_meta,
+            "version": smac.version,
         }
 
         return meta
