@@ -53,3 +53,21 @@ class TrialInfo:
     seed: int | None
     budget: float = 0.0
     source: int = 0
+
+
+@dataclass
+class TrajectoryItem:
+    """Replaces `TrajEntry` from the original code."""
+
+    cost: float
+    # incumbent_id: int  # TODO: Do we actually need the incumbent_id?
+    incumbent: Configuration | dict[str, Any]
+    walltime_used: float
+    target_algorithm_walltime_used: float
+    target_algorithm_runs: int
+    budget: float
+
+    def __post_init__(self) -> None:
+        # Transform configuration to dict
+        if isinstance(self.incumbent, Configuration):
+            self.incumbent = self.incumbent.get_dictionary()

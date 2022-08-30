@@ -122,11 +122,11 @@ class BOinGFacade(HyperparameterFacade):
         )
         return optimizer
 
-    def _init_optimizer(
+    def _get_optimizer(
         self,
-    ) -> None:
+    ) -> BOinGSMBO:
         """Configure the BOinGSMBO optimizer, that defines the particular BO loop."""
-        self.optimizer = BOinGSMBO(
+        return BOinGSMBO(
             scenario=self._scenario,
             stats=self.stats,
             runner=self.runner,

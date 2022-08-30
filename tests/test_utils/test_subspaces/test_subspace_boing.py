@@ -47,8 +47,10 @@ def test_init(get_ss_kwargs):
     assert boing_ss_1.acq_optimizer_local.local_search.n_steps_plateau_walk == 5
 
     acq_optimiozer = LocalAndSortedRandomSearch(
-        acquisition_function=None, configspace=get_ss_kwargs['config_space'], n_steps_plateau_walk=10,
-        local_search_iterations=10
+        acquisition_function=None,
+        configspace=get_ss_kwargs["config_space"],
+        n_steps_plateau_walk=10,
+        local_search_iterations=10,
     )
 
     boing_ss_2 = BOinGSubspace(**get_ss_kwargs, acq_optimizer_local=acq_optimiozer)

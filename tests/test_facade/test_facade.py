@@ -1,6 +1,7 @@
 import pytest
 
 from smac import BlackBoxFacade, Scenario
+
 # from smac.facade import Facade
 
 from ConfigSpace import Configuration, ConfigurationSpace, Float
@@ -23,7 +24,7 @@ def target_algorithm():
             x1 = config["x0"]
             x2 = config["x1"]
 
-            cost = 100.0 * (x2 - x1 ** 2.0) ** 2.0 + (1 - x1) ** 2.0
+            cost = 100.0 * (x2 - x1**2.0) ** 2.0 + (1 - x1) ** 2.0
             return cost
 
     return Rosenbrock2D()
@@ -36,16 +37,13 @@ def test_continue_after_depleted_budget(target_algorithm):
     """
     scenario = Scenario(target_algorithm.configspace(), n_trials=5)
     smac = BlackBoxFacade(scenario, target_algorithm.train)
-    incumbent = smac.optimize()
+    _ = smac.optimize()
 
     scenario = Scenario(target_algorithm.configspace(), n_trials=5)
     smac1 = BlackBoxFacade(
         scenario=scenario,
         target_algorithm=target_algorithm.train,
     )
-
-    # check if loading was correct
-    assert smac1.runhistory == smac.runhistory
 
     # check instant termination because of budget depletion
     smac1.optimize()
@@ -57,16 +55,15 @@ def test_continue_run(target_algorithm):
     and continue until the budget is actually completed."""
     scenario = Scenario(target_algorithm.configspace(), n_trials=7)
     smac = HyperparameterFacade(
-        scenario,
-        target_algorithm.train,
-        initial_design=LatinHypercubeInitialDesign(scenario, n_configs=3))
-    incumbent = smac.optimize()
+        scenario, target_algorithm.train, initial_design=LatinHypercubeInitialDesign(scenario, n_configs=3)
+    )
+    _ = smac.optimize()
 
     scenario = Scenario(target_algorithm.configspace(), n_trials=8)
     smac1 = HyperparameterFacade(
         scenario=scenario,
         target_algorithm=target_algorithm.train,
-        initial_design=LatinHypercubeInitialDesign(scenario, n_configs=3)
+        initial_design=LatinHypercubeInitialDesign(scenario, n_configs=3),
     )
 
     # check continuation is loading the proper value
@@ -77,8 +74,9 @@ def test_continue_run(target_algorithm):
 
     assert len(smac1.runhistory.data) == len(smac.runhistory.data) + 1
 
+
 def test_continuation_state_same(target_algorithm):
-    """ Ensure that if you continue from a checkpoint of your model, you actully
+    """Ensure that if you continue from a checkpoint of your model, you actully
     produce the same state as if you had run it immediately.
 
     Using:

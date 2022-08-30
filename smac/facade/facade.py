@@ -29,9 +29,8 @@ from smac.runner.runner import AbstractRunner
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.scenario import Scenario
 from smac.main import SMBO
-from smac.utils.data_structures import recursively_compare_dicts
 from smac.utils.logging import get_logger, setup_logging
-from smac.utils.stats import Stats
+from smac.stats import Stats
 
 logger = get_logger(__name__)
 
@@ -156,29 +155,25 @@ class Facade:
             # We use a dask runner for parallelization
             runner = DaskParallelRunner(single_worker=runner)
 
-        # TODO make these private attributes (also in smbo...)
         # Set variables globally
         self._scenario = scenario
-        self.configspace = scenario.configspace
-        self.runner = runner
-        self.model = model
-        self.acquisition_function = acquisition_function
-        self.acquisition_optimizer = acquisition_optimizer
-        self.initial_design = initial_design
-        self.random_design = random_design
-        self.intensifier = intensifier
-        self.multi_objective_algorithm = multi_objective_algorithm
+        self._runner = runner
+        self._model = model
+        self._acquisition_function = acquisition_function
+        self._acquisition_optimizer = acquisition_optimizer
+        self._initial_design = initial_design
+        self._random_design = random_design
+        self._intensifier = intensifier
+        self._multi_objective_algorithm = multi_objective_algorithm
         self._runhistory = runhistory
-        self.runhistory_encoder = runhistory_encoder
+        self._runhistory_encoder = runhistory_encoder
         self._stats = stats
-        self.seed = scenario.seed
-
-        # Create optimizer using the previously defined objects
-        self._init_optimizer()
+        self._overwrite = overwrite
+        self._optimizer = self._get_optimizer()
 
         # Register callbacks here
         for callback in callbacks:
-            self.optimizer.register_callback(callback)
+            self._optimizer._register_callback(callback)
 
         # Adding dependencies of the components
         self._update_dependencies()
@@ -189,26 +184,15 @@ class Facade:
         # We have to validate if the object compositions are correct and actually make sense
         self._validate()
 
-        # Here we actually check whether the run should be continued or not.
-        # More precisely, we update our stats and runhistory object if all component arguments
-        # and scenario/stats object are the same. For doing so, we create a specific hash.
-        # The SMBO object recognizes that stats is not empty and hence does not the run initial design anymore.
-        # Since the runhistory is already updated, the model uses previous data directly.
-        self._continue(overwrite)
-
-        # And now we save our scenario object.
-        # Runhistory and stats are saved by `SMBO` as they change over time.
-        self._scenario.save()
-
     @property
     def runhistory(self) -> RunHistory:
-        return self._runhistory
+        return self._optimizer._runhistory
 
     @property
     def stats(self) -> Stats:
-        return self._stats
+        return self._optimizer._stats
 
-    def _init_optimizer(self) -> None:
+    def _get_optimizer(self) -> SMBO:
         """
         Filling the SMBO with all the pre-initialized components.
 
@@ -217,19 +201,19 @@ class Facade:
         optimizer: SMBO
             A fully configured SMBO object
         """
-        self.optimizer = SMBO(
+        return SMBO(
             scenario=self._scenario,
-            stats=self.stats,
-            runner=self.runner,
-            initial_design=self.initial_design,
-            runhistory=self.runhistory,
-            runhistory_encoder=self.runhistory_encoder,
-            intensifier=self.intensifier,
-            model=self.model,
-            acquisition_function=self.acquisition_function,
-            acquisition_optimizer=self.acquisition_optimizer,
-            random_design=self.random_design,
-            seed=self.seed,
+            stats=self._stats,
+            runner=self._runner,
+            initial_design=self._initial_design,
+            runhistory=self._runhistory,
+            runhistory_encoder=self._runhistory_encoder,
+            intensifier=self._intensifier,
+            model=self._model,
+            acquisition_function=self._acquisition_function,
+            acquisition_optimizer=self._acquisition_optimizer,
+            random_design=self._random_design,
+            overwrite=self._overwrite,
         )
 
     def _update_dependencies(self) -> None:
@@ -237,91 +221,37 @@ class Facade:
         the components. This is the easiest way to incorporate dependencies, although
         it might be a bit hacky.
         """
-        self.intensifier.stats = self.stats
-        self.runhistory_encoder._set_multi_objective_algorithm(self.multi_objective_algorithm)
-        self.acquisition_function._set_model(self.model)
-        self.acquisition_optimizer._set_acquisition_function(self.acquisition_function)
-
-        # TODO: self.runhistory_encoder.set_success_states etc. for different intensifier?
+        self._intensifier.stats = self._stats
+        self._runhistory_encoder._set_multi_objective_algorithm(self._multi_objective_algorithm)
+        self._acquisition_function._set_model(self._model)
+        self._acquisition_optimizer._set_acquisition_function(self._acquisition_function)
+        # TODO: self._runhistory_encoder.set_success_states etc. for different intensifier?
 
     def _validate(self) -> None:
-        """Check if the composition is correct if there are dependencies, not necessarily"""
-        assert self.optimizer
+        """Checks if the composition is correct if there are dependencies, not necessarily"""
+        assert self._optimizer
 
         # Make sure the same acquisition function is used
-        assert self.acquisition_function == self.acquisition_optimizer.acquisition_function
-
-    def _continue(self, overwrite: bool = False) -> None:
-        """Update the runhistory and stats object if configs (inclusive meta data) are the same."""
-        if overwrite:
-            return
-
-        old_output_directory = self._scenario.output_directory
-        old_runhistory_filename = self._scenario.output_directory / "runhistory.json"
-        old_stats_filename = self._scenario.output_directory / "stats.json"
-
-        if old_output_directory.exists() and old_runhistory_filename.exists() and old_stats_filename.exists():
-            old_scenario = Scenario.load(old_output_directory)
-
-            if self._scenario == old_scenario:
-                logger.info("Continuing from previous run.")
-
-                # We update the runhistory and stats in-place.
-                # Stats use the output directory from the config directly.
-                self.runhistory.reset()
-                self.runhistory.load_json(str(old_runhistory_filename), configspace=self._scenario.configspace)
-                self.stats.load()
-
-                # Reset runhistory and stats if first run was not successful
-                if self.stats.submitted == 1 and self.stats.finished == 0:
-                    logger.info("Since the previous run was not successful, SMAC will start from scratch again.")
-                    self.runhistory.reset()
-                    self.stats.reset()
-            else:
-                diff = recursively_compare_dicts(self._scenario.__dict__, old_scenario.__dict__, level="scenario")
-                logger.info(
-                    f"Found old run in `{self._scenario.output_directory}` but it is not the same as the current one:\n"
-                    f"{diff}"
-                )
-
-                feedback = input(
-                    "\nPress one of the following numbers to continue or any other key to abort:\n"
-                    "(1) Overwrite old run completely.\n"
-                    "(2) Overwrite old run and re-use previous runhistory data. The configuration space "
-                    "has to be the same for this option.\n"
-                )
-
-                if feedback == "1":
-                    # We don't have to do anything here, since we work with a clean runhistory and stats object
-                    pass
-                elif feedback == "2":
-                    # We overwrite runhistory and stats.
-                    # However, we should ensure that we use the same configspace.
-                    assert self._scenario.configspace == old_scenario.configspace
-
-                    self.runhistory.load_json(str(old_runhistory_filename), configspace=self._scenario.configspace)
-                    self.stats.load()
-                else:
-                    raise RuntimeError("SMAC run was stopped by the user.")
+        assert self._acquisition_function == self._acquisition_optimizer.acquisition_function
 
     def get_meta(self) -> dict[str, Any]:
         """Generates a hash based on all components of the facade. This is used for the run name or to determine
         whether a run should be continued or not."""
 
         multi_objective_algorithm_meta = None
-        if self.multi_objective_algorithm is not None:
-            multi_objective_algorithm_meta = self.multi_objective_algorithm.get_meta()
+        if self._multi_objective_algorithm is not None:
+            multi_objective_algorithm_meta = self._multi_objective_algorithm.get_meta()
 
         meta = {
             "facade": {"name": self.__class__.__name__},
-            "runner": self.runner.get_meta(),
-            "model": self.model.get_meta(),
-            "acquisition_optimizer": self.acquisition_optimizer.get_meta(),
-            "acquisition_function": self.acquisition_function.get_meta(),
-            "intensifier": self.intensifier.get_meta(),
-            "initial_design": self.initial_design.get_meta(),
-            "random_design": self.random_design.get_meta(),
-            "runhistory_encoder": self.runhistory_encoder.get_meta(),
+            "runner": self._runner.get_meta(),
+            "model": self._model.get_meta(),
+            "acquisition_optimizer": self._acquisition_optimizer.get_meta(),
+            "acquisition_function": self._acquisition_function.get_meta(),
+            "intensifier": self._intensifier.get_meta(),
+            "initial_design": self._initial_design.get_meta(),
+            "random_design": self._random_design.get_meta(),
+            "runhistory_encoder": self._runhistory_encoder.get_meta(),
             "multi_objective_algorithm": multi_objective_algorithm_meta,
             "version": smac.version,
         }
@@ -339,13 +269,13 @@ class Facade:
         """
         incumbent = None
         try:
-            incumbent = self.optimizer.run()
+            incumbent = self._optimizer.run()
         finally:
-            self.optimizer.save()
-            self.stats.print()
+            self._optimizer.save()
+            self._stats.print()
 
             if incumbent is not None:
-                cost = self.runhistory.get_cost(incumbent)
+                cost = self._runhistory.get_cost(incumbent)
                 logger.info(f"Final Incumbent: {incumbent.get_dictionary()}")
                 logger.info(f"Estimated cost: {cost}")
 
@@ -394,7 +324,7 @@ class Facade:
 
     @staticmethod
     @abstractmethod
-    def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:
+    def get_runhistory_encoder(scenario: Scenario) -> AbstractRunHistoryEncoder:
         """Returns an instance of the runhistory encoder class to be used in the BO loop,
         specifying how the runhistory is to be prepared for the next surrogate model."""
         raise NotImplementedError

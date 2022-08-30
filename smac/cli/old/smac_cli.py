@@ -22,7 +22,7 @@ from smac.facade.random_facade import ROAR
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.runner import FirstRunCrashedException, TargetAlgorithmAbortException
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
-from smac.utils.stats import Stats
+from smac.stats import Stats
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

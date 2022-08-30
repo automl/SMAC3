@@ -1,9 +1,5 @@
 from __future__ import annotations
 
-import typing
-
-import logging
-
 import numpy as np
 from ConfigSpace import ConfigurationSpace
 from ConfigSpace.hyperparameters import (
@@ -17,8 +13,6 @@ from ConfigSpace.hyperparameters import (
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
-
-from smac.constants import MAXINT
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

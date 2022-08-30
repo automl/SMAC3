@@ -23,7 +23,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.runner.runner import AbstractRunner
 
 # from smac.runner.old.execute_ta_run_old import ExecuteTARunOld
-from smac.utils.stats import Stats
+from smac.stats import Stats
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

@@ -15,7 +15,7 @@ from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.logging import get_logger
-from smac.utils.stats import Stats
+from smac.stats import Stats
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

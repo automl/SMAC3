@@ -16,7 +16,7 @@ from smac.intensification.successive_halving import (
 from smac.runhistory import RunHistory, TrialInfo, TrialValue, RunInfoIntent
 from smac.runner.runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
-from smac.utils.stats import Stats
+from smac.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -41,8 +41,8 @@ def evaluate_challenger(
         run_info=run_info,
     )
 
-    stats.target_algorithm_walltime_used += float(result.time)
-    stats.finished += 1
+    stats._target_algorithm_walltime_used += float(result.time)
+    stats._finished += 1
 
     runhistory.add(
         config=run_info.config,
@@ -54,7 +54,7 @@ def evaluate_challenger(
         budget=run_info.budget,
         force_update=force_update,
     )
-    stats.n_configs = len(runhistory.config_ids)
+    stats._n_configs = len(runhistory.config_ids)
 
     return result
 

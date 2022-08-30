@@ -5,7 +5,7 @@ import unittest.mock
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.runhistory.runhistory import RunInfo, TrialValue
-from smac.utils.stats import Stats
+from smac.stats import Stats
 from smac.runner.runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.runner.serial_runner import SerialRunner

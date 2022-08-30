@@ -1,18 +1,11 @@
 from __future__ import annotations
 
-import abc
-from typing import List, Mapping, Optional, Tuple
-
 import numpy as np
 
+import warnings
 from smac import constants
-from smac.configspace import convert_configurations_to_array
-from smac.multi_objective import AbstractMultiObjectiveAlgorithm
-from smac.multi_objective.utils import normalize_costs
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
-from smac.runhistory.runhistory import RunHistory, TrialKey, TrialValue
-from smac.runner.runner import StatusType
-from smac.scenario import Scenario
+
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -42,12 +35,13 @@ class RunHistoryLogScaledEncoder(RunHistoryEncoder):
         """
         min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
         min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
+
         # linear scaling
         # prevent diving by zero
-
         min_y[np.where(min_y == self.max_y)] *= 1 - 10**-10
 
-        values = (values - min_y) / (self.max_y - min_y)
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=RuntimeWarning)
 
-        values = np.log(values)
-        return values
+            values = (values - min_y) / (self.max_y - min_y)
+            return np.log(values)

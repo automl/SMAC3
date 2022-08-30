@@ -13,7 +13,7 @@ from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.scenario import Scenario
-from smac.utils.stats import Stats
+from smac.stats import Stats
 
 # https://github.com/dask/distributed/issues/4168
 # import multiprocessing.popen_spawn_posix  # noqa

@@ -8,7 +8,7 @@ import numpy as np
 
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration, ConfigurationSpace
-from smac.utils.stats import Stats
+from smac.stats import Stats
 from smac.runner.runner import StatusType
 from smac.runner.target_algorithm_runner import ExecuteTAFuncArray, TargetAlgorithmRunner
 

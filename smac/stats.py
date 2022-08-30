@@ -1,21 +1,11 @@
 from __future__ import annotations
-
-from typing import Any, Dict, Optional
-
 import dataclasses
 import json
-import os
 import time
-from dataclasses import dataclass
 
 import numpy as np
-from ConfigSpace.configuration_space import Configuration, ConfigurationSpace
-from ConfigSpace.hyperparameters import (
-    CategoricalHyperparameter,
-    Constant,
-    FloatHyperparameter,
-    IntegerHyperparameter,
-)
+from ConfigSpace.configuration_space import Configuration
+from smac.runhistory.dataclasses import TrajectoryItem
 
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
@@ -27,40 +17,38 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-@dataclass
-class TrajectoryItem:
-    """Replaces `TrajEntry` from the original code."""
-
-    cost: float
-    # incumbent_id: int  # TODO: Do we actually need the incumbent_id?
-    incumbent: Configuration | dict[str, Any]
-    walltime_used: float
-    target_algorithm_walltime_used: float
-    target_algorithm_runs: int
-    budget: float
-
-    def __post_init__(self) -> None:
-        # Transform configuration to dict
-        if isinstance(self.incumbent, Configuration):
-            self.incumbent = self.incumbent.get_dictionary()
-
-
 class Stats:
     """
     All statistics collected during run.
     """
 
     def __init__(self, scenario: Scenario):
-        self.scenario = scenario
+        self._scenario = scenario
         self.reset()
 
+    @property
+    def submitted(self) -> int:
+        return self._submitted
+
+    @property
+    def finished(self) -> int:
+        return self._finished
+
+    @property
+    def n_configs(self) -> int:
+        return self._n_configs
+
+    @property
+    def incumbent_changed(self) -> int:
+        return self._incumbent_changed
+
     def reset(self) -> None:
-        self.submitted = 0
-        self.finished = 0
-        self.n_configs = 0
-        self.walltime_used = 0.0
-        self.target_algorithm_walltime_used = 0.0
-        self.incumbent_changed = 0
+        self._submitted = 0
+        self._finished = 0
+        self._n_configs = 0
+        self._incumbent_changed = 0
+        self._walltime_used = 0.0
+        self._target_algorithm_walltime_used = 0.0
 
         # Trajectory
         self.trajectory: list[TrajectoryItem] = []
@@ -76,31 +64,31 @@ class Stats:
         self._start_time = np.NaN
 
     def add_incumbent(self, cost: float, incumbent: Configuration, budget: float = 0) -> None:
-        self.incumbent_changed += 1
+        self._incumbent_changed += 1
         item = TrajectoryItem(
             cost=cost,
             incumbent=incumbent,
             walltime_used=self.get_used_walltime(),
-            target_algorithm_walltime_used=self.target_algorithm_walltime_used,
-            target_algorithm_runs=self.finished,
+            target_algorithm_walltime_used=self._target_algorithm_walltime_used,
+            target_algorithm_runs=self._finished,
             budget=budget,
         )
         self.trajectory.append(item)
 
     def get_incumbent(self) -> Configuration | None:
-        if self.incumbent_changed == 0:
+        if self._incumbent_changed == 0:
             return None
 
         # Transform dictionary to configuration
         incumbent = self.trajectory[-1].incumbent
-        return Configuration(self.scenario.configspace, values=incumbent)
+        return Configuration(self._scenario.configspace, values=incumbent)
 
     def start_timing(self) -> None:
         """Starts the timer (for the runtime configuration budget).
 
         Substracting wallclock time used so we can continue loaded Stats.
         """
-        self._start_time = time.time() - self.walltime_used
+        self._start_time = time.time() - self._walltime_used
 
     def get_used_walltime(self) -> float:
         """Returns used wallclock time."""
@@ -108,16 +96,15 @@ class Stats:
 
     def get_remaing_walltime(self) -> float:
         """Subtracts the runtime configuration budget with the used wallclock time."""
-        assert self.scenario
-        return self.scenario.walltime_limit - (time.time() - self._start_time)
+        return self._scenario.walltime_limit - (time.time() - self._start_time)
 
     def get_remaining_cputime(self) -> float:
         """Subtracts the ta running budget with the used time."""
-        return self.scenario.cputime_limit - self.target_algorithm_walltime_used
+        return self._scenario.cputime_limit - self._target_algorithm_walltime_used
 
     def get_remaining_trials(self) -> int:
         """Subtract the target algorithm runs in the scenario with the used ta runs."""
-        return self.scenario.n_trials - self.submitted
+        return self._scenario.n_trials - self._submitted
 
     def is_budget_exhausted(self) -> bool:
         """Check whether the configuration budget for time budget, ta_budget and submitted
@@ -160,12 +147,13 @@ class Stats:
         log(
             "\n"
             f"--- STATISTICS -------------------------------------\n"
-            f"--- Incumbent changed: {self.incumbent_changed - 1}\n"
-            f"--- Submitted target algorithm runs: {self.submitted} / {self.scenario.n_trials}\n"
-            f"--- Finished target algorithm runs: {self.finished} / {self.scenario.n_trials}\n"
-            f"--- Configurations: {self.n_configs}\n"
-            f"--- Used wallclock time: {round(self.get_used_walltime())} / {self.scenario.walltime_limit} sec\n"
-            f"--- Used target algorithm runtime: {round(self.target_algorithm_walltime_used, 2)} / {self.scenario.cputime_limit} sec\n"
+            f"--- Incumbent changed: {self._incumbent_changed - 1}\n"
+            f"--- Submitted target algorithm runs: {self._submitted} / {self._scenario.n_trials}\n"
+            f"--- Finished target algorithm runs: {self._finished} / {self._scenario.n_trials}\n"
+            f"--- Configurations: {self._n_configs}\n"
+            f"--- Used wallclock time: {round(self.get_used_walltime())} / {self._scenario.walltime_limit} sec\n"
+            "--- Used target algorithm runtime: "
+            f"{round(self._target_algorithm_walltime_used, 2)} / {self._scenario.cputime_limit} sec\n"
             f"----------------------------------------------------"
         )
 
@@ -183,17 +171,17 @@ class Stats:
     def save(self) -> None:
         """Save all relevant attributes to json-dictionary."""
         data = {
-            "submitted": self.submitted,
-            "finished": self.finished,
-            "n_configs": self.n_configs,
+            "submitted": self._submitted,
+            "finished": self._finished,
+            "n_configs": self._n_configs,
             "walltime_used": self.get_used_walltime(),
-            "target_algorithm_walltime_used": self.target_algorithm_walltime_used,
-            "incumbent_changed": self.incumbent_changed,
+            "target_algorithm_walltime_used": self._target_algorithm_walltime_used,
+            "incumbent_changed": self._incumbent_changed,
             "trajectory": [dataclasses.asdict(item) for item in self.trajectory],
         }
 
-        assert self.scenario.output_directory
-        filename = self.scenario.output_directory / "stats.json"
+        assert self._scenario.output_directory
+        filename = self._scenario.output_directory / "stats.json"
         logger.debug(f"Saving stats to `{filename}`")
 
         with open(filename, "w") as fh:
@@ -201,16 +189,16 @@ class Stats:
 
     def load(self) -> None:
         """Load all attributes from dictionary in file into stats-object."""
-        assert self.scenario.output_directory
-        filename = self.scenario.output_directory / "stats.json"
+        assert self._scenario.output_directory
+        filename = self._scenario.output_directory / "stats.json"
 
         with open(filename, "r") as fh:
             data = json.load(fh)
 
-        self.submitted = data["submitted"]
-        self.finished = data["finished"]
-        self.n_configs = data["n_configs"]
-        self.walltime_used = data["walltime_used"]
-        self.target_algorithm_walltime_used = data["target_algorithm_walltime_used"]
-        self.incumbent_changed = data["incumbent_changed"]
+        self._submitted = data["submitted"]
+        self._finished = data["finished"]
+        self._n_configs = data["n_configs"]
+        self._walltime_used = data["walltime_used"]
+        self._target_algorithm_walltime_used = data["target_algorithm_walltime_used"]
+        self._incumbent_changed = data["incumbent_changed"]
         self.trajectory = [TrajectoryItem(**item) for item in data["trajectory"]]

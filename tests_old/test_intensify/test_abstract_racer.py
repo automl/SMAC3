@@ -10,7 +10,7 @@ from smac.cli.traj_logging import TrajLogger
 from smac.intensification.abstract_racer import AbstractIntensifier
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.runner import StatusType
-from smac.utils.stats import Stats
+from smac.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

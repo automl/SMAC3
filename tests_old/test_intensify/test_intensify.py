@@ -13,7 +13,7 @@ from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFac
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.intensification.intensification import Intensifier, IntensifierStage
 from smac.runhistory.runhistory import RunHistory, RunInfo
-from smac.utils.stats import Stats
+from smac.stats import Stats
 from smac.runner.runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 

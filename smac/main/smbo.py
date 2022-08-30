@@ -29,10 +29,9 @@ class SMBO(BaseSMBO):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
 
-        self.initial_design_configs: list[Configuration] = []
-        self.predict_x_best = True
-        self.min_samples_model = 1
-        self.currently_considered_budgets = [
+        self._predict_x_best = True
+        self._min_samples_model = 1
+        self._currently_considered_budgets = [
             0.0,
         ]
 
@@ -51,7 +50,7 @@ class SMBO(BaseSMBO):
 
         logger.debug("Search for next configuration...")
         X, Y, X_configurations = self._collect_data()
-        previous_configs = self.runhistory.get_configs()
+        previous_configs = self._runhistory.get_configs()
 
         if X.shape[0] == 0:
             # Only return a single point to avoid an overly high number of
@@ -60,30 +59,30 @@ class SMBO(BaseSMBO):
             # Let's get rid of this random search here...
             # return self._random_search.maximize(previous_configs, num_points=1)
 
-            return iter([self.configspace.sample_configuration(1)])
+            return iter([self._scenario.configspace.sample_configuration(1)])
 
-        self.model.train(X, Y)
+        self._model.train(X, Y)
 
         x_best_array: np.ndarray | None = None
         if incumbent_value is not None:
             best_observation = incumbent_value
         else:
-            if self.runhistory.empty():
+            if self._runhistory.empty():
                 raise ValueError("Runhistory is empty and the cost value of " "the incumbent is unknown.")
 
-            x_best_array, best_observation = self._get_x_best(self.predict_x_best, X_configurations)
+            x_best_array, best_observation = self._get_x_best(self._predict_x_best, X_configurations)
 
-        self.acquisition_function.update(
-            model=self.model,
+        self._acquisition_function.update(
+            model=self._model,
             eta=best_observation,
             incumbent_array=x_best_array,
             num_data=len(self._get_evaluated_configs()),
             X=X_configurations,
         )
 
-        challengers = self.acquisition_optimizer.maximize(
+        challengers = self._acquisition_optimizer.maximize(
             previous_configs,
-            random_design=self.random_design,
+            random_design=self._random_design,
         )
 
         for callback in self._callbacks:
@@ -94,7 +93,7 @@ class SMBO(BaseSMBO):
     def tell(self, run_info: TrialInfo, run_value: TrialValue, time_left: float, save: bool = True) -> None:
         # We removed `abort_on_first_run_crash` and therefore we expect the first
         # run to always succeed.
-        if self.stats.finished == 0 and run_value.status == StatusType.CRASHED:
+        if self._stats.finished == 0 and run_value.status == StatusType.CRASHED:
             additional_info = ""
             if "traceback" in run_value.additional_info:
                 additional_info = "\n\n" + run_value.additional_info["traceback"]
@@ -102,15 +101,15 @@ class SMBO(BaseSMBO):
             raise FirstRunCrashedException("The first run crashed. Please check your setup again." + additional_info)
 
         # Update SMAC stats
-        self.stats.target_algorithm_walltime_used += float(run_value.time)
-        self.stats.finished += 1
+        self._stats._target_algorithm_walltime_used += float(run_value.time)
+        self._stats._finished += 1
 
         logger.debug(
             f"Status: {run_value.status}, cost: {run_value.cost}, time: {run_value.time}, "
             f"Additional: {run_value.additional_info}"
         )
 
-        self.runhistory.add(
+        self._runhistory.add(
             config=run_info.config,
             cost=run_value.cost,
             time=run_value.time,
@@ -123,7 +122,7 @@ class SMBO(BaseSMBO):
             force_update=True,
             additional_info=run_value.additional_info,
         )
-        self.stats.n_configs = len(self.runhistory.config_ids)
+        self._stats._n_configs = len(self._runhistory.config_ids)
 
         if run_value.status == StatusType.ABORT:
             raise TargetAlgorithmAbortException(
@@ -134,11 +133,11 @@ class SMBO(BaseSMBO):
             return
 
         # Update the intensifier with the result of the runs
-        self.incumbent, _ = self.intensifier.process_results(
+        self._incumbent, _ = self._intensifier.process_results(
             run_info=run_info,
             run_value=run_value,
-            incumbent=self.incumbent,
-            runhistory=self.runhistory,
+            incumbent=self._incumbent,
+            runhistory=self._runhistory,
             time_bound=max(self._min_time, time_left),
         )
 
@@ -148,7 +147,7 @@ class SMBO(BaseSMBO):
     def _collect_data(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         # if we use a float value as a budget, we want to train the model only on the highest budget
         available_budgets = []
-        for run_key in self.runhistory.data.keys():
+        for run_key in self._runhistory.data.keys():
             available_budgets.append(run_key.budget)
 
         # Sort available budgets from highest to lowest budget
@@ -156,18 +155,18 @@ class SMBO(BaseSMBO):
 
         # Get #points per budget and if there are enough samples, then build a model
         for b in available_budgets:
-            X, Y = self.runhistory_encoder.transform(
-                self.runhistory,
+            X, Y = self._runhistory_encoder.transform(
+                self._runhistory,
                 budget_subset=[
                     b,
                 ],
             )
-            if X.shape[0] >= self.min_samples_model:
-                self.currently_considered_budgets = [
+            if X.shape[0] >= self._min_samples_model:
+                self._currently_considered_budgets = [
                     b,
                 ]
-                configs_array = self.runhistory_encoder.get_configurations(
-                    self.runhistory, budget_subset=self.currently_considered_budgets
+                configs_array = self._runhistory_encoder.get_configurations(
+                    self._runhistory, budget_subset=self._currently_considered_budgets
                 )
                 return X, Y, configs_array
 
@@ -182,7 +181,7 @@ class SMBO(BaseSMBO):
         )
 
     def _get_evaluated_configs(self) -> list[Configuration]:
-        return self.runhistory.get_configs_per_budget(budget_subset=self.currently_considered_budgets)
+        return self._runhistory.get_configs_per_budget(budget_subset=self._currently_considered_budgets)
 
     def _get_x_best(self, predict: bool, X: np.ndarray) -> tuple[np.ndarray, float]:
         """Get value, configuration, and array representation of the "best" configuration.
@@ -203,7 +202,7 @@ class SMBO(BaseSMBO):
         Configuration
         """
         if predict:
-            model = self.model
+            model = self._model
             costs = list(
                 map(
                     lambda x: (
@@ -218,15 +217,15 @@ class SMBO(BaseSMBO):
             best_observation = costs[0][0]
             # won't need log(y) if EPM was already trained on log(y)
         else:
-            all_configs = self.runhistory.get_configs_per_budget(budget_subset=self.currently_considered_budgets)
+            all_configs = self._runhistory.get_configs_per_budget(budget_subset=self._currently_considered_budgets)
             x_best = self.incumbent
             x_best_array = convert_configurations_to_array(all_configs)
-            best_observation = self.runhistory.get_cost(x_best)
+            best_observation = self._runhistory.get_cost(x_best)
             best_observation_as_array = np.array(best_observation).reshape((1, 1))
 
             # It's unclear how to do this for inv scaling and potential future scaling.
             # This line should be changed if necessary
-            best_observation = self.runhistory_encoder.transform_response_values(best_observation_as_array)
+            best_observation = self._runhistory_encoder.transform_response_values(best_observation_as_array)
             best_observation = best_observation[0][0]
 
         return x_best_array, best_observation

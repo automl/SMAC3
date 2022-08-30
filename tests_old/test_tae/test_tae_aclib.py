@@ -4,7 +4,7 @@ import unittest
 
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.utils.stats import Stats
+from smac.stats import Stats
 from smac.runner.runner import StatusType
 from smac.runner.old.execute_ta_run_aclib import ExecuteTARunAClib
 

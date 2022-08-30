@@ -23,8 +23,9 @@ from smac.runhistory.runhistory import RunHistory
 from smac.runner.runner import AbstractRunner
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
-from smac.utils.stats import Stats
+from smac.stats import Stats
 from smac.random_design.abstract_random_design import AbstractRandomDesign
+from smac.utils.data_structures import recursively_compare_dicts
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -75,6 +76,10 @@ class BaseSMBO:
     configuration_chooser_kwargs: typing.Optional[typing.Dict]
         Additional arguments passed to epmchooser
 
+    Warning
+    -------
+    This model should only be initialized by a facade.
+
     Attributes
     ----------
     incumbent
@@ -102,75 +107,397 @@ class BaseSMBO:
         acquisition_optimizer: AbstractAcquisitionOptimizer,
         acquisition_function: AbstractAcquisitionFunction,
         random_design: AbstractRandomDesign,
-        seed: int = 0,
+        overwrite: bool = False,
     ):
-        # Changed in 2.0: We don't restore the incumbent anymore but derive it directly from
-        # the stats object when the run is started.
-        self.incumbent = None
+        self._scenario = scenario
+        self._configspace = scenario.configspace
+        self._stats = stats
+        self._initial_design = initial_design
+        self._runhistory = runhistory
+        self._runhistory_encoder = runhistory_encoder
+        self._intensifier = intensifier
+        self._model = model
+        self._acquisition_optimizer = acquisition_optimizer
+        self._acquisition_function = acquisition_function
+        self._random_design = random_design
+        self._runner = runner
+        self._overwrite = overwrite
 
-        self.scenario = scenario
-        self.configspace = scenario.configspace
-        self.stats = stats
-        self.initial_design = initial_design
-        self.runhistory = runhistory
-        self.runhistory_encoder = runhistory_encoder
-        self.intensifier = intensifier
-        self.model = model
-        self.acquisition_optimizer = acquisition_optimizer
-        self.acquisition_function = acquisition_function
-        self.random_design = random_design
-        self.runner = runner
+        # Those are the configs sampled from the passed initial design
+        self._initial_design_configs: list[Configuration] = []
 
-        self.seed = seed
-        self.rng = np.random.RandomState(seed)
-
-        self.initial_design_configs: list[Configuration] = []
-
-        # Internal variable - if this is set to True it will gracefully stop SMAC
+        # Internal variables
         self._finished = False
-        self._stop = False
+        self._stop = False  # Gracefully stop SMAC
         self._min_time = 10**-5
         self._callbacks: list[Callback] = []
 
-    def _start(self) -> None:
+        # We don't restore the incumbent anymore but derive it directly from
+        # the stats object when the run is started.
+        self._incumbent = None
+
+    @property
+    def runhistory(self) -> RunHistory:
+        return self._runhistory
+
+    @property
+    def stats(self) -> Stats:
+        return self._stats
+
+    def update_model(self, model: AbstractModel) -> None:
+        """Updates the model and updates the acquisition function."""
+        self._model = model
+        self._acquisition_function._set_model(model)
+
+    def update_acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
+        """Updates acquisition function and assosiates the current model. Also, the acquisition
+        optimizer is updated."""
+        self._acquisition_function = acquisition_function
+        self._acquisition_function._set_model(self._model)
+        self._acquisition_optimizer._set_acquisition_function(acquisition_function)
+
+    def run(self) -> Configuration:
+        """Runs the Bayesian optimization loop.
+
+        Returns
+        -------
+        incumbent: np.array(1, H)
+            The best found configuration.
+        """
+        # We return the incumbent if we already finished the optimization process (we don't want to allow to call
+        # optimize more than once).
+        if self._finished:
+            return self._incumbent
+
+        # Start the timer before we do anything
+        self._stats.start_timing()
+
+        # We initialize the state based on previous data.
+        # If no previous data is found then we take care of the initial design.
+        self._initialize_state()
+
+        for callback in self._callbacks:
+            callback.on_start(self)
+
+        # Main BO loop
+        while True:
+            for callback in self._callbacks:
+                callback.on_iteration_start(self)
+
+            start_time = time.time()
+
+            # Sample next configuration for intensification.
+            # Initial design runs are also included in the BO loop now.
+            intent, run_info = self._intensifier.get_next_run(
+                challengers=self._initial_design_configs,
+                incumbent=self._incumbent,
+                ask=self.ask,
+                runhistory=self._runhistory,
+                repeat_configs=self._intensifier.repeat_configs,
+                n_workers=self._runner.available_worker_count(),
+            )
+
+            # Remove config from initial design challengers to not repeat it again
+            self._initial_design_configs = [c for c in self._initial_design_configs if c != run_info.config]
+
+            # Update timebound only if a 'new' configuration is sampled as the challenger
+            if self._intensifier.num_run == 0:
+                time_spent = time.time() - start_time
+                time_left = self._get_timebound_for_intensification(time_spent, update=False)
+                logger.debug("New intensification time bound: %f", time_left)
+            else:
+                old_time_left = time_left
+                time_spent = time_spent + (time.time() - start_time)
+                time_left = self._get_timebound_for_intensification(time_spent, update=True)
+                logger.debug(f"Updated intensification time bound from {old_time_left} to {time_left}")
+
+            # Skip starting new runs if the budget is now exhausted
+            if self._stats.is_budget_exhausted():
+                intent = RunInfoIntent.SKIP
+
+            # Skip the run if there was a request to do so.
+            # For example, during intensifier intensification, we
+            # don't want to rerun a config that was previously ran
+            if intent == RunInfoIntent.RUN:
+                n_objectives = self._scenario.count_objectives()
+
+                # Track the fact that a run was launched in the run
+                # history. It's status is tagged as RUNNING, and once
+                # completed and processed, it will be updated accordingly
+                self._runhistory.add(
+                    config=run_info.config,
+                    cost=float(MAXINT) if n_objectives == 1 else [float(MAXINT) for _ in range(n_objectives)],
+                    time=0.0,
+                    status=StatusType.RUNNING,
+                    instance=run_info.instance,
+                    seed=run_info.seed,
+                    budget=run_info.budget,
+                )
+
+                run_info.config.config_id = self._runhistory.config_ids[run_info.config]
+                self._runner.submit_run(run_info=run_info)
+
+                # There are 2 criteria that the stats object uses to know
+                # if the budged was exhausted.
+                # The budget time, which can only be known when the run finishes,
+                # And the number of ta executions. Because we submit the job at this point,
+                # we count this submission as a run. This prevent for using more
+                # runner runs than what the config allows
+                self._stats._submitted += 1
+            elif intent == RunInfoIntent.SKIP:
+                # No launch is required
+                # This marks a transition request from the intensifier
+                # To a new iteration
+                pass
+            elif intent == RunInfoIntent.WAIT:
+                # In any other case, we wait for resources
+                # This likely indicates that no further decision
+                # can be taken by the intensifier until more data is
+                # available
+                self._runner.wait()
+            else:
+                raise NotImplementedError("No other RunInfoIntent has been coded!")
+
+            # Check if there is any result, or else continue
+            for run_info, run_value in self._runner.iter_results():
+                # Add the results of the run to the run history
+                # Additionally check for new incumbent
+                self.tell(run_info, run_value, time_left)
+
+            logger.debug(
+                "Remaining budget: %f (wallclock time), %f (target algorithm time), %f (target algorithm runs)"
+                % (
+                    self._stats.get_remaing_walltime(),
+                    self._stats.get_remaining_cputime(),
+                    self._stats.get_remaining_trials(),
+                )
+            )
+
+            if self._stats.is_budget_exhausted() or self._stop:
+                if self._stats.is_budget_exhausted():
+                    logger.debug("Configuration budget is exhausted.")
+                else:
+                    logger.debug("Shutting down because a configuration or callback returned status STOP.")
+
+                # The budget can be exhausted  for 2 reasons: number of ta runs or
+                # time. If the number of ta runs is reached, but there is still budget,
+                # wait for the runs to finish.
+                while self._runner.is_running():
+                    self._runner.wait()
+
+                    for run_info, run_value in self._runner.iter_results():
+                        # Add the results of the run to the run history
+                        # Additionally check for new incumbent
+                        self.tell(run_info, run_value, time_left)
+
+                # Break from the intensification loop, as there are no more resources.
+                break
+
+            # Gracefully end optimization if termination cost is reached
+            if self._scenario.termination_cost_threshold != np.inf:
+                if not isinstance(run_value.cost, list):
+                    cost = [run_value.cost]
+                else:
+                    cost = run_value.cost
+
+                if not isinstance(self._scenario.termination_cost_threshold, list):
+                    cost_threshold = [self._scenario.termination_cost_threshold]
+                else:
+                    cost_threshold = self._scenario.termination_cost_threshold
+
+                if len(cost) != len(cost_threshold):
+                    raise RuntimeError("You must specify a termination cost threshold for each objective.")
+
+                if all(cost[i] < cost_threshold[i] for i in range(len(cost))):
+                    self._stop = True
+
+            for callback in self._callbacks:
+                response = callback.on_iteration_end(smbo=self, info=run_info, value=run_value)
+
+                # If a callback returns False, the optimization loop should be interrupted
+                # the other callbacks are still being called.
+                if response is False:
+                    logger.debug("An callback returned False. Abort is requested.")
+                    self._stop = True
+
+            # Print stats at the end of each intensification iteration.
+            if self._intensifier.iteration_done:
+                self._stats.print()
+
+        for callback in self._callbacks:
+            callback.on_end(self)
+
+        self._finished = True
+        return self._incumbent
+
+    @abstractmethod
+    def ask(self) -> Iterator[Configuration]:
+        """Choose next candidate solution with Bayesian optimization. The suggested configurations
+        depend on the surrogate model acquisition optimizer/function.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def tell(self, run_info: TrialInfo, run_value: TrialValue, time_left: float, save: bool = True) -> None:
+        """The SMBO submits a config-run-request via a RunInfo object. When that config run is
+        completed, a RunValue, which contains all the relevant information obtained after running a
+        job, is returned. This method incorporates the status of that run into the stats/runhistory
+        objects so that other consumers can advance with their task.
+
+        Additionally, it checks for a new incumbent via the intensifier process results,
+        which also has the side effect of moving the intensifier to a new state
+
+        Parameters
+        ----------
+        run_info: RunInfo
+            Describes the run (config) from which to process the results.
+        result: RunValue
+            Contains relevant information regarding the execution of a config.
+        time_left: float
+            How much time in seconds is left to perform intensification.
+        save : bool, optional to True
+            Whether the runhistory should be saved.
+        """
+        raise NotImplementedError
+
+    def save(self) -> None:
+        """Saves the current stats and runhistory."""
+        self._stats.save()
+
+        path = self._scenario.output_directory
+        if path is not None:
+            self._runhistory.save_json(str(path / "runhistory.json"))
+
+    def _register_callback(self, callback: Callback) -> None:
+        self._callbacks += [callback]
+
+    def _initialize_state(self) -> None:
         """Starts the Bayesian Optimization loop and detects whether the optimization is restored
         from a previous state."""
-        self.stats.start_timing()
+
+        # Here we actually check whether the run should be continued or not.
+        # More precisely, we update our stats and runhistory object if all component arguments
+        # and scenario/stats object are the same. For doing so, we create a specific hash.
+        # The SMBO object recognizes that stats is not empty and hence does not the run initial design anymore.
+        # Since the runhistory is already updated, the model uses previous data directly.
+
+        if not self._overwrite:
+            # First we get the paths from potentially previous data
+            old_output_directory = self._scenario.output_directory
+            old_runhistory_filename = self._scenario.output_directory / "runhistory.json"
+            old_stats_filename = self._scenario.output_directory / "stats.json"
+
+            if old_output_directory.exists() and old_runhistory_filename.exists() and old_stats_filename.exists():
+                old_scenario = Scenario.load(old_output_directory)
+
+                if self._scenario == old_scenario:
+                    logger.info("Continuing from previous run.")
+
+                    # We update the runhistory and stats in-place.
+                    # Stats use the output directory from the config directly.
+                    self._runhistory.reset()
+                    self._runhistory.load_json(str(old_runhistory_filename), configspace=self._scenario.configspace)
+                    self._stats.load()
+
+                    # Reset runhistory and stats if first run was not successful
+                    if self._stats.submitted == 1 and self._stats.finished == 0:
+                        logger.info("Since the previous run was not successful, SMAC will start from scratch again.")
+                        self._runhistory.reset()
+                        self._stats.reset()
+                else:
+                    diff = recursively_compare_dicts(self._scenario.__dict__, old_scenario.__dict__, level="scenario")
+                    logger.info(
+                        f"Found old run in `{self._scenario.output_directory}` but it is not the same as the current one:\n"
+                        f"{diff}"
+                    )
+
+                    feedback = input(
+                        "\nPress one of the following numbers to continue or any other key to abort:\n"
+                        "(1) Overwrite old run completely.\n"
+                        "(2) Overwrite old run and re-use previous runhistory data. The configuration space "
+                        "has to be the same for this option.\n"
+                    )
+
+                    if feedback == "1":
+                        # We don't have to do anything here, since we work with a clean runhistory and stats object
+                        pass
+                    elif feedback == "2":
+                        # We overwrite runhistory and stats.
+                        # However, we should ensure that we use the same configspace.
+                        assert self._scenario.configspace == old_scenario.configspace
+
+                        self._runhistory.load_json(str(old_runhistory_filename), configspace=self._scenario.configspace)
+                        self._stats.load()
+                    else:
+                        raise RuntimeError("SMAC run was stopped by the user.")
+
+        # And now we save our scenario object.
+        # Runhistory and stats are saved later on as they change over time.
+        self._scenario.save()
+
+        # Make sure we use the current incumbent
+        self._incumbent = self._stats.get_incumbent()
 
         # Initialization, depends on input
-        if self.stats.submitted == 0 and self.incumbent is None:
-            if len(self.runhistory) == 0:
+        if self._stats.submitted == 0 and self._incumbent is None:
+            if len(self._runhistory) == 0:
                 logger.info("Running initial design...")
                 # Intensifier initialization
-                self.initial_design_configs = self.initial_design.select_configurations()
+                self._initial_design_configs = self._initial_design.select_configurations()
 
                 # to be on the safe side, never return an empty list of initial configs
-                if not self.initial_design_configs:
-                    self.initial_design_configs = [self.configspace.get_default_configuration()]
+                if not self._initial_design_configs:
+                    self._initial_design_configs = [self._configspace.get_default_configuration()]
             else:
                 logger.info(
-                    f"Initial design is skipped since {len(self.runhistory)} entries are found in the runhistory."
+                    f"Initial design is skipped since {len(self._runhistory)} entries are found in the runhistory."
                 )
 
-                self.incumbent = self.runhistory.get_incumbent()
-                self.initial_design_configs = self.runhistory.get_configs()
+                self._incumbent = self._runhistory.get_incumbent()
+                self._initial_design_configs = self._runhistory.get_configs()
 
                 logger.info(
-                    f"Added {len(self.initial_design_configs)} configs from the runhistory as initial design and "
+                    f"Added {len(self._initial_design_configs)} configs from the runhistory as initial design and "
                     "determined the incumbent."
                 )
-
         else:
-            # Restoring state!
-            if self.incumbent is None:
+            # Restoring the state
+            if self._incumbent is None:
                 raise RuntimeError(
                     "It seems like SMAC restored from a previous state which failed.\n"
                     "Please remove the previous files and try again. "
                     "Alternatively, you can set `overwrite` to true in the facade."
                 )
 
-            logger.info(f"State restored! Starting optimization with incumbent {self.incumbent.get_dictionary()}.")
-            self.stats.print()
+            logger.info(f"State restored! Starting optimization with incumbent {self._incumbent.get_dictionary()}.")
+            self._stats.print()
+
+    def _get_timebound_for_intensification(self, time_spent: float, update: bool) -> float:
+        """Calculate time left for intensify from the time spent on choosing challengers using the
+        fraction of time intended for intensification (which is specified in
+        intensifier.intensification_percentage).
+
+        Parameters
+        ----------
+        time_spent : float
+
+        update : bool
+            Only used to check in the unit tests how this function was called
+
+        Returns
+        -------
+        time_left : float
+        """
+        frac_intensify = self._intensifier.intensify_percentage
+        total_time = time_spent / (1 - frac_intensify)
+        time_left = frac_intensify * total_time
+
+        logger.debug(
+            f"\n--- Total time: {round(total_time, 4)}"
+            f"\n--- Time spent on choosing next configurations: {round(time_spent, 4)} ({(1 - frac_intensify)})"
+            f"\n--- Time left for intensification: {round(time_left, 4)} ({frac_intensify})"
+        )
+        return time_left
 
     '''
     # TODO: Is this still needed?
@@ -211,27 +538,27 @@ class BaseSMBO:
             runhistory containing all specified runs
         """
         if isinstance(config_mode, str):
-            assert self.config.output_directory is not None  # Please mypy
-            traj_fn = os.path.join(self.config.output_directory, "traj_aclib2.json")
+            assert self._config.output_directory is not None  # Please mypy
+            traj_fn = os.path.join(self._config.output_directory, "traj_aclib2.json")
             trajectory = TrajLogger.read_traj_aclib_format(
-                fn=traj_fn, cs=self.configspace
+                fn=traj_fn, cs=self._configspace
             )  # type: Optional[List[Dict[str, Union[float, int, Configuration]]]]
         else:
             trajectory = None
-        if self.config.output_directory:
+        if self._config.output_directory:
             new_rh_path = os.path.join(
-                self.config.output_directory, "validated_runhistory.json"
+                self._config.output_directory, "validated_runhistory.json"
             )  # type: Optional[str] # noqa E501
         else:
             new_rh_path = None
 
-        validator = Validator(self.config, trajectory, self.rng)
+        validator = Validator(self._config, trajectory, self._rng)
         if use_epm:
             new_rh = validator.validate_epm(
                 config_mode=config_mode,
                 instance_mode=instance_mode,
                 repetitions=repetitions,
-                runhistory=self.runhistory,
+                runhistory=self._runhistory,
                 output_fn=new_rh_path,
             )
         else:
@@ -241,248 +568,9 @@ class BaseSMBO:
                 repetitions,
                 n_jobs,
                 backend,
-                self.runhistory,
-                self.runner,
+                self._runhistory,
+                self._runner,
                 output_fn=new_rh_path,
             )
         return new_rh
     '''
-
-    def _get_timebound_for_intensification(self, time_spent: float, update: bool) -> float:
-        """Calculate time left for intensify from the time spent on choosing challengers using the
-        fraction of time intended for intensification (which is specified in
-        intensifier.intensification_percentage).
-
-        Parameters
-        ----------
-        time_spent : float
-
-        update : bool
-            Only used to check in the unit tests how this function was called
-
-        Returns
-        -------
-        time_left : float
-        """
-        frac_intensify = self.intensifier.intensify_percentage
-        total_time = time_spent / (1 - frac_intensify)
-        time_left = frac_intensify * total_time
-
-        logger.debug(
-            f"\n--- Total time: {round(total_time, 4)}"
-            f"\n--- Time spent on choosing next configurations: {round(time_spent, 4)} ({(1 - frac_intensify)})"
-            f"\n--- Time left for intensification: {round(time_left, 4)} ({frac_intensify})"
-        )
-        return time_left
-
-    def register_callback(self, callback: Callback) -> None:
-        self._callbacks += [callback]
-
-    def run(self) -> Configuration:
-        """Runs the Bayesian optimization loop.
-
-        Returns
-        -------
-        incumbent: np.array(1, H)
-            The best found configuration.
-        """
-        # We return the incumbent if we already finished the optimization process
-        if self._finished:
-            return self.incumbent
-
-        # Make sure we use the right incumbent
-        self.incumbent = self.stats.get_incumbent()
-
-        self._start()
-        n_objectives = self.scenario.count_objectives()
-
-        for callback in self._callbacks:
-            callback.on_start(self)
-
-        # Main BO loop
-        while True:
-            for callback in self._callbacks:
-                callback.on_iteration_start(self)
-
-            start_time = time.time()
-
-            # Sample next configuration for intensification.
-            # Initial design runs are also included in the BO loop now.
-            intent, run_info = self.intensifier.get_next_run(
-                challengers=self.initial_design_configs,
-                incumbent=self.incumbent,
-                ask=self.ask,
-                runhistory=self.runhistory,
-                repeat_configs=self.intensifier.repeat_configs,
-                n_workers=self.runner.available_worker_count(),
-            )
-
-            # Remove config from initial design challengers to not repeat it again
-            self.initial_design_configs = [c for c in self.initial_design_configs if c != run_info.config]
-
-            # Update timebound only if a 'new' configuration is sampled as the challenger
-            if self.intensifier.num_run == 0:
-                time_spent = time.time() - start_time
-                time_left = self._get_timebound_for_intensification(time_spent, update=False)
-                logger.debug("New intensification time bound: %f", time_left)
-            else:
-                old_time_left = time_left
-                time_spent = time_spent + (time.time() - start_time)
-                time_left = self._get_timebound_for_intensification(time_spent, update=True)
-                logger.debug(f"Updated intensification time bound from {old_time_left} to {time_left}")
-
-            # Skip starting new runs if the budget is now exhausted
-            if self.stats.is_budget_exhausted():
-                intent = RunInfoIntent.SKIP
-
-            # Skip the run if there was a request to do so.
-            # For example, during intensifier intensification, we
-            # don't want to rerun a config that was previously ran
-            if intent == RunInfoIntent.RUN:
-                # Track the fact that a run was launched in the run
-                # history. It's status is tagged as RUNNING, and once
-                # completed and processed, it will be updated accordingly
-                self.runhistory.add(
-                    config=run_info.config,
-                    cost=float(MAXINT) if n_objectives == 1 else [float(MAXINT) for _ in range(n_objectives)],
-                    time=0.0,
-                    status=StatusType.RUNNING,
-                    instance=run_info.instance,
-                    seed=run_info.seed,
-                    budget=run_info.budget,
-                )
-
-                run_info.config.config_id = self.runhistory.config_ids[run_info.config]
-                self.runner.submit_run(run_info=run_info)
-
-                # There are 2 criteria that the stats object uses to know
-                # if the budged was exhausted.
-                # The budget time, which can only be known when the run finishes,
-                # And the number of ta executions. Because we submit the job at this point,
-                # we count this submission as a run. This prevent for using more
-                # runner runs than what the config allows
-                self.stats.submitted += 1
-
-            elif intent == RunInfoIntent.SKIP:
-                # No launch is required
-                # This marks a transition request from the intensifier
-                # To a new iteration
-                pass
-            elif intent == RunInfoIntent.WAIT:
-                # In any other case, we wait for resources
-                # This likely indicates that no further decision
-                # can be taken by the intensifier until more data is
-                # available
-                self.runner.wait()
-            else:
-                raise NotImplementedError("No other RunInfoIntent has been coded!")
-
-            # Check if there is any result, or else continue
-            for run_info, run_value in self.runner.iter_results():
-                # Add the results of the run to the run history
-                # Additionally check for new incumbent
-                self.tell(run_info, run_value, time_left)
-
-            logger.debug(
-                "Remaining budget: %f (wallclock time), %f (target algorithm time), %f (target algorithm runs)"
-                % (
-                    self.stats.get_remaing_walltime(),
-                    self.stats.get_remaining_cputime(),
-                    self.stats.get_remaining_trials(),
-                )
-            )
-
-            if self.stats.is_budget_exhausted() or self._stop:
-                if self.stats.is_budget_exhausted():
-                    logger.debug("Configuration budget is exhausted.")
-                else:
-                    logger.debug("Shutting down because a configuration or callback returned status STOP.")
-
-                # The budget can be exhausted  for 2 reasons: number of ta runs or
-                # time. If the number of ta runs is reached, but there is still budget,
-                # wait for the runs to finish.
-                while self.runner.is_running():
-                    self.runner.wait()
-
-                    for run_info, run_value in self.runner.iter_results():
-                        # Add the results of the run to the run history
-                        # Additionally check for new incumbent
-                        self.tell(run_info, run_value, time_left)
-
-                # Break from the intensification loop, as there are no more resources.
-                break
-
-            # Gracefully end optimization if termination cost is reached
-            if self.scenario.termination_cost_threshold != np.inf:
-                if not isinstance(run_value.cost, list):
-                    cost = [run_value.cost]
-                else:
-                    cost = run_value.cost
-
-                if not isinstance(self.scenario.termination_cost_threshold, list):
-                    cost_threshold = [self.scenario.termination_cost_threshold]
-                else:
-                    cost_threshold = self.scenario.termination_cost_threshold
-
-                if len(cost) != len(cost_threshold):
-                    raise RuntimeError("You must specify a termination cost threshold for each objective.")
-
-                if all(cost[i] < cost_threshold[i] for i in range(len(cost))):
-                    self._stop = True
-
-            for callback in self._callbacks:
-                response = callback.on_iteration_end(smbo=self, info=run_info, value=run_value)
-
-                # If a callback returns False, the optimization loop should be interrupted
-                # the other callbacks are still being called.
-                if response is False:
-                    logger.debug("An callback returned False. Abort is requested.")
-                    self._stop = True
-
-            # Print stats at the end of each intensification iteration.
-            if self.intensifier.iteration_done:
-                self.stats.print()
-
-        for callback in self._callbacks:
-            callback.on_end(self)
-
-        self._finished = True
-        return self.incumbent
-
-    @abstractmethod
-    def ask(self) -> Iterator[Configuration]:
-        """Choose next candidate solution with Bayesian optimization. The suggested configurations
-        depend on the surrogate model acquisition optimizer/function.
-        """
-        raise NotImplementedError
-
-    @abstractmethod
-    def tell(self, run_info: TrialInfo, run_value: TrialValue, time_left: float, save: bool = True) -> None:
-        """The SMBO submits a config-run-request via a RunInfo object. When that config run is
-        completed, a RunValue, which contains all the relevant information obtained after running a
-        job, is returned. This method incorporates the status of that run into the stats/runhistory
-        objects so that other consumers can advance with their task.
-
-        Additionally, it checks for a new incumbent via the intensifier process results,
-        which also has the side effect of moving the intensifier to a new state
-
-        Parameters
-        ----------
-        run_info: RunInfo
-            Describes the run (config) from which to process the results.
-        result: RunValue
-            Contains relevant information regarding the execution of a config.
-        time_left: float
-            How much time in seconds is left to perform intensification.
-        save : bool, optional to True
-            Whether the runhistory should be saved.
-        """
-        raise NotImplementedError
-
-    def save(self) -> None:
-        """Saves the current stats and runhistory."""
-        self.stats.save()
-
-        path = self.scenario.output_directory
-        if path is not None:
-            self.runhistory.save_json(str(path / "runhistory.json"))

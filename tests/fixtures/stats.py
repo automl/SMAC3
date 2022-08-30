@@ -1,6 +1,6 @@
 from typing import Callable
 from smac import Scenario
-from smac.utils.stats import Stats
+from smac.stats import Stats
 import pytest
 
 

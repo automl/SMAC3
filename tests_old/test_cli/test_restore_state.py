@@ -9,7 +9,7 @@ from smac.cli.scenario import Scenario
 from smac.cli.smac_cli import SMACCLI
 from smac.configspace import ConfigurationSpace
 from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
-from smac.utils.stats import Stats
+from smac.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

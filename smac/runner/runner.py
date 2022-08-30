@@ -16,7 +16,7 @@ import smac
 from smac.configspace import Configuration
 from smac.runhistory import TrialInfo, TrialValue, StatusType
 from smac.utils.logging import get_logger
-from smac.utils.stats import Stats
+from smac.stats import Stats
 
 logger = get_logger(__name__)
 

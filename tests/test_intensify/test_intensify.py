@@ -7,7 +7,7 @@ from smac.intensification.intensification import Intensifier, IntensifierStage
 from smac.runhistory import RunHistory, TrialInfo, RunInfoIntent
 from smac.runner.runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
-from smac.utils.stats import Stats
+from smac.stats import Stats
 
 
 def evaluate_challenger(
@@ -26,8 +26,8 @@ def evaluate_challenger(
     # Evaluating configuration
     run_info, result = target_algorithm.run_wrapper(run_info=run_info)
 
-    stats.target_algorithm_walltime_used += float(result.time)
-    stats.finished += 1
+    stats._target_algorithm_walltime_used += float(result.time)
+    stats._finished += 1
 
     runhistory.add(
         config=run_info.config,
@@ -39,7 +39,7 @@ def evaluate_challenger(
         budget=run_info.budget,
         force_update=force_update,
     )
-    stats.n_configs = len(runhistory.config_ids)
+    stats._n_configs = len(runhistory.config_ids)
 
     return result
 
@@ -417,7 +417,7 @@ def test_generate_challenger(make_scenario, make_stats, configspace_small, runhi
         next(gen)
 
     smac = AlgorithmConfigurationFacade(scenario, target, overwrite=True)
-    gen = intensifier._generate_challengers(challengers=None, ask=smac.optimizer.ask)
+    gen = intensifier._generate_challengers(challengers=None, ask=smac._optimizer.ask)
 
     assert next(gen).get_dictionary() == {"a": 5489, "b": 0.007257005721594277, "c": "dog"}
 

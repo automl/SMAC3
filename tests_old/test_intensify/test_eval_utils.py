@@ -1,5 +1,5 @@
 from smac.runhistory.runhistory import RunHistory, RunInfo
-from smac.utils.stats import Stats
+from smac.stats import Stats
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

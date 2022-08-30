@@ -15,7 +15,7 @@ from smac.configspace import (
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
-from smac.utils.stats import Stats
+from smac.stats import Stats
 from smac.utils._result_merging import ResultMerger
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
