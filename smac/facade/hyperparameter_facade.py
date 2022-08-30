@@ -7,8 +7,8 @@ from smac.configspace import Configuration
 from smac.facade.facade import Facade
 from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.intensification.intensification import Intensifier
-from smac.model.random_forest.random_forest_with_instances import (
-    RandomForestWithInstances,
+from smac.model.random_forest.random_forest import (
+    RandomForest,
 )
 from smac.model.utils import get_types
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
@@ -31,10 +31,10 @@ class HyperparameterFacade(Facade):
         min_samples_split: int = 2,
         min_samples_leaf: int = 1,
         max_depth: int = 2**20,
-    ) -> RandomForestWithInstances:
+    ) -> RandomForest:
         """Returns a RandomForestWithInstances surrogate model. Please check the
         its documentation for details."""
-        return RandomForestWithInstances(
+        return RandomForest(
             log_y=True,
             num_trees=n_trees,
             do_bootstrapping=bootstrapping,

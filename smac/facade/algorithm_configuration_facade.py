@@ -6,11 +6,11 @@ from smac.acquisition.local_and_random_search import LocalAndSortedRandomSearch
 from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.configspace import Configuration
 from smac.facade.facade import Facade
-from smac.initial_design import InitialDesign
+from smac.initial_design import AbstractInitialDesign
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensification.intensification import Intensifier
-from smac.model.random_forest.random_forest_with_instances import (
-    RandomForestWithInstances,
+from smac.model.random_forest.random_forest import (
+    RandomForest,
 )
 from smac.model.utils import get_types
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
@@ -38,9 +38,9 @@ class AlgorithmConfigurationFacade(Facade):
         min_samples_leaf: int = 3,
         max_depth: int = 20,
         pca_components: int = 4,
-    ) -> RandomForestWithInstances:
+    ) -> RandomForest:
         """Returns a RandomForestWithInstances surrogate model. Please check its documentation."""
-        return RandomForestWithInstances(
+        return RandomForest(
             log_y=False,
             num_trees=n_trees,
             do_bootstrapping=bootstrapping,
@@ -94,7 +94,7 @@ class AlgorithmConfigurationFacade(Facade):
         scenario: Scenario,
         *,
         configs: list[Configuration] | None = None,
-    ) -> InitialDesign:
+    ) -> AbstractInitialDesign:
         """Returns an DefaultInitialDesign, evaluating only the default configuration. Please check
         its documentation."""
         return DefaultInitialDesign(

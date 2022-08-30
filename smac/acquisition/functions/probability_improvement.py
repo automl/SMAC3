@@ -7,7 +7,7 @@ from scipy.stats import norm
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.model.base_model import BaseModel
+from smac.model.abstract_model import AbstractModel
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -36,11 +36,12 @@ class PI(AbstractAcquisitionFunction):
     eta : float
         Current incumbent value.
     """
+
     def __init__(self, xi: float = 0.0):
         super(PI, self).__init__()
-        self.long_name : str= "Probability of Improvement"
-        self.xi : float = xi
-        self.eta : float | None = None
+        self.long_name: str = "Probability of Improvement"
+        self.xi: float = xi
+        self.eta: float | None = None
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
@@ -48,7 +49,7 @@ class PI(AbstractAcquisitionFunction):
             "name": self.__class__.__name__,
         }
 
-    def update(self, model: BaseModel, eta: float, xi : float | None = None, **kwargs: Any) -> None:
+    def update(self, model: AbstractModel, eta: float, xi: float | None = None, **kwargs: Any) -> None:
         """Update the acquisition function attributes required for calculation.
 
         Parameters

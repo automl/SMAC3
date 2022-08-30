@@ -7,13 +7,13 @@ from pyrfr import regression
 
 from smac.configspace import ConfigurationSpace
 from smac.constants import N_TREES, VERY_SMALL_NUMBER
-from smac.model.random_forest import BaseRandomForest
+from smac.model.random_forest import AbstractRandomForest
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class RandomForestWithInstances(BaseRandomForest):
+class RandomForest(AbstractRandomForest):
     """Random forest that takes instance features into account.
 
     Parameters
@@ -137,7 +137,7 @@ class RandomForestWithInstances(BaseRandomForest):
             "name": self.__class__.__name__,
         }
 
-    def _train(self, X: np.ndarray, y: np.ndarray) -> "RandomForestWithInstances":
+    def _train(self, X: np.ndarray, y: np.ndarray) -> RandomForest:
         """Trains the random forest on X and y.
 
         Parameters
@@ -163,6 +163,7 @@ class RandomForestWithInstances(BaseRandomForest):
         self.rf.options = self.rf_opts
         data = self._init_data_container(self.X, self.y)
         self.rf.fit(data, rng=self.rng)
+
         return self
 
     def _init_data_container(self, X: np.ndarray, y: np.ndarray) -> regression.default_data_container:

@@ -10,7 +10,7 @@ from ConfigSpace.hyperparameters import (
     UniformFloatHyperparameter,
 )
 
-from smac.model.gaussian_process.base_gaussian_process import GaussianProcess
+from smac.model.gaussian_process.abstract_gaussian_process import GaussianProcess
 from smac.model.gaussian_process.kernels import ConstantKernel, Matern, WhiteKernel
 from smac.model.utils import get_types
 from smac.acquisition.functions import TS

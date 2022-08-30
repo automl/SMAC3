@@ -9,7 +9,7 @@ from ConfigSpace import (
 )
 
 import smac
-from smac.model.random_forest.random_forest_with_instances import RandomForestWithInstances
+from smac.model.random_forest.random_forest import RandomForest
 from smac.model.utils import get_types
 from smac.facade.boing_facade import BOinGFacade
 from smac.facade.blackbox_facade import BlackBoxFacade
@@ -151,7 +151,7 @@ def test_subspace_extraction():
     cs.add_hyperparameter(UniformFloatHyperparameter("x0", 0.0, 1.0))
     cs.add_hyperparameter(CategoricalHyperparameter("x1", [0, 1, 2, 3, 4, 5]))
 
-    rf = RandomForestWithInstances(
+    rf = RandomForest(
         cs,
         num_trees=10,
         ratio_features=1.0,

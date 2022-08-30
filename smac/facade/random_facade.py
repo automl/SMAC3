@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.random_search import AbstractAcquisitionOptimizer, RandomSearch
-from smac.random_design import RandomDesign, ProbabilityRandomDesign
+from smac.random_design import AbstractRandomDesign, ProbabilityRandomDesign
 from smac.configspace import Configuration
 from smac.facade.facade import Facade
 from smac.initial_design.default_design import DefaultInitialDesign
@@ -97,7 +97,7 @@ class RandomFacade(Facade):
         scenario: Scenario,
         *,
         random_probability: float = 0.5,
-    ) -> RandomDesign:
+    ) -> AbstractRandomDesign:
         return ProbabilityRandomDesign(probability=random_probability, seed=scenario.seed)
 
     @staticmethod

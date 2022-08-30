@@ -13,16 +13,16 @@ from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
 from smac.callback import Callback
-from smac.random_design.random_design import RandomDesign
+from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.configspace import Configuration
-from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier
-from smac.model.base_model import BaseModel
+from smac.model.abstract_model import AbstractModel
 
 from smac.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
 )
-from smac.runhistory.encoder.encoder import RunHistoryEncoder
+from smac.runhistory.encoder.abstract_encoder import AbstractRunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.runner import AbstractRunner
@@ -83,15 +83,15 @@ class Facade:
         scenario: Scenario,
         target_algorithm: AbstractRunner | Callable,
         *,
-        model: BaseModel | None = None,
+        model: AbstractModel | None = None,
         acquisition_function: AbstractAcquisitionFunction | None = None,
         acquisition_optimizer: AbstractAcquisitionOptimizer | None = None,
-        initial_design: InitialDesign | None = None,
-        random_design: RandomDesign | None = None,
+        initial_design: AbstractInitialDesign | None = None,
+        random_design: AbstractRandomDesign | None = None,
         intensifier: AbstractIntensifier | None = None,
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
         runhistory: RunHistory | None = None,
-        runhistory_encoder: RunHistoryEncoder | None = None,
+        runhistory_encoder: AbstractRunHistoryEncoder | None = None,
         logging_level: int | Path | None = None,
         callbacks: list[Callback] = [],
         overwrite: bool = False,
@@ -353,7 +353,7 @@ class Facade:
 
     @staticmethod
     @abstractmethod
-    def get_model(scenario: Scenario) -> BaseModel:
+    def get_model(scenario: Scenario) -> AbstractModel:
         """Returns the surrogate cost model instance used in the BO loop."""
         raise NotImplementedError
 
@@ -380,14 +380,14 @@ class Facade:
 
     @staticmethod
     @abstractmethod
-    def get_initial_design(scenario: Scenario) -> InitialDesign:
+    def get_initial_design(scenario: Scenario) -> AbstractInitialDesign:
         """Returns an instance of the initial design class to be used in the BO loop,
         specifying how the configurations the BO loop is 'warm-started' with are selected."""
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
-    def get_random_design(scenario: Scenario) -> RandomDesign:
+    def get_random_design(scenario: Scenario) -> AbstractRandomDesign:
         """Returns an instance of the random design class to be used in the BO loop,
         specifying how to interleave the BO iterations with randomly selected configurations."""
         raise NotImplementedError

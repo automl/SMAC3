@@ -5,7 +5,7 @@ from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac.cli.scenario import Scenario
-from smac.model.random_forest.random_forest_with_instances import RandomForestWithInstances
+from smac.model.random_forest.random_forest import RandomForest
 from smac.model.imputer.random_forest_imputer import RandomForestImputer
 from smac.model.utils import get_types
 from smac.runhistory import runhistory
@@ -50,7 +50,7 @@ class RunhistoryTest(unittest.TestCase):
             rng=np.random.RandomState(seed=12345),
             cutoff=np.log(self.scen.cutoff),
             threshold=np.log(self.scen.cutoff * self.scen.par_factor),
-            model=RandomForestWithInstances(
+            model=RandomForest(
                 configspace=self.cs,
                 types=self.types,
                 bounds=self.bounds,
@@ -186,7 +186,7 @@ class RunhistoryTest(unittest.TestCase):
             rng=np.random.RandomState(seed=12345),
             cutoff=self.scen.cutoff,
             threshold=self.scen.cutoff * self.scen.par_factor,
-            model=RandomForestWithInstances(
+            model=RandomForest(
                 configspace=self.cs,
                 types=self.types,
                 bounds=self.bounds,

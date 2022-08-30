@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from smac.random_design.random_design import RandomDesign
+from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -11,7 +11,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class ProbabilityRandomDesign(RandomDesign):
+class ProbabilityRandomDesign(AbstractRandomDesign):
     """Interleave a random configuration according to a given probability.
 
     Parameters
@@ -49,7 +49,7 @@ class ProbabilityRandomDesign(RandomDesign):
             return False
 
 
-class ProbabilityCoolDownRandomDesign(RandomDesign):
+class ProbabilityCoolDownRandomDesign(AbstractRandomDesign):
     """Interleave a random configuration according to a given probability which is decreased over
     time.
 

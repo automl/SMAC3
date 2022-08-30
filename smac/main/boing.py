@@ -15,12 +15,12 @@ from smac.acquisition.functions.thompson import TS
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.main.smbo import SMBO
-from smac.model.base_model import BaseModel
+from smac.model.abstract_model import AbstractModel
 from smac.model.gaussian_process.gpytorch import (
     GloballyAugmentedLocalGaussianProcess,
 )
-from smac.model.random_forest.random_forest_with_instances import (
-    RandomForestWithInstances,
+from smac.model.random_forest.random_forest import (
+    RandomForest,
 )
 from smac.model.utils import get_types
 from smac.runhistory.encoder.boing_encoder import RunHistoryRawEncoder
@@ -73,7 +73,7 @@ class BOinGSMBO(SMBO):
 
     def __init__(
         self,
-        model_local: Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
+        model_local: Type[AbstractModel] = GloballyAugmentedLocalGaussianProcess,
         acquisition_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
         model_local_kwargs: Dict | None = None,
         acquisition_func_local_kwargs: Dict | None = None,
@@ -88,7 +88,7 @@ class BOinGSMBO(SMBO):
     ):
         super(BOinGSMBO, self).__init__(*args, **kwargs)
 
-        if not isinstance(self.model, RandomForestWithInstances):
+        if not isinstance(self.model, RandomForest):
             raise ValueError("BOinG only supports RandomForestWithInstances as its global optimizer")
         if not isinstance(self.runhistory_encoder, RunHistoryRawEncoder):
             raise ValueError("BOinG only supports RunHistory2EPM4CostWithRaw as its rh transformer")
@@ -474,7 +474,7 @@ class BOinGSMBO(SMBO):
 def subspace_extraction(
     X: np.ndarray,
     challenger: np.ndarray,
-    model: RandomForestWithInstances,
+    model: RandomForest,
     num_min: int,
     num_max: int,
     bounds: np.ndarray | List[Tuple],

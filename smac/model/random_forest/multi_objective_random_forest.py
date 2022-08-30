@@ -3,10 +3,10 @@ from __future__ import annotations
 from typing import Any, Dict, List, Tuple
 
 from smac.configspace import ConfigurationSpace
-from smac.model.base_model import BaseModel
+from smac.model.abstract_model import AbstractModel
 from smac.model.multi_objective_model import MultiObjectiveModel
-from smac.model.random_forest.random_forest_with_instances import (
-    RandomForestWithInstances,
+from smac.model.random_forest.random_forest import (
+    RandomForest,
 )
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -26,7 +26,7 @@ class MultiObjectiveRandomForest(MultiObjectiveModel):
         self,
         configspace: ConfigurationSpace,
         model_kwargs: Dict[str, Any],
-    ) -> list[BaseModel]:
+    ) -> list[AbstractModel]:
         """
         Construct a list of estimators. The number of the estimators equals 'self.num_targets'
         Parameters
@@ -48,4 +48,4 @@ class MultiObjectiveRandomForest(MultiObjectiveModel):
         estimators: List[BaseEPM]
             A list of Random Forests
         """
-        return [RandomForestWithInstances(configspace, **model_kwargs) for _ in range(self.num_targets)]
+        return [RandomForest(configspace, **model_kwargs) for _ in range(self.num_targets)]

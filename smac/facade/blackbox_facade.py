@@ -12,10 +12,8 @@ from smac.configspace import Configuration
 from smac.facade.facade import Facade
 from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.intensification.intensification import Intensifier
-from smac.model.gaussian_process.base_gaussian_process import (
-    BaseGaussianProcess,
-    GaussianProcess,
-)
+from smac.model.gaussian_process.gaussian_process import GaussianProcess
+from smac.model.gaussian_process.abstract_gaussian_process import AbstractGaussianProcess
 from smac.model.gaussian_process.kernels import (
     ConstantKernel,
     HammingKernel,
@@ -46,7 +44,7 @@ class BlackBoxFacade(Facade):
         if self._scenario.instance_features is not None and len(self._scenario.instance_features) > 0:
             raise NotImplementedError("The Black-Box GP cannot handle instances.")
 
-        if not isinstance(self.model, BaseGaussianProcess):
+        if not isinstance(self.model, AbstractGaussianProcess):
             raise ValueError(
                 "The Black-Box facade only works with Gaussian Process-"
                 "like surrogate models (inheriting from smac.model.gaussian_process.BaseModel, "
@@ -56,7 +54,7 @@ class BlackBoxFacade(Facade):
     @staticmethod
     def get_model(
         scenario: Scenario, *, model_type: str = "gp", kernel: kernels.Kernel | None = None
-    ) -> BaseGaussianProcess:
+    ) -> AbstractGaussianProcess:
         """Returns a Gaussian Process surrogate model. Please check its documentation for
         detials."""
         available_model_types = ["gp", "gp_mcmc"]

@@ -13,9 +13,9 @@ from scipy.stats.qmc import LatinHypercube, Sobol
 from smac.acquisition import AbstractAcquisitionOptimizer
 from smac.acquisition.functions import AbstractAcquisitionFunction, TS
 from smac.configspace import Configuration, ConfigurationSpace
-from smac.model.base_model import BaseModel
+from smac.model.abstract_model import AbstractModel
 from smac.model.gaussian_process.gpytorch import GloballyAugmentedLocalGaussianProcess
-from smac.model.gaussian_process.base_gaussian_process import GaussianProcess
+from smac.model.gaussian_process.abstract_gaussian_process import GaussianProcess
 from smac.model.gaussian_process.gpytorch import GPyTorchGaussianProcess
 from smac.model.gaussian_process.mcmc_gaussian_process import MCMCGaussianProcess
 from smac.utils.logging import get_logger
@@ -60,7 +60,7 @@ class TuRBOSubSpace(LocalSubspace):
         hps_types: List[int],
         bounds_ss_cont: Optional[np.ndarray] = None,
         bounds_ss_cat: Optional[List[Tuple]] = None,
-        model_local: Union[BaseModel, Type[BaseModel]] = GPyTorchGaussianProcess,
+        model_local: Union[AbstractModel, Type[AbstractModel]] = GPyTorchGaussianProcess,
         model_local_kwargs: Dict = {},
         acq_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = TS,
         acq_func_local_kwargs: Optional[Dict] = None,
@@ -203,7 +203,7 @@ class TuRBOSubSpace(LocalSubspace):
             config_next = self.init_configs.pop()
             return [(0, config_next)]
 
-        self.model.train(self.model_x[-self.num_valid_observations:], self.model_y[-self.num_valid_observations:])
+        self.model.train(self.model_x[-self.num_valid_observations :], self.model_y[-self.num_valid_observations :])
         self.update_model(predict_x_best=False, update_incumbent_array=True)
 
         sobol_gen = Sobol(d=self.n_dims, scramble=True, seed=self.rng.randint(low=0, high=10000000))

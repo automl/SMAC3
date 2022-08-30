@@ -24,7 +24,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class InitialDesign:
+class AbstractInitialDesign:
     """Base class for initial design strategies that evaluates multiple configurations.
 
     Parameters
@@ -103,6 +103,7 @@ class InitialDesign:
             raise ValueError(
                 f"Initial budget {self.n_configs} cannot be higher than the number of trials {scenario.n_trials}."
             )
+
     @abstractmethod
     def _select_configurations(self) -> list[Configuration]:
         """Selects the initial configurations. Depending on the implementation
@@ -173,7 +174,7 @@ class InitialDesign:
             "n_configs": self.n_configs,
             "seed": self.seed,
             "configs": configs,
-            "n_configs_per_hyperparameter": self.n_configs_per_hyperparameter
+            "n_configs_per_hyperparameter": self.n_configs_per_hyperparameter,
         }
 
     def select_configurations(self) -> list[Configuration]:

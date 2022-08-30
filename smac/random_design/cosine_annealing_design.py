@@ -4,7 +4,7 @@ from typing import Any
 
 import numpy as np
 
-from smac.random_design.random_design import RandomDesign
+from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -13,7 +13,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class CosineAnnealingRandomDesign(RandomDesign):
+class CosineAnnealingRandomDesign(AbstractRandomDesign):
     """Interleave a random configuration according to a given probability which is decreased
     according to a cosine annealing schedule.
 

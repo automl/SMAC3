@@ -13,8 +13,8 @@ from smac.cli.scenario import Scenario
 from smac.configspace import Configuration, convert_configurations_to_array
 from smac.constants import MAXINT
 from smac.model.imputer.random_forest_imputer import RandomForestImputer
-from smac.model.random_forest.random_forest_with_instances import (
-    RandomForestWithInstances,
+from smac.model.random_forest.random_forest import (
+    RandomForest,
 )
 from smac.model.utils import get_types
 from smac.runhistory import TrialInfo, TrialKey, TrialValue, StatusType
@@ -102,7 +102,7 @@ class Validator(object):
 
         self.traj = trajectory
         self.scen = scenario
-        self.epm = None  # type: Optional[RandomForestWithInstances]
+        self.epm = None  # type: Optional[RandomForest]
 
         if isinstance(rng, np.random.RandomState):
             self.rng = rng
@@ -346,7 +346,7 @@ class Validator(object):
         elif not reuse_epm or self.epm is None:
             # Create RandomForest
             types, bounds = get_types(self.scen.cs, self.scen.feature_array)  # type: ignore[attr-defined] # noqa F821
-            epm = RandomForestWithInstances(
+            epm = RandomForest(
                 configspace=self.scen.cs,  # type: ignore[attr-defined] # noqa F821
                 types=types,
                 bounds=bounds,
@@ -390,7 +390,7 @@ class Validator(object):
             # Train random forest
             epm.train(X, y)
         else:
-            epm = cast(RandomForestWithInstances, self.epm)
+            epm = cast(RandomForest, self.epm)
 
         # Predict desired runs
         runs, rh_epm = self._get_runs(config_mode, instance_mode, repetitions, runhistory)

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import List, Optional, Tuple, Union
-
 import numpy as np
 import sklearn.gaussian_process
 from sklearn.gaussian_process import GaussianProcessRegressor
@@ -9,14 +7,14 @@ from sklearn.gaussian_process.kernels import Kernel, KernelOperator
 
 import smac.model.gaussian_process.priors
 from smac.configspace import ConfigurationSpace
-from smac.model.base_model import BaseModel
+from smac.model.abstract_model import AbstractModel
 from smac.model.gaussian_process.priors.prior import Prior
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class BaseGaussianProcess(BaseModel):
+class AbstractGaussianProcess(AbstractModel):
     def __init__(
         self,
         configspace: ConfigurationSpace,
@@ -61,8 +59,8 @@ class BaseGaussianProcess(BaseModel):
     def _untransform_y(
         self,
         y: np.ndarray,
-        var: Optional[np.ndarray] = None,
-    ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
+        var: np.ndarray | None = None,
+    ) -> np.ndarray | tuple[np.ndarray, np.ndarray]:
         """Transform zeromean unit standard deviation data into the regular space.
 
         This function should be used after a prediction with the Gaussian process which was
@@ -77,7 +75,7 @@ class BaseGaussianProcess(BaseModel):
 
         Returns
         -------
-        np.ndarray on Tuple[np.ndarray, np.ndarray]
+        np.ndarray on tuple[np.ndarray, np.ndarray]
         """
         y = y * self.std_y_ + self.mean_y_
         if var is not None:
@@ -89,7 +87,7 @@ class BaseGaussianProcess(BaseModel):
         self,
         add_bound_priors: bool = True,
         add_soft_bounds: bool = False,
-    ) -> List[List[Prior]]:
+    ) -> list[list[Prior]]:
         """Returns all priors."""
         # Obtain a list of all priors for each tunable hyperparameter of the kernel
         all_priors = []
@@ -155,8 +153,3 @@ class BaseGaussianProcess(BaseModel):
         X = X.copy()
         X[~np.isfinite(X)] = -1
         return X
-
-
-from smac.model.gaussian_process.gaussian_process import GaussianProcess  # noqa
-
-__all__ = ["BaseGaussianProcess", "GaussianProcess"]

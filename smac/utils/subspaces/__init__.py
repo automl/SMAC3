@@ -26,7 +26,7 @@ from ConfigSpace.hyperparameters import (
 
 from smac.acquisition.functions import EI, AbstractAcquisitionFunction
 from smac.configspace import Configuration, ConfigurationSpace
-from smac.model.base_model import BaseModel
+from smac.model.abstract_model import AbstractModel
 from smac.model.gaussian_process.gpytorch import GloballyAugmentedLocalGaussianProcess
 from smac.model.gaussian_process.kernels.boing import construct_gp_kernel
 from smac.model.utils import check_subspace_points
@@ -78,7 +78,7 @@ class LocalSubspace(ABC):
         hps_types: List[int],
         bounds_ss_cont: np.ndarray | None = None,
         bounds_ss_cat: List[Tuple] | None = None,
-        model_local: BaseModel | Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
+        model_local: AbstractModel | Type[AbstractModel] = GloballyAugmentedLocalGaussianProcess,
         model_local_kwargs: Dict = {},
         acq_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
         acq_func_local_kwargs: Dict | None = None,

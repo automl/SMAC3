@@ -12,7 +12,7 @@ from ConfigSpace.hyperparameters import (
 
 from smac.cli import scenario
 from smac.model.imputer import random_forest_imputer
-from smac.model.random_forest.random_forest_with_instances import RandomForestWithInstances
+from smac.model.random_forest.random_forest import RandomForest
 from smac.model.utils import get_types
 from smac.runhistory import runhistory
 from smac.runhistory.encoder import encoder
@@ -72,7 +72,7 @@ class ImputorTest(unittest.TestCase):
         if instance_features:
             instance_features = numpy.array([instance_features[key] for key in instance_features])
         types, bounds = get_types(cs, instance_features)
-        model = RandomForestWithInstances(
+        model = RandomForest(
             configspace=cs,
             types=types,
             bounds=bounds,

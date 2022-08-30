@@ -23,10 +23,10 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-Self = TypeVar("Self", bound="BaseModel")
+Self = TypeVar("Self", bound="AbstractModel")
 
 
-class BaseModel(ABC):
+class AbstractModel(ABC):
     """Abstract implementation of the EPM API.
 
     **Note:** The input dimensionality of Y for training and the output dimensions

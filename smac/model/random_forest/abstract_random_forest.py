@@ -11,13 +11,13 @@ from smac.configspace import (
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
-from smac.model.base_model import BaseModel
+from smac.model.abstract_model import AbstractModel
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class BaseRandomForest(BaseModel):
+class AbstractRandomForest(AbstractModel):
     def __init__(
         self,
         configspace: ConfigurationSpace,

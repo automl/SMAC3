@@ -11,7 +11,7 @@ from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
 from smac.random_design.modulus_design import NoCoolDownRandomDesign
-from smac.random_design.random_design import RandomDesign
+from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.logging import get_logger
@@ -62,7 +62,7 @@ class AbstractAcquisitionOptimizer(metaclass=abc.ABCMeta):
         self,
         previous_configs: List[Configuration],
         num_points: int | None = None,
-        random_design: RandomDesign | None = None,
+        random_design: AbstractRandomDesign | None = None,
     ) -> Iterator[Configuration]:
         """Maximize acquisition function using ``_maximize``.
 
@@ -172,7 +172,7 @@ class ChallengerList(Iterator):
         self,
         challenger_callback: Callable,
         configuration_space: ConfigurationSpace,
-        random_design: RandomDesign | None = NoCoolDownRandomDesign(modulus=2.0),
+        random_design: AbstractRandomDesign | None = NoCoolDownRandomDesign(modulus=2.0),
     ):
         self.challengers_callback = challenger_callback
         self.challengers = None  # type: Optional[List[Configuration]]

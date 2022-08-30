@@ -13,7 +13,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class RandomDesign:
+class AbstractRandomDesign:
     """Abstract base of helper classes to configure interleaving of random configurations in a list
     of challengers.
 
@@ -44,4 +44,3 @@ class RandomDesign:
         """Check if the next configuration should be at random. Iteration here relates
         to the ith configuration evaluated in an SMBO iteration."""
         pass
-

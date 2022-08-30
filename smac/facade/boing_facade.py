@@ -14,7 +14,7 @@ from smac.acquisition.functions import EI, AbstractAcquisitionFunction
 from smac.main.boing import BOinGSMBO
 from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.facade.hyperparameter_facade import HyperparameterFacade
-from smac.model.base_model import BaseModel
+from smac.model.abstract_model import AbstractModel
 from smac.model.gaussian_process.gpytorch import GloballyAugmentedLocalGaussianProcess, GPyTorchGaussianProcess
 from smac.runhistory.encoder.boing_encoder import (
     RunHistoryRawEncoder,
@@ -64,21 +64,24 @@ class BOinGFacade(HyperparameterFacade):
     turbo_kwargs: Optional[Dict] = None
        parameters for building a turbo optimizer. For details, please refer to smac.utils.subspace.turbo
     """
-    def __init__(self,
-                 scenario: Scenario,
-                 target_algorithm: AbstractRunner | Callable,
-                 *,
-                 model_local: Type[BaseModel] = GloballyAugmentedLocalGaussianProcess,
-                 model_local_kwargs: Dict | None = None,
-                 acquisition_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
-                 acquisition_func_local_kwargs: Dict | None = None,
-                 acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
-                 acq_optimizer_local_kwargs: Dict | None = None,
-                 max_configs_local_fracs: float = 0.5,
-                 min_configs_local: int | None = None,
-                 do_switching: bool = False,
-                 turbo_kwargs: Dict | None = None,
-                 **kwargs):
+
+    def __init__(
+        self,
+        scenario: Scenario,
+        target_algorithm: AbstractRunner | Callable,
+        *,
+        model_local: Type[AbstractModel] = GloballyAugmentedLocalGaussianProcess,
+        model_local_kwargs: Dict | None = None,
+        acquisition_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
+        acquisition_func_local_kwargs: Dict | None = None,
+        acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
+        acq_optimizer_local_kwargs: Dict | None = None,
+        max_configs_local_fracs: float = 0.5,
+        min_configs_local: int | None = None,
+        do_switching: bool = False,
+        turbo_kwargs: Dict | None = None,
+        **kwargs,
+    ):
         self.model_local = model_local
         if model_local_kwargs is None and issubclass(model_local, GPyTorchGaussianProcess):
             model_local_kwargs = self.get_lgpga_local_components()
@@ -99,9 +102,7 @@ class BOinGFacade(HyperparameterFacade):
         return RunHistoryRawScaledEncoder(scenario, scale_percentage=5)
 
     @staticmethod
-    def get_random_design(
-        scenario: Scenario, *, probability: float = 0.08447232371720552
-    ) -> ProbabilityRandomDesign:
+    def get_random_design(scenario: Scenario, *, probability: float = 0.08447232371720552) -> ProbabilityRandomDesign:
         return super(BOinGFacade, BOinGFacade).get_random_design(scenario=scenario, probability=probability)
 
     @staticmethod

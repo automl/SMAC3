@@ -6,7 +6,7 @@ import numpy as np
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.model.base_model import BaseModel
+from smac.model.abstract_model import AbstractModel
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -40,15 +40,16 @@ class TS(AbstractAcquisitionFunction):
     long_name : str
     par : float
         Exploration/exploitation trade-off parameter.
-    num_data : int 
+    num_data : int
         Number of data points (t).
     """
+
     def __init__(self, par: float = 0.0) -> None:
         # TODO check if TS is used with RandomSearch only
         super(TS, self).__init__()
-        self.long_name : str = "Thompson Sampling"
-        self.par : float = par
-        self.num_data : int | None = None
+        self.long_name: str = "Thompson Sampling"
+        self.par: float = par
+        self.num_data: int | None = None
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
@@ -56,7 +57,7 @@ class TS(AbstractAcquisitionFunction):
             "name": self.__class__.__name__,
         }
 
-    def update(self, model: BaseModel, num_data : int, par: float | None = None, **kwargs: Any) -> None:
+    def update(self, model: AbstractModel, num_data: int, par: float | None = None, **kwargs: Any) -> None:
         """Update the acquisition function attributes required for calculation.
 
         Parameters

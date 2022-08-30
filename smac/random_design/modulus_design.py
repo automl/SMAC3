@@ -4,7 +4,7 @@ from typing import Any
 
 import numpy as np
 
-from smac.random_design.random_design import RandomDesign
+from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -13,7 +13,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class NoCoolDownRandomDesign(RandomDesign):
+class NoCoolDownRandomDesign(AbstractRandomDesign):
     """Interleave a random configuration after a constant number of configurations found by
     Bayesian optimization.
 
@@ -51,7 +51,7 @@ class NoCoolDownRandomDesign(RandomDesign):
         return iteration % self.modulus < 1
 
 
-class LinearCoolDownRandomDesign(RandomDesign):
+class LinearCoolDownRandomDesign(AbstractRandomDesign):
     """Interleave a random configuration, decreasing the fraction of random configurations over
     time.
 

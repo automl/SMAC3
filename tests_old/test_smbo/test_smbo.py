@@ -11,7 +11,7 @@ from smac.callback import IncorporateRunResultCallback
 from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
 from smac.configspace import ConfigurationSpace
-from smac.model.random_forest.random_forest_with_instances import RandomForestWithInstances
+from smac.model.random_forest.random_forest import RandomForest
 from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 from smac.facade.hyperparameter_facade import SMAC4HPO
 from smac.intensification.abstract_racer import RunInfoIntent
@@ -74,13 +74,13 @@ class TestSMBO(unittest.TestCase):
         self.scenario.run_obj = "runtime"
         self.scenario.cutoff = 300
         smbo = AlgorithmConfigurationFacade(self.scenario).solver
-        self.assertIsInstance(smbo.epm_chooser.model, RandomForestWithInstances)
+        self.assertIsInstance(smbo.epm_chooser.model, RandomForest)
         self.assertIsInstance(smbo.epm_chooser.rh2EPM, RunhistoryLogTransformer)
         self.assertIsInstance(smbo.epm_chooser.acquisition_func, LogEI)
 
     def test_init_only_scenario_quality(self):
         smbo = AlgorithmConfigurationFacade(self.scenario).solver
-        self.assertIsInstance(smbo.epm_chooser.model, RandomForestWithInstances)
+        self.assertIsInstance(smbo.epm_chooser.model, RandomForest)
         self.assertIsInstance(smbo.epm_chooser.rh2EPM, RunhistoryTransformer)
         self.assertIsInstance(smbo.epm_chooser.acquisition_func, EI)
 

@@ -12,7 +12,7 @@ from smac.configspace import (
     UniformFloatHyperparameter,
     convert_configurations_to_array,
 )
-from smac.model.gaussian_process.base_gaussian_process import GaussianProcess
+from smac.model.gaussian_process.abstract_gaussian_process import GaussianProcess
 from smac.model.gaussian_process.priors import HorseshoePrior, LogNormalPrior
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

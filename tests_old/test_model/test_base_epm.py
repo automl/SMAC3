@@ -6,7 +6,7 @@ from ConfigSpace import UniformFloatHyperparameter
 
 import smac
 import smac.configspace
-from smac.model.base_model import BaseModel
+from smac.model.abstract_model import AbstractModel
 from smac.model.utils import get_types
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -33,12 +33,12 @@ class TestRFWithInstances(unittest.TestCase):
             y = np.random.rand(num_samples)
             return X, y
 
-        with unittest.mock.patch.object(BaseModel, "_train"):
-            with unittest.mock.patch.object(BaseModel, "_predict") as predict_mock:
+        with unittest.mock.patch.object(AbstractModel, "_train"):
+            with unittest.mock.patch.object(AbstractModel, "_predict") as predict_mock:
 
                 predict_mock.side_effect = lambda x, _: (x, x)
 
-                epm = BaseModel(
+                epm = AbstractModel(
                     configspace=cs,
                     types=types,
                     bounds=bounds,

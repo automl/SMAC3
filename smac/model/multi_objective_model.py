@@ -6,13 +6,13 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 
 from smac.configspace import ConfigurationSpace
-from smac.model.base_model import BaseModel
+from smac.model.abstract_model import AbstractModel
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class MultiObjectiveModel(BaseModel):
+class MultiObjectiveModel(AbstractModel):
     """Wrapper for the surrogate models to predict multiple targets.
 
     Only a list with the target names and the types array for the
@@ -73,14 +73,14 @@ class MultiObjectiveModel(BaseModel):
 
         self.target_names = target_names
         self.num_targets = len(self.target_names)
-        self.estimators: List[BaseModel] = self.construct_estimators(configspace, **model_kwargs)
+        self.estimators: List[AbstractModel] = self.construct_estimators(configspace, **model_kwargs)
 
     @abstractmethod
     def construct_estimators(
         self,
         configspace: ConfigurationSpace,
         model_kwargs: Dict[str, Any],
-    ) -> list[BaseModel]:
+    ) -> list[AbstractModel]:
         """
         Construct a list of estimators. The number of the estimators equals 'self.num_targets'
         Parameters

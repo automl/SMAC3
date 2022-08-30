@@ -25,7 +25,7 @@ from scipy.stats.qmc import LatinHypercube
 
 from smac.configspace import ConfigurationSpace
 from smac.constants import VERY_SMALL_NUMBER
-from smac.model.gaussian_process.base_gaussian_process import BaseGaussianProcess
+from smac.model.gaussian_process.abstract_gaussian_process import AbstractGaussianProcess
 from smac.model.utils import check_subspace_points
 from smac.model.gaussian_process.kernels.boing import FITCKernel, FITCMean
 
@@ -66,7 +66,7 @@ class ExactGPModel(ExactGP):
         return MultivariateNormal(mean_x, covar_x)
 
 
-class GPyTorchGaussianProcess(BaseGaussianProcess):
+class GPyTorchGaussianProcess(AbstractGaussianProcess):
     def __init__(
         self,
         configspace: ConfigurationSpace,

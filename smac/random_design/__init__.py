@@ -7,10 +7,10 @@ from smac.random_design.probability_design import (
     ProbabilityCoolDownRandomDesign,
     ProbabilityRandomDesign,
 )
-from smac.random_design.random_design import RandomDesign
+from smac.random_design.abstract_random_design import AbstractRandomDesign
 
 __all__ = [
-    "RandomDesign",
+    "AbstractRandomDesign",
     "CosineAnnealingRandomDesign",
     "NoCoolDownRandomDesign",
     "LinearCoolDownRandomDesign",

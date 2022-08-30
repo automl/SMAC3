@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from smac.model.base_model import BaseModel
+from smac.model.abstract_model import AbstractModel
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -11,7 +11,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class RandomModel(BaseModel):
+class RandomModel(AbstractModel):
     """EPM which returns random values on a call to ``fit``.
 
     Parameters

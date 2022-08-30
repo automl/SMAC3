@@ -12,7 +12,7 @@ from ConfigSpace import (
 
 import smac
 import smac.configspace
-from smac.model.random_forest.random_forest_with_instances import RandomForestWithInstances
+from smac.model.random_forest.random_forest import RandomForest
 from smac.model.utils import get_types
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -29,7 +29,7 @@ class TestRFWithInstances(unittest.TestCase):
     def test_predict_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)
 
-        model = RandomForestWithInstances(
+        model = RandomForest(
             configspace=self._get_cs(10),
             types=np.zeros((10,), dtype=np.uint),
             bounds=list(map(lambda x: (0, 10), range(10))),
@@ -47,7 +47,7 @@ class TestRFWithInstances(unittest.TestCase):
         rs = np.random.RandomState(1)
         X = rs.rand(20, 10)
         Y = rs.rand(10, 1)
-        model = RandomForestWithInstances(
+        model = RandomForest(
             configspace=self._get_cs(10),
             types=np.zeros((10,), dtype=np.uint),
             bounds=list(map(lambda x: (0, 10), range(10))),
@@ -63,7 +63,7 @@ class TestRFWithInstances(unittest.TestCase):
         X = rs.rand(20, 20)
         F = rs.rand(10, 10)
         Y = rs.rand(20, 1)
-        model = RandomForestWithInstances(
+        model = RandomForest(
             configspace=self._get_cs(10),
             types=np.zeros((20,), dtype=np.uint),
             bounds=list(map(lambda x: (0, 10), range(10))),
@@ -81,7 +81,7 @@ class TestRFWithInstances(unittest.TestCase):
     def test_predict_marginalized_over_instances_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)
 
-        model = RandomForestWithInstances(
+        model = RandomForest(
             configspace=self._get_cs(10),
             types=np.zeros((10,), dtype=np.uint),
             instance_features=rs.rand(10, 2),
@@ -103,14 +103,14 @@ class TestRFWithInstances(unittest.TestCase):
             X,
         )
 
-    @unittest.mock.patch.object(RandomForestWithInstances, "predict")
+    @unittest.mock.patch.object(RandomForest, "predict")
     def test_predict_marginalized_over_instances_no_features(self, rf_mock):
         """The RF should fall back to the regular predict() method."""
 
         rs = np.random.RandomState(1)
         X = rs.rand(20, 10)
         Y = rs.rand(10, 1)
-        model = RandomForestWithInstances(
+        model = RandomForest(
             configspace=self._get_cs(10),
             types=np.zeros((10,), dtype=np.uint),
             bounds=list(map(lambda x: (0, 10), range(10))),
@@ -127,7 +127,7 @@ class TestRFWithInstances(unittest.TestCase):
         Y = rs.rand(len(X) * len(F), 1)
         X_ = rs.rand(200, 15)
 
-        model = RandomForestWithInstances(
+        model = RandomForest(
             configspace=self._get_cs(10),
             types=np.zeros((15,), dtype=np.uint),
             instance_features=F,
@@ -139,7 +139,7 @@ class TestRFWithInstances(unittest.TestCase):
         self.assertEqual(means.shape, (20, 1))
         self.assertEqual(variances.shape, (20, 1))
 
-    @unittest.mock.patch.object(RandomForestWithInstances, "predict")
+    @unittest.mock.patch.object(RandomForest, "predict")
     def test_predict_marginalized_over_instances_mocked(self, rf_mock):
         """Use mock to count the number of calls to predict()"""
 
@@ -155,7 +155,7 @@ class TestRFWithInstances(unittest.TestCase):
         rs = np.random.RandomState(1)
         F = rs.rand(10, 5)
 
-        model = RandomForestWithInstances(
+        model = RandomForest(
             configspace=self._get_cs(10),
             types=np.zeros((15,), dtype=np.uint),
             instance_features=F,
@@ -191,7 +191,7 @@ class TestRFWithInstances(unittest.TestCase):
             dtype=np.float64,
         )
         y = np.array([[0.1], [0.2], [9], [9.2], [100.0], [100.2], [109.0], [109.2]], dtype=np.float64)
-        model = RandomForestWithInstances(
+        model = RandomForest(
             configspace=self._get_cs(3),
             types=np.array([0, 0, 0], dtype=np.uint),
             bounds=[(0, np.nan), (0, np.nan), (0, np.nan)],
@@ -215,7 +215,7 @@ class TestRFWithInstances(unittest.TestCase):
 
         feat_array = np.array([0, 0, 0]).reshape(1, -1)
         types, bounds = get_types(cs, feat_array)
-        model = RandomForestWithInstances(
+        model = RandomForest(
             configspace=cs,
             types=types,
             bounds=bounds,
@@ -265,7 +265,7 @@ class TestRFWithInstances(unittest.TestCase):
         for do_log in [False, True]:
             if do_log:
                 targets = np.log(y)
-                model = RandomForestWithInstances(
+                model = RandomForest(
                     configspace=self._get_cs(X.shape[1]),
                     types=types,
                     bounds=bounds,
@@ -277,7 +277,7 @@ class TestRFWithInstances(unittest.TestCase):
                 maes = [0.43169704431695493156, 0.4267519520332511912]
             else:
                 targets = y
-                model = RandomForestWithInstances(
+                model = RandomForest(
                     configspace=self._get_cs(X.shape[1]),
                     types=types,
                     bounds=bounds,
@@ -321,7 +321,7 @@ class TestRFWithInstances(unittest.TestCase):
             elif line[0] == 1:
                 self.assertTrue(np.isnan(line[2]))
 
-        model = RandomForestWithInstances(
+        model = RandomForest(
             configspace=cs,
             types=np.zeros((3,), dtype=np.uint),
             bounds=list(map(lambda x: (0, 1), range(10))),

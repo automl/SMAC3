@@ -14,9 +14,9 @@ from smac.acquisition.functions.abstract_acquisition_function import (
 from smac.callback import Callback
 from smac.configspace import Configuration
 from smac.constants import MAXINT
-from smac.initial_design import InitialDesign
+from smac.initial_design import AbstractInitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier
-from smac.model.base_model import BaseModel
+from smac.model.abstract_model import AbstractModel
 from smac.runhistory import TrialInfo, RunInfoIntent, TrialValue, StatusType
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory
@@ -24,7 +24,7 @@ from smac.runner.runner import AbstractRunner
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 from smac.utils.stats import Stats
-from smac.random_design.random_design import RandomDesign
+from smac.random_design.abstract_random_design import AbstractRandomDesign
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -94,14 +94,14 @@ class BaseSMBO:
         scenario: Scenario,
         stats: Stats,
         runner: AbstractRunner,
-        initial_design: InitialDesign,
+        initial_design: AbstractInitialDesign,
         runhistory: RunHistory,
         runhistory_encoder: RunHistoryEncoder,
         intensifier: AbstractIntensifier,
-        model: BaseModel,
+        model: AbstractModel,
         acquisition_optimizer: AbstractAcquisitionOptimizer,
         acquisition_function: AbstractAcquisitionFunction,
-        random_design: RandomDesign,
+        random_design: AbstractRandomDesign,
         seed: int = 0,
     ):
         # Changed in 2.0: We don't restore the incumbent anymore but derive it directly from

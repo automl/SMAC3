@@ -7,7 +7,7 @@ import numpy as np
 
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
-from smac.model.base_model import BaseModel
+from smac.model.abstract_model import AbstractModel
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -31,9 +31,9 @@ class AbstractAcquisitionFunction(metaclass=ABCMeta):
     """
 
     def __init__(self) -> None:
-        self.model: BaseModel | None = None
+        self.model: AbstractModel | None = None
 
-    def _set_model(self, model: BaseModel) -> None:
+    def _set_model(self, model: AbstractModel) -> None:
         self.model = model
 
     @abstractmethod

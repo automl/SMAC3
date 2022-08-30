@@ -13,12 +13,12 @@ from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.model.random_model import RandomModel
 from smac.model.random_forest.multi_objective_random_forest import MultiObjectiveRandomForest
-from smac.model.random_forest.random_forest_with_instances import RandomForestWithInstances
+from smac.model.random_forest.random_forest import RandomForest
 from smac.model.utils import get_rng
 from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.initial_design.factorial_design import FactorialInitialDesign
-from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 from smac.initial_design.latin_hypercube_design import LatinHypercubeInitialDesign
 from smac.initial_design.random_design import RandomInitialDesign
 from smac.initial_design.sobol_design import SobolInitialDesign
@@ -201,15 +201,15 @@ class TestSMACFacade(unittest.TestCase):
     def test_construct_epm(self):
         rng = np.random.RandomState(42)
         smbo = AlgorithmConfigurationFacade(self.scenario)
-        self.assertIsInstance(smbo.solver.epm_chooser.model, RandomForestWithInstances)
+        self.assertIsInstance(smbo.solver.epm_chooser.model, RandomForest)
         smbo = AlgorithmConfigurationFacade(self.scenario, rng=rng)
-        self.assertIsInstance(smbo.solver.epm_chooser.model, RandomForestWithInstances)
+        self.assertIsInstance(smbo.solver.epm_chooser.model, RandomForest)
         self.assertEqual(smbo.solver.epm_chooser.model.seed, 1935803228)
         smbo = AlgorithmConfigurationFacade(self.scenario, model_kwargs={"seed": 2})
-        self.assertIsInstance(smbo.solver.epm_chooser.model, RandomForestWithInstances)
+        self.assertIsInstance(smbo.solver.epm_chooser.model, RandomForest)
         self.assertEqual(smbo.solver.epm_chooser.model.seed, 2)
         smbo = AlgorithmConfigurationFacade(self.scenario, model_kwargs={"num_trees": 20})
-        self.assertIsInstance(smbo.solver.epm_chooser.model, RandomForestWithInstances)
+        self.assertIsInstance(smbo.solver.epm_chooser.model, RandomForest)
         self.assertEqual(smbo.solver.epm_chooser.model.rf_opts.num_trees, 20)
         smbo = AlgorithmConfigurationFacade(self.scenario, model=RandomModel, model_kwargs={"seed": 2})
         self.assertIsInstance(smbo.solver.epm_chooser.model, RandomModel)
@@ -223,7 +223,7 @@ class TestSMACFacade(unittest.TestCase):
         smbo = AlgorithmConfigurationFacade(self.scenario)
         self.assertIsInstance(smbo.solver.epm_chooser.acquisition_func, EI)
         smbo = AlgorithmConfigurationFacade(self.scenario, rng=rng)
-        self.assertIsInstance(smbo.solver.epm_chooser.acquisition_func.model, RandomForestWithInstances)
+        self.assertIsInstance(smbo.solver.epm_chooser.acquisition_func.model, RandomForest)
         self.assertEqual(smbo.solver.epm_chooser.acquisition_func.model.seed, 1935803228)
         smbo = AlgorithmConfigurationFacade(self.scenario, acquisition_function_kwargs={"par": 17})
         self.assertIsInstance(smbo.solver.epm_chooser.acquisition_func, EI)
@@ -295,10 +295,10 @@ class TestSMACFacade(unittest.TestCase):
         self.assertEqual(smbo.solver.intensifier.maxR, 987)
         smbo = AlgorithmConfigurationFacade(
             self.scenario,
-            initial_design=InitialDesign,
+            initial_design=AbstractInitialDesign,
             initial_design_kwargs={"configs": "dummy"},
         )
-        self.assertIsInstance(smbo.solver.initial_design, InitialDesign)
+        self.assertIsInstance(smbo.solver.initial_design, AbstractInitialDesign)
         self.assertEqual(smbo.solver.initial_design.configs, "dummy")
 
         for initial_incumbent_string, expected_instance in (
