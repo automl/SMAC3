@@ -2,12 +2,11 @@
 Support Vector Machine with Cross-Validation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-An example of optimizing a simple support vector machine on the IRIS benchmark. We use the hyperparameter optimization 
-facade, which uses a random forest as its surrogate model. It is able to scale to higher evaluation budgets and a higher 
-number of dimensions. Also, you can use mixed data types as well as conditional hyperparameters by nature.
+An example of optimizing a simple support vector machine on the IRIS benchmark. We use the
+hyperparameter optimization facade, which uses a random forest as its surrogate model. It is able to
+scale to higher evaluation budgets and a higher number of dimensions. Also, you can use mixed data
+types as well as conditional hyperparameters.
 
-The hyperparameter facade only supports a single fidelity approach. Therefore, only the configuration (not a budget like
-iterations) is passed to the target algorithm.
 """
 
 import numpy as np
@@ -84,10 +83,12 @@ if __name__ == "__main__":
         n_trials=50,  # We want to run max 50 trials (combination of config and seed)
     )
 
-    # We want to run only five initial configurations
+    # We want to run the facade's default initial design, but we want to alter the number
+    # of initial configs to be 5.
     initial_design = HyperparameterFacade.get_initial_design(scenario, n_configs=5)
 
-    # You can also initialize from the class directly to have full control
+    # You can also override the initial design completely, by providing another
+    # initial design class.
     initial_design = SobolInitialDesign(scenario, n_configs=5)
 
     # Now we use SMAC to find the best hyperparameters

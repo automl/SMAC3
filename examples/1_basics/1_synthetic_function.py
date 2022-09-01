@@ -6,7 +6,7 @@ An example of applying SMAC to optimize a synthetic function (2D Rosenbrock func
 
 We use the black-box facade because it is designed for black-box function optimization.
 The black-box facade uses a :term:`Gaussian Process<GP>` as its surrogate model.
-The facade works best on numerical hyperparameter configuration space and should not
+The facade works best on a numerical hyperparameter configuration space and should not
 be applied to problems with large evaluation budgets (up to 1000 evaluations).
 """
 
@@ -30,34 +30,36 @@ class Rosenbrock2D:
 
     def train(self, config: Configuration) -> float:
         """The 2-dimensional Rosenbrock function as a toy model.
-        The Rosenbrock function is well know in the optimization community and
+        The Rosenbrock function is well-known in the optimization community and
         often serves as a toy problem. It can be defined for arbitrary
-        dimensions. The minimium is always at x_i = 1 with a function value of
+        dimensions. The minimum is always at x_i = 1 with a function value of
         zero. All input parameters are continuous. The search domain for
         all x's is the interval [-5, 10].
         """
         x1 = config["x0"]
         x2 = config["x1"]
 
-        cost = 100.0 * (x2 - x1**2.0) ** 2.0 + (1 - x1) ** 2.0
+        cost = 100.0 * (x2 - x1 ** 2.0) ** 2.0 + (1 - x1) ** 2.0
         return cost
 
 
 if __name__ == "__main__":
     model = Rosenbrock2D()
 
-    # Scenario object
-    scenario = Scenario(model.configspace, n_trials=100)
+    # Scenario object specifying the optimization "environment"
+    scenario = Scenario(model.configspace, n_trials=300)
 
-    # Example call of the target algorithm
+    # Example call of the target algorithm (for debugging)
     default_value = model.train(model.configspace.get_default_configuration())
     print(f"Default value: {round(default_value, 2)}")
 
     # Now we use SMAC to find the best hyperparameters
     smac = BlackBoxFacade(
         scenario,
-        model.train,
-        overwrite=True,
+        model.train,  # pass the target algorithm
+        overwrite=True
+        # override any previous results that are found that are inconsistent with
+        # the meta-data.
     )
     incumbent = smac.optimize()
 

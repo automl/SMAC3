@@ -37,13 +37,21 @@ different and potentially improving configurations.
 
 .. code-block:: python
     
-    def train(config) -> float:
+    def train(self, config: Configuration, seed: int) -> float:
         model = MultiLayerPerceptron(learning_rate=config["learning_rate"])
         model.fit(...)
         accuracy = model.validate(...)
 
         return 1 - accuracy  # SMAC always minimizes (the smaller the better)
 
+.. note::
+
+    Crucially, the arguments of the target algorithm depend on the facade, that is acting on it.
+    The MultiFidelityFacade requires an additional :python:`budget` argument, by which you can define the amount of fidelity
+    (e.g. number of epochs, dataset subset size, ...) that you want to allocate for a configuration.
+    In the same manner, should you choose to evaluate your target algorithm on a set of problem instances,
+    the target algorithm will be required to have an :python:`instance` argument. Notice, that you will have
+    to specify the actual instances to choose from in the Scenario object.
 
 Scenario
 --------
