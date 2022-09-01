@@ -611,7 +611,30 @@ def test_ei_zero_variance(model, acquisition_function):
 #         acq = np.array(self.ei(X))
 #         self.assertAlmostEqual(acq[0][0], 0.0)
 #
-#
+
+@pytest.fixture
+def acq_eips(model):
+    ei = EIPS()
+    ei._set_model(model=model)
+    return ei
+
+
+def test_eips_1xD(model, acq_eips):
+    ei = acq_eips
+    ei.update(model=model, eta=1.0)
+    configurations = [ConfigurationMock([1.0, 1.0]), ConfigurationMock([1.0, 1.0])]
+    acq = ei(configurations)
+    assert acq.shape == (1, 1)
+    assert np.isclose(acq[0][0], 0.3989422804014327)
+
+
+def test_eips_fail(model, acq_eips):
+    ei = acq_eips
+    with pytest.raises(ValueError):
+        configurations = [ConfigurationMock([1.0, 1.0])]
+        ei(configurations)
+
+
 # class TestEIPS(unittest.TestCase):
 #     def setUp(self):
 #         self.model = MockModelDual()
@@ -629,7 +652,38 @@ def test_ei_zero_variance(model, acquisition_function):
 #             configurations = [ConfigurationMock([1.0, 1.0])]
 #             self.ei(configurations)
 #
-#
+
+@pytest.fixture
+def acq_logei(model):
+    ei = EI(log=True)
+    ei._set_model(model=model)
+    return ei
+
+
+def test_logei_1xD(model, acq_logei):
+    ei = acq_logei
+    ei.update(model=model, eta=1.0)
+    configurations = [ConfigurationMock([1.0, 1.0, 1.0])]
+    acq = ei(configurations)
+    assert acq.shape == (1, 1)
+    assert np.isclose(acq[0][0], 0.6480973967332011)
+
+
+def test_logei_NxD(model, acq_logei):
+    ei = acq_logei
+    ei.update(model=model, eta=1.0)
+    configurations = [
+        ConfigurationMock([0.1, 0.0, 0.0]),
+        ConfigurationMock([0.1, 0.1, 0.1]),
+        ConfigurationMock([1.0, 1.0, 1.0]),
+    ]
+    acq = ei(configurations)
+    assert acq.shape == (3, 1)
+    assert np.isclose(acq[0][0], 1.6670107375002425)
+    assert np.isclose(acq[1][0], 1.5570607606556273)
+    assert np.isclose(acq[2][0], 0.6480973967332011)
+
+
 # class TestLogEI(unittest.TestCase):
 #     def setUp(self):
 #         self.model = MockModel()
@@ -655,7 +709,46 @@ def test_ei_zero_variance(model, acquisition_function):
 #         self.assertAlmostEqual(acq[1][0], 1.5570607606556273)
 #         self.assertAlmostEqual(acq[2][0], 0.6480973967332011)
 #
-#
+
+@pytest.fixture
+def acq_pi(model):
+    pi = PI()
+    pi._set_model(model=model)
+    return pi
+
+
+def test_pi_1xD(model, acq_pi):
+    ei = acq_pi
+    ei.update(model=model, eta=1.0)
+    configurations = [ConfigurationMock([0.5, 0.5, 0.5])]
+    acq = ei(configurations)
+    assert acq.shape == (1, 1)
+    assert np.isclose(acq[0][0], 0.7602499389065233)
+
+
+def test_pi_1xD_zero(model, acq_pi):
+    ei = acq_pi
+    ei.update(model=model, eta=1.0)
+    configurations = [ConfigurationMock([100, 100, 100])]
+    acq = ei(configurations)
+    assert acq.shape == (1, 1)
+    assert np.isclose(acq[0][0], 0)
+
+
+def test_pi_NxD(model, acq_pi):
+    ei = acq_pi
+    ei.update(model=model, eta=1.0)
+    configurations = [
+        ConfigurationMock([0.0001, 0.0001, 0.0001]),
+        ConfigurationMock([0.1, 0.1, 0.1]),
+        ConfigurationMock([1.0, 1.0, 1.0]),
+    ]
+    acq = ei(configurations)
+    assert acq.shape == (3, 1)
+    assert np.isclose(acq[0][0], 1.0)
+    assert np.isclose(acq[1][0], 0.99778673707104)
+    assert np.isclose(acq[2][0], 0.5)
+
 # class TestPI(unittest.TestCase):
 #     def setUp(self):
 #         self.model = MockModel()
@@ -688,7 +781,56 @@ def test_ei_zero_variance(model, acquisition_function):
 #         self.assertAlmostEqual(acq[1][0], 0.99778673707104)
 #         self.assertAlmostEqual(acq[2][0], 0.5)
 #
-#
+
+@pytest.fixture
+def acq_lcb(model):
+    lcb = LCB()
+    lcb._set_model(model=model)
+    return lcb
+
+
+def test_lcb_1xD(model, acq_lcb):
+    ei = acq_lcb
+    ei.update(model=model, eta=1.0, par=1, num_data=3)
+    configurations = [ConfigurationMock([0.5, 0.5, 0.5])]
+    acq = ei(configurations)
+    assert acq.shape == (1, 1)
+    assert np.isclose(acq[0][0], 1.315443985917585)
+    ei.update(model=model, eta=1.0, par=1, num_data=100)
+    configurations = [ConfigurationMock([0.5, 0.5, 0.5])]
+    acq = ei(configurations)
+    assert acq.shape == (1, 1)
+    assert np.isclose(acq[0][0], 2.7107557771721433)
+
+
+def test_lcb_1xD_no_improvement_vs_improvement(model, acq_lcb):
+    ei = acq_lcb
+    ei.update(model=model, par=1, num_data=1)
+    configurations = [ConfigurationMock([100, 100])]
+    acq = ei(configurations)
+    assert acq.shape == (1, 1)
+    assert np.isclose(acq[0][0], -88.22589977)
+    configurations = [ConfigurationMock([0.001, 0.001])]
+    acq = ei(configurations)
+    assert acq.shape == (1, 1)
+    assert np.isclose(acq[0][0], 0.03623297)
+
+
+def test_lcb_NxD(model, acq_lcb):
+    ei = acq_lcb
+    ei.update(model=model, eta=1.0, num_data=100)
+    configurations = [
+        ConfigurationMock([0.0001, 0.0001, 0.0001]),
+        ConfigurationMock([0.1, 0.1, 0.1]),
+        ConfigurationMock([1.0, 1.0, 1.0]),
+    ]
+    acq = ei(configurations)
+    assert acq.shape == (3, 1)
+    assert np.isclose(acq[0][0], 0.045306943655446116)
+    assert np.isclose(acq[1][0], 1.3358936353814157)
+    assert np.isclose(acq[2][0], 3.5406943655446117)
+
+
 # class TestLCB(unittest.TestCase):
 #     def setUp(self):
 #         self.model = MockModel()
@@ -730,7 +872,35 @@ def test_ei_zero_variance(model, acquisition_function):
 #         self.assertAlmostEqual(acq[1][0], 1.3358936353814157)
 #         self.assertAlmostEqual(acq[2][0], 3.5406943655446117)
 #
-#
+
+@pytest.fixture
+def acq_ts(model):
+    ts = TS()
+    ts._set_model(model=model)
+    return ts
+
+
+def test_ts_1xD(model, acq_ts):
+    ei = acq_ts
+    configurations = [ConfigurationMock([0.5, 0.5, 0.5])]
+    acq = ei(configurations)
+    assert acq.shape == (1, 1)
+    assert np.isclose(acq[0][0], -1.74737338)
+
+
+def test_ts_NxD(model, acq_ts):
+    ei = acq_ts
+    configurations = [
+        ConfigurationMock([0.0001, 0.0001, 0.0001]),
+        ConfigurationMock([0.1, 0.1, 0.1]),
+        ConfigurationMock([1.0, 1.0, 1.0]),
+    ]
+    acq = ei(configurations)
+    assert acq.shape == (3, 1)
+    assert np.isclose(acq[0][0], -0.00988738)
+    assert np.isclose(acq[1][0], -0.22654082)
+    assert np.isclose(acq[2][0], -2.76405235)
+
 # class TestTS(unittest.TestCase):
 #     def setUp(self):
 #         # Test TS acqusition function with model that only has attribute 'seed'
