@@ -8,7 +8,7 @@ from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.intensification.stages import IntensifierStage
-from smac.runhistory import InstanceSeedBudgetKey, TrialInfo, RunInfoIntent, TrialValue
+from smac.runhistory import InstanceSeedBudgetKey, TrialInfo, TrialInfoIntent, TrialValue
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.logging import format_array, get_logger
@@ -170,7 +170,7 @@ class Intensifier(AbstractIntensifier):
         runhistory: RunHistory,
         repeat_configs: bool = True,
         n_workers: int = 1,
-    ) -> tuple[RunInfoIntent, TrialInfo]:
+    ) -> tuple[TrialInfoIntent, TrialInfo]:
         """This procedure is in charge of generating a RunInfo object to comply with lines 7 (in
         case stage is stage==RUN_INCUMBENT) or line 12 (In case of stage==RUN_CHALLENGER)
 
@@ -257,7 +257,7 @@ class Intensifier(AbstractIntensifier):
                 # Lines 5-7
                 instance, seed = self._get_next_instance(pending_instances)
 
-                return RunInfoIntent.RUN, TrialInfo(
+                return TrialInfoIntent.RUN, TrialInfo(
                     config=incumbent,
                     instance=instance,
                     seed=seed,
@@ -293,7 +293,7 @@ class Intensifier(AbstractIntensifier):
         # when all configurations for this iteration are exhausted
         # and have been run in all proposed instance/pairs.
         if challenger is None:
-            return RunInfoIntent.SKIP, TrialInfo(
+            return TrialInfoIntent.SKIP, TrialInfo(
                 config=None,
                 instance=None,
                 seed=0,
@@ -304,7 +304,7 @@ class Intensifier(AbstractIntensifier):
         if challenger == incumbent and self.stage == IntensifierStage.RUN_CHALLENGER:
             self.challenger_same_as_incumbent = True
             logger.debug("Challenger was the same as the current incumbent. Challenger is skipped.")
-            return RunInfoIntent.SKIP, TrialInfo(
+            return TrialInfoIntent.SKIP, TrialInfo(
                 config=None,
                 instance=None,
                 seed=0,
@@ -342,7 +342,7 @@ class Intensifier(AbstractIntensifier):
                 # Request SMBO to skip this run. This function will
                 # be called again, after the _process_racer_results
                 # has updated the intensifier stage
-                return RunInfoIntent.SKIP, TrialInfo(
+                return TrialInfoIntent.SKIP, TrialInfo(
                     config=None,
                     instance=None,
                     seed=0,
@@ -362,7 +362,7 @@ class Intensifier(AbstractIntensifier):
                 #    instance_specific = self.instance_specifics.get(instance, "0")
 
                 # Line 12
-                return RunInfoIntent.RUN, TrialInfo(
+                return TrialInfoIntent.RUN, TrialInfo(
                     config=challenger,
                     instance=instance,
                     seed=seed,

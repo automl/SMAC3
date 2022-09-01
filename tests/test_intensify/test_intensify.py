@@ -4,7 +4,7 @@ import numpy as np
 
 from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 from smac.intensification.intensification import Intensifier, IntensifierStage
-from smac.runhistory import RunHistory, TrialInfo, RunInfoIntent
+from smac.runhistory import RunHistory, TrialInfo, TrialInfoIntent
 from smac.runner.runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.stats import Stats
@@ -711,7 +711,7 @@ def test_no_new_intensification_wo_challenger_run(make_scenario, make_stats, con
     # that a new iteration must be initiated, and for code simplicity,
     # relies on a new call to get_next_run to yield more configurations
     intent, run_info = intensifier.get_next_run(challengers=[config0], incumbent=inc, runhistory=runhistory, ask=None)
-    assert intent == RunInfoIntent.SKIP
+    assert intent == TrialInfoIntent.SKIP
 
     # This doesn't return a config because the array of configs is exhausted
     intensifier.stage = IntensifierStage.RUN_CHALLENGER

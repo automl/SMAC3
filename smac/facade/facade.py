@@ -24,7 +24,7 @@ from smac.multi_objective.abstract_multi_objective_algorithm import (
 )
 from smac.runhistory.dataclasses import TrialInfo, TrialValue
 from smac.runhistory.encoder.abstract_encoder import AbstractRunHistoryEncoder
-from smac.runhistory.enumerations import RunInfoIntent
+from smac.runhistory.enumerations import TrialInfoIntent
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.runner import AbstractRunner
@@ -89,7 +89,6 @@ class Facade:
         random_design: AbstractRandomDesign | None = None,
         intensifier: AbstractIntensifier | None = None,
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
-        runhistory: RunHistory | None = None,
         runhistory_encoder: AbstractRunHistoryEncoder | None = None,
         logging_level: int | Path | None = None,
         callbacks: list[Callback] = [],
@@ -118,13 +117,11 @@ class Facade:
         if multi_objective_algorithm is None and scenario.count_objectives() > 1:
             multi_objective_algorithm = self.get_multi_objective_algorithm(scenario=scenario)
 
-        if runhistory is None:
-            runhistory = RunHistory()
-
         if runhistory_encoder is None:
             runhistory_encoder = self.get_runhistory_encoder(scenario)
 
         # Initialize empty stats and runhistory object
+        runhistory = RunHistory()
         stats = Stats(scenario)
 
         # Set the seed for configuration space
@@ -222,9 +219,16 @@ class Facade:
         the intensifier."""
         return self._optimizer.get_next_configurations()
 
-    def ask(self) -> tuple[RunInfoIntent, TrialInfo]:
-        """Asks the intensifier for the next trial."""
-        return self._optimizer.ask()
+    def ask(self) -> TrialInfo:
+        """Asks the intensifier for the next trial. This method returns only trials with the intend
+        to run."""
+        while True:
+            intend, info = self._optimizer.ask()
+            # We only accept trials which are intented to run
+            if intend != TrialInfoIntent.RUN:
+                continue
+
+            return info
 
     def tell(self, info: TrialInfo, value: TrialValue, time_left: float | None = None, save: bool = True) -> None:
         """Adds the result of a trial to the runhistory and updates the intensifier. Also,
@@ -243,9 +247,15 @@ class Facade:
         """
         return self._optimizer.tell(info, value, time_left, save)
 
-    def optimize(self) -> Configuration:
+    def optimize(self, force_initial_design: bool = False) -> Configuration:
         """
         Optimizes the algorithm.
+
+        Parameters
+        ----------
+        force_initial_design: bool
+            The initial design is only performed if the runhistory is empty. If this flag is set to True,
+            the initial design is performed regardless of the runhistory.
 
         Returns
         -------
@@ -254,7 +264,7 @@ class Facade:
         """
         incumbent = None
         try:
-            incumbent = self._optimizer.run()
+            incumbent = self._optimizer.run(force_initial_design=force_initial_design)
         finally:
             self._optimizer.save()
             self._stats.print()

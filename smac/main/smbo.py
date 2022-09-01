@@ -7,7 +7,7 @@ import numpy as np
 
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
-from smac.runhistory.enumerations import RunInfoIntent
+from smac.runhistory.enumerations import TrialInfoIntent
 from smac.utils.logging import get_logger
 from smac.main.base_smbo import BaseSMBO
 from smac.runhistory import TrialInfo, TrialValue, StatusType
@@ -87,7 +87,7 @@ class SMBO(BaseSMBO):
 
         return challengers
 
-    def ask(self) -> tuple[RunInfoIntent, TrialInfo]:
+    def ask(self) -> tuple[TrialInfoIntent, TrialInfo]:
         for callback in self._callbacks:
             callback.on_ask_start(self)
 

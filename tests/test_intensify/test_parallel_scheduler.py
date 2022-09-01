@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 
 from smac.intensification.parallel_scheduling import ParallelScheduler
-from smac.runhistory import TrialInfo, TrialValue, RunInfoIntent
+from smac.runhistory import TrialInfo, TrialValue, TrialInfoIntent
 from smac.runner.runner import StatusType
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -106,7 +106,7 @@ def test_get_next_run_wait(make_scenario, make_stats, configspace_small, runhist
 
     scheduler._get_intensifier_ranking = mock_ranker
     scheduler.intensifier_instances = {0: mock.Mock()}
-    scheduler.intensifier_instances[0].get_next_run.return_value = (RunInfoIntent.WAIT, None)
+    scheduler.intensifier_instances[0].get_next_run.return_value = (TrialInfoIntent.WAIT, None)
     scheduler.intensifier_instances[0].stage = 0
     scheduler.intensifier_instances[0].run_tracker = ()
 
@@ -122,7 +122,7 @@ def test_get_next_run_wait(make_scenario, make_stats, configspace_small, runhist
             repeat_configs=False,
             n_workers=1,
         )
-        assert intent == RunInfoIntent.WAIT
+        assert intent == TrialInfoIntent.WAIT
 
 
 def test_get_next_run_add_instance(make_scenario, make_stats, configspace_small, runhistory):
@@ -142,7 +142,7 @@ def test_get_next_run_add_instance(make_scenario, make_stats, configspace_small,
             source = len(scheduler.intensifier_instances)
             scheduler.intensifier_instances[source] = mock.Mock()
             scheduler.intensifier_instances[source].get_next_run.return_value = (
-                RunInfoIntent.RUN,
+                TrialInfoIntent.RUN,
                 None,
             )
             return True
@@ -151,7 +151,7 @@ def test_get_next_run_add_instance(make_scenario, make_stats, configspace_small,
         scheduler._get_intensifier_ranking = mock_ranker
         scheduler.intensifier_instances = {0: mock.Mock()}
         scheduler.intensifier_instances[0].get_next_run.return_value = (
-            RunInfoIntent.WAIT,
+            TrialInfoIntent.WAIT,
             None,
         )
         scheduler.intensifier_instances[0].stage = 0
@@ -166,4 +166,4 @@ def test_get_next_run_add_instance(make_scenario, make_stats, configspace_small,
             n_workers=1,
         )
         assert len(scheduler.intensifier_instances) == 2
-        assert intent == RunInfoIntent.RUN
+        assert intent == TrialInfoIntent.RUN

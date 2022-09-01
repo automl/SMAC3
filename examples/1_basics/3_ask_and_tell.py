@@ -8,8 +8,8 @@ This examples show how to use the Ask-and-Tell interface.
 from ConfigSpace import Configuration, ConfigurationSpace, Float
 
 from smac import BlackBoxFacade, Scenario
-from smac.runhistory.dataclasses import TrialValue
-from smac.runhistory.enumerations import RunInfoIntent, StatusType
+from smac.runhistory.dataclasses import TrialInfo, TrialValue
+from smac.runhistory.enumerations import StatusType
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -50,7 +50,10 @@ if __name__ == "__main__":
     default_value = model.train(model.configspace.get_default_configuration())
     print(f"Default value: {round(default_value, 2)}")
 
-    intensifier = BlackBoxFacade.get_intensifier(scenario, max_config_calls=1)
+    intensifier = BlackBoxFacade.get_intensifier(
+        scenario,
+        max_config_calls=1,  # We basically use one seed only
+    )
 
     # Now we use SMAC to find the best hyperparameters
     smac = BlackBoxFacade(
@@ -60,20 +63,30 @@ if __name__ == "__main__":
         overwrite=True,
     )
 
-    for _ in range(500):
-        intend, trial_info = smac.ask()
+    # We can provide SMAC with custom configurations first
+    for config in model.configspace.sample_configuration(10):
+        cost = model.train(config)
 
-        # We only accept trials which are intented to run
-        if intend != RunInfoIntent.RUN:
-            continue
-
-        cost = model.train(trial_info.config)
-        trial_value = TrialValue(
-            cost=cost,
-            time=0.5,
-            status=StatusType.SUCCESS,
-        )
+        trial_info = TrialInfo(config)
+        trial_value = TrialValue(cost=cost, time=0.5, status=StatusType.SUCCESS)
         smac.tell(trial_info, trial_value)
+
+    # Then we ask SMAC which trial to run next
+    for _ in range(500):
+        # Get next trial and evaluate the cost of the config
+        # TODO: Result caching? only train if new data is available
+        # add: how many trials should be sampled?
+        trial_info = smac.ask(n=20, seed=None)
+        cost = model.train(trial_info.config)
+
+        # Tell SMAC about the result of the evaluation
+        trial_value = TrialValue(cost=cost, time=0.5, status=StatusType.SUCCESS)
+        smac.tell(trial_info, trial_value, increase=True)
+
+    # Finally, we could even run the optimize method
+    # NOTE: Using only the tell method does not increase the number of submitted trials.
+    # Hence, the optimize method will process additional 100 trials.
+    smac.optimize()
 
     # Now we retrieve the best configuration using our runhistory
     incumbent = smac.runhistory.get_incumbent()

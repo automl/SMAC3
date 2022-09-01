@@ -36,7 +36,7 @@ class TrialKey:
     budget: float = 0.0
 
 
-@dataclass  # (frozen=True)
+@dataclass(frozen=True)
 class TrialValue:
     cost: float | list[float]
     time: float = 0.0
@@ -49,8 +49,8 @@ class TrialValue:
 @dataclass(frozen=True)
 class TrialInfo:
     config: Configuration
-    instance: str | None
-    seed: int | None
+    instance: str | None = None
+    seed: int | None = None
     budget: float = 0.0
     source: int = 0
 

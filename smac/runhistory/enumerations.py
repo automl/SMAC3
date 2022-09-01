@@ -46,7 +46,7 @@ class DataOrigin(Enum):
     EXTERNAL_DIFFERENT_INSTANCES = 3
 
 
-class RunInfoIntent(Enum):
+class TrialInfoIntent(Enum):
     """Class to define different requests on how to process the runinfo.
 
     Gives the flexibility to indicate whether a configuration should be skipped (SKIP) or if the

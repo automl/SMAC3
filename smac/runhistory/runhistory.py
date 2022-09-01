@@ -200,16 +200,18 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
             # If budget is used, then update cost instead of incremental updates
             if not self.overwrite_existing_runs and k.budget == 0:
+                logger.info(f"Incremental update cost for config {k.config_id}")
                 # Assumes an average across runs as cost function aggregation, this is used for
                 # algorithm configuration (incremental updates are used to save time as getting the
                 # cost for > 100 instances is high)
                 self.incremental_update_cost(self.ids_config[k.config_id], v.cost)
             else:
                 # this is when budget > 0 (only successive halving and hyperband so far)
+                logger.info(f"Update cost for config {k.config_id}.")
                 self.update_cost(config=self.ids_config[k.config_id])
-                if k.budget > 0:
-                    if self.num_runs_per_config[k.config_id] != 1:  # This is updated in update_cost
-                        raise ValueError("This should not happen!")
+                # if k.budget > 0:
+                #    if self.num_runs_per_config[k.config_id] != 1:  # This is updated in update_cost
+                #        raise ValueError("This should not happen!")
 
     def _cost(
         self,

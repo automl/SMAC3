@@ -6,7 +6,7 @@ import os
 
 from smac.configspace import Configuration
 from smac.intensification.abstract_intensifier import AbstractIntensifier
-from smac.runhistory import TrialInfo, RunInfoIntent, TrialValue
+from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
@@ -98,7 +98,7 @@ class ParallelScheduler(AbstractIntensifier):
         runhistory: RunHistory,
         repeat_configs: bool = False,
         n_workers: int = 1,
-    ) -> tuple[RunInfoIntent, TrialInfo]:
+    ) -> tuple[TrialInfoIntent, TrialInfo]:
         """This procedure decides from which instance to pick a config, in order to determine the
         next run.
 
@@ -159,7 +159,7 @@ class ParallelScheduler(AbstractIntensifier):
 
             # if asked to wait, the intensifier cannot come up
             # with a new configuration, so we continue
-            if intent == RunInfoIntent.WAIT:
+            if intent == TrialInfoIntent.WAIT:
                 continue
 
             return intent, run_info
@@ -178,7 +178,7 @@ class ParallelScheduler(AbstractIntensifier):
         # If got to this point, no new instance can be added as
         # there are no idle workers and all running instances have to
         # wait, so we return a wait intent
-        return RunInfoIntent.WAIT, TrialInfo(
+        return TrialInfoIntent.WAIT, TrialInfo(
             config=None,
             instance=None,
             seed=0,

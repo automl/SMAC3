@@ -13,7 +13,7 @@ from smac.intensification.successive_halving import (
     SuccessiveHalving,
     SuccessiveHalvingWorker,
 )
-from smac.runhistory import RunHistory, TrialInfo, TrialValue, RunInfoIntent
+from smac.runhistory import RunHistory, TrialInfo, TrialValue, TrialInfoIntent
 from smac.runner.runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.stats import Stats
@@ -252,7 +252,7 @@ def test_get_next_run_single_SH(SH, runhistory, configs):
         # Regenerate challenger list
         challengers = [c for c in challengers if c != run_info.config]
 
-        if intent == RunInfoIntent.WAIT:
+        if intent == TrialInfoIntent.WAIT:
             break
 
         # Add the config to rh in order to make SH aware that this
@@ -297,7 +297,7 @@ def test_get_next_run_dual_SH(SH, runhistory, configs):
 
         # Add the config to rh in order to make SH aware that this
         # config/instance was launched
-        if intent == RunInfoIntent.WAIT:
+        if intent == TrialInfoIntent.WAIT:
             break
         runhistory.add(
             config=run_info.config,
@@ -371,7 +371,7 @@ def _exhaust_run_and_get_incumbent(SH, runhistory, configs, n_workers=2):
         # Regenerate challenger list
         challengers = [c for c in challengers if c != run_info.config]
 
-        if intent == RunInfoIntent.WAIT:
+        if intent == TrialInfoIntent.WAIT:
             break
 
         run_value = target_from_run_info(run_info)
@@ -822,7 +822,7 @@ def test_get_next_run_1(make_sh_worker, runhistory, configs):
     # So we cannot advance to a new stage
     intent, run_info = intensifier.get_next_run(challengers=[config2], ask=None, incumbent=inc, runhistory=runhistory)
     assert run_info.config is None
-    assert intent == RunInfoIntent.WAIT
+    assert intent == TrialInfoIntent.WAIT
     assert len(intensifier.success_challengers) == 1
     assert intensifier.new_challenger
 
@@ -1292,7 +1292,7 @@ def test_launched_all_configs_for_current_stage(make_sh_worker, make_target_algo
         )
 
         # All this runs are valid for this stage
-        assert intent == RunInfoIntent.RUN
+        assert intent == TrialInfoIntent.RUN
 
         # Remove from the challengers, the launched configs
         challengers = [c for c in challengers if c != run_info.config]
@@ -1319,7 +1319,7 @@ def test_launched_all_configs_for_current_stage(make_sh_worker, make_target_algo
     # We have launched all runs, that are expected for this stage
     # not registered any, so for sure we have to wait
     # For all runs to be completed before moving to the next stage
-    assert intent == RunInfoIntent.WAIT
+    assert intent == TrialInfoIntent.WAIT
 
 
 def _exhaust_stage_execution(intensifier, target_algorithm, runhistory, challengers, incumbent):
@@ -1362,7 +1362,7 @@ def _exhaust_stage_execution(intensifier, target_algorithm, runhistory, challeng
         # Update the challengers
         challengers = [c for c in challengers if c != run_info.config]
 
-        if intent == RunInfoIntent.WAIT:
+        if intent == TrialInfoIntent.WAIT:
             break
 
         # Add this configuration as running

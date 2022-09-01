@@ -7,7 +7,7 @@ import time
 import numpy as np
 
 from smac.configspace import Configuration
-from smac.runhistory import TrialInfo, RunInfoIntent, TrialValue
+from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.logging import format_array, get_logger
@@ -121,7 +121,7 @@ class AbstractIntensifier:
         runhistory: RunHistory,
         repeat_configs: bool = True,
         n_workers: int = 1,
-    ) -> tuple[RunInfoIntent, TrialInfo]:
+    ) -> tuple[TrialInfoIntent, TrialInfo]:
         """Abstract method for choosing the next challenger, to allow for different selections
         across intensifiers uses ``_next_challenger()`` by default.
 
@@ -344,9 +344,11 @@ class AbstractIntensifier:
 
     def _log_incumbent_changes(
         self,
-        incumbent: Configuration,
-        challenger: Configuration,
+        incumbent: Configuration | None,
+        challenger: Configuration | None,
     ) -> None:
+        if incumbent is None or challenger is None:
+            return
 
         params = sorted([(param, incumbent[param], challenger[param]) for param in challenger.keys()])
         logger.info("Changes in incumbent:")

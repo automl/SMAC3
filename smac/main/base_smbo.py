@@ -17,7 +17,7 @@ from smac.constants import MAXINT
 from smac.initial_design import AbstractInitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.model.abstract_model import AbstractModel
-from smac.runhistory import TrialInfo, RunInfoIntent, TrialValue, StatusType
+from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue, StatusType
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.runner import AbstractRunner
@@ -156,7 +156,7 @@ class BaseSMBO:
         self._acquisition_function._set_model(self._model)
         self._acquisition_optimizer._set_acquisition_function(acquisition_function)
 
-    def run(self) -> Configuration:
+    def run(self, force_initial_design: bool = False) -> Configuration:
         """Runs the Bayesian optimization loop.
 
         Returns
@@ -171,10 +171,11 @@ class BaseSMBO:
 
         # Start the timer before we do anything
         self._stats.start_timing()
+        time_left = None
 
         # We initialize the state based on previous data.
         # If no previous data is found then we take care of the initial design.
-        self._initialize_state()
+        self._initialize_state(force_initial_design=force_initial_design)
 
         for callback in self._callbacks:
             callback.on_start(self)
@@ -194,7 +195,7 @@ class BaseSMBO:
             self._initial_design_configs = [c for c in self._initial_design_configs if c != run_info.config]
 
             # Update timebound only if a 'new' configuration is sampled as the challenger
-            if self._intensifier.num_run == 0:
+            if self._intensifier.num_run == 0 or time_left is None:
                 time_spent = time.time() - start_time
                 time_left = self._get_timebound_for_intensification(time_spent, update=False)
                 logger.debug("New intensification time bound: %f", time_left)
@@ -206,12 +207,12 @@ class BaseSMBO:
 
             # Skip starting new runs if the budget is now exhausted
             if self._stats.is_budget_exhausted():
-                intent = RunInfoIntent.SKIP
+                intent = TrialInfoIntent.SKIP
 
             # Skip the run if there was a request to do so.
             # For example, during intensifier intensification, we
             # don't want to rerun a config that was previously ran
-            if intent == RunInfoIntent.RUN:
+            if intent == TrialInfoIntent.RUN:
                 n_objectives = self._scenario.count_objectives()
 
                 # Track the fact that a run was launched in the run
@@ -237,12 +238,12 @@ class BaseSMBO:
                 # we count this submission as a run. This prevent for using more
                 # runner runs than what the config allows
                 self._stats._submitted += 1
-            elif intent == RunInfoIntent.SKIP:
+            elif intent == TrialInfoIntent.SKIP:
                 # No launch is required
                 # This marks a transition request from the intensifier
                 # To a new iteration
                 pass
-            elif intent == RunInfoIntent.WAIT:
+            elif intent == TrialInfoIntent.WAIT:
                 # In any other case, we wait for resources
                 # This likely indicates that no further decision
                 # can be taken by the intensifier until more data is
@@ -331,7 +332,7 @@ class BaseSMBO:
         raise NotImplementedError
 
     @abstractmethod
-    def ask(self) -> tuple[RunInfoIntent, TrialInfo]:
+    def ask(self) -> tuple[TrialInfoIntent, TrialInfo]:
         """Asks the intensifier for the next trial."""
         raise NotImplementedError
 
@@ -364,7 +365,7 @@ class BaseSMBO:
     def _register_callback(self, callback: Callback) -> None:
         self._callbacks += [callback]
 
-    def _initialize_state(self) -> None:
+    def _initialize_state(self, force_initial_design: bool = False) -> None:
         """Starts the Bayesian Optimization loop and detects whether the optimization is restored
         from a previous state."""
 
@@ -432,8 +433,9 @@ class BaseSMBO:
         self._incumbent = self._stats.get_incumbent()
 
         # Initialization, depends on input
+        assert 1 == 0, "This has to be thought thru."
         if self._stats.submitted == 0 and self._incumbent is None:
-            if len(self._runhistory) == 0:
+            if len(self._runhistory) == 0 or force_initial_design:
                 logger.info("Running initial design...")
                 # Intensifier initialization
                 self._initial_design_configs = self._initial_design.select_configurations()

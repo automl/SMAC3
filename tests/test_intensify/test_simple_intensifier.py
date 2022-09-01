@@ -2,7 +2,7 @@ import pytest
 
 import numpy as np
 
-from smac.runhistory import RunInfoIntent
+from smac.runhistory import TrialInfoIntent
 from smac.intensification.simple_intensifier import SimpleIntensifier
 from smac.runhistory import TrialInfo, TrialValue
 from smac.runner.runner import StatusType
@@ -38,7 +38,7 @@ def test_get_next_run(intensifier, runhistory, configs):
         n_workers=1,
         ask=None,
     )
-    assert intent == RunInfoIntent.RUN
+    assert intent == TrialInfoIntent.RUN
 
     # @KEggensperger: Why is it instance 1 here?
     # run_info2 = RunInfo(
@@ -77,7 +77,7 @@ def test_get_next_run_waits_if_no_workers(intensifier, runhistory, configs):
     # )
 
     # We can get the configuration 1
-    assert intent == RunInfoIntent.RUN
+    assert intent == TrialInfoIntent.RUN
     assert run_info.config == configs[0]
     assert run_info.budget == 0.0
     assert run_info.instance is None
@@ -92,7 +92,7 @@ def test_get_next_run_waits_if_no_workers(intensifier, runhistory, configs):
         n_workers=1,
         ask=None,
     )
-    assert intent == RunInfoIntent.WAIT
+    assert intent == TrialInfoIntent.WAIT
 
     run_info2 = TrialInfo(
         config=None,
