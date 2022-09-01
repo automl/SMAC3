@@ -9,6 +9,12 @@ from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
 from smac.utils.logging import get_logger
+from smac.configspace import Configuration
+from smac.model.abstract_model import AbstractModel
+from smac.acquisition.functions.integrated import IntegratedAcquisitionFunction
+from smac.acquisition.functions.thompson import TS
+from smac.acquisition.functions.confidence_bound import LCB
+
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -54,18 +60,14 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         prior_floor: float = 1e-12,
         discretize: bool = False,
         discrete_bins_factor: float = 10.0,
-        **kwargs: Any,
     ):
         super().__init__()
         self.long_name = "Prior Acquisition Function (%s)" % acquisition_function.__class__.__name__
-        self.acq : AbstractAcquisitionFunction = acquisition_function
-        self._functions : list[AbstractAcquisitionFunction]= [] 
-        self.eta : float | None = None
+        self.acq: AbstractAcquisitionFunction = acquisition_function
+        self._functions: list[AbstractAcquisitionFunction] = []
+        self.eta: float | None = None
 
-        # Problem here: We don't have our model at the init rn
-        raise RuntimeError(":(")
-
-        self.hyperparameters = self.model.get_configspace().get_hyperparameters_dict()
+        self._hyperparameters: dict[Any, list[Configuration]] | None = None
         self.decay_beta = decay_beta
         self.prior_floor = prior_floor
         self.discretize = discretize
@@ -81,6 +83,20 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
 
         self.rescale_acq = isinstance(acquisition_type, (LCB, TS))
         self.iteration_number = 0
+
+    @property
+    def hyperparameters(self):
+        if self._hyperparameters is None:
+            raise ValueError("Please set the model via '_set_model' first.")
+        return self._hyperparameters
+
+    @hyperparameters.setter
+    def hyperparameters(self, hyperparameters):
+        self._hyperparameters = hyperparameters
+
+    def _set_model(self, model: AbstractModel) -> None:
+        self.model = model
+        self.hyperparameters = self.model.get_configspace().get_hyperparameters_dict()
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""

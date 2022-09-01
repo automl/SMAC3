@@ -300,6 +300,50 @@ def test_integrated_acquisition_function_compute_with_different_numbers_of_model
     #         rval = iaf(configurations)
     #         self.assertEqual(rval.shape, (2, 1))
 
+@pytest.fixture
+def x0_prior():
+    return MockPrior(pdf=lambda x: 2 * x, max_density=2)
+
+
+@pytest.fixture
+def hyperparameter_dict(x0_prior):
+    return {"x0": x0_prior}
+
+
+@pytest.fixture
+def prior_model(hyperparameter_dict):
+    return PriorMockModel(hyperparameter_dict=hyperparameter_dict)
+
+
+@pytest.fixture
+def beta():
+    return 2
+
+
+@pytest.fixture
+def prior_floor():
+    return 1e-1
+
+
+# TODO for Prior: test if hyperparameters raise value error if the model has not been set before
+def test_prior_init_ei(prior_model, acquisition_function, beta):
+    acq_ei = acquisition_function
+    paf = PriorAcquisitionFunction(prior_model, acq_ei, beta)
+    assert paf.rescale_acq is False
+
+
+def test_prior_init_ts(prior_model, acq_ts, beta):
+    paf = PriorAcquisitionFunction(model=prior_model, acquisition_function=acq_ts, decay_beta=beta)
+    assert paf.rescale_acq is True
+
+
+def test_prior_update(prior_model, acquisition_function, beta):
+    ei = acquisition_function
+    paf = PriorAcquisitionFunction(prior_model, ei, beta)
+    paf.update(model=prior_model, eta=2)
+    assert paf.eta == 2
+    assert paf.acq.eta == 2
+    assert paf.iteration_number == 1
 
 # class TestPriorAcquisitionFunction(unittest.TestCase):
 #     def setUp(self):
