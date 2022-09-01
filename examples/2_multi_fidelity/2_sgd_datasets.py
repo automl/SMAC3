@@ -4,13 +4,14 @@ Stochastic Gradient Descent On Multiple Datasets
 
 Example for optimizing a Multi-Layer Perceptron (MLP) across multiple (dataset) instances.
 
-Alternative to budgets, here we consider instances as a fidelity type. An instance represents a specific
+Alternative to budgets, here wlog. we consider instances as a fidelity type. An instance represents a specific
 scenario/condition (e.g. different datasets, subsets, transformations) for the algorithm to run. SMAC then returns the
 algorithm that had the best performance across all the instances. In this case, an instance is a binary dataset i.e.,
 digit-2 vs digit-3.
 
 If we use instance as our fidelity, we need to initialize scenario with argument instance. In this case the argument
-budget is no longer required by the target function.
+budget is no longer required by the target function. But due to the scenario instance argument,
+the target algorithm now is required to have an instance argument.
 """
 
 from __future__ import annotations
@@ -18,7 +19,7 @@ import itertools
 import warnings
 
 import numpy as np
-from ConfigSpace import ConfigurationSpace, Float, Categorical, Configuration
+from ConfigSpace import Float, Categorical, Configuration
 from sklearn import datasets
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import StratifiedKFold, cross_val_score
@@ -78,7 +79,7 @@ class SGD:
 
         return cs
 
-    def train(self, config: Configuration, instance: str, seed: int = 0):
+    def train(self, config: Configuration, instance: str, seed: int = 0) -> float:
         """Creates a SGD classifier based on a configuration and evaluates it on the
         digits dataset using cross-validation."""
 

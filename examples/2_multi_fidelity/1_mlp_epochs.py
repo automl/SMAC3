@@ -3,11 +3,14 @@ Multi-Layer Perceptron Using Multiple Epochs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets.
-Since we want to take advantage of Multi-Fidelity, the multi-fidelity facade is a good choice. By default,
+Since we want to take advantage of Multi-Fidelity, the ``MultiFidelityFacade`` is a good choice. By default,
 ``MultiFidelityFacade`` internally runs with `hyperband <https://arxiv.org/abs/1603.06560>`_, which is a combination of an
-aggressive racing mechanism and successive halving.
+aggressive racing mechanism and successive halving. Crucially, the target algorithm function
+must accept a budget variable, detailing how much fidelity smac wants to allocate to this
+configuration.
 
-MLP is a deep neural network, and therefore, we choose epochs as fidelity type. The digits dataset
+MLP is a deep neural network, and therefore, we choose epochs as fidelity type. This implies,
+that ``budget`` specifies the number of epochs smac wants to allocate. The digits dataset
 is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. note::
@@ -48,7 +51,7 @@ digits = load_digits()
 
 class MLP:
     @property
-    def configspace(self):
+    def configspace(self) -> ConfigurationSpace:
         # Build Configuration Space which defines all parameters and their ranges.
         # To illustrate different parameter types, we use continuous, integer and categorical parameters.
         cs = ConfigurationSpace()
@@ -87,8 +90,9 @@ class MLP:
 
         return cs
 
-    def train(self, config, seed=0, budget=25):
-        # For deactivated parameters, the configuration stores None-values.
+    def train(self, config, seed=0, budget=25) -> float:
+        # For deactivated parameters (by virtue of the conditions),
+        # the configuration stores None-values.
         # This is not accepted by the MLP, so we replace them with placeholder values.
         lr = config["learning_rate"] if config["learning_rate"] else "constant"
         lr_init = config["learning_rate_init"] if config["learning_rate_init"] else 0.001
@@ -108,7 +112,7 @@ class MLP:
                 random_state=seed,
             )
 
-            # Returns the cross validation accuracy
+            # Returns the 5-fold cross validation accuracy
             cv = StratifiedKFold(n_splits=5, random_state=seed, shuffle=True)  # to make CV splits consistent
             score = cross_val_score(classifier, digits.data, digits.target, cv=cv, error_score="raise")
 
@@ -119,7 +123,7 @@ if __name__ == "__main__":
     mlp = MLP()
     default_config = mlp.configspace.get_default_configuration()
 
-    # Example call of the target algorithm
+    # Example call of the target algorithm (for debugging)
     default_value = mlp.train(default_config)
     print(f"Default value: {round(default_value, 2)}")
 
