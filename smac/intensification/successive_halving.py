@@ -221,6 +221,14 @@ class SuccessiveHalving(ParallelScheduler):
             "name": self.__class__.__name__,
         }
 
+    @property
+    def uses_budgets(self) -> bool:
+        return not self.instance_as_budget
+
+    @property
+    def uses_instances(self) -> bool:
+        return self.instance_as_budget
+
     def _get_intensifier_ranking(self, intensifier: AbstractIntensifier) -> tuple[int, int]:
         """Given a intensifier, returns how advance it is. This metric will be used to determine
         what priority to assign to the intensifier.

@@ -84,6 +84,10 @@ class ParallelScheduler(AbstractIntensifier):
         self.intensifier_instances: dict[int, AbstractIntensifier] = {}
         self.print_worker_warning = True
 
+    @property
+    def uses_seeds(self) -> bool:
+        return True
+
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {

@@ -1,4 +1,5 @@
 from __future__ import annotations
+from abc import abstractmethod
 
 from typing import Any, Callable, Iterator, Optional, Tuple
 
@@ -106,6 +107,21 @@ class AbstractIntensifier:
         self.repeat_configs = False
         # to mark the end of an iteration
         self.iteration_done = False
+
+    @property
+    @abstractmethod
+    def uses_seeds(self) -> bool:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def uses_budgets(self) -> bool:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def uses_instances(self) -> bool:
+        raise NotImplementedError
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""

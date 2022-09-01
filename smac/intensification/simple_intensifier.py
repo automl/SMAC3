@@ -51,6 +51,18 @@ class SimpleIntensifier(AbstractIntensifier):
         # Below variable tracks active runs not processed
         self.run_tracker: dict[tuple[Configuration, str | None, int, float], bool] = {}
 
+    @property
+    def uses_seeds(self) -> bool:
+        return True
+
+    @property
+    def uses_budgets(self) -> bool:
+        return False
+
+    @property
+    def uses_instances(self) -> bool:
+        return self.instances is not None
+
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {

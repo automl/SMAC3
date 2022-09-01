@@ -81,10 +81,7 @@ class AbstractRunner(ABC):
     """
 
     def __init__(
-        self,
-        target_algorithm: Callable,
-        scenario: smac.scenario.Scenario,
-        stats: Stats,
+        self, target_algorithm: Callable, scenario: smac.scenario.Scenario, stats: Stats, required_arguments: list[str]
     ):
         self.scenario = scenario
 
@@ -114,14 +111,21 @@ class AbstractRunner(ABC):
             )
 
         # Signatures here
-        self._signature = inspect.signature(self.target_algorithm).parameters
+        signature = inspect.signature(self.target_algorithm).parameters
+        for argument in required_arguments:
+            if argument not in signature.keys():
+                raise RuntimeError(
+                    f"Target function needs to have the arguments {required_arguments} "
+                    f"but could not found {argument}."
+                )
 
-    def check_signature(self, argument: str) -> bool:
-        """Checks whether an argument is included in the signature or not."""
-        if argument in self._signature.keys():
-            return True
+        # Now we check for additional arguments which are not used by SMAC
+        # However, we only want to warn the user and not
+        for key in list(signature.keys())[1:]:
+            if key not in required_arguments:
+                logger.warning(f"The argument {key} is not set by SMAC. Consider removing it.")
 
-        return False
+        self._required_arguments = required_arguments
 
     def run_wrapper(self, run_info: TrialInfo) -> tuple[TrialInfo, TrialValue]:
         """Wrapper around run() to exec and check the execution of a given config file.

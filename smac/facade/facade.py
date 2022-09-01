@@ -126,11 +126,26 @@ class Facade:
         # Set the seed for configuration space
         scenario.configspace.seed(scenario.seed)
 
+        # Set variables globally
+        self._scenario = scenario
+        self._model = model
+        self._acquisition_function = acquisition_function
+        self._acquisition_optimizer = acquisition_optimizer
+        self._initial_design = initial_design
+        self._random_design = random_design
+        self._intensifier = intensifier
+        self._multi_objective_algorithm = multi_objective_algorithm
+        self._runhistory = runhistory
+        self._runhistory_encoder = runhistory_encoder
+        self._stats = stats
+        self._overwrite = overwrite
+
         # Prepare the algorithm executer
         runner = TargetAlgorithmRunner(
             target_algorithm,
             scenario=scenario,
             stats=stats,
+            required_arguments=self._get_signature_arguments(),
         )
 
         # In case of multiple jobs, we need to wrap the runner again using `DaskParallelRunner`
@@ -143,20 +158,8 @@ class Facade:
             # We use a dask runner for parallelization
             runner = DaskParallelRunner(single_worker=runner)
 
-        # Set variables globally
-        self._scenario = scenario
+        # Set the runner to access it globally
         self._runner = runner
-        self._model = model
-        self._acquisition_function = acquisition_function
-        self._acquisition_optimizer = acquisition_optimizer
-        self._initial_design = initial_design
-        self._random_design = random_design
-        self._intensifier = intensifier
-        self._multi_objective_algorithm = multi_objective_algorithm
-        self._runhistory = runhistory
-        self._runhistory_encoder = runhistory_encoder
-        self._stats = stats
-        self._overwrite = overwrite
         self._optimizer = self._get_optimizer()
 
         # Register callbacks here
@@ -364,10 +367,16 @@ class Facade:
         # Make sure the same acquisition function is used
         assert self._acquisition_function == self._acquisition_optimizer.acquisition_function
 
-    def _get_signature_arguments(self) -> None:
-        arguments = ["seed"]
+    def _get_signature_arguments(self) -> list[str]:
+        arguments = []
 
-        if self._scenario.instance_features is not None:
+        if self._intensifier.uses_seeds:
+            arguments += ["seed"]
+
+        if self._intensifier.uses_budgets:
+            arguments += ["budget"]
+
+        if self._intensifier.uses_instances:
             arguments += ["instance"]
 
-        # if self._
+        return arguments

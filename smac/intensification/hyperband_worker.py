@@ -3,12 +3,14 @@ from __future__ import annotations
 from typing import Callable, Iterator
 
 import numpy as np
-from smac.intensification.hyperband import Hyperband
 
-from smac.intensification.successive_halving import SuccessiveHalvingWorker
+import smac
+
 from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.logging import get_logger
+from smac.intensification.hyperband import Hyperband
+from smac.intensification.successive_halving_worker import SuccessiveHalvingWorker
 from ConfigSpace import Configuration
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -212,6 +214,7 @@ class HyperbandWorker(SuccessiveHalvingWorker):
         """Update tracking information for a new stage/iteration and update statistics. This method
         is called to initialize stage variables and after all configurations of a successive halving
         stage are completed."""
+
         min_budget = self.hyperband.min_budget
         max_budget = self.hyperband.max_budget
         eta = self.hyperband.eta

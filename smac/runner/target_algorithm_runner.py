@@ -122,11 +122,11 @@ class TargetAlgorithmRunner(AbstractRunner):
         """Calls the target algorithm with pynisher (if algorithm walltime limit or memory limit is set) or without."""
         # The kwargs are passed to the target algorithm.
         kwargs: dict[str, Any] = {}
-        if self._accepts_seed:
+        if "seed" in self._required_arguments:
             kwargs["seed"] = seed
-        if self._accepts_instance:
+        if "instance" in self._required_arguments:
             kwargs["instance"] = instance
-        if self._accepts_budget:
+        if "budget" in self._required_arguments:
             kwargs["budget"] = budget
 
         # Presetting
@@ -179,7 +179,7 @@ class TargetAlgorithmRunner(AbstractRunner):
         # Do some sanity checking (for multi objective)
         error = f"Returned costs {result} does not match the number of objectives {self.objectives}."
 
-        # If dict convert to array make sure the ordering is correct.
+        # If dict convert to array and make sure the order is correct
         if isinstance(result, dict):
             if len(result) != len(self.objectives):
                 raise RuntimeError(error)
@@ -216,7 +216,7 @@ class TargetAlgorithmRunner(AbstractRunner):
         self,
         config: Configuration,
         algorithm: Callable,
-        algorithm_kwargs: dict[str, int | str | float | None],
+        algorithm_kwargs: dict[str, Any],
     ) -> (
         float
         | list[float]

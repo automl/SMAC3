@@ -92,10 +92,6 @@ class Intensifier(AbstractIntensifier):
     def __init__(
         self,
         scenario: Scenario,
-        # instances: List[str],
-        # instance_specifics: Mapping[str, str] = None,
-        # algorithm_walltime_limit: float | None = None,
-        # deterministic: bool = False,
         race_against: Configuration | None = None,
         run_limit: int = MAXINT,
         use_target_algorithm_time_bound: bool = False,
@@ -107,10 +103,6 @@ class Intensifier(AbstractIntensifier):
     ):
         super().__init__(
             scenario=scenario,
-            # instances=instances,
-            # instance_specifics=instance_specifics,
-            # algorithm_walltime_limit=algorithm_walltime_limit,
-            # deterministic=deterministic,
             min_config_calls=min_config_calls,
             max_config_calls=max_config_calls,
             min_challenger=min_challenger,
@@ -155,6 +147,21 @@ class Intensifier(AbstractIntensifier):
         self.to_run: list[InstanceSeedBudgetKey] = []
         # self.inc_sum_cost = np.inf
         self.N = -1
+
+    @property
+    def uses_seeds(self) -> bool:
+        return True
+
+    @property
+    def uses_budgets(self) -> bool:
+        return False
+
+    @property
+    def uses_instances(self) -> bool:
+        if self.instances == [None]:
+            return False
+
+        return True
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
@@ -356,10 +363,6 @@ class Intensifier(AbstractIntensifier):
                     incumbent=incumbent,
                     runhistory=runhistory,
                 )
-
-                # instance_specific = "0"
-                # if instance is not None:
-                #    instance_specific = self.instance_specifics.get(instance, "0")
 
                 # Line 12
                 return TrialInfoIntent.RUN, TrialInfo(
