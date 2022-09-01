@@ -300,6 +300,36 @@ def test_integrated_acquisition_function_compute_with_different_numbers_of_model
     #         rval = iaf(configurations)
     #         self.assertEqual(rval.shape, (2, 1))
 
+@pytest.fixture
+def x0_prior():
+    return MockPrior(pdf=lambda x: 2 * x, max_density=2)
+
+
+@pytest.fixture
+def hyperparameter_dict(x0_prior):
+    return {"x0": x0_prior}
+
+
+@pytest.fixture
+def prior_model(hyperparameter_dict):
+    return PriorMockModel(hyperparameter_dict=hyperparameter_dict)
+
+
+@pytest.fixture
+def beta():
+    return 2
+
+
+@pytest.fixture
+def prior_floor():
+    return 1e-1
+
+
+def test_prior_init_ei(prior_model, acquisition_function, beta):
+    acq_ei = acquisition_function
+    paf = PriorAcquisitionFunction(prior_model, acq_ei, beta)
+    assert paf.rescale_acq is False
+
 
 # class TestPriorAcquisitionFunction(unittest.TestCase):
 #     def setUp(self):
