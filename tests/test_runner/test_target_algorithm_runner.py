@@ -33,7 +33,7 @@ def target_failed(x: float, seed: int, instance: str) -> tuple[float, dict]:
     raise RuntimeError("Failed.")
 
 
-def target_dummy(config: Configuration, seed: int, instance: str, budget: float) -> int:
+def target_dummy(config: Configuration, seed: int) -> int:
     """Target function just returning the seed"""
     return seed
 
@@ -41,8 +41,8 @@ def target_dummy(config: Configuration, seed: int, instance: str, budget: float)
 def target_multi_objective1(
     config: Configuration,
     seed: int,
-    instance: str,
-    budget: float,
+    # instance: str,
+    # budget: float,
 ) -> list[float]:
     """Target function multi-objective return the seed twice"""
     return [seed, seed]
@@ -51,8 +51,8 @@ def target_multi_objective1(
 def target_multi_objective2(
     config: Configuration,
     seed: int,
-    instance: str,
-    budget: float,
+    # instance: str,
+    # budget: float,
 ) -> dict[str, float]:
     """Target function multi-objective return the seed twice as a dict"""
     return {"cost1": seed, "cost2": seed}
@@ -69,15 +69,22 @@ def make_runner(
     def _make(
         target_algorithm: Callable,
         use_multi_objective: bool = False,
+        use_instances: bool = False,
     ) -> TargetAlgorithmRunner:
         scenario = make_scenario(
             configspace=configspace_small,
             use_multi_objective=use_multi_objective,
         )
+
+        required_arguments = ["seed"]
+        if use_instances:
+            required_arguments += ["instance"]
+
         return TargetAlgorithmRunner(
             target_algorithm=target_algorithm,
             scenario=scenario,
             stats=make_stats(scenario),
+            required_arguments=required_arguments,
         )
 
     return _make
@@ -85,7 +92,7 @@ def make_runner(
 
 def test_run(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
     """Makes sure that we are able to run a config and return the expected values/types"""
-    runner = make_runner(target)
+    runner = make_runner(target, use_instances=True)
     run_info = TrialInfo(config=2, instance="test", seed=0, budget=0.0)
 
     # submit runs! then get the value
@@ -102,7 +109,7 @@ def test_run(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
 
 def test_serial_runs(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
     """Test submitting two runs in succession and that they complete after eachother in results"""
-    runner = make_runner(target_delayed)
+    runner = make_runner(target_delayed, use_instances=True)
 
     run_info = TrialInfo(config=2, instance="test2", seed=0, budget=0.0)
     runner.submit_run(run_info)
@@ -127,7 +134,7 @@ def test_serial_runs(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
 
 def test_fail(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
     """Test traceback and error end up in the additional info of a failing run"""
-    runner = make_runner(target_failed)
+    runner = make_runner(target_failed, use_instances=True)
     run_info = TrialInfo(config=2, instance="test", seed=0, budget=0.0)
 
     runner.submit_run(run_info)

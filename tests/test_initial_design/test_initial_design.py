@@ -88,5 +88,5 @@ def test_select_configurations(make_scenario, configspace_small):
         n_configs=15,
     )
 
-    with pytest.raises(NotImplementedError):
-        dc.select_configurations()
+    # We expect empty list here
+    assert dc.select_configurations() == []

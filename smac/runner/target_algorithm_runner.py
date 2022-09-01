@@ -115,8 +115,8 @@ class TargetAlgorithmRunner(AbstractRunner):
         self,
         config: Configuration,
         instance: str | None = None,
-        seed: int = 0,
         budget: float | None = None,
+        seed: int = 0,
         # instance_specific: str = "0",
     ) -> tuple[StatusType, float | list[float], float, dict]:
         """Calls the target algorithm with pynisher (if algorithm walltime limit or memory limit is set) or without."""

@@ -20,7 +20,7 @@ def target_algorithm():
 
             return cs
 
-        def train(self, config: Configuration) -> float:
+        def train(self, config: Configuration, seed: int = 0) -> float:
             x1 = config["x0"]
             x2 = config["x1"]
 

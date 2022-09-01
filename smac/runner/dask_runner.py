@@ -82,6 +82,7 @@ class DaskParallelRunner(AbstractRunner):
             target_algorithm=single_worker.target_algorithm,
             scenario=single_worker.scenario,
             stats=single_worker.stats,
+            required_arguments=single_worker._required_arguments,
         )
 
         # The single worker to hold on to and call run on
@@ -191,8 +192,8 @@ class DaskParallelRunner(AbstractRunner):
         self,
         config: Configuration,
         instance: str | None = None,
-        seed: int = 0,
         budget: float | None = None,
+        seed: int = 0,
     ) -> tuple[StatusType, float | list[float], float, dict]:
         """This method only complies with the abstract parent class. In the parallel
         case, we call the single worker run() method.

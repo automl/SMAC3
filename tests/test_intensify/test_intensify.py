@@ -53,14 +53,14 @@ def test_race_challenger_1(make_scenario, make_stats, configspace_small, runhist
     Makes sure that a racing configuration with better performance, is selected as incumbent.
     """
 
-    def target(x):
+    def target(x, seed=0):
         return (x["a"] + 1) / 1000.0
 
     scenario = make_scenario(configspace_small, use_instances=True)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
     intensifier.stats = stats
-    target_algorithm = TargetAlgorithmRunner(target, scenario, stats)
+    target_algorithm = TargetAlgorithmRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(3)
 
     assert intensifier.stage == IntensifierStage.RUN_FIRST_CONFIG
@@ -110,14 +110,14 @@ def test_race_challenger_large(make_scenario, make_stats, configspace_small, run
     Makes sure that a racing configuration with better performance, is selected as incumbent.
     """
 
-    def target(x):
+    def target(x, seed=0):
         return 1
 
     scenario = make_scenario(configspace_small, use_instances=True, deterministic=True)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
     intensifier.stats = stats
-    target_algorithm = TargetAlgorithmRunner(target, scenario, stats)
+    target_algorithm = TargetAlgorithmRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(3)
 
     for i in range(3):
@@ -175,14 +175,14 @@ def test_race_challenger_large_blocked_seed(make_scenario, make_stats, configspa
     Test _race_challenger whether seeds are blocked for challenger runs.
     """
 
-    def target(x):
+    def target(x, seed=0):
         return 1
 
     scenario = make_scenario(configspace_small, use_instances=True, deterministic=False)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
     intensifier.stats = stats
-    target_algorithm = TargetAlgorithmRunner(target, scenario, stats)
+    target_algorithm = TargetAlgorithmRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(3)
 
     for i in range(3):
@@ -243,14 +243,14 @@ def test_add_incumbent(make_scenario, make_stats, configspace_small, runhistory)
     Test _race_challenger whether seeds are blocked for challenger runs.
     """
 
-    def target(x):
+    def target(x, seed=0):
         return (x["a"] + 1) / 1000.0
 
     scenario = make_scenario(configspace_small, use_instances=True, deterministic=True)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
     intensifier.stats = stats
-    target_algorithm = TargetAlgorithmRunner(target, scenario, stats)
+    target_algorithm = TargetAlgorithmRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(3)
 
     instance, seed = intensifier._get_next_instance(
@@ -300,14 +300,14 @@ def test_add_incumbent_non_deterministic(make_scenario, make_stats, configspace_
     Test _add_inc_run().
     """
 
-    def target(x):
+    def target(x, seed=0):
         return (x["a"] + 1) / 1000.0
 
     scenario = make_scenario(configspace_small, use_instances=True, deterministic=False)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
     intensifier.stats = stats
-    target_algorithm = TargetAlgorithmRunner(target, scenario, stats)
+    target_algorithm = TargetAlgorithmRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(3)
 
     instance, seed = intensifier._get_next_instance(
@@ -368,7 +368,7 @@ def testget_next_challenger(make_scenario, make_stats, configspace_small, runhis
     Test get_next_challenger().
     """
 
-    def target(x):
+    def target(x, seed=0):
         return (x["a"] + 1) / 1000.0
 
     scenario = make_scenario(configspace_small, use_instances=True, deterministic=True)
@@ -400,7 +400,7 @@ def test_generate_challenger(make_scenario, make_stats, configspace_small, runhi
     Test generate_challenger()
     """
 
-    def target(x):
+    def target(x, seed=0, instance=None):
         return (x["a"] + 1) / 1000.0
 
     scenario = make_scenario(configspace_small, use_instances=True, deterministic=True)
@@ -434,14 +434,14 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
     Test evaluate_challenger() - a complete intensification run without a `always_race_against` configuration.
     """
 
-    def target(x):
+    def target(x, seed=0):
         return 2 * x["a"] + x["b"]
 
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=1, deterministic=True)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario, race_against=None, run_limit=1)
     intensifier.stats = stats
-    target_algorithm = TargetAlgorithmRunner(target, scenario, stats)
+    target_algorithm = TargetAlgorithmRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(20)
 
     config0 = configs[16]
@@ -579,14 +579,14 @@ def test_evaluate_challenger_2(make_scenario, make_stats, configspace_small, run
     Test evaluate_challenger for a resumed SMAC run (first run with incumbent)
     """
 
-    def target(x):
+    def target(x, seed=0):
         return 2 * x["a"] + x["b"]
 
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=1, deterministic=True)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario, race_against=None, run_limit=1)
     intensifier.stats = stats
-    target_algorithm = TargetAlgorithmRunner(target, scenario, stats)
+    target_algorithm = TargetAlgorithmRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(20)
 
     config0 = configs[16]
@@ -631,14 +631,14 @@ def test_no_new_intensification_wo_challenger_run(make_scenario, make_stats, con
     This test ensures that no new iteration is started if no challenger run was conducted.
     """
 
-    def target(x):
+    def target(x, seed=0):
         return 2 * x["a"] + x["b"]
 
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=1, deterministic=True)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario, race_against=None, run_limit=1, min_challenger=1)
     intensifier.stats = stats
-    target_algorithm = TargetAlgorithmRunner(target, scenario, stats)
+    target_algorithm = TargetAlgorithmRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(20)
 
     config0 = configs[16]

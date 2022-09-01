@@ -38,7 +38,7 @@ def get_optimum():
     return optimum
 
 
-def tae(cfg):
+def tae(cfg, seed=0):
     f1, f2 = schaffer(cfg["x"])
     return {"cost1": f1, "cost2": f2}
 

@@ -52,6 +52,7 @@ def make_dummy_ta(
             target_algorithm=target_algorithm,
             scenario=scenario,
             stats=make_stats(scenario),
+            required_arguments=["seed", "instance"],
         )
 
     return _make

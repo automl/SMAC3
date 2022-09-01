@@ -81,7 +81,11 @@ class AbstractRunner(ABC):
     """
 
     def __init__(
-        self, target_algorithm: Callable, scenario: smac.scenario.Scenario, stats: Stats, required_arguments: list[str]
+        self,
+        target_algorithm: Callable,
+        scenario: smac.scenario.Scenario,
+        stats: Stats,
+        required_arguments: list[str],
     ):
         self.scenario = scenario
 
@@ -152,8 +156,8 @@ class AbstractRunner(ABC):
             status, cost, runtime, additional_info = self.run(
                 config=run_info.config,
                 instance=run_info.instance,
-                seed=run_info.seed,
                 budget=run_info.budget,
+                seed=run_info.seed,
             )
         except Exception as e:
             status = StatusType.CRASHED
@@ -225,8 +229,8 @@ class AbstractRunner(ABC):
         self,
         config: Configuration,
         instance: str | None = None,
-        seed: int = 0,
         budget: float | None = None,
+        seed: int = 0,
     ) -> tuple[StatusType, float | list[float], float, dict]:
         """Runs the target algorithm with a configuration on a single instance with instance specifics.
 

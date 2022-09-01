@@ -9,10 +9,8 @@ from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 
-from smac.intensification.successive_halving import (
-    SuccessiveHalving,
-    SuccessiveHalvingWorker,
-)
+from smac.intensification.successive_halving import SuccessiveHalving
+from smac.intensification.successive_halving_worker import SuccessiveHalvingWorker
 from smac.runhistory import RunHistory, TrialInfo, TrialValue, TrialInfoIntent
 from smac.runner.abstract_runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner

@@ -36,7 +36,7 @@ def get_optimum():
     return optimum
 
 
-def tae(cfg):
+def tae(cfg, seed=0):
     f1, f2 = schaffer(cfg["x"])
     return {"cost1": f1, "cost2": f2}
 
@@ -49,8 +49,7 @@ def configspace():
     return cs
 
 
-@pytest.mark.parametrize("facade", [BlackBoxFacade, HyperparameterFacade,
-                                    AlgorithmConfigurationFacade, RandomFacade])
+@pytest.mark.parametrize("facade", [BlackBoxFacade, HyperparameterFacade, AlgorithmConfigurationFacade, RandomFacade])
 def test_mean_aggregation(facade, make_scenario, configspace):
     scenario = make_scenario(configspace, use_multi_objective=True)
 
