@@ -15,7 +15,7 @@ from smac.acquisition.functions.abstract_acquisition_function import (
 from smac.callback import Callback
 from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.configspace import Configuration
-from smac.initial_design.abstract_initial_design import AbstractInitialDesign
+from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.model.abstract_model import AbstractModel
 
@@ -27,7 +27,6 @@ from smac.runhistory.encoder.abstract_encoder import AbstractRunHistoryEncoder
 from smac.runhistory.enumerations import TrialInfoIntent
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.dask_runner import DaskParallelRunner
-from smac.runner.abstract_runner import AbstractRunner
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.scenario import Scenario
 from smac.main import SMBO
@@ -85,7 +84,7 @@ class Facade:
         model: AbstractModel | None = None,
         acquisition_function: AbstractAcquisitionFunction | None = None,
         acquisition_optimizer: AbstractAcquisitionOptimizer | None = None,
-        initial_design: AbstractInitialDesign | None = None,
+        initial_design: InitialDesign | None = None,
         random_design: AbstractRandomDesign | None = None,
         intensifier: AbstractIntensifier | None = None,
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
@@ -297,7 +296,7 @@ class Facade:
 
     @staticmethod
     @abstractmethod
-    def get_initial_design(scenario: Scenario) -> AbstractInitialDesign:
+    def get_initial_design(scenario: Scenario) -> InitialDesign:
         """Returns an instance of the initial design class to be used in the BO loop,
         specifying how the configurations the BO loop is 'warm-started' with are selected."""
         raise NotImplementedError

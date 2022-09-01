@@ -14,7 +14,7 @@ from smac.acquisition.functions.abstract_acquisition_function import (
 from smac.callback import Callback
 from smac.configspace import Configuration
 from smac.constants import MAXINT
-from smac.initial_design import AbstractInitialDesign
+from smac.initial_design import InitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.model.abstract_model import AbstractModel
 from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue, StatusType
@@ -99,7 +99,7 @@ class BaseSMBO:
         scenario: Scenario,
         stats: Stats,
         runner: AbstractRunner,
-        initial_design: AbstractInitialDesign,
+        initial_design: InitialDesign,
         runhistory: RunHistory,
         runhistory_encoder: RunHistoryEncoder,
         intensifier: AbstractIntensifier,
@@ -230,14 +230,6 @@ class BaseSMBO:
 
                 run_info.config.config_id = self._runhistory.config_ids[run_info.config]
                 self._runner.submit_run(run_info=run_info)
-
-                # There are 2 criteria that the stats object uses to know
-                # if the budged was exhausted.
-                # The budget time, which can only be known when the run finishes,
-                # And the number of ta executions. Because we submit the job at this point,
-                # we count this submission as a run. This prevent for using more
-                # runner runs than what the config allows
-                self._stats._submitted += 1
             elif intent == TrialInfoIntent.SKIP:
                 # No launch is required
                 # This marks a transition request from the intensifier
@@ -430,42 +422,17 @@ class BaseSMBO:
         self._scenario.save()
 
         # Make sure we use the current incumbent
-        self._incumbent = self._stats.get_incumbent()
+        self._incumbent = self.stats.get_incumbent()
 
-        # Initialization, depends on input
-        assert 1 == 0, "This has to be thought thru."
-        if self._stats.submitted == 0 and self._incumbent is None:
-            if len(self._runhistory) == 0 or force_initial_design:
-                logger.info("Running initial design...")
-                # Intensifier initialization
-                self._initial_design_configs = self._initial_design.select_configurations()
+        logger.info("Selecting configurations from initial design...")
+        self._initial_design_configs = self._initial_design.select_configurations()
 
-                # to be on the safe side, never return an empty list of initial configs
-                if not self._initial_design_configs:
-                    self._initial_design_configs = [self._configspace.get_default_configuration()]
-            else:
-                logger.info(
-                    f"Initial design is skipped since {len(self._runhistory)} entries are found in the runhistory."
-                )
-
-                self._incumbent = self._runhistory.get_incumbent()
-                self._initial_design_configs = self._runhistory.get_configs()
-
-                logger.info(
-                    f"Added {len(self._initial_design_configs)} configs from the runhistory as initial design and "
-                    "determined the incumbent."
-                )
+        # Sanity-checking: We expect an empty runhistory if submitted/finished in stats is 0
+        if self.stats.finished == 0 or self.stats.submitted == 0 or self._incumbent is None:
+            assert self.runhistory.empty()
         else:
-            # Restoring the state
-            if self._incumbent is None:
-                raise RuntimeError(
-                    "It seems like SMAC restored from a previous state which failed.\n"
-                    "Please remove the previous files and try again. "
-                    "Alternatively, you can set `overwrite` to true in the facade."
-                )
-
             logger.info(f"State restored! Starting optimization with incumbent {self._incumbent.get_dictionary()}.")
-            self._stats.print()
+            self.stats.print()
 
     def _get_timebound_for_intensification(self, time_spent: float, update: bool) -> float:
         """Calculate time left for intensify from the time spent on choosing challengers using the

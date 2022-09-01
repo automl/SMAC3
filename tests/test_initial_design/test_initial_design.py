@@ -1,7 +1,7 @@
 import pytest
 
 
-from smac.initial_design import AbstractInitialDesign
+from smac.initial_design import InitialDesign
 from smac.initial_design.default_design import DefaultInitialDesign
 
 
@@ -27,7 +27,7 @@ def test_multi_config_design(make_scenario, configspace_small):
     scenario = make_scenario(configspace_small)
     configs = configspace_small.sample_configuration(5)
 
-    dc = AbstractInitialDesign(
+    dc = InitialDesign(
         scenario=scenario,
         n_configs=10,  # Will be ignored
         configs=configs,
@@ -44,21 +44,21 @@ def test_config_numbers(make_scenario, configspace_small):
     scenario = make_scenario(configspace_small)
     configs = configspace_small.sample_configuration(5)
 
-    dc = AbstractInitialDesign(
+    dc = InitialDesign(
         scenario=scenario,
         n_configs=15,
     )
 
     assert dc.n_configs == 15
 
-    dc = AbstractInitialDesign(
+    dc = InitialDesign(
         scenario=scenario,
         configs=configs,
     )
 
     assert dc.n_configs == 5
 
-    dc = AbstractInitialDesign(
+    dc = InitialDesign(
         scenario=scenario,
         n_configs_per_hyperparameter=5,
     )
@@ -67,14 +67,14 @@ def test_config_numbers(make_scenario, configspace_small):
 
     # We can't have more initial configs than
     with pytest.raises(ValueError):
-        dc = AbstractInitialDesign(
+        dc = InitialDesign(
             scenario=scenario,
             n_configs=200,
         )
 
     # We need to specify at least `n_configs`, `configs` or `n_configs_per_hyperparameter`
     with pytest.raises(ValueError):
-        dc = AbstractInitialDesign(
+        dc = InitialDesign(
             scenario=scenario,
             n_configs_per_hyperparameter=None,
         )
@@ -83,7 +83,7 @@ def test_config_numbers(make_scenario, configspace_small):
 def test_select_configurations(make_scenario, configspace_small):
     scenario = make_scenario(configspace_small)
 
-    dc = AbstractInitialDesign(
+    dc = InitialDesign(
         scenario=scenario,
         n_configs=15,
     )

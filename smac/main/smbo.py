@@ -100,6 +100,15 @@ class SMBO(BaseSMBO):
             n_workers=self._runner.available_worker_count(),
         )
 
+        if intent == TrialInfoIntent.RUN:
+            # There are 2 criteria that the stats object uses to know
+            # if the budged was exhausted.
+            # The budget time, which can only be known when the run finishes,
+            # And the number of ta executions. Because we submit the job at this point,
+            # we count this submission as a run. This prevent for using more
+            # runner runs than what the config allows
+            self._stats._submitted += 1
+
         for callback in self._callbacks:
             callback.on_ask_end(self, trial_info)
 

@@ -3,13 +3,13 @@ from __future__ import annotations
 from ConfigSpace import Configuration
 from typing import Any
 
-from smac.initial_design.abstract_initial_design import AbstractInitialDesign
+from smac.initial_design.initial_design import InitialDesign
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class RandomInitialDesign(AbstractInitialDesign):
+class RandomInitialDesign(InitialDesign):
     """Initial design that evaluates random configurations."""
 
     def get_meta(self) -> dict[str, Any]:

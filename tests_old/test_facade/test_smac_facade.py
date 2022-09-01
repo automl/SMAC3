@@ -18,7 +18,7 @@ from smac.model.utils import get_rng
 from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.initial_design.factorial_design import FactorialInitialDesign
-from smac.initial_design.abstract_initial_design import AbstractInitialDesign
+from smac.initial_design.initial_design import InitialDesign
 from smac.initial_design.latin_hypercube_design import LatinHypercubeInitialDesign
 from smac.initial_design.random_design import RandomInitialDesign
 from smac.initial_design.sobol_design import SobolInitialDesign
@@ -295,10 +295,10 @@ class TestSMACFacade(unittest.TestCase):
         self.assertEqual(smbo.solver.intensifier.maxR, 987)
         smbo = AlgorithmConfigurationFacade(
             self.scenario,
-            initial_design=AbstractInitialDesign,
+            initial_design=InitialDesign,
             initial_design_kwargs={"configs": "dummy"},
         )
-        self.assertIsInstance(smbo.solver.initial_design, AbstractInitialDesign)
+        self.assertIsInstance(smbo.solver.initial_design, InitialDesign)
         self.assertEqual(smbo.solver.initial_design.configs, "dummy")
 
         for initial_incumbent_string, expected_instance in (

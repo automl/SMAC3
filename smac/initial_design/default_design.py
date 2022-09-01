@@ -2,13 +2,13 @@ from __future__ import annotations
 
 from ConfigSpace import Configuration
 
-from smac.initial_design.abstract_initial_design import AbstractInitialDesign
+from smac.initial_design.initial_design import InitialDesign
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class DefaultInitialDesign(AbstractInitialDesign):
+class DefaultInitialDesign(InitialDesign):
     """Initial design that evaluates only the default configuration."""
 
     def _select_configurations(self) -> list[Configuration]:

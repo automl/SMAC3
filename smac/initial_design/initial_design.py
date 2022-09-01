@@ -24,7 +24,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class AbstractInitialDesign:
+class InitialDesign:
     """Base class for initial design strategies that evaluates multiple configurations.
 
     Parameters
@@ -104,11 +104,10 @@ class AbstractInitialDesign:
                 f"Initial budget {self.n_configs} cannot be higher than the number of trials {scenario.n_trials}."
             )
 
-    @abstractmethod
     def _select_configurations(self) -> list[Configuration]:
         """Selects the initial configurations. Depending on the implementation
         of the initial_design."""
-        raise NotImplementedError
+        return []
 
     def _transform_continuous_designs(
         self, design: np.ndarray, origin: str, configspace: ConfigurationSpace
@@ -182,6 +181,7 @@ class AbstractInitialDesign:
         logger.info(f"Retrieving {self.n_configs} configurations for the initial design.")
         if self.n_configs == 0:
             return []
+
         if self.configs is None:
             self.configs = self._select_configurations()
 
