@@ -325,11 +325,25 @@ def prior_floor():
     return 1e-1
 
 
+# TODO for Prior: test if hyperparameters raise value error if the model has not been set before
 def test_prior_init_ei(prior_model, acquisition_function, beta):
     acq_ei = acquisition_function
     paf = PriorAcquisitionFunction(prior_model, acq_ei, beta)
     assert paf.rescale_acq is False
 
+
+def test_prior_init_ts(prior_model, acq_ts, beta):
+    paf = PriorAcquisitionFunction(model=prior_model, acquisition_function=acq_ts, decay_beta=beta)
+    assert paf.rescale_acq is True
+
+
+def test_prior_update(prior_model, acquisition_function, beta):
+    ei = acquisition_function
+    paf = PriorAcquisitionFunction(prior_model, ei, beta)
+    paf.update(model=prior_model, eta=2)
+    assert paf.eta == 2
+    assert paf.acq.eta == 2
+    assert paf.iteration_number == 1
 
 # class TestPriorAcquisitionFunction(unittest.TestCase):
 #     def setUp(self):

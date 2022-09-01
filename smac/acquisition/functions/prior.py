@@ -64,7 +64,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         super().__init__()
         self.long_name = "Prior Acquisition Function (%s)" % acquisition_function.__class__.__name__
         self.acq: AbstractAcquisitionFunction = acquisition_function
-        self._functions: list[AbstractAcquisitionFunction]= []
+        self._functions: list[AbstractAcquisitionFunction] = []
         self.eta: float | None = None
 
         self._hyperparameters: dict[Any, list[Configuration]] | None = None
