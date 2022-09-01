@@ -46,12 +46,17 @@ different and potentially improving configurations.
 
 .. note::
 
-    Crucially, the arguments of the target algorithm depend on the facade, that is acting on it.
-    The MultiFidelityFacade requires an additional :python:`budget` argument, by which you can define the amount of fidelity
-    (e.g. number of epochs, dataset subset size, ...) that you want to allocate for a configuration.
-    In the same manner, should you choose to evaluate your target algorithm on a set of problem instances,
-    the target algorithm will be required to have an :python:`instance` argument. Notice, that you will have
-    to specify the actual instances to choose from in the Scenario object.
+    In general, the arguments of the target algorithm depend on the intensifier. However,
+    in all cases, the first argument must be the configuration (arbitrary argument name is possible here) and a seed.
+    If you specified instances in the scenario, SMAC requires `instance` as argument additionally. If you use
+    `SuccessiveHalving` or `Hyperband` as intensifier but you did not specify instances, SMAC passes `budget` as
+    argument to the target function.
+
+
+.. warning::
+
+    SMAC passes either `instance` or `budget` to the target function but never both.
+
 
 Scenario
 --------
