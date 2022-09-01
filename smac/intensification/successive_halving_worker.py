@@ -5,11 +5,10 @@ from typing import Callable, Iterator, List, Optional
 import numpy as np
 
 from smac.configspace import Configuration
-from smac.constants import MAXINT
 from smac.intensification.abstract_intensifier import AbstractIntensifier
+from smac.intensification.successive_halving import SuccessiveHalving
 from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue, StatusType
 from smac.runhistory.runhistory import RunHistory
-from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -105,88 +104,41 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
 
     def __init__(
         self,
-        scenario: Scenario,
-        instance_seed_pairs: list[tuple[str | None, int]] | None = None,
-        instance_order: str | None = "shuffle_once",
-        incumbent_selection: str = "highest_executed_budget",
-        n_initial_challengers: int | None = None,
-        min_challenger: int = 1,
-        eta: float = 3,
-        intensify_percentage: float = 0.5,
-        seed: int | None = None,
-        n_seeds: int | None = None,
+        successive_halving: SuccessiveHalving,
         identifier: int = 0,
         _all_budgets: np.ndarray | None = None,
         _n_configs_in_stage: np.ndarray | None = None,
     ) -> None:
         super().__init__(
-            scenario=scenario,
-            min_challenger=min_challenger,
-            intensify_percentage=intensify_percentage,
-            seed=seed,
+            scenario=successive_halving.scenario,
+            min_challenger=successive_halving.min_challenger,
+            intensify_percentage=successive_halving.intensify_percentage,
+            seed=successive_halving.seed,
         )
 
+        self.successive_halving = successive_halving
         self.first_run = True
         self.identifier = identifier
         self.logger = get_logger(f"{__name__}.{identifier}")
 
-        if self.min_challenger > 1:
-            raise ValueError("Successive Halving cannot handle argument `min_challenger` > 1.")
-
-        # Instances
-        self.n_seeds = n_seeds if n_seeds else 1
-        self.instance_order = instance_order
-
-        if self.instances is not None and len(self.instances) == 1 and self.n_seeds > 1:
-            raise NotImplementedError("The case multiple seeds and one instance can not be handled yet!")
-
-        # If instances are coming from Hyperband, skip the instance preprocessing section
-        # it is already taken care by Hyperband.
-        self.instance_seed_pairs: list[tuple[str | None, int]]
-        if instance_seed_pairs is None:
-            # Set seed(s) for all SH runs. Currently user gives the number of seeds to consider.
-            if self.deterministic:
-                seeds = [0]
-            else:
-                seeds = [int(s) for s in self.rng.randint(low=0, high=MAXINT, size=self.n_seeds)]
-                if self.n_seeds == 1:
-                    self.logger.warning(
-                        "The target algorithm is specified to be non-deterministic, "
-                        "but number of seeds to evaluate are set to 1. "
-                        "Consider setting `n_seeds` > 1."
-                    )
-
-            # storing instances & seeds as tuples
-            if self.instances is not None:
-                self.instance_seed_pairs = [(i, s) for s in seeds for i in self.instances]
-            else:
-                self.instance_seed_pairs = [(None, s) for s in seeds]
-
-            # determine instance-seed pair order
-            if self.instance_order == "shuffle_once":
-                # randomize once
-                self.rng.shuffle(self.instance_seed_pairs)  # type: ignore
+        if _all_budgets is not None and _n_configs_in_stage is not None:
+            # Assert we use the given numbers to avoid rounding issues, see #701
+            self.all_budgets = _all_budgets
+            self.n_configs_in_stage = _n_configs_in_stage
         else:
-            self.instance_seed_pairs = instance_seed_pairs
+            eta = successive_halving.eta
+            max_sh_iterations = successive_halving.max_sh_iterations
+            max_budget = successive_halving.max_budget
+            n_initial_challengers = successive_halving.n_initial_challengers
 
-        # Successive halving parameters
-        self._init_sh_params(
-            eta=eta,
-            n_initial_challengers=n_initial_challengers,
-            _all_budgets=_all_budgets,
-            _n_configs_in_stage=_n_configs_in_stage,
-        )
-
-        # Challengers can be repeated only if optimizing across multiple seeds or changing instance orders every run
-        # (this does not include having multiple instances)
-        if self.n_seeds > 1 or self.instance_order == "shuffle":
-            self.repeat_configs = True
-        else:
-            self.repeat_configs = False
-
-        # Incumbent selection design
-        assert incumbent_selection in ["highest_executed_budget", "highest_budget", "any_budget"]
-        self.incumbent_selection = incumbent_selection
+            # budgets to consider in each stage
+            linspace = -np.linspace(max_sh_iterations, 0, max_sh_iterations + 1)
+            self.all_budgets = max_budget * np.power(eta, linspace)
+            # number of challengers to consider in each stage
+            n_configs_in_stage = n_initial_challengers * np.power(
+                eta, -np.linspace(0, max_sh_iterations, max_sh_iterations + 1)
+            )
+            self.n_configs_in_stage = np.array(np.round(n_configs_in_stage), dtype=int).tolist()
 
         # Current instance index tracks two things. Configurations that are to be launched,
         # That is config A needs to run in 3 instances/seed pairs, then current_instance_indices should
@@ -213,93 +165,6 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # when we access the complete list of configs from the run history, we filter
         # the ones launched by the current succesive halver using self.run_tracker
         self.run_tracker: dict[tuple[Configuration, str | None, int, float], bool] = {}
-
-    def _init_sh_params(
-        self,
-        eta: float,
-        n_initial_challengers: int | None = None,
-        _all_budgets: np.ndarray | None = None,
-        _n_configs_in_stage: np.ndarray | None = None,
-    ) -> None:
-        """Initialize Successive Halving parameters.
-
-        Parameters
-        ----------
-        eta : float
-            'halving' factor after each iteration in a successive halving run
-        n_initial_challengers : Optional[int]
-            number of challengers to consider for the initial budget
-        _all_budgets: Optional[np.ndarray] = None
-            Used internally when HB uses SH as a subrouting
-        _n_configs_in_stage: Optional[np.ndarray] = None
-            Used internally when HB uses SH as a subrouting
-        """
-        if eta <= 1:
-            raise ValueError("The parameter `eta` must be greater than 1.")
-
-        self.eta = eta
-
-        # Budgets
-        min_budget = self.scenario.min_budget
-        max_budget = self.scenario.max_budget
-
-        if max_budget is not None and min_budget is not None and max_budget < min_budget:
-            raise ValueError("Max budget has to be larger than min budget.")
-
-        # If only 1 instance was provided & quality objective, then use algorithm_walltime_limit as budget
-        # else, use instances as budget
-        if self.instance_seed_pairs is None or len(self.instance_seed_pairs) <= 1:
-            # budget with algorithm_walltime_limit
-            if min_budget is None or max_budget is None:
-                raise ValueError(
-                    "Successive Halving with real-valued budget (i.e., only 1 instance) "
-                    "requires parameters `min_budget` and `max_budget` for intensification!"
-                )
-
-            self.min_budget = min_budget
-            self.max_budget = max_budget
-            self.instance_as_budget = False
-        else:
-            # Budget with instances
-            self.min_budget = int(min_budget) if min_budget else 1
-            self.max_budget = int(max_budget) if max_budget else len(self.instance_seed_pairs)
-            self.instance_as_budget = True
-
-            if self.max_budget > len(self.instance_seed_pairs):
-                raise ValueError("Max budget can not be greater than the number of instance-seed pairs.")
-            if self.max_budget < len(self.instance_seed_pairs):
-                self.logger.warning(
-                    "Max budget (%d) does not include all instance-seed pairs (%d)."
-                    % (self.max_budget, len(self.instance_seed_pairs))
-                )
-
-        budget_type = "INSTANCES" if self.instance_as_budget else "REAL-VALUED"
-        self.logger.info(
-            "Successive Halving configuration: budget type = %s, "
-            "Initial budget = %.2f, Max. budget = %.2f, eta = %.2f"
-            % (budget_type, self.min_budget, self.max_budget, self.eta)
-        )
-
-        # Pre-computing stuff for SH
-        max_sh_iter = int(np.floor(np.log(self.max_budget / self.min_budget) / np.log(self.eta)))
-
-        # Initial number of challengers to sample
-        if n_initial_challengers is None:
-            n_initial_challengers = int(self.eta**max_sh_iter)
-
-        if _all_budgets is not None and _n_configs_in_stage is not None:
-            # Assert we use the given numbers to avoid rounding issues, see #701
-            self.all_budgets = _all_budgets
-            self.n_configs_in_stage = _n_configs_in_stage
-        else:
-            # budgets to consider in each stage
-            linspace = -np.linspace(max_sh_iter, 0, max_sh_iter + 1)
-            self.all_budgets = self.max_budget * np.power(self.eta, linspace)
-            # number of challengers to consider in each stage
-            n_configs_in_stage = n_initial_challengers * np.power(
-                self.eta, -np.linspace(0, max_sh_iter, max_sh_iter + 1)
-            )
-            self.n_configs_in_stage = np.array(np.round(n_configs_in_stage), dtype=int).tolist()
 
     def process_results(
         self,
@@ -428,7 +293,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                     self.sh_iters + 1,
                     self.stage + 1,
                     self.all_budgets[self.stage],
-                    self.max_budget,
+                    self.successive_halving.max_budget,
                     self.n_configs_in_stage[self.stage],
                 )
             )
@@ -563,7 +428,6 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                     return TrialInfoIntent.SKIP, TrialInfo(
                         config=None,
                         instance=None,
-                        # instance_specific="0",
                         seed=0,
                         budget=0.0,
                         source=self.identifier,
@@ -600,6 +464,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # perspective
         self.new_challenger = new_challenger
 
+        # TODO: Budget = None?
         budget = 0.0 if self.instance_as_budget else curr_budget
         self.run_tracker[(challenger, instance, seed, budget)] = False
 

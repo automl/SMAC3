@@ -10,7 +10,7 @@ from smac.model.imputer.random_forest_imputer import RandomForestImputer
 from smac.model.utils import get_types
 from smac.runhistory import runhistory
 from smac.runhistory.encoder import encoder
-from smac.runner.runner import StatusType
+from smac.runner.abstract_runner import StatusType
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"

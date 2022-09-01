@@ -8,7 +8,7 @@ from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.runhistory.runhistory import RunInfo
 from smac.stats import Stats
-from smac.runner.runner import StatusType
+from smac.runner.abstract_runner import StatusType
 from smac.runner.serial_runner import SerialRunner
 
 if sys.version_info[0] == 2:

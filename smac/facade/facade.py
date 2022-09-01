@@ -27,7 +27,7 @@ from smac.runhistory.encoder.abstract_encoder import AbstractRunHistoryEncoder
 from smac.runhistory.enumerations import TrialInfoIntent
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.dask_runner import DaskParallelRunner
-from smac.runner.runner import AbstractRunner
+from smac.runner.abstract_runner import AbstractRunner
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.scenario import Scenario
 from smac.main import SMBO
@@ -80,7 +80,7 @@ class Facade:
     def __init__(
         self,
         scenario: Scenario,
-        target_algorithm: AbstractRunner | Callable,
+        target_algorithm: Callable,
         *,
         model: AbstractModel | None = None,
         acquisition_function: AbstractAcquisitionFunction | None = None,
@@ -128,19 +128,11 @@ class Facade:
         scenario.configspace.seed(scenario.seed)
 
         # Prepare the algorithm executer
-        runner: AbstractRunner
-        if callable(target_algorithm):
-            # We wrap our algorithm with the AlgorithmExecuter to (potentially) use pynisher and catch exceptions
-            runner = TargetAlgorithmRunner(
-                target_algorithm,
-                scenario=scenario,
-                stats=stats,
-            )
-        elif isinstance(target_algorithm, AbstractRunner):
-            runner = target_algorithm
-        else:
-            # TODO: Integrate ExecuteTARunOld again
-            raise NotImplementedError
+        runner = TargetAlgorithmRunner(
+            target_algorithm,
+            scenario=scenario,
+            stats=stats,
+        )
 
         # In case of multiple jobs, we need to wrap the runner again using `DaskParallelRunner`
         if (n_workers := scenario.n_workers) > 1:
@@ -372,3 +364,11 @@ class Facade:
 
         # Make sure the same acquisition function is used
         assert self._acquisition_function == self._acquisition_optimizer.acquisition_function
+
+    def _get_signature_arguments(self) -> None:
+        arguments = ["seed"]
+
+        if self._scenario.instance_features is not None:
+            arguments += ["instance"]
+
+        # if self._

@@ -6,7 +6,7 @@ import unittest
 
 from smac.optimizer import pSMAC
 from smac.runhistory.runhistory import DataOrigin, RunHistory, TrialKey
-from smac.runner.runner import StatusType
+from smac.runner.abstract_runner import StatusType
 from smac.utils import _test_helpers
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

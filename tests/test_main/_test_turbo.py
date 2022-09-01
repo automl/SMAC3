@@ -6,20 +6,23 @@ from smac.scenario import Scenario
 from smac.facade.blackbox_facade import BlackBoxFacade
 from smac.main.turbo import TuRBOSMBO
 from smac.runhistory.runhistory import RunHistory
-from smac.runner.runner import StatusType
+from smac.runner.abstract_runner import StatusType
 from smac.utils import _test_helpers
 
 
 class TuRBOFacade(BlackBoxFacade):
     """A wrapper that allows to run TuRBO optimizer. Its arguments are described under smac.main.turbo.TuRBOSMBO"""
-    def _init_optimizer(self,
-                        length_init=0.8,
-                        length_min=0.5**8,
-                        length_max=1.6,
-                        success_tol=3,
-                        failure_tol_min=4,
-                        n_init_x_params=2,
-                        n_candidate_max=5000) -> None:
+
+    def _init_optimizer(
+        self,
+        length_init=0.8,
+        length_min=0.5**8,
+        length_max=1.6,
+        success_tol=3,
+        failure_tol_min=4,
+        n_init_x_params=2,
+        n_candidate_max=5000,
+    ) -> None:
         self.optimizer = TuRBOSMBO(
             length_init=length_init,
             length_min=length_min,
@@ -41,6 +44,7 @@ class TuRBOFacade(BlackBoxFacade):
             random_design=self.random_design,
             seed=self.seed,
         )
+
 
 def test_choose_next(make_scenario):
     cs = _test_helpers.get_branin_config_space()

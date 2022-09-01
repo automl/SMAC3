@@ -5,7 +5,7 @@ import unittest
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.stats import Stats
-from smac.runner.runner import StatusType
+from smac.runner.abstract_runner import StatusType
 from smac.runner.old.execute_ta_run_old import ExecuteTARunOld
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

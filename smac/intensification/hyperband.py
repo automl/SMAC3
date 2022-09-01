@@ -3,15 +3,13 @@ from __future__ import annotations
 from typing import Any, Tuple
 
 from smac.intensification.abstract_intensifier import AbstractIntensifier
-from smac.intensification.parallel_scheduling import ParallelScheduler
-from smac.intensification.hyperband_worker import HyperbandWorker
-from smac.scenario import Scenario
+from smac.intensification.successive_halving import SuccessiveHalving
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class Hyperband(ParallelScheduler):
+class Hyperband(SuccessiveHalving):
     """Races multiple challengers against an incumbent using Hyperband method.
 
     Implementation from "BOHB: Robust and Efficient Hyperparameter Optimization at Scale" (Falkner et al. 2018)
@@ -60,32 +58,6 @@ class Hyperband(ParallelScheduler):
         * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
     """
 
-    def __init__(
-        self,
-        scenario: Scenario,
-        instance_seed_pairs: list[tuple[str | None, int]] | None = None,
-        instance_order: str | None = "shuffle_once",
-        incumbent_selection: str = "highest_executed_budget",
-        min_challenger: int = 1,
-        eta: float = 3,
-        intensify_percentage: float = 0.5,
-        seed: int | None = None,
-        n_seeds: int | None = None,
-    ) -> None:
-
-        super().__init__(
-            scenario=scenario,
-            min_challenger=min_challenger,
-            intensify_percentage=intensify_percentage,
-            seed=seed,
-        )
-
-        self.instance_seed_pairs = instance_seed_pairs
-        self.instance_order = instance_order
-        self.incumbent_selection = incumbent_selection
-        self.eta = eta
-        self.n_seeds = n_seeds
-
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
@@ -112,7 +84,8 @@ class Hyperband(ParallelScheduler):
             example, in the case of Successive Halving it can be the number
             of configurations launched
         """
-        # For mypy -- we expect to work with _Hyperband instances
+        from smac.intensification.hyperband_worker import HyperbandWorker
+
         assert isinstance(intensifier, HyperbandWorker)
         assert intensifier.sh_intensifier
 
@@ -138,25 +111,14 @@ class Hyperband(ParallelScheduler):
         -------
             Whether or not a new instance was added.
         """
+        from smac.intensification.hyperband_worker import HyperbandWorker
+
         if len(self.intensifier_instances) >= n_workers:
             return False
 
         hp = HyperbandWorker(
-            scenario=self.scenario,
-            # instances=self._instances,
-            # instance_specifics=self._instance_specifics,
-            # algorithm_walltime_limit=self.algorithm_walltime_limit,
-            # deterministic=self.deterministic,
-            # min_budget=self.min_budget,
-            # max_budget=self.max_budget,
-            eta=self.eta,
-            instance_seed_pairs=self.instance_seed_pairs,
-            instance_order=self.instance_order,
-            min_challenger=self.min_challenger,
-            incumbent_selection=self.incumbent_selection,
+            hyperband=self,
             identifier=len(self.intensifier_instances),
-            seed=self.seed,
-            n_seeds=self.n_seeds,
         )
         hp.stats = self.stats
         self.intensifier_instances[len(self.intensifier_instances)] = hp

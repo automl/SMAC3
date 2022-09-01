@@ -3,7 +3,7 @@ from smac.runner.exceptions import (
     FirstRunCrashedException,
     TargetAlgorithmAbortException,
 )
-from smac.runner.runner import AbstractRunner
+from smac.runner.abstract_runner import AbstractRunner
 from smac.runner.serial_runner import SerialRunner
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 

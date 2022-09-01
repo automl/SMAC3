@@ -10,7 +10,7 @@ from dask.distributed import Client
 
 from smac.runhistory import TrialInfo, TrialValue
 from smac.runner.dask_runner import DaskParallelRunner
-from smac.runner.runner import StatusType
+from smac.runner.abstract_runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.scenario import Scenario
 from smac.stats import Stats

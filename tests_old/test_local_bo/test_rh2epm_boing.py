@@ -8,7 +8,7 @@ from smac.runhistory.encoder.boing_encoder import (
     RunHistory2EPM4CostWithRaw,
     RunHistory2EPM4ScaledLogCostWithRaw,
 )
-from smac.runner.runner import StatusType
+from smac.runner.abstract_runner import StatusType
 
 from tests_old.test_runhistory.test_runhistory2epm import RunhistoryTest
 

@@ -93,7 +93,7 @@ class AbstractIntensifier:
             self.instances = [None]
         else:
             # Removing duplicates here
-            # Fun fact: When using a set here, it always included randomness
+            # Fun fact: When using a set here, it always includes randomness
             self.instances = list(dict.fromkeys(scenario.instances))
 
         # General attributes

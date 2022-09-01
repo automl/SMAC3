@@ -20,7 +20,7 @@ from smac.model.utils import get_types
 from smac.runhistory import TrialInfo, TrialKey, TrialValue, StatusType
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory
-from smac.runner.runner import AbstractRunner
+from smac.runner.abstract_runner import AbstractRunner
 
 # from smac.runner.old.execute_ta_run_old import ExecuteTARunOld
 from smac.stats import Stats

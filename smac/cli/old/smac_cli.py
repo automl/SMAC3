@@ -20,7 +20,7 @@ from smac.facade.hyperparameter_facade import SMAC4HPO
 from smac.facade.psmac import PSMAC  # type: ignore[attr-defined] # noqa F821
 from smac.facade.random_facade import ROAR
 from smac.runhistory.runhistory import RunHistory
-from smac.runner.runner import FirstRunCrashedException, TargetAlgorithmAbortException
+from smac.runner.abstract_runner import FirstRunCrashedException, TargetAlgorithmAbortException
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 from smac.stats import Stats
 

@@ -36,7 +36,7 @@ from smac.runhistory.encoder.encoder import (
     RunHistory2EPM4EIPS,
     RunhistoryLogTransformer,
 )
-from smac.runner.runner import StatusType
+from smac.runner.abstract_runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

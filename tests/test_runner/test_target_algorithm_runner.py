@@ -8,7 +8,7 @@ import pytest
 
 from ConfigSpace import Configuration, ConfigurationSpace
 from smac.runhistory import TrialInfo
-from smac.runner.runner import StatusType
+from smac.runner.abstract_runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.scenario import Scenario
 from smac.stats import Stats

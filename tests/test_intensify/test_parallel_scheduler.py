@@ -3,7 +3,7 @@ from unittest import mock
 
 from smac.intensification.parallel_scheduling import ParallelScheduler
 from smac.runhistory import TrialInfo, TrialValue, TrialInfoIntent
-from smac.runner.runner import StatusType
+from smac.runner.abstract_runner import StatusType
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

@@ -22,7 +22,7 @@ class ParallelScheduler(AbstractIntensifier):
 
     This class instantiates intensifier objects on a need basis, that is, to
     prevent workers from being idle. This intensifier objects will give configurations
-    to run
+    to run.
 
     Parameters
     ----------
@@ -182,7 +182,7 @@ class ParallelScheduler(AbstractIntensifier):
             config=None,
             instance=None,
             seed=0,
-            budget=0.0,
+            budget=0.0,  # TODO: None?
         )
 
     def process_results(

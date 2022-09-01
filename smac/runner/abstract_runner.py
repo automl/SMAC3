@@ -9,6 +9,7 @@ from typing import Any, Callable, Iterator
 
 import time
 import traceback
+import inspect
 
 import numpy as np
 
@@ -105,6 +106,22 @@ class AbstractRunner(ABC):
 
         self.objectives = objectives
         self.n_objectives = scenario.count_objectives()
+
+        # Check if target algorithm is callable
+        if not callable(self.target_algorithm):
+            raise TypeError(
+                "Argument `target_algorithm` must be a callable but is type" f"`{type(self.target_algorithm)}`."
+            )
+
+        # Signatures here
+        self._signature = inspect.signature(self.target_algorithm).parameters
+
+    def check_signature(self, argument: str) -> bool:
+        """Checks whether an argument is included in the signature or not."""
+        if argument in self._signature.keys():
+            return True
+
+        return False
 
     def run_wrapper(self, run_info: TrialInfo) -> tuple[TrialInfo, TrialValue]:
         """Wrapper around run() to exec and check the execution of a given config file.

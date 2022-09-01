@@ -14,7 +14,7 @@ from smac.intensification.hyperband import Hyperband, HyperbandWorker
 from smac.intensification.successive_halving import SuccessiveHalvingWorker
 from smac.runhistory.runhistory import RunHistory, RunInfo, TrialValue
 from smac.stats import Stats
-from smac.runner.runner import StatusType
+from smac.runner.abstract_runner import StatusType
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 
 from .test_eval_utils import eval_challenger

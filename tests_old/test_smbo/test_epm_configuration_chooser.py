@@ -9,7 +9,7 @@ from smac.cli.scenario import Scenario
 from smac.model.random_forest.random_forest import RandomForest
 from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 from smac.runhistory.runhistory import RunHistory
-from smac.runner.runner import StatusType
+from smac.runner.abstract_runner import StatusType
 from smac.utils import _test_helpers
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

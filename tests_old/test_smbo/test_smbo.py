@@ -18,7 +18,7 @@ from smac.intensification.abstract_racer import RunInfoIntent
 from smac.optimizer.acquisition import EI, LogEI
 from smac.runhistory.runhistory import RunInfo, TrialValue
 from smac.runhistory.encoder.encoder import RunhistoryTransformer, RunhistoryLogTransformer
-from smac.runner.runner import FirstRunCrashedException, StatusType
+from smac.runner.abstract_runner import FirstRunCrashedException, StatusType
 from smac.runner.target_algorithm_runner import ExecuteTAFuncArray
 from smac.utils import _test_helpers
 from smac.utils._validate import Validator

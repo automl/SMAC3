@@ -11,7 +11,7 @@ from smac.cli.traj_logging import TrajLogger
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
 from smac.stats import Stats
-from smac.runner.runner import StatusType
+from smac.runner.abstract_runner import StatusType
 from smac.runner.old.execute_ta_run_old import ExecuteTARunOld
 from smac.utils._validate import Validator, _Run
 

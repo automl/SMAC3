@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 from typing import Any
-
+import numpy as np
 
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.intensification.parallel_scheduling import ParallelScheduler
 from smac.scenario import Scenario
-from smac.intensification.successive_halving_worker import SuccessiveHalvingWorker
 from smac.utils.logging import get_logger
+from smac.constants import MAXINT
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -110,12 +110,110 @@ class SuccessiveHalving(ParallelScheduler):
             seed=seed,
         )
 
-        self.instance_seed_pairs = instance_seed_pairs
+        self.instance_seed_pairs: list[tuple[str | None, int]]
         self.instance_order = instance_order
         self.incumbent_selection = incumbent_selection
         self.n_initial_challengers = n_initial_challengers
+        self.n_seeds = n_seeds if n_seeds else 1
         self.eta = eta
-        self.n_seeds = n_seeds
+        self.min_budget: float | int
+        self.max_budget: float | int
+
+        if self.min_challenger > 1:
+            raise ValueError("Successive Halving can not handle argument `min_challenger` > 1.")
+
+        if self.instances is not None and len(self.instances) == 1 and self.n_seeds > 1:
+            raise NotImplementedError("The case multiple seeds and one instance can not be handled yet!")
+
+        if eta <= 1:
+            raise ValueError("The parameter `eta` must be greater than 1.")
+
+        # We declare the instance seed pairs now
+        if instance_seed_pairs is None:
+            # Set seed(s) for all SH runs. Currently user gives the number of seeds to consider.
+            if self.deterministic:
+                seeds = [0]
+                logger.info("Only one seed is used as `deterministic` is set to true.")
+            else:
+                seeds = [int(s) for s in self.rng.randint(low=0, high=MAXINT, size=self.n_seeds)]
+                if self.n_seeds == 1:
+                    logger.warning(
+                        "The target algorithm is specified to be non-deterministic, "
+                        "but number of seeds to evaluate are set to 1. "
+                        "Consider increasing `n_seeds` from the intensifier."
+                    )
+
+            # Storing instances & seeds as tuples
+            if self.instances is not None:
+                self.instance_seed_pairs = [(i, s) for s in seeds for i in self.instances]
+            else:
+                self.instance_seed_pairs = [(None, s) for s in seeds]
+
+            # Determine instance-seed pair order
+            if self.instance_order == "shuffle_once":
+                # Randomize once
+                self.rng.shuffle(self.instance_seed_pairs)  # type: ignore
+        else:
+            self.instance_seed_pairs = instance_seed_pairs
+
+        # Budgets
+        min_budget = self.scenario.min_budget
+        max_budget = self.scenario.max_budget
+
+        if max_budget is not None and min_budget is not None and max_budget < min_budget:
+            raise ValueError("Max budget has to be larger than min budget.")
+
+        # If only 1 instance was provided & quality objective, then use algorithm_walltime_limit as budget
+        # else, use instances as budget
+        if self.instance_seed_pairs is None or len(self.instance_seed_pairs) <= 1:
+            # budget with algorithm_walltime_limit
+            if min_budget is None or max_budget is None:
+                raise ValueError(
+                    "Successive Halving with real-valued budget (i.e., only 1 instance) "
+                    "requires parameters `min_budget` and `max_budget` for intensification!"
+                )
+
+            self.min_budget = min_budget
+            self.max_budget = max_budget
+            self.instance_as_budget = False
+        else:
+            # Budget with instances
+            self.min_budget = int(min_budget) if min_budget else 1
+            self.max_budget = int(max_budget) if max_budget else len(self.instance_seed_pairs)
+            self.instance_as_budget = True
+
+            if self.max_budget > len(self.instance_seed_pairs):
+                raise ValueError("Max budget can not be greater than the number of instance-seed pairs.")
+            if self.max_budget < len(self.instance_seed_pairs):
+                logger.warning(
+                    "Max budget (%d) does not include all instance-seed pairs (%d)."
+                    % (self.max_budget, len(self.instance_seed_pairs))
+                )
+
+        budget_type = "INSTANCES" if self.instance_as_budget else "REAL-VALUED"
+        logger.info(
+            "Successive Halving configuration: budget type = %s, "
+            "Initial budget = %.2f, Max. budget = %.2f, eta = %.2f"
+            % (budget_type, self.min_budget, self.max_budget, self.eta)
+        )
+
+        # Pre-computing stuff for SH
+        self.max_sh_iterations = int(np.floor(np.log(self.max_budget / self.min_budget) / np.log(self.eta)))
+
+        # Initial number of challengers to sample
+        if n_initial_challengers is None:
+            self.n_initial_challengers = int(self.eta**self.max_sh_iterations)
+
+        # Challengers can be repeated only if optimizing across multiple seeds or changing instance orders every run
+        # (this does not include having multiple instances)
+        if self.n_seeds > 1 or self.instance_order == "shuffle":
+            self.repeat_configs = True
+        else:
+            self.repeat_configs = False
+
+        # Incumbent selection design
+        assert incumbent_selection in ["highest_executed_budget", "highest_budget", "any_budget"]
+        self.incumbent_selection = incumbent_selection
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
@@ -143,6 +241,8 @@ class SuccessiveHalving(ParallelScheduler):
             example, in the case of Successive Halving it can be the number
             of configurations launched
         """
+        from smac.intensification.successive_halving_worker import SuccessiveHalvingWorker
+
         assert isinstance(intensifier, SuccessiveHalvingWorker)
 
         # Each row of this matrix is id, stage, configs+instances for stage
@@ -170,22 +270,13 @@ class SuccessiveHalving(ParallelScheduler):
         -------
         Whether or not a successive halving instance was added
         """
-        assert self.stats
+        from smac.intensification.successive_halving_worker import SuccessiveHalvingWorker
 
         if len(self.intensifier_instances) >= n_workers:
             return False
 
         sh = SuccessiveHalvingWorker(
-            scenario=self.scenario,
-            instance_seed_pairs=self.instance_seed_pairs,
-            instance_order=self.instance_order,
-            incumbent_selection=self.incumbent_selection,
-            n_initial_challengers=self.n_initial_challengers,
-            min_challenger=self.min_challenger,
-            eta=self.eta,
-            intensify_percentage=self.intensify_percentage,
-            seed=self.seed,
-            n_seeds=self.n_seeds,
+            successive_halving=self,
             identifier=len(self.intensifier_instances),
         )
         sh.stats = self.stats

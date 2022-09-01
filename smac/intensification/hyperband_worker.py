@@ -3,11 +3,11 @@ from __future__ import annotations
 from typing import Callable, Iterator
 
 import numpy as np
+from smac.intensification.hyperband import Hyperband
 
 from smac.intensification.successive_halving import SuccessiveHalvingWorker
 from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
 from smac.runhistory.runhistory import RunHistory
-from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 from ConfigSpace import Configuration
 
@@ -67,35 +67,21 @@ class HyperbandWorker(SuccessiveHalvingWorker):
 
     def __init__(
         self,
-        scenario: Scenario,
-        instance_seed_pairs: list[tuple[str | None, int]] | None = None,
-        instance_order: str | None = "shuffle_once",
-        incumbent_selection: str = "highest_executed_budget",
-        min_challenger: int = 1,
-        intensify_percentage: float = 0.5,
-        eta: float = 3,
-        seed: int | None = None,
-        n_seeds: int | None = None,
+        hyperband: Hyperband,
         identifier: int = 0,
     ) -> None:
 
         super().__init__(
-            scenario=scenario,
-            instance_seed_pairs=instance_seed_pairs,
-            instance_order=instance_order,
-            incumbent_selection=incumbent_selection,
-            n_initial_challengers=None,
-            min_challenger=min_challenger,
-            eta=eta,
-            intensify_percentage=intensify_percentage,
-            seed=seed,
-            n_seeds=n_seeds,
+            successive_halving=hyperband,
+            identifier=identifier,
         )
 
+        # Overwrite logger
         self.identifier = identifier
         self.logger = get_logger(f"{__name__}.{identifier}")
 
         # To track completed hyperband iterations
+        self.hyperband = hyperband
         self.hb_iters = 0
         self.sh_intensifier: SuccessiveHalvingWorker | None = None
 
@@ -226,9 +212,13 @@ class HyperbandWorker(SuccessiveHalvingWorker):
         """Update tracking information for a new stage/iteration and update statistics. This method
         is called to initialize stage variables and after all configurations of a successive halving
         stage are completed."""
+        min_budget = self.hyperband.min_budget
+        max_budget = self.hyperband.max_budget
+        eta = self.hyperband.eta
+
         if not hasattr(self, "s"):
             # Setting initial running budget for future iterations (s & s_max from Algorithm 1)
-            self.s_max = int(np.floor(np.log(self.max_budget / self.min_budget) / np.log(self.eta)))
+            self.s_max = int(np.floor(np.log(max_budget / min_budget) / np.log(eta)))
             self.s = self.s_max
         elif self.s == 0:
             # Reset if HB iteration is over
@@ -241,12 +231,12 @@ class HyperbandWorker(SuccessiveHalvingWorker):
             self.s -= 1
 
         # compute min budget for new SH run
-        sh_min_budget = self.eta**-self.s * self.max_budget
+        sh_min_budget = eta**-self.s * max_budget
         # sample challengers for next iteration (based on HpBandster package)
-        n_challengers = int(np.floor((self.s_max + 1) / (self.s + 1)) * self.eta**self.s)
+        n_challengers = int(np.floor((self.s_max + 1) / (self.s + 1)) * eta**self.s)
 
         # Compute this for the next round
-        n_configs_in_stage = n_challengers * np.power(self.eta, -np.linspace(0, self.s, self.s + 1))
+        n_configs_in_stage = n_challengers * np.power(eta, -np.linspace(0, self.s, self.s + 1))
         n_configs_in_stage = np.array(np.round(n_configs_in_stage), dtype=int).tolist()
 
         self.logger.info(
@@ -256,16 +246,7 @@ class HyperbandWorker(SuccessiveHalvingWorker):
 
         # Creating a new Successive Halving intensifier with the current running budget
         self.sh_intensifier = SuccessiveHalvingWorker(
-            scenario=self.scenario,
-            instance_seed_pairs=self.instance_seed_pairs,
-            instance_order=self.instance_order,
-            incumbent_selection=self.incumbent_selection,
-            n_initial_challengers=n_challengers,
-            min_challenger=self.min_challenger,
-            eta=self.eta,
-            intensify_percentage=self.intensify_percentage,
-            seed=self.seed,
-            n_seeds=self.n_seeds,
+            successive_halving=self.hyperband,
             identifier=self.identifier,
             _all_budgets=self.all_budgets[(-self.s - 1) :],
             _n_configs_in_stage=n_configs_in_stage,

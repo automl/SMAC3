@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Callable
+from typing import Any, Callable, Iterator
 
 import copy
 import inspect
@@ -12,9 +12,10 @@ import numpy as np
 from pynisher import MemoryLimitException, WallTimeoutException, limit
 
 from smac.configspace import Configuration
-from smac.runner.runner import StatusType
-from smac.runner.serial_runner import SerialRunner
+from smac.runner.abstract_runner import StatusType
+from smac.runner.abstract_runner import AbstractRunner
 from smac.utils.logging import get_logger
+from smac.runhistory.dataclasses import TrialInfo, TrialValue
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -22,7 +23,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class TargetAlgorithmRunner(SerialRunner):
+class TargetAlgorithmRunner(AbstractRunner):
     """Class to execute target algorithms which are python functions.
 
     Evaluate function for given configuration and resource limit.
@@ -45,16 +46,6 @@ class TargetAlgorithmRunner(SerialRunner):
     def __init__(self, *args: Any, **kwargs: Any):
         super().__init__(*args, **kwargs)
 
-        signature = inspect.signature(self.target_algorithm).parameters
-        self._accepts_seed = "seed" in signature.keys()
-        self._accepts_instance = "instance" in signature.keys()
-        self._accepts_budget = "budget" in signature.keys()
-
-        if not callable(self.target_algorithm):
-            raise TypeError(
-                "Argument `target_algorithm` must be a callable but is type" f"`{type(self.target_algorithm)}`."
-            )
-
         # Pynisher limitations
         if (memory := self.scenario.trial_memory_limit) is not None:
             memory = int(math.ceil(memory))
@@ -64,6 +55,61 @@ class TargetAlgorithmRunner(SerialRunner):
 
         self.memory_limit = memory
         self.algorithm_walltime_limit = time
+
+    def submit_run(self, run_info: TrialInfo) -> None:
+        """This function submits a run_info object in a serial fashion.
+
+        As there is a single worker for this task, this
+        interface can be considered a wrapper over the run()
+        method.
+
+        Both result/exceptions can be completely determined in this
+        step so both lists are properly filled.
+
+        Parameters
+        ----------
+        run_info: RunInfo
+            An object containing the configuration and the necessary data to run it
+        """
+        self._results_queue.append(self.run_wrapper(run_info))
+
+    def iter_results(self) -> Iterator[tuple[TrialInfo, TrialValue]]:
+        """This method returns any finished configuration, and returns a list with the
+        results of exercising the configurations. This class keeps populating results to
+        self._results_queue until a call to get_finished runs is done. In this case,
+        the self._results_queue list is emptied and all RunValues produced by running
+        self.run() are returned.
+
+        Returns
+        -------
+        list[tuple[RunInfo, RunValue]]
+            A list of RunInfo/RunValues pairs a submitted configuration.
+        """
+        while self._results_queue:
+            yield self._results_queue.pop(0)  # TODO: Could switch to dequeue?
+
+    def wait(self) -> None:
+        """SMBO/intensifier might need to wait for runs to finish before making a decision.
+
+        For serial runs, no wait is needed as the result is immediately available.
+        """
+        # There is no need to wait in serial runs. When launching a run via submit, as
+        # the serial run uses the same process to run, the result is always available
+        # immediately after. This method implements is just an implementation of the
+        # abstract method via a simple return, again, because there is no need to wait
+        return
+
+    def is_running(self) -> bool:
+        """Whether or not there are configs still running.
+
+        Generally if the runner is serial, launching a run instantly returns it's result.
+        On parallel runners, there might be pending configurations to complete.
+        """
+        return False
+
+    def available_worker_count(self) -> int:
+        """Total number of workers available. Serial workers only have 1"""
+        return 1
 
     def run(
         self,

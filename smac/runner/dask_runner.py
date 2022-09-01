@@ -10,7 +10,7 @@ from dask.distributed import Client, Future, wait
 
 from smac.configspace import Configuration
 from smac.runhistory import TrialInfo, TrialValue, StatusType
-from smac.runner.runner import AbstractRunner
+from smac.runner.abstract_runner import AbstractRunner
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -83,6 +83,7 @@ class DaskParallelRunner(AbstractRunner):
             scenario=single_worker.scenario,
             stats=single_worker.stats,
         )
+
         # The single worker to hold on to and call run on
         self._single_worker = single_worker
 

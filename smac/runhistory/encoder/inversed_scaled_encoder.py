@@ -11,7 +11,7 @@ from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.utils import normalize_costs
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory, TrialKey, TrialValue
-from smac.runner.runner import StatusType
+from smac.runner.abstract_runner import StatusType
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 

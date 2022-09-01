@@ -20,7 +20,7 @@ from smac.model.abstract_model import AbstractModel
 from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue, StatusType
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory
-from smac.runner.runner import AbstractRunner
+from smac.runner.abstract_runner import AbstractRunner
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 from smac.stats import Stats

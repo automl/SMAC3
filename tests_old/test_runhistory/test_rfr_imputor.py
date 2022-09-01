@@ -16,7 +16,7 @@ from smac.model.random_forest.random_forest import RandomForest
 from smac.model.utils import get_types
 from smac.runhistory import runhistory
 from smac.runhistory.encoder import encoder
-from smac.runner.runner import StatusType
+from smac.runner.abstract_runner import StatusType
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

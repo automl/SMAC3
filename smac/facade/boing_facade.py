@@ -20,7 +20,7 @@ from smac.runhistory.encoder.boing_encoder import (
     RunHistoryRawEncoder,
     RunHistoryRawScaledEncoder,
 )
-from smac.runner.runner import AbstractRunner
+from smac.runner.abstract_runner import AbstractRunner
 from smac.scenario import Scenario
 
 

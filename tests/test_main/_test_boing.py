@@ -17,7 +17,7 @@ from smac.facade.hyperparameter_facade import HyperparameterFacade
 from smac.main.boing import subspace_extraction
 from smac.model.utils import check_subspace_points
 from smac.runhistory.runhistory import RunHistory
-from smac.runner.runner import StatusType
+from smac.runner.abstract_runner import StatusType
 from smac.utils import _test_helpers
 
 
