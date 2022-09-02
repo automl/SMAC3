@@ -1,16 +1,13 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Any, Mapping, Optional, Tuple
+from typing import Any, Mapping
 
 import numpy as np
 
-from smac import constants
-from smac.configspace import convert_configurations_to_array
+from smac.utils.configspace import convert_configurations_to_array
 
-# from smac.model.imputer import AbstractImputer
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
-from smac.multi_objective.utils import normalize_costs
 from smac.runhistory.runhistory import RunHistory, TrialKey, TrialValue
 from smac.runner.abstract_runner import StatusType
 from smac.scenario import Scenario
@@ -82,8 +79,6 @@ class AbstractRunHistoryEncoder:
             StatusType.MEMORYOUT,
             StatusType.DONOTADVANCE,
         ],
-        # impute_censored_data: bool = False,
-        # impute_state: list[StatusType] | None = None,
         consider_for_higher_budgets_state: list[StatusType]
         | None = [
             StatusType.DONOTADVANCE,
@@ -102,22 +97,9 @@ class AbstractRunHistoryEncoder:
 
         self.seed = seed
         self.rng = np.random.RandomState(seed)
-
         self.scale_percentage = scale_percentage
         self.n_objectives = scenario.count_objectives()
-
-        # Configuration
-        # self.impute_censored_data = impute_censored_data
         self.algorithm_walltime_limit = self.scenario.trial_walltime_limit
-
-        # if impute_state is None and impute_censored_data:
-        #    raise TypeError("No `impute_state` is given.")
-
-        # self.impute_state: list[StatusType]
-        # if impute_state is None:
-        #    self.impute_state = []
-        # else:
-        #    self.impute_state = impute_state
 
         self.consider_for_higher_budgets_state: list[StatusType]
         if consider_for_higher_budgets_state is None:
@@ -125,8 +107,8 @@ class AbstractRunHistoryEncoder:
         else:
             self.consider_for_higher_budgets_state = consider_for_higher_budgets_state
 
-        # if success_states is None:
-        #    raise TypeError("success_states not given")
+        if success_states is None:
+            raise TypeError("No success states are given.")
 
         self.success_states = success_states
 
@@ -134,21 +116,6 @@ class AbstractRunHistoryEncoder:
         self.instance_features = scenario.instance_features
         self.n_features = scenario.count_instance_features()
         self.n_params = len(scenario.configspace.get_hyperparameters())
-
-        # Sanity checks
-        # if impute_censored_data and scenario.run_obj != "runtime":
-        #    # So far we don't know how to handle censored quality data
-        #    logger.critical("Cannot impute censored data when not " "optimizing runtime")
-        #    raise NotImplementedError("Cannot impute censored data when not " "optimizing runtime")
-
-        # Check imputer stuff
-        # if impute_censored_data and self.imputer is None:
-        #    logger.critical("You want me to impute censored data, but " "I don't know how. imputer is None")
-        #    raise ValueError("impute_censored data, but no imputer given")
-        # elif impute_censored_data and not isinstance(self.imputer, AbstractImputer):
-        #    raise ValueError(
-        #        "Given imputer is not an instance of " "smac.epm.base_imputer.Baseimputer, but %s" % type(self.imputer)
-        #    )
 
         # Learned statistics
         self.min_y = np.array([np.NaN] * self.n_objectives)
@@ -173,7 +140,7 @@ class AbstractRunHistoryEncoder:
         run_dict: Mapping[TrialKey, TrialValue],
         runhistory: RunHistory,
         store_statistics: bool = False,
-    ) -> Tuple[np.ndarray, np.ndarray]:
+    ) -> tuple[np.ndarray, np.ndarray]:
         """Builds x,y matrixes from selected runs from runhistory.
 
         Parameters
@@ -236,7 +203,7 @@ class AbstractRunHistoryEncoder:
                 run: runhistory.data[run]
                 for run in runhistory.data.keys()
                 if runhistory.data[run].status == StatusType.TIMEOUT
-                and runhistory.data[run].time >= self.algorithm_walltime_limit
+                and runhistory.data[run].time >= self.algorithm_walltime_limit  # type: ignore
                 and run.budget in budget_subset
             }
         else:
@@ -244,7 +211,7 @@ class AbstractRunHistoryEncoder:
                 run: runhistory.data[run]
                 for run in runhistory.data.keys()
                 if runhistory.data[run].status == StatusType.TIMEOUT
-                and runhistory.data[run].time >= self.algorithm_walltime_limit
+                and runhistory.data[run].time >= self.algorithm_walltime_limit  # type: ignore
             }
 
         return t_run_dict
@@ -280,7 +247,7 @@ class AbstractRunHistoryEncoder:
         self,
         runhistory: RunHistory,
         budget_subset: list | None = None,
-    ) -> Tuple[np.ndarray, np.ndarray]:
+    ) -> tuple[np.ndarray, np.ndarray]:
         """Returns vector representation of runhistory; if imputation is disabled, censored (TIMEOUT
         with time < cutoff) will be skipped.
 
@@ -312,71 +279,14 @@ class AbstractRunHistoryEncoder:
             store_statistics=store_statistics,
         )
 
-        # if we don't have successful runs,
+        # If we don't have successful runs,
         # we have to return all timeout runs
         if not s_run_dict:
             return tX, tY
 
-        if False:
-            pass
-            """
-            if self.impute_censored_data:
-            # Get all censored runs
-            if budget_subset is not None:
-                c_run_dict = {
-                    run: runhistory.data[run]
-                    for run in runhistory.data.keys()
-                    if runhistory.data[run].status in self.impute_state
-                    and runhistory.data[run].time < self.algorithm_walltime_limit
-                    and run.budget in budget_subset
-                }
-            else:
-                c_run_dict = {
-                    run: runhistory.data[run]
-                    for run in runhistory.data.keys()
-                    if runhistory.data[run].status in self.impute_state
-                    and runhistory.data[run].time < self.algorithm_walltime_limit
-                }
-
-            if len(c_run_dict) == 0:
-                logger.debug("No censored data found, skip imputation")
-                # If we do not impute, we also return TIMEOUT data
-                X = np.vstack((X, tX))
-                Y = np.concatenate((Y, tY))
-            else:
-
-                # better empirical results by using PAR1 instead of PAR10
-                # for censored data imputation
-                cen_X, cen_Y = self._build_matrix(
-                    run_dict=c_run_dict,
-                    runhistory=runhistory,
-                    return_time_as_y=True,
-                    store_statistics=False,
-                )
-
-                # Also impute TIMEOUTS
-                tX, tY = self._build_matrix(
-                    run_dict=t_run_dict,
-                    runhistory=runhistory,
-                    return_time_as_y=True,
-                    store_statistics=False,
-                )
-                logger.debug("%d TIMEOUTS, %d CAPPED, %d SUCC" % (tX.shape[0], cen_X.shape[0], X.shape[0]))
-                cen_X = np.vstack((cen_X, tX))
-                cen_Y = np.concatenate((cen_Y, tY))
-
-                # return imp_Y in PAR depending on the used threshold in imputer
-                assert isinstance(self.imputer, AbstractImputer)  # please mypy
-                imp_Y = self.imputer.impute(censored_X=cen_X, censored_y=cen_Y, uncensored_X=X, uncensored_y=Y)
-
-                # Shuffle data to mix censored and imputed data
-                X = np.vstack((X, cen_X))
-                Y = np.concatenate((Y, imp_Y))  # type: ignore
-            """
-        else:
-            # If we do not impute, we also return TIMEOUT data
-            X = np.vstack((X, tX))
-            Y = np.concatenate((Y, tY))
+        # If we do not impute, we also return TIMEOUT data
+        X = np.vstack((X, tX))
+        Y = np.concatenate((Y, tY))
 
         logger.debug("Converted %d observations." % (X.shape[0]))
         return X, Y
@@ -398,42 +308,3 @@ class AbstractRunHistoryEncoder:
         np.ndarray
         """
         raise NotImplementedError
-
-    '''
-    def get_X_y(self, runhistory: RunHistory) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-        """
-        Simple interface to obtain all data in runhistory in X, y format.
-        Note: This function should not be used as it does not consider all available StatusTypes.
-
-        Parameters
-        ----------
-        runhistory : smac.runhistory.runhistory.RunHistory
-            runhistory of all evaluated configurations x instances
-
-        Returns
-        -------
-        X: numpy.ndarray
-            matrix of all configurations (+ instance features)
-        y: numpy.ndarray
-            vector of cost values; can include censored runs
-        cen: numpy.ndarray
-            vector of bools indicating whether the y-value is censored
-        """
-        logger.warning("This function is not tested and might not work as expected!")
-        X = []
-        y = []
-        cen = []
-        feature_dict = self.scenario.feature_dict
-        params = self.scenario.configspace.get_hyperparameters()  # type: ignore[attr-defined] # noqa F821
-        for k, v in runhistory.data.items():
-            config = runhistory.ids_config[k.config_id]
-            x = [config.get(p.name) for p in params]
-            features = feature_dict.get(k.instance)
-            if features:
-                x.extend(features)
-            X.append(x)
-            y.append(v.cost)
-            cen.append(v.status != StatusType.SUCCESS)
-
-        return np.array(X), np.array(y), np.array(cen)
-    '''

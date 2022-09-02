@@ -87,6 +87,18 @@ class HyperbandWorker(SuccessiveHalvingWorker):
         self.hb_iters = 0
         self.sh_intensifier: SuccessiveHalvingWorker | None = None
 
+    @property
+    def uses_seeds(self) -> bool:
+        return self.hyperband.uses_seeds
+
+    @property
+    def uses_budgets(self) -> bool:
+        return self.hyperband.uses_budgets
+
+    @property
+    def uses_instances(self) -> bool:
+        return self.hyperband.uses_instances
+
     def process_results(
         self,
         run_info: TrialInfo,

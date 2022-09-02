@@ -1,17 +1,13 @@
 from __future__ import annotations
 
-import abc
-from typing import List, Mapping, Optional, Tuple
+from typing import Mapping
 
 import numpy as np
 
-from smac import constants
-from smac.configspace import convert_configurations_to_array
+from smac.utils.configspace import convert_configurations_to_array
 from smac.multi_objective.utils import normalize_costs
 from smac.runhistory.encoder import AbstractRunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory, TrialKey, TrialValue
-from smac.runner.abstract_runner import StatusType
-from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -22,15 +18,14 @@ logger = get_logger(__name__)
 
 
 class RunHistoryEIPSEncoder(AbstractRunHistoryEncoder):
-    """TODO."""
+    """Encoder specifically for the EIPS acquisition function."""
 
     def _build_matrix(
         self,
         run_dict: Mapping[TrialKey, TrialValue],
         runhistory: RunHistory,
         store_statistics: bool = False,
-    ) -> Tuple[np.ndarray, np.ndarray]:
-        """TODO."""
+    ) -> tuple[np.ndarray, np.ndarray]:
         if store_statistics:
             # store_statistics is currently not necessary
             pass
@@ -46,7 +41,8 @@ class RunHistoryEIPSEncoder(AbstractRunHistoryEncoder):
             # Scaling is automatically done in configSpace
             conf = runhistory.ids_config[key.config_id]
             conf_vector = convert_configurations_to_array([conf])[0]
-            if self.n_features > 0:
+            if self.n_features > 0 and self.instance_features is not None:
+                assert isinstance(key.instance, str)
                 feats = self.instance_features[key.instance]
                 X[row, :] = np.hstack((conf_vector, feats))
             else:
@@ -54,6 +50,7 @@ class RunHistoryEIPSEncoder(AbstractRunHistoryEncoder):
 
             if self.n_objectives > 1:
                 assert self.multi_objective_algorithm is not None
+                assert isinstance(run.cost, list)
 
                 # Let's normalize y here
                 # We use the objective_bounds calculated by the runhistory

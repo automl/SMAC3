@@ -8,7 +8,7 @@ from smac.acquisition.functions import AbstractAcquisitionFunction
 from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.local_and_random_search import LocalAndSortedRandomSearch
 from smac.random_design.probability_design import ProbabilityRandomDesign
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.facade.facade import Facade
 from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.intensification.intensification import Intensifier
@@ -53,7 +53,10 @@ class BlackBoxFacade(Facade):
 
     @staticmethod
     def get_model(
-        scenario: Scenario, *, model_type: str = "gp", kernel: kernels.Kernel | None = None
+        scenario: Scenario,
+        *,
+        model_type: str = "gp",
+        kernel: kernels.Kernel | None = None,
     ) -> AbstractGaussianProcess:
         """Returns a Gaussian Process surrogate model. Please check its documentation for
         detials."""
@@ -93,7 +96,7 @@ class BlackBoxFacade(Facade):
         """Returns a kernel for the Gaussian Process surrogate model.
         The kernel is a composite of kernels depending on the type of hyperparameters:
         categorical (HammingKernel), continuous (Matern), and noise kernels (White)."""
-        types, bounds = get_types(scenario.configspace, instance_features=None)
+        types, _ = get_types(scenario.configspace, instance_features=None)
         cont_dims = np.where(np.array(types) == 0)[0]
         cat_dims = np.where(np.array(types) != 0)[0]
 
@@ -154,19 +157,22 @@ class BlackBoxFacade(Facade):
         return kernel
 
     @staticmethod
-    def get_acquisition_function(scenario: Scenario, xi: float = 0.0) -> AbstractAcquisitionFunction:
+    def get_acquisition_function(  # type: ignore
+        scenario: Scenario,
+        xi: float = 0.0,
+    ) -> EI:
         """Returns the acquisition function instance (EI: Expected Improvement) for the Black-Box
         facade.
         """
         return EI(xi=xi)
 
     @staticmethod
-    def get_acquisition_optimizer(
+    def get_acquisition_optimizer(  # type: ignore
         scenario: Scenario,
         *,
         local_search_iterations: int = 10,
         challengers: int = 1000,
-    ) -> AbstractAcquisitionOptimizer:
+    ) -> LocalAndSortedRandomSearch:
         """Returns the acquisition optimizer instance (LocalAndSOrtedRandomSearch) for the
         Black-Box facade. Please check its documentation for detials."""
         optimizer = LocalAndSortedRandomSearch(
@@ -178,7 +184,7 @@ class BlackBoxFacade(Facade):
         return optimizer
 
     @staticmethod
-    def get_intensifier(
+    def get_intensifier(  # type: ignore
         scenario: Scenario,
         *,
         min_challenger: int = 1,
@@ -200,7 +206,7 @@ class BlackBoxFacade(Facade):
         return intensifier
 
     @staticmethod
-    def get_initial_design(
+    def get_initial_design(  # type: ignore
         scenario: Scenario,
         *,
         configs: list[Configuration] | None = None,
@@ -220,8 +226,10 @@ class BlackBoxFacade(Facade):
         return initial_design
 
     @staticmethod
-    def get_random_design(
-        scenario: Scenario, *, random_probability: float = 0.08447232371720552
+    def get_random_design(  # type: ignore
+        scenario: Scenario,
+        *,
+        random_probability: float = 0.08447232371720552,
     ) -> ProbabilityRandomDesign:
         """Returns a random design instance (ProbabilityRandomDesign) for the Black-Box facade,
         detailing the interleaving of configurations derived from BO's acquisition with those
@@ -229,11 +237,15 @@ class BlackBoxFacade(Facade):
         return ProbabilityRandomDesign(seed=scenario.seed, probability=random_probability)
 
     @staticmethod
-    def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
+    def get_multi_objective_algorithm(  # type: ignore
+        scenario: Scenario,
+    ) -> MeanAggregationStrategy:
         """Returns the multi-objective algorithm instance (MeanAggregationStrategy) for the
         Black-Box facade."""
         return MeanAggregationStrategy(scenario=scenario)
 
     @staticmethod
-    def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:
+    def get_runhistory_encoder(
+        scenario: Scenario,
+    ) -> RunHistoryEncoder:
         return RunHistoryEncoder(scenario)

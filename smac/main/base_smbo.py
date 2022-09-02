@@ -12,7 +12,7 @@ from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
 from smac.callback import Callback
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.constants import MAXINT
 from smac.initial_design import AbstractInitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier

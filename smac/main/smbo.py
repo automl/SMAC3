@@ -5,8 +5,8 @@ from typing import Any, Iterator
 import numpy as np
 
 
-from smac.configspace import Configuration
-from smac.configspace.util import convert_configurations_to_array
+from ConfigSpace import Configuration
+from smac.utils.configspace import convert_configurations_to_array
 from smac.runhistory.enumerations import TrialInfoIntent
 from smac.utils.logging import get_logger
 from smac.main.base_smbo import BaseSMBO

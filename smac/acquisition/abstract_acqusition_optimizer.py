@@ -12,7 +12,7 @@ from smac.acquisition.functions.abstract_acquisition_function import (
 )
 from smac.random_design.modulus_design import NoCoolDownRandomDesign
 from smac.random_design.abstract_random_design import AbstractRandomDesign
-from smac.configspace import Configuration, ConfigurationSpace
+from ConfigSpace import Configuration, ConfigurationSpace
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.logging import get_logger
 from smac.stats import Stats

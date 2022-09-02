@@ -39,6 +39,8 @@ def evaluate_challenger(
         run_info=run_info,
     )
 
+    print(run_info)
+
     stats._target_algorithm_walltime_used += float(result.time)
     stats._finished += 1
 
@@ -87,20 +89,8 @@ def SH(make_scenario, make_stats, configspace_small):
 
 
 @pytest.fixture
-def _SH(make_scenario, make_stats, configspace_small):
-    scenario = make_scenario(
-        configspace_small,
-        use_instances=True,
-        n_instances=3,
-        deterministic=False,
-        min_budget=2,
-        max_budget=5,
-    )
-    stats = make_stats(scenario)
-    intensifier = SuccessiveHalvingWorker(scenario=scenario, eta=2, n_seeds=2)
-    intensifier.stats = stats
-
-    return intensifier
+def _SH(SH):
+    return SuccessiveHalvingWorker(SH)
 
 
 @pytest.fixture
@@ -127,27 +117,34 @@ def make_sh_worker(make_scenario, make_stats, configspace_small):
             max_budget=max_budget,
         )
         stats = make_stats(scenario)
-        intensifier = SuccessiveHalvingWorker(
+        sh = SuccessiveHalving(
             scenario=scenario,
             instance_order=instance_order,
             incumbent_selection=incumbent_selection,
             min_challenger=min_challenger,
             eta=eta,
             n_seeds=n_seeds,
+        )
+        sh.stats = stats
+
+        return SuccessiveHalvingWorker(
+            sh,
             _all_budgets=_all_budgets,
             _n_configs_in_stage=_n_configs_in_stage,
         )
-        intensifier.stats = stats
-
-        return intensifier
 
     return _make
 
 
 @pytest.fixture
 def make_target_algorithm():
-    def _make(scenario, stats, func):
-        return TargetAlgorithmRunner(target_algorithm=func, scenario=scenario, stats=stats)
+    def _make(scenario, stats, func, required_arguments=[]):
+        return TargetAlgorithmRunner(
+            target_algorithm=func,
+            scenario=scenario,
+            stats=stats,
+            required_arguments=required_arguments,
+        )
 
     return _make
 
@@ -168,9 +165,9 @@ def test_init(SH):
     assert SH._add_new_instance(n_workers=1)
 
     # Parameters properly passed to _SH
-    assert len(SH.intensifier_instances[0].instance_seed_pairs) == 6
-    assert SH.intensifier_instances[0].min_budget == 2
-    assert SH.intensifier_instances[0].max_budget == 5
+    assert len(SH.instance_seed_pairs) == 6
+    assert SH.min_budget == 2
+    assert SH.max_budget == 5
 
 
 def test_process_results_via_sourceid(SH, runhistory, configs):
@@ -455,13 +452,13 @@ def test_init_1(make_sh_worker):
     """
     _SH = make_sh_worker(deterministic=False, min_budget=None, max_budget=None, n_seeds=2)
 
-    assert len(_SH.instance_seed_pairs) == 6  # since instance-seed pairs
-    assert len(_SH.instances) == 3
-    assert _SH.min_budget == 1
-    assert _SH.max_budget == 6
+    assert len(_SH.successive_halving.instance_seed_pairs) == 6  # since instance-seed pairs
+    assert len(_SH.successive_halving.instances) == 3
+    assert _SH.successive_halving.min_budget == 1
+    assert _SH.successive_halving.max_budget == 6
     assert _SH.n_configs_in_stage == [4.0, 2.0, 1.0]
-    assert _SH.instance_as_budget
-    assert _SH.repeat_configs
+    assert _SH.successive_halving.instance_as_budget
+    assert _SH.successive_halving.repeat_configs
 
 
 def test_init_2(make_sh_worker):
@@ -470,13 +467,13 @@ def test_init_2(make_sh_worker):
     """
     _SH = make_sh_worker(deterministic=False, min_budget=1, max_budget=10, n_instances=1, n_seeds=1)
 
-    assert len(_SH.instance_seed_pairs) == 1  # since instance-seed pairs
-    assert _SH.min_budget == 1
-    assert _SH.max_budget == 10
+    assert len(_SH.successive_halving.instance_seed_pairs) == 1  # since instance-seed pairs
+    assert _SH.successive_halving.min_budget == 1
+    assert _SH.successive_halving.max_budget == 10
     assert _SH.n_configs_in_stage == [8.0, 4.0, 2.0, 1.0]
     assert list(_SH.all_budgets) == [1.25, 2.5, 5.0, 10.0]
-    assert not _SH.instance_as_budget
-    assert not _SH.repeat_configs
+    assert not _SH.successive_halving.instance_as_budget
+    assert not _SH.successive_halving.repeat_configs
 
 
 def test_init_3(make_sh_worker):
@@ -484,13 +481,13 @@ def test_init_3(make_sh_worker):
     Test parameter initialiations for successive halving - real-valued budget, high initial budget
     """
     _SH = make_sh_worker(deterministic=True, min_budget=9, max_budget=10, n_instances=1, n_seeds=1)
-    assert len(_SH.instance_seed_pairs) == 1  # since instance-seed pairs
-    assert _SH.min_budget == 9
-    assert _SH.max_budget == 10
+    assert len(_SH.successive_halving.instance_seed_pairs) == 1  # since instance-seed pairs
+    assert _SH.successive_halving.min_budget == 9
+    assert _SH.successive_halving.max_budget == 10
     assert _SH.n_configs_in_stage == [1.0]
     assert list(_SH.all_budgets) == [10.0]
-    assert not _SH.instance_as_budget
-    assert not _SH.repeat_configs
+    assert not _SH.successive_halving.instance_as_budget
+    assert not _SH.successive_halving.repeat_configs
 
 
 def test_init_4(make_sh_worker):
@@ -956,7 +953,9 @@ def test_evaluate_challenger_1(make_sh_worker, make_target_algorithm, runhistory
     intensifier = make_sh_worker(deterministic=True, n_instances=0, min_budget=0.25, max_budget=0.5, eta=2)
     intensifier._update_stage(runhistory=None)
 
-    target_algorithm = make_target_algorithm(intensifier.scenario, intensifier.stats, target)
+    target_algorithm = make_target_algorithm(
+        intensifier.scenario, intensifier.stats, target, required_arguments=["seed", "budget", "instance"]
+    )
 
     runhistory.add(
         config=config1,
@@ -1333,7 +1332,7 @@ def _exhaust_stage_execution(intensifier, target_algorithm, runhistory, challeng
     stage = 0 if not hasattr(intensifier, "stage") else intensifier.stage
     curr_budget = intensifier.all_budgets[stage]
     prev_budget = int(intensifier.all_budgets[stage - 1]) if stage > 0 else 0
-    if intensifier.instance_as_budget:
+    if intensifier.successive_halving.instance_as_budget:
         total_runs = int(curr_budget - prev_budget) * int(intensifier.n_configs_in_stage[stage])
         toggle = np.random.choice([True, False], total_runs).tolist()
         while not np.any(toggle) or not np.any(np.invert(toggle)):
@@ -1417,7 +1416,7 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
     target_algorithm.runhistory = runhistory
 
     # we want to test instance as budget
-    assert intensifier.instance_as_budget
+    assert intensifier.successive_halving.instance_as_budget
 
     # Run until there are no more configurations to be proposed
     # Skip running some configurations to emulate the fact that runs finish on different time
@@ -1513,7 +1512,7 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
     target_algorithm.runhistory = runhistory
 
     # we do not want to test instance as budget
-    assert not intensifier.instance_as_budget
+    assert not intensifier.successive_halving.instance_as_budget
 
     # Run until there are no more configurations to be proposed
     # Skip running some configurations to emulate the fact that runs finish on different time

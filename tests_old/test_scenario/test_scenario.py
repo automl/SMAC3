@@ -15,7 +15,7 @@ from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.abstract_runner import StatusType
-from smac.utils.merge_foreign_data import merge_foreign_data
+from smac.utils._merge_foreign_data import merge_foreign_data
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

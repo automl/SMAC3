@@ -1,4 +1,4 @@
-from smac.random_design.cosine_annealing_design import CosineAnnealingRandomDesign
+from smac.random_design.annealing_design import CosineAnnealingRandomDesign
 from smac.random_design.modulus_design import (
     LinearCoolDownRandomDesign,
     NoCoolDownRandomDesign,

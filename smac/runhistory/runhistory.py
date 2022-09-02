@@ -7,7 +7,7 @@ from collections import OrderedDict
 
 import numpy as np
 
-from smac.configspace import Configuration, ConfigurationSpace
+from ConfigSpace import Configuration, ConfigurationSpace
 from smac.multi_objective.utils import normalize_costs
 from smac.runhistory.dataclasses import (
     InstanceSeedBudgetKey,

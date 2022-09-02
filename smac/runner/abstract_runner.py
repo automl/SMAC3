@@ -14,7 +14,7 @@ import inspect
 import numpy as np
 
 import smac
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.runhistory import TrialInfo, TrialValue, StatusType
 from smac.utils.logging import get_logger
 from smac.stats import Stats
@@ -85,7 +85,7 @@ class AbstractRunner(ABC):
         target_algorithm: Callable,
         scenario: smac.scenario.Scenario,
         stats: Stats,
-        required_arguments: list[str],
+        required_arguments: list[str] = [],
     ):
         self.scenario = scenario
 

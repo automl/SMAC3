@@ -7,7 +7,7 @@ import time
 
 import numpy as np
 
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
@@ -234,7 +234,6 @@ class AbstractIntensifier:
             next challenger to use
         """
         start_time = time.time()
-        used_configs = set(runhistory.get_configs())
 
         chall_gen: Iterator[Optional[Configuration]]
         if challengers:
@@ -256,6 +255,8 @@ class AbstractIntensifier:
             # Repetitions allowed
             if repeat_configs:
                 return challenger
+
+            used_configs = set(runhistory.get_configs())
 
             # Otherwise, select only a unique challenger
             if challenger not in used_configs:

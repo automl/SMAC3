@@ -14,7 +14,7 @@ from smac.acquisition.functions.abstract_acquisition_function import (
 )
 from smac.callback import Callback
 from smac.random_design.abstract_random_design import AbstractRandomDesign
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.initial_design.initial_design import AbstractInitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.model.abstract_model import AbstractModel
@@ -26,6 +26,7 @@ from smac.runhistory.dataclasses import TrialInfo, TrialValue
 from smac.runhistory.encoder.abstract_encoder import AbstractRunHistoryEncoder
 from smac.runhistory.enumerations import TrialInfoIntent
 from smac.runhistory.runhistory import RunHistory
+from smac.runner.abstract_runner import AbstractRunner
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.scenario import Scenario
@@ -141,7 +142,7 @@ class Facade:
         self._overwrite = overwrite
 
         # Prepare the algorithm executer
-        runner = TargetAlgorithmRunner(
+        runner: AbstractRunner = TargetAlgorithmRunner(
             target_algorithm,
             scenario=scenario,
             stats=stats,

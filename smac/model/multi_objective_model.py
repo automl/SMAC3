@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 
-from smac.configspace import ConfigurationSpace
+from ConfigSpace import ConfigurationSpace
 from smac.model.abstract_model import AbstractModel
 
 __copyright__ = "Copyright 2022, automl.org"

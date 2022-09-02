@@ -21,7 +21,7 @@ from smac.facade.psmac import PSMAC  # type: ignore[attr-defined] # noqa F821
 from smac.facade.random_facade import ROAR
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.abstract_runner import FirstRunCrashedException, TargetAlgorithmAbortException
-from smac.utils.merge_foreign_data import merge_foreign_data_from_file
+from smac.utils._merge_foreign_data import merge_foreign_data_from_file
 from smac.stats import Stats
 
 __copyright__ = "Copyright 2022, automl.org"

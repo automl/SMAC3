@@ -12,7 +12,7 @@ from smac.acquisition import AbstractAcquisitionOptimizer
 from smac.acquisition.functions import AbstractAcquisitionFunction
 from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.functions.thompson import TS
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.constants import MAXINT
 from smac.main.smbo import SMBO
 from smac.model.abstract_model import AbstractModel

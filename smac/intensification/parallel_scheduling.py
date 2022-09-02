@@ -4,7 +4,7 @@ from typing import Any, Callable, Dict, Iterator, List, Tuple
 
 import os
 
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
 from smac.runhistory.runhistory import RunHistory

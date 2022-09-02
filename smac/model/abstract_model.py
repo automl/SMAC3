@@ -11,7 +11,7 @@ from sklearn.decomposition import PCA
 from sklearn.exceptions import NotFittedError
 from sklearn.preprocessing import MinMaxScaler
 
-from smac.configspace import ConfigurationSpace
+from ConfigSpace import ConfigurationSpace
 from smac.constants import VERY_SMALL_NUMBER
 from smac.utils.logging import get_logger
 from smac.model.utils import get_types

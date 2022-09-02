@@ -9,7 +9,7 @@ from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
 from smac.utils.logging import get_logger
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.model.abstract_model import AbstractModel
 from smac.acquisition.functions.integrated import IntegratedAcquisitionFunction
 from smac.acquisition.functions.thompson import TS

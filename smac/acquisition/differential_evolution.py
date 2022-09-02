@@ -6,7 +6,7 @@ from typing import Callable, Iterator, Optional, Set, Union
 import numpy as np
 
 from smac.acquisition import AbstractAcquisitionOptimizer
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -42,7 +42,7 @@ class DifferentialEvolution(AbstractAcquisitionOptimizer):
         """
         from scipy.optimize._differentialevolution import DifferentialEvolutionSolver
 
-        configs : tuple[float, Configuration] = []
+        configs: tuple[float, Configuration] = []
 
         def func(x: np.ndarray) -> np.ndarray:
             assert self.acquisition_function is not None

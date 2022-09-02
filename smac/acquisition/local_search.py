@@ -11,13 +11,9 @@ import numpy as np
 
 from smac.acquisition import AbstractAcquisitionOptimizer
 from smac.acquisition.functions import AbstractAcquisitionFunction
-from smac.configspace import (
-    Configuration,
-    ConfigurationSpace,
-    ForbiddenValueError,
-    convert_configurations_to_array,
-    get_one_exchange_neighbourhood,
-)
+from ConfigSpace import Configuration, ConfigurationSpace
+from ConfigSpace.exceptions import ForbiddenValueError
+from smac.utils.configspace import get_one_exchange_neighbourhood, convert_configurations_to_array
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -199,7 +195,7 @@ class LocalSearch(AbstractAcquisitionOptimizer):
             additional_start_points = []
 
         init_points = []
-        init_points_as_set : Set[Configuration] = set()
+        init_points_as_set: Set[Configuration] = set()
         for cand in itertools.chain(
             configs_previous_runs_sorted,
             previous_configs_sorted_by_cost,
@@ -254,7 +250,7 @@ class LocalSearch(AbstractAcquisitionOptimizer):
             )
             local_search_steps[i] += 1
         # Keeping track of configurations with equal acquisition value for plateau walking
-        neighbors_w_equal_acq : list[list[Configuration]] = [[] for _ in range(num_candidates)]
+        neighbors_w_equal_acq: list[list[Configuration]] = [[] for _ in range(num_candidates)]
 
         num_iters = 0
         while np.any(active):

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import abc
-from typing import Any, Callable, Iterator,  Set
+from typing import Any, Callable, Iterator, Set
 
 import copy
 import itertools
@@ -14,11 +14,10 @@ from smac.acquisition import AbstractAcquisitionOptimizer
 from smac.acquisition.functions import AbstractAcquisitionFunction
 from smac.acquisition.local_search import LocalSearch
 from smac.acquisition.random_search import RandomSearch
-from smac.configspace import (
-    Configuration,
-    ConfigurationSpace,
-    get_one_exchange_neighbourhood,
-)
+
+from ConfigSpace import Configuration, ConfigurationSpace
+
+
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -181,7 +180,7 @@ class LocalAndSortedPriorRandomSearch(AbstractAcquisitionOptimizer):
         prior_sampling_fraction: float = 0.5,
         challengers: int = 5000,
         seed: int = 0,
-     ) -> None:
+    ) -> None:
         super().__init__(acquisition_function, configspace, challengers=challengers, seed=seed)
         self.prior_random_search = RandomSearch(
             acquisition_function=acquisition_function, configspace=configspace, seed=seed

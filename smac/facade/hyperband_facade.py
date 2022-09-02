@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.facade.random_facade import RandomFacade
 from smac.initial_design.random_design import RandomInitialDesign
 from smac.intensification.hyperband import Hyperband
@@ -21,11 +21,10 @@ class HyperbandFacade(RandomFacade):
         Hyperband: A Novel Bandit-Based Approach to Hyperparameter Optimization.
         J. Mach. Learn. Res. 18: 185:1-185:52 (2017)
         https://jmlr.org/papers/v18/16-558.html
-
     """
 
     @staticmethod
-    def get_initial_design(
+    def get_initial_design(  # type: ignore
         scenario: Scenario,
         *,
         configs: list[Configuration] | None = None,
@@ -43,7 +42,7 @@ class HyperbandFacade(RandomFacade):
         )
 
     @staticmethod
-    def get_intensifier(
+    def get_intensifier(  # type: ignore
         scenario: Scenario,
         *,
         eta: int = 3,

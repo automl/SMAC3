@@ -15,7 +15,6 @@ API References
    smac.runner
    smac.runhistory
    smac.multi_objective
-   smac.configspace
    smac.utils
    smac.scenario
    smac.constants

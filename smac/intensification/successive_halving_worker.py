@@ -4,7 +4,7 @@ from typing import Callable, Iterator, List
 
 import numpy as np
 
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue, StatusType
@@ -117,6 +117,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         )
 
         self.successive_halving = successive_halving
+        self.stats = successive_halving.stats
         self.first_run = True
         self.identifier = identifier
         self.logger = get_logger(f"{__name__}.{identifier}")
@@ -152,6 +153,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         self.do_not_advance_challengers: set[Configuration] = set()
         self.fail_challengers: set[Configuration] = set()
         self.fail_chal_offset = 0
+        self.new_challenger = False
 
         # Track which configs were launched. This will allow to have an extra check to make sure
         # that a successive halver deals only with the configs it launched,
@@ -165,6 +167,18 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # when we access the complete list of configs from the run history, we filter
         # the ones launched by the current succesive halver using self.run_tracker
         self.run_tracker: dict[tuple[Configuration, str | None, int | None, float], bool] = {}
+
+    @property
+    def uses_seeds(self) -> bool:
+        return self.successive_halving.uses_seeds
+
+    @property
+    def uses_budgets(self) -> bool:
+        return self.successive_halving.uses_budgets
+
+    @property
+    def uses_instances(self) -> bool:
+        return self.successive_halving.uses_instances
 
     def process_results(
         self,
@@ -437,7 +451,6 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                 # We see a challenger for the first time, so no
                 # instance has been launched
                 self.current_instance_indices[challenger] = 0
-                self._challenger_id = self._challenger_id  # type: int # make mypy happy
                 self._challenger_id += 1
                 self.running_challenger = challenger
 

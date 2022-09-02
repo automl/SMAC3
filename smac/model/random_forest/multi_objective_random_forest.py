@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
-from smac.configspace import ConfigurationSpace
+from ConfigSpace import ConfigurationSpace
 from smac.model.abstract_model import AbstractModel
 from smac.model.multi_objective_model import MultiObjectiveModel
 from smac.model.random_forest.random_forest import (
@@ -25,7 +25,7 @@ class MultiObjectiveRandomForest(MultiObjectiveModel):
     def construct_estimators(
         self,
         configspace: ConfigurationSpace,
-        model_kwargs: Dict[str, Any],
+        model_kwargs: dict[str, Any],
     ) -> list[AbstractModel]:
         """
         Construct a list of estimators. The number of the estimators equals 'self.num_targets'

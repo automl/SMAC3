@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.facade.hyperparameter_facade import HyperparameterFacade
 from smac.initial_design.random_design import RandomInitialDesign
 from smac.intensification.hyperband import Hyperband
@@ -12,7 +12,7 @@ __license__ = "3-clause BSD"
 
 class MultiFidelityFacade(HyperparameterFacade):
     @staticmethod
-    def get_intensifier(
+    def get_intensifier(  # type: ignore
         scenario: Scenario,
         *,
         eta: int = 3,
@@ -30,7 +30,7 @@ class MultiFidelityFacade(HyperparameterFacade):
         )
 
     @staticmethod
-    def get_initial_design(
+    def get_initial_design(  # type: ignore
         scenario: Scenario,
         *,
         configs: list[Configuration] | None = None,

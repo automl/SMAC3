@@ -49,14 +49,17 @@ class Rosenbrock2D:
 
 class TuRBOFacade(BlackBoxFacade):
     """A wrapper that allows to run TuRBO optimizer. Its arguments are described under smac.main.turbo.TuRBOSMBO"""
-    def _init_optimizer(self,
-                        length_init=0.8,
-                        length_min=0.5**8,
-                        length_max=1.6,
-                        success_tol=3,
-                        failure_tol_min=4,
-                        n_init_x_params=2,
-                        n_candidate_max=5000) -> None:
+
+    def _init_optimizer(
+        self,
+        length_init=0.8,
+        length_min=0.5**8,
+        length_max=1.6,
+        success_tol=3,
+        failure_tol_min=4,
+        n_init_x_params=2,
+        n_candidate_max=5000,
+    ) -> None:
         self.optimizer = TuRBOSMBO(
             length_init=length_init,
             length_min=length_min,
@@ -81,6 +84,8 @@ class TuRBOFacade(BlackBoxFacade):
 
 
 if __name__ == "__main__":
+    exit()
+
     model = Rosenbrock2D()
 
     # Scenario object

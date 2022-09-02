@@ -4,7 +4,7 @@ from typing import Any, Callable, Iterator, cast, Optional
 
 from collections import Counter
 
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.intensification.stages import IntensifierStage
@@ -332,8 +332,6 @@ class Intensifier(AbstractIntensifier):
         logger.debug("Intensify on %s.", challenger.get_dictionary())
         if hasattr(challenger, "origin"):
             logger.debug("Configuration origin: %s", challenger.origin)
-            if challenger.origin is None:
-                exit()
 
         if self.stage in [IntensifierStage.RUN_CHALLENGER, IntensifierStage.RUN_BASIS]:
 

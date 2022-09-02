@@ -8,7 +8,7 @@ from pathlib import Path
 import dask
 from dask.distributed import Client, Future, wait
 
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.runhistory import TrialInfo, TrialValue, StatusType
 from smac.runner.abstract_runner import AbstractRunner
 from smac.utils.logging import get_logger

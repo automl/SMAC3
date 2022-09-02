@@ -1,14 +1,19 @@
-from typing import List
+from __future__ import annotations
+from functools import partial
 
 import numpy as np
 
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
+from ConfigSpace.util import get_one_exchange_neighbourhood
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-def convert_configurations_to_array(configs: List[Configuration]) -> np.ndarray:
+get_one_exchange_neighbourhood = partial(get_one_exchange_neighbourhood, stdev=0.05, num_neighbors=8)
+
+
+def convert_configurations_to_array(configs: list[Configuration]) -> np.ndarray:
     """Impute inactive hyperparameters in configurations with their default.
 
     Necessary to apply an EPM to the data.

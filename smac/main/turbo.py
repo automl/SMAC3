@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Iterator
 
 from smac.acquisition.functions.thompson import TS
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.main.smbo import SMBO
 from smac.model.utils import get_types
 from smac.utils.logging import get_logger

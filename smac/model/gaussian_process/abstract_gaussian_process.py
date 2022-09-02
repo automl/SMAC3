@@ -6,7 +6,7 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Kernel, KernelOperator
 
 import smac.model.gaussian_process.priors
-from smac.configspace import ConfigurationSpace
+from ConfigSpace import ConfigurationSpace
 from smac.model.abstract_model import AbstractModel
 from smac.model.gaussian_process.priors.prior import Prior
 

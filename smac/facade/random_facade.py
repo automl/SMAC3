@@ -3,12 +3,11 @@ from __future__ import annotations
 from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.random_search import AbstractAcquisitionOptimizer, RandomSearch
 from smac.random_design import AbstractRandomDesign, ProbabilityRandomDesign
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.facade.facade import Facade
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.model.random_model import RandomModel
-from smac.model.utils import get_types
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.runhistory.encoder.encoder import RunHistoryEncoder

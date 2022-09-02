@@ -3,14 +3,13 @@ from __future__ import annotations
 from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.local_and_random_search import LocalAndSortedRandomSearch
 from smac.random_design.probability_design import ProbabilityRandomDesign
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.facade.facade import Facade
 from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.model.random_forest.random_forest import (
     RandomForest,
 )
-from smac.model.utils import get_types
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.runhistory.encoder.log_scaled_encoder import RunHistoryLogScaledEncoder
@@ -22,7 +21,7 @@ __license__ = "3-clause BSD"
 
 class HyperparameterFacade(Facade):
     @staticmethod
-    def get_model(
+    def get_model(  # type: ignore
         scenario: Scenario,
         *,
         n_trees: int = 10,
@@ -48,13 +47,17 @@ class HyperparameterFacade(Facade):
         )
 
     @staticmethod
-    def get_acquisition_function(scenario: Scenario, *, xi: float = 0.0) -> EI:
+    def get_acquisition_function(  # type: ignore
+        scenario: Scenario,
+        *,
+        xi: float = 0.0,
+    ) -> EI:
         """Returns an Expected Improvement acquisition function. Please check its documentation
         for details."""
         return EI(xi=xi, log=True)
 
     @staticmethod
-    def get_acquisition_optimizer(
+    def get_acquisition_optimizer(  # type: ignore
         scenario: Scenario,
         *,
         local_search_iterations: int = 10,
@@ -72,7 +75,7 @@ class HyperparameterFacade(Facade):
         return optimizer
 
     @staticmethod
-    def get_intensifier(
+    def get_intensifier(  # type: ignore
         scenario: Scenario,
         *,
         min_challenger: int = 1,
@@ -94,7 +97,7 @@ class HyperparameterFacade(Facade):
         return intensifier
 
     @staticmethod
-    def get_initial_design(
+    def get_initial_design(  # type: ignore
         scenario: Scenario,
         *,
         configs: list[Configuration] | None = None,
@@ -112,7 +115,7 @@ class HyperparameterFacade(Facade):
         )
 
     @staticmethod
-    def get_random_design(
+    def get_random_design(  # type: ignore
         scenario: Scenario,
         *,
         probability: float = 0.2,
@@ -122,10 +125,14 @@ class HyperparameterFacade(Facade):
         return ProbabilityRandomDesign(probability=probability)
 
     @staticmethod
-    def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
+    def get_multi_objective_algorithm(  # type: ignore
+        scenario: Scenario,
+    ) -> MeanAggregationStrategy:
         """Returns a multi-objective algorithm instance. Please check its documentation for details."""
         return MeanAggregationStrategy(scenario=scenario)
 
     @staticmethod
-    def get_runhistory_encoder(scenario: Scenario) -> RunHistoryLogScaledEncoder:
+    def get_runhistory_encoder(  # type: ignore
+        scenario: Scenario,
+    ) -> RunHistoryLogScaledEncoder:
         return RunHistoryLogScaledEncoder(scenario)

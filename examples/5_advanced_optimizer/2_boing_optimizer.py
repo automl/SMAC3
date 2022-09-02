@@ -47,6 +47,8 @@ class Rosenbrock2D:
 
 
 if __name__ == "__main__":
+    exit()
+
     model = Rosenbrock2D()
 
     # Scenario object

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import List, Tuple
 
 from smac.cli.scenario import Scenario
-from smac.configspace import ConfigurationSpace
+from ConfigSpace import ConfigurationSpace
 from smac.runhistory.runhistory import DataOrigin, RunHistory
 
 __copyright__ = "Copyright 2022, automl.org"

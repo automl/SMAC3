@@ -12,7 +12,7 @@ from scipy.stats.qmc import LatinHypercube, Sobol
 
 from smac.acquisition import AbstractAcquisitionOptimizer
 from smac.acquisition.functions import AbstractAcquisitionFunction, TS
-from smac.configspace import Configuration, ConfigurationSpace
+from ConfigSpace import Configuration, ConfigurationSpace
 from smac.model.abstract_model import AbstractModel
 from smac.model.gaussian_process.gpytorch import GloballyAugmentedLocalGaussianProcess
 from smac.model.gaussian_process.abstract_gaussian_process import AbstractGaussianProcess

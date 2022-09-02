@@ -4,7 +4,7 @@ import numpy as np
 from ConfigSpace import Float
 
 from smac import AlgorithmConfigurationFacade, BlackBoxFacade, HyperparameterFacade, RandomFacade
-from smac.configspace import ConfigurationSpace
+from ConfigSpace import ConfigurationSpace
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.multi_objective.parego import ParEGO
 

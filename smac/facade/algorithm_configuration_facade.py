@@ -1,19 +1,15 @@
 from __future__ import annotations
 
-from smac.acquisition.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
 from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.local_and_random_search import LocalAndSortedRandomSearch
 from smac.random_design.probability_design import ProbabilityRandomDesign
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.facade.facade import Facade
-from smac.initial_design import AbstractInitialDesign
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.model.random_forest.random_forest import (
     RandomForest,
 )
-from smac.model.utils import get_types
-from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.scenario import Scenario
@@ -28,7 +24,7 @@ logger = get_logger(__name__)
 
 class AlgorithmConfigurationFacade(Facade):
     @staticmethod
-    def get_model(
+    def get_model(  # type: ignore
         scenario: Scenario,
         *,
         n_trees: int = 10,
@@ -55,12 +51,17 @@ class AlgorithmConfigurationFacade(Facade):
         )
 
     @staticmethod
-    def get_acquisition_function(scenario: Scenario, xi: float = 0.0) -> EI:
+    def get_acquisition_function(  # type: ignore
+        scenario: Scenario,
+        xi: float = 0.0,
+    ) -> EI:
         """Returns an Expected Improvement acquisition function. Please check its documentation."""
         return EI(xi=xi)
 
     @staticmethod
-    def get_acquisition_optimizer(scenario: Scenario) -> AbstractAcquisitionOptimizer:
+    def get_acquisition_optimizer(  # type: ignore
+        scenario: Scenario,
+    ) -> LocalAndSortedRandomSearch:
         optimizer = LocalAndSortedRandomSearch(
             scenario.configspace,
             seed=scenario.seed,
@@ -69,7 +70,7 @@ class AlgorithmConfigurationFacade(Facade):
         return optimizer
 
     @staticmethod
-    def get_intensifier(
+    def get_intensifier(  # type: ignore
         scenario: Scenario,
         *,
         min_challenger=1,
@@ -90,11 +91,11 @@ class AlgorithmConfigurationFacade(Facade):
         return intensifier
 
     @staticmethod
-    def get_initial_design(
+    def get_initial_design(  # type: ignore
         scenario: Scenario,
         *,
         configs: list[Configuration] | None = None,
-    ) -> AbstractInitialDesign:
+    ) -> DefaultInitialDesign:
         """Returns an DefaultInitialDesign, evaluating only the default configuration. Please check
         its documentation."""
         return DefaultInitialDesign(
@@ -103,7 +104,7 @@ class AlgorithmConfigurationFacade(Facade):
         )
 
     @staticmethod
-    def get_random_design(
+    def get_random_design(  # type: ignore
         scenario: Scenario,
         *,
         random_probability: float = 0.5,
@@ -113,7 +114,9 @@ class AlgorithmConfigurationFacade(Facade):
         return ProbabilityRandomDesign(probability=random_probability, seed=scenario.seed)
 
     @staticmethod
-    def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
+    def get_multi_objective_algorithm(  # type: ignore
+        scenario: Scenario,
+    ) -> MeanAggregationStrategy:
         """Returns a MultiObjectiveAlgorithm (MeanAggregationStrategy). Please check its
         documentation."""
         return MeanAggregationStrategy(scenario=scenario)

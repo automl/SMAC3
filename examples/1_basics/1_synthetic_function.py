@@ -28,7 +28,7 @@ class Rosenbrock2D:
 
         return cs
 
-    def train(self, config: Configuration) -> float:
+    def train(self, config: Configuration, seed: int = 0) -> float:
         """The 2-dimensional Rosenbrock function as a toy model.
         The Rosenbrock function is well-known in the optimization community and
         often serves as a toy problem. It can be defined for arbitrary
@@ -39,7 +39,7 @@ class Rosenbrock2D:
         x1 = config["x0"]
         x2 = config["x1"]
 
-        cost = 100.0 * (x2 - x1 ** 2.0) ** 2.0 + (1 - x1) ** 2.0
+        cost = 100.0 * (x2 - x1**2.0) ** 2.0 + (1 - x1) ** 2.0
         return cost
 
 

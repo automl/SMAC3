@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from typing import Any, List, Optional, Tuple
+from typing import Any
 
 import numpy as np
 from pyrfr import regression
 
-from smac.configspace import ConfigurationSpace
+from ConfigSpace import ConfigurationSpace
 from smac.constants import N_TREES, VERY_SMALL_NUMBER
 from smac.model.random_forest import AbstractRandomForest
 
@@ -195,7 +195,7 @@ class RandomForest(AbstractRandomForest):
             data.add_data_point(row_X, row_y)
         return data
 
-    def _predict(self, X: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov") -> Tuple[np.ndarray, np.ndarray]:
+    def _predict(self, X: np.ndarray, cov_return_type: str | None = "diagonal_cov") -> tuple[np.ndarray, np.ndarray]:
         """Predict means and variances for given X.
 
         Parameters
@@ -256,7 +256,7 @@ class RandomForest(AbstractRandomForest):
 
         return means.reshape((-1, 1)), vars_.reshape((-1, 1))
 
-    def predict_marginalized_over_instances(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    def predict_marginalized_over_instances(self, X: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         """Predict mean and variance marginalized over all instances.
 
         Returns the predictive mean and variance marginalised over all

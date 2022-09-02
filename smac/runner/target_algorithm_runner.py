@@ -11,7 +11,7 @@ import traceback
 import numpy as np
 from pynisher import MemoryLimitException, WallTimeoutException, limit
 
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.runner.abstract_runner import StatusType
 from smac.runner.abstract_runner import AbstractRunner
 from smac.utils.logging import get_logger

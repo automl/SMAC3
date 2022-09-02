@@ -9,7 +9,7 @@ from scipy import optimize
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Kernel
 
-from smac.configspace import ConfigurationSpace
+from ConfigSpace import ConfigurationSpace
 from smac.constants import VERY_SMALL_NUMBER
 from smac.model.gaussian_process.abstract_gaussian_process import AbstractGaussianProcess
 from smac.model.gaussian_process.priors.prior import Prior

@@ -1,4 +1,5 @@
 import datetime
+import traceback
 
 name = "SMAC3"
 package_name = "smac"
@@ -43,3 +44,4 @@ try:
     ]
 except ModuleNotFoundError as e:
     print(e)
+    print(traceback.print_exc())

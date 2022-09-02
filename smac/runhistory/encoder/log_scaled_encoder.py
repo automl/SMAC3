@@ -16,27 +16,13 @@ logger = get_logger(__name__)
 
 
 class RunHistoryLogScaledEncoder(RunHistoryEncoder):
-    """TODO."""
-
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values.
-
-        Transform the response values by linearly scaling them between zero and one and
-        then using the log transformation.
-
-        Parameters
-        ----------
-        values : np.ndarray
-            Response values to be transformed.
-
-        Returns
-        -------
-        np.ndarray
-        """
+        """Transform the response values by linearly scaling them between zero and one and
+        then using the log transformation."""
         min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
         min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
 
-        # linear scaling
+        # Linear scaling
         # prevent diving by zero
         min_y[np.where(min_y == self.max_y)] *= 1 - 10**-10
 

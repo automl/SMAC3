@@ -1,16 +1,14 @@
 from __future__ import annotations
 
-from typing import Mapping, Tuple
+from typing import Mapping
 
 import numpy as np
 
-from smac.configspace import convert_configurations_to_array
+from smac.utils.configspace import convert_configurations_to_array
 from smac.multi_objective.utils import normalize_costs
 from smac.runhistory.encoder import AbstractRunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory, TrialKey, TrialValue
 from smac.utils.logging import get_logger
-from smac.scenario import Scenario
-from smac.runhistory.enumerations import StatusType
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -20,8 +18,6 @@ logger = get_logger(__name__)
 
 
 class RunHistoryEncoder(AbstractRunHistoryEncoder):
-    """TODO."""
-
     def _build_matrix(
         self,
         run_dict: Mapping[TrialKey, TrialValue],
@@ -51,7 +47,6 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
                 X[row, :] = np.hstack((conf_vector, feats))
             else:
                 X[row, :] = conf_vector
-            # run_array[row, -1] = instances[row]
 
             if self.n_objectives > 1:
                 assert self.multi_objective_algorithm is not None
@@ -63,9 +58,6 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
                 y_agg = self.multi_objective_algorithm(y_)
                 y[row] = y_agg
             else:
-                # if return_time_as_y:
-                #    y[row, 0] = run.time
-                # else:
                 y[row] = run.cost
 
         if y.size > 0:
@@ -78,15 +70,5 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
         return X, y
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values. Returns the input values.
-
-        Parameters
-        ----------
-        values : np.ndarray
-            Response values to be transformed.
-
-        Returns
-        -------
-        np.ndarray
-        """
+        """Returns the input values."""
         return values

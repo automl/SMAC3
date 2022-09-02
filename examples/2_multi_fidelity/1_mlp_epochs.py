@@ -40,7 +40,6 @@ from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.neural_network import MLPClassifier
 
 from smac import MultiFidelityFacade, Scenario
-from smac.configspace import ConfigurationSpace
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -130,8 +129,8 @@ if __name__ == "__main__":
     # Define our environment variables
     scenario = Scenario(
         mlp.configspace,
-        walltime_limit=40,  # After 40 seconds, we stop the optimization
-        n_trials=100,  # Evaluate max 100 different trials
+        walltime_limit=100,  # After 100 seconds, we stop the optimization
+        n_trials=200,  # Evaluate max 100 different trials
         min_budget=5,  # Train the MLP for at least 5 epochs
         max_budget=25,  # Train the MLP for at most 25 epochs
     )

@@ -23,7 +23,7 @@ from gpytorch.utils.errors import NanError, NotPSDError
 from scipy import optimize
 from scipy.stats.qmc import LatinHypercube
 
-from smac.configspace import ConfigurationSpace
+from ConfigSpace import ConfigurationSpace
 from smac.constants import VERY_SMALL_NUMBER
 from smac.model.gaussian_process.abstract_gaussian_process import AbstractGaussianProcess
 from smac.model.utils import check_subspace_points

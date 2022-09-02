@@ -52,46 +52,15 @@ class RunHistoryRawEncoder(RunHistoryEncoder):
         return X, Y, Y_raw
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values. Returns the input values.
-
-        Parameters
-        ----------
-        values : np.ndarray
-            Response values to be transformed.
-
-        Returns
-        -------
-        np.ndarray
-        """
-        # otherwise it will be overwritten by its superclass
+        """Returns the input values."""
         return values
 
     def transform_raw_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values. Returns the raw input values before transformation
-
-        Parameters
-        ----------
-        values : np.ndarray
-            Response values to be transformed.
-
-        Returns
-        -------
-        np.ndarray
-        """
+        """Returns the raw input values before transformation."""
         return values
 
 
 class RunHistoryRawScaledEncoder(RunHistoryRawEncoder, RunHistoryLogScaledEncoder):
     def transform_raw_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values. Returns the raw input values before transformation
-
-        Parameters
-        ----------
-        values : np.ndarray
-            Response values to be transformed.
-
-        Returns
-        -------
-        np.ndarray
-        """
+        """Returns the raw input values before transformation."""
         return RunHistoryLogScaledEncoder.transform_response_values(self, values)

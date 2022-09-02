@@ -19,12 +19,11 @@ import itertools
 import warnings
 
 import numpy as np
-from ConfigSpace import Float, Categorical, Configuration
+from ConfigSpace import Float, Categorical, Configuration, ConfigurationSpace
 from sklearn import datasets
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 
-from smac.configspace import ConfigurationSpace
 from smac import MultiFidelityFacade, Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

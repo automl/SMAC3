@@ -9,7 +9,7 @@ from ConfigSpace import ConfigurationSpace
 
 from smac.acquisition import AbstractAcquisitionOptimizer, LocalAndSortedRandomSearch
 from smac.acquisition.functions import EI, AbstractAcquisitionFunction
-from smac.configspace import Configuration
+from ConfigSpace import Configuration
 from smac.model.abstract_model import AbstractModel
 from smac.model.gaussian_process.gpytorch import GloballyAugmentedLocalGaussianProcess
 from smac.utils.logging import get_logger
