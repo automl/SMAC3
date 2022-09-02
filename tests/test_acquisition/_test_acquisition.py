@@ -1,9 +1,8 @@
 import unittest
 import unittest.mock
 
-import pytest
-
 import numpy as np
+import pytest
 
 from smac.acquisition.functions import (
     EI,
@@ -116,9 +115,11 @@ def acquisition_function(model):
     ei._set_model(model=model)
     return ei
 
+
 # --------------------------------------------------------------
 # Test AbstractAcquisitionFunction
 # --------------------------------------------------------------
+
 
 def test_update_model_and_eta(model, acquisition_function):
     model = "abc"
@@ -129,15 +130,15 @@ def test_update_model_and_eta(model, acquisition_function):
 
 
 def test_update_with_kwargs(acquisition_function):
-    acquisition_function.update(model="abc", eta=0., other="hi there:)")
+    acquisition_function.update(model="abc", eta=0.0, other="hi there:)")
     assert acquisition_function.model == "abc"
 
 
 def test_update_without_required(acquisition_function):
     with pytest.raises(
-            TypeError,
-        ):
-            acquisition_function.update(other=None)
+        TypeError,
+    ):
+        acquisition_function.update(other=None)
 
 
 # --------------------------------------------------------------
@@ -223,6 +224,7 @@ def test_integrated_acquisition_function_compute_with_different_numbers_of_model
 # Test PriorAcquisitionFunction
 # --------------------------------------------------------------
 
+
 @pytest.fixture
 def x0_prior():
     return MockPrior(pdf=lambda x: 2 * x, max_density=2)
@@ -262,7 +264,6 @@ def test_prior_init_ts(prior_model, acq_ts, beta):
 
 
 def test_prior_update(prior_model, acquisition_function, beta):
-    ei = acquisition_function
     paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta)
     paf.update(model=prior_model, eta=2)
     assert paf.eta == 2
@@ -279,9 +280,9 @@ def test_prior_compute_prior_Nx1(prior_model, hyperparameter_dict, acquisition_f
     prior_values = paf._compute_prior(X)
 
     assert prior_values.shape == (3, 1)
-    assert prior_values[0][0]== 0
-    assert prior_values[1][0]== 1
-    assert prior_values[2][0]== 2
+    assert prior_values[0][0] == 0
+    assert prior_values[1][0] == 1
+    assert prior_values[2][0] == 2
 
 
 def test_prior_compute_prior_NxD(prior_model, hyperparameter_dict, acquisition_function, beta):
@@ -376,7 +377,7 @@ def test_prior_NxD(hp_dict3, prior_model, acquisition_function, beta, prior_floo
     assert np.isclose(acq[0][0], 0.0 * prior_0_factor)
     assert np.isclose(acq[1][0], 0.90020601136712231 * prior_1_factor)
     assert np.isclose(acq[2][0], 0.3989422804014327 * prior_2_factor)
-    
+
 
 def test_prior_NxD_TS(prior_model, hp_dict3, acq_ts, beta, prior_floor):
     prior_model.update_prior(hp_dict3)
@@ -428,7 +429,9 @@ def test_prior_decay(hp_dict3, prior_model, acquisition_function, beta, prior_fl
 
 def test_prior_discretize_pdf(prior_model, acquisition_function, hyperparameter_dict, beta, prior_floor):
     prior_model.update_prior(hyperparameter_dict)
-    paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta, prior_floor=prior_floor, discretize=True)
+    paf = PriorAcquisitionFunction(
+        acquisition_function=acquisition_function, decay_beta=beta, prior_floor=prior_floor, discretize=True
+    )
     paf.update(model=prior_model, eta=1)
 
     number_of_bins_1 = 13
@@ -449,9 +452,11 @@ def test_prior_discretize_pdf(prior_model, acquisition_function, hyperparameter_
     with pytest.raises(ValueError):
         paf._compute_discretized_pdf(x0_prior, np.linspace(0, 1, number_of_points), number_of_bins=-1)
 
+
 # --------------------------------------------------------------
 # Test EI
 # --------------------------------------------------------------
+
 
 def test_ei_1xD(model, acquisition_function):
     ei = acquisition_function
@@ -508,9 +513,11 @@ def test_ei_zero_variance(model, acquisition_function):
     acq = np.array(ei(X))
     assert np.isclose(acq[0][0], 0.0)
 
+
 # --------------------------------------------------------------
 # Test EIPS
 # --------------------------------------------------------------
+
 
 @pytest.fixture
 def model_eips():
@@ -570,6 +577,7 @@ def test_logei_NxD(model, acq_logei):
     assert np.isclose(acq[1][0], 1.5570607606556273)
     assert np.isclose(acq[2][0], 0.6480973967332011)
 
+
 # --------------------------------------------------------------
 # Test PI
 # --------------------------------------------------------------
@@ -613,6 +621,7 @@ def test_pi_NxD(model, acq_pi):
     assert np.isclose(acq[0][0], 1.0)
     assert np.isclose(acq[1][0], 0.99778673707104)
     assert np.isclose(acq[2][0], 0.5)
+
 
 # --------------------------------------------------------------
 # Test LCB
@@ -667,9 +676,11 @@ def test_lcb_NxD(model, acq_lcb):
     assert np.isclose(acq[1][0], 1.3358936353814157)
     assert np.isclose(acq[2][0], 3.5406943655446117)
 
+
 # --------------------------------------------------------------
 # Test TS
 # --------------------------------------------------------------
+
 
 @pytest.fixture
 def acq_ts(model):
