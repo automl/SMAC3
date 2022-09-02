@@ -39,8 +39,6 @@ def evaluate_challenger(
         run_info=run_info,
     )
 
-    print(run_info)
-
     stats._target_algorithm_walltime_used += float(result.time)
     stats._finished += 1
 
@@ -184,7 +182,7 @@ def test_process_results_via_sourceid(SH, runhistory, configs):
             config=configs[0],
             instance="i1",
             seed=0,
-            budget=0.0,
+            budget=None,
             source=i,
         )
 
@@ -942,7 +940,7 @@ def test_update_stage_2(make_sh_worker, runhistory, configs):
 def test_evaluate_challenger_1(make_sh_worker, make_target_algorithm, runhistory, configs):
     """Test evaluate_challenger with quality objective & real-valued budget."""
 
-    def target(x: Configuration, instance: str, seed: int, budget: float):
+    def target(x: Configuration, seed: int, budget: float):
         return 0.1 * budget
 
     config1 = configs[0]
@@ -954,7 +952,7 @@ def test_evaluate_challenger_1(make_sh_worker, make_target_algorithm, runhistory
     intensifier._update_stage(runhistory=None)
 
     target_algorithm = make_target_algorithm(
-        intensifier.scenario, intensifier.stats, target, required_arguments=["seed", "budget", "instance"]
+        intensifier.scenario, intensifier.stats, target, required_arguments=["seed", "budget"]
     )
 
     runhistory.add(
@@ -1153,7 +1151,7 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_algorithm, runh
     runhistory.add(
         config=config1,
         instance="i1",
-        seed=None,
+        seed=0,
         budget=1,
         cost=0.5,
         time=1,
@@ -1163,7 +1161,7 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_algorithm, runh
     runhistory.add(
         config=config1,
         instance="i1",
-        seed=None,
+        seed=0,
         budget=2,
         cost=10,
         time=1,
@@ -1173,7 +1171,7 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_algorithm, runh
     runhistory.add(
         config=config2,
         instance="i1",
-        seed=None,
+        seed=0,
         budget=2,
         cost=5,
         time=1,
@@ -1201,7 +1199,12 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_algorithm, runh
 
     # select best on highest budget only
     intensifier = make_sh_worker(
-        deterministic=True, n_instances=1, min_budget=1, max_budget=4, eta=2, incumbent_selection="highest_budget"
+        deterministic=True,
+        n_instances=1,
+        min_budget=1,
+        max_budget=4,
+        eta=2,
+        incumbent_selection="highest_budget",
     )
     intensifier.stage = 0
 
@@ -1210,7 +1213,7 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_algorithm, runh
     runhistory.add(
         config=config3,
         instance="i1",
-        seed=None,
+        seed=0,
         budget=2,
         cost=0.5,
         time=1,
@@ -1220,7 +1223,7 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_algorithm, runh
     runhistory.add(
         config=config4,
         instance="i1",
-        seed=None,
+        seed=0,
         budget=1,
         cost=5,
         time=1,
@@ -1240,7 +1243,7 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_algorithm, runh
     runhistory.add(
         config=config3,
         instance="i1",
-        seed=None,
+        seed=0,
         budget=4,
         cost=10,
         time=1,
@@ -1460,7 +1463,11 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
     assert intensifier.stage == 1
 
     pending_processing, incumbent = _exhaust_stage_execution(
-        intensifier, target_algorithm, runhistory, challengers, incumbent
+        intensifier,
+        target_algorithm,
+        runhistory,
+        challengers,
+        incumbent,
     )
 
     # Because budget is 5, BUT we previously ran 2 instances in stage 0
@@ -1482,7 +1489,7 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
         run_value = evaluate_challenger(
             run_info, target_algorithm, target_algorithm.stats, runhistory, force_update=True
         )
-        incumbent, inc_value = intensifier.process_results(
+        incumbent, _ = intensifier.process_results(
             run_info=run_info,
             incumbent=incumbent,
             runhistory=runhistory,
@@ -1501,14 +1508,25 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
     """Makes sure that iteration done for a given stage is asserted ONLY after all
     configurations AND instances are completed, when instance is NOT used as budget."""
 
-    def target(x: Configuration):
+    def target(x: Configuration, seed, budget):
         return 1
 
     # instances = [None]???
-    intensifier = make_sh_worker(deterministic=True, n_instances=1, min_budget=2, max_budget=5, eta=2)
+    intensifier = make_sh_worker(
+        deterministic=True,
+        n_instances=1,
+        min_budget=2,
+        max_budget=5,
+        eta=2,
+    )
     intensifier._update_stage(runhistory=None)
 
-    target_algorithm = make_target_algorithm(intensifier.scenario, intensifier.stats, target)
+    target_algorithm = make_target_algorithm(
+        intensifier.scenario,
+        intensifier.stats,
+        target,
+        required_arguments=["seed", "budget"],
+    )
     target_algorithm.runhistory = runhistory
 
     # we do not want to test instance as budget
@@ -1540,9 +1558,13 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
     # as we are in stage 1 out of 2
     for run_info in pending_processing:
         run_value = evaluate_challenger(
-            run_info, target_algorithm, target_algorithm.stats, runhistory, force_update=True
+            run_info,
+            target_algorithm,
+            target_algorithm.stats,
+            runhistory,
+            force_update=True,
         )
-        incumbent, inc_value = intensifier.process_results(
+        incumbent, _ = intensifier.process_results(
             run_info=run_info,
             incumbent=incumbent,
             runhistory=runhistory,

@@ -279,7 +279,7 @@ class Intensifier(AbstractIntensifier):
                     config=incumbent,
                     instance=instance,
                     seed=seed,
-                    budget=0.0,
+                    budget=None,
                 )
             else:
                 # This point marks the transitions from lines 3-7 to 8-18
@@ -314,8 +314,8 @@ class Intensifier(AbstractIntensifier):
             return TrialInfoIntent.SKIP, TrialInfo(
                 config=None,
                 instance=None,
-                seed=0,
-                budget=0.0,
+                seed=None,
+                budget=None,
             )
 
         # Skip the iteration if the challenger was previously run
@@ -325,8 +325,8 @@ class Intensifier(AbstractIntensifier):
             return TrialInfoIntent.SKIP, TrialInfo(
                 config=None,
                 instance=None,
-                seed=0,
-                budget=0.0,
+                seed=None,
+                budget=None,
             )
 
         logger.debug("Intensify on %s.", challenger.get_dictionary())
@@ -363,8 +363,8 @@ class Intensifier(AbstractIntensifier):
                 return TrialInfoIntent.SKIP, TrialInfo(
                     config=None,
                     instance=None,
-                    seed=0,
-                    budget=0.0,
+                    seed=None,
+                    budget=None,
                 )
 
             else:
@@ -380,7 +380,7 @@ class Intensifier(AbstractIntensifier):
                     config=challenger,
                     instance=instance,
                     seed=seed,
-                    budget=0.0,
+                    budget=None,
                 )
         else:
             raise ValueError("No valid stage found!")
@@ -484,7 +484,7 @@ class Intensifier(AbstractIntensifier):
 
             elif self._target_algorithm_time - time_bound >= 0:
                 logger.debug(
-                    "TA time limit for intensification reached (used: %f sec, available: %f sec)",
+                    "Target function time limit for intensification reached (used: %f sec, available: %f sec)",
                     self._target_algorithm_time,
                     time_bound,
                 )
@@ -554,17 +554,20 @@ class Intensifier(AbstractIntensifier):
         # Line 4
         # Find all instances that have the most runs on the inc
         inc_runs = runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True)
+
+        # Now we select and count the instances and sort them
         inc_inst = [s.instance for s in inc_runs]
-        inc_inst = list(Counter(inc_inst).items())
-        inc_inst.sort(key=lambda x: x[1], reverse=True)
+        inc_inst_counter = list(Counter(inc_inst).items())
+        inc_inst_counter.sort(key=lambda x: x[1], reverse=True)
 
         try:
-            max_runs = inc_inst[0][1]
+            max_runs = inc_inst_counter[0][1]
         except IndexError:
             logger.debug("No run for incumbent found.")
             max_runs = 0
 
-        inc_inst = [x[0] for x in inc_inst if x[1] == max_runs]
+        # Those are the instances with run the most
+        inc_inst = [x[0] for x in inc_inst_counter if x[1] == max_runs]
 
         # We basically sort the instances by their name
         available_insts: list[str | None] = list(set(self.instances) - set(inc_inst))
@@ -784,8 +787,20 @@ class Intensifier(AbstractIntensifier):
         inc_inst_seeds = set(runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True))
         chall_inst_seeds = set(runhistory.get_runs_for_config(challenger, only_max_observed_budget=True))
 
+        # print("++++++++++++++++++++++++++++++++++++")
+        # print(inc_inst_seeds, chall_inst_seeds)
+
+        activate_sort = True
+        for isbk in list(inc_inst_seeds) + list(chall_inst_seeds):
+            if isbk.budget is None:
+                activate_sort = False
+                break
+
         # Line 10
-        missing_runs = sorted(inc_inst_seeds - chall_inst_seeds)
+        if activate_sort:
+            missing_runs = sorted(inc_inst_seeds - chall_inst_seeds)
+        else:
+            missing_runs = list(inc_inst_seeds - chall_inst_seeds)
 
         # Line 11
         self.rng.shuffle(missing_runs)  # type: ignore

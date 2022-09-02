@@ -166,7 +166,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # run history, does not have this information and so we track locally. That way,
         # when we access the complete list of configs from the run history, we filter
         # the ones launched by the current succesive halver using self.run_tracker
-        self.run_tracker: dict[tuple[Configuration, str | None, int | None, float], bool] = {}
+        self.run_tracker: dict[tuple[Configuration, str | None, int | None, float | None], bool] = {}
 
     @property
     def uses_seeds(self) -> bool:
@@ -376,8 +376,8 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
             return TrialInfoIntent.WAIT, TrialInfo(
                 config=None,
                 instance=None,
-                seed=0,
-                budget=0.0,
+                seed=None,
+                budget=None,
                 source=self.identifier,
             )
 
@@ -423,8 +423,8 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                     return TrialInfoIntent.WAIT, TrialInfo(
                         config=None,
                         instance=None,
-                        seed=0,
-                        budget=0.0,
+                        seed=None,
+                        budget=None,
                         source=self.identifier,
                     )
 
@@ -442,8 +442,8 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                     return TrialInfoIntent.SKIP, TrialInfo(
                         config=None,
                         instance=None,
-                        seed=0,
-                        budget=0.0,
+                        seed=None,
+                        budget=None,
                         source=self.identifier,
                     )
 
@@ -477,8 +477,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # perspective
         self.new_challenger = new_challenger
 
-        # TODO: Budget = None?
-        budget = 0.0 if self.successive_halving.instance_as_budget else curr_budget
+        budget = None if self.successive_halving.instance_as_budget else curr_budget
         self.run_tracker[(challenger, instance, seed, budget)] = False
 
         # self.current_instance_indices Tell us our current instance to be run. The upcoming return
@@ -622,9 +621,9 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
 
         if self.successive_halving.instance_as_budget:
             new_incumbent = super()._compare_configs(incumbent, challenger, runhistory, log_trajectory)
-            # if compare config returned none, then it is undecided. So return old incumbent
-            new_incumbent = incumbent if new_incumbent is None else new_incumbent
-            return new_incumbent
+
+            # If compare config returned none, then it is undecided. So return old incumbent.
+            return incumbent if new_incumbent is None else new_incumbent
 
         # For real-valued budgets, compare configs based on the incumbent selection design
         curr_budget = self.all_budgets[self.stage]
@@ -649,17 +648,23 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                 inc_runs[0].budget,
                 len(inc_runs),
             )
+
         if len(chall_runs) > 1:
             raise ValueError(
                 "Number of challenger runs on budget %f must not exceed 1, but is %d",
                 chall_runs[0].budget,
                 len(chall_runs),
             )
+
         inc_run = inc_runs[0]
         chall_run = chall_runs[0]
 
-        # incumbent selection: highest budget only
+        if inc_run.budget is None or chall_run.budget is None:
+            raise RuntimeError("Since budgets are not used for instance optimization, this should not happen.")
+
+        # Incumbent selection: highest budget only
         if self.successive_halving.incumbent_selection == "highest_budget":
+            assert chall_run.budget is not None
             if chall_run.budget < self.successive_halving.max_budget:
                 self.logger.debug(
                     "Challenger (budget=%.4f) has not been evaluated on the highest budget %.4f yet.",
@@ -668,17 +673,18 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                 )
                 return incumbent
 
-        # incumbent selection: highest budget run so far
+        # Incumbent selection: highest budget run so far
         if inc_run.budget > chall_run.budget:
             self.logger.debug(
-                "Incumbent evaluated on higher budget than challenger (%.4f > %.4f), " "not changing the incumbent",
+                "Incumbent evaluated on higher budget than challenger (%.4f > %.4f), not changing the incumbent",
                 inc_run.budget,
                 chall_run.budget,
             )
             return incumbent
+
         if inc_run.budget < chall_run.budget:
             self.logger.debug(
-                "Challenger evaluated on higher budget than incumbent (%.4f > %.4f), " "changing the incumbent",
+                "Challenger evaluated on higher budget than incumbent (%.4f > %.4f), changing the incumbent",
                 chall_run.budget,
                 inc_run.budget,
             )

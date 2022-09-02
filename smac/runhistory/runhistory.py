@@ -70,9 +70,9 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         # serialize the data and can assume it's still in the same order as it was added.
         self.data: dict[TrialKey, TrialValue] = OrderedDict()
 
-        # for fast access, we have also an unordered data structure to get all instance
-        # seed pairs of a configuration. This does not include capped runs.
-        self._config_id_to_inst_seed_budget: dict[int, dict[InstanceSeedKey, list[float]]] = {}
+        # For fast access, we have also an unordered data structure to get all instance
+        # seed pairs of a configuration.
+        self._config_id_to_isbk: dict[int, dict[InstanceSeedKey, list[float | None]]] = {}
 
         self.config_ids: dict[Configuration, int] = {}
         self.ids_config: dict[int, Configuration] = {}
@@ -108,7 +108,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         """Enables the `len(runhistory)`"""
         return len(self.data)
 
-    def __eq__(self, other: Any):
+    def __eq__(self, other: Any) -> bool:
         """Enables to check equality of runhistory if the run is continued"""
         return self.data == other.data
 
@@ -188,15 +188,31 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         ):
             # Also add to fast data structure
             isk = InstanceSeedKey(k.instance, k.seed)
-            self._config_id_to_inst_seed_budget[k.config_id] = self._config_id_to_inst_seed_budget.get(k.config_id, {})
+            self._config_id_to_isbk[k.config_id] = self._config_id_to_isbk.get(k.config_id, {})
 
-            if isk not in self._config_id_to_inst_seed_budget[k.config_id].keys():
+            # We sanity-check whether we don't mix none and str in the instances
+            for isk_ in self._config_id_to_isbk[k.config_id].keys():
+                if isinstance(isk_, str) != isinstance(isk, str):
+                    raise ValueError(
+                        "Can not mix instances of different types. "
+                        f"Wants to add {isk_.instance} but found already {isk.instance}."
+                    )
+
+            if isk not in self._config_id_to_isbk[k.config_id]:
                 # Add new inst-seed-key with budget to main dict
-                self._config_id_to_inst_seed_budget[k.config_id][isk] = [k.budget]
+                self._config_id_to_isbk[k.config_id][isk] = [k.budget]
             # Before it was k.budget not in isk
             elif k.budget != isk.instance and k.budget != isk.seed:
+                # We have to make sure that we don't mix none and float budgets
+                if isinstance(self._config_id_to_isbk[k.config_id][isk][0], float) != isinstance(k.budget, float):
+                    raise ValueError(
+                        "Can not mix budgets of different types for the same instance-seed pair. "
+                        f"Wants to add {k.budget} but found already "
+                        f"{self._config_id_to_isbk[k.config_id][isk][0]}."
+                    )
+
                 # Append new budget to existing inst-seed-key dict
-                self._config_id_to_inst_seed_budget[k.config_id][isk].append(k.budget)
+                self._config_id_to_isbk[k.config_id][isk].append(k.budget)
 
             # If budget is used, then update cost instead of incremental updates
             if not self.overwrite_existing_runs and k.budget == 0:
@@ -206,12 +222,9 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 # cost for > 100 instances is high)
                 self.incremental_update_cost(self.ids_config[k.config_id], v.cost)
             else:
-                # this is when budget > 0 (only successive halving and hyperband so far)
+                # This happens when budget > 0 (only successive halving and hyperband so far)
                 logger.debug(f"Update cost for config {k.config_id}.")
                 self.update_cost(config=self.ids_config[k.config_id])
-                # if k.budget > 0:
-                #    if self.num_runs_per_config[k.config_id] != 1:  # This is updated in update_cost
-                #        raise ValueError("This should not happen!")
 
     def _cost(
         self,
@@ -259,10 +272,10 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         config: Configuration,
         cost: int | float | list[int | float],
         time: float,
-        status: StatusType,
+        status: StatusType = StatusType.SUCCESS,
         instance: str | None = None,
         seed: int | None = None,
-        budget: float = 0.0,
+        budget: float | None = None,
         starttime: float = 0.0,
         endtime: float = 0.0,
         additional_info: dict[str, Any] = {},
@@ -338,6 +351,10 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         else:
             c = [float(i) for i in c]
 
+        if budget is not None:
+            # Just to make sure we really add a float
+            budget = float(budget)
+
         k = TrialKey(config_id=config_id, instance=instance, seed=seed, budget=budget)
         v = TrialValue(
             cost=c,
@@ -369,18 +386,6 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         # the same runkey will be ignored silently if not capped.
         if self.overwrite_existing_runs or force_update or self.data.get(k) is None:
             self._add(k, v, status, origin)
-
-        # v2.0: We remove all runtime optimization
-        # elif status != StatusType.CAPPED and self.data[k].status == StatusType.CAPPED:
-        #    # overwrite capped runs with uncapped runs
-        #    self._add(k, v, status, origin)
-        # elif status == StatusType.CAPPED and self.data[k].status == StatusType.CAPPED:
-        #    if self.n_objectives > 1:
-        #        raise RuntimeError("Not supported yet.")
-        #
-        #    # Overwrite if censored with a larger cutoff
-        #    if cost > self.data[k].cost:
-        #        self._add(k, v, status, origin)
         else:
             logger.info("Entry was not added to the runhistory because existing runs will not overwritten.")
 
@@ -652,10 +657,6 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
     def get_runs_for_config(self, config: Configuration, only_max_observed_budget: bool) -> list[InstanceSeedBudgetKey]:
         """Return all runs (instance seed pairs) for a configuration.
 
-        Note
-        ----
-        This method ignores capped runs.
-
         Parameters
         ----------
         config : Configuration from ConfigSpace
@@ -669,17 +670,19 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         """
         config_id = self.config_ids.get(config)
         runs = {}
-        if config_id in self._config_id_to_inst_seed_budget:
-            runs = self._config_id_to_inst_seed_budget[config_id].copy()
+        if config_id in self._config_id_to_isbk:
+            runs = self._config_id_to_isbk[config_id].copy()
 
         # Select only the max budget run if specified
         if only_max_observed_budget:
             for k, v in runs.items():
-                runs[k] = [max(v)]
+                if None in v:
+                    runs[k] = [None]
+                else:
+                    runs[k] = [max([v_ for v_ in v if v_ is not None])]
 
-        # convert to inst-seed-budget key
-        rval = [InstanceSeedBudgetKey(k.instance, k.seed, budget) for k, v in runs.items() for budget in v]
-        return rval
+        # Convert to instance-seed-budget key
+        return [InstanceSeedBudgetKey(k.instance, k.seed, budget) for k, v in runs.items() for budget in v]
 
     def get_configs(self) -> list[Configuration]:
         """Return all configurations in this RunHistory object.
@@ -743,8 +746,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                     (
                         int(k.config_id),
                         str(k.instance) if k.instance is not None else None,
-                        k.seed,
-                        float(k.budget) if k.budget is not None else 0,
+                        int(k.seed) if k.seed is not None else None,
+                        float(k.budget) if k.budget is not None else None,
                         v.cost,
                         v.time,
                         v.status,
@@ -829,8 +832,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 time=float(entry[5]),
                 status=StatusType(entry[6]),
                 instance=entry[1],
-                seed=int(entry[2]),
-                budget=float(entry[3]),
+                seed=entry[2],
+                budget=entry[3],
                 starttime=entry[7],
                 endtime=entry[8],
                 additional_info=entry[9],

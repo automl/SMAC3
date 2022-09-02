@@ -110,14 +110,14 @@ def test_race_challenger_large(make_scenario, make_stats, configspace_small, run
     Makes sure that a racing configuration with better performance, is selected as incumbent.
     """
 
-    def target(x, seed=0):
+    def target(x, seed=0, instance=None):
         return 1
 
     scenario = make_scenario(configspace_small, use_instances=True, deterministic=True)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
     intensifier.stats = stats
-    target_algorithm = TargetAlgorithmRunner(target, scenario, stats, required_arguments=["seed"])
+    target_algorithm = TargetAlgorithmRunner(target, scenario, stats, required_arguments=["seed", "instance"])
     configs = configspace_small.sample_configuration(3)
 
     for i in range(3):
@@ -145,7 +145,7 @@ def test_race_challenger_large(make_scenario, make_stats, configspace_small, run
             challenger=config, incumbent=configs[0], runhistory=runhistory
         )
 
-        run_info = TrialInfo(config=config, instance=instance, seed=seed, budget=0.0)
+        run_info = TrialInfo(config=config, instance=instance, seed=seed)
         run_value = evaluate_challenger(run_info, target_algorithm, stats, runhistory)
 
         incumbent, _ = intensifier.process_results(
@@ -209,7 +209,7 @@ def test_race_challenger_large_blocked_seed(make_scenario, make_stats, configspa
             challenger=config, incumbent=configs[0], runhistory=runhistory
         )
 
-        run_info = TrialInfo(config=config, instance=instance, seed=seed, budget=0.0)
+        run_info = TrialInfo(config=config, instance=instance, seed=seed, budget=None)
         run_value = evaluate_challenger(run_info, target_algorithm, stats, runhistory)
 
         incumbent, _ = intensifier.process_results(
@@ -434,6 +434,8 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
     Test evaluate_challenger() - a complete intensification run without a `always_race_against` configuration.
     """
 
+    print("++++++++++++++++++++")
+
     def target(x, seed=0):
         return 2 * x["a"] + x["b"]
 
@@ -508,6 +510,9 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
         time_bound=np.inf,
         run_value=run_value,
     )
+
+    print(inc, perf)
+    print("++++++++++++++++++++")
 
     # challenger has a better performance, so incumbent has changed
     assert inc == config1

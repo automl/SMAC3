@@ -119,6 +119,10 @@ class SuccessiveHalving(ParallelScheduler):
         self.min_budget: float | int
         self.max_budget: float | int
 
+        available_incumbent_selections = ["highest_executed_budget", "highest_budget", "any_budget"]
+        if incumbent_selection not in available_incumbent_selections:
+            raise ValueError(f"The incumbent selection must be one of {available_incumbent_selections}.")
+
         if self.min_challenger > 1:
             raise ValueError("Successive Halving can not handle argument `min_challenger` > 1.")
 
@@ -190,11 +194,10 @@ class SuccessiveHalving(ParallelScheduler):
                     % (self.max_budget, len(self.instance_seed_pairs))
                 )
 
-        budget_type = "INSTANCES" if self.instance_as_budget else "REAL-VALUED"
+        budget_type = "INSTANCES" if self.instance_as_budget else "BUDGETS"
         logger.info(
-            "Successive Halving configuration: budget type = %s, "
-            "Initial budget = %.2f, Max. budget = %.2f, eta = %.2f"
-            % (budget_type, self.min_budget, self.max_budget, self.eta)
+            f"Using successive halving with budget type {budget_type}, min budget {self.min_budget}, "
+            f"max budget {self.max_budget} and eta {self.eta}."
         )
 
         # Pre-computing stuff for SH
@@ -211,9 +214,8 @@ class SuccessiveHalving(ParallelScheduler):
         else:
             self.repeat_configs = False
 
-        # Incumbent selection design
-        assert incumbent_selection in ["highest_executed_budget", "highest_budget", "any_budget"]
-        self.incumbent_selection = incumbent_selection
+        if self.instance_as_budget:
+            logger.info("The argument `incumbent_selection` is ignored because instances are used as budget type.")
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""

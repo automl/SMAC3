@@ -49,7 +49,7 @@ class SimpleIntensifier(AbstractIntensifier):
         # the workers. At any time, we want to make sure that if there
         # are just W workers, there should be at max W active runs
         # Below variable tracks active runs not processed
-        self.run_tracker: dict[tuple[Configuration, str | None, int, float], bool] = {}
+        self.run_tracker: dict[tuple[Configuration, str | None, int | None, float | None], bool] = {}
 
     @property
     def uses_seeds(self) -> bool:
@@ -181,15 +181,15 @@ class SimpleIntensifier(AbstractIntensifier):
             return TrialInfoIntent.WAIT, TrialInfo(
                 config=None,
                 instance=None,
-                seed=0,
-                budget=0.0,
+                seed=None,
+                budget=None,
             )
 
         run_info = TrialInfo(
             config=challenger,
             instance=None if self.instances is None else self.instances[-1],
             seed=0 if self.deterministic else int(self.rng.randint(low=0, high=MAXINT, size=1)[0]),
-            budget=0.0,
+            budget=None,
         )
 
         self.run_tracker[(run_info.config, run_info.instance, run_info.seed, run_info.budget)] = False

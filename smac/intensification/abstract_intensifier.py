@@ -238,14 +238,14 @@ class AbstractIntensifier:
         chall_gen: Iterator[Optional[Configuration]]
         if challengers:
             # iterate over challengers provided
-            logger.debug("Using challengers provided")
+            logger.debug("Using provied challengers.")
             chall_gen = (c for c in challengers)
         elif ask:
             # generating challengers on-the-fly if optimizer is given
-            logger.debug("Generating new challenger from optimizer")
+            logger.debug("Generating new challenger from optimizer.")
             chall_gen = ask()
         else:
-            raise ValueError("No configurations/ask function provided. Cannot generate challenger!")
+            raise ValueError("No configurations/ask function provided. Can not generate challenger!")
 
         logger.debug("Time to select next challenger: %.4f" % (time.time() - start_time))
 

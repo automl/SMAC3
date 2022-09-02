@@ -22,10 +22,13 @@ class InstanceSeedKey:
 class InstanceSeedBudgetKey:
     instance: str | None = None
     seed: int | None = None
-    budget: float = 0.0
+    budget: float | None = None
 
     def __lt__(self, other: InstanceSeedBudgetKey) -> bool:
-        return self.budget < other.budget
+        if self.budget is not None and other.budget is not None:
+            return self.budget < other.budget
+
+        raise RuntimeError("InstanceSeedBudgetKey does not support comparison without budget.")
 
 
 @dataclass(frozen=True)
@@ -33,7 +36,7 @@ class TrialKey:
     config_id: int
     instance: str | None = None
     seed: int | None = None
-    budget: float = 0.0
+    budget: float | None = None
 
 
 @dataclass(frozen=True)
@@ -51,7 +54,7 @@ class TrialInfo:
     config: Configuration
     instance: str | None = None
     seed: int | None = None
-    budget: float = 0.0
+    budget: float | None = None
     source: int = 0
 
 

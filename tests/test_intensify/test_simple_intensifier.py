@@ -49,7 +49,7 @@ def test_get_next_run(intensifier, runhistory, configs):
     # )
 
     assert run_info.config == configs[0]
-    assert run_info.budget == 0.0
+    assert run_info.budget is None
     assert run_info.instance is None
     assert run_info.seed != 0  # Random seed because of deterministic false
 
@@ -79,7 +79,7 @@ def test_get_next_run_waits_if_no_workers(intensifier, runhistory, configs):
     # We can get the configuration 1
     assert intent == TrialInfoIntent.RUN
     assert run_info.config == configs[0]
-    assert run_info.budget == 0.0
+    assert run_info.budget is None
     assert run_info.instance is None
     assert run_info.seed != 0
 
@@ -97,8 +97,8 @@ def test_get_next_run_waits_if_no_workers(intensifier, runhistory, configs):
     run_info2 = TrialInfo(
         config=None,
         instance=None,
-        seed=0,
-        budget=0.0,
+        seed=None,
+        budget=None,
     )
 
     assert run_info == run_info2
