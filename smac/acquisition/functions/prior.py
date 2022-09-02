@@ -87,7 +87,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
     @property
     def hyperparameters(self):
         if self._hyperparameters is None:
-            raise ValueError("Please set the model via '_set_model' first.")
+            raise ValueError("Please set the model via 'update' or '_set_model' first.")
         return self._hyperparameters
 
     @hyperparameters.setter
@@ -104,7 +104,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             "name": self.__class__.__name__,
         }
 
-    def update(self, eta: float, **kwargs: Any) -> None:
+    def update(self, model: AbstractModel, eta: float, **kwargs: Any) -> None:
         """Update the acquisition function attributes required for calculation.
 
         Parameters
@@ -114,6 +114,8 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         """
         self.iteration_number += 1
         self.eta = eta
+        self._set_model(model=model)
+        kwargs["model"] = model
         # Maybe the underlying acquisition function needs eta.
         kwargs["eta"] = eta
         self.acq.update(**kwargs)
