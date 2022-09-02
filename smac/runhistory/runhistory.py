@@ -1,4 +1,5 @@
 from __future__ import annotations
+from pathlib import Path
 
 from typing import Any, Iterable, Iterator, Mapping, cast
 
@@ -7,7 +8,7 @@ from collections import OrderedDict
 
 import numpy as np
 
-from ConfigSpace import Configuration, ConfigurationSpace
+from ConfigSpace import ConfigurationSpace, Configuration
 from smac.multi_objective.utils import normalize_costs
 from smac.runhistory.dataclasses import (
     InstanceSeedBudgetKey,
@@ -314,11 +315,9 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             Forces the addition of a config to the history
         """
         if config is None:
-            raise TypeError("Configuration to add to the runhistory must not be None")
+            raise TypeError("Configuration must not be None.")
         elif not isinstance(config, Configuration):
-            raise TypeError(
-                "Configuration to add to the runhistory is not of type Configuration, but %s" % type(config)
-            )
+            raise TypeError("Configuration is not of type Configuration, but %s." % type(config))
 
         # Squeeze is important to reduce arrays with one element
         # to scalars.
@@ -766,6 +765,11 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
             config_origins[id_] = config.origin
 
+        # Some sanity-checks
+        assert filename.endswith(".json")
+        path = Path(filename)
+        path.parent.mkdir(parents=True, exist_ok=True)
+
         with open(filename, "w") as fp:
             json.dump(
                 {
@@ -841,8 +845,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
     def update_from_json(
         self,
-        fn: str,
-        cs: ConfigurationSpace,
+        filename: str,
+        configspace: ConfigurationSpace,
         origin: DataOrigin = DataOrigin.EXTERNAL_SAME_INSTANCES,
     ) -> None:
         """Updates the current runhistory by adding new runs from a json file.
@@ -857,7 +861,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             What to store as data origin.
         """
         new_runhistory = RunHistory()
-        new_runhistory.load_json(fn, cs)
+        new_runhistory.load_json(filename, configspace)
         self.update(runhistory=new_runhistory, origin=origin)
 
     def update(

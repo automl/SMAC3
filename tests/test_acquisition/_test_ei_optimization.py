@@ -12,9 +12,9 @@ from ConfigSpace.hyperparameters import (
 )
 from scipy.spatial.distance import euclidean
 
-from smac.configspace import ConfigurationSpace, pcs
+from ConfigSpace import ConfigurationSpace, pcs
 from smac.optimizer.acquisition import EI
-from smac.optimizer.acquisition.maximizer import (
+from smac.acquisition import (
     LocalAndSortedPriorRandomSearch,
     LocalSearch,
     RandomSearch,
