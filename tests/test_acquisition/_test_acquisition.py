@@ -333,17 +333,200 @@ def test_prior_init_ei(prior_model, acquisition_function, beta):
 
 
 def test_prior_init_ts(prior_model, acq_ts, beta):
-    paf = PriorAcquisitionFunction(model=prior_model, acquisition_function=acq_ts, decay_beta=beta)
+    paf = PriorAcquisitionFunction(acquisition_function=acq_ts, decay_beta=beta)
+    paf.update(model=prior_model, eta=1, num_data=1)
     assert paf.rescale_acq is True
 
 
 def test_prior_update(prior_model, acquisition_function, beta):
     ei = acquisition_function
-    paf = PriorAcquisitionFunction(prior_model, ei, beta)
+    paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta)
     paf.update(model=prior_model, eta=2)
     assert paf.eta == 2
     assert paf.acq.eta == 2
     assert paf.iteration_number == 1
+
+
+def test_prior_compute_prior_Nx1(prior_model, hyperparameter_dict, acquisition_function, beta):
+    prior_model.update_prior(hyperparameter_dict)
+    paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta)
+    paf.update(model=prior_model, eta=1)
+
+    X = np.array([0, 0.5, 1]).reshape(3, 1)
+    prior_values = paf._compute_prior(X)
+
+    assert prior_values.shape == (3, 1)
+    assert prior_values[0][0]== 0
+    assert prior_values[1][0]== 1
+    assert prior_values[2][0]== 2
+
+
+def test_prior_compute_prior_NxD(prior_model, hyperparameter_dict, acquisition_function, beta):
+    prior_model.update_prior(hyperparameter_dict)
+    paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta)
+    paf.update(model=prior_model, eta=1)
+
+    X = np.array([[0, 0], [0, 1], [1, 1]])
+    prior_values = paf._compute_prior(X)
+
+    assert prior_values.shape == (3, 1)
+    assert prior_values[0][0] == 0
+    assert prior_values[1][0] == 0
+    assert prior_values[2][0] == 2
+
+
+def test_prior_compute_prior_1xD(prior_model, acquisition_function, beta):
+    x0_prior = MockPrior(pdf=lambda x: 2 * x, max_density=2)
+    x1_prior = MockPrior(pdf=lambda x: np.ones_like(x), max_density=1)
+    hyperparameter_dict = {"x0": x0_prior, "x1": x1_prior}
+
+    prior_model.update_prior(hyperparameter_dict)
+    paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta)
+    paf.update(model=prior_model, eta=1)
+
+    X = np.array([[0.5, 0.5]])
+    prior_values = paf._compute_prior(X)
+
+    assert prior_values.shape == (1, 1)
+    assert prior_values[0][0] == 1
+
+
+def test_prior_compute_prior_1x1(prior_model, hyperparameter_dict, acquisition_function, beta):
+    prior_model.update_prior(hyperparameter_dict)
+    paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta)
+    paf.update(model=prior_model, eta=1)
+
+    X = np.array([0.5]).reshape(1, 1)
+    prior_values = paf._compute_prior(X)
+
+    assert prior_values.shape == (1, 1)
+    assert prior_values[0][0] == 1
+
+
+@pytest.fixture
+def x1_prior():
+    return MockPrior(pdf=lambda x: np.ones_like(x), max_density=1)
+
+
+@pytest.fixture
+def x2_prior():
+    return MockPrior(pdf=lambda x: 2 - 2 * x, max_density=2)
+
+
+@pytest.fixture
+def hp_dict3(x0_prior, x1_prior, x2_prior):
+    return {"x0": x0_prior, "x1": x1_prior, "x2": x2_prior}
+
+
+def test_prior_1xD(hp_dict3, prior_model, acquisition_function, beta, prior_floor):
+    prior_model.update_prior(hp_dict3)
+    paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta, prior_floor=prior_floor)
+    paf.update(model=prior_model, eta=1.0)
+    configurations = [ConfigurationMock([1.0, 1.0, 1.0])]
+    acq = paf(configurations)
+    assert acq.shape == (1, 1)
+
+    prior_0_factor = np.power(2.0 * 1.0 * 0.0 + paf.prior_floor, beta / 1.0)
+
+    assert np.isclose(acq[0][0], 0.3989422804014327 * prior_0_factor)
+
+
+def test_prior_NxD(hp_dict3, prior_model, acquisition_function, beta, prior_floor):
+    prior_model.update_prior(hp_dict3)
+    paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta, prior_floor=prior_floor)
+    paf.update(model=prior_model, eta=1.0)
+
+    # These are the exact same numbers as in the EI tests below
+    configurations = [
+        ConfigurationMock([0.0, 0.0, 0.0]),
+        ConfigurationMock([0.1, 0.1, 0.1]),
+        ConfigurationMock([1.0, 1.0, 1.0]),
+    ]
+    acq = paf(configurations)
+    assert acq.shape == (3, 1)
+
+    prior_0_factor = np.power(0.0 * 1.0 * 2.0 + paf.prior_floor, beta / 1.0)
+    prior_1_factor = np.power(0.2 * 1.0 * 1.8 + paf.prior_floor, beta / 1.0)
+    prior_2_factor = np.power(2.0 * 1.0 * 0.0 + paf.prior_floor, beta / 1.0)
+
+    # We do only one update, so we are at iteration 1 (beta/iteration_nbr=2)
+    assert np.isclose(acq[0][0], 0.0 * prior_0_factor)
+    assert np.isclose(acq[1][0], 0.90020601136712231 * prior_1_factor)
+    assert np.isclose(acq[2][0], 0.3989422804014327 * prior_2_factor)
+    
+
+def test_prior_NxD_TS(prior_model, hp_dict3, acq_ts, beta, prior_floor):
+    prior_model.update_prior(hp_dict3)
+    paf = PriorAcquisitionFunction(acquisition_function=acq_ts, decay_beta=beta, prior_floor=prior_floor)
+
+    eta = 1.0
+    paf.update(model=prior_model, eta=eta, num_data=1)
+
+    configurations = [
+        ConfigurationMock([0.0001, 0.0001, 0.0001]),
+        ConfigurationMock([0.1, 0.1, 0.1]),
+        ConfigurationMock([1.0, 1.0, 1.0]),
+    ]
+    acq = paf(configurations)
+    assert acq.shape == (3, 1)
+
+    # retrieved from TS example
+    ts_value_0 = -0.00988738
+    ts_value_1 = -0.22654082
+    ts_value_2 = -2.76405235
+
+    prior_0_factor = np.power(0.0002 * 1 * 1.9998 + paf.prior_floor, beta / 1.0)
+    prior_1_factor = np.power(0.2 * 1.0 * 1.8 + paf.prior_floor, beta / 1.0)
+    prior_2_factor = np.power(2.0 * 1.0 * 0.0 + paf.prior_floor, beta / 1.0)
+
+    # rescaling to avoid negative values, and keep the TS ranking intact
+    combined_value_0 = np.clip(ts_value_0 + eta, 0, np.inf) * prior_0_factor
+    combined_value_1 = np.clip(ts_value_1 + eta, 0, np.inf) * prior_1_factor
+    combined_value_2 = np.clip(ts_value_2 + eta, 0, np.inf) * prior_2_factor
+
+    assert np.isclose(acq[0][0], combined_value_0)
+    assert np.isclose(acq[1][0], combined_value_1)
+    assert np.isclose(acq[2][0], combined_value_2)
+
+
+def test_prior_decay(hp_dict3, prior_model, acquisition_function, beta, prior_floor):
+    prior_model.update_prior(hp_dict3)
+    paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta, prior_floor=prior_floor)
+    paf.update(model=prior_model, eta=1.0)
+    configurations = [ConfigurationMock([0.1, 0.1, 0.1])]
+
+    for i in range(1, 6):
+        prior_factor = np.power(0.2 * 1.0 * 1.8 + paf.prior_floor, beta / i)
+        acq = paf(configurations)
+        print(acq, 0.90020601136712231 * prior_factor)
+        assert np.isclose(acq[0][0], 0.90020601136712231 * prior_factor)
+        paf.update(model=prior_model, eta=1.0)  # increase iteration number
+
+
+def test_prior_discretize_pdf(prior_model, acquisition_function, hyperparameter_dict, beta, prior_floor):
+    prior_model.update_prior(hyperparameter_dict)
+    paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta, prior_floor=prior_floor, discretize=True)
+    paf.update(model=prior_model, eta=1)
+
+    number_of_bins_1 = 13
+    number_of_bins_2 = 27521
+    number_of_points = 1001
+
+    discrete_values_1 = paf._compute_discretized_pdf(
+        x0_prior, np.linspace(0, 1, number_of_points), number_of_bins=number_of_bins_1
+    )
+    discrete_values_2 = paf._compute_discretized_pdf(
+        x0_prior, np.linspace(0, 1, number_of_points), number_of_bins=number_of_bins_2
+    )
+    number_unique_values_1 = len(np.unique(discrete_values_1))
+    number_unique_values_2 = len(np.unique(discrete_values_2))
+
+    assert number_unique_values_1 == number_of_bins_1
+    assert number_unique_values_2 == number_of_points
+    with pytest.raises(ValueError):
+        paf._compute_discretized_pdf(x0_prior, np.linspace(0, 1, number_of_points), number_of_bins=-1)
+
+
 
 # class TestPriorAcquisitionFunction(unittest.TestCase):
 #     def setUp(self):
@@ -657,22 +840,27 @@ def test_ei_zero_variance(model, acquisition_function):
 #
 
 @pytest.fixture
-def acq_eips(model):
+def model_eips():
+    return MockModelDual()
+
+
+@pytest.fixture
+def acq_eips(model_eips):
     ei = EIPS()
-    ei._set_model(model=model)
+    ei._set_model(model=model_eips)
     return ei
 
 
-def test_eips_1xD(model, acq_eips):
+def test_eips_1xD(model_eips, acq_eips):
     ei = acq_eips
-    ei.update(model=model, eta=1.0)
+    ei.update(model=model_eips, eta=1.0)
     configurations = [ConfigurationMock([1.0, 1.0]), ConfigurationMock([1.0, 1.0])]
     acq = ei(configurations)
     assert acq.shape == (1, 1)
     assert np.isclose(acq[0][0], 0.3989422804014327)
 
 
-def test_eips_fail(model, acq_eips):
+def test_eips_fail(model_eips, acq_eips):
     ei = acq_eips
     with pytest.raises(ValueError):
         configurations = [ConfigurationMock([1.0, 1.0])]
@@ -970,17 +1158,17 @@ def test_ts_NxD(model, acq_ts):
 #         self.assertAlmostEqual(acq[0][0], -0.00988738)
 #         self.assertAlmostEqual(acq[1][0], -0.22654082)
 #         self.assertAlmostEqual(acq[2][0], -2.76405235)
-#
-#
-# class TestTSRNG(TestTS):
-#     def setUp(self):
-#         # Test TS acqusition function with model that only has attribute 'rng'
-#         self.model = MockModelRNG()
-#         self.ei = TS(self.model)
-#
-#
-# class TestTSSampler(TestTS):
-#     def setUp(self):
-#         # Test TS acqusition function with model that only has attribute 'sample_functions'
-#         self.model = MockModelSampler()
-#         self.ei = TS(self.model)
+
+
+def test_ts_rng():
+    """Test TS acqusition function with model that only has attribute 'rng'"""
+    model = MockModelRNG()
+    ts = TS()
+    ts._set_model(model=model)
+
+
+def test_ts_sampler():
+    "Test TS acqusition function with model that only has attribute 'sample_functions'"
+    model = MockModelSampler()
+    ts = TS()
+    ts._set_model(model=model)
