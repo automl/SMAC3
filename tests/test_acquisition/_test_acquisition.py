@@ -250,7 +250,6 @@ def prior_floor():
     return 1e-1
 
 
-# TODO for Prior: test if hyperparameters raise value error if the model has not been set before
 def test_prior_init_ei(prior_model, acquisition_function, beta):
     acq_ei = acquisition_function
     paf = PriorAcquisitionFunction(prior_model, acq_ei, beta)
@@ -427,7 +426,9 @@ def test_prior_decay(hp_dict3, prior_model, acquisition_function, beta, prior_fl
         paf.update(model=prior_model, eta=1.0)  # increase iteration number
 
 
-def test_prior_discretize_pdf(prior_model, acquisition_function, hyperparameter_dict, beta, prior_floor):
+def test_prior_discretize_pdf(prior_model, acquisition_function, beta, prior_floor):
+    x0_prior = MockPrior(pdf=lambda x: 2 * x, max_density=2)
+    hyperparameter_dict = {"x0": x0_prior}
     prior_model.update_prior(hyperparameter_dict)
     paf = PriorAcquisitionFunction(
         acquisition_function=acquisition_function, decay_beta=beta, prior_floor=prior_floor, discretize=True
