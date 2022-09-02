@@ -24,7 +24,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class InitialDesign:
+class AbstractInitialDesign:
     """Base class for initial design strategies that evaluates multiple configurations.
 
     Parameters
@@ -83,13 +83,13 @@ class InitialDesign:
 
         n_params = len(self.configspace.get_hyperparameters())
         if configs is not None:
-            logger.info("Ignoring `n_configs` and `n_configs_per_hyperparameter` since `configs` is given.")
+            logger.info("Using `configs` and ignoring `n_configs` and `n_configs_per_hyperparameter`.")
             self.n_configs = len(configs)
         elif n_configs is not None:
-            logger.info("Ignoring `configs` and `n_configs_per_hyperparameter` since `n_configs` is given.")
+            logger.info("Using `n_configs` and ignoring `configs` and `n_configs_per_hyperparameter`.")
             self.n_configs = n_configs
         elif n_configs_per_hyperparameter is not None:
-            logger.info("Ignoring `configs` and `n_configs` since `n_configs_per_hyperparameter` is given.")
+            logger.info("Using `n_configs_per_hyperparameter` and ignoring `configs` and `n_configs`.")
             self.n_configs = int(
                 max(1, min(n_configs_per_hyperparameter * n_params, (max_config_ratio * scenario.n_trials)))
             )
@@ -104,10 +104,11 @@ class InitialDesign:
                 f"Initial budget {self.n_configs} cannot be higher than the number of trials {scenario.n_trials}."
             )
 
+    @abstractmethod
     def _select_configurations(self) -> list[Configuration]:
         """Selects the initial configurations. Depending on the implementation
         of the initial_design."""
-        return []
+        raise NotImplementedError
 
     def _transform_continuous_designs(
         self, design: np.ndarray, origin: str, configspace: ConfigurationSpace
@@ -153,11 +154,10 @@ class InitialDesign:
                 )
             except ForbiddenValueError:
                 continue
+
             conf.origin = origin
             configs.append(conf)
             logger.debug(conf)
-
-        logger.debug("Size of initial design: %d" % (len(configs)))
 
         return configs
 
@@ -178,8 +178,8 @@ class InitialDesign:
 
     def select_configurations(self) -> list[Configuration]:
         """Selects the initial configurations."""
-        logger.info(f"Retrieving {self.n_configs} configurations for the initial design.")
         if self.n_configs == 0:
+            logger.info("No initial configurations are used.")
             return []
 
         if self.configs is None:
@@ -192,4 +192,6 @@ class InitialDesign:
         # Removing duplicates
         # (Reference: https://stackoverflow.com/questions/7961363/removing-duplicates-in-lists)
         self.configs = list(OrderedDict.fromkeys(self.configs))
+        logger.info(f"Using {len(self.configs)} initial design configurations.")
+
         return self.configs

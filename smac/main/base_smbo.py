@@ -14,7 +14,7 @@ from smac.acquisition.functions.abstract_acquisition_function import (
 from smac.callback import Callback
 from smac.configspace import Configuration
 from smac.constants import MAXINT
-from smac.initial_design import InitialDesign
+from smac.initial_design import AbstractInitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.model.abstract_model import AbstractModel
 from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue, StatusType
@@ -99,7 +99,7 @@ class BaseSMBO:
         scenario: Scenario,
         stats: Stats,
         runner: AbstractRunner,
-        initial_design: InitialDesign,
+        initial_design: AbstractInitialDesign,
         runhistory: RunHistory,
         runhistory_encoder: RunHistoryEncoder,
         intensifier: AbstractIntensifier,
@@ -424,8 +424,10 @@ class BaseSMBO:
         # Make sure we use the current incumbent
         self._incumbent = self.stats.get_incumbent()
 
-        logger.info("Selecting configurations from initial design...")
+        # Selecting configurations from initial design
         self._initial_design_configs = self._initial_design.select_configurations()
+        if len(self._initial_design_configs) == 0:
+            raise RuntimeError("SMAC needs initial configurations to work.")
 
         # Sanity-checking: We expect an empty runhistory if submitted/finished in stats is 0
         if self.stats.finished == 0 or self.stats.submitted == 0 or self._incumbent is None:

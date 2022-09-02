@@ -6,7 +6,7 @@ from smac.acquisition.local_and_random_search import LocalAndSortedRandomSearch
 from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.configspace import Configuration
 from smac.facade.facade import Facade
-from smac.initial_design import InitialDesign
+from smac.initial_design import AbstractInitialDesign
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.model.random_forest.random_forest import (
@@ -94,7 +94,7 @@ class AlgorithmConfigurationFacade(Facade):
         scenario: Scenario,
         *,
         configs: list[Configuration] | None = None,
-    ) -> InitialDesign:
+    ) -> AbstractInitialDesign:
         """Returns an DefaultInitialDesign, evaluating only the default configuration. Please check
         its documentation."""
         return DefaultInitialDesign(

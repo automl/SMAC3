@@ -179,6 +179,9 @@ class Scenario:
 
     def save(self) -> None:
         """Saves internal variables and the configuration space to a file."""
+        if self.get_meta() == {}:
+            logger.warning("Scenario will saved without meta data. Please call the facade first to set meta data.")
+
         if self.name is None:
             raise RuntimeError(
                 "Please specify meta data for generating a name. Alternatively, you can specify a name manually."

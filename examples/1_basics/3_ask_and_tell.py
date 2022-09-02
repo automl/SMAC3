@@ -25,7 +25,7 @@ class Rosenbrock2D:
 
         return cs
 
-    def train(self, config: Configuration) -> float:
+    def train(self, config: Configuration, seed: int = 0) -> float:
         """The 2-dimensional Rosenbrock function as a toy model.
         The Rosenbrock function is well know in the optimization community and
         often serves as a toy problem. It can be defined for arbitrary
@@ -62,6 +62,11 @@ if __name__ == "__main__":
         intensifier=intensifier,
         overwrite=True,
     )
+    exit()
+
+    # The scenario is saved when calling the `optimize` method
+    # If we don't use it, we have to save it manually
+    scenario.save()
 
     # We can provide SMAC with custom configurations first
     for config in model.configspace.sample_configuration(10):

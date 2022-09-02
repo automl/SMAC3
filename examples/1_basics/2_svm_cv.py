@@ -80,16 +80,16 @@ if __name__ == "__main__":
     # Next, we create an object, holding general information about the run
     scenario = Scenario(
         configspace,
-        n_trials=50,  # We want to run max 50 trials (combination of config and seed)
+        n_trials=100,  # We want to run max 50 trials (combination of config and seed)
     )
 
     # We want to run the facade's default initial design, but we want to alter the number
     # of initial configs to be 5.
-    initial_design = HyperparameterFacade.get_initial_design(scenario, n_configs=5)
+    initial_design = HyperparameterFacade.get_initial_design(scenario, n_configs=10)
 
     # You can also override the initial design completely, by providing another
     # initial design class.
-    initial_design = SobolInitialDesign(scenario, n_configs=5)
+    initial_design = SobolInitialDesign(scenario, n_configs=10)
 
     # Now we use SMAC to find the best hyperparameters
     smac = HyperparameterFacade(

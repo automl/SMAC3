@@ -120,6 +120,17 @@ class Intensifier(AbstractIntensifier):
         self.run_limit = run_limit
         self.race_against = race_against
 
+        if race_against is not None and race_against.origin is None:
+            assert self.race_against is not None
+            if race_against == scenario.configspace.get_default_configuration():
+                self.race_against.origin = "Default"
+            else:
+                logger.warning(
+                    "The passed configuration to the intensifier was not specified with an origin. "
+                    "The origin is set to `Unknown`."
+                )
+                self.race_against.origin = "Unknown"
+
         if self.run_limit < 1:
             raise ValueError("The argument `run_limit` must be greather than 1.")
 
@@ -321,6 +332,8 @@ class Intensifier(AbstractIntensifier):
         logger.debug("Intensify on %s.", challenger.get_dictionary())
         if hasattr(challenger, "origin"):
             logger.debug("Configuration origin: %s", challenger.origin)
+            if challenger.origin is None:
+                exit()
 
         if self.stage in [IntensifierStage.RUN_CHALLENGER, IntensifierStage.RUN_BASIS]:
 
@@ -513,7 +526,7 @@ class Intensifier(AbstractIntensifier):
             next_seed = int(self.rng.randint(low=0, high=MAXINT, size=1)[0])
 
         # Line 7
-        logger.debug("Add run of incumbent for instance={}".format(next_instance))
+        logger.debug(f"Add run of incumbent for instance = {next_instance}")
         if self.stage == IntensifierStage.RUN_FIRST_CONFIG:
             self.stage = IntensifierStage.PROCESS_FIRST_CONFIG_RUN
         else:

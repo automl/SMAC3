@@ -12,13 +12,13 @@ from ConfigSpace.hyperparameters import (
 )
 from ConfigSpace.util import deactivate_inactive_hyperparameters
 
-from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design.initial_design import AbstractInitialDesign
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class FactorialInitialDesign(InitialDesign):
+class FactorialInitialDesign(AbstractInitialDesign):
     """Factorial initial design.
 
     Attributes

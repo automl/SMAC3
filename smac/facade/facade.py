@@ -15,7 +15,7 @@ from smac.acquisition.functions.abstract_acquisition_function import (
 from smac.callback import Callback
 from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.configspace import Configuration
-from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design.initial_design import AbstractInitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.model.abstract_model import AbstractModel
 
@@ -84,7 +84,7 @@ class Facade:
         model: AbstractModel | None = None,
         acquisition_function: AbstractAcquisitionFunction | None = None,
         acquisition_optimizer: AbstractAcquisitionOptimizer | None = None,
-        initial_design: InitialDesign | None = None,
+        initial_design: AbstractInitialDesign | None = None,
         random_design: AbstractRandomDesign | None = None,
         intensifier: AbstractIntensifier | None = None,
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
@@ -299,7 +299,7 @@ class Facade:
 
     @staticmethod
     @abstractmethod
-    def get_initial_design(scenario: Scenario) -> InitialDesign:
+    def get_initial_design(scenario: Scenario) -> AbstractInitialDesign:
         """Returns an instance of the initial design class to be used in the BO loop,
         specifying how the configurations the BO loop is 'warm-started' with are selected."""
         raise NotImplementedError

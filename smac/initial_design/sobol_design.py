@@ -6,14 +6,14 @@ from ConfigSpace.configuration_space import Configuration
 from ConfigSpace.hyperparameters import Constant
 from scipy.stats.qmc import Sobol
 
-from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design.initial_design import AbstractInitialDesign
 from smac.scenario import Scenario
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class SobolInitialDesign(InitialDesign):
+class SobolInitialDesign(AbstractInitialDesign):
     """Sobol sequence design with a scrambled Sobol sequence.
 
     See https://scipy.github.io/devdocs/reference/generated/scipy.stats.qmc.Sobol.html
