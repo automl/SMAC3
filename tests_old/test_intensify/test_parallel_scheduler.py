@@ -102,7 +102,7 @@ class TestParallelScheduler(unittest.TestCase):
 
         result = TrialValue(cost=1, time=0.5, status=StatusType.SUCCESS, starttime=1, endtime=2, additional_info={})
 
-        scheduler.process_results(run_info=run_info, result=result, incumbent=None, run_history=None, time_bound=None)
+        scheduler.process_results(trial_info=run_info, result=result, incumbent=None, run_history=None, time_bound=None)
         self.assertIsNone(scheduler.intensifier_instances[0].process_results.call_args)
         self.assertIsNone(scheduler.intensifier_instances[1].process_results.call_args)
         self.assertEqual(scheduler.intensifier_instances[2].process_results.call_args[1]["run_info"], run_info)

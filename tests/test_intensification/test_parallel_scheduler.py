@@ -79,7 +79,7 @@ def test_process_results(make_scenario, make_stats, configspace_small, runhistor
         2: mock.Mock(),
     }
 
-    run_info = TrialInfo(
+    trial_info = TrialInfo(
         config=None,
         instance=0,
         seed=0,
@@ -87,12 +87,14 @@ def test_process_results(make_scenario, make_stats, configspace_small, runhistor
         source=2,
     )
 
-    run_value = TrialValue(cost=1, time=0.5, status=StatusType.SUCCESS, starttime=1, endtime=2, additional_info={})
+    trial_value = TrialValue(cost=1, time=0.5, status=StatusType.SUCCESS, starttime=1, endtime=2, additional_info={})
 
-    scheduler.process_results(run_info=run_info, run_value=run_value, incumbent=None, runhistory=None, time_bound=None)
+    scheduler.process_results(
+        trial_info=trial_info, trial_value=trial_value, incumbent=None, runhistory=None, time_bound=None
+    )
     assert scheduler.intensifier_instances[0].process_results.call_args is None
     assert scheduler.intensifier_instances[1].process_results.call_args is None
-    assert scheduler.intensifier_instances[2].process_results.call_args[1]["run_info"] == run_info
+    assert scheduler.intensifier_instances[2].process_results.call_args[1]["trial_info"] == trial_info
 
 
 def test_get_next_run_wait(make_scenario, make_stats, configspace_small, runhistory):
@@ -114,10 +116,10 @@ def test_get_next_run_wait(make_scenario, make_stats, configspace_small, runhist
         "smac.intensification.parallel_scheduling.ParallelScheduler._add_new_instance"
     ) as add_new_instance:
         add_new_instance.return_value = False
-        intent, run_info = scheduler.get_next_run(
+        intent, trial_info = scheduler.get_next_run(
             challengers=None,
             incumbent=None,
-            ask=None,
+            get_next_configurations=None,
             runhistory=None,
             repeat_configs=False,
             n_workers=1,
@@ -157,10 +159,10 @@ def test_get_next_run_add_instance(make_scenario, make_stats, configspace_small,
         scheduler.intensifier_instances[0].stage = 0
         scheduler.intensifier_instances[0].run_tracker = ()
 
-        intent, run_info = scheduler.get_next_run(
+        intent, trial_info = scheduler.get_next_run(
             challengers=None,
             incumbent=None,
-            ask=None,
+            get_next_configurations=None,
             runhistory=None,
             repeat_configs=False,
             n_workers=1,

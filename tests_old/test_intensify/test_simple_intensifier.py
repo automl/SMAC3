@@ -172,7 +172,7 @@ class TestSimpleIntensifier(unittest.TestCase):
         )
 
         incumbent, inc_perf = self.intensifier.process_results(
-            run_info=run_info,
+            trial_info=run_info,
             incumbent=None,
             run_history=self.rh,
             time_bound=np.inf,

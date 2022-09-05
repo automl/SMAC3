@@ -130,7 +130,7 @@ class TestSuccessiveHalving(unittest.TestCase):
                 additional_info=magic,
             )
             self.SH.process_results(
-                run_info=run_info,
+                trial_info=run_info,
                 incumbent=None,
                 run_history=self.rh,
                 time_bound=None,

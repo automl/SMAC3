@@ -101,8 +101,8 @@ class HyperbandWorker(SuccessiveHalvingWorker):
 
     def process_results(
         self,
-        run_info: TrialInfo,
-        run_value: TrialValue,
+        trial_info: TrialInfo,
+        trial_value: TrialValue,
         incumbent: Configuration | None,
         runhistory: RunHistory,
         time_bound: float,
@@ -113,7 +113,7 @@ class HyperbandWorker(SuccessiveHalvingWorker):
 
         Parameters
         ----------
-        run_info : RunInfo
+        trial_info : RunInfo
                A RunInfo containing the configuration that was evaluated
         incumbent : Optional[Configuration]
             Best configuration seen so far
@@ -139,8 +139,8 @@ class HyperbandWorker(SuccessiveHalvingWorker):
 
         # run 1 iteration of successive halving
         incumbent, inc_perf = self.sh_intensifier.process_results(
-            run_info=run_info,
-            run_value=run_value,
+            trial_info=trial_info,
+            trial_value=trial_value,
             incumbent=incumbent,
             runhistory=runhistory,
             time_bound=time_bound,
@@ -158,7 +158,7 @@ class HyperbandWorker(SuccessiveHalvingWorker):
         self,
         challengers: list[Configuration] | None,
         incumbent: Configuration,
-        ask: Callable[[], Iterator[Configuration]] | None,
+        get_next_configurations: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
         n_workers: int = 1,
@@ -190,7 +190,7 @@ class HyperbandWorker(SuccessiveHalvingWorker):
         -------
         intent: RunInfoIntent
             Indicator of how to consume the RunInfo object
-        run_info: RunInfo
+        trial_info: RunInfo
             An object that encapsulates necessary information for a config run
         """
         if n_workers > 1:
@@ -207,10 +207,10 @@ class HyperbandWorker(SuccessiveHalvingWorker):
         self.iteration_done = False
 
         assert self.sh_intensifier
-        intent, run_info = self.sh_intensifier.get_next_run(
+        intent, trial_info = self.sh_intensifier.get_next_run(
             challengers=challengers,
             incumbent=incumbent,
-            ask=ask,
+            get_next_configurations=get_next_configurations,
             runhistory=runhistory,
             repeat_configs=self.sh_intensifier.repeat_configs,
         )
@@ -220,7 +220,7 @@ class HyperbandWorker(SuccessiveHalvingWorker):
         # perspective
         self.new_challenger = self.sh_intensifier.new_challenger
 
-        return intent, run_info
+        return intent, trial_info
 
     def _update_stage(self, runhistory: RunHistory = None) -> None:
         """Update tracking information for a new stage/iteration and update statistics. This method
@@ -265,5 +265,7 @@ class HyperbandWorker(SuccessiveHalvingWorker):
             identifier=self.identifier,
             _all_budgets=self.all_budgets[(-self.s - 1) :],
             _n_configs_in_stage=n_configs_in_stage,
+            _min_budget=sh_min_budget,
+            _max_budget=max_budget,
         )
         self.sh_intensifier.stats = self.stats

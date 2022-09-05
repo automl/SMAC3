@@ -1,14 +1,10 @@
-import logging
 import time
-import unittest
 import pytest
 from unittest import mock
 
 import numpy as np
-from ConfigSpace import Configuration, ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
-
+from ConfigSpace import Configuration
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.intensification.successive_halving_worker import SuccessiveHalvingWorker
 from smac.runhistory import RunHistory, TrialInfo, TrialValue, TrialInfoIntent
@@ -21,7 +17,7 @@ __license__ = "3-clause BSD"
 
 
 def evaluate_challenger(
-    run_info: TrialInfo,
+    trial_info: TrialInfo,
     target_algorithm: TargetAlgorithmRunner,
     stats: Stats,
     runhistory: RunHistory,
@@ -35,21 +31,21 @@ def evaluate_challenger(
     wrapper to launch the taf and add it to the history
     """
     # evaluating configuration
-    run_info, result = target_algorithm.run_wrapper(
-        run_info=run_info,
+    trial_info, result = target_algorithm.run_wrapper(
+        trial_info=trial_info,
     )
 
     stats._target_algorithm_walltime_used += float(result.time)
     stats._finished += 1
 
     runhistory.add(
-        config=run_info.config,
+        config=trial_info.config,
         cost=result.cost,
         time=result.time,
         status=result.status,
-        instance=run_info.instance,
-        seed=run_info.seed,
-        budget=run_info.budget,
+        instance=trial_info.instance,
+        seed=trial_info.seed,
+        budget=trial_info.budget,
         force_update=force_update,
     )
     stats._n_configs = len(runhistory.config_ids)
@@ -57,8 +53,8 @@ def evaluate_challenger(
     return result
 
 
-def target_from_run_info(run_info: TrialInfo):
-    value_from_config = sum([a for a in run_info.config.get_dictionary().values() if not isinstance(a, str)])
+def target_from_trial_info(trial_info: TrialInfo):
+    value_from_config = sum([a for a in trial_info.config.get_dictionary().values() if not isinstance(a, str)])
     return TrialValue(
         cost=value_from_config,
         time=0.5,
@@ -170,15 +166,15 @@ def test_init(SH):
 
 def test_process_results_via_sourceid(SH, runhistory, configs):
     """Makes sure source id is honored when deciding
-    which _SH will consume the result/run_info"""
+    which _SH will consume the result/trial_info"""
     # Mock the _SH so we can make sure the correct item is passed
     for i in range(10):
         SH.intensifier_instances[i] = mock.Mock()
 
-    # randomly create run_infos and push into SH. Then we will make
+    # randomly create trial_infos and push into SH. Then we will make
     # sure they got properly allocated
     for i in np.random.choice(list(range(10)), 30):
-        run_info = TrialInfo(
+        trial_info = TrialInfo(
             config=configs[0],
             instance="i1",
             seed=0,
@@ -190,7 +186,7 @@ def test_process_results_via_sourceid(SH, runhistory, configs):
         # That is we check only the proper _SH has this
         magic = time.time()
 
-        run_value = TrialValue(
+        trial_value = TrialValue(
             cost=1,
             time=0.5,
             status=StatusType.SUCCESS,
@@ -199,11 +195,11 @@ def test_process_results_via_sourceid(SH, runhistory, configs):
             additional_info=magic,
         )
         SH.process_results(
-            run_info=run_info,
+            trial_info=trial_info,
             incumbent=None,
             runhistory=runhistory,
             time_bound=None,
-            run_value=run_value,
+            trial_value=trial_value,
             log_trajectory=False,
         )
 
@@ -211,22 +207,22 @@ def test_process_results_via_sourceid(SH, runhistory, configs):
         # it is the correct one
 
         # First the expected one
-        assert SH.intensifier_instances[i].process_results.call_args[1]["run_info"] == run_info
-        assert SH.intensifier_instances[i].process_results.call_args[1]["run_value"] == run_value
+        assert SH.intensifier_instances[i].process_results.call_args[1]["trial_info"] == trial_info
+        assert SH.intensifier_instances[i].process_results.call_args[1]["trial_value"] == trial_value
 
-        all_other_run_infos, all_other_results = [], []
+        all_other_trial_infos, all_other_results = [], []
         for j, item in enumerate(SH.intensifier_instances):
             # Skip the expected _SH
             if i == j:
                 continue
             if SH.intensifier_instances[j].process_results.call_args is None:
-                all_other_run_infos.append(None)
+                all_other_trial_infos.append(None)
             else:
-                all_other_run_infos.append(SH.intensifier_instances[j].process_results.call_args[1]["run_info"])
-                all_other_results.append(SH.intensifier_instances[j].process_results.call_args[1]["run_value"])
+                all_other_trial_infos.append(SH.intensifier_instances[j].process_results.call_args[1]["trial_info"])
+                all_other_results.append(SH.intensifier_instances[j].process_results.call_args[1]["trial_value"])
 
-        assert run_info not in all_other_run_infos
-        assert run_value not in all_other_results
+        assert trial_info not in all_other_trial_infos
+        assert trial_value not in all_other_results
 
 
 def test_get_next_run_single_SH(SH, runhistory, configs):
@@ -234,16 +230,16 @@ def test_get_next_run_single_SH(SH, runhistory, configs):
 
     challengers = configs[:4]
     for i in range(30):
-        intent, run_info = SH.get_next_run(
+        intent, trial_info = SH.get_next_run(
             challengers=challengers,
             incumbent=None,
-            ask=None,
+            get_next_configurations=None,
             runhistory=runhistory,
             n_workers=1,
         )
 
         # Regenerate challenger list
-        challengers = [c for c in challengers if c != run_info.config]
+        challengers = [c for c in challengers if c != trial_info.config]
 
         if intent == TrialInfoIntent.WAIT:
             break
@@ -251,13 +247,13 @@ def test_get_next_run_single_SH(SH, runhistory, configs):
         # Add the config to rh in order to make SH aware that this
         # config/instance was launched
         runhistory.add(
-            config=run_info.config,
+            config=trial_info.config,
             cost=10,
             time=0.0,
             status=StatusType.RUNNING,
-            instance=run_info.instance,
-            seed=run_info.seed,
-            budget=run_info.budget,
+            instance=trial_info.instance,
+            seed=trial_info.seed,
+            budget=trial_info.budget,
         )
 
     # We should not create more _SH intensifier_instances
@@ -272,34 +268,34 @@ def test_get_next_run_single_SH(SH, runhistory, configs):
 
 def test_get_next_run_dual_SH(SH, runhistory, configs):
     """Makes sure that two  _SH can properly coexist and tag
-    run_info properly"""
+    trial_info properly"""
 
     # Everything here will be tested with a single _SH
     challengers = configs[:4]
     for i in range(30):
-        intent, run_info = SH.get_next_run(
+        intent, trial_info = SH.get_next_run(
             challengers=challengers,
             incumbent=None,
-            ask=None,
+            get_next_configurations=None,
             runhistory=runhistory,
             n_workers=2,
         )
 
         # Regenerate challenger list
-        challengers = [c for c in challengers if c != run_info.config]
+        challengers = [c for c in challengers if c != trial_info.config]
 
         # Add the config to rh in order to make SH aware that this
         # config/instance was launched
         if intent == TrialInfoIntent.WAIT:
             break
         runhistory.add(
-            config=run_info.config,
+            config=trial_info.config,
             cost=10,
             time=0.0,
             status=StatusType.RUNNING,
-            instance=run_info.instance,
-            seed=run_info.seed,
-            budget=run_info.budget,
+            instance=trial_info.instance,
+            seed=trial_info.seed,
+            budget=trial_info.budget,
         )
 
     # We create a second sh intensifier_instances as after 4 runs, the _SH
@@ -349,10 +345,10 @@ def _exhaust_run_and_get_incumbent(SH, runhistory, configs, n_workers=2):
     inc_perf = None
     for i in range(100):
         try:
-            intent, run_info = SH.get_next_run(
+            intent, trial_info = SH.get_next_run(
                 challengers=challengers,
                 incumbent=None,
-                ask=None,
+                get_next_configurations=None,
                 runhistory=runhistory,
                 n_workers=n_workers,
             )
@@ -362,27 +358,27 @@ def _exhaust_run_and_get_incumbent(SH, runhistory, configs, n_workers=2):
             break
 
         # Regenerate challenger list
-        challengers = [c for c in challengers if c != run_info.config]
+        challengers = [c for c in challengers if c != trial_info.config]
 
         if intent == TrialInfoIntent.WAIT:
             break
 
-        run_value = target_from_run_info(run_info)
+        trial_value = target_from_trial_info(trial_info)
         runhistory.add(
-            config=run_info.config,
-            cost=run_value.cost,
-            time=run_value.time,
-            status=run_value.status,
-            instance=run_info.instance,
-            seed=run_info.seed,
-            budget=run_info.budget,
+            config=trial_info.config,
+            cost=trial_value.cost,
+            time=trial_value.time,
+            status=trial_value.status,
+            instance=trial_info.instance,
+            seed=trial_info.seed,
+            budget=trial_info.budget,
         )
         incumbent, inc_perf = SH.process_results(
-            run_info=run_info,
+            trial_info=trial_info,
             incumbent=incumbent,
             runhistory=runhistory,
             time_bound=100.0,
-            run_value=run_value,
+            trial_value=trial_value,
             log_trajectory=False,
         )
 
@@ -754,23 +750,23 @@ def test_get_next_run_1(make_sh_worker, runhistory, configs):
     config2 = configs[1]
 
     # next challenger from a list
-    intent, run_info = intensifier.get_next_run(
+    intent, trial_info = intensifier.get_next_run(
         challengers=[config1],
-        ask=None,
+        get_next_configurations=None,
         runhistory=runhistory,
         incumbent=None,
     )
     runhistory.add(
-        config=run_info.config,
-        instance=run_info.instance,
-        seed=run_info.seed,
-        budget=run_info.budget,
+        config=trial_info.config,
+        instance=trial_info.instance,
+        seed=trial_info.seed,
+        budget=trial_info.budget,
         cost=10,
         time=1,
         status=StatusType.RUNNING,
         additional_info=None,
     )
-    assert run_info.config == config1
+    assert trial_info.config == config1
     assert intensifier.new_challenger
 
     # In the parallel scenario, we cannot wait for a configuration
@@ -778,43 +774,45 @@ def test_get_next_run_1(make_sh_worker, runhistory, configs):
     # stage. That is, for this example we will have n_configs_in_stage=[2, 1]
     # with all_budgets=[1. 2.]. In other words, in this stage we
     # will have 2 configs each with 1 instance.
-    intent, run_info_new = intensifier.get_next_run(
+    intent, trial_info_new = intensifier.get_next_run(
         challengers=[config2],
-        ask=None,
+        get_next_configurations=None,
         runhistory=runhistory,
         incumbent=None,
     )
     runhistory.add(
-        config=run_info_new.config,
-        instance=run_info_new.instance,
-        seed=run_info_new.seed,
-        budget=run_info_new.budget,
+        config=trial_info_new.config,
+        instance=trial_info_new.instance,
+        seed=trial_info_new.seed,
+        budget=trial_info_new.budget,
         cost=10,
         time=1,
         status=StatusType.RUNNING,
         additional_info=None,
     )
-    assert run_info_new.config == config2
-    assert intensifier.running_challenger == run_info_new.config
+    assert trial_info_new.config == config2
+    assert intensifier.running_challenger == trial_info_new.config
     assert intensifier.new_challenger
 
     # evaluating configuration
-    assert run_info.config is not None
-    run_value = evaluate_challenger(run_info, target_algorithm, intensifier.stats, runhistory)
+    assert trial_info.config is not None
+    trial_value = evaluate_challenger(trial_info, target_algorithm, intensifier.stats, runhistory)
     inc, inc_value = intensifier.process_results(
-        run_info=run_info,
+        trial_info=trial_info,
         incumbent=None,
         runhistory=runhistory,
         time_bound=np.inf,
-        run_value=run_value,
+        trial_value=trial_value,
         log_trajectory=False,
     )
 
-    # We already launched run_info_new. We expect 2 configs each with 1 seed/instance
-    # 1 has finished and already processed. We have not even run run_info_new
+    # We already launched trial_info_new. We expect 2 configs each with 1 seed/instance
+    # 1 has finished and already processed. We have not even run trial_info_new
     # So we cannot advance to a new stage
-    intent, run_info = intensifier.get_next_run(challengers=[config2], ask=None, incumbent=inc, runhistory=runhistory)
-    assert run_info.config is None
+    intent, trial_info = intensifier.get_next_run(
+        challengers=[config2], get_next_configurations=None, incumbent=inc, runhistory=runhistory
+    )
+    assert trial_info.config is None
     assert intent == TrialInfoIntent.WAIT
     assert len(intensifier.success_challengers) == 1
     assert intensifier.new_challenger
@@ -832,13 +830,13 @@ def test_get_next_run_2(make_sh_worker, configs, runhistory):
     intensifier.configs_to_run = [config1]
 
     # next challenger should come from configs to run
-    intent, run_info = intensifier.get_next_run(
+    intent, trial_info = intensifier.get_next_run(
         challengers=None,
-        ask=None,
+        get_next_configurations=None,
         runhistory=runhistory,
         incumbent=None,
     )
-    assert run_info.config == config1
+    assert trial_info.config == config1
     assert len(intensifier.configs_to_run) == 0
     assert not intensifier.new_challenger
 
@@ -983,19 +981,19 @@ def test_evaluate_challenger_1(make_sh_worker, make_target_algorithm, runhistory
     intensifier.success_challengers = {config2, config3}
     intensifier._update_stage(runhistory=runhistory)
 
-    intent, run_info = intensifier.get_next_run(
+    intent, trial_info = intensifier.get_next_run(
         challengers=[config1],
-        ask=None,
+        get_next_configurations=None,
         incumbent=config1,
         runhistory=runhistory,
     )
-    run_value = evaluate_challenger(run_info, target_algorithm, target_algorithm.stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_algorithm, target_algorithm.stats, runhistory)
     inc, inc_value = intensifier.process_results(
-        run_info=run_info,
+        trial_info=trial_info,
         incumbent=config1,
         runhistory=runhistory,
         time_bound=np.inf,
-        run_value=run_value,
+        trial_value=trial_value,
     )
 
     assert inc == config2
@@ -1284,9 +1282,9 @@ def test_launched_all_configs_for_current_stage(make_sh_worker, make_target_algo
     run_tracker = {}
     challengers = configs[:4]
     for i in range(total_configs_in_stage * instances_per_stage):
-        intent, run_info = intensifier.get_next_run(
+        intent, trial_info = intensifier.get_next_run(
             challengers=challengers,
-            ask=None,
+            get_next_configurations=None,
             runhistory=runhistory,
             incumbent=None,
         )
@@ -1295,13 +1293,13 @@ def test_launched_all_configs_for_current_stage(make_sh_worker, make_target_algo
         assert intent == TrialInfoIntent.RUN
 
         # Remove from the challengers, the launched configs
-        challengers = [c for c in challengers if c != run_info.config]
-        run_tracker[(run_info.config, run_info.instance, run_info.seed)] = False
+        challengers = [c for c in challengers if c != trial_info.config]
+        run_tracker[(trial_info.config, trial_info.instance, trial_info.seed)] = False
         runhistory.add(
-            config=run_info.config,
-            instance=run_info.instance,
-            seed=run_info.seed,
-            budget=run_info.budget,
+            config=trial_info.config,
+            instance=trial_info.instance,
+            seed=trial_info.seed,
+            budget=trial_info.budget,
             cost=10,
             time=1,
             status=StatusType.RUNNING,
@@ -1309,9 +1307,9 @@ def test_launched_all_configs_for_current_stage(make_sh_worker, make_target_algo
         )
 
     # This will get us the second instance of config 1
-    intent, run_info = intensifier.get_next_run(
+    intent, trial_info = intensifier.get_next_run(
         challengers=[config2, config3, config4],
-        ask=None,
+        get_next_configurations=None,
         runhistory=runhistory,
         incumbent=None,
     )
@@ -1325,7 +1323,7 @@ def test_launched_all_configs_for_current_stage(make_sh_worker, make_target_algo
 def _exhaust_stage_execution(intensifier, target_algorithm, runhistory, challengers, incumbent):
     """
     Exhaust configuration/instances seed and returns the
-    run_info that were not launched.
+    trial_info that were not launched.
 
     The idea with this procedure is to emulate the fact that some
     configurations will finish while others won't. We need to be
@@ -1352,25 +1350,25 @@ def _exhaust_stage_execution(intensifier, target_algorithm, runhistory, challeng
         toggle = [False, True, False, True]
 
     while True:
-        intent, run_info = intensifier.get_next_run(
+        intent, trial_info = intensifier.get_next_run(
             challengers=challengers,
-            ask=None,
+            get_next_configurations=None,
             runhistory=runhistory,
             incumbent=incumbent,
         )
 
         # Update the challengers
-        challengers = [c for c in challengers if c != run_info.config]
+        challengers = [c for c in challengers if c != trial_info.config]
 
         if intent == TrialInfoIntent.WAIT:
             break
 
         # Add this configuration as running
         runhistory.add(
-            config=run_info.config,
-            instance=run_info.instance,
-            seed=run_info.seed,
-            budget=run_info.budget,
+            config=trial_info.config,
+            instance=trial_info.instance,
+            seed=trial_info.seed,
+            budget=trial_info.budget,
             cost=1000,
             time=1000,
             status=StatusType.RUNNING,
@@ -1378,19 +1376,19 @@ def _exhaust_stage_execution(intensifier, target_algorithm, runhistory, challeng
         )
 
         if toggle.pop():
-            run_value = evaluate_challenger(
-                run_info, target_algorithm, target_algorithm.stats, runhistory, force_update=True
+            trial_value = evaluate_challenger(
+                trial_info, target_algorithm, target_algorithm.stats, runhistory, force_update=True
             )
             incumbent, inc_value = intensifier.process_results(
-                run_info=run_info,
+                trial_info=trial_info,
                 incumbent=incumbent,
                 runhistory=runhistory,
                 time_bound=np.inf,
-                run_value=run_value,
+                trial_value=trial_value,
                 log_trajectory=False,
             )
         else:
-            pending_processing.append(run_info)
+            pending_processing.append(trial_info)
 
         # In case a iteration is done, break
         # This happens if the configs per stage is 1
@@ -1445,16 +1443,16 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
 
     # Go to the last stage. Notice that iteration should not be done
     # as we are in stage 1 out of 2
-    for run_info in pending_processing:
-        run_value = evaluate_challenger(
-            run_info, target_algorithm, target_algorithm.stats, runhistory, force_update=True
+    for trial_info in pending_processing:
+        trial_value = evaluate_challenger(
+            trial_info, target_algorithm, target_algorithm.stats, runhistory, force_update=True
         )
         incumbent, inc_value = intensifier.process_results(
-            run_info=run_info,
+            trial_info=trial_info,
             incumbent=config1,
             runhistory=runhistory,
             time_bound=np.inf,
-            run_value=run_value,
+            trial_value=trial_value,
             log_trajectory=False,
         )
     assert not intensifier.iteration_done
@@ -1485,16 +1483,16 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
     assert not intensifier.iteration_done
 
     # Finish the pending runs
-    for run_info in pending_processing:
-        run_value = evaluate_challenger(
-            run_info, target_algorithm, target_algorithm.stats, runhistory, force_update=True
+    for trial_info in pending_processing:
+        trial_value = evaluate_challenger(
+            trial_info, target_algorithm, target_algorithm.stats, runhistory, force_update=True
         )
         incumbent, _ = intensifier.process_results(
-            run_info=run_info,
+            trial_info=trial_info,
             incumbent=incumbent,
             runhistory=runhistory,
             time_bound=np.inf,
-            run_value=run_value,
+            trial_value=trial_value,
             log_trajectory=False,
         )
 
@@ -1556,20 +1554,20 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
 
     # Go to the last stage. Notice that iteration should not be done
     # as we are in stage 1 out of 2
-    for run_info in pending_processing:
-        run_value = evaluate_challenger(
-            run_info,
+    for trial_info in pending_processing:
+        trial_value = evaluate_challenger(
+            trial_info,
             target_algorithm,
             target_algorithm.stats,
             runhistory,
             force_update=True,
         )
         incumbent, _ = intensifier.process_results(
-            run_info=run_info,
+            trial_info=trial_info,
             incumbent=incumbent,
             runhistory=runhistory,
             time_bound=np.inf,
-            run_value=run_value,
+            trial_value=trial_value,
             log_trajectory=False,
         )
     assert not intensifier.iteration_done

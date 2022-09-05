@@ -22,7 +22,7 @@ def eval_challenger(
     """
     # evaluating configuration
     run_info, result = taf.run_wrapper(
-        run_info=run_info,
+        trial_info=run_info,
     )
 
     stats.ta_time_used += float(result.time)

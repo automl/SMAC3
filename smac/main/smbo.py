@@ -36,7 +36,7 @@ class SMBO(BaseSMBO):
             0.0,
         ]
 
-    def get_next_configurations(self) -> Iterator[Configuration]:
+    def get_next_configurations(self, n: int | None = None) -> Iterator[Configuration]:
         for callback in self._callbacks:
             callback.on_next_configurations_start(self)
 
@@ -50,12 +50,9 @@ class SMBO(BaseSMBO):
         previous_configs = self._runhistory.get_configs()
 
         if X.shape[0] == 0:
-            # Only return a single point to avoid an overly high number of
-            # random search iterations
-
-            # Let's get rid of this random search here...
-            # return self._random_search.maximize(previous_configs, num_points=1)
-
+            # Only return a single point to avoid an overly high number of random search iterations.
+            # We got rid of random search here and replaced it with a simple configuration sampling from
+            # the configspace.
             return iter([self._scenario.configspace.sample_configuration(1)])
 
         self._model.train(X, Y)
@@ -65,7 +62,7 @@ class SMBO(BaseSMBO):
             best_observation = incumbent_value
         else:
             if self._runhistory.empty():
-                raise ValueError("Runhistory is empty and the cost value of " "the incumbent is unknown.")
+                raise ValueError("Runhistory is empty and the cost value of the incumbent is unknown.")
 
             x_best_array, best_observation = self._get_x_best(self._predict_x_best, X_configurations)
 
@@ -80,6 +77,7 @@ class SMBO(BaseSMBO):
         challengers = self._acquisition_optimizer.maximize(
             previous_configs,
             random_design=self._random_design,
+            num_points=n,
         )
 
         for callback in self._callbacks:
@@ -94,7 +92,7 @@ class SMBO(BaseSMBO):
         intent, trial_info = self._intensifier.get_next_run(
             challengers=self._initial_design_configs,
             incumbent=self._incumbent,
-            ask=self.get_next_configurations,
+            get_next_configurations=self.get_next_configurations,
             runhistory=self._runhistory,
             repeat_configs=self._intensifier.repeat_configs,
             n_workers=self._runner.available_worker_count(),

@@ -71,8 +71,8 @@ class SimpleIntensifier(AbstractIntensifier):
 
     def process_results(
         self,
-        run_info: TrialInfo,
-        run_value: TrialValue,
+        trial_info: TrialInfo,
+        trial_value: TrialValue,
         incumbent: Configuration | None,
         runhistory: RunHistory,
         time_bound: float,
@@ -83,7 +83,7 @@ class SimpleIntensifier(AbstractIntensifier):
 
         Parameters
         ----------
-        run_info : RunInfo
+        trial_info : RunInfo
             A RunInfo containing the configuration that was evaluated
         incumbent : Optional[Configuration]
             Best configuration seen so far
@@ -106,17 +106,17 @@ class SimpleIntensifier(AbstractIntensifier):
             empirical performance of incumbent configuration
         """
         # Mark the fact that we processed this configuration
-        self.run_tracker[(run_info.config, run_info.instance, run_info.seed, run_info.budget)] = True
+        self.run_tracker[(trial_info.config, trial_info.instance, trial_info.seed, trial_info.budget)] = True
 
         # If The incumbent is None we use the challenger
         if not incumbent:
             logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
-            incumbent = run_info.config
+            incumbent = trial_info.config
 
         self.num_run += 1
 
         incumbent = self._compare_configs(
-            challenger=run_info.config,
+            challenger=trial_info.config,
             incumbent=incumbent,
             runhistory=runhistory,
             log_trajectory=log_trajectory,
@@ -130,7 +130,7 @@ class SimpleIntensifier(AbstractIntensifier):
         self,
         challengers: list[Configuration] | None,
         incumbent: Configuration,
-        ask: Callable[[], Iterator[Configuration]] | None,
+        get_next_configurations: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
         n_workers: int = 1,
@@ -159,7 +159,7 @@ class SimpleIntensifier(AbstractIntensifier):
         -------
         intent: RunInfoIntent
                Indicator of how to consume the RunInfo object
-        run_info: RunInfo
+        trial_info: RunInfo
             An object that encapsulates the minimum information to
             evaluate a configuration
         """
@@ -167,7 +167,7 @@ class SimpleIntensifier(AbstractIntensifier):
         # We always sample from the configs provided or the EPM
         challenger = self._next_challenger(
             challengers=challengers,
-            ask=ask,
+            get_next_configurations=get_next_configurations,
             runhistory=runhistory,
             repeat_configs=repeat_configs,
         )
@@ -185,12 +185,12 @@ class SimpleIntensifier(AbstractIntensifier):
                 budget=None,
             )
 
-        run_info = TrialInfo(
+        trial_info = TrialInfo(
             config=challenger,
             instance=None if self.instances is None else self.instances[-1],
             seed=0 if self.deterministic else int(self.rng.randint(low=0, high=MAXINT, size=1)[0]),
             budget=None,
         )
 
-        self.run_tracker[(run_info.config, run_info.instance, run_info.seed, run_info.budget)] = False
-        return TrialInfoIntent.RUN, run_info
+        self.run_tracker[(trial_info.config, trial_info.instance, trial_info.seed, trial_info.budget)] = False
+        return TrialInfoIntent.RUN, trial_info

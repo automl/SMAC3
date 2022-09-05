@@ -56,8 +56,8 @@ class TargetAlgorithmRunner(AbstractRunner):
         self.memory_limit = memory
         self.algorithm_walltime_limit = time
 
-    def submit_run(self, run_info: TrialInfo) -> None:
-        """This function submits a run_info object in a serial fashion.
+    def submit_run(self, trial_info: TrialInfo) -> None:
+        """This function submits a trial_info object in a serial fashion.
 
         As there is a single worker for this task, this
         interface can be considered a wrapper over the run()
@@ -68,10 +68,10 @@ class TargetAlgorithmRunner(AbstractRunner):
 
         Parameters
         ----------
-        run_info: RunInfo
+        trial_info: RunInfo
             An object containing the configuration and the necessary data to run it
         """
-        self._results_queue.append(self.run_wrapper(run_info))
+        self._results_queue.append(self.run_wrapper(trial_info))
 
     def iter_results(self) -> Iterator[tuple[TrialInfo, TrialValue]]:
         """This method returns any finished configuration, and returns a list with the

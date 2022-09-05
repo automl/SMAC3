@@ -2,11 +2,10 @@
 Support Vector Machine with Cross-Validation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-An example of optimizing a simple support vector machine on the IRIS benchmark. We use the
+An example of optimizing a simple support vector machine on the IRIS dataset. We use the
 hyperparameter optimization facade, which uses a random forest as its surrogate model. It is able to
 scale to higher evaluation budgets and a higher number of dimensions. Also, you can use mixed data
 types as well as conditional hyperparameters.
-
 """
 
 import numpy as np

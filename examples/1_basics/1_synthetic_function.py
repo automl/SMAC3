@@ -56,10 +56,8 @@ if __name__ == "__main__":
     # Now we use SMAC to find the best hyperparameters
     smac = BlackBoxFacade(
         scenario,
-        model.train,  # pass the target algorithm
-        overwrite=True
-        # override any previous results that are found that are inconsistent with
-        # the meta-data.
+        model.train,  # We pass the target algorithm here
+        overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data.
     )
     incumbent = smac.optimize()
 

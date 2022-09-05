@@ -131,7 +131,7 @@ class AbstractRunner(ABC):
 
         self._required_arguments = required_arguments
 
-    def run_wrapper(self, run_info: TrialInfo) -> tuple[TrialInfo, TrialValue]:
+    def run_wrapper(self, trial_info: TrialInfo) -> tuple[TrialInfo, TrialValue]:
         """Wrapper around run() to exec and check the execution of a given config file.
 
         This function encapsulates common handling/processing, so that run() implementation
@@ -139,7 +139,7 @@ class AbstractRunner(ABC):
 
         Parameters
         ----------
-        run_info : RunInfo
+        trial_info : RunInfo
             Object that contains enough information to execute a configuration run in
             isolation.
 
@@ -154,10 +154,10 @@ class AbstractRunner(ABC):
 
         try:
             status, cost, runtime, additional_info = self.run(
-                config=run_info.config,
-                instance=run_info.instance,
-                budget=run_info.budget,
-                seed=run_info.seed,
+                config=trial_info.config,
+                instance=trial_info.instance,
+                budget=trial_info.budget,
+                seed=trial_info.seed,
             )
         except Exception as e:
             status = StatusType.CRASHED
@@ -171,7 +171,7 @@ class AbstractRunner(ABC):
 
         end = time.time()
 
-        if run_info.budget == 0 and status == StatusType.DONOTADVANCE:
+        if trial_info.budget == 0 and status == StatusType.DONOTADVANCE:
             raise ValueError("Cannot handle DONOTADVANCE state when using intensify or SH/HB on instances.")
 
         # Catch NaN or inf.
@@ -193,7 +193,7 @@ class AbstractRunner(ABC):
             starttime=start,
             endtime=end,
         )
-        return run_info, run_value
+        return trial_info, run_value
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
@@ -203,7 +203,7 @@ class AbstractRunner(ABC):
         }
 
     @abstractmethod
-    def submit_run(self, run_info: TrialInfo) -> None:
+    def submit_run(self, trial_info: TrialInfo) -> None:
         """This function submits a configuration embedded in a RunInfo object, and uses one of the
         workers to produce a result (such result will eventually be available on the self._results_queue
         FIFO).
@@ -211,7 +211,7 @@ class AbstractRunner(ABC):
         This interface method will be called by SMBO, with the expectation
         that a function will be executed by a worker.
 
-        What will be executed is dictated by run_info, and "how" will it be
+        What will be executed is dictated by trial_info, and "how" will it be
         executed is decided via the child class that implements a run() method.
 
         Because config submission can be a serial/parallel endeavor,
@@ -219,7 +219,7 @@ class AbstractRunner(ABC):
 
         Parameters
         ----------
-        run_info: RunInfo
+        trial_info: RunInfo
             An object containing the configuration and the necessary data to run it
         """
         ...

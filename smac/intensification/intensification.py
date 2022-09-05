@@ -184,7 +184,7 @@ class Intensifier(AbstractIntensifier):
         self,
         challengers: list[Configuration] | None,
         incumbent: Configuration,
-        ask: Callable[[], Iterator[Configuration]] | None,
+        get_next_configurations: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
         n_workers: int = 1,
@@ -223,7 +223,7 @@ class Intensifier(AbstractIntensifier):
         -------
         intent: RunInfoIntent
             What should the smbo object do with the runinfo.
-        run_info: RunInfo
+        trial_info: RunInfo
             An object that encapsulates necessary information for a config run
         """
         if n_workers > 1:
@@ -252,7 +252,7 @@ class Intensifier(AbstractIntensifier):
                 logger.info("No incumbent provided in the first run. Sampling a new challenger...")
                 challenger, self.new_challenger = self.get_next_challenger(
                     challengers=challengers,
-                    ask=ask,
+                    get_next_configurations=get_next_configurations,
                 )
                 incumbent = challenger
             else:
@@ -303,7 +303,7 @@ class Intensifier(AbstractIntensifier):
             # challenger
             challenger, self.new_challenger = self.get_next_challenger(
                 challengers=challengers,
-                ask=ask,
+                get_next_configurations=get_next_configurations,
             )
 
         # No new challengers are available for this iteration,
@@ -387,8 +387,8 @@ class Intensifier(AbstractIntensifier):
 
     def process_results(
         self,
-        run_info: TrialInfo,
-        run_value: TrialValue,
+        trial_info: TrialInfo,
+        trial_value: TrialValue,
         incumbent: Configuration | None,
         runhistory: RunHistory,
         time_bound: float,
@@ -411,7 +411,7 @@ class Intensifier(AbstractIntensifier):
 
         Parameters
         ----------
-        run_info : RunInfo
+        trial_info : RunInfo
             A RunInfo containing the configuration that was evaluated
         incumbent : Optional[Configuration]
             best configuration so far, None in 1st run
@@ -436,13 +436,13 @@ class Intensifier(AbstractIntensifier):
         if self.stage == IntensifierStage.PROCESS_FIRST_CONFIG_RUN:
             if incumbent is None:
                 logger.info("First run and no incumbent provided. Challenger is assumed to be the incumbent.")
-                incumbent = run_info.config
+                incumbent = trial_info.config
 
         if self.stage in [
             IntensifierStage.PROCESS_INCUMBENT_RUN,
             IntensifierStage.PROCESS_FIRST_CONFIG_RUN,
         ]:
-            self._target_algorithm_time += run_value.time
+            self._target_algorithm_time += trial_value.time
             self.num_run += 1
             self._process_incumbent(
                 incumbent=incumbent,
@@ -452,15 +452,15 @@ class Intensifier(AbstractIntensifier):
         else:
             self.num_run += 1
             self.num_challenger_run += 1
-            self._target_algorithm_time += run_value.time
+            self._target_algorithm_time += trial_value.time
             incumbent = self._process_racer_results(
-                challenger=run_info.config,
+                challenger=trial_info.config,
                 incumbent=incumbent,
                 runhistory=runhistory,
                 log_trajectory=log_trajectory,
             )
 
-        self.elapsed_time += run_value.endtime - run_value.starttime
+        self.elapsed_time += trial_value.endtime - trial_value.starttime
         # check if 1 intensification run is complete - line 18
         # this is different to regular SMAC as it requires at least successful challenger run,
         # which is necessary to work on a fixed grid of configurations.
@@ -822,7 +822,7 @@ class Intensifier(AbstractIntensifier):
     def get_next_challenger(
         self,
         challengers: list[Configuration] | None,
-        ask: Callable[[], Iterator[Configuration]] | None,
+        get_next_configurations: Callable[[], Iterator[Configuration]] | None,
     ) -> tuple[Configuration | None, bool]:
         """This function returns the next challenger, that should be exercised though lines 8-17.
 
@@ -859,7 +859,9 @@ class Intensifier(AbstractIntensifier):
 
             # this is a new intensification run, get the next list of configurations to run
             if self.update_configs_to_run:
-                configs_to_run = self._generate_challengers(challengers=challengers, ask=ask)
+                configs_to_run = self._generate_challengers(
+                    challengers=challengers, get_next_configurations=get_next_configurations
+                )
                 self.configs_to_run = cast(Iterator[Optional[Configuration]], configs_to_run)
                 self.update_configs_to_run = False
 
@@ -886,7 +888,7 @@ class Intensifier(AbstractIntensifier):
     def _generate_challengers(
         self,
         challengers: list[Configuration] | None,
-        ask: Callable[[], Iterator[Configuration]] | None,
+        get_next_configurations: Callable[[], Iterator[Configuration]] | None,
     ) -> Iterator[Optional[Configuration]]:
         """Retuns a sequence of challengers to use in intensification If challengers are not
         provided, then optimizer will be used to generate the challenger list.
@@ -908,12 +910,12 @@ class Intensifier(AbstractIntensifier):
             # iterate over challengers provided
             logger.debug("Using provided challengers...")
             chall_gen = iter(challengers)
-        elif ask:
+        elif get_next_configurations:
             # generating challengers on-the-fly if optimizer is given
             logger.debug("Generating new challenger from optimizer...")
-            chall_gen = ask()
+            chall_gen = get_next_configurations()
         else:
-            raise ValueError("No configurations/ask function provided. Can not generate challenger!")
+            raise ValueError("No configuration function provided. Can not generate challenger!")
 
         return chall_gen
 

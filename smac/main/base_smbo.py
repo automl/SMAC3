@@ -229,7 +229,7 @@ class BaseSMBO:
                 )
 
                 run_info.config.config_id = self._runhistory.config_ids[run_info.config]
-                self._runner.submit_run(run_info=run_info)
+                self._runner.submit_run(trial_info=run_info)
             elif intent == TrialInfoIntent.SKIP:
                 # No launch is required
                 # This marks a transition request from the intensifier
@@ -317,10 +317,21 @@ class BaseSMBO:
         return self._incumbent
 
     @abstractmethod
-    def get_next_configurations(self) -> Iterator[Configuration]:
+    def get_next_configurations(self, n: int | None = None) -> Iterator[Configuration]:
         """Choose next candidate solution with Bayesian optimization. The suggested configurations
         depend on the surrogate model acquisition optimizer/function. This method is used by
-        the intensifier."""
+        the intensifier.
+
+        Parameters
+        ----------
+        n : int | None, defaults to None
+            Number of configurations to return. If None, uses the number of challengers defined in the intensifier.
+
+        Returns
+        -------
+        configurations : Iterator[Configuration]
+            Iterator over configurations from the acquisition optimizer.
+        """
         raise NotImplementedError
 
     @abstractmethod

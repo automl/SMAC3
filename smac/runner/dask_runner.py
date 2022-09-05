@@ -122,13 +122,13 @@ class DaskParallelRunner(AbstractRunner):
             "code": self.target_algorithm.__code__.co_code,
         }
 
-    def submit_run(self, run_info: TrialInfo) -> None:
-        """This function submits a configuration embedded in a run_info object, and uses one of the
+    def submit_run(self, trial_info: TrialInfo) -> None:
+        """This function submits a configuration embedded in a trial_info object, and uses one of the
         workers to produce a result locally to each worker.
 
         The execution of a configuration follows this procedure:
-        1.  SMBO/intensifier generates a run_info
-        2.  SMBO calls submit_run so that a worker launches the run_info
+        1.  SMBO/intensifier generates a trial_info
+        2.  SMBO calls submit_run so that a worker launches the trial_info
         3.  submit_run internally calls self.run(). it does so via a call to self.run_wrapper()
         which contains common code that any run() method will otherwise have to implement, like
         capping check.
@@ -139,7 +139,7 @@ class DaskParallelRunner(AbstractRunner):
 
         Parameters
         ----------
-        run_info: RunInfo
+        trial_info: RunInfo
             An object containing the configuration and the necessary data to run it
         """
         # Check for resources or block till one is available
@@ -158,7 +158,7 @@ class DaskParallelRunner(AbstractRunner):
                 )
 
         # At this point we can submit the job
-        run = self._client.submit(self._single_worker.run_wrapper, run_info=run_info)
+        run = self._client.submit(self._single_worker.run_wrapper, trial_info=trial_info)
         self._pending_runs.append(run)
 
     def iter_results(self) -> Iterator[tuple[TrialInfo, TrialValue]]:

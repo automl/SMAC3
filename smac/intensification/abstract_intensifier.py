@@ -133,7 +133,7 @@ class AbstractIntensifier:
         self,
         challengers: list[Configuration] | None,
         incumbent: Configuration,
-        ask: Callable[[], Iterator[Configuration]] | None,
+        get_next_configurations: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
         n_workers: int = 1,
@@ -162,7 +162,7 @@ class AbstractIntensifier:
 
         Returns
         -------
-        run_info: RunInfo
+        trial_info: RunInfo
             An object that encapsulates necessary information for a config run
         intent: RunInfoIntent
             Indicator of how to consume the RunInfo object
@@ -171,8 +171,8 @@ class AbstractIntensifier:
 
     def process_results(
         self,
-        run_info: TrialInfo,
-        run_value: TrialValue,
+        trial_info: TrialInfo,
+        trial_value: TrialValue,
         incumbent: Configuration | None,
         runhistory: RunHistory,
         time_bound: float,
@@ -183,7 +183,7 @@ class AbstractIntensifier:
 
         Parameters
         ----------
-        run_info : RunInfo
+        trial_info : RunInfo
                A RunInfo containing the configuration that was evaluated
         incumbent : Optional[Configuration]
             Best configuration seen so far
@@ -210,7 +210,7 @@ class AbstractIntensifier:
     def _next_challenger(
         self,
         challengers: list[Configuration] | None,
-        ask: Callable[[], Iterator[Configuration]] | None,
+        get_next_configurations: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
     ) -> Configuration | None:
@@ -240,10 +240,10 @@ class AbstractIntensifier:
             # iterate over challengers provided
             logger.debug("Using provied challengers.")
             chall_gen = (c for c in challengers)
-        elif ask:
+        elif get_next_configurations:
             # generating challengers on-the-fly if optimizer is given
             logger.debug("Generating new challenger from optimizer.")
-            chall_gen = ask()
+            chall_gen = get_next_configurations()
         else:
             raise ValueError("No configurations/ask function provided. Can not generate challenger!")
 

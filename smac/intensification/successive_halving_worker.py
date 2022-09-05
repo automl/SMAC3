@@ -108,6 +108,8 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         identifier: int = 0,
         _all_budgets: np.ndarray | None = None,
         _n_configs_in_stage: np.ndarray | None = None,
+        _min_budget: float | None = None,
+        _max_budget: float | None = None,
     ) -> None:
         super().__init__(
             scenario=successive_halving.scenario,
@@ -122,22 +124,28 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         self.identifier = identifier
         self.logger = get_logger(f"{__name__}.{identifier}")
 
+        self.min_budget = _min_budget if _min_budget is not None else successive_halving.min_budget
+        self.max_budget = _max_budget if _max_budget is not None else successive_halving.max_budget
+
         if _all_budgets is not None and _n_configs_in_stage is not None:
             # Assert we use the given numbers to avoid rounding issues, see #701
             self.all_budgets = _all_budgets
             self.n_configs_in_stage = _n_configs_in_stage
         else:
             eta = successive_halving.eta
-            max_sh_iterations = successive_halving.max_sh_iterations
-            max_budget = successive_halving.max_budget
-            n_initial_challengers = successive_halving.n_initial_challengers
+
+            # Max sh iterations and n initial challengers are depending on min and max budget
+            # Since min and max budget can be changed by the user, we need to update
+            # Pre-computing stuff for SH
+            self.max_sh_iterations = int(np.floor(np.log(self.max_budget / self.min_budget) / np.log(eta)))
+            self.n_initial_challengers = int(eta**self.max_sh_iterations)
 
             # budgets to consider in each stage
-            linspace = -np.linspace(max_sh_iterations, 0, max_sh_iterations + 1)
-            self.all_budgets = max_budget * np.power(eta, linspace)
+            linspace = -np.linspace(self.max_sh_iterations, 0, self.max_sh_iterations + 1)
+            self.all_budgets = self.max_budget * np.power(eta, linspace)
             # number of challengers to consider in each stage
-            n_configs_in_stage = n_initial_challengers * np.power(
-                eta, -np.linspace(0, max_sh_iterations, max_sh_iterations + 1)
+            n_configs_in_stage = self.n_initial_challengers * np.power(
+                eta, -np.linspace(0, self.max_sh_iterations, self.max_sh_iterations + 1)
             )
             self.n_configs_in_stage = np.array(np.round(n_configs_in_stage), dtype=int).tolist()
 
@@ -182,8 +190,8 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
 
     def process_results(
         self,
-        run_info: TrialInfo,
-        run_value: TrialValue,
+        trial_info: TrialInfo,
+        trial_value: TrialValue,
         incumbent: Configuration | None,
         runhistory: RunHistory,
         time_bound: float,
@@ -194,7 +202,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
 
         Parameters
         ----------
-        run_info : RunInfo
+        trial_info : RunInfo
                A RunInfo containing the configuration that was evaluated
         incumbent : Optional[Configuration]
             Best configuration seen so far
@@ -218,27 +226,27 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         """
 
         # Mark the fact that we processed this configuration
-        self.run_tracker[(run_info.config, run_info.instance, run_info.seed, run_info.budget)] = True
+        self.run_tracker[(trial_info.config, trial_info.instance, trial_info.seed, trial_info.budget)] = True
 
         # If The incumbent is None and it is the first run, we use the challenger
         if not incumbent and self.first_run:
             # We already displayed this message before
             # self.logger.info("First run and no incumbent provided. Challenger is assumed to be the incumbent.")
-            incumbent = run_info.config
+            incumbent = trial_info.config
             self.first_run = False
 
         # In a serial run, if we have to CAP a run, then we stop launching
         # more configurations for this run.
         # In the context of parallelism, we launch the instances proactively
-        # The fact that self.current_instance_indices[run_info.config] is np.inf means
+        # The fact that self.current_instance_indices[trial_info.config] is np.inf means
         # that no more instances will be launched for the current config, so we
         # can add a check to make sure that if we are capping, this makes sense
         # for the active challenger
-        # if result.status == StatusType.CAPPED and run_info.config == self.running_challenger:
-        #    self.current_instance_indices[run_info.config] = np.inf
+        # if result.status == StatusType.CAPPED and trial_info.config == self.running_challenger:
+        #    self.current_instance_indices[trial_info.config] = np.inf
         # else:
         self._target_algorithm_time = self._target_algorithm_time
-        self._target_algorithm_time += run_value.time
+        self._target_algorithm_time += trial_value.time
         self.num_run = self.num_run
         self.num_run += 1
 
@@ -272,14 +280,15 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # curr_challengers is a set, so "at least 1" success can be counted by set addition (no duplicates)
         # If a configuration is successful, it is added to curr_challengers.
         # if it fails it is added to fail_challengers.
-        if np.isfinite(self.current_instance_indices[run_info.config]) and run_value.status == StatusType.SUCCESS:
-            self.success_challengers.add(run_info.config)  # successful configs
+        if np.isfinite(self.current_instance_indices[trial_info.config]) and trial_value.status == StatusType.SUCCESS:
+            self.success_challengers.add(trial_info.config)  # successful configs
         elif (
-            np.isfinite(self.current_instance_indices[run_info.config]) and run_value.status == StatusType.DONOTADVANCE
+            np.isfinite(self.current_instance_indices[trial_info.config])
+            and trial_value.status == StatusType.DONOTADVANCE
         ):
-            self.do_not_advance_challengers.add(run_info.config)
+            self.do_not_advance_challengers.add(trial_info.config)
         else:
-            self.fail_challengers.add(run_info.config)  # capped/crashed/do not advance configs
+            self.fail_challengers.add(trial_info.config)  # capped/crashed/do not advance configs
 
         # We need to update the incumbent if this config we are processing
         # completes all scheduled instance-seed pairs.
@@ -289,12 +298,12 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # is marked as TRUE as an indication that it has finished and should be processed)
         # so if all configurations runs are marked as TRUE it means that this new config
         # was the missing piece to have everything needed to compare against the incumbent
-        update_incumbent = all([v for k, v in self.run_tracker.items() if k[0] == run_info.config])
+        update_incumbent = all([v for k, v in self.run_tracker.items() if k[0] == trial_info.config])
 
         # get incumbent if all instances have been evaluated
         if is_stage_done or update_incumbent:
             incumbent = self._compare_configs(
-                challenger=run_info.config,
+                challenger=trial_info.config,
                 incumbent=incumbent,
                 runhistory=runhistory,
                 log_trajectory=log_trajectory,
@@ -307,7 +316,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                     self.sh_iters + 1,
                     self.stage + 1,
                     self.all_budgets[self.stage],
-                    self.successive_halving.max_budget,
+                    self.max_budget,
                     self.n_configs_in_stage[self.stage],
                 )
             )
@@ -323,7 +332,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         self,
         challengers: list[Configuration] | None,
         incumbent: Configuration,
-        ask: Callable[[], Iterator[Configuration]] | None,
+        get_next_configurations: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = True,
         n_workers: int = 1,
@@ -353,7 +362,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         -------
         intent: RunInfoIntent
                Indicator of how to consume the RunInfo object
-        run_info: RunInfo
+        trial_info: RunInfo
             An object that encapsulates the minimum information to
             evaluate a configuration
         """
@@ -409,7 +418,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                 # first stage, so sample from configurations/chooser provided
                 challenger = self._next_challenger(
                     challengers=challengers,
-                    ask=ask,
+                    get_next_configurations=get_next_configurations,
                     runhistory=runhistory,
                     repeat_configs=repeat_configs,
                 )
@@ -555,7 +564,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                         self.sh_iters + 1,
                         self.stage + 1,
                         self.all_budgets[self.stage],
-                        self.successive_halving.max_budget,
+                        self.max_budget,
                         self.n_configs_in_stage[self.stage],
                     )
                 else:
@@ -665,11 +674,11 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # Incumbent selection: highest budget only
         if self.successive_halving.incumbent_selection == "highest_budget":
             assert chall_run.budget is not None
-            if chall_run.budget < self.successive_halving.max_budget:
+            if chall_run.budget < self.max_budget:
                 self.logger.debug(
                     "Challenger (budget=%.4f) has not been evaluated on the highest budget %.4f yet.",
                     chall_run.budget,
-                    self.successive_halving.max_budget,
+                    self.max_budget,
                 )
                 return incumbent
 

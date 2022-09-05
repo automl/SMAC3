@@ -98,7 +98,7 @@ class ParallelScheduler(AbstractIntensifier):
         self,
         challengers: list[Configuration] | None,
         incumbent: Configuration,
-        ask: Callable[[], Iterator[Configuration]] | None,
+        get_next_configurations: Callable[[], Iterator[Configuration]] | None,
         runhistory: RunHistory,
         repeat_configs: bool = False,
         n_workers: int = 1,
@@ -132,7 +132,7 @@ class ParallelScheduler(AbstractIntensifier):
         -------
         intent: RunInfoIntent
                Indicator of how to consume the RunInfo object
-        run_info: RunInfo
+        trial_info: RunInfo
             An object that encapsulates the minimum information to
             evaluate a configuration
         """
@@ -153,10 +153,10 @@ class ParallelScheduler(AbstractIntensifier):
 
         # First get a config to run from a SH instance
         for i in self._sort_instances_by_stage(self.intensifier_instances):
-            intent, run_info = self.intensifier_instances[i].get_next_run(
+            intent, trial_info = self.intensifier_instances[i].get_next_run(
                 challengers=challengers,
                 incumbent=incumbent,
-                ask=ask,
+                get_next_configurations=get_next_configurations,
                 runhistory=runhistory,
                 repeat_configs=repeat_configs,
             )
@@ -166,7 +166,7 @@ class ParallelScheduler(AbstractIntensifier):
             if intent == TrialInfoIntent.WAIT:
                 continue
 
-            return intent, run_info
+            return intent, trial_info
 
         # If gotten to this point, we might look into adding a new
         # intensifier
@@ -174,7 +174,7 @@ class ParallelScheduler(AbstractIntensifier):
             return self.intensifier_instances[len(self.intensifier_instances) - 1].get_next_run(
                 challengers=challengers,
                 incumbent=incumbent,
-                ask=ask,
+                get_next_configurations=get_next_configurations,
                 runhistory=runhistory,
                 repeat_configs=repeat_configs,
             )
@@ -191,8 +191,8 @@ class ParallelScheduler(AbstractIntensifier):
 
     def process_results(
         self,
-        run_info: TrialInfo,
-        run_value: TrialValue,
+        trial_info: TrialInfo,
+        trial_value: TrialValue,
         incumbent: Configuration | None,
         runhistory: RunHistory,
         time_bound: float,
@@ -211,7 +211,7 @@ class ParallelScheduler(AbstractIntensifier):
 
         Parameters
         ----------
-        run_info : RunInfo
+        trial_info : RunInfo
             A RunInfo containing the configuration that was evaluated
         incumbent : Optional[Configuration]
             Best configuration seen so far
@@ -233,9 +233,9 @@ class ParallelScheduler(AbstractIntensifier):
         inc_perf: float
             empirical performance of incumbent configuration
         """
-        return self.intensifier_instances[run_info.source].process_results(
-            run_info=run_info,
-            run_value=run_value,
+        return self.intensifier_instances[trial_info.source].process_results(
+            trial_info=trial_info,
+            trial_value=trial_value,
             incumbent=incumbent,
             runhistory=runhistory,
             time_bound=time_bound,
