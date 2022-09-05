@@ -856,7 +856,6 @@ class Intensifier(AbstractIntensifier):
         # select new configuration when entering 'race challenger' stage
         # or for the first run
         if not self.current_challenger or (self.stage == IntensifierStage.RUN_CHALLENGER and not self.to_run):
-
             # this is a new intensification run, get the next list of configurations to run
             if self.update_configs_to_run:
                 configs_to_run = self._generate_challengers(

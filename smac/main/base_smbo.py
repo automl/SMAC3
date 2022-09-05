@@ -279,32 +279,8 @@ class BaseSMBO:
                 # Break from the intensification loop, as there are no more resources.
                 break
 
-            # Gracefully end optimization if termination cost is reached
-            if self._scenario.termination_cost_threshold != np.inf:
-                if not isinstance(trial_value.cost, list):
-                    cost = [trial_value.cost]
-                else:
-                    cost = trial_value.cost
-
-                if not isinstance(self._scenario.termination_cost_threshold, list):
-                    cost_threshold = [self._scenario.termination_cost_threshold]
-                else:
-                    cost_threshold = self._scenario.termination_cost_threshold
-
-                if len(cost) != len(cost_threshold):
-                    raise RuntimeError("You must specify a termination cost threshold for each objective.")
-
-                if all(cost[i] < cost_threshold[i] for i in range(len(cost))):
-                    self._stop = True
-
             for callback in self._callbacks:
-                response = callback.on_iteration_end(smbo=self, info=trial_info, value=trial_value)
-
-                # If a callback returns False, the optimization loop should be interrupted
-                # the other callbacks are still being called.
-                if response is False:
-                    logger.debug("An callback returned False. Abort is requested.")
-                    self._stop = True
+                callback.on_iteration_end(self)
 
             # Print stats at the end of each intensification iteration.
             if self._intensifier.iteration_done:
@@ -325,7 +301,7 @@ class BaseSMBO:
         Parameters
         ----------
         n : int | None, defaults to None
-            Number of configurations to return. If None, uses the number of challengers defined in the intensifier.
+            Number of configurations to return. If None, uses the number of challengers defined in the acquisition optimizer.
 
         Returns
         -------

@@ -1,4 +1,5 @@
 from __future__ import annotations
+import copy
 
 from typing import Any, Iterator
 
@@ -81,7 +82,8 @@ class SMBO(BaseSMBO):
         )
 
         for callback in self._callbacks:
-            callback.on_next_configurations_end(self, list(challengers))
+            challenger_list = list(copy.deepcopy(challengers))
+            callback.on_next_configurations_end(self, challenger_list)
 
         return challengers
 
@@ -108,7 +110,7 @@ class SMBO(BaseSMBO):
             self._stats._submitted += 1
 
         for callback in self._callbacks:
-            callback.on_ask_end(self, trial_info)
+            callback.on_ask_end(self, intent, trial_info)
 
         return intent, trial_info
 
@@ -119,6 +121,14 @@ class SMBO(BaseSMBO):
         time_left: float | None = None,
         save: bool = True,
     ) -> None:
+        for callback in self._callbacks:
+            response = callback.on_tell_start(self, info, value)
+            # If a callback returns False, the optimization loop should be interrupted
+            # the other callbacks are still being called.
+            if response is False:
+                logger.info("An callback returned False. Abort is requested.")
+                self._stop = True
+
         # We expect the first run to always succeed.
         if self._stats.finished == 0 and value.status == StatusType.CRASHED:
             additional_info = ""
@@ -155,8 +165,8 @@ class SMBO(BaseSMBO):
                 "The target algorithm was aborted. The last incumbent can be found in the trajectory file."
             )
         elif value.status == StatusType.STOP:
+            logger.debug("Value holds the status stop. Abort is requested.")
             self._stop = True
-            return
 
         if time_left is None:
             time_left = np.inf
@@ -169,6 +179,33 @@ class SMBO(BaseSMBO):
             runhistory=self._runhistory,
             time_bound=max(self._min_time, time_left),
         )
+
+        # Gracefully end optimization if termination cost is reached
+        if self._scenario.termination_cost_threshold != np.inf:
+            if not isinstance(value.cost, list):
+                cost = [value.cost]
+            else:
+                cost = value.cost
+
+            if not isinstance(self._scenario.termination_cost_threshold, list):
+                cost_threshold = [self._scenario.termination_cost_threshold]
+            else:
+                cost_threshold = self._scenario.termination_cost_threshold
+
+            if len(cost) != len(cost_threshold):
+                raise RuntimeError("You must specify a termination cost threshold for each objective.")
+
+            if all(cost[i] < cost_threshold[i] for i in range(len(cost))):
+                logger.debug("Cost threshold was reached. Abort is requested.")
+                self._stop = True
+
+        for callback in self._callbacks:
+            response = callback.on_tell_end(self, info, value)
+            # If a callback returns False, the optimization loop should be interrupted
+            # the other callbacks are still being called.
+            if response is False:
+                logger.info("An callback returned False. Abort is requested.")
+                self._stop = True
 
         if save:
             self.save()

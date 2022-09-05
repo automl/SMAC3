@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import abstractmethod
 
 import smac
-from smac.runhistory import TrialInfo, TrialValue
+from smac.runhistory import TrialInfo, TrialValue, TrialInfoIntent
 from ConfigSpace import Configuration
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -25,17 +25,13 @@ class Callback:
         pass
 
     @abstractmethod
-    def on_ask_start(self, smbo: smac.main.BaseSMBO) -> None:
-        """Called before the intensification asks for new configurations. Essentially, this callback is called
-        before the surrogate model is trained and before the acquisition function is called.
-        """
+    def on_iteration_start(self, smbo: smac.main.BaseSMBO) -> None:
+        """Called before the next run is sampled."""
         pass
 
     @abstractmethod
-    def on_ask_end(self, smbo: smac.main.BaseSMBO, trial_info: TrialInfo) -> None:
-        """Called before the intensification asks for new configurations. Essentially, this callback is called
-        before the surrogate model is trained and before the acquisition function is called.
-        """
+    def on_iteration_end(self, smbo: smac.main.BaseSMBO) -> None:
+        """Called after an iteration ended."""
         pass
 
     @abstractmethod
@@ -47,18 +43,29 @@ class Callback:
 
     @abstractmethod
     def on_next_configurations_end(self, smbo: smac.main.BaseSMBO, configurations: list[Configuration]) -> None:
-        """Called before the intensification asks for new configurations. Essentially, this callback is called
+        """Called after the intensification asks for new configurations. Essentially, this callback is called
         before the surrogate model is trained and before the acquisition function is called.
         """
         pass
 
     @abstractmethod
-    def on_iteration_start(self, smbo: smac.main.BaseSMBO) -> None:
-        """Called before the next run is sampled."""
+    def on_ask_start(self, smbo: smac.main.BaseSMBO) -> None:
+        """Called before the intensifier is asked for the next trial."""
         pass
 
     @abstractmethod
-    def on_iteration_end(self, smbo: smac.main.BaseSMBO, info: TrialInfo, value: TrialValue) -> bool | None:
-        """Called after the finished run is added to the runhistory. Optionally, return `False` to
-        gracefully stop the optimization."""
+    def on_ask_end(self, smbo: smac.main.BaseSMBO, intent: TrialInfoIntent, info: TrialInfo) -> None:
+        """Called after the intensifier is asked for the next trial."""
+        pass
+
+    @abstractmethod
+    def on_tell_start(self, smbo: smac.main.BaseSMBO, info: TrialInfo, value: TrialValue) -> bool | None:
+        """Called before the stats are updated and the trial is added to the runhistory. Optionally, returns false
+        to gracefully stop the optimization."""
+        pass
+
+    @abstractmethod
+    def on_tell_end(self, smbo: smac.main.BaseSMBO, info: TrialInfo, value: TrialValue) -> bool | None:
+        """Called after the stats are updated and the trial is added to the runhistory. Optionally, returns false
+        to gracefully stop the optimization."""
         pass
