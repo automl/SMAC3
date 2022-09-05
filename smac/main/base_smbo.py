@@ -189,10 +189,10 @@ class BaseSMBO:
 
             # Sample next configuration for intensification.
             # Initial design runs are also included in the BO loop now.
-            intent, run_info = self.ask()
+            intent, trial_info = self.ask()
 
             # Remove config from initial design challengers to not repeat it again
-            self._initial_design_configs = [c for c in self._initial_design_configs if c != run_info.config]
+            self._initial_design_configs = [c for c in self._initial_design_configs if c != trial_info.config]
 
             # Update timebound only if a 'new' configuration is sampled as the challenger
             if self._intensifier.num_run == 0 or time_left is None:
@@ -219,17 +219,17 @@ class BaseSMBO:
                 # history. It's status is tagged as RUNNING, and once
                 # completed and processed, it will be updated accordingly
                 self._runhistory.add(
-                    config=run_info.config,
+                    config=trial_info.config,
                     cost=float(MAXINT) if n_objectives == 1 else [float(MAXINT) for _ in range(n_objectives)],
                     time=0.0,
                     status=StatusType.RUNNING,
-                    instance=run_info.instance,
-                    seed=run_info.seed,
-                    budget=run_info.budget,
+                    instance=trial_info.instance,
+                    seed=trial_info.seed,
+                    budget=trial_info.budget,
                 )
 
-                run_info.config.config_id = self._runhistory.config_ids[run_info.config]
-                self._runner.submit_run(trial_info=run_info)
+                trial_info.config.config_id = self._runhistory.config_ids[trial_info.config]
+                self._runner.submit_run(trial_info=trial_info)
             elif intent == TrialInfoIntent.SKIP:
                 # No launch is required
                 # This marks a transition request from the intensifier
@@ -245,10 +245,10 @@ class BaseSMBO:
                 raise NotImplementedError("No other RunInfoIntent has been coded!")
 
             # Check if there is any result, or else continue
-            for run_info, run_value in self._runner.iter_results():
+            for trial_info, trial_value in self._runner.iter_results():
                 # Add the results of the run to the run history
                 # Additionally check for new incumbent
-                self.tell(run_info, run_value, time_left)
+                self.tell(trial_info, trial_value, time_left)
 
             logger.debug(
                 "Remaining budget: %f (wallclock time), %f (target algorithm time), %f (target algorithm runs)"
@@ -271,20 +271,20 @@ class BaseSMBO:
                 while self._runner.is_running():
                     self._runner.wait()
 
-                    for run_info, run_value in self._runner.iter_results():
+                    for trial_info, trial_value in self._runner.iter_results():
                         # Add the results of the run to the run history
                         # Additionally check for new incumbent
-                        self.tell(run_info, run_value, time_left)
+                        self.tell(trial_info, trial_value, time_left)
 
                 # Break from the intensification loop, as there are no more resources.
                 break
 
             # Gracefully end optimization if termination cost is reached
             if self._scenario.termination_cost_threshold != np.inf:
-                if not isinstance(run_value.cost, list):
-                    cost = [run_value.cost]
+                if not isinstance(trial_value.cost, list):
+                    cost = [trial_value.cost]
                 else:
-                    cost = run_value.cost
+                    cost = trial_value.cost
 
                 if not isinstance(self._scenario.termination_cost_threshold, list):
                     cost_threshold = [self._scenario.termination_cost_threshold]
@@ -298,7 +298,7 @@ class BaseSMBO:
                     self._stop = True
 
             for callback in self._callbacks:
-                response = callback.on_iteration_end(smbo=self, info=run_info, value=run_value)
+                response = callback.on_iteration_end(smbo=self, info=trial_info, value=trial_value)
 
                 # If a callback returns False, the optimization loop should be interrupted
                 # the other callbacks are still being called.

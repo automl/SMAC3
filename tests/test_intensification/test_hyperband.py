@@ -53,7 +53,8 @@ def evaluate_challenger(
 
 
 def target_from_trial_info(trial_info: TrialInfo):
-    value_from_config = sum([a for a in trial_info.config.get_dictionary().values() if not isinstance(a, str)])
+    value_from_config = trial_info.config.get_dictionary()["a"]
+
     return TrialValue(
         cost=value_from_config,
         time=0.5,
@@ -425,46 +426,45 @@ def _exhaust_run_and_get_incumbent(runhistory, sh: SuccessiveHalving, configs, n
             time_bound=100.0,
             log_trajectory=False,
         )
+
     return incumbent, inc_perf
 
 
-'''
-def test_parallel_same_as_serial_HB(runhistory, HB, configs):
+def test_parallel_same_as_serial_HB(make_hb_worker, configs):
     """Makes sure we behave the same as a serial run at the end"""
+    runhistory1 = RunHistory()
+    _HB = make_hb_worker(min_budget=2, max_budget=5, eta=2, n_instances=5)
 
-    # Get the runhistory for a_HB instance run:
-    _HB = HyperbandWorker(HB )
-    incumbent, inc_perf = _exhaust_run_and_get_incumbent(runhistory, _HB, configs, n_workers=1)
+    incumbent, inc_perf = _exhaust_run_and_get_incumbent(runhistory1, _HB, configs, n_workers=1)
 
     # Just to make sure nothing has changed from the_HB instance side to make
     # this check invalid:
     # We add config values, so config 3 with 0 and 7 should be the lesser cost
-    assert incumbent == configs[2]
-    assert inc_perf == 7.0
+    assert incumbent == configs[0]
+    assert inc_perf == 203
 
-
-def test_parallel_same_as_serial_HB2(runhistory, HB, configs):
     # Do the same for HB, but have multiple_HB instance in there
     # This_HB instance will be created via n_workers==2
     # in _exhaust_run_and_get_incumbent
+    runhistory2 = RunHistory()
+    HB = make_hb_worker(min_budget=2, max_budget=5, eta=2, n_instances=5).hyperband
 
-    incumbent_phb, inc_perf_phb = _exhaust_run_and_get_incumbent(runhistory, HB, configs)
+    incumbent_phb, inc_perf_phb = _exhaust_run_and_get_incumbent(runhistory2, HB, configs)
     assert incumbent, incumbent_phb
 
     # This makes sure there is a single incumbent in HB
-    assert inc_perf, inc_perf_phb)
+    assert inc_perf == inc_perf_phb
 
     # We don't want to loose any configuration, and particularly
     # we want to make sure the values of_HB instance to HB match
-    assert len(runhistory.data) == len(runhistory.data)
+    assert len(runhistory1.data) == len(runhistory2.data)
 
     # Because it is a deterministic run, the run histories must be the
     # same on exhaustion
-    assert runhistory.data == runhistory.data
-'''
+    assert runhistory1.data == runhistory2.data
 
 
-def test_update_stage(runhistory, make_hb_worker):
+def test_update_stage(make_hb_worker):
     """
     test initialization of all parameters and tracking variables
     """

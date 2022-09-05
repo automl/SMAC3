@@ -163,8 +163,8 @@ class SMBO(BaseSMBO):
 
         # Update the intensifier with the result of the runs
         self._incumbent, _ = self._intensifier.process_results(
-            run_info=info,
-            run_value=value,
+            trial_info=info,
+            trial_value=value,
             incumbent=self._incumbent,
             runhistory=self._runhistory,
             time_bound=max(self._min_time, time_left),

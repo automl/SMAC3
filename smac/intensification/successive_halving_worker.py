@@ -323,7 +323,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
 
             self._update_stage(runhistory=runhistory)
 
-        # get incumbent cost
+        # Get incumbent cost
         inc_perf = runhistory.get_cost(incumbent)
 
         return incumbent, inc_perf
