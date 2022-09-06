@@ -33,9 +33,7 @@ class SMBO(BaseSMBO):
 
         self._predict_x_best = True
         self._min_samples_model = 1
-        self._currently_considered_budgets = [
-            0.0,
-        ]
+        self._considered_budgets: list[float | None] = [None]
 
     def get_next_configurations(self, n: int | None = None) -> Iterator[Configuration]:
         for callback in self._callbacks:
@@ -217,23 +215,18 @@ class SMBO(BaseSMBO):
             available_budgets.append(run_key.budget)
 
         # Sort available budgets from highest to lowest budget
-        available_budgets = sorted(list(set(available_budgets)), reverse=True)
+        available_budgets = sorted(list(set(available_budgets)), reverse=True)  # type: ignore
 
         # Get #points per budget and if there are enough samples, then build a model
         for b in available_budgets:
-            X, Y = self._runhistory_encoder.transform(
-                self._runhistory,
-                budget_subset=[
-                    b,
-                ],
-            )
+            X, Y = self._runhistory_encoder.transform(self._runhistory, budget_subset=[b])
+
             if X.shape[0] >= self._min_samples_model:
-                self._currently_considered_budgets = [
-                    b,
-                ]
+                self._considered_budgets = [b]
                 configs_array = self._runhistory_encoder.get_configurations(
-                    self._runhistory, budget_subset=self._currently_considered_budgets
+                    self._runhistory, budget_subset=self._considered_budgets
                 )
+
                 return X, Y, configs_array
 
         return (
@@ -247,7 +240,7 @@ class SMBO(BaseSMBO):
         )
 
     def _get_evaluated_configs(self) -> list[Configuration]:
-        return self._runhistory.get_configs_per_budget(budget_subset=self._currently_considered_budgets)
+        return self._runhistory.get_configs_per_budget(budget_subset=self._considered_budgets)
 
     def _get_x_best(self, predict: bool, X: np.ndarray) -> tuple[np.ndarray, float]:
         """Get value, configuration, and array representation of the "best" configuration.
@@ -283,7 +276,7 @@ class SMBO(BaseSMBO):
             best_observation = costs[0][0]
             # won't need log(y) if EPM was already trained on log(y)
         else:
-            all_configs = self._runhistory.get_configs_per_budget(budget_subset=self._currently_considered_budgets)
+            all_configs = self._runhistory.get_configs_per_budget(budget_subset=self._considered_budgets)
             x_best = self._incumbent
             x_best_array = convert_configurations_to_array(all_configs)
             best_observation = self._runhistory.get_cost(x_best)

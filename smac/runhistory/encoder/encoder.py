@@ -20,51 +20,51 @@ logger = get_logger(__name__)
 class RunHistoryEncoder(AbstractRunHistoryEncoder):
     def _build_matrix(
         self,
-        run_dict: Mapping[TrialKey, TrialValue],
+        trials: Mapping[TrialKey, TrialValue],
         runhistory: RunHistory,
         store_statistics: bool = False,
     ) -> tuple[np.ndarray, np.ndarray]:
         # First build nan-matrix of size #configs x #params+1
-        n_rows = len(run_dict)
-        n_cols = self.n_params
-        X = np.ones([n_rows, n_cols + self.n_features]) * np.nan
+        n_rows = len(trials)
+        n_cols = self._n_params
+        X = np.ones([n_rows, n_cols + self._n_features]) * np.nan
 
         # For now we keep it as 1
         # TODO: Extend for native multi-objective
         y = np.ones([n_rows, 1])
 
-        if self.multi_objective_algorithm is not None:
-            self.multi_objective_algorithm.update_on_iteration_start()
+        if self._multi_objective_algorithm is not None:
+            self._multi_objective_algorithm.update_on_iteration_start()
 
         # Then populate matrix
-        for row, (key, run) in enumerate(run_dict.items()):
+        for row, (key, run) in enumerate(trials.items()):
             # Scaling is automatically done in configSpace
             conf = runhistory.ids_config[key.config_id]
             conf_vector = convert_configurations_to_array([conf])[0]
-            if self.n_features > 0 and self.instance_features is not None:
+            if self._n_features > 0 and self._instance_features is not None:
                 assert isinstance(key.instance, str)
-                feats = self.instance_features[key.instance]
+                feats = self._instance_features[key.instance]
                 X[row, :] = np.hstack((conf_vector, feats))
             else:
                 X[row, :] = conf_vector
 
-            if self.n_objectives > 1:
-                assert self.multi_objective_algorithm is not None
+            if self._n_objectives > 1:
+                assert self._multi_objective_algorithm is not None
                 assert isinstance(run.cost, list)
 
                 # Let's normalize y here
                 # We use the objective_bounds calculated by the runhistory
                 y_ = normalize_costs(run.cost, runhistory.objective_bounds)
-                y_agg = self.multi_objective_algorithm(y_)
+                y_agg = self._multi_objective_algorithm(y_)
                 y[row] = y_agg
             else:
                 y[row] = run.cost
 
         if y.size > 0:
             if store_statistics:
-                self.perc = np.percentile(y, self.scale_percentage, axis=0)
-                self.min_y = np.min(y, axis=0)
-                self.max_y = np.max(y, axis=0)
+                self._percentile = np.percentile(y, self._scale_percentage, axis=0)
+                self._min_y = np.min(y, axis=0)
+                self._max_y = np.max(y, axis=0)
 
         y = self.transform_response_values(values=y)
         return X, y

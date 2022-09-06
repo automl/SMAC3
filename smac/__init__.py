@@ -47,4 +47,4 @@ try:
     ]
 except ModuleNotFoundError as e:
     print(e)
-    print(traceback.print_exc())
+    traceback.print_exc()
