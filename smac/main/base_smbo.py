@@ -439,14 +439,14 @@ class BaseSMBO:
         -------
         time_left : float
         """
-        frac_intensify = self._intensifier.intensify_percentage
-        total_time = time_spent / (1 - frac_intensify)
-        time_left = frac_intensify * total_time
+        intensify_percentage = self._intensifier.intensify_percentage
+        total_time = time_spent / (1 - intensify_percentage)
+        time_left = intensify_percentage * total_time
 
         logger.debug(
             f"\n--- Total time: {round(total_time, 4)}"
-            f"\n--- Time spent on choosing next configurations: {round(time_spent, 4)} ({(1 - frac_intensify)})"
-            f"\n--- Time left for intensification: {round(time_left, 4)} ({frac_intensify})"
+            f"\n--- Time spent on choosing next configurations: {round(time_spent, 4)} ({(1 - intensify_percentage)})"
+            f"\n--- Time left for intensification: {round(time_left, 4)} ({intensify_percentage})"
         )
         return time_left
 

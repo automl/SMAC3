@@ -58,12 +58,20 @@ class CustomCallback(Callback):
 
 
 def test_callback(rosenbrock):
-    N_TRIALS = 50
+    N_TRIALS = 500
 
-    scenario = Scenario(rosenbrock.configspace, n_trials=N_TRIALS)
+    scenario = Scenario(
+        rosenbrock.configspace,
+        n_trials=N_TRIALS,
+        walltime_limit=10,
+    )
     callback = CustomCallback()
-    intensifier = Intensifier(scenario, max_config_calls=1)
+
+    # The intensify percentage indirectly influences the number of calls of configuration
+    # sampling.
+    intensifier = Intensifier(scenario, max_config_calls=1, intensify_percentage=0.1)
     initial_design = DefaultInitialDesign(scenario)
+
     smac = HyperparameterFacade(
         scenario,
         rosenbrock.train,
@@ -74,13 +82,11 @@ def test_callback(rosenbrock):
     )
     smac.optimize()
 
-    # Warning: All of these counters strongly depend on the initial design
-
     # Those functions are called only once
     assert callback.start_counter == 1
     assert callback.end_counter == 1
 
-    # Those functions are called N_TRIALS + 1 times
+    # Those functions are called N_TRIALS
     assert callback.ask_start_counter == N_TRIALS
     assert callback.ask_end_counter == N_TRIALS
 
@@ -93,6 +99,6 @@ def test_callback(rosenbrock):
     # but we stop because we already evaluated N_TRIALS
     assert callback.iteration_end_counter == N_TRIALS - 1
 
-    # This is depending on the number of challengers
-    assert callback.next_configurations_start_counter == 999999
-    assert callback.next_configurations_end_counter == 999999
+    # This is depending on the number of challengers/intensify percentage
+    assert callback.next_configurations_start_counter == 3
+    assert callback.next_configurations_end_counter == 3

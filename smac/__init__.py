@@ -30,6 +30,7 @@ try:
         HyperparameterFacade,
         MultiFidelityFacade,
         RandomFacade,
+        HyperbandFacade,
     )
     from smac.runhistory.runhistory import RunHistory
     from smac.scenario import Scenario
@@ -41,6 +42,8 @@ try:
         "HyperparameterFacade",
         "MultiFidelityFacade",
         "AlgorithmConfigurationFacade",
+        "RandomFacade",
+        "HyperbandFacade",
     ]
 except ModuleNotFoundError as e:
     print(e)

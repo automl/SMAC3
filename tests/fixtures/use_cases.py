@@ -12,7 +12,7 @@ class Rosenbrock2D:
 
         return cs
 
-    def train(self, config: Configuration, seed: int = 0) -> float:
+    def train(self, config: Configuration, seed: int = 0, budget: float = 0, instance: str = "") -> float:
         """The 2-dimensional Rosenbrock function as a toy model.
         The Rosenbrock function is well-known in the optimization community and
         often serves as a toy problem. It can be defined for arbitrary

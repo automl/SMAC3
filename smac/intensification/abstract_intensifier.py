@@ -58,7 +58,7 @@ class AbstractIntensifier:
         minimal number of challengers to be considered (even if time_bound is exhausted earlier)
     intensify_percentage : float, defaults to 0.5
         How much percentage of the time should configurations be intensified (evaluated on higher budgets or
-        more instances).
+        more instances). This parameter is accessed in the SMBO class.
     """
 
     def __init__(

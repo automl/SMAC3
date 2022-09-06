@@ -1,68 +1,118 @@
 import pytest
 
-from smac import BlackBoxFacade, Scenario
+from smac import (
+    BlackBoxFacade,
+    Scenario,
+    AlgorithmConfigurationFacade,
+    HyperparameterFacade,
+    RandomFacade,
+    MultiFidelityFacade,
+    HyperbandFacade,
+)
 
-# from smac.facade import Facade
 
-from ConfigSpace import Configuration, ConfigurationSpace, Float
-from smac import HyperparameterFacade, BlackBoxFacade, Scenario
+from smac.callback import Callback
 from smac.initial_design import LatinHypercubeInitialDesign
+from smac.acquisition.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition.functions.abstract_acquisition_function import (
+    AbstractAcquisitionFunction,
+)
+from smac.random_design.abstract_random_design import AbstractRandomDesign
+from smac.initial_design.initial_design import AbstractInitialDesign
+from smac.intensification.abstract_intensifier import AbstractIntensifier
+from smac.model.abstract_model import AbstractModel
+
+from smac.multi_objective.abstract_multi_objective_algorithm import (
+    AbstractMultiObjectiveAlgorithm,
+)
+from smac.runhistory.encoder.abstract_encoder import AbstractRunHistoryEncoder
 
 
-@pytest.fixture
-def target_algorithm():
-    class Rosenbrock2D:
-        def configspace(self) -> ConfigurationSpace:
-            cs = ConfigurationSpace(seed=0)
-            x0 = Float("x0", (-5, 10), default=-3)
-            x1 = Float("x1", (-5, 10), default=-4)
-            cs.add_hyperparameters([x0, x1])
+class CustomCallback(Callback):
+    def __init__(self):
+        self.counter = 0
 
-            return cs
-
-        def train(self, config: Configuration, seed: int = 0) -> float:
-            x1 = config["x0"]
-            x2 = config["x1"]
-
-            cost = 100.0 * (x2 - x1**2.0) ** 2.0 + (1 - x1) ** 2.0
-            return cost
-
-    return Rosenbrock2D()
+    def on_iteration_end(self, _):
+        self.counter += 1
 
 
-def test_continue_after_depleted_budget(target_algorithm):
+def test_facades(rosenbrock):
+
+    for facade in [
+        BlackBoxFacade,
+        AlgorithmConfigurationFacade,
+        HyperparameterFacade,
+        RandomFacade,
+        MultiFidelityFacade,
+        HyperbandFacade,
+    ]:
+        scenario = Scenario(rosenbrock.configspace, n_trials=20, min_budget=5, max_budget=50)
+        smac = facade(scenario, rosenbrock.train, overwrite=True)
+        smac.optimize()
+        assert smac.stats.finished > 0
+
+        # Also try it with instances
+        scenario = Scenario(
+            rosenbrock.configspace,
+            n_trials=20,
+            min_budget=1,
+            max_budget=3,
+            instances=["i1", "i2", "i3"],
+        )
+        smac = facade(scenario, rosenbrock.train, overwrite=True)
+        smac.optimize()
+        assert smac.stats.finished > 0
+
+        # And check components here
+        assert isinstance(facade.get_model(scenario), AbstractModel)
+        assert isinstance(facade.get_acquisition_function(scenario), AbstractAcquisitionFunction)
+        assert isinstance(facade.get_acquisition_optimizer(scenario), AbstractAcquisitionOptimizer)
+        assert isinstance(facade.get_intensifier(scenario), AbstractIntensifier)
+        assert isinstance(facade.get_initial_design(scenario), AbstractInitialDesign)
+        assert isinstance(facade.get_random_design(scenario), AbstractRandomDesign)
+        assert isinstance(facade.get_runhistory_encoder(scenario), AbstractRunHistoryEncoder)
+        assert isinstance(facade.get_multi_objective_algorithm(scenario), AbstractMultiObjectiveAlgorithm)
+
+
+def test_continue_after_depleted_budget(rosenbrock):
     """
     Run optimize until budget depletion, then instantiate the new facade and expect it
-    to terminate immediately
+    to terminate immediately.
     """
-    scenario = Scenario(target_algorithm.configspace(), n_trials=5)
-    smac = BlackBoxFacade(scenario, target_algorithm.train)
-    _ = smac.optimize()
+    custom_callback1 = CustomCallback()
+    scenario = Scenario(rosenbrock.configspace, n_trials=5)
+    smac1 = BlackBoxFacade(scenario, rosenbrock.train, callbacks=[custom_callback1], overwrite=True)
+    _ = smac1.optimize()
 
-    scenario = Scenario(target_algorithm.configspace(), n_trials=5)
-    smac1 = BlackBoxFacade(
-        scenario=scenario,
-        target_algorithm=target_algorithm.train,
-    )
+    custom_callback2 = CustomCallback()
+    scenario = Scenario(rosenbrock.configspace, n_trials=5)
+    smac2 = BlackBoxFacade(scenario, rosenbrock.train, callbacks=[custom_callback2])
 
-    # check instant termination because of budget depletion
-    smac1.optimize()
-    assert smac1.runhistory == smac.runhistory
+    # This should terminate immediately
+    smac2.optimize()
+
+    # Stats object should be filled now
+    assert smac2.stats.get_incumbent() == smac1.stats.get_incumbent()
+    assert smac1.runhistory == smac2.runhistory
+
+    # We expect different counter because the callback should not be called (since immediately termination)
+    assert custom_callback1.counter != custom_callback2.counter
+    assert custom_callback2.counter == 0
 
 
-def test_continue_run(target_algorithm):
+def test_continue_run(rosenbrock):
     """Run facade. terminate using end of iteration callback prematurely. Instantiate facade
     and continue until the budget is actually completed."""
-    scenario = Scenario(target_algorithm.configspace(), n_trials=7)
+    scenario = Scenario(rosenbrock.configspace, n_trials=7)
     smac = HyperparameterFacade(
-        scenario, target_algorithm.train, initial_design=LatinHypercubeInitialDesign(scenario, n_configs=3)
+        scenario, rosenbrock.train, initial_design=LatinHypercubeInitialDesign(scenario, n_configs=3)
     )
     _ = smac.optimize()
 
-    scenario = Scenario(target_algorithm.configspace(), n_trials=8)
+    scenario = Scenario(rosenbrock.configspace, n_trials=8)
     smac1 = HyperparameterFacade(
         scenario=scenario,
-        target_algorithm=target_algorithm.train,
+        target_algorithm=rosenbrock.train,
         initial_design=LatinHypercubeInitialDesign(scenario, n_configs=3),
     )
 
@@ -75,7 +125,7 @@ def test_continue_run(target_algorithm):
     assert len(smac1.runhistory.data) == len(smac.runhistory.data) + 1
 
 
-def test_continuation_state_same(target_algorithm):
+def test_continuation_state_same(rosenbrock):
     """Ensure that if you continue from a checkpoint of your model, you actully
     produce the same state as if you had run it immediately.
 
