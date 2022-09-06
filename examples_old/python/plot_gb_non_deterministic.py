@@ -114,7 +114,7 @@ if __name__ == "__main__":
 
     # get all the seeds applied to incumbent
     run_seeds = []
-    for inst_seed_budget in smac.get_runhistory().get_runs_for_config(incumbent, only_max_observed_budget=True):
+    for inst_seed_budget in smac.get_runhistory().get_trials(incumbent, only_max_observed_budget=True):
         run_seeds.append(inst_seed_budget.seed)
 
     cfg_default = cs.get_default_configuration()

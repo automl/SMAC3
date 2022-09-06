@@ -228,7 +228,7 @@ class BaseSMBO:
                     budget=trial_info.budget,
                 )
 
-                trial_info.config.config_id = self._runhistory.config_ids[trial_info.config]
+                trial_info.config.config_id = self._runhistory._config_ids[trial_info.config]
                 self._runner.submit_run(trial_info=trial_info)
             elif intent == TrialInfoIntent.SKIP:
                 # No launch is required

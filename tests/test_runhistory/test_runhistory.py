@@ -75,7 +75,7 @@ def test_add_and_pickle(runhistory, config1):
     with open(name, "rb") as fh:
         loaded_runhistory = pickle.load(fh)
 
-    assert loaded_runhistory.data == runhistory.data
+    assert loaded_runhistory._data == runhistory._data
 
 
 def test_illegal_input(runhistory):
@@ -104,10 +104,10 @@ def test_add_multiple_times(runhistory, config1):
             budget=0,
         )
 
-    assert len(runhistory.data) == 1
-    assert len(runhistory.get_runs_for_config(config1, only_max_observed_budget=True)) == 1
-    assert len(runhistory._config_id_to_isbk[1]) == 1
-    assert list(runhistory.data.values())[0].cost == 1
+    assert len(runhistory._data) == 1
+    assert len(runhistory.get_trials(config1, only_max_observed_budget=True)) == 1
+    assert len(runhistory._config_id_to_isk_to_budget[1]) == 1
+    assert list(runhistory._data.values())[0].cost == 1
 
 
 def test_get_config_runs(runhistory, config1, config2):
@@ -156,7 +156,7 @@ def test_get_config_runs(runhistory, config1, config2):
         budget=1,
     )
 
-    ist = runhistory.get_runs_for_config(config=config1, only_max_observed_budget=True)
+    ist = runhistory.get_trials(config=config1, only_max_observed_budget=True)
 
     # assert len(ist) == 2
     assert len(ist) == 1
@@ -209,7 +209,7 @@ def test_get_config_runs2(runhistory, config1, config2):
         budget=2,
     )
 
-    ist = runhistory.get_runs_for_config(config=config1, only_max_observed_budget=False)
+    ist = runhistory.get_trials(config=config1, only_max_observed_budget=False)
 
     assert len(ist) == 2
     assert ist[0].instance == 1
@@ -247,11 +247,11 @@ def test_full_update(runhistory, config1, config2):
 
     cost_config2 = runhistory.get_cost(config2)
 
-    runhistory.compute_all_costs()
+    runhistory.update_costs()
     updated_cost_config2 = runhistory.get_cost(config2)
     assert cost_config2 == updated_cost_config2
 
-    runhistory.compute_all_costs(instances=[2])
+    runhistory.update_costs(instances=[2])
     updated_cost_config2 = runhistory.get_cost(config2)
     assert cost_config2 != updated_cost_config2
     assert updated_cost_config2 == 20
@@ -287,11 +287,11 @@ def test_full_update2(runhistory, config1, config2):
 
     cost_config2 = runhistory.get_cost(config2)
 
-    runhistory.compute_all_costs()
+    runhistory.update_costs()
     updated_cost_config2 = runhistory.get_cost(config2)
     assert cost_config2 == updated_cost_config2
 
-    runhistory.compute_all_costs(instances=[2])
+    runhistory.update_costs(instances=[2])
     updated_cost_config2 = runhistory.get_cost(config2)
     assert cost_config2 != updated_cost_config2
     assert updated_cost_config2 == 20
@@ -492,7 +492,7 @@ def test_iter(runhistory, config1):
     assert [k.instance for k in iter(runhistory)] == expected_id_order
 
     assert len(list(iter(runhistory))) == len(runhistory)
-    assert len(list(iter(runhistory))) == len(runhistory.data)
+    assert len(list(iter(runhistory))) == len(runhistory._data)
 
 
 def test_items(runhistory, config1):

@@ -415,7 +415,7 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(self.rh.get_cost(self.config2), 1)
 
         # get data for config2 to check that the correct run was performed
-        runs = self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)
+        runs = self.rh.get_trials(self.config2, only_max_observed_budget=True)
         self.assertEqual(len(runs), 10)
 
         self.assertEqual(intensifier.num_run, 10)
@@ -490,7 +490,7 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(self.rh.get_cost(self.config2), 1)
 
         # get data for config2 to check that the correct run was performed
-        runs = self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)
+        runs = self.rh.get_trials(self.config2, only_max_observed_budget=True)
         self.assertEqual(len(runs), 10)
 
         seeds = sorted([r.seed for r in runs])
@@ -627,7 +627,7 @@ class TestIntensify(unittest.TestCase):
             result=result,
         )
         self.assertEqual(len(self.rh.data), 2, self.rh.data)
-        runs = self.rh.get_runs_for_config(config=self.config1, only_max_observed_budget=True)
+        runs = self.rh.get_trials(config=self.config1, only_max_observed_budget=True)
         # exactly one run on each instance
         self.assertIn(1, [runs[0].instance, runs[1].instance])
         self.assertIn(2, [runs[0].instance, runs[1].instance])
@@ -896,15 +896,15 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
 
         self.assertEqual(
-            len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)),
+            len(self.rh.get_trials(self.config1, only_max_observed_budget=True)),
             3,
         )
         self.assertEqual(
-            len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)),
+            len(self.rh.get_trials(self.config2, only_max_observed_budget=True)),
             2,
         )
         self.assertEqual(
-            len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)),
+            len(self.rh.get_trials(self.config3, only_max_observed_budget=True)),
             0,
         )  # capped
 
@@ -975,7 +975,7 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(inc, self.config3)
         self.assertEqual(self.stats.inc_changed, 1)
         self.assertEqual(
-            len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)),
+            len(self.rh.get_trials(self.config3, only_max_observed_budget=True)),
             1,
         )
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
@@ -1053,15 +1053,15 @@ class TestIntensify(unittest.TestCase):
             next(intensifier.configs_to_run)
 
         self.assertEqual(
-            len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)),
+            len(self.rh.get_trials(self.config1, only_max_observed_budget=True)),
             1,
         )
         self.assertEqual(
-            len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)),
+            len(self.rh.get_trials(self.config2, only_max_observed_budget=True)),
             1,
         )
         self.assertEqual(
-            len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)),
+            len(self.rh.get_trials(self.config3, only_max_observed_budget=True)),
             1,
         )
 
@@ -1119,7 +1119,7 @@ class TestIntensify(unittest.TestCase):
 
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
         self.assertEqual(
-            len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)),
+            len(self.rh.get_trials(self.config1, only_max_observed_budget=True)),
             2,
         )
 

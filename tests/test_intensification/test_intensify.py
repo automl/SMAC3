@@ -166,7 +166,7 @@ def test_race_challenger_large(make_scenario, make_stats, configspace_small, run
     assert runhistory.get_cost(configs[1]) == 1
 
     # Get data for config2 to check that the correct run was performed
-    runs = runhistory.get_runs_for_config(configs[1], only_max_observed_budget=True)
+    runs = runhistory.get_trials(configs[1], only_max_observed_budget=True)
     assert len(runs) == 3
     assert intensifier.num_run == 3
     assert intensifier.num_challenger_run == 3
@@ -232,7 +232,7 @@ def test_race_challenger_large_blocked_seed(make_scenario, make_stats, configspa
     assert runhistory.get_cost(configs[1]) == 1
 
     # Get data for config2 to check that the correct run was performed
-    runs = runhistory.get_runs_for_config(configs[1], only_max_observed_budget=True)
+    runs = runhistory.get_trials(configs[1], only_max_observed_budget=True)
     assert len(runs) == 3
 
     seeds = sorted([r.seed for r in runs])
@@ -272,7 +272,7 @@ def test_add_incumbent(make_scenario, make_stats, configspace_small, runhistory)
         time_bound=np.inf,
     )
 
-    assert len(runhistory.data) == 1
+    assert len(runhistory._data) == 1
 
     # Since we assume deterministic=1,
     # the second call should not add any more runs
@@ -326,7 +326,7 @@ def test_add_incumbent_non_deterministic(make_scenario, make_stats, configspace_
         time_bound=np.inf,
         trial_value=trial_value,
     )
-    assert len(runhistory.data) == 1
+    assert len(runhistory._data) == 1
 
     instance, seed = intensifier._get_next_instance(
         pending_instances=intensifier._get_pending_instances(incumbent=configs[0], runhistory=runhistory)
@@ -340,8 +340,8 @@ def test_add_incumbent_non_deterministic(make_scenario, make_stats, configspace_
         time_bound=np.inf,
         trial_value=trial_value,
     )
-    assert len(runhistory.data) == 2
-    runs = runhistory.get_runs_for_config(config=configs[0], only_max_observed_budget=True)
+    assert len(runhistory._data) == 2
+    runs = runhistory.get_trials(config=configs[0], only_max_observed_budget=True)
 
     # Exactly one run on each instance
     assert "i1" in [runs[0].instance, runs[1].instance]
@@ -359,7 +359,7 @@ def test_add_incumbent_non_deterministic(make_scenario, make_stats, configspace_
         time_bound=np.inf,
         trial_value=trial_value,
     )
-    assert len(runhistory.data) == 3
+    assert len(runhistory._data) == 3
 
     # The number of runs performed should be 3
     # No Next iteration call as an incumbent is provided
@@ -498,7 +498,7 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
     # no new TA runs as there are no more instances to run
     assert inc == config2
     assert stats.incumbent_changed == 1
-    assert len(runhistory.get_runs_for_config(config2, only_max_observed_budget=True)) == 1
+    assert len(runhistory.get_trials(config2, only_max_observed_budget=True)) == 1
 
     assert intensifier.stage == IntensifierStage.RUN_CHALLENGER
 
@@ -578,9 +578,9 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
     with pytest.raises(StopIteration):
         next(intensifier.configs_to_run)
 
-    assert len(runhistory.get_runs_for_config(config0, only_max_observed_budget=True)) == 1
-    assert len(runhistory.get_runs_for_config(config1, only_max_observed_budget=True)) == 1
-    assert len(runhistory.get_runs_for_config(config2, only_max_observed_budget=True)) == 1
+    assert len(runhistory.get_trials(config0, only_max_observed_budget=True)) == 1
+    assert len(runhistory.get_trials(config1, only_max_observed_budget=True)) == 1
+    assert len(runhistory.get_trials(config2, only_max_observed_budget=True)) == 1
 
 
 def test_evaluate_challenger_2(make_scenario, make_stats, configspace_small, runhistory):
@@ -632,7 +632,7 @@ def test_evaluate_challenger_2(make_scenario, make_stats, configspace_small, run
     )
 
     assert intensifier.stage == IntensifierStage.RUN_CHALLENGER
-    assert len(runhistory.get_runs_for_config(config0, only_max_observed_budget=True)) == 2
+    assert len(runhistory.get_trials(config0, only_max_observed_budget=True)) == 2
 
 
 def test_no_new_intensification_wo_challenger_run(make_scenario, make_stats, configspace_small, runhistory):

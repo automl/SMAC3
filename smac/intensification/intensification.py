@@ -256,7 +256,7 @@ class Intensifier(AbstractIntensifier):
                 )
                 incumbent = challenger
             else:
-                inc_runs = runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True)
+                inc_runs = runhistory.get_trials(incumbent, only_max_observed_budget=True)
                 if len(inc_runs) > 0:
                     logger.debug("Skipping RUN_FIRST_CONFIG stage since incumbent has already been ran.")
                     self.stage = IntensifierStage.RUN_INCUMBENT
@@ -267,7 +267,7 @@ class Intensifier(AbstractIntensifier):
             # A modified version, that not only checks for max_config_calls
             # but also makes sure that there are runnable instances,
             # that is, instances has not been exhausted
-            inc_runs = runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True)
+            inc_runs = runhistory.get_trials(incumbent, only_max_observed_budget=True)
 
             # Line 4
             pending_instances = self._get_pending_instances(incumbent, runhistory)
@@ -553,7 +553,7 @@ class Intensifier(AbstractIntensifier):
         """
         # Line 4
         # Find all instances that have the most runs on the inc
-        inc_runs = runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True)
+        inc_runs = runhistory.get_trials(incumbent, only_max_observed_budget=True)
 
         # Now we select and count the instances and sort them
         inc_inst = [s.instance for s in inc_runs]
@@ -602,7 +602,7 @@ class Intensifier(AbstractIntensifier):
             Whether to log changes of incumbents in trajectory
         """
         # output estimated performance of incumbent
-        inc_runs = runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True)
+        inc_runs = runhistory.get_trials(incumbent, only_max_observed_budget=True)
         inc_perf = runhistory.get_cost(incumbent)
         format_value = format_array(inc_perf)
         logger.info(f"Updated estimated cost of incumbent on {len(inc_runs)} runs: {format_value}")
@@ -696,7 +696,7 @@ class Intensifier(AbstractIntensifier):
         new_incumbent: Optional[Configuration]
             Either challenger or incumbent
         """
-        chal_runs = runhistory.get_runs_for_config(challenger, only_max_observed_budget=True)
+        chal_runs = runhistory.get_trials(challenger, only_max_observed_budget=True)
         chal_perf = runhistory.get_cost(challenger)
 
         # If all <instance, seed> have been run, compare challenger performance
@@ -784,8 +784,8 @@ class Intensifier(AbstractIntensifier):
         """
         # Get next instances left for the challenger
         # Line 8
-        inc_inst_seeds = set(runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True))
-        chall_inst_seeds = set(runhistory.get_runs_for_config(challenger, only_max_observed_budget=True))
+        inc_inst_seeds = set(runhistory.get_trials(incumbent, only_max_observed_budget=True))
+        chall_inst_seeds = set(runhistory.get_trials(challenger, only_max_observed_budget=True))
 
         # print("++++++++++++++++++++++++++++++++++++")
         # print(inc_inst_seeds, chall_inst_seeds)

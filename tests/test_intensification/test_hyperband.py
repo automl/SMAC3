@@ -457,11 +457,11 @@ def test_parallel_same_as_serial_HB(make_hb_worker, configs):
 
     # We don't want to loose any configuration, and particularly
     # we want to make sure the values of_HB instance to HB match
-    assert len(runhistory1.data) == len(runhistory2.data)
+    assert len(runhistory1._data) == len(runhistory2._data)
 
     # Because it is a deterministic run, the run histories must be the
     # same on exhaustion
-    assert runhistory1.data == runhistory2.data
+    assert runhistory1._data == runhistory2._data
 
 
 def test_update_stage(make_hb_worker):
@@ -576,7 +576,7 @@ def test_eval_challenger(runhistory, make_target_algorithm, make_hb_worker, conf
     assert inc == config2
     assert intensifier.s == 0
     assert inc_value == 0.1
-    assert list(runhistory.data.keys())[-1].config_id, runhistory.config_ids[config2]
+    assert list(runhistory._data.keys())[-1].config_id, runhistory.config_ids[config2]
     assert target_algorithm.stats.incumbent_changed == 1
 
 

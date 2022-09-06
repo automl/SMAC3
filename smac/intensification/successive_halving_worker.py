@@ -648,8 +648,8 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
             return new_incumbent
 
         # get runs for both configurations
-        inc_runs = runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True)
-        chall_runs = runhistory.get_runs_for_config(challenger, only_max_observed_budget=True)
+        inc_runs = runhistory.get_trials(incumbent, only_max_observed_budget=True)
+        chall_runs = runhistory.get_trials(challenger, only_max_observed_budget=True)
 
         if len(inc_runs) > 1:
             raise ValueError(
@@ -826,12 +826,12 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # extracting costs for each given configuration
         config_costs = {}
         # sample list instance-seed-budget key to act as base
-        run_key = runhistory.get_runs_for_config(configs[0], only_max_observed_budget=True)
+        run_key = runhistory.get_trials(configs[0], only_max_observed_budget=True)
         for c in configs:
             # ensuring that all configurations being compared are run on the same set of instance, seed & budget
-            cur_run_key = runhistory.get_runs_for_config(c, only_max_observed_budget=True)
+            cur_run_key = runhistory.get_trials(c, only_max_observed_budget=True)
 
-            # Move to compare set -- get_runs_for_config queries form a dictionary
+            # Move to compare set -- get_trials queries form a dictionary
             # which is not an ordered structure. Some queries to that dictionary returned unordered
             # list which wrongly trigger the below if
             if set(cur_run_key) != set(run_key):
@@ -874,7 +874,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # have been proposed
         configurations_by_this_intensifier = [c for c, i, s, b in self.run_tracker]
         running_configs = set()
-        for k, v in runhistory.data.items():
+        for k, v in runhistory.items():
             if runhistory.ids_config[k.config_id] in configurations_by_this_intensifier:
                 # We get all configurations launched by the current intensifier
                 # regardless if status is RUNNING or not, to make it more robust

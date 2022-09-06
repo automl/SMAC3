@@ -261,23 +261,23 @@ class ValidationTest(unittest.TestCase):
         # Test basic usage
         rh = validator.validate(config_mode="def", instance_mode="test", repetitions=3)
         self.assertEqual(len(rh.get_all_configs()), 1)
-        self.assertEqual(len(rh.get_runs_for_config(rh.get_all_configs()[0], only_max_observed_budget=True)), 9)
+        self.assertEqual(len(rh.get_trials(rh.get_all_configs()[0], only_max_observed_budget=True)), 9)
 
         rh = validator.validate(config_mode="inc", instance_mode="train+test")
         self.assertEqual(len(rh.get_all_configs()), 1)
-        self.assertEqual(len(rh.get_runs_for_config(rh.get_all_configs()[0], only_max_observed_budget=True)), 6)
+        self.assertEqual(len(rh.get_trials(rh.get_all_configs()[0], only_max_observed_budget=True)), 6)
 
         rh = validator.validate(config_mode="wallclock_time", instance_mode="train")
         self.assertEqual(len(rh.get_all_configs()), 7)
         self.assertEqual(
-            sum([len(rh.get_runs_for_config(c, only_max_observed_budget=True)) for c in rh.get_all_configs()]),
+            sum([len(rh.get_trials(c, only_max_observed_budget=True)) for c in rh.get_all_configs()]),
             21,
         )
 
         # Test with backend multiprocessing
         rh = validator.validate(config_mode="def", instance_mode="test", repetitions=3, backend="multiprocessing")
         self.assertEqual(len(rh.get_all_configs()), 1)
-        self.assertEqual(len(rh.get_runs_for_config(rh.get_all_configs()[0], only_max_observed_budget=True)), 9)
+        self.assertEqual(len(rh.get_trials(rh.get_all_configs()[0], only_max_observed_budget=True)), 9)
 
     def test_validate_no_insts(self):
         """no instances"""
@@ -293,7 +293,7 @@ class ValidationTest(unittest.TestCase):
         rh = validator.validate(config_mode="def+inc", instance_mode="train", repetitions=3, output_fn=self.output_rh)
         self.assertEqual(len(rh.get_all_configs()), 2)
         self.assertEqual(
-            sum([len(rh.get_runs_for_config(c, only_max_observed_budget=True)) for c in rh.get_all_configs()]),
+            sum([len(rh.get_trials(c, only_max_observed_budget=True)) for c in rh.get_all_configs()]),
             6,
         )
 
@@ -312,7 +312,7 @@ class ValidationTest(unittest.TestCase):
         rh = validator.validate(config_mode="def+inc", instance_mode="train", repetitions=3)
         self.assertEqual(len(rh.get_all_configs()), 2)
         self.assertEqual(
-            sum([len(rh.get_runs_for_config(c, only_max_observed_budget=True)) for c in rh.get_all_configs()]),
+            sum([len(rh.get_trials(c, only_max_observed_budget=True)) for c in rh.get_all_configs()]),
             6,
         )
 

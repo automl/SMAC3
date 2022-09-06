@@ -411,7 +411,7 @@ def test_parallel_same_as_serial_SH(SH, _SH, configs):
 
     # We don't want to loose any configuration, and particularly
     # we want to make sure the values of _SH to SH match
-    assert len(runhistory1.data) == len(runhistory2.data)
+    assert len(runhistory1._data) == len(runhistory2._data)
 
     # We are comparing exhausted single vs parallel successive
     # halving runs. The number and type of configs should be the same
@@ -420,7 +420,7 @@ def test_parallel_same_as_serial_SH(SH, _SH, configs):
     # yet we make sure that after exhaustion, the budgets a config was run
     # should match
     configs_sh_rh = {}
-    for k, v in runhistory1.data.items():
+    for k, v in runhistory1._data.items():
         config_sh = runhistory1.ids_config[k.config_id]
         if config_sh not in configs_sh_rh:
             configs_sh_rh[config_sh] = []
@@ -428,7 +428,7 @@ def test_parallel_same_as_serial_SH(SH, _SH, configs):
             configs_sh_rh[config_sh].append(v.cost)
 
     configs_psh_rh = {}
-    for k, v in runhistory2.data.items():
+    for k, v in runhistory2._data.items():
         config_psh = runhistory2.ids_config[k.config_id]
         if config_psh not in configs_psh_rh:
             configs_psh_rh[config_psh] = []
@@ -998,7 +998,7 @@ def test_evaluate_challenger_1(make_sh_worker, make_target_algorithm, runhistory
 
     assert inc == config2
     assert inc_value == 0.05
-    assert list(runhistory.data.keys())[-1].config_id == runhistory.config_ids[config2]
+    assert list(runhistory._data.keys())[-1].config_id == runhistory.config_ids[config2]
     assert target_algorithm.stats.incumbent_changed == 1
 
 
@@ -1435,10 +1435,10 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
     # Make sure we launched all configurations we were meant to:
     # all_budgets=[2.5 5. ] n_configs_in_stage=[2.0, 1.0]
     # We need 2 configurations in the run history
-    configurations = set([k.config_id for k, v in runhistory.data.items()])
+    configurations = set([k.config_id for k, v in runhistory._data.items()])
     assert configurations == {1, 2}
     # We need int(2.5) instances in the run history per config
-    config_inst_seed = set([k for k, v in runhistory.data.items()])
+    config_inst_seed = set([k for k, v in runhistory._data.items()])
     assert len(config_inst_seed) == 4
 
     # Go to the last stage. Notice that iteration should not be done
@@ -1471,7 +1471,7 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
     # Because budget is 5, BUT we previously ran 2 instances in stage 0
     # we expect that the run history will be populated with 3 new instances for 1
     # config more 4 (stage0, 2 config on 2 instances) + 3 (stage1, 1 config 3 instances) = 7
-    config_inst_seed = [k for k, v in runhistory.data.items()]
+    config_inst_seed = [k for k, v in runhistory._data.items()]
     assert len(config_inst_seed) == 7
 
     # All new runs should be on the same config
@@ -1546,10 +1546,10 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
     # Make sure we launched all configurations we were meant to:
     # all_budgets=[2.5 5. ] n_configs_in_stage=[2.0, 1.0]
     # We need 2 configurations in the run history
-    configurations = set([k.config_id for k, v in runhistory.data.items()])
+    configurations = set([k.config_id for k, v in runhistory._data.items()])
     assert configurations == {1, 2}
     # There is only one instance always -- so we only have 2 configs for 1 instances each
-    config_inst_seed = set([k for k, v in runhistory.data.items()])
+    config_inst_seed = set([k for k, v in runhistory._data.items()])
     assert len(config_inst_seed) == 2
 
     # Go to the last stage. Notice that iteration should not be done
@@ -1581,7 +1581,7 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
 
     # The next configuration per stage is just one (n_configs_in_stage=[2.0, 1.0])
     # We ran previously 2 configs and with this new, we should have 3 total
-    config_inst_seed = [k for k, v in runhistory.data.items()]
+    config_inst_seed = [k for k, v in runhistory._data.items()]
     assert len(config_inst_seed) == 3
 
     # Because it is only 1 config, the iteration is completed
@@ -1590,7 +1590,7 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
     # We make sure the proper budget got allocated on the whole run:
     # all_budgets=[2.5 5. ]
     # We ran 2 configs in small budget and 1 in full budget
-    assert [k.budget for k in runhistory.data.keys()] == [2.5, 2.5, 5]
+    assert [k.budget for k in runhistory._data.keys()] == [2.5, 2.5, 5]
 
 
 def test_budget_initialization(make_sh_worker, make_target_algorithm, runhistory, configs):

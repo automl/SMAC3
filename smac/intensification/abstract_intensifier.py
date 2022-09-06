@@ -298,8 +298,8 @@ class AbstractIntensifier:
         -------
         None or better of the two configurations x,y
         """
-        inc_runs = runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True)
-        chall_runs = runhistory.get_runs_for_config(challenger, only_max_observed_budget=True)
+        inc_runs = runhistory.get_trials(incumbent, only_max_observed_budget=True)
+        chall_runs = runhistory.get_trials(challenger, only_max_observed_budget=True)
         to_compare_runs = set(inc_runs).intersection(chall_runs)
 
         # performance on challenger runs, the challenger only becomes incumbent

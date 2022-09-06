@@ -119,10 +119,10 @@ def test_continue_run(rosenbrock):
     # check continuation is loading the proper value
     smac1.optimize()
 
-    for k, k1 in zip(smac.runhistory.data.keys(), smac1.runhistory.data.keys()):
+    for k, k1 in zip(smac.runhistory._data.keys(), smac1.runhistory._data.keys()):
         assert k == k1
 
-    assert len(smac1.runhistory.data) == len(smac.runhistory.data) + 1
+    assert len(smac1.runhistory._data) == len(smac.runhistory._data) + 1
 
 
 def test_continuation_state_same(rosenbrock):

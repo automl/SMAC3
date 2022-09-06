@@ -178,7 +178,7 @@ class ScenarioTest(unittest.TestCase):
         self.assertTrue(np.isnan(rh_base.get_cost(config)))
 
         # we should not get direct access to external run data
-        runs = rh_base.get_runs_for_config(config, only_max_observed_budget=True)
+        runs = rh_base.get_trials(config, only_max_observed_budget=True)
         self.assertTrue(len(runs) == 0)
 
         rh_merge.add(

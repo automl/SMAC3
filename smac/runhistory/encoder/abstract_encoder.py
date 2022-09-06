@@ -125,7 +125,7 @@ class AbstractRunHistoryEncoder:
             if len(budget_subset) != 1:
                 raise ValueError("Can not yet handle getting runs from multiple budgets.")
 
-        for trial_key, trial_value in runhistory.data.items():
+        for trial_key, trial_value in runhistory.items():
             add = False
             if budget_subset is not None:
                 if trial_key.budget in budget_subset and trial_value.status in self._considered_states:
@@ -155,17 +155,17 @@ class AbstractRunHistoryEncoder:
     ) -> dict[TrialKey, TrialValue]:
         if budget_subset is not None:
             trials = {
-                run: runhistory.data[run]
-                for run in runhistory.data.keys()
-                if runhistory.data[run].status == StatusType.TIMEOUT
+                run: runhistory[run]
+                for run in runhistory
+                if runhistory[run].status == StatusType.TIMEOUT
                 # and runhistory.data[run].time >= self._algorithm_walltime_limit  # type: ignore
                 and run.budget in budget_subset
             }
         else:
             trials = {
-                run: runhistory.data[run]
-                for run in runhistory.data.keys()
-                if runhistory.data[run].status == StatusType.TIMEOUT
+                run: runhistory[run]
+                for run in runhistory
+                if runhistory[run].status == StatusType.TIMEOUT
                 # and runhistory.data[run].time >= self._algorithm_walltime_limit  # type: ignore
             }
 
@@ -194,7 +194,7 @@ class AbstractRunHistoryEncoder:
         t_trials = self._get_timeout_trials(runhistory, budget_subset)
         t_config_ids = set(t_trial.config_id for t_trial in t_trials)
         config_ids = s_config_ids | t_config_ids
-        configurations = [runhistory.ids_config[config_id] for config_id in config_ids]
+        configurations = [runhistory._ids_config[config_id] for config_id in config_ids]
         configs_array = convert_configurations_to_array(configurations)
 
         return configs_array

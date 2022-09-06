@@ -85,7 +85,7 @@ def test_add_and_pickle(runhistory, config1):
     with open(name, "rb") as fh:
         loaded_runhistory = pickle.load(fh)  # nosec
 
-    assert loaded_runhistory.data == runhistory.data
+    assert loaded_runhistory._data == runhistory._data
 
 
 def test_illegal_input(runhistory, config1):
@@ -130,12 +130,12 @@ def test_add_multiple_times(runhistory, config1):
             additional_info=None,
         )
 
-    assert len(runhistory.data) == 1
-    assert len(runhistory.get_runs_for_config(config1, only_max_observed_budget=True)) == 1
-    assert len(runhistory._config_id_to_isbk[1]) == 1
+    assert len(runhistory._data) == 1
+    assert len(runhistory.get_trials(config1, only_max_observed_budget=True)) == 1
+    assert len(runhistory._config_id_to_isk_to_budget[1]) == 1
 
     # We expect to get 1.0 and 2.0 because runhistory does not overwrite by default
-    assert list(runhistory.data.values())[0].cost == [1.0, 2.0]
+    assert list(runhistory._data.values())[0].cost == [1.0, 2.0]
 
 
 def test_full(runhistory, config1, config2, config3):
@@ -221,12 +221,12 @@ def test_full_update(runhistory, config1, config2):
 
     cost_config2 = runhistory.get_cost(config2)
 
-    runhistory.compute_all_costs()
+    runhistory.update_costs()
     updated_cost_config2 = runhistory.get_cost(config2)
 
     assert cost_config2 == updated_cost_config2
 
-    runhistory.compute_all_costs(instances=[2])
+    runhistory.update_costs(instances=[2])
     updated_cost_config2 = runhistory.get_cost(config2)
 
     assert updated_cost_config2 == pytest.approx(0.833, 0.001)
@@ -366,8 +366,8 @@ def test_objective_bounds(runhistory, config1, config2, config3):
         budget=1,
     )
 
-    assert runhistory.objective_bounds[0] == (5, 10)
-    assert runhistory.objective_bounds[1] == (50, 150)
+    assert runhistory._objective_bounds[0] == (5, 10)
+    assert runhistory._objective_bounds[1] == (50, 150)
 
 
 def test_objective_bounds2(runhistory, config1, config2, config3):
@@ -401,7 +401,7 @@ def test_objective_bounds2(runhistory, config1, config2, config3):
         budget=1,
     )
 
-    assert runhistory.objective_bounds[0] == (5, 10)
+    assert runhistory._objective_bounds[0] == (5, 10)
 
 
 def test_bounds_on_crash(runhistory, config1, config2, config3):
@@ -436,8 +436,8 @@ def test_bounds_on_crash(runhistory, config1, config2, config3):
         budget=1,
     )
 
-    assert runhistory.objective_bounds[0] == (0, 10)
-    assert runhistory.objective_bounds[1] == (50, 150)
+    assert runhistory._objective_bounds[0] == (0, 10)
+    assert runhistory._objective_bounds[1] == (50, 150)
 
 
 def test_instances(runhistory, config1, config2):
@@ -492,8 +492,8 @@ def test_instances(runhistory, config1, config2):
         budget=0,
     )
 
-    assert runhistory.objective_bounds[0] == (0, 100)
-    assert runhistory.objective_bounds[1] == (10, 30)
+    assert runhistory._objective_bounds[0] == (0, 100)
+    assert runhistory._objective_bounds[1] == (10, 30)
 
     # Average cost returns us the cost of the latest budget
     assert runhistory.get_cost(config1) == 0.375
@@ -543,8 +543,8 @@ def test_budgets(runhistory, config1, config2):
         budget=5,
     )
 
-    assert runhistory.objective_bounds[0] == (0, 40)
-    assert runhistory.objective_bounds[1] == (50, 150)
+    assert runhistory._objective_bounds[0] == (0, 40)
+    assert runhistory._objective_bounds[1] == (50, 150)
 
     # Average cost returns us the cost of the latest budget
     assert runhistory.get_cost(config1) == 0.75

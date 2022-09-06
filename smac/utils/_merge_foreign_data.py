@@ -104,6 +104,6 @@ def merge_foreign_data(
         if scenario.feature_dict.get(date.instance_id) is None:
             raise ValueError('Instance feature for "%s" was not found in scenario data.' % (date.instance_id))
 
-    runhistory.compute_all_costs(instances=scenario.train_insts)
+    runhistory.update_costs(instances=scenario.train_insts)
 
     return scenario, runhistory

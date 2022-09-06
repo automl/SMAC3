@@ -156,7 +156,7 @@ class SMBO(BaseSMBO):
             force_update=True,
             additional_info=value.additional_info,
         )
-        self._stats._n_configs = len(self._runhistory.config_ids)
+        self._stats._n_configs = len(self._runhistory._config_ids)
 
         if value.status == StatusType.ABORT:
             raise TargetAlgorithmAbortException(
@@ -211,7 +211,7 @@ class SMBO(BaseSMBO):
     def _collect_data(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         # if we use a float value as a budget, we want to train the model only on the highest budget
         available_budgets = []
-        for run_key in self._runhistory.data.keys():
+        for run_key in self._runhistory:
             available_budgets.append(run_key.budget)
 
         # Sort available budgets from highest to lowest budget
