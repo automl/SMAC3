@@ -33,7 +33,6 @@ class AbstractRandomDesign:
             "seed": self._seed,
         }
 
-    @abstractmethod
     def next_iteration(self) -> None:
         """Indicates the beginning of the next SMBO iteration."""
         pass
