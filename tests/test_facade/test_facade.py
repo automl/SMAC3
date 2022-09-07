@@ -18,7 +18,7 @@ from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
 from smac.random_design.abstract_random_design import AbstractRandomDesign
-from smac.initial_design.initial_design import AbstractInitialDesign
+from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.model.abstract_model import AbstractModel
 
