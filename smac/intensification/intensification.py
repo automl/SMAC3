@@ -163,11 +163,15 @@ class Intensifier(AbstractIntensifier):
         return True
 
     def get_meta(self) -> dict[str, Any]:
+        race_against: dict | None = None
+        if self._race_against is not None:
+            race_against = self._race_against.get_dictionary()
+
         meta = super().get_meta()
         meta.update(
             {
                 "name": self.__class__.__name__,
-                "race_against": self._race_against,
+                "race_against": race_against,
                 "run_limit": self._run_limit,
                 "use_target_algorithm_time_bound": self._use_target_algorithm_time_bound,
             }

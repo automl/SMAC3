@@ -12,31 +12,49 @@ __license__ = "3-clause BSD"
 
 
 class AbstractMultiObjectiveAlgorithm(ABC):
-    """A general interface for multi-objective optimizer, depending on different strategies."""
+    """A general interface for multi-objective optimizer, depending on different strategies.
 
-    def __init__(self, scenario: Scenario, seed: int | None = None):
+    Parameters
+    ----------
+    scenario : Scenario
+    seed : int | None, defaults to None
+    """
+
+    def __init__(
+        self,
+        scenario: Scenario,
+        seed: int | None = None,
+    ):
         if seed is None:
             seed = scenario.seed
 
-        self.num_objectives = scenario.count_objectives()
-        self.seed = seed
-        self.rng = np.random.RandomState(seed)
+        self._n_objectives = scenario.count_objectives()
+        self._seed = seed
+        self._rng = np.random.RandomState(seed)
 
     def update_on_iteration_start(self) -> None:
-        """Update the internal state for each SMAC SMBO iteration.
-
-        Optionally required to be inherited and imported
-        """
+        """Update the internal state on start of each SMBO iteration."""
         pass
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
-            "seed": self.seed,
+            "seed": self._seed,
         }
 
     @abstractmethod
     def __call__(self, values: list[float]) -> float:
-        """Convert the multiple values to a single value"""
-        ...
+        """Transform a multi-objective loss to a single loss.
+
+        Parameters
+        ----------
+        values : list[float]
+            Normalized values.
+
+        Returns
+        -------
+        cost : float
+            Combined cost.
+        """
+        raise NotImplementedError

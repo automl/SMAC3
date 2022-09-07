@@ -8,20 +8,7 @@ from smac.multi_objective.abstract_multi_objective_algorithm import (
 
 
 class MeanAggregationStrategy(AbstractMultiObjectiveAlgorithm):
-    """A class to mean-aggregate multi-objective losses to a single loss"""
+    """A class to mean-aggregate multi-objective costs to a single cost."""
 
     def __call__(self, values: list[float]) -> float:
-        """
-        Transform a multi-objective loss to a single loss.
-
-        Parameters
-        ----------
-        values : list[float]
-            Normalized values.
-
-        Returns
-        -------
-        cost : float
-            Combined cost.
-        """
         return np.mean(values, axis=0)
