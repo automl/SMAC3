@@ -62,14 +62,10 @@ def test_run(make_dummy_ta: Callable[..., TargetAlgorithmRunner]) -> None:
     """Makes sure that we are able to run a configuration and get expected values/types"""
     single_worker = make_dummy_ta(target, n_workers=2)
     runner = DaskParallelRunner(single_worker=single_worker)
-    print(runner.available_worker_count())
-    print(len(runner._pending_runs))
-    print(sum(runner._client.nthreads().values()))
-
-    run_info = TrialInfo(config=2, instance="test", seed=0, budget=0.0)
+    trial_info = TrialInfo(config=2, instance="test", seed=0, budget=0.0)
 
     # Submit runs! then get the value
-    runner.submit_run(run_info)
+    runner.submit_trial(trial_info)
     result = next(runner.iter_results(), None)
 
     # Run will not have finished so fast
@@ -80,8 +76,8 @@ def test_run(make_dummy_ta: Callable[..., TargetAlgorithmRunner]) -> None:
     result = next(runner.iter_results(), None)
     assert result is not None
 
-    run_info, run_value = result
-    assert isinstance(run_info, TrialInfo)
+    trial_info, run_value = result
+    assert isinstance(trial_info, TrialInfo)
     assert isinstance(run_value, TrialValue)
 
     assert run_value.cost == 4
@@ -89,21 +85,21 @@ def test_run(make_dummy_ta: Callable[..., TargetAlgorithmRunner]) -> None:
 
 
 def test_parallel_runs(make_dummy_ta: Callable[..., TargetAlgorithmRunner]) -> None:
-    """Make sure because there are 2 workers, the runs are launched close in time"""
+    """Make sure because there are 2 workers, the trials are launched close in time"""
     single_runner = make_dummy_ta(target_delayed, n_workers=2)
     runner = DaskParallelRunner(single_worker=single_runner)
 
-    assert runner.available_worker_count() == 2
+    assert runner.count_available_workers() == 2
 
-    run_info = TrialInfo(config=2, instance="test", seed=0, budget=0.0)
-    runner.submit_run(run_info)
+    trial_info = TrialInfo(config=2, instance="test", seed=0, budget=0.0)
+    runner.submit_trial(trial_info)
 
-    assert runner.available_worker_count() == 1
+    assert runner.count_available_workers() == 1
 
-    run_info = TrialInfo(config=3, instance="test", seed=0, budget=0.0)
-    runner.submit_run(run_info)
+    trial_info = TrialInfo(config=3, instance="test", seed=0, budget=0.0)
+    runner.submit_trial(trial_info)
 
-    assert runner.available_worker_count() == 0
+    assert runner.count_available_workers() == 0
 
     # At this stage, we submitted 2 jobs, that are running in remote workers.
     # We have to wait for each one of them to complete. The runner provides a
@@ -115,7 +111,7 @@ def test_parallel_runs(make_dummy_ta: Callable[..., TargetAlgorithmRunner]) -> N
 
     # The iter results could have freed up two so we only check it's one or greater
     assert first is not None
-    assert runner.available_worker_count() >= 1
+    assert runner.count_available_workers() >= 1
 
     # Again, the runs might take slightly different time depending if we have
     # heterogeneous workers, so calling wait 2 times is a guarantee that 2
@@ -124,7 +120,7 @@ def test_parallel_runs(make_dummy_ta: Callable[..., TargetAlgorithmRunner]) -> N
     second = next(runner.iter_results(), None)
 
     assert second is not None
-    assert runner.available_worker_count() == 2
+    assert runner.count_available_workers() == 2
 
     # To make it is parallel, we just make sure that the start of the second run is
     # earlier than the end of the first run
@@ -142,10 +138,10 @@ def test_additional_info_crash_msg(make_dummy_ta: Callable[..., TargetAlgorithmR
     single_worker = make_dummy_ta(target_failed, n_workers=2)
     runner = DaskParallelRunner(single_worker=single_worker)
 
-    run_info = TrialInfo(config=2, instance="test", seed=0, budget=0.0)
-    runner.submit_run(run_info)
+    trial_info = TrialInfo(config=2, instance="test", seed=0, budget=0.0)
+    runner.submit_trial(trial_info)
     runner.wait()
-    run_info, run_value = next(runner.iter_results())
+    trial_info, run_value = next(runner.iter_results())
 
     # Make sure the traceback message is included
     assert "traceback" in run_value.additional_info

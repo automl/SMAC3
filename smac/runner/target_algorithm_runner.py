@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import Any, Callable, Iterator
 
 import copy
-import inspect
 import math
 import time
 import traceback
@@ -24,91 +23,58 @@ logger = get_logger(__name__)
 
 
 class TargetAlgorithmRunner(AbstractRunner):
-    """Class to execute target algorithms which are python functions.
-
-    Evaluate function for given configuration and resource limit.
-
-    Passes the configuration as a dictionary to the target algorithm. The
-    target algorithm needs to implement one of the following signatures:
-
-    * ``target_algorithm(config: Configuration) -> Union[float, Tuple[float, Any]]``
-    * ``target_algorithm(config: Configuration, seed: int) -> Union[float, Tuple[float, Any]]``
-    * ``target_algorithm(config: Configuration, seed: int, instance: str) -> Union[float, Tuple[float, Any]]``
+    """Class to execute target algorithms which are (python) functions. Evaluates functions for given configuration and
+    resource limit.
 
     The target algorithm can either return a float (the loss), or a tuple
     with the first element being a float and the second being additional run
-    information.
-
-    ExecuteTAFuncDict will use inspection to figure out the correct call to
-    the target algorithm.
+    information. In a multi-objective setting, the float value is replaced by a list of floats.
     """
 
     def __init__(self, *args: Any, **kwargs: Any):
         super().__init__(*args, **kwargs)
 
         # Pynisher limitations
-        if (memory := self.scenario.trial_memory_limit) is not None:
+        if (memory := self._scenario.trial_memory_limit) is not None:
             memory = int(math.ceil(memory))
 
-        if (time := self.scenario.trial_walltime_limit) is not None:
+        if (time := self._scenario.trial_walltime_limit) is not None:
             time = int(math.ceil(time))
 
-        self.memory_limit = memory
-        self.algorithm_walltime_limit = time
+        self._memory_limit = memory
+        self._algorithm_walltime_limit = time
 
-    def submit_run(self, trial_info: TrialInfo) -> None:
-        """This function submits a trial_info object in a serial fashion.
+    def submit_trial(self, trial_info: TrialInfo) -> None:
+        """This function submits a trial_info object in a serial fashion. As there is a single worker for this task,
+        this interface can be considered a wrapper over the `run` method.
 
-        As there is a single worker for this task, this
-        interface can be considered a wrapper over the run()
-        method.
-
-        Both result/exceptions can be completely determined in this
-        step so both lists are properly filled.
+        Both result/exceptions can be completely determined in this step so both lists are properly filled.
 
         Parameters
         ----------
-        trial_info: RunInfo
-            An object containing the configuration and the necessary data to run it
+        trial_info : TrialInfo
+            An object containing the configuration launched.
         """
         self._results_queue.append(self.run_wrapper(trial_info))
 
     def iter_results(self) -> Iterator[tuple[TrialInfo, TrialValue]]:
-        """This method returns any finished configuration, and returns a list with the
-        results of exercising the configurations. This class keeps populating results to
-        self._results_queue until a call to get_finished runs is done. In this case,
-        the self._results_queue list is emptied and all RunValues produced by running
-        self.run() are returned.
-
-        Returns
-        -------
-        list[tuple[RunInfo, RunValue]]
-            A list of RunInfo/RunValues pairs a submitted configuration.
-        """
         while self._results_queue:
-            yield self._results_queue.pop(0)  # TODO: Could switch to dequeue?
+            yield self._results_queue.pop(0)
 
     def wait(self) -> None:
-        """SMBO/intensifier might need to wait for runs to finish before making a decision.
-
-        For serial runs, no wait is needed as the result is immediately available.
-        """
-        # There is no need to wait in serial runs. When launching a run via submit, as
-        # the serial run uses the same process to run, the result is always available
+        """The SMBO/intensifier might need to wait for trials to finish before making a decision.
+        For serial runners, no wait is needed as the result is immediately available."""
+        # There is no need to wait in serial runners. When launching a trial via submit, as
+        # the serial trial uses the same process to run, the result is always available
         # immediately after. This method implements is just an implementation of the
         # abstract method via a simple return, again, because there is no need to wait
         return
 
     def is_running(self) -> bool:
-        """Whether or not there are configs still running.
-
-        Generally if the runner is serial, launching a run instantly returns it's result.
-        On parallel runners, there might be pending configurations to complete.
-        """
         return False
 
-    def available_worker_count(self) -> int:
-        """Total number of workers available. Serial workers only have 1"""
+    def count_available_workers(self) -> int:
+        """Returns the number of available workers. Serial workers only have one worker."""
         return 1
 
     def run(
@@ -116,10 +82,33 @@ class TargetAlgorithmRunner(AbstractRunner):
         config: Configuration,
         instance: str | None = None,
         budget: float | None = None,
-        seed: int = 0,
-        # instance_specific: str = "0",
+        seed: int | None = None,
     ) -> tuple[StatusType, float | list[float], float, dict]:
-        """Calls the target algorithm with pynisher (if algorithm walltime limit or memory limit is set) or without."""
+        """Calls the target algorithm with pynisher if algorithm walltime limit or memory limit is set. Otherwise
+        the function is called directly.
+
+        Parameters
+        ----------
+        config : Configuration
+            Configuration to be passed to the target algorithm.
+        instance : str | None, defaults to None
+            The Problem instance.
+        budget : float | None, defaults to None
+            A positive, real-valued number representing an arbitrary limit to the target algorithm handled by the
+            target algorithm internally.
+        seed : int, defaults to None
+
+        Returns
+        -------
+        status : StatusType
+            Status of the trial.
+        cost : float | list[float]
+            Resulting cost(s) of the trial.
+        runtime : float
+            The time the target algorithm function took to run.
+        additional_info : dict
+            All further additional trial information.
+        """
         # The kwargs are passed to the target algorithm.
         kwargs: dict[str, Any] = {}
         if "seed" in self._required_arguments:
@@ -130,22 +119,22 @@ class TargetAlgorithmRunner(AbstractRunner):
             kwargs["budget"] = budget
 
         # Presetting
-        cost: float | list[float] = self.crash_cost
+        cost: float | list[float] = self._crash_cost
         runtime = 0.0
         additional_info = {}
         status = StatusType.CRASHED
 
         # If memory limit or walltime limit is set, we wanna use pynisher
         target_algorithm: Callable
-        if self.memory_limit is not None or self.algorithm_walltime_limit is not None:
+        if self._memory_limit is not None or self._algorithm_walltime_limit is not None:
             target_algorithm = limit(
-                self.target_algorithm,
-                memory=self.memory_limit,
-                wall_time=self.algorithm_walltime_limit,
+                self._target_algorithm,
+                memory=self._memory_limit,
+                wall_time=self._algorithm_walltime_limit,
                 wrap_errors=True,  # Hard to describe; see https://github.com/automl/pynisher
             )
         else:
-            target_algorithm = self.target_algorithm
+            target_algorithm = self._target_algorithm
 
         # We don't want the user to change the configuration
         config_copy = copy.deepcopy(config)
@@ -177,15 +166,15 @@ class TargetAlgorithmRunner(AbstractRunner):
             result, additional_info = rval, {}
 
         # Do some sanity checking (for multi objective)
-        error = f"Returned costs {result} does not match the number of objectives {self.objectives}."
+        error = f"Returned costs {result} does not match the number of objectives {self._objectives}."
 
         # If dict convert to array and make sure the order is correct
         if isinstance(result, dict):
-            if len(result) != len(self.objectives):
+            if len(result) != len(self._objectives):
                 raise RuntimeError(error)
 
             ordered_cost: list[float] = []
-            for name in self.objectives:
+            for name in self._objectives:
                 if name not in result:
                     raise RuntimeError(f"Objective {name} was not found in the returned costs.")
 
@@ -194,11 +183,11 @@ class TargetAlgorithmRunner(AbstractRunner):
             result = ordered_cost
 
         if isinstance(result, list):
-            if len(result) != len(self.objectives):
+            if len(result) != len(self._objectives):
                 raise RuntimeError(error)
 
         if isinstance(result, float):
-            if isinstance(self.objectives, list) and len(self.objectives) != 1:
+            if isinstance(self._objectives, list) and len(self._objectives) != 1:
                 raise RuntimeError(error)
 
         cost = result
@@ -225,5 +214,5 @@ class TargetAlgorithmRunner(AbstractRunner):
         | tuple[list[float], dict]
         | tuple[dict[str, float], dict]
     ):
-        """Calls the algorithm"""
+        """Calls the algorithm, which is processed in the `run` method."""
         return algorithm(config, **algorithm_kwargs)

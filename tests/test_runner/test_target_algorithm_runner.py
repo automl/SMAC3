@@ -96,7 +96,7 @@ def test_run(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
     run_info = TrialInfo(config=2, instance="test", seed=0, budget=0.0)
 
     # submit runs! then get the value
-    runner.submit_run(run_info)
+    runner.submit_trial(run_info)
     result = next(runner.iter_results(), None)
 
     assert result is not None
@@ -112,10 +112,10 @@ def test_serial_runs(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
     runner = make_runner(target_delayed, use_instances=True)
 
     run_info = TrialInfo(config=2, instance="test2", seed=0, budget=0.0)
-    runner.submit_run(run_info)
+    runner.submit_trial(run_info)
 
     run_info = TrialInfo(config=3, instance="test3", seed=0, budget=0.0)
-    runner.submit_run(run_info)
+    runner.submit_trial(run_info)
 
     results = runner.iter_results()
 
@@ -137,7 +137,7 @@ def test_fail(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
     runner = make_runner(target_failed, use_instances=True)
     run_info = TrialInfo(config=2, instance="test", seed=0, budget=0.0)
 
-    runner.submit_run(run_info)
+    runner.submit_trial(run_info)
     run_info, run_value = next(runner.iter_results())
 
     # Make sure the traceback message is included
@@ -148,7 +148,7 @@ def test_fail(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
 def test_call(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
     """Test call functionality returns things as expected"""
     runner = make_runner(target_dummy)
-    config = runner.scenario.configspace.get_default_configuration()
+    config = runner._scenario.configspace.get_default_configuration()
 
     SEED = 2345
     status, cost, _, _ = runner.run(config=config, instance=None, seed=SEED, budget=None)
@@ -163,7 +163,7 @@ def test_multi_objective(make_runner: Callable[..., TargetAlgorithmRunner]) -> N
     # Internally, target algorithm runner maps the dict to a list of costs in the right order.
     for target in [target_multi_objective1, target_multi_objective2]:
         runner = make_runner(target, use_multi_objective=True)
-        config = runner.scenario.configspace.get_default_configuration()
+        config = runner._scenario.configspace.get_default_configuration()
 
         SEED = 2345
         status, cost, _, _ = runner.run(config=config, instance=None, seed=SEED, budget=None)

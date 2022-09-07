@@ -95,7 +95,7 @@ class SMBO(BaseSMBO):
             get_next_configurations=self.get_next_configurations,
             runhistory=self._runhistory,
             repeat_configs=self._intensifier.repeat_configs,
-            n_workers=self._runner.available_worker_count(),
+            n_workers=self._runner.count_available_workers(),
         )
 
         if intent == TrialInfoIntent.RUN:

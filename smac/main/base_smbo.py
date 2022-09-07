@@ -229,7 +229,7 @@ class BaseSMBO:
                 )
 
                 trial_info.config.config_id = self._runhistory._config_ids[trial_info.config]
-                self._runner.submit_run(trial_info=trial_info)
+                self._runner.submit_trial(trial_info=trial_info)
             elif intent == TrialInfoIntent.SKIP:
                 # No launch is required
                 # This marks a transition request from the intensifier

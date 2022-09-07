@@ -48,7 +48,7 @@ class TestSerialRunner(unittest.TestCase):
         )
 
         # submit runs! then get the value
-        runner.submit_run(run_info)
+        runner.submit_trial(run_info)
         result = next(runner.iter_results(), None)
 
         self.assertIsNotNone(result)
@@ -72,7 +72,7 @@ class TestSerialRunner(unittest.TestCase):
             capped=False,
             budget=0.0,
         )
-        runner.submit_run(run_info)
+        runner.submit_trial(run_info)
         run_info = RunInfo(
             config=3,
             instance="test",
@@ -82,7 +82,7 @@ class TestSerialRunner(unittest.TestCase):
             capped=False,
             budget=0.0,
         )
-        runner.submit_run(run_info)
+        runner.submit_trial(run_info)
         run_values = list(runner.iter_results())
         self.assertEqual(len(run_values), 2)
 
