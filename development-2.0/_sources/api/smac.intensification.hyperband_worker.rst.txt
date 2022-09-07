@@ -1,0 +1,29 @@
+smac.intensification.hyperband\_worker
+======================================
+
+.. automodule:: smac.intensification.hyperband_worker
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      HyperbandWorker
+   
+   
+
+   
+   
+   
+
+
+

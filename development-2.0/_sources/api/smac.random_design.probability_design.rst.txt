@@ -1,0 +1,30 @@
+smac.random\_design.probability\_design
+=======================================
+
+.. automodule:: smac.random_design.probability_design
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      DynamicProbabilityRandomDesign
+      ProbabilityRandomDesign
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,29 @@
+﻿smac.callback
+=============
+
+.. automodule:: smac.callback
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Callback
+   
+   
+
+   
+   
+   
+
+
+

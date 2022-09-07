@@ -1,0 +1,30 @@
+smac.runner.exceptions
+======================
+
+.. automodule:: smac.runner.exceptions
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      FirstRunCrashedException
+      TargetAlgorithmAbortException
+   
+   
+
+
+

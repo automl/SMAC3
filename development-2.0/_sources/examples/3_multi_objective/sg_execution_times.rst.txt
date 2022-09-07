@@ -1,0 +1,12 @@
+
+:orphan:
+
+.. _sphx_glr_examples_3_multi_objective_sg_execution_times:
+
+Computation times
+=================
+**00:01.633** total execution time for **examples_3_multi_objective** files:
+
++------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_examples_3_multi_objective_1_schaffer.py` (``1_schaffer.py``) | 00:01.633 | 0.0 MB |
++------------------------------------------------------------------------------+-----------+--------+

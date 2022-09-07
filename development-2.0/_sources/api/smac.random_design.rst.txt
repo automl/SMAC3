@@ -1,0 +1,34 @@
+﻿smac.random\_design
+===================
+
+.. automodule:: smac.random_design
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   smac.random_design.abstract_random_design
+   smac.random_design.annealing_design
+   smac.random_design.modulus_design
+   smac.random_design.probability_design
+

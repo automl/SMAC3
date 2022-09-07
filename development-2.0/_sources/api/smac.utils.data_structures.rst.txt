@@ -1,0 +1,29 @@
+smac.utils.data\_structures
+===========================
+
+.. automodule:: smac.utils.data_structures
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      recursively_compare_dicts
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,29 @@
+smac.runhistory.encoder.scaled\_encoder
+=======================================
+
+.. automodule:: smac.runhistory.encoder.scaled_encoder
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      RunHistoryScaledEncoder
+   
+   
+
+   
+   
+   
+
+
+

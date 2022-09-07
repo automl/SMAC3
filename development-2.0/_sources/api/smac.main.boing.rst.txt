@@ -1,0 +1,35 @@
+smac.main.boing
+===============
+
+.. automodule:: smac.main.boing
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      subspace_extraction
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BOinGSMBO
+   
+   
+
+   
+   
+   
+
+
+

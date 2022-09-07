@@ -1,0 +1,29 @@
+smac.initial\_design.factorial\_design
+======================================
+
+.. automodule:: smac.initial_design.factorial_design
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      FactorialInitialDesign
+   
+   
+
+   
+   
+   
+
+
+

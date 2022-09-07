@@ -1,0 +1,29 @@
+smac.facade.random\_facade
+==========================
+
+.. automodule:: smac.facade.random_facade
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      RandomFacade
+   
+   
+
+   
+   
+   
+
+
+

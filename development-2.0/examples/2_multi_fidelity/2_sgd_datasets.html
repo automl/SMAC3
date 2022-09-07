@@ -1,0 +1,582 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Stochastic Gradient Descent On Multiple Datasets &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    
+  <link href="../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    
+  <link rel="preload" as="script" href="../../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Multi-Objective" href="../3_multi_objective/index.html" />
+    <link rel="prev" title="Multi-Layer Perceptron Using Multiple Epochs" href="1_mlp_epochs.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+  <a class="navbar-brand" href="../../index.html">
+    <img src="../../_static/logo.png" class="logo" alt="logo">
+  </a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org?lang=de" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../../search.html" method="get"
+style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../package_overview.html">
+   Package Overview
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../getting_started.html">
+   Getting Started
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../minimal_example.html">
+   Minimal Example
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../index.html">
+   Examples
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../1_basics/index.html">
+     Basics
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="reference internal" href="index.html">
+     Multi-Fidelity and Multi-Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../3_multi_objective/index.html">
+     Multi-Objective
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../4_commandline/index.html">
+     Commandline
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../advanced_usage/index.html">
+   Advanced Usage
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/resumption.html">
+     Resumption
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/callbacks.html">
+     Callbacks
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../api.html">
+   API References
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/smac.facade.html">
+     smac.facade
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/smac.main.html">
+     smac.main
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/smac.model.html">
+     smac.model
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/smac.acquisition.html">
+     smac.acquisition
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/smac.intensification.html">
+     smac.intensification
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/smac.runner.html">
+     smac.runner
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/smac.runhistory.html">
+     smac.runhistory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/smac.multi_objective.html">
+     smac.multi_objective
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/smac.utils.html">
+     smac.utils
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/smac.constants.html">
+     smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/smac.callback.html">
+     smac.callback
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../glossary.html">
+   Glossary
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../faq.html">
+   F.A.Q.
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../license.html">
+   License
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-2-multi-fidelity-2-sgd-datasets-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="stochastic-gradient-descent-on-multiple-datasets">
+<span id="sphx-glr-examples-2-multi-fidelity-2-sgd-datasets-py"></span><h1>Stochastic Gradient Descent On Multiple Datasets<a class="headerlink" href="#stochastic-gradient-descent-on-multiple-datasets" title="Permalink to this heading">¶</a></h1>
+<p>Example for optimizing a Multi-Layer Perceptron (MLP) across multiple (dataset) instances.</p>
+<p>Alternative to budgets, here wlog. we consider instances as a fidelity type. An instance represents a specific
+scenario/condition (e.g. different datasets, subsets, transformations) for the algorithm to run. SMAC then returns the
+algorithm that had the best performance across all the instances. In this case, an instance is a binary dataset i.e.,
+digit-2 vs digit-3.</p>
+<p>If we use instance as our fidelity, we need to initialize scenario with argument instance. In this case the argument
+budget is no longer required by the target function. But due to the scenario instance argument,
+the target algorithm now is required to have an instance argument.</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Default cost: 0.14
+[INFO][abstract_initial_design.py:92] Using `n_configs_per_hyperparameter` and ignoring `configs` and `n_configs`.
+[WARNING][successive_halving.py:129] The target algorithm is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider increasing `n_seeds` from the intensifier.
+[INFO][successive_halving.py:183] Using successive halving with budget type INSTANCES, min budget 1, max budget 45 and eta 3.
+[INFO][successive_halving.py:203] The argument `incumbent_selection` is ignored because instances are used as budget type.
+[INFO][abstract_initial_design.py:144] Using 40 initial design configurations.
+[WARNING][parallel_scheduling.py:102] Hyperband is executed with 1 worker(s) only. However, your system supports up to 2 workers. Consider increasing the workers in the scenario.
+[INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 1-1 with initial budget 1.
+[INFO][successive_halving_worker.py:384] First run and no incumbent provided. Challenger is assumed to be the incumbent.
+[INFO][abstract_intensifier.py:335] Challenger (0.0137) is better than incumbent (0.0164) on 1 trials.
+[INFO][abstract_intensifier.py:359] Changes in incumbent:
+[INFO][abstract_intensifier.py:362] --- alpha: 0.5488135039273248 -&gt; 0.11827442586893322
+[INFO][abstract_intensifier.py:362] --- eta0: 0.0006273927602293597 -&gt; 9.614170248896958e-05
+[INFO][abstract_intensifier.py:362] --- l1_ratio: 0.317983179393976 -&gt; 0.24875314351995803
+[INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [1.67 / 45] and 27 evaluated challenger(s).
+[INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-2 with budget [5.00 / 45] and 9 evaluated challenger(s).
+[INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-3 with budget [15.00 / 45] and 3 evaluated challenger(s).
+[INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-4 with budget [45.00 / 45] and 1 evaluated challenger(s).
+[INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 1-2 with initial budget 5.
+[INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [5.00 / 45] and 9 evaluated challenger(s).
+[INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-2 with budget [15.00 / 45] and 3 evaluated challenger(s).
+[INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-3 with budget [45.00 / 45] and 1 evaluated challenger(s).
+[INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 1-3 with initial budget 15.
+[INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [15.00 / 45] and 6 evaluated challenger(s).
+[INFO][abstract_intensifier.py:335] Challenger (0.0061) is better than incumbent (0.0082) on 45 trials.
+[INFO][abstract_intensifier.py:359] Changes in incumbent:
+[INFO][abstract_intensifier.py:362] --- alpha: 0.11827442586893322 -&gt; 0.12435576832412187
+[INFO][abstract_intensifier.py:362] --- eta0: 9.614170248896958e-05 -&gt; 0.08244597846698355
+[INFO][abstract_intensifier.py:362] --- l1_ratio: 0.24875314351995803 -&gt; 0.26756551376906273
+[INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-2 with budget [45.00 / 45] and 2 evaluated challenger(s).
+[INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 1-4 with initial budget 45.
+[INFO][facade.py:269] Final Incumbent: {&#39;alpha&#39;: 0.12435576832412187, &#39;eta0&#39;: 0.08244597846698355, &#39;l1_ratio&#39;: 0.26756551376906273, &#39;learning_rate&#39;: &#39;adaptive&#39;}
+[INFO][facade.py:270] Estimated cost: 0.006063174109298513
+Incumbent cost: 0.01
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ConfigurationSpace</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">SGDClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">cross_val_score</span>
+
+<span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">MultiFidelityFacade</span><span class="p">,</span> <span class="n">Scenario</span>
+
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2021, AutoML.org Freiburg-Hannover&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">DigitsDataset</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_digits</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Create instances from the dataset which include two classes only.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">classA</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">classB</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">classA</span><span class="p">,</span> <span class="n">classB</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">target_names</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+
+    <span class="k">def</span> <span class="nf">get_instance_features</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the mean and variance of all instances as features.&quot;&quot;&quot;</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instances</span><span class="p">():</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_data</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+            <span class="n">features</span><span class="p">[</span><span class="n">instance</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">data</span><span class="p">)]</span>
+
+        <span class="k">return</span> <span class="n">features</span>
+
+    <span class="k">def</span> <span class="nf">get_instance_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve data from the passed instance.&quot;&quot;&quot;</span>
+        <span class="c1"># We split the dataset into two classes</span>
+        <span class="n">classA</span><span class="p">,</span> <span class="n">classB</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">classA</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">classB</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">target</span><span class="p">))</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">target</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">target</span>
+
+
+<span class="k">class</span> <span class="nc">SGD</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">configspace</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConfigurationSpace</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Build the configuration space which defines all parameters and their ranges for the SGD classifier.&quot;&quot;&quot;</span>
+        <span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigurationSpace</span><span class="p">()</span>
+
+        <span class="c1"># We define a few possible parameters for the SGD classifier</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">l1_ratio</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="s2">&quot;l1_ratio&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">learning_rate</span> <span class="o">=</span> <span class="n">Categorical</span><span class="p">(</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="s2">&quot;invscaling&quot;</span><span class="p">,</span> <span class="s2">&quot;adaptive&quot;</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;constant&quot;</span><span class="p">)</span>
+        <span class="n">eta0</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="s2">&quot;eta0&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.00001</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Add the parameters to configuration space</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">alpha</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="n">eta0</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">cs</span>
+
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Creates a SGD classifier based on a configuration and evaluates it on the</span>
+<span class="sd">        digits dataset using cross-validation.&quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+            <span class="c1"># SGD classifier using given configuration</span>
+            <span class="n">clf</span> <span class="o">=</span> <span class="n">SGDClassifier</span><span class="p">(</span>
+                <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">,</span>
+                <span class="n">penalty</span><span class="o">=</span><span class="s2">&quot;elasticnet&quot;</span><span class="p">,</span>
+                <span class="n">alpha</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">],</span>
+                <span class="n">l1_ratio</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;l1_ratio&quot;</span><span class="p">],</span>
+                <span class="n">learning_rate</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">],</span>
+                <span class="n">eta0</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;eta0&quot;</span><span class="p">],</span>
+                <span class="n">max_iter</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+                <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="c1"># get instance</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_instance_data</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+
+            <span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># to make CV splits consistent</span>
+            <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">DigitsDataset</span><span class="p">()</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">SGD</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+
+    <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span>
+        <span class="n">walltime_limit</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>  <span class="c1"># We want to optimize for 40 seconds</span>
+        <span class="n">n_trials</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>  <span class="c1"># We want to try max 5000 different configurations</span>
+        <span class="n">min_budget</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># Use min one instance</span>
+        <span class="n">max_budget</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span>  <span class="c1"># Use max 45 instances (if we have a lot of instances we could constraint it)</span>
+        <span class="n">instances</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_instances</span><span class="p">(),</span>
+        <span class="n">instance_features</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_instance_features</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Calculate the mean cost of all instances for the default configuration</span>
+    <span class="n">default_costs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get_instances</span><span class="p">():</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">(),</span>
+            <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">default_costs</span> <span class="o">+=</span> <span class="p">[</span><span class="n">cost</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">default_costs</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Create our SMAC object and pass the scenario and the train method</span>
+    <span class="n">smac</span> <span class="o">=</span> <span class="n">MultiFidelityFacade</span><span class="p">(</span>
+        <span class="n">scenario</span><span class="p">,</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">,</span>
+        <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+
+    <span class="c1"># Calculate the mean cost of all instances for the incumbent</span>
+    <span class="n">incumbent_costs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get_instances</span><span class="p">():</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
+            <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">incumbent_costs</span> <span class="o">+=</span> <span class="p">[</span><span class="n">cost</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">incumbent_costs</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  44.194 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-2-sgd-datasets-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/88e1c1ee9fc33236ebfa159898782a73/2_sgd_datasets.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_sgd_datasets.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/8a5c5b9a1383ea80dbf4608b637a4168/2_sgd_datasets.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">2_sgd_datasets.ipynb</span></code></a></p>
+</div>
+</div>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="1_mlp_epochs.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Multi-Layer Perceptron Using Multiple Epochs</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../3_multi_objective/index.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Multi-Objective</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 
+    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
+    and Frank Hutter
+.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+5.1.1. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

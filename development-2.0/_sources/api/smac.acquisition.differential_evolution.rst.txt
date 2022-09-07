@@ -1,0 +1,29 @@
+smac.acquisition.differential\_evolution
+========================================
+
+.. automodule:: smac.acquisition.differential_evolution
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      DifferentialEvolution
+   
+   
+
+   
+   
+   
+
+
+

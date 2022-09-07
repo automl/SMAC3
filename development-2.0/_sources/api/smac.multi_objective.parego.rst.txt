@@ -1,0 +1,29 @@
+smac.multi\_objective.parego
+============================
+
+.. automodule:: smac.multi_objective.parego
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ParEGO
+   
+   
+
+   
+   
+   
+
+
+

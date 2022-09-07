@@ -1,0 +1,29 @@
+smac.acquisition.functions.abstract\_acquisition\_function
+==========================================================
+
+.. automodule:: smac.acquisition.functions.abstract_acquisition_function
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AbstractAcquisitionFunction
+   
+   
+
+   
+   
+   
+
+
+

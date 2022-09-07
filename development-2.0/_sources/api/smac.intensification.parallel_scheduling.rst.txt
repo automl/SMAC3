@@ -1,0 +1,29 @@
+smac.intensification.parallel\_scheduling
+=========================================
+
+.. automodule:: smac.intensification.parallel_scheduling
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ParallelScheduler
+   
+   
+
+   
+   
+   
+
+
+

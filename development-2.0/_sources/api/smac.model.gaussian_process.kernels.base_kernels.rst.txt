@@ -1,0 +1,32 @@
+smac.model.gaussian\_process.kernels.base\_kernels
+==================================================
+
+.. automodule:: smac.model.gaussian_process.kernels.base_kernels
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ConstantKernel
+      MagicMixinKernel
+      ProductKernel
+      SumKernel
+   
+   
+
+   
+   
+   
+
+
+

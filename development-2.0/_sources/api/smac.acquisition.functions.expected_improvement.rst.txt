@@ -1,0 +1,30 @@
+smac.acquisition.functions.expected\_improvement
+================================================
+
+.. automodule:: smac.acquisition.functions.expected_improvement
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      EI
+      EIPS
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,539 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>smac.facade.boing_facade &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    
+  <link href="../../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css" />
+    
+  <link rel="preload" as="script" href="../../../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+  <a class="navbar-brand" href="../../../index.html">
+    <img src="../../../_static/logo.png" class="logo" alt="logo">
+  </a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org?lang=de" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../../../search.html" method="get"
+style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../package_overview.html">
+   Package Overview
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../getting_started.html">
+   Getting Started
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../minimal_example.html">
+   Minimal Example
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../examples/index.html">
+   Examples
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../examples/1_basics/index.html">
+     Basics
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../examples/2_multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../examples/3_multi_objective/index.html">
+     Multi-Objective
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../examples/4_commandline/index.html">
+     Commandline
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../advanced_usage/index.html">
+   Advanced Usage
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/resumption.html">
+     Resumption
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/callbacks.html">
+     Callbacks
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../api.html">
+   API References
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.facade.html">
+     smac.facade
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.main.html">
+     smac.main
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.model.html">
+     smac.model
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.acquisition.html">
+     smac.acquisition
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.intensification.html">
+     smac.intensification
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.runner.html">
+     smac.runner
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.runhistory.html">
+     smac.runhistory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.multi_objective.html">
+     smac.multi_objective
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.utils.html">
+     smac.utils
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.constants.html">
+     smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../api/smac.callback.html">
+     smac.callback
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../glossary.html">
+   Glossary
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../faq.html">
+   F.A.Q.
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../license.html">
+   License
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <h1>Source code for smac.facade.boing_facade</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Type</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">botorch.models.kernels.categorical</span> <span class="kn">import</span> <span class="n">CategoricalKernel</span>
+<span class="kn">from</span> <span class="nn">gpytorch.constraints.constraints</span> <span class="kn">import</span> <span class="n">Interval</span>
+<span class="kn">from</span> <span class="nn">gpytorch.kernels</span> <span class="kn">import</span> <span class="n">MaternKernel</span><span class="p">,</span> <span class="n">ScaleKernel</span>
+<span class="kn">from</span> <span class="nn">gpytorch.likelihoods.gaussian_likelihood</span> <span class="kn">import</span> <span class="n">GaussianLikelihood</span>
+<span class="kn">from</span> <span class="nn">gpytorch.priors</span> <span class="kn">import</span> <span class="n">HorseshoePrior</span><span class="p">,</span> <span class="n">LogNormalPrior</span>
+
+<span class="kn">from</span> <span class="nn">smac.acquisition</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionOptimizer</span><span class="p">,</span> <span class="n">LocalAndSortedRandomSearch</span>
+<span class="kn">from</span> <span class="nn">smac.acquisition.functions</span> <span class="kn">import</span> <span class="n">EI</span><span class="p">,</span> <span class="n">AbstractAcquisitionFunction</span>
+<span class="kn">from</span> <span class="nn">smac.main.boing</span> <span class="kn">import</span> <span class="n">BOinGSMBO</span>
+<span class="kn">from</span> <span class="nn">smac.random_design.probability_design</span> <span class="kn">import</span> <span class="n">ProbabilityRandomDesign</span>
+<span class="kn">from</span> <span class="nn">smac.facade.hyperparameter_facade</span> <span class="kn">import</span> <span class="n">HyperparameterFacade</span>
+<span class="kn">from</span> <span class="nn">smac.model.abstract_model</span> <span class="kn">import</span> <span class="n">AbstractModel</span>
+<span class="kn">from</span> <span class="nn">smac.model.gaussian_process.gpytorch</span> <span class="kn">import</span> <span class="n">GloballyAugmentedLocalGaussianProcess</span><span class="p">,</span> <span class="n">GPyTorchGaussianProcess</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.encoder.boing_encoder</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">RunHistoryRawEncoder</span><span class="p">,</span>
+    <span class="n">RunHistoryRawScaledEncoder</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">smac.runner.abstract_runner</span> <span class="kn">import</span> <span class="n">AbstractRunner</span>
+<span class="kn">from</span> <span class="nn">smac.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
+
+
+<div class="viewcode-block" id="BOinGFacade"><a class="viewcode-back" href="../../../api/smac.facade.boing_facade.html#smac.facade.boing_facade.BOinGFacade">[docs]</a><span class="k">class</span> <span class="nc">BOinGFacade</span><span class="p">(</span><span class="n">HyperparameterFacade</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    SMAC wrapper for BO inside Grove(BOinG):</span>
+<span class="sd">        Deng and Lindauer, Searching in the Forest for Local Bayesian Optimization</span>
+<span class="sd">        https://arxiv.org/abs/2111.05834</span>
+
+<span class="sd">    BOiNG is a two-stages optimizer: at the first stage, the global optimizer extracts the global optimum with a random</span>
+<span class="sd">    forest (RF) model. Then in the second stage, the optimizer constructs a local model in the vicinity of the</span>
+<span class="sd">    configuration suggested by the global surrogate model.</span>
+
+<span class="sd">    Its Hyperparameter settings follow the implementation from smac.facade.smac_bb_facade.SMAC4BB:</span>
+<span class="sd">    Hyperparameters are chosen according to the best configuration for Gaussian process maximum likelihood found in</span>
+<span class="sd">    &quot;Towards Assessing the Impact of Bayesian Optimization&#39;s Own Hyperparameters&quot; by Lindauer et al., presented at the</span>
+<span class="sd">    DSO workshop 2019 (https://arxiv.org/abs/1908.06674).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model_local: Type[BaseModel],</span>
+<span class="sd">        local empirical performance model, used in subspace. Since the subspace might have different amount of</span>
+<span class="sd">        hyperparameters compared to the search space. We only instantiate them under the subspace.</span>
+<span class="sd">    model_local_kwargs: Optional[Dict] = None,</span>
+<span class="sd">        parameters for initializing a local model</span>
+<span class="sd">    acquisition_func_local: AbstractAcquisitionFunction,</span>
+<span class="sd">        local acquisition function,  used in subspace</span>
+<span class="sd">    acquisition_func_local_kwargs: Optional[Dict] = None,</span>
+<span class="sd">        parameters for initializing a local acquisition function optimizer</span>
+<span class="sd">    acq_optimizer_local: Optional[AcquisitionFunctionMaximizer] = None,</span>
+<span class="sd">        Optimizer of acquisition function of local models, same as above</span>
+<span class="sd">    acq_optimizer_local_kwargs: typing: Optional[Dict] = None,</span>
+<span class="sd">        parameters for the optimizer of acquisition function of local models</span>
+<span class="sd">    max_configs_local_fracs : float</span>
+<span class="sd">        The maximal number of fractions of samples to be included in the subspace. If the number of samples in the</span>
+<span class="sd">        subspace is greater than this value and n_min_config_inner, the subspace will be cropped to fit the requirement</span>
+<span class="sd">    min_configs_local: int,</span>
+<span class="sd">        Minimum number of samples included in the inner loop model</span>
+<span class="sd">    do_switching: bool</span>
+<span class="sd">       if we want to switch between turbo and boing or do a pure BOinG search</span>
+<span class="sd">    turbo_kwargs: Optional[Dict] = None</span>
+<span class="sd">       parameters for building a turbo optimizer. For details, please refer to smac.utils.subspace.turbo</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
+        <span class="n">target_algorithm</span><span class="p">:</span> <span class="n">AbstractRunner</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">model_local</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">AbstractModel</span><span class="p">]</span> <span class="o">=</span> <span class="n">GloballyAugmentedLocalGaussianProcess</span><span class="p">,</span>
+        <span class="n">model_local_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">acquisition_func_local</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span> <span class="o">|</span> <span class="n">Type</span><span class="p">[</span><span class="n">AbstractAcquisitionFunction</span><span class="p">]</span> <span class="o">=</span> <span class="n">EI</span><span class="p">,</span>
+        <span class="n">acquisition_func_local_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">acq_optimizer_local</span><span class="p">:</span> <span class="n">AbstractAcquisitionOptimizer</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">acq_optimizer_local_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_configs_local_fracs</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">min_configs_local</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">do_switching</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">turbo_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_local</span> <span class="o">=</span> <span class="n">model_local</span>
+        <span class="k">if</span> <span class="n">model_local_kwargs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">model_local</span><span class="p">,</span> <span class="n">GPyTorchGaussianProcess</span><span class="p">):</span>
+            <span class="n">model_local_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_lgpga_local_components</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_local_kwargs</span> <span class="o">=</span> <span class="n">model_local_kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_func_local</span> <span class="o">=</span> <span class="n">acquisition_func_local</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_func_local_kwargs</span> <span class="o">=</span> <span class="n">acquisition_func_local_kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer_local</span> <span class="o">=</span> <span class="n">acq_optimizer_local</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer_local_kwargs</span> <span class="o">=</span> <span class="n">acq_optimizer_local_kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_configs_local_fracs</span> <span class="o">=</span> <span class="n">max_configs_local_fracs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_configs_local</span> <span class="o">=</span> <span class="n">min_configs_local</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">do_switching</span> <span class="o">=</span> <span class="n">do_switching</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">turbo_kwargs</span> <span class="o">=</span> <span class="n">turbo_kwargs</span>
+        <span class="c1"># we attach here to allow the users to pass their own arguments to the boing optimizer</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">target_algorithm</span><span class="o">=</span><span class="n">target_algorithm</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BOinGFacade.get_runhistory_encoder"><a class="viewcode-back" href="../../../api/smac.facade.boing_facade.html#smac.facade.boing_facade.BOinGFacade.get_runhistory_encoder">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_runhistory_encoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistoryRawEncoder</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RunHistoryRawScaledEncoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">scale_percentage</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BOinGFacade.get_random_design"><a class="viewcode-back" href="../../../api/smac.facade.boing_facade.html#smac.facade.boing_facade.BOinGFacade.get_random_design">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_random_design</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">probability</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.08447232371720552</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProbabilityRandomDesign</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">BOinGFacade</span><span class="p">,</span> <span class="n">BOinGFacade</span><span class="p">)</span><span class="o">.</span><span class="n">get_random_design</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">probability</span><span class="o">=</span><span class="n">probability</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BOinGFacade.get_acquisition_optimizer"><a class="viewcode-back" href="../../../api/smac.facade.boing_facade.html#smac.facade.boing_facade.BOinGFacade.get_acquisition_optimizer">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_acquisition_optimizer</span><span class="p">(</span>
+        <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">local_search_iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">challengers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractAcquisitionOptimizer</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the acquisition optimizer instance for finding the next candidate configuration</span>
+<span class="sd">        based on the acquisition function.&quot;&quot;&quot;</span>
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">LocalAndSortedRandomSearch</span><span class="p">(</span>
+            <span class="n">configspace</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span>
+            <span class="n">local_search_iterations</span><span class="o">=</span><span class="n">local_search_iterations</span><span class="p">,</span>
+            <span class="n">challengers</span><span class="o">=</span><span class="n">challengers</span><span class="p">,</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">optimizer</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_optimizer</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BOinGSMBO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Configure the BOinGSMBO optimizer, that defines the particular BO loop.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">BOinGSMBO</span><span class="p">(</span>
+            <span class="n">scenario</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="p">,</span>
+            <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+            <span class="n">runner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runner</span><span class="p">,</span>
+            <span class="n">initial_design</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_design</span><span class="p">,</span>
+            <span class="n">runhistory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
+            <span class="n">runhistory_encoder</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory_encoder</span><span class="p">,</span>
+            <span class="n">intensifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="p">,</span>
+            <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">acquisition_function</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function</span><span class="p">,</span>
+            <span class="n">acquisition_optimizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acquisition_optimizer</span><span class="p">,</span>
+            <span class="n">random_design</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_design</span><span class="p">,</span>
+            <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+            <span class="n">model_local</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_local</span><span class="p">,</span>
+            <span class="n">model_local_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_local_kwargs</span><span class="p">,</span>
+            <span class="n">acquisition_func_local</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acquisition_func_local</span><span class="p">,</span>
+            <span class="n">acq_optimizer_local_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acquisition_func_local_kwargs</span><span class="p">,</span>
+            <span class="n">max_configs_local_fracs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_configs_local_fracs</span><span class="p">,</span>
+            <span class="n">min_configs_local</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_configs_local</span><span class="p">,</span>
+            <span class="n">do_switching</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">do_switching</span><span class="p">,</span>
+            <span class="n">turbo_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">turbo_kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="BOinGFacade.get_lgpga_local_components"><a class="viewcode-back" href="../../../api/smac.facade.boing_facade.html#smac.facade.boing_facade.BOinGFacade.get_lgpga_local_components">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_lgpga_local_components</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A function to construct the required components that could be implemented to construct a LGPGA model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># The lower bound and upper bounds are set to be identical as SMAC4BB</span>
+        <span class="n">cont_kernel_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;lengthscale_constraint&quot;</span><span class="p">:</span> <span class="n">Interval</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">6.754111155189306</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.0858637988771976</span><span class="p">),</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="mf">1.0</span>
+            <span class="p">),</span>
+        <span class="p">}</span>
+        <span class="n">cat_kernel_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;lengthscale_constraint&quot;</span><span class="p">:</span> <span class="n">Interval</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">6.754111155189306</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.0858637988771976</span><span class="p">),</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="mf">1.0</span>
+            <span class="p">),</span>
+        <span class="p">}</span>
+        <span class="n">scale_kernel_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;outputscale_constraint&quot;</span><span class="p">:</span> <span class="n">Interval</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">10.0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">2.0</span><span class="p">),</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="mf">2.0</span><span class="p">),</span>
+            <span class="s2">&quot;outputscale_prior&quot;</span><span class="p">:</span> <span class="n">LogNormalPrior</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+        <span class="p">}</span>
+
+        <span class="n">kernel_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;cont_kernel&quot;</span><span class="p">:</span> <span class="n">MaternKernel</span><span class="p">,</span>
+            <span class="s2">&quot;cont_kernel_kwargs&quot;</span><span class="p">:</span> <span class="n">cont_kernel_kwargs</span><span class="p">,</span>
+            <span class="s2">&quot;cat_kernel&quot;</span><span class="p">:</span> <span class="n">CategoricalKernel</span><span class="p">,</span>
+            <span class="s2">&quot;cat_kernel_kwargs&quot;</span><span class="p">:</span> <span class="n">cat_kernel_kwargs</span><span class="p">,</span>
+            <span class="s2">&quot;scale_kernel&quot;</span><span class="p">:</span> <span class="n">ScaleKernel</span><span class="p">,</span>
+            <span class="s2">&quot;scale_kernel_kwargs&quot;</span><span class="p">:</span> <span class="n">scale_kernel_kwargs</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="c1"># by setting lower bound of noise_constraint we could make it more stable</span>
+        <span class="n">noise_prior</span> <span class="o">=</span> <span class="n">HorseshoePrior</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">likelihood</span> <span class="o">=</span> <span class="n">GaussianLikelihood</span><span class="p">(</span>
+            <span class="n">noise_prior</span><span class="o">=</span><span class="n">noise_prior</span><span class="p">,</span> <span class="n">noise_constraint</span><span class="o">=</span><span class="n">Interval</span><span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">double</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">kernel_kwargs</span><span class="o">=</span><span class="n">kernel_kwargs</span><span class="p">,</span> <span class="n">likelihood</span><span class="o">=</span><span class="n">likelihood</span><span class="p">)</span></div></div>
+</pre></div>
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../../../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 
+    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
+    and Frank Hutter
+.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+5.1.1. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

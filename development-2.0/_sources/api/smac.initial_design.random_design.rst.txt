@@ -1,0 +1,29 @@
+smac.initial\_design.random\_design
+===================================
+
+.. automodule:: smac.initial_design.random_design
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      RandomInitialDesign
+   
+   
+
+   
+   
+   
+
+
+

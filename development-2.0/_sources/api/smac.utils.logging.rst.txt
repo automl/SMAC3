@@ -1,0 +1,31 @@
+smac.utils.logging
+==================
+
+.. automodule:: smac.utils.logging
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      format_array
+      get_logger
+      setup_logging
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

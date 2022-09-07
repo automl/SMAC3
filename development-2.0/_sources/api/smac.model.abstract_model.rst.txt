@@ -1,0 +1,29 @@
+smac.model.abstract\_model
+==========================
+
+.. automodule:: smac.model.abstract_model
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AbstractModel
+   
+   
+
+   
+   
+   
+
+
+

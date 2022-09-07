@@ -1,0 +1,29 @@
+smac.intensification.intensification
+====================================
+
+.. automodule:: smac.intensification.intensification
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Intensifier
+   
+   
+
+   
+   
+   
+
+
+

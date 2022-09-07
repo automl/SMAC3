@@ -1,0 +1,29 @@
+smac.intensification.hyperband
+==============================
+
+.. automodule:: smac.intensification.hyperband
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Hyperband
+   
+   
+
+   
+   
+   
+
+
+

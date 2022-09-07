@@ -1,0 +1,31 @@
+smac.runhistory.enumerations
+============================
+
+.. automodule:: smac.runhistory.enumerations
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      DataOrigin
+      StatusType
+      TrialInfoIntent
+   
+   
+
+   
+   
+   
+
+
+

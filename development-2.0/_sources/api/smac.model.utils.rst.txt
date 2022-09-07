@@ -1,0 +1,30 @@
+smac.model.utils
+================
+
+.. automodule:: smac.model.utils
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      check_subspace_points
+      get_types
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

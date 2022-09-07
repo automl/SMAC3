@@ -1,0 +1,34 @@
+﻿smac.runner
+===========
+
+.. automodule:: smac.runner
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   smac.runner.abstract_runner
+   smac.runner.dask_runner
+   smac.runner.exceptions
+   smac.runner.target_algorithm_runner
+

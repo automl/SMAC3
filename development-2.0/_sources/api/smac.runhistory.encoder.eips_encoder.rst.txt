@@ -1,0 +1,29 @@
+smac.runhistory.encoder.eips\_encoder
+=====================================
+
+.. automodule:: smac.runhistory.encoder.eips_encoder
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      RunHistoryEIPSEncoder
+   
+   
+
+   
+   
+   
+
+
+
