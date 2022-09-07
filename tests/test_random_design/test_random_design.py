@@ -1,8 +1,8 @@
 from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.random_design.annealing_design import CosineAnnealingRandomDesign
 from smac.random_design.modulus_design import (
-    LinearCoolDownRandomDesign,
-    NoCoolDownRandomDesign,
+    DynamicModulusRandomDesign,
+    ModulusRandomDesign,
 )
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -11,9 +11,9 @@ __license__ = "3-clause BSD"
 
 def test_chooser_rng():
     dc = {
-        "NoCoolDownRandomDesign": [NoCoolDownRandomDesign, {"modulus": 2}],
+        "NoCoolDownRandomDesign": [ModulusRandomDesign, {"modulus": 2}],
         "LinearCoolDownRandomDesign": [
-            LinearCoolDownRandomDesign,
+            DynamicModulusRandomDesign,
             {
                 "start_modulus": 2,
                 "modulus_increment": 1,

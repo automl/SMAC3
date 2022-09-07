@@ -13,7 +13,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class NoCoolDownRandomDesign(AbstractRandomDesign):
+class ModulusRandomDesign(AbstractRandomDesign):
     """Interleave a random configuration after a constant number of configurations found by
     Bayesian optimization.
 
@@ -45,7 +45,7 @@ class NoCoolDownRandomDesign(AbstractRandomDesign):
         return iteration % self._modulus < 1
 
 
-class LinearCoolDownRandomDesign(AbstractRandomDesign):
+class DynamicModulusRandomDesign(AbstractRandomDesign):
     """Interleave a random configuration, decreasing the fraction of random configurations over
     time.
 

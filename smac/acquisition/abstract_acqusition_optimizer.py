@@ -10,7 +10,7 @@ import numpy as np
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.random_design.modulus_design import NoCoolDownRandomDesign
+from smac.random_design.modulus_design import ModulusRandomDesign
 from smac.random_design.abstract_random_design import AbstractRandomDesign
 from ConfigSpace import Configuration, ConfigurationSpace
 from smac.runhistory.runhistory import RunHistory
@@ -172,7 +172,7 @@ class ChallengerList(Iterator):
         self,
         challenger_callback: Callable,
         configuration_space: ConfigurationSpace,
-        random_design: AbstractRandomDesign | None = NoCoolDownRandomDesign(modulus=2.0),
+        random_design: AbstractRandomDesign | None = ModulusRandomDesign(modulus=2.0),
     ):
         self.challengers_callback = challenger_callback
         self.challengers = None  # type: Optional[List[Configuration]]

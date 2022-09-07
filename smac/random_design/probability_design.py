@@ -42,7 +42,7 @@ class ProbabilityRandomDesign(AbstractRandomDesign):
             return False
 
 
-class ProbabilityCoolDownRandomDesign(AbstractRandomDesign):
+class DynamicProbabilityRandomDesign(AbstractRandomDesign):
     """Interleave a random configuration according to a given probability which is decreased over
     time.
 

@@ -1,7 +1,6 @@
 import numpy as np
 
-from smac.random_design.probability_design import ProbabilityRandomDesign, \
-    ProbabilityCoolDownRandomDesign
+from smac.random_design.probability_design import ProbabilityRandomDesign, DynamicProbabilityRandomDesign
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -18,8 +17,8 @@ def test_chooser_prob():
 
 def test_cooldownchooser_prob():
     for i in range(10):
-        c = ProbabilityCoolDownRandomDesign(seed=1, probability=0.1 * i, factor=0.5)
-        expected = 0.1*i
+        c = DynamicProbabilityRandomDesign(seed=1, probability=0.1 * i, factor=0.5)
+        expected = 0.1 * i
         for _ in range(3):
             stats = []
             for j in range(100000):
