@@ -49,21 +49,21 @@ def test_config_numbers(make_scenario, configspace_small):
         n_configs=15,
     )
 
-    assert dc.n_configs == 15
+    assert dc._n_configs == 15
 
     dc = AbstractInitialDesign(
         scenario=scenario,
         configs=configs,
     )
 
-    assert dc.n_configs == 5
+    assert dc._n_configs == 5
 
     dc = AbstractInitialDesign(
         scenario=scenario,
         n_configs_per_hyperparameter=5,
     )
 
-    assert dc.n_configs == len(configspace_small.get_hyperparameters()) * 5
+    assert dc._n_configs == len(configspace_small.get_hyperparameters()) * 5
 
     # We can't have more initial configs than
     with pytest.raises(ValueError):

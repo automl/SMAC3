@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from ConfigSpace import Configuration
-from typing import Any
 
 from smac.initial_design.initial_design import AbstractInitialDesign
 
@@ -12,19 +11,9 @@ __license__ = "3-clause BSD"
 class RandomInitialDesign(AbstractInitialDesign):
     """Initial design that evaluates random configurations."""
 
-    def get_meta(self) -> dict[str, Any]:
-        pass
-
     def _select_configurations(self) -> list[Configuration]:
-        """Select random configurations.
-
-        Returns
-        -------
-        configs: list[Configuration]
-            The list of configurations to be evaluated in the initial design.
-        """
-        configs = self.configspace.sample_configuration(size=self.n_configs)
-        if self.n_configs == 1:
+        configs = self._configspace.sample_configuration(size=self._n_configs)
+        if self._n_configs == 1:
             configs = [configs]
         for config in configs:
             config.origin = "Random Initial Design"

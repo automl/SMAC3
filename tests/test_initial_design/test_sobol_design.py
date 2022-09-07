@@ -15,7 +15,7 @@ def test_sobol_design(make_scenario, configspace_large):
     )
 
     configs = initial_design.select_configurations()
-    assert initial_design.n_configs == 54
+    assert initial_design._n_configs == 54
     assert len(configs) == 54
 
 

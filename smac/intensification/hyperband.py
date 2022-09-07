@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Any
-
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.intensification.successive_halving import SuccessiveHalving
 
@@ -49,11 +47,6 @@ class Hyperband(SuccessiveHalving):
     n_seeds : int | None, defaults to None
         The number of seeds to use if the target algorithm is non-deterministic.
     """
-
-    def get_meta(self) -> dict[str, Any]:
-        return {
-            "name": self.__class__.__name__,
-        }
 
     def _get_intensifier_ranking(self, intensifier: AbstractIntensifier) -> tuple[int, int]:
         from smac.intensification.hyperband_worker import HyperbandWorker

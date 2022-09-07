@@ -71,26 +71,26 @@ class AbstractInitialDesign:
         max_config_ratio: float = 0.25,
         seed: int | None = None,
     ):
-        self.configspace = scenario.configspace
+        self._configspace = scenario.configspace
 
         if seed is None:
             seed = scenario.seed
 
-        self.seed = seed
-        self.rng = np.random.RandomState(seed)
-        self.configs = configs
-        self.n_configs_per_hyperparameter = n_configs_per_hyperparameter
+        self._seed = seed
+        self._rng = np.random.RandomState(seed)
+        self._configs = configs
+        self._n_configs_per_hyperparameter = n_configs_per_hyperparameter
 
-        n_params = len(self.configspace.get_hyperparameters())
+        n_params = len(self._configspace.get_hyperparameters())
         if configs is not None:
             logger.info("Using `configs` and ignoring `n_configs` and `n_configs_per_hyperparameter`.")
-            self.n_configs = len(configs)
+            self._n_configs = len(configs)
         elif n_configs is not None:
             logger.info("Using `n_configs` and ignoring `configs` and `n_configs_per_hyperparameter`.")
-            self.n_configs = n_configs
+            self._n_configs = n_configs
         elif n_configs_per_hyperparameter is not None:
             logger.info("Using `n_configs_per_hyperparameter` and ignoring `configs` and `n_configs`.")
-            self.n_configs = int(
+            self._n_configs = int(
                 max(1, min(n_configs_per_hyperparameter * n_params, (max_config_ratio * scenario.n_trials)))
             )
         else:
@@ -99,15 +99,55 @@ class AbstractInitialDesign:
                 "`n_configs_per_hyperparameter`, but provided none of them."
             )
 
-        if self.n_configs > scenario.n_trials:
+        if self._n_configs > scenario.n_trials:
             raise ValueError(
-                f"Initial budget {self.n_configs} cannot be higher than the number of trials {scenario.n_trials}."
+                f"Initial budget {self._n_configs} cannot be higher than the number of trials {scenario.n_trials}."
             )
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        configs = None
+        if self._configs is not None:
+            configs = [config.get_dictionary() for config in self._configs]
+
+        return {
+            "name": self.__class__.__name__,
+            "n_configs": self._n_configs,
+            "seed": self._seed,
+            "configs": configs,
+            "n_configs_per_hyperparameter": self._n_configs_per_hyperparameter,
+        }
+
+    def select_configurations(self) -> list[Configuration]:
+        """Selects the initial configurations. Internally, `_select_configurations` is called,
+        which has to be implemented by the child class.
+
+        Returns
+        -------
+        configs : list[Configuration]
+            Configurations from the child class.
+        """
+        if self._n_configs == 0:
+            logger.info("No initial configurations are used.")
+            return []
+
+        if self._configs is None:
+            self._configs = self._select_configurations()
+
+        for config in self._configs:
+            if config.origin is None:
+                config.origin = "Initial design"
+
+        # Removing duplicates
+        # (Reference: https://stackoverflow.com/questions/7961363/removing-duplicates-in-lists)
+        self._configs = list(OrderedDict.fromkeys(self._configs))
+        logger.info(f"Using {len(self._configs)} initial design configurations.")
+
+        return self._configs
 
     @abstractmethod
     def _select_configurations(self) -> list[Configuration]:
-        """Selects the initial configurations. Depending on the implementation
-        of the initial_design."""
+        """Selects the initial configurations, depending on the implementation of the initial design."""
         raise NotImplementedError
 
     def _transform_continuous_designs(
@@ -119,10 +159,14 @@ class AbstractInitialDesign:
         ----------
         design : np.ndarray
             Array of hyperparameters originating from the initial design strategy.
-            See e.g. scipy.qmc.LatinHypercube for details.
         origin : str | None, defaults to None
             Label for a configuration where it originated from.
         configspace : ConfigurationSpace
+
+        Returns
+        -------
+        configs : list[Configuration]
+            Continuous transformed configs.
         """
 
         params = configspace.get_hyperparameters()
@@ -160,38 +204,3 @@ class AbstractInitialDesign:
             logger.debug(conf)
 
         return configs
-
-    def get_meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
-
-        configs = None
-        if self.configs is not None:
-            configs = [config.get_dictionary() for config in self.configs]
-
-        return {
-            "name": self.__class__.__name__,
-            "n_configs": self.n_configs,
-            "seed": self.seed,
-            "configs": configs,
-            "n_configs_per_hyperparameter": self.n_configs_per_hyperparameter,
-        }
-
-    def select_configurations(self) -> list[Configuration]:
-        """Selects the initial configurations."""
-        if self.n_configs == 0:
-            logger.info("No initial configurations are used.")
-            return []
-
-        if self.configs is None:
-            self.configs = self._select_configurations()
-
-        for config in self.configs:
-            if config.origin is None:
-                config.origin = "Initial design"
-
-        # Removing duplicates
-        # (Reference: https://stackoverflow.com/questions/7961363/removing-duplicates-in-lists)
-        self.configs = list(OrderedDict.fromkeys(self.configs))
-        logger.info(f"Using {len(self.configs)} initial design configurations.")
-
-        return self.configs
