@@ -26,7 +26,7 @@ class AbstractRunHistoryEncoder:
     Parameters
     ----------
     scenario : Scenario
-    considered_states : list[StatusType], defaults to [StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMORYOUT, StatusType.DONOTADVANCE]
+    considered_states : list[StatusType], defaults to [StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMORYOUT, StatusType.DONOTADVANCE]  # noqa: E501
         Trials with the passed states are considered.
     lower_budget_states : list[StatusType], defaults to []
         Additionally consider all trials with these states for budget < current budget.
