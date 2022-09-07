@@ -1,7 +1,7 @@
 from __future__ import annotations
 from abc import abstractmethod
 
-from typing import Any, Callable, Iterator, Optional, Tuple
+from typing import Any, Callable, Iterator, Optional
 
 import time
 
@@ -23,42 +23,27 @@ logger = get_logger(__name__)
 class AbstractIntensifier:
     """Base class for all racing methods.
 
-    The "intensification" is designed to output a RunInfo object with enough information
-    to run a given configuration (for example, the run info contains the instance/seed
+    The intensification is designed to output a TrialInfo object with enough information
+    to run a given configuration (for example, the trial info contains the instance/seed
     pair, as well as the associated resources).
 
-    A worker can execute this RunInfo object and produce a RunValue object with the
-    execution results. Each intensifier process the RunValue object and updates it's
+    A worker can execute this TrialInfo object and produce a TrialValue object with the
+    execution results. Each intensifier process the TrialValue object and updates its
     internal state in preparation for the next iteration.
-
-    Note
-    ----
-    Do not use  this class directly.
 
     Parameters
     ----------
-    stats: Stats
-        stats object
-    rng : np.random.RandomState
-    instances : List[str]
-        list of all instance ids
-    instance_specifics : Mapping[str, str]
-        mapping from instance name to instance specific string
-    algorithm_walltime_limit : float
-        runtime algorithm_walltime_limit of TA runs
-    deterministic: bool
-        whether the TA is deterministic or not
-    min_config_calls : int
-        Minimum number of run per config (summed over all calls to
-        intensify).
-    max_config_calls : int
-        Maximum number of runs per config (summed over all calls to
-        intensifiy).
-    min_challenger: int
-        minimal number of challengers to be considered (even if time_bound is exhausted earlier)
+    scenario : Scenario
+    min_config_calls : int, defaults to 1
+        Minimum number of trials per config (summed over all calls to intensify).
+    max_config_calls : int, defaults to 2000
+        Maximum number of trials per config (summed over all calls to intensify).
+    min_challenger : int, defaults to 1
+        Minimal number of challengers to be considered (even if time_bound is exhausted earlier).
     intensify_percentage : float, defaults to 0.5
         How much percentage of the time should configurations be intensified (evaluated on higher budgets or
         more instances). This parameter is accessed in the SMBO class.
+    seed : int | None, defaults to none
     """
 
     def __init__(
@@ -70,63 +55,87 @@ class AbstractIntensifier:
         intensify_percentage: float = 0.5,
         seed: int | None = None,
     ):
-        self.scenario = scenario
-        self.stats: Stats | None = None
+        # Intensify percentage must be between 0 and 1
+        assert intensify_percentage >= 0.0 and intensify_percentage <= 1.0
 
         if seed is None:
             seed = scenario.seed
 
-        self.seed = seed
-        self.rng = np.random.RandomState(seed)
-        self.deterministic = scenario.deterministic
-        self.min_config_calls = min_config_calls
-        self.max_config_calls = max_config_calls
-        self.min_challenger = min_challenger
-        self.intensify_percentage = intensify_percentage
-
-        # Intensify percentage must be between 0 and 1
-        assert intensify_percentage >= 0.0 and intensify_percentage <= 1.0
+        self._scenario = scenario
+        self._seed = seed
+        self._rng = np.random.RandomState(seed)
+        self._deterministic = scenario.deterministic
+        self._min_config_calls = min_config_calls
+        self._max_config_calls = max_config_calls
+        self._min_challenger = min_challenger
+        self._intensify_percentage = intensify_percentage
+        self._stats: Stats | None = None
 
         # Set the instances
-        self.instances: list[str | None]
+        self._instances: list[str | None]
         if scenario.instances is None:
             # We need to include None here to tell whether None instance was evaluated or not
-            self.instances = [None]
+            self._instances = [None]
         else:
             # Removing duplicates here
             # Fun fact: When using a set here, it always includes randomness
-            self.instances = list(dict.fromkeys(scenario.instances))
+            self._instances = list(dict.fromkeys(scenario.instances))
 
         # General attributes
-        self.num_run = 0  # Number of runs done in an iteration so far
+        self._num_trials = 0  # Number of trials done in an iteration so far
         self._challenger_id = 0
+        self._repeat_configs = False  # Repeating configurations is discouraged for parallel trials.
+        self._iteration_done = False  # Marks the end of an iteration.
         self._target_algorithm_time = 0.0
 
-        # attributes for sampling next configuration
-        # Repeating configurations is discouraged for parallel runs
-        self.repeat_configs = False
-        # to mark the end of an iteration
-        self.iteration_done = False
+    @property
+    def intensify_percentage(self) -> float:
+        """How much percentage of the time should configurations be intensified (evaluated on higher budgets or
+        more instances). This parameter is accessed in the SMBO class."""
+        return self._intensify_percentage
+
+    @property
+    def repeat_configs(self) -> bool:
+        """Whether configs should be repeated or not."""
+        return self._repeat_configs
+
+    @property
+    def iteration_done(self) -> bool:
+        """Whether an iteration is done or not."""
+        return self._iteration_done
+
+    @property
+    def num_trials(self) -> int:
+        """How many trials have been done in an iteration so far."""
+        return self._num_trials
 
     @property
     @abstractmethod
     def uses_seeds(self) -> bool:
+        """If the intensifier needs to make use of seeds."""
         raise NotImplementedError
 
     @property
     @abstractmethod
     def uses_budgets(self) -> bool:
+        """If the intensifier needs to make use of budgets."""
         raise NotImplementedError
 
     @property
     @abstractmethod
     def uses_instances(self) -> bool:
+        """If the intensifier needs to make use of instances."""
         raise NotImplementedError
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
+            "min_config_calls": self._min_config_calls,
+            "max_config_calls": self._max_config_calls,
+            "min_challenger": self._min_challenger,
+            "intensify_percentage": self._intensify_percentage,
+            "seed": self._seed,
         }
 
     def get_next_run(
@@ -138,34 +147,29 @@ class AbstractIntensifier:
         repeat_configs: bool = True,
         n_workers: int = 1,
     ) -> tuple[TrialInfoIntent, TrialInfo]:
-        """Abstract method for choosing the next challenger, to allow for different selections
-        across intensifiers uses ``_next_challenger()`` by default.
-
-        If no more challengers are available, the method should issue a SKIP via
-        RunInfoIntent.SKIP, so that a new iteration can sample new configurations.
+        """Abstract method for choosing the next challenger. If no more challengers are available, the method should
+        issue a SKIP via RunInfoIntent.SKIP, so that a new iteration can sample new configurations.
 
         Parameters
         ----------
-        challengers : List[Configuration]
-            promising configurations
-        incumbent: Configuration
-             incumbent configuration
-        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
-            optimizer that generates next configurations to use for racing
-        runhistory : smac.runhistory.runhistory.RunHistory
-            stores all runs we ran so far
-        repeat_configs : bool
-            if False, an evaluated configuration will not be generated again
-        n_workers: int
-            the maximum number of workers available
-            at a given time.
+        challengers : list[Configuration] | None
+            Promising configurations
+        incumbent : Configuration
+            Incumbent configuration.
+        get_next_configurations : Callable[[], Iterator[Configuration]] | None, defaults to none
+            Function that generates next configurations to use for racing.
+        runhistory : RunHistory
+        repeat_configs : bool, defaults to true
+            If false, an evaluated configuration will not be generated again.
+        n_workers : int, optional, defaults to 1
+            The maximum number of workers available.
 
         Returns
         -------
-        trial_info: RunInfo
-            An object that encapsulates necessary information for a config run
-        intent: RunInfoIntent
-            Indicator of how to consume the RunInfo object
+        TrialInfoIntent
+            Indicator of how to consume the TrialInfo object.
+        TrialInfo
+            An object that encapsulates necessary information of the trial.
         """
         raise NotImplementedError()
 
@@ -177,33 +181,28 @@ class AbstractIntensifier:
         runhistory: RunHistory,
         time_bound: float,
         log_trajectory: bool = True,
-    ) -> Tuple[Configuration, float]:
+    ) -> tuple[Configuration, float | list[float]]:
         """The intensifier stage will be updated based on the results/status of a configuration
         execution. Also, a incumbent will be determined.
 
         Parameters
         ----------
-        trial_info : RunInfo
-               A RunInfo containing the configuration that was evaluated
-        incumbent : Optional[Configuration]
-            Best configuration seen so far
+        trial_info : TrialInfo
+        trial_value: TrialValue
+        incumbent : Configuration | None
+            Best configuration seen so far.
         runhistory : RunHistory
-            stores all runs we ran so far
-            if False, an evaluated configuration will not be generated again
         time_bound : float
-            time in [sec] available to perform intensify
-        result: RunValue
-            Contain the result (status and other methadata) of exercising
-            a challenger/incumbent.
+            Time [sec] available to perform intensify.
         log_trajectory: bool
-            Whether to log changes of incumbents in trajectory
+            Whether to log changes of incumbents in the trajectory.
 
         Returns
         -------
-        incumbent: Configuration()
-            current (maybe new) incumbent configuration
-        inc_perf: float
-            empirical performance of incumbent configuration
+        incumbent: Configuration
+            Current (maybe new) incumbent configuration.
+        incumbent_costs: float | list[float]
+            Empirical cost(s) of the incumbent configuration.
         """
         raise NotImplementedError()
 
@@ -214,24 +213,23 @@ class AbstractIntensifier:
         runhistory: RunHistory,
         repeat_configs: bool = True,
     ) -> Configuration | None:
-        """Retuns the next challenger to use in intensification If challenger is None, then
+        """Retuns the next challenger to use in intensification. If challenger is none, then the
         optimizer will be used to generate the next challenger.
 
         Parameters
         ----------
-        challengers : List[Configuration]
-            promising configurations to evaluate next
-        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
-            a sampler that generates next configurations to use for racing
-        runhistory : smac.runhistory.runhistory.RunHistory
-            stores all runs we ran so far
-        repeat_configs : bool
-            if False, an evaluated configuration will not be generated again
+        challengers : list[Configuration] | None
+            Promising configurations to evaluate next.
+        get_next_configurations : Callable[[], Iterator[Configuration]] | None, defaults to none
+            Function that generates next configurations to use for racing.
+        runhistory : RunHistory
+        repeat_configs : bool, defaults to true
+            If false, an evaluated configuration will not be generated again.
 
         Returns
         -------
-        Configuration
-            next challenger to use
+        configuration : Configuration | None
+            Next challenger to use. If no challenger was found, none is returned.
         """
         start_time = time.time()
 
@@ -273,56 +271,46 @@ class AbstractIntensifier:
         log_trajectory: bool = True,
     ) -> Configuration | None:
         """Compare two configuration wrt the runhistory and return the one which performs better (or
-        None if the decision is not safe)
+        None if the decision is not safe).
 
         Decision strategy to return x as being better than y:
-            1. x has at least as many runs as y
-            2. x performs better than y on the intersection of runs on x and y
+        * x has at least as many trials as y.
+        * x performs better than y on the intersection of trials on x and y.
 
-        Implicit assumption:
-            Challenger was evaluated on the same instance-seed pairs as
-            incumbent
-
-        Parameters
-        ----------
-        incumbent: Configuration
-            Current incumbent
-        challenger: Configuration
-            Challenger configuration
-        runhistory: smac.runhistory.runhistory.RunHistory
-            Stores all runs we ran so far
-        log_trajectory: bool
-            Whether to log changes of incumbents in trajectory
+        Note
+        ----
+        Implicit assumption: Challenger was evaluated on the same instance-seed pairs as incumbent.
 
         Returns
         -------
-        None or better of the two configurations x,y
+        configuration : Configuration | None
+            The better configuration. If the decision is not sure, none is returned.
         """
-        inc_runs = runhistory.get_trials(incumbent, only_max_observed_budget=True)
-        chall_runs = runhistory.get_trials(challenger, only_max_observed_budget=True)
-        to_compare_runs = set(inc_runs).intersection(chall_runs)
+        inc_trials = runhistory.get_trials(incumbent, only_max_observed_budget=True)
+        chall_trials = runhistory.get_trials(challenger, only_max_observed_budget=True)
+        to_compare_trials = set(inc_trials).intersection(chall_trials)
 
-        # performance on challenger runs, the challenger only becomes incumbent
+        # performance on challenger trials, the challenger only becomes incumbent
         # if it dominates the incumbent
-        chal_perf = runhistory.average_cost(challenger, to_compare_runs, normalize=True)
-        inc_perf = runhistory.average_cost(incumbent, to_compare_runs, normalize=True)
+        chal_perf = runhistory.average_cost(challenger, to_compare_trials, normalize=True)
+        inc_perf = runhistory.average_cost(incumbent, to_compare_trials, normalize=True)
 
         assert type(chal_perf) == float
         assert type(inc_perf) == float
 
         # Line 15
-        if np.any(chal_perf > inc_perf) and len(chall_runs) >= self.min_config_calls:
+        if np.any(chal_perf > inc_perf) and len(chall_trials) >= self._min_config_calls:
             chal_perf_format = format_array(chal_perf)
             inc_perf_format = format_array(inc_perf)
             # Incumbent beats challenger
             logger.debug(
                 f"Incumbent ({inc_perf_format}) is better than challenger "
-                f"({chal_perf_format}) on {len(chall_runs)} runs."
+                f"({chal_perf_format}) on {len(chall_trials)} trials."
             )
             return incumbent
 
         # Line 16
-        if not set(inc_runs) - set(chall_runs):
+        if not set(inc_trials) - set(chall_trials):
             # no plateau walks
             if np.any(chal_perf >= inc_perf):
                 chal_perf_format = format_array(chal_perf)
@@ -330,33 +318,33 @@ class AbstractIntensifier:
 
                 logger.debug(
                     f"Incumbent ({inc_perf_format}) is at least as good as the "
-                    f"challenger ({chal_perf_format}) on {len(chall_runs)} runs."
+                    f"challenger ({chal_perf_format}) on {len(chall_trials)} trials."
                 )
-                assert self.stats
-                if log_trajectory and self.stats.incumbent_changed == 0:
-                    self.stats.add_incumbent(cost=chal_perf, incumbent=incumbent)
+                assert self._stats
+                if log_trajectory and self._stats.incumbent_changed == 0:
+                    self._stats.add_incumbent(cost=chal_perf, incumbent=incumbent)
 
                 return incumbent
 
-            # Challenger is better than incumbent
-            # and has at least the same runs as inc
+            # Challenger is better than incumbent and has at least the same trials as incumbent.
             # -> change incumbent
-            n_samples = len(chall_runs)
+            n_samples = len(chall_trials)
             chal_perf_format = format_array(chal_perf)
             inc_perf_format = format_array(inc_perf)
 
             logger.info(
-                f"Challenger ({chal_perf_format}) is better than incumbent ({inc_perf_format}) " f"on {n_samples} runs."
+                f"Challenger ({chal_perf_format}) is better than incumbent ({inc_perf_format}) "
+                f"on {n_samples} trials."
             )
             self._log_incumbent_changes(incumbent, challenger)
 
             if log_trajectory:
-                assert self.stats
-                self.stats.add_incumbent(cost=chal_perf, incumbent=challenger)
+                assert self._stats
+                self._stats.add_incumbent(cost=chal_perf, incumbent=challenger)
 
             return challenger
 
-        # undecided
+        # Undecided
         return None
 
     def _log_incumbent_changes(

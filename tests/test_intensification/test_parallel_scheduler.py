@@ -10,7 +10,7 @@ __license__ = "3-clause BSD"
 
 
 def mock_ranker(sh):
-    return sh.stage, len(sh.run_tracker)
+    return sh._stage, len(sh.run_tracker)
 
 
 def test_sort_instances_by_stage(make_scenario, make_stats, configspace_small, runhistory):
@@ -18,7 +18,7 @@ def test_sort_instances_by_stage(make_scenario, make_stats, configspace_small, r
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=3, deterministic=True)
     stats = make_stats(scenario)
     scheduler = ParallelScheduler(scenario=scenario)
-    scheduler.stats = stats
+    scheduler._stats = stats
 
     scheduler._get_intensifier_ranking = mock_ranker
 
@@ -27,7 +27,7 @@ def test_sort_instances_by_stage(make_scenario, make_stats, configspace_small, r
         sh.run_tracker = []
         for i in range(config_inst_pairs):
             sh.run_tracker.append((i, i, i))
-        sh.stage = stage
+        sh._stage = stage
         return sh
 
     # Add more SH to make testing interesting
@@ -71,9 +71,9 @@ def test_process_results(make_scenario, make_stats, configspace_small, runhistor
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=3, deterministic=True)
     stats = make_stats(scenario)
     scheduler = ParallelScheduler(scenario=scenario)
-    scheduler.stats = stats
+    scheduler._stats = stats
 
-    scheduler.intensifier_instances = {
+    scheduler._intensifier_instances = {
         0: mock.Mock(),
         1: mock.Mock(),
         2: mock.Mock(),
@@ -92,9 +92,9 @@ def test_process_results(make_scenario, make_stats, configspace_small, runhistor
     scheduler.process_results(
         trial_info=trial_info, trial_value=trial_value, incumbent=None, runhistory=None, time_bound=None
     )
-    assert scheduler.intensifier_instances[0].process_results.call_args is None
-    assert scheduler.intensifier_instances[1].process_results.call_args is None
-    assert scheduler.intensifier_instances[2].process_results.call_args[1]["trial_info"] == trial_info
+    assert scheduler._intensifier_instances[0].process_results.call_args is None
+    assert scheduler._intensifier_instances[1].process_results.call_args is None
+    assert scheduler._intensifier_instances[2].process_results.call_args[1]["trial_info"] == trial_info
 
 
 def test_get_next_run_wait(make_scenario, make_stats, configspace_small, runhistory):
@@ -104,13 +104,13 @@ def test_get_next_run_wait(make_scenario, make_stats, configspace_small, runhist
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=3, deterministic=True)
     stats = make_stats(scenario)
     scheduler = ParallelScheduler(scenario=scenario)
-    scheduler.stats = stats
+    scheduler._stats = stats
 
     scheduler._get_intensifier_ranking = mock_ranker
-    scheduler.intensifier_instances = {0: mock.Mock()}
-    scheduler.intensifier_instances[0].get_next_run.return_value = (TrialInfoIntent.WAIT, None)
-    scheduler.intensifier_instances[0].stage = 0
-    scheduler.intensifier_instances[0].run_tracker = ()
+    scheduler._intensifier_instances = {0: mock.Mock()}
+    scheduler._intensifier_instances[0].get_next_run.return_value = (TrialInfoIntent.WAIT, None)
+    scheduler._intensifier_instances[0]._stage = 0
+    scheduler._intensifier_instances[0].run_tracker = ()
 
     with unittest.mock.patch(
         "smac.intensification.parallel_scheduling.ParallelScheduler._add_new_instance"
@@ -138,12 +138,12 @@ def test_get_next_run_add_instance(make_scenario, make_stats, configspace_small,
         "smac.intensification.parallel_scheduling.ParallelScheduler._add_new_instance"
     ) as add_new_instance:
         scheduler = ParallelScheduler(scenario=scenario)
-        scheduler.stats = stats
+        scheduler._stats = stats
 
         def instance_added(args):
-            source = len(scheduler.intensifier_instances)
-            scheduler.intensifier_instances[source] = mock.Mock()
-            scheduler.intensifier_instances[source].get_next_run.return_value = (
+            source = len(scheduler._intensifier_instances)
+            scheduler._intensifier_instances[source] = mock.Mock()
+            scheduler._intensifier_instances[source].get_next_run.return_value = (
                 TrialInfoIntent.RUN,
                 None,
             )
@@ -151,13 +151,13 @@ def test_get_next_run_add_instance(make_scenario, make_stats, configspace_small,
 
         add_new_instance.side_effect = instance_added
         scheduler._get_intensifier_ranking = mock_ranker
-        scheduler.intensifier_instances = {0: mock.Mock()}
-        scheduler.intensifier_instances[0].get_next_run.return_value = (
+        scheduler._intensifier_instances = {0: mock.Mock()}
+        scheduler._intensifier_instances[0].get_next_run.return_value = (
             TrialInfoIntent.WAIT,
             None,
         )
-        scheduler.intensifier_instances[0].stage = 0
-        scheduler.intensifier_instances[0].run_tracker = ()
+        scheduler._intensifier_instances[0]._stage = 0
+        scheduler._intensifier_instances[0].run_tracker = ()
 
         intent, trial_info = scheduler.get_next_run(
             challengers=None,
@@ -167,5 +167,5 @@ def test_get_next_run_add_instance(make_scenario, make_stats, configspace_small,
             repeat_configs=False,
             n_workers=1,
         )
-        assert len(scheduler.intensifier_instances) == 2
+        assert len(scheduler._intensifier_instances) == 2
         assert intent == TrialInfoIntent.RUN

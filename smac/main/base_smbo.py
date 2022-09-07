@@ -195,7 +195,7 @@ class BaseSMBO:
             self._initial_design_configs = [c for c in self._initial_design_configs if c != trial_info.config]
 
             # Update timebound only if a 'new' configuration is sampled as the challenger
-            if self._intensifier.num_run == 0 or time_left is None:
+            if self._intensifier.num_trials == 0 or time_left is None:
                 time_spent = time.time() - start_time
                 time_left = self._get_timebound_for_intensification(time_spent, update=False)
                 logger.debug("New intensification time bound: %f", time_left)

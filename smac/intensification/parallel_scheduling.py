@@ -81,8 +81,8 @@ class ParallelScheduler(AbstractIntensifier):
         )
 
         # We have a pool of instances that yield configurations ot run
-        self.intensifier_instances: dict[int, AbstractIntensifier] = {}
-        self.print_worker_warning = True
+        self._intensifier_instances: dict[int, AbstractIntensifier] = {}
+        self._print_worker_warning = True
 
     @property
     def uses_seeds(self) -> bool:
@@ -136,13 +136,13 @@ class ParallelScheduler(AbstractIntensifier):
             An object that encapsulates the minimum information to
             evaluate a configuration
         """
-        if n_workers <= 1 and self.print_worker_warning:
+        if n_workers <= 1 and self._print_worker_warning:
             logger.warning(
                 f"{self.__class__.__name__} is executed with {n_workers} worker(s) only. "
                 f"However, your system supports up to {os.cpu_count()} workers. Consider increasing the workers "
                 "in the scenario."
             )
-            self.print_worker_warning = False
+            self._print_worker_warning = False
 
         # If repeat_configs is True, that means that not only self can repeat
         # configurations, but also in the context of multiprocessing, N
@@ -152,8 +152,8 @@ class ParallelScheduler(AbstractIntensifier):
             raise ValueError("repeat_configs is not supported for parallel execution")
 
         # First get a config to run from a SH instance
-        for i in self._sort_instances_by_stage(self.intensifier_instances):
-            intent, trial_info = self.intensifier_instances[i].get_next_run(
+        for i in self._sort_instances_by_stage(self._intensifier_instances):
+            intent, trial_info = self._intensifier_instances[i].get_next_run(
                 challengers=challengers,
                 incumbent=incumbent,
                 get_next_configurations=get_next_configurations,
@@ -171,7 +171,7 @@ class ParallelScheduler(AbstractIntensifier):
         # If gotten to this point, we might look into adding a new
         # intensifier
         if self._add_new_instance(n_workers):
-            return self.intensifier_instances[len(self.intensifier_instances) - 1].get_next_run(
+            return self._intensifier_instances[len(self._intensifier_instances) - 1].get_next_run(
                 challengers=challengers,
                 incumbent=incumbent,
                 get_next_configurations=get_next_configurations,
@@ -185,8 +185,8 @@ class ParallelScheduler(AbstractIntensifier):
         return TrialInfoIntent.WAIT, TrialInfo(
             config=None,
             instance=None,
-            seed=0,
-            budget=0.0,  # TODO: None?
+            seed=None,
+            budget=None,
         )
 
     def process_results(
@@ -233,7 +233,7 @@ class ParallelScheduler(AbstractIntensifier):
         inc_perf: float
             empirical performance of incumbent configuration
         """
-        return self.intensifier_instances[trial_info.source].process_results(
+        return self._intensifier_instances[trial_info.source].process_results(
             trial_info=trial_info,
             trial_value=trial_value,
             incumbent=incumbent,

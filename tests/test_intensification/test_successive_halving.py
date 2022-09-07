@@ -77,7 +77,7 @@ def SH(make_scenario, make_stats, configspace_small):
     )
     stats = make_stats(scenario)
     intensifier = SuccessiveHalving(scenario=scenario, eta=2, n_seeds=2)
-    intensifier.stats = stats
+    intensifier._stats = stats
 
     return intensifier
 
@@ -119,7 +119,7 @@ def make_sh_worker(make_scenario, make_stats, configspace_small):
             eta=eta,
             n_seeds=n_seeds,
         )
-        sh.stats = stats
+        sh._stats = stats
 
         return SuccessiveHalvingWorker(
             sh,
@@ -153,15 +153,15 @@ def test_init(SH):
     """Makes sure that a proper _SH is created"""
 
     # We initialize the SH with zero intensifier_instances
-    assert len(SH.intensifier_instances) == 0
+    assert len(SH._intensifier_instances) == 0
 
     # Add an instance to check the _SH initialization
     assert SH._add_new_instance(n_workers=1)
 
     # Parameters properly passed to _SH
-    assert len(SH.instance_seed_pairs) == 6
-    assert SH.min_budget == 2
-    assert SH.max_budget == 5
+    assert len(SH._instance_seed_pairs) == 6
+    assert SH._min_budget == 2
+    assert SH._max_budget == 5
 
 
 def test_process_results_via_sourceid(SH, runhistory, configs):
@@ -169,7 +169,7 @@ def test_process_results_via_sourceid(SH, runhistory, configs):
     which _SH will consume the result/trial_info"""
     # Mock the _SH so we can make sure the correct item is passed
     for i in range(10):
-        SH.intensifier_instances[i] = mock.Mock()
+        SH._intensifier_instances[i] = mock.Mock()
 
     # randomly create trial_infos and push into SH. Then we will make
     # sure they got properly allocated
@@ -207,19 +207,19 @@ def test_process_results_via_sourceid(SH, runhistory, configs):
         # it is the correct one
 
         # First the expected one
-        assert SH.intensifier_instances[i].process_results.call_args[1]["trial_info"] == trial_info
-        assert SH.intensifier_instances[i].process_results.call_args[1]["trial_value"] == trial_value
+        assert SH._intensifier_instances[i].process_results.call_args[1]["trial_info"] == trial_info
+        assert SH._intensifier_instances[i].process_results.call_args[1]["trial_value"] == trial_value
 
         all_other_trial_infos, all_other_results = [], []
-        for j, item in enumerate(SH.intensifier_instances):
+        for j, item in enumerate(SH._intensifier_instances):
             # Skip the expected _SH
             if i == j:
                 continue
-            if SH.intensifier_instances[j].process_results.call_args is None:
+            if SH._intensifier_instances[j].process_results.call_args is None:
                 all_other_trial_infos.append(None)
             else:
-                all_other_trial_infos.append(SH.intensifier_instances[j].process_results.call_args[1]["trial_info"])
-                all_other_results.append(SH.intensifier_instances[j].process_results.call_args[1]["trial_value"])
+                all_other_trial_infos.append(SH._intensifier_instances[j].process_results.call_args[1]["trial_info"])
+                all_other_results.append(SH._intensifier_instances[j].process_results.call_args[1]["trial_value"])
 
         assert trial_info not in all_other_trial_infos
         assert trial_value not in all_other_results
@@ -257,7 +257,7 @@ def test_get_next_run_single_SH(SH, runhistory, configs):
         )
 
     # We should not create more _SH intensifier_instances
-    assert len(SH.intensifier_instances) == 1
+    assert len(SH._intensifier_instances) == 1
 
     # We are running with:
     # 'all_budgets': array([2.5, 5. ]) -> 2 intensifier_instances per config top
@@ -300,7 +300,7 @@ def test_get_next_run_dual_SH(SH, runhistory, configs):
 
     # We create a second sh intensifier_instances as after 4 runs, the _SH
     # number zero needs to wait
-    assert len(SH.intensifier_instances) == 2
+    assert len(SH._intensifier_instances) == 2
 
     # We are running with:
     # 'all_budgets': array([2.5, 5. ]) -> 2 intensifier_instances per config top
@@ -315,10 +315,10 @@ def test_add_new_instance(SH):
 
     # By default we do not create a _SH
     # test adding the first instance!
-    assert len(SH.intensifier_instances) == 0
+    assert len(SH._intensifier_instances) == 0
     assert SH._add_new_instance(n_workers=1)
-    assert len(SH.intensifier_instances) == 1
-    assert isinstance(SH.intensifier_instances[0], SuccessiveHalvingWorker)
+    assert len(SH._intensifier_instances) == 1
+    assert isinstance(SH._intensifier_instances[0], SuccessiveHalvingWorker)
     # A second call should not add a new _SH
     assert not SH._add_new_instance(n_workers=1)
 
@@ -327,12 +327,12 @@ def test_add_new_instance(SH):
     # We effectively return true because we added a new _SH
     assert SH._add_new_instance(n_workers=2)
 
-    assert len(SH.intensifier_instances) == 2
-    assert isinstance(SH.intensifier_instances[1], SuccessiveHalvingWorker)
+    assert len(SH._intensifier_instances) == 2
+    assert isinstance(SH._intensifier_instances[1], SuccessiveHalvingWorker)
 
     # Trying to add a third one should return false
     assert not SH._add_new_instance(n_workers=2)
-    assert len(SH.intensifier_instances) == 2
+    assert len(SH._intensifier_instances) == 2
 
 
 def _exhaust_run_and_get_incumbent(SH, runhistory, configs, n_workers=2):
@@ -446,13 +446,13 @@ def test_init_1(make_sh_worker):
     """
     _SH = make_sh_worker(deterministic=False, min_budget=None, max_budget=None, n_seeds=2)
 
-    assert len(_SH.successive_halving.instance_seed_pairs) == 6  # since instance-seed pairs
-    assert len(_SH.successive_halving.instances) == 3
-    assert _SH.successive_halving.min_budget == 1
-    assert _SH.successive_halving.max_budget == 6
-    assert _SH.n_configs_in_stage == [4.0, 2.0, 1.0]
-    assert _SH.successive_halving.instance_as_budget
-    assert _SH.successive_halving.repeat_configs
+    assert len(_SH._successive_halving._instance_seed_pairs) == 6  # since instance-seed pairs
+    assert len(_SH._successive_halving._instances) == 3
+    assert _SH._successive_halving._min_budget == 1
+    assert _SH._successive_halving._max_budget == 6
+    assert _SH._n_configs_in_stage == [4.0, 2.0, 1.0]
+    assert _SH._successive_halving._instance_as_budget
+    assert _SH._successive_halving._repeat_configs
 
 
 def test_init_2(make_sh_worker):
@@ -461,13 +461,13 @@ def test_init_2(make_sh_worker):
     """
     _SH = make_sh_worker(deterministic=False, min_budget=1, max_budget=10, n_instances=1, n_seeds=1)
 
-    assert len(_SH.successive_halving.instance_seed_pairs) == 1  # since instance-seed pairs
-    assert _SH.successive_halving.min_budget == 1
-    assert _SH.successive_halving.max_budget == 10
-    assert _SH.n_configs_in_stage == [8.0, 4.0, 2.0, 1.0]
-    assert list(_SH.all_budgets) == [1.25, 2.5, 5.0, 10.0]
-    assert not _SH.successive_halving.instance_as_budget
-    assert not _SH.successive_halving.repeat_configs
+    assert len(_SH._successive_halving._instance_seed_pairs) == 1  # since instance-seed pairs
+    assert _SH._successive_halving._min_budget == 1
+    assert _SH._successive_halving._max_budget == 10
+    assert _SH._n_configs_in_stage == [8.0, 4.0, 2.0, 1.0]
+    assert list(_SH._all_budgets) == [1.25, 2.5, 5.0, 10.0]
+    assert not _SH._successive_halving._instance_as_budget
+    assert not _SH._successive_halving._repeat_configs
 
 
 def test_init_3(make_sh_worker):
@@ -475,13 +475,13 @@ def test_init_3(make_sh_worker):
     Test parameter initialiations for successive halving - real-valued budget, high initial budget
     """
     _SH = make_sh_worker(deterministic=True, min_budget=9, max_budget=10, n_instances=1, n_seeds=1)
-    assert len(_SH.successive_halving.instance_seed_pairs) == 1  # since instance-seed pairs
-    assert _SH.successive_halving.min_budget == 9
-    assert _SH.successive_halving.max_budget == 10
-    assert _SH.n_configs_in_stage == [1.0]
-    assert list(_SH.all_budgets) == [10.0]
-    assert not _SH.successive_halving.instance_as_budget
-    assert not _SH.successive_halving.repeat_configs
+    assert len(_SH._successive_halving._instance_seed_pairs) == 1  # since instance-seed pairs
+    assert _SH._successive_halving._min_budget == 9
+    assert _SH._successive_halving._max_budget == 10
+    assert _SH._n_configs_in_stage == [1.0]
+    assert list(_SH._all_budgets) == [10.0]
+    assert not _SH._successive_halving._instance_as_budget
+    assert not _SH._successive_halving._repeat_configs
 
 
 def test_init_4(make_sh_worker):
@@ -711,12 +711,12 @@ def test_top_k_4(make_sh_worker, runhistory, configs):
         budget=1,
         additional_info=None,
     )
-    intensifier.success_challengers.add(config1)
-    intensifier.fail_challengers.add(config2)
-    intensifier.fail_challengers.add(config3)
-    intensifier.fail_challengers.add(config4)
+    intensifier._success_challengers.add(config1)
+    intensifier._failed_challengers.add(config2)
+    intensifier._failed_challengers.add(config3)
+    intensifier._failed_challengers.add(config4)
     intensifier._update_stage(runhistory)
-    assert intensifier.fail_chal_offset == 3  # We miss three challenger for this round
+    assert intensifier._failed_challenger_offset == 3  # We miss three challenger for this round
 
     configs = intensifier._top_k(configs=[config1], k=2, runhistory=runhistory)
     assert configs == [config1]
@@ -728,12 +728,12 @@ def test_top_k_4(make_sh_worker, runhistory, configs):
         status=StatusType.DONOTADVANCE,
         instance="i1",
         seed=None,
-        budget=intensifier.all_budgets[1],
+        budget=intensifier._all_budgets[1],
         additional_info=None,
     )
-    intensifier.fail_challengers.add(config2)
+    intensifier._failed_challengers.add(config2)
     intensifier._update_stage(runhistory)
-    assert intensifier.stage == 0  # Going back, since there are not enough to advance
+    assert intensifier._stage == 0  # Going back, since there are not enough to advance
 
 
 def test_get_next_run_1(make_sh_worker, runhistory, configs):
@@ -745,7 +745,7 @@ def test_get_next_run_1(make_sh_worker, runhistory, configs):
         return 1
 
     intensifier = make_sh_worker(deterministic=False, n_instances=2, min_budget=1, max_budget=2, n_seeds=1, eta=2)
-    target_algorithm = TargetAlgorithmRunner(target, intensifier.scenario, intensifier.stats)
+    target_algorithm = TargetAlgorithmRunner(target, intensifier._scenario, intensifier._stats)
     config1 = configs[0]
     config2 = configs[1]
 
@@ -767,7 +767,7 @@ def test_get_next_run_1(make_sh_worker, runhistory, configs):
         additional_info=None,
     )
     assert trial_info.config == config1
-    assert intensifier.new_challenger
+    assert intensifier._new_challenger
 
     # In the parallel scenario, we cannot wait for a configuration
     # to be evaluated before moving to the next configuration in the same
@@ -791,12 +791,12 @@ def test_get_next_run_1(make_sh_worker, runhistory, configs):
         additional_info=None,
     )
     assert trial_info_new.config == config2
-    assert intensifier.running_challenger == trial_info_new.config
-    assert intensifier.new_challenger
+    assert intensifier._running_challenger == trial_info_new.config
+    assert intensifier._new_challenger
 
     # evaluating configuration
     assert trial_info.config is not None
-    trial_value = evaluate_challenger(trial_info, target_algorithm, intensifier.stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_algorithm, intensifier._stats, runhistory)
     inc, inc_value = intensifier.process_results(
         trial_info=trial_info,
         incumbent=None,
@@ -814,8 +814,8 @@ def test_get_next_run_1(make_sh_worker, runhistory, configs):
     )
     assert trial_info.config is None
     assert intent == TrialInfoIntent.WAIT
-    assert len(intensifier.success_challengers) == 1
-    assert intensifier.new_challenger
+    assert len(intensifier._success_challengers) == 1
+    assert intensifier._new_challenger
 
 
 def test_get_next_run_2(make_sh_worker, configs, runhistory):
@@ -826,8 +826,8 @@ def test_get_next_run_2(make_sh_worker, configs, runhistory):
     config1 = configs[0]
 
     intensifier._update_stage(runhistory=None)
-    intensifier.stage += 1
-    intensifier.configs_to_run = [config1]
+    intensifier._stage += 1
+    intensifier._configs_to_run = [config1]
 
     # next challenger should come from configs to run
     intent, trial_info = intensifier.get_next_run(
@@ -837,8 +837,8 @@ def test_get_next_run_2(make_sh_worker, configs, runhistory):
         incumbent=None,
     )
     assert trial_info.config == config1
-    assert len(intensifier.configs_to_run) == 0
-    assert not intensifier.new_challenger
+    assert len(intensifier._configs_to_run) == 0
+    assert not intensifier._new_challenger
 
 
 def test_update_stage(make_sh_worker, runhistory, configs):
@@ -847,32 +847,33 @@ def test_update_stage(make_sh_worker, runhistory, configs):
     config1 = configs[0]
     config2 = configs[1]
 
-    # first stage update
-    intensifier._update_stage(runhistory=None)
+    # First stage update
+    # Change in 2.0: Workers are initialized with stage 0 directly
+    # intensifier._update_stage(runhistory=None)
 
-    assert intensifier.stage == 0
-    assert intensifier.sh_iters == 0
-    assert intensifier.running_challenger is None
-    assert intensifier.success_challengers == set()
+    assert intensifier._stage == 0
+    assert intensifier._sh_iters == 0
+    assert intensifier._running_challenger is None
+    assert intensifier._success_challengers == set()
 
     # higher stages
     runhistory.add(config1, 1, 1, StatusType.SUCCESS)
     runhistory.add(config2, 2, 2, StatusType.SUCCESS)
-    intensifier.success_challengers = {config1, config2}
+    intensifier._success_challengers = {config1, config2}
     intensifier._update_stage(runhistory=runhistory)
 
-    assert intensifier.stage == 1
-    assert intensifier.sh_iters == 0
-    assert intensifier.configs_to_run == [config1]
+    assert intensifier._stage == 1
+    assert intensifier._sh_iters == 0
+    assert intensifier._configs_to_run == [config1]
 
     # next iteration
-    intensifier.success_challengers = {config1}
+    intensifier._success_challengers = {config1}
     intensifier._update_stage(runhistory=runhistory)
 
-    assert intensifier.stage == 0
-    assert intensifier.sh_iters == 1
-    assert isinstance(intensifier.configs_to_run, list)
-    assert len(intensifier.configs_to_run) == 0
+    assert intensifier._stage == 0
+    assert intensifier._sh_iters == 1
+    assert isinstance(intensifier._configs_to_run, list)
+    assert len(intensifier._configs_to_run) == 0
 
 
 '''
@@ -891,8 +892,8 @@ def test_update_stage_2(make_sh_worker, runhistory, configs):
     # update variables
     intensifier._update_stage(runhistory=runhistory)
 
-    intensifier.success_challengers.add(config1)
-    intensifier.success_challengers.add(config2)
+    intensifier._success_challengers.add(config1)
+    intensifier._success_challengers.add(config2)
     intensifier.do_not_advance_challengers.add(config3)
     intensifier.do_not_advance_challengers.add(config4)
 
@@ -900,12 +901,12 @@ def test_update_stage_2(make_sh_worker, runhistory, configs):
     intensifier.return_value = [config1, config3]
 
     # Test that we update the stage as there is one configuration advanced to the next budget
-    assert intensifier.stage == 0
+    assert intensifier._stage == 0
     intensifier._update_stage(runhistory=runhistory)
-    assert intensifier.stage == 1
-    assert intensifier.configs_to_run == [config1]
+    assert intensifier._stage == 1
+    assert intensifier._configs_to_run == [config1]
     assert intensifier.fail_chal_offset == 1
-    assert len(intensifier.success_challengers) == 0
+    assert len(intensifier._success_challengers) == 0
     assert len(intensifier.do_not_advance_challengers) == 0
 
     intensifier = make_sh_worker(deterministic=True, n_instances=0, min_budget=1, max_budget=4, eta=2)
@@ -913,8 +914,8 @@ def test_update_stage_2(make_sh_worker, runhistory, configs):
     # update variables
     intensifier._update_stage(runhistory=runhistory)
 
-    intensifier.success_challengers.add(config1)
-    intensifier.success_challengers.add(config2)
+    intensifier._success_challengers.add(config1)
+    intensifier._success_challengers.add(config2)
     intensifier.do_not_advance_challengers.add(config3)
     intensifier.do_not_advance_challengers.add(config4)
 
@@ -922,12 +923,12 @@ def test_update_stage_2(make_sh_worker, runhistory, configs):
     # top_k_mock.return_value = [config3, config4]
 
     # Test that we update the stage as there is no configuration advanced to the next budget
-    assert intensifier.stage == 0
+    assert intensifier._stage == 0
     intensifier._update_stage(runhistory=runhistory)
-    assert intensifier.stage == 0
-    assert intensifier.configs_to_run == []
+    assert intensifier._stage == 0
+    assert intensifier._configs_to_run == []
     assert intensifier.fail_chal_offset == 0
-    assert len(intensifier.success_challengers) == 0
+    assert len(intensifier._success_challengers) == 0
     assert len(intensifier.do_not_advance_challengers) == 0
 
     # top_k_mock.return_value = []
@@ -950,7 +951,7 @@ def test_evaluate_challenger_1(make_sh_worker, make_target_algorithm, runhistory
     intensifier._update_stage(runhistory=None)
 
     target_algorithm = make_target_algorithm(
-        intensifier.scenario, intensifier.stats, target, required_arguments=["seed", "budget"]
+        intensifier._scenario, intensifier._stats, target, required_arguments=["seed", "budget"]
     )
 
     runhistory.add(
@@ -978,7 +979,7 @@ def test_evaluate_challenger_1(make_sh_worker, make_target_algorithm, runhistory
         budget=0.25,
     )
 
-    intensifier.success_challengers = {config2, config3}
+    intensifier._success_challengers = {config2, config3}
     intensifier._update_stage(runhistory=runhistory)
 
     intent, trial_info = intensifier.get_next_run(
@@ -987,7 +988,7 @@ def test_evaluate_challenger_1(make_sh_worker, make_target_algorithm, runhistory
         incumbent=config1,
         runhistory=runhistory,
     )
-    trial_value = evaluate_challenger(trial_info, target_algorithm, target_algorithm.stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_algorithm, intensifier._stats, runhistory)
     inc, inc_value = intensifier.process_results(
         trial_info=trial_info,
         incumbent=config1,
@@ -999,7 +1000,7 @@ def test_evaluate_challenger_1(make_sh_worker, make_target_algorithm, runhistory
     assert inc == config2
     assert inc_value == 0.05
     assert list(runhistory._data.keys())[-1].config_id == runhistory.config_ids[config2]
-    assert target_algorithm.stats.incumbent_changed == 1
+    assert intensifier._stats.incumbent_changed == 1
 
 
 def test_incumbent_selection_default(make_sh_worker, make_target_algorithm, runhistory, configs):
@@ -1012,7 +1013,7 @@ def test_incumbent_selection_default(make_sh_worker, make_target_algorithm, runh
 
     # instances = [None]???
     intensifier = make_sh_worker(deterministic=True, n_instances=1, min_budget=1, max_budget=2, eta=2)
-    intensifier.stage = 0
+    intensifier._stage = 0
     # intensifier._update_stage(runhistory=None)
     # SH considers challenger as incumbent in first run in evaluate_challenger
     runhistory.add(
@@ -1098,7 +1099,7 @@ def test_incumbent_selection_default(make_sh_worker, make_target_algorithm, runh
     assert inc == config3
 
     intensifier = make_sh_worker(deterministic=True, n_instances=1, min_budget=1, eta=2)
-    intensifier.stage = 0
+    intensifier._stage = 0
 
     # Adding a better configuration, but the incumbent will only be changed on budget=2
     runhistory.add(
@@ -1144,7 +1145,7 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_algorithm, runh
         eta=2,
         incumbent_selection="any_budget",
     )
-    intensifier.stage = 0
+    intensifier._stage = 0
 
     runhistory.add(
         config=config1,
@@ -1204,7 +1205,7 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_algorithm, runh
         eta=2,
         incumbent_selection="highest_budget",
     )
-    intensifier.stage = 0
+    intensifier._stage = 0
 
     # incumbent should not change, since there is no run on the highest budget,
     # though config3 is run on a higher budget
@@ -1235,7 +1236,7 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_algorithm, runh
         log_trajectory=False,
     )
     assert config4 == inc
-    assert intensifier.stats.incumbent_changed == 0
+    assert intensifier._stats.incumbent_changed == 0
 
     # incumbent changes to config3 since that is run on the highest budget
     runhistory.add(
@@ -1269,7 +1270,7 @@ def test_launched_all_configs_for_current_stage(make_sh_worker, make_target_algo
     intensifier = make_sh_worker(
         deterministic=True, n_instances=10, min_budget=2, max_budget=10, eta=2, incumbent_selection="any_budget"
     )
-    intensifier.stage = 0
+    intensifier._stage = 0
 
     # So there are 2 instances per config.
     # stage=0
@@ -1330,11 +1331,11 @@ def _exhaust_stage_execution(intensifier, target_algorithm, runhistory, challeng
     robust against this scenario
     """
     pending_processing = []
-    stage = 0 if not hasattr(intensifier, "stage") else intensifier.stage
-    curr_budget = intensifier.all_budgets[stage]
-    prev_budget = int(intensifier.all_budgets[stage - 1]) if stage > 0 else 0
-    if intensifier.successive_halving.instance_as_budget:
-        total_runs = int(curr_budget - prev_budget) * int(intensifier.n_configs_in_stage[stage])
+    stage = 0 if not hasattr(intensifier, "stage") else intensifier._stage
+    curr_budget = intensifier._all_budgets[stage]
+    prev_budget = int(intensifier._all_budgets[stage - 1]) if stage > 0 else 0
+    if intensifier._successive_halving._instance_as_budget:
+        total_runs = int(curr_budget - prev_budget) * int(intensifier._n_configs_in_stage[stage])
         toggle = np.random.choice([True, False], total_runs).tolist()
         while not np.any(toggle) or not np.any(np.invert(toggle)):
             # make sure we have both true and false!
@@ -1377,7 +1378,7 @@ def _exhaust_stage_execution(intensifier, target_algorithm, runhistory, challeng
 
         if toggle.pop():
             trial_value = evaluate_challenger(
-                trial_info, target_algorithm, target_algorithm.stats, runhistory, force_update=True
+                trial_info, target_algorithm, intensifier._stats, runhistory, force_update=True
             )
             incumbent, inc_value = intensifier.process_results(
                 trial_info=trial_info,
@@ -1392,7 +1393,7 @@ def _exhaust_stage_execution(intensifier, target_algorithm, runhistory, challeng
 
         # In case a iteration is done, break
         # This happens if the configs per stage is 1
-        if intensifier.iteration_done:
+        if intensifier._iteration_done:
             break
 
     return pending_processing, incumbent
@@ -1413,11 +1414,11 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
     intensifier = make_sh_worker(deterministic=True, n_instances=5, min_budget=2, max_budget=5, eta=2)
     intensifier._update_stage(runhistory=None)
 
-    target_algorithm = make_target_algorithm(intensifier.scenario, intensifier.stats, target)
+    target_algorithm = make_target_algorithm(intensifier._scenario, intensifier._stats, target)
     target_algorithm.runhistory = runhistory
 
     # we want to test instance as budget
-    assert intensifier.successive_halving.instance_as_budget
+    assert intensifier._successive_halving._instance_as_budget
 
     # Run until there are no more configurations to be proposed
     # Skip running some configurations to emulate the fact that runs finish on different time
@@ -1430,7 +1431,7 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
     )
 
     # We have configurations pending, so iteration should NOT be done
-    assert not intensifier.iteration_done
+    assert not intensifier._iteration_done
 
     # Make sure we launched all configurations we were meant to:
     # all_budgets=[2.5 5. ] n_configs_in_stage=[2.0, 1.0]
@@ -1445,7 +1446,7 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
     # as we are in stage 1 out of 2
     for trial_info in pending_processing:
         trial_value = evaluate_challenger(
-            trial_info, target_algorithm, target_algorithm.stats, runhistory, force_update=True
+            trial_info, target_algorithm, intensifier._stats, runhistory, force_update=True
         )
         incumbent, inc_value = intensifier.process_results(
             trial_info=trial_info,
@@ -1455,10 +1456,10 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
             trial_value=trial_value,
             log_trajectory=False,
         )
-    assert not intensifier.iteration_done
+    assert not intensifier._iteration_done
 
     # we transition to stage 1, where the budget is 5
-    assert intensifier.stage == 1
+    assert intensifier._stage == 1
 
     pending_processing, incumbent = _exhaust_stage_execution(
         intensifier,
@@ -1480,12 +1481,12 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
     assert len(set(config_inst_seed[4:])) == 3
 
     # because there are configurations pending, no iteration should be done
-    assert not intensifier.iteration_done
+    assert not intensifier._iteration_done
 
     # Finish the pending runs
     for trial_info in pending_processing:
         trial_value = evaluate_challenger(
-            trial_info, target_algorithm, target_algorithm.stats, runhistory, force_update=True
+            trial_info, target_algorithm, intensifier._stats, runhistory, force_update=True
         )
         incumbent, _ = intensifier.process_results(
             trial_info=trial_info,
@@ -1497,7 +1498,7 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
         )
 
     # Finally, all stages are done, so iteration should be done!!
-    assert intensifier.iteration_done
+    assert intensifier._iteration_done
 
 
 def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
@@ -1520,15 +1521,15 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
     intensifier._update_stage(runhistory=None)
 
     target_algorithm = make_target_algorithm(
-        intensifier.scenario,
-        intensifier.stats,
+        intensifier._scenario,
+        intensifier._stats,
         target,
         required_arguments=["seed", "budget"],
     )
     target_algorithm.runhistory = runhistory
 
     # we do not want to test instance as budget
-    assert not intensifier.successive_halving.instance_as_budget
+    assert not intensifier._successive_halving._instance_as_budget
 
     # Run until there are no more configurations to be proposed
     # Skip running some configurations to emulate the fact that runs finish on different time
@@ -1541,7 +1542,7 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
     )
 
     # We have configurations pending, so iteration should NOT be done
-    assert not intensifier.iteration_done
+    assert not intensifier._iteration_done
 
     # Make sure we launched all configurations we were meant to:
     # all_budgets=[2.5 5. ] n_configs_in_stage=[2.0, 1.0]
@@ -1558,7 +1559,7 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
         trial_value = evaluate_challenger(
             trial_info,
             target_algorithm,
-            target_algorithm.stats,
+            intensifier._stats,
             runhistory,
             force_update=True,
         )
@@ -1570,10 +1571,10 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
             trial_value=trial_value,
             log_trajectory=False,
         )
-    assert not intensifier.iteration_done
+    assert not intensifier._iteration_done
 
     # we transition to stage 1, where the budget is 5
-    assert intensifier.stage == 1
+    assert intensifier._stage == 1
 
     pending_processing, incumbent = _exhaust_stage_execution(
         intensifier, target_algorithm, runhistory, challengers, incumbent
@@ -1585,7 +1586,7 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
     assert len(config_inst_seed) == 3
 
     # Because it is only 1 config, the iteration is completed
-    assert intensifier.iteration_done
+    assert intensifier._iteration_done
 
     # We make sure the proper budget got allocated on the whole run:
     # all_budgets=[2.5 5. ]
@@ -1597,8 +1598,8 @@ def test_budget_initialization(make_sh_worker, make_target_algorithm, runhistory
     """Check computing budgets (only for non-instance cases)."""
     intensifier = make_sh_worker(deterministic=True, n_instances=0, min_budget=1, max_budget=81, eta=3)
 
-    assert [1, 3, 9, 27, 81] == intensifier.all_budgets.tolist()
-    assert [81, 27, 9, 3, 1] == intensifier.n_configs_in_stage
+    assert [1, 3, 9, 27, 81] == intensifier._all_budgets.tolist()
+    assert [81, 27, 9, 3, 1] == intensifier._n_configs_in_stage
 
     to_check = [
         # minb, maxb, eta, n_configs_in_stage, all_budgets
@@ -1654,8 +1655,8 @@ def test_budget_initialization(make_sh_worker, make_target_algorithm, runhistory
             _n_configs_in_stage=n_configs_in_stage,
         )
 
-        comp_budgets = intensifier.all_budgets
-        comp_configs = intensifier.n_configs_in_stage
+        comp_budgets = intensifier._all_budgets
+        comp_configs = intensifier._n_configs_in_stage
 
         assert len(all_budgets) == len(comp_budgets)
         assert comp_budgets[-1] == maxb

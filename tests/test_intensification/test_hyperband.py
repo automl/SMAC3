@@ -77,7 +77,7 @@ def HB(make_scenario, make_stats, configspace_small) -> Hyperband:
     )
     stats = make_stats(scenario)
     intensifier = Hyperband(scenario=scenario, eta=2, n_seeds=2)
-    intensifier.stats = stats
+    intensifier._stats = stats
 
     return intensifier
 
@@ -117,7 +117,7 @@ def make_hb_worker(make_scenario, make_stats, configspace_small):
             eta=eta,
             n_seeds=n_seeds,
         )
-        hb.stats = stats
+        hb._stats = stats
 
         return HyperbandWorker(hb)
 
@@ -147,23 +147,23 @@ def test_initialization(runhistory: RunHistory, HB: Hyperband):
     """Makes sure that a proper_HB is created"""
 
     # We initialize the HB with zero intensifier_instances
-    assert len(HB.intensifier_instances) == 0
+    assert len(HB._intensifier_instances) == 0
 
     # Add an instance to check the_HB initialization
     assert HB._add_new_instance(n_workers=1)
 
     # Some default init
-    assert HB.intensifier_instances[0].hb_iters == 0
-    assert HB.max_budget == 5
-    assert HB.min_budget == 2
+    assert HB._intensifier_instances[0]._hb_iters == 0
+    assert HB._max_budget == 5
+    assert HB._min_budget == 2
 
     # Update the stage
-    HB.intensifier_instances[0]._update_stage(runhistory)
+    HB._intensifier_instances[0]._update_stage(runhistory)
 
     # Parameters properly passed to SH
-    assert len(HB.instance_seed_pairs) == 10
-    assert HB.intensifier_instances[0].successive_halving.min_budget == 2
-    assert HB.intensifier_instances[0].successive_halving.max_budget == 5
+    assert len(HB._instance_seed_pairs) == 10
+    assert HB._intensifier_instances[0]._successive_halving._min_budget == 2
+    assert HB._intensifier_instances[0]._successive_halving._max_budget == 5
 
 
 def test_process_results_via_sourceid(runhistory, HB: Hyperband, configs):
@@ -173,10 +173,10 @@ def test_process_results_via_sourceid(runhistory, HB: Hyperband, configs):
     """
     # Mock the_HB instance so we can make sure the correct item is passed
     for i in range(10):
-        HB.intensifier_instances[i] = mock.Mock()
-        HB.intensifier_instances[i].process_results.return_value = (configs[0], 0.5)
+        HB._intensifier_instances[i] = mock.Mock()
+        HB._intensifier_instances[i].process_results.return_value = (configs[0], 0.5)
         # make iter false so the mock object is not overwritten
-        HB.intensifier_instances[i].iteration_done = False
+        HB._intensifier_instances[i]._iteration_done = False
 
     # randomly create trial_infos and push into HB. Then we will make
     # sure they got properly allocated
@@ -214,18 +214,18 @@ def test_process_results_via_sourceid(runhistory, HB: Hyperband, configs):
         # it is the correct one
 
         # First the expected one
-        assert HB.intensifier_instances[i].process_results.call_args[1]["trial_info"] == trial_info
-        assert HB.intensifier_instances[i].process_results.call_args[1]["trial_value"] == result
+        assert HB._intensifier_instances[i].process_results.call_args[1]["trial_info"] == trial_info
+        assert HB._intensifier_instances[i].process_results.call_args[1]["trial_value"] == result
         all_other_trial_infos, all_other_results = [], []
-        for j, item in enumerate(HB.intensifier_instances):
+        for j, item in enumerate(HB._intensifier_instances):
             # Skip the expected_HB instance
             if i == j:
                 continue
-            if HB.intensifier_instances[j].process_results.call_args is None:
+            if HB._intensifier_instances[j].process_results.call_args is None:
                 all_other_trial_infos.append(None)
             else:
-                all_other_trial_infos.append(HB.intensifier_instances[j].process_results.call_args[1]["trial_info"])
-                all_other_results.append(HB.intensifier_instances[j].process_results.call_args[1]["trial_value"])
+                all_other_trial_infos.append(HB._intensifier_instances[j].process_results.call_args[1]["trial_info"])
+                all_other_results.append(HB._intensifier_instances[j].process_results.call_args[1]["trial_value"])
 
         assert trial_info not in all_other_trial_infos
         assert result not in all_other_results
@@ -263,13 +263,13 @@ def test_get_next_run_single_HB_instance(runhistory, HB: Hyperband, configs):
         )
 
     # smax==1 (int(np.floor(np.log(max_budget / min_budget) / np.log(   eta))))
-    assert HB.intensifier_instances[0].s_max == 1
+    assert HB._intensifier_instances[0]._s_max == 1
 
     # And we do not even complete 1 iteration, so s has to be 1
-    assert HB.intensifier_instances[0].s == 1
+    assert HB._intensifier_instances[0]._s == 1
 
     # We should not create more_HB instance intensifier_instances
-    assert len(HB.intensifier_instances) == 1
+    assert len(HB._intensifier_instances) == 1
 
     # We are running with:
     # 'all_budgets': array([2.5, 5. ]) -> 2 intensifier_instances per config top
@@ -280,10 +280,10 @@ def test_get_next_run_single_HB_instance(runhistory, HB: Hyperband, configs):
     # Also, check the internals of the unique sh instance
 
     # sh_min_budget==2.5 (eta ** -s * max_budget)
-    assert HB.min_budget == 2
+    assert HB._min_budget == 2
 
     # n_challengers=2 (int(np.floor((s_max + 1) / (s + 1)) * eta ** s))
-    assert len(HB.intensifier_instances[0].sh_intensifier.n_configs_in_stage) == 2
+    assert len(HB._intensifier_instances[0]._sh_intensifier._n_configs_in_stage) == 2
 
 
 def test_get_next_run_multiple_HB_instances(runhistory, HB: Hyperband, configs):
@@ -322,21 +322,21 @@ def test_get_next_run_multiple_HB_instances(runhistory, HB: Hyperband, configs):
         )
 
     # We have not completed an iteration
-    assert HB.intensifier_instances[0].hb_iters == 0
+    assert HB._intensifier_instances[0]._hb_iters == 0
 
     # Because n workers is now 2, we expect 2 sh intensifier_instances
-    assert len(HB.intensifier_instances) == 2
+    assert len(HB._intensifier_instances) == 2
 
     # Each of the intensifier_instances should have s equal to 1
     # As no iteration has been completed
-    assert HB.intensifier_instances[0].s_max == 1
-    assert HB.intensifier_instances[0].s == 1
-    assert HB.intensifier_instances[1].s_max == 1
-    assert HB.intensifier_instances[1].s == 1
+    assert HB._intensifier_instances[0]._s_max == 1
+    assert HB._intensifier_instances[0]._s == 1
+    assert HB._intensifier_instances[1]._s_max == 1
+    assert HB._intensifier_instances[1]._s == 1
 
     # First let us check everything makes sense in_HB-SH-0 HB-SH-0
-    assert len(HB.intensifier_instances[0].sh_intensifier.n_configs_in_stage) == 2
-    assert len(HB.intensifier_instances[1].sh_intensifier.n_configs_in_stage) == 2
+    assert len(HB._intensifier_instances[0]._sh_intensifier._n_configs_in_stage) == 2
+    assert len(HB._intensifier_instances[1]._sh_intensifier._n_configs_in_stage) == 2
 
     # We are running with:
     # + 4 runs for sh instance 0 ('all_budgets': array([2.5, 5. ]), 'n_configs_in_stage': [2.0, 1.0])
@@ -361,10 +361,10 @@ def test_add_new_instance(HB):
 
     # By default we do not create a_HB
     # test adding the first instance!
-    assert len(HB.intensifier_instances) == 0
+    assert len(HB._intensifier_instances) == 0
     assert HB._add_new_instance(n_workers=1)
-    assert len(HB.intensifier_instances) == 1
-    assert isinstance(HB.intensifier_instances[0], HyperbandWorker)
+    assert len(HB._intensifier_instances) == 1
+    assert isinstance(HB._intensifier_instances[0], HyperbandWorker)
     # A second call should not add a new_HB instance
     assert not HB._add_new_instance(n_workers=1)
 
@@ -373,12 +373,12 @@ def test_add_new_instance(HB):
     # We effectively return true because we added a new_HB instance
     assert HB._add_new_instance(n_workers=2)
 
-    assert len(HB.intensifier_instances) == 2
-    assert isinstance(HB.intensifier_instances[1], HyperbandWorker)
+    assert len(HB._intensifier_instances) == 2
+    assert isinstance(HB._intensifier_instances[1], HyperbandWorker)
 
     # Trying to add a third one should return false
     assert not HB._add_new_instance(n_workers=2)
-    assert len(HB.intensifier_instances) == 2
+    assert len(HB._intensifier_instances) == 2
 
 
 def _exhaust_run_and_get_incumbent(runhistory, sh: SuccessiveHalving, configs, n_workers=1):
@@ -447,7 +447,7 @@ def test_parallel_same_as_serial_HB(make_hb_worker, configs):
     # This_HB instance will be created via n_workers==2
     # in _exhaust_run_and_get_incumbent
     runhistory2 = RunHistory()
-    HB = make_hb_worker(min_budget=2, max_budget=5, eta=2, n_instances=5).hyperband
+    HB = make_hb_worker(min_budget=2, max_budget=5, eta=2, n_instances=5)._hyperband
 
     incumbent_phb, inc_perf_phb = _exhaust_run_and_get_incumbent(runhistory2, HB, configs)
     assert incumbent, incumbent_phb
@@ -472,32 +472,33 @@ def test_update_stage(make_hb_worker):
     intensifier: HyperbandWorker = make_hb_worker(
         deterministic=True, n_instances=1, min_budget=0.1, max_budget=1, eta=2
     )
-    intensifier._update_stage()
 
-    assert intensifier.s == 3
-    assert intensifier.s_max == 3
-    assert intensifier.hb_iters == 0
-    assert isinstance(intensifier.sh_intensifier, SuccessiveHalvingWorker)
-    assert intensifier.sh_intensifier.min_budget == 0.125
-    assert intensifier.sh_intensifier.n_configs_in_stage == [8.0, 4.0, 2.0, 1.0]
+    # intensifier._update_stage()
+
+    assert intensifier._s == 3
+    assert intensifier._s_max == 3
+    assert intensifier._hb_iters == 0
+    assert isinstance(intensifier._sh_intensifier, SuccessiveHalvingWorker)
+    assert intensifier._sh_intensifier._min_budget == 0.125
+    assert intensifier._sh_intensifier._n_configs_in_stage == [8.0, 4.0, 2.0, 1.0]
 
     # next HB stage
     intensifier._update_stage()
 
-    assert intensifier.s == 2
-    assert intensifier.hb_iters == 0
-    assert intensifier.sh_intensifier.min_budget == 0.25
-    assert intensifier.sh_intensifier.n_configs_in_stage == [4.0, 2.0, 1.0]
+    assert intensifier._s == 2
+    assert intensifier._hb_iters == 0
+    assert intensifier._sh_intensifier._min_budget == 0.25
+    assert intensifier._sh_intensifier._n_configs_in_stage == [4.0, 2.0, 1.0]
 
     intensifier._update_stage()  # s = 1
     intensifier._update_stage()  # s = 0
     # HB iteration completed
     intensifier._update_stage()
 
-    assert intensifier.s == intensifier.s_max
-    assert intensifier.hb_iters == 1
-    assert intensifier.sh_intensifier.min_budget == 0.125
-    assert intensifier.sh_intensifier.n_configs_in_stage == [8.0, 4.0, 2.0, 1.0]
+    assert intensifier._s == intensifier._s_max
+    assert intensifier._hb_iters == 1
+    assert intensifier._sh_intensifier._min_budget == 0.125
+    assert intensifier._sh_intensifier._n_configs_in_stage == [8.0, 4.0, 2.0, 1.0]
 
 
 def test_eval_challenger(runhistory, make_target_algorithm, make_hb_worker, configs):
@@ -522,10 +523,8 @@ def test_eval_challenger(runhistory, make_target_algorithm, make_hb_worker, conf
     )
 
     target_algorithm = make_target_algorithm(
-        intensifier.scenario, intensifier.stats, target, required_arguments=["seed", "budget"]
+        intensifier._scenario, intensifier._stats, target, required_arguments=["seed", "budget"]
     )
-
-    assert not hasattr(intensifier, "s")
 
     # Testing get_next_run - get next configuration
     intent, trial_info = intensifier.get_next_run(
@@ -534,26 +533,26 @@ def test_eval_challenger(runhistory, make_target_algorithm, make_hb_worker, conf
         incumbent=None,
         runhistory=runhistory,
     )
-    assert intensifier.s == intensifier.s_max
+    assert intensifier._s == intensifier._s_max
     assert trial_info.config == config2
 
-    # update to the last SH iteration of the given HB stage
-    assert intensifier.s == 1
-    assert intensifier.s_max == 1
+    # Update to the last SH iteration of the given HB stage
+    assert intensifier._s == 1
+    assert intensifier._s_max == 1
 
     # We assume now that process results was called with below successes.
     # We track closely run execution through run_tracker, so this also
     # has to be update -- the fact that the succesive halving inside hyperband
     # processed the given configurations
     runhistory.add(config=config1, cost=1, time=1, status=StatusType.SUCCESS, seed=0, budget=1)
-    intensifier.sh_intensifier.run_tracker[(config1, None, 0, 1)] = True
+    intensifier._sh_intensifier._run_tracker[(config1, None, 0, 1)] = True
     runhistory.add(config=config2, cost=2, time=2, status=StatusType.SUCCESS, seed=0, budget=0.5)
-    intensifier.sh_intensifier.run_tracker[(config2, None, 0, 0.5)] = True
+    intensifier._sh_intensifier._run_tracker[(config2, None, 0, 0.5)] = True
     runhistory.add(config=config3, cost=3, time=2, status=StatusType.SUCCESS, seed=0, budget=0.5)
-    intensifier.sh_intensifier.run_tracker[(config3, None, 0, 0.5)] = True
+    intensifier._sh_intensifier._run_tracker[(config3, None, 0, 0.5)] = True
 
-    intensifier.sh_intensifier.success_challengers = {config2, config3}
-    intensifier.sh_intensifier._update_stage(runhistory)
+    intensifier._sh_intensifier._success_challengers = {config2, config3}
+    intensifier._sh_intensifier._update_stage(runhistory)
     intent, trial_info = intensifier.get_next_run(
         challengers=[config2, config3],
         get_next_configurations=None,
@@ -563,7 +562,7 @@ def test_eval_challenger(runhistory, make_target_algorithm, make_hb_worker, conf
 
     # evaluation should change the incumbent to config2
     assert trial_info.config is not None
-    trial_value = evaluate_challenger(trial_info, target_algorithm, target_algorithm.stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_algorithm, intensifier._stats, runhistory)
 
     inc, inc_value = intensifier.process_results(
         trial_info=trial_info,
@@ -574,10 +573,10 @@ def test_eval_challenger(runhistory, make_target_algorithm, make_hb_worker, conf
     )
 
     assert inc == config2
-    assert intensifier.s == 0
+    assert intensifier._s == 0
     assert inc_value == 0.1
     assert list(runhistory._data.keys())[-1].config_id, runhistory.config_ids[config2]
-    assert target_algorithm.stats.incumbent_changed == 1
+    assert intensifier._stats.incumbent_changed == 1
 
 
 def test_budget_initialization(make_hb_worker):
@@ -593,8 +592,8 @@ def test_budget_initialization(make_hb_worker):
         deterministic=True,
     )
 
-    assert [1, 3, 9, 27, 81] == intensifier.all_budgets.tolist()
-    assert [81, 27, 9, 3, 1] == intensifier.n_configs_in_stage
+    assert [1, 3, 9, 27, 81] == intensifier._all_budgets.tolist()
+    assert [81, 27, 9, 3, 1] == intensifier._n_configs_in_stage
 
     to_check = [
         # minb, maxb, eta, n_configs_in_stage, all_budgets
@@ -641,9 +640,8 @@ def test_budget_initialization(make_hb_worker):
         )
 
         for i in range(len(all_budgets) + 10):
-            intensifier._update_stage()
-            comp_budgets = intensifier.sh_intensifier.all_budgets.tolist()
-            comp_configs = intensifier.sh_intensifier.n_configs_in_stage
+            comp_budgets = intensifier._sh_intensifier._all_budgets.tolist()
+            comp_configs = intensifier._sh_intensifier._n_configs_in_stage
 
             assert isinstance(comp_configs, list)
             for c in comp_configs:
@@ -654,3 +652,4 @@ def test_budget_initialization(make_hb_worker):
 
             # The content of these lists might differ
             assert len(n_configs_in_stage[i % len(n_configs_in_stage) :]) == len(comp_configs)
+            intensifier._update_stage()

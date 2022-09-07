@@ -49,7 +49,7 @@ class SimpleIntensifier(AbstractIntensifier):
         # the workers. At any time, we want to make sure that if there
         # are just W workers, there should be at max W active runs
         # Below variable tracks active runs not processed
-        self.run_tracker: dict[tuple[Configuration, str | None, int | None, float | None], bool] = {}
+        self._run_tracker: dict[tuple[Configuration, str | None, int | None, float | None], bool] = {}
 
     @property
     def uses_seeds(self) -> bool:
@@ -61,7 +61,7 @@ class SimpleIntensifier(AbstractIntensifier):
 
     @property
     def uses_instances(self) -> bool:
-        return self.instances is not None
+        return self._instances is not None
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
@@ -106,14 +106,14 @@ class SimpleIntensifier(AbstractIntensifier):
             empirical performance of incumbent configuration
         """
         # Mark the fact that we processed this configuration
-        self.run_tracker[(trial_info.config, trial_info.instance, trial_info.seed, trial_info.budget)] = True
+        self._run_tracker[(trial_info.config, trial_info.instance, trial_info.seed, trial_info.budget)] = True
 
         # If The incumbent is None we use the challenger
         if not incumbent:
             logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
             incumbent = trial_info.config
 
-        self.num_run += 1
+        self._num_trials += 1
 
         incumbent = self._compare_configs(
             challenger=trial_info.config,
@@ -175,7 +175,7 @@ class SimpleIntensifier(AbstractIntensifier):
         # Run tracker is a dictionary whose values indicate if a run has been
         # processed. If a value in this dict is false, it means that a worker
         # should still be processing this configuration.
-        total_active_runs = len([v for v in self.run_tracker.values() if not v])
+        total_active_runs = len([v for v in self._run_tracker.values() if not v])
         if total_active_runs >= n_workers:
             # We only submit jobs if there is an idle worker
             return TrialInfoIntent.WAIT, TrialInfo(
@@ -187,10 +187,10 @@ class SimpleIntensifier(AbstractIntensifier):
 
         trial_info = TrialInfo(
             config=challenger,
-            instance=None if self.instances is None else self.instances[-1],
-            seed=0 if self.deterministic else int(self.rng.randint(low=0, high=MAXINT, size=1)[0]),
+            instance=None if self._instances is None else self._instances[-1],
+            seed=0 if self._deterministic else int(self._rng.randint(low=0, high=MAXINT, size=1)[0]),
             budget=None,
         )
 
-        self.run_tracker[(trial_info.config, trial_info.instance, trial_info.seed, trial_info.budget)] = False
+        self._run_tracker[(trial_info.config, trial_info.instance, trial_info.seed, trial_info.budget)] = False
         return TrialInfoIntent.RUN, trial_info

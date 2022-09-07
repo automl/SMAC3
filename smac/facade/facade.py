@@ -355,7 +355,7 @@ class Facade:
         the components. This is the easiest way to incorporate dependencies, although
         it might be a bit hacky.
         """
-        self._intensifier.stats = self._stats
+        self._intensifier._stats = self._stats
         self._runhistory_encoder._set_multi_objective_algorithm(self._multi_objective_algorithm)
         self._acquisition_function._set_model(self._model)
         self._acquisition_optimizer._set_acquisition_function(self._acquisition_function)

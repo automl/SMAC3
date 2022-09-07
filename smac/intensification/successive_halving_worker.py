@@ -54,7 +54,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
 
     Parameters
     ----------
-    stats: smac.stats.stats.Stats
+    stats: smac._stats._stats._stats
         stats object
     rng : np.random.RandomState
     instances : List[str]
@@ -112,42 +112,46 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         _max_budget: float | None = None,
     ) -> None:
         super().__init__(
-            scenario=successive_halving.scenario,
-            min_challenger=successive_halving.min_challenger,
-            intensify_percentage=successive_halving.intensify_percentage,
-            seed=successive_halving.seed,
+            scenario=successive_halving._scenario,
+            min_challenger=successive_halving._min_challenger,
+            intensify_percentage=successive_halving._intensify_percentage,
+            seed=successive_halving._seed,
         )
 
-        self.successive_halving = successive_halving
-        self.stats = successive_halving.stats
-        self.first_run = True
-        self.identifier = identifier
-        self.logger = get_logger(f"{__name__}.{identifier}")
+        self._successive_halving = successive_halving
+        self._stats = successive_halving._stats
+        self._first_run = True
+        self._identifier = identifier
+        self._logger = get_logger(f"{__name__}.{identifier}")
 
-        self.min_budget = _min_budget if _min_budget is not None else successive_halving.min_budget
-        self.max_budget = _max_budget if _max_budget is not None else successive_halving.max_budget
+        self._min_budget = _min_budget if _min_budget is not None else successive_halving._min_budget
+        self._max_budget = _max_budget if _max_budget is not None else successive_halving._max_budget
 
         if _all_budgets is not None and _n_configs_in_stage is not None:
             # Assert we use the given numbers to avoid rounding issues, see #701
-            self.all_budgets = _all_budgets
-            self.n_configs_in_stage = _n_configs_in_stage
+            self._all_budgets = _all_budgets
+            self._n_configs_in_stage = _n_configs_in_stage
         else:
-            eta = successive_halving.eta
+            eta = successive_halving._eta
 
             # Max sh iterations and n initial challengers are depending on min and max budget
             # Since min and max budget can be changed by the user, we need to update
             # Pre-computing stuff for SH
-            self.max_sh_iterations = int(np.floor(np.log(self.max_budget / self.min_budget) / np.log(eta)))
-            self.n_initial_challengers = int(eta**self.max_sh_iterations)
+            self._max_sh_iterations = int(np.floor(np.log(self._max_budget / self._min_budget) / np.log(eta)))
+            self._n_initial_challengers = int(eta**self._max_sh_iterations)
 
-            # budgets to consider in each stage
-            linspace = -np.linspace(self.max_sh_iterations, 0, self.max_sh_iterations + 1)
-            self.all_budgets = self.max_budget * np.power(eta, linspace)
-            # number of challengers to consider in each stage
-            n_configs_in_stage = self.n_initial_challengers * np.power(
-                eta, -np.linspace(0, self.max_sh_iterations, self.max_sh_iterations + 1)
-            )
-            self.n_configs_in_stage = np.array(np.round(n_configs_in_stage), dtype=int).tolist()
+            # Budgets to consider in each stage
+            linspace = -np.linspace(self._max_sh_iterations, 0, self._max_sh_iterations + 1)
+            self._all_budgets = self._max_budget * np.power(eta, linspace)
+
+            # Number of challengers to consider in each stage
+            linspace = -np.linspace(0, self._max_sh_iterations, self._max_sh_iterations + 1)
+            n_configs_in_stage = self._n_initial_challengers * np.power(eta, linspace)
+            self._n_configs_in_stage = np.array(np.round(n_configs_in_stage), dtype=int).tolist()
+
+        self._sh_iters = 0
+        self._stage = 0
+        self._configs_to_run: list[Configuration] = []
 
         # Current instance index tracks two things. Configurations that are to be launched,
         # That is config A needs to run in 3 instances/seed pairs, then current_instance_indices should
@@ -155,13 +159,13 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # a new separate current_instance_indices needs to be started.
         # The indices normally are of type int, but np.inf is used to indicate to not further
         # launch instances for this configuration, hence the type is Union[int, float].
-        self.current_instance_indices: dict[Configuration, int | float] = {}
-        self.running_challenger = None
-        self.success_challengers: set[Configuration] = set()
-        self.do_not_advance_challengers: set[Configuration] = set()
-        self.fail_challengers: set[Configuration] = set()
-        self.fail_chal_offset = 0
-        self.new_challenger = False
+        self._current_instance_indices: dict[Configuration, int | float] = {}
+        self._running_challenger = None
+        self._success_challengers: set[Configuration] = set()
+        self._do_not_advance_challengers: set[Configuration] = set()
+        self._failed_challengers: set[Configuration] = set()
+        self._failed_challenger_offset = 0
+        self._new_challenger = False
 
         # Track which configs were launched. This will allow to have an extra check to make sure
         # that a successive halver deals only with the configs it launched,
@@ -173,20 +177,30 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # Nevertheless, the common object among SMBO/intensifier, which is the
         # run history, does not have this information and so we track locally. That way,
         # when we access the complete list of configs from the run history, we filter
-        # the ones launched by the current succesive halver using self.run_tracker
-        self.run_tracker: dict[tuple[Configuration, str | None, int | None, float | None], bool] = {}
+        # the ones launched by the current succesive halver using self._run_tracker
+        self._run_tracker: dict[tuple[Configuration, str | None, int | None, float | None], bool] = {}
+
+        # Those general arguments are initialized in the parent class
+        # self._num_trials = 0
+        # self._challenger_id = 0
+        # self._iteration_done = False
+        # self._target_algorithm_time = 0
+
+    @property
+    def stage(self) -> int:
+        return self._stage
 
     @property
     def uses_seeds(self) -> bool:
-        return self.successive_halving.uses_seeds
+        return self._successive_halving.uses_seeds
 
     @property
     def uses_budgets(self) -> bool:
-        return self.successive_halving.uses_budgets
+        return self._successive_halving.uses_budgets
 
     @property
     def uses_instances(self) -> bool:
-        return self.successive_halving.uses_instances
+        return self._successive_halving.uses_instances
 
     def process_results(
         self,
@@ -226,36 +240,35 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         """
 
         # Mark the fact that we processed this configuration
-        self.run_tracker[(trial_info.config, trial_info.instance, trial_info.seed, trial_info.budget)] = True
+        self._run_tracker[(trial_info.config, trial_info.instance, trial_info.seed, trial_info.budget)] = True
 
         # If The incumbent is None and it is the first run, we use the challenger
-        if not incumbent and self.first_run:
+        if not incumbent and self._first_run:
             # We already displayed this message before
-            # self.logger.info("First run and no incumbent provided. Challenger is assumed to be the incumbent.")
+            # self._logger.info("First run and no incumbent provided. Challenger is assumed to be the incumbent.")
             incumbent = trial_info.config
-            self.first_run = False
+            self._first_run = False
 
         # In a serial run, if we have to CAP a run, then we stop launching
         # more configurations for this run.
         # In the context of parallelism, we launch the instances proactively
-        # The fact that self.current_instance_indices[trial_info.config] is np.inf means
+        # The fact that self._current_instance_indices[trial_info.config] is np.inf means
         # that no more instances will be launched for the current config, so we
         # can add a check to make sure that if we are capping, this makes sense
         # for the active challenger
-        # if result.status == StatusType.CAPPED and trial_info.config == self.running_challenger:
-        #    self.current_instance_indices[trial_info.config] = np.inf
+        # if result.status == StatusType.CAPPED and trial_info.config == self._running_challenger:
+        #    self._current_instance_indices[trial_info.config] = np.inf
         # else:
         self._target_algorithm_time = self._target_algorithm_time
         self._target_algorithm_time += trial_value.time
-        self.num_run = self.num_run
-        self.num_run += 1
+        self._num_trials += 1
 
         # 0: Before moving to a new stage, we have to complete M x N tasks, where M is the
         # total number of configurations evaluated in N instance/seed pairs.
         # The last active configuration is stored in self.running challengers is the M
         # configuration, and to get to this point, we have already submitted tasks
         # for (M - 1) configurations on N instances seed-pairs. The status of such
-        # (M - 1) * N tasks is tracked in self.run_tracker, that has a value of False
+        # (M - 1) * N tasks is tracked in self._run_tracker, that has a value of False
         # if not processed and true if such task has been processed.
         # This stage is complete only if all tasks have been launched and all of the
         # already launched tasks are processed.
@@ -263,12 +276,12 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # 1: We first query if we have launched everything already (All M * N tasks)
         all_config_inst_seed_launched = self._all_config_instance_seed_pairs_launched(
             runhistory=runhistory,
-            activate_configuration_being_intensified=self.running_challenger,
+            activate_configuration_being_intensified=self._running_challenger,
         )
 
         # 2: Then we get the already submitted tasks (that is, proposed by get_next_runs),
         # that have not yet been processed process_results
-        all_config_inst_seeds_processed = len([v for v in self.run_tracker.values() if not v]) <= 0
+        all_config_inst_seeds_processed = len([v for v in self._run_tracker.values() if not v]) <= 0
 
         # 3: Then the total number of remaining task before we can conclude this stage
         # is calculated by taking into account point 2 and 3 above
@@ -280,15 +293,15 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # curr_challengers is a set, so "at least 1" success can be counted by set addition (no duplicates)
         # If a configuration is successful, it is added to curr_challengers.
         # if it fails it is added to fail_challengers.
-        if np.isfinite(self.current_instance_indices[trial_info.config]) and trial_value.status == StatusType.SUCCESS:
-            self.success_challengers.add(trial_info.config)  # successful configs
+        if np.isfinite(self._current_instance_indices[trial_info.config]) and trial_value.status == StatusType.SUCCESS:
+            self._success_challengers.add(trial_info.config)  # successful configs
         elif (
-            np.isfinite(self.current_instance_indices[trial_info.config])
+            np.isfinite(self._current_instance_indices[trial_info.config])
             and trial_value.status == StatusType.DONOTADVANCE
         ):
-            self.do_not_advance_challengers.add(trial_info.config)
+            self._do_not_advance_challengers.add(trial_info.config)
         else:
-            self.fail_challengers.add(trial_info.config)  # capped/crashed/do not advance configs
+            self._failed_challengers.add(trial_info.config)  # capped/crashed/do not advance configs
 
         # We need to update the incumbent if this config we are processing
         # completes all scheduled instance-seed pairs.
@@ -298,7 +311,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # is marked as TRUE as an indication that it has finished and should be processed)
         # so if all configurations runs are marked as TRUE it means that this new config
         # was the missing piece to have everything needed to compare against the incumbent
-        update_incumbent = all([v for k, v in self.run_tracker.items() if k[0] == trial_info.config])
+        update_incumbent = all([v for k, v in self._run_tracker.items() if k[0] == trial_info.config])
 
         # get incumbent if all instances have been evaluated
         if is_stage_done or update_incumbent:
@@ -309,15 +322,15 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                 log_trajectory=log_trajectory,
             )
         if is_stage_done:
-            self.logger.info(
+            self._logger.info(
                 "Finished Successive Halving iteration-step %d-%d with "
                 "budget [%.2f / %d] and %d evaluated challenger(s)."
                 % (
-                    self.sh_iters + 1,
-                    self.stage + 1,
-                    self.all_budgets[self.stage],
-                    self.max_budget,
-                    self.n_configs_in_stage[self.stage],
+                    self._sh_iters + 1,
+                    self._stage + 1,
+                    self._all_budgets[self._stage],
+                    self._max_budget,
+                    self._n_configs_in_stage[self._stage],
                 )
             )
 
@@ -367,54 +380,53 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
             evaluate a configuration
         """
         if n_workers > 1:
-            self.logger.warning(
+            self._logger.warning(
                 "Consider using ParallelSuccesiveHalving instead of "
                 "SuccesiveHalving. The later will halt on each stage "
                 "transition until all configs for the current stage are completed."
             )
-        # if this is the first run, then initialize tracking variables
-        if not hasattr(self, "stage"):
-            self._update_stage(runhistory=runhistory)
+
+        sh = self._successive_halving
 
         # In the case of multiprocessing, we have runs in Running stage, which have not
         # been processed via process_results(). get_next_run() is called agnostically by
         # smbo. To prevent launching more configs, than the ones needed, we query if
         # there is room for more configurations, else we wait for process_results()
         # to trigger a new stage
-        if self._all_config_instance_seed_pairs_launched(runhistory, self.running_challenger):
+        if self._all_config_instance_seed_pairs_launched(runhistory, self._running_challenger):
             return TrialInfoIntent.WAIT, TrialInfo(
                 config=None,
                 instance=None,
                 seed=None,
                 budget=None,
-                source=self.identifier,
+                source=self._identifier,
             )
 
-        # sampling from next challenger marks the beginning of a new iteration
-        self.iteration_done = False
+        # Sampling from next challenger marks the beginning of a new iteration
+        self._iteration_done = False
 
-        curr_budget = self.all_budgets[self.stage]
+        current_budget = self._all_budgets[self._stage]
 
-        # if all instances have been executed, then reset and move on to next config
-        if self.successive_halving.instance_as_budget:
-            prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
-            n_insts = int(curr_budget) - prev_budget
+        # If all instances have been executed, then reset and move on to next config
+        if sh._instance_as_budget:
+            previous_budget = int(self._all_budgets[self._stage - 1]) if self._stage > 0 else 0
+            n_insts = int(current_budget) - previous_budget
         else:
-            n_insts = len(self.successive_halving.instance_seed_pairs)
+            n_insts = len(sh._instance_seed_pairs)
 
         # The instances remaining tell us, per configuration, how many instances we
         # have suggested to SMBO
         n_insts_remaining = n_insts
-        if self.running_challenger is not None:
-            n_insts_remaining = n_insts - self.current_instance_indices[self.running_challenger]
+        if self._running_challenger is not None:
+            n_insts_remaining = n_insts - self._current_instance_indices[self._running_challenger]
 
-        # if there are instances pending, finish running configuration
-        if self.running_challenger and n_insts_remaining > 0:
-            challenger = self.running_challenger
+        # If there are instances pending, finish running configuration
+        if self._running_challenger and n_insts_remaining > 0:
+            challenger = self._running_challenger
             new_challenger = False
         else:
-            # select next configuration
-            if self.stage == 0:
+            # Select next configuration
+            if self._stage == 0:
                 # first stage, so sample from configurations/chooser provided
                 challenger = self._next_challenger(
                     challengers=challengers,
@@ -434,17 +446,17 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                         instance=None,
                         seed=None,
                         budget=None,
-                        source=self.identifier,
+                        source=self._identifier,
                     )
 
                 new_challenger = True
             else:
-                # sample top configs from previously sampled configurations
+                # Sample top configs from previously sampled configurations
                 try:
-                    challenger = self.configs_to_run.pop(0)
+                    challenger = self._configs_to_run.pop(0)
                     new_challenger = False
                 except IndexError:
-                    # self.configs_to_run is populated via update_stage,
+                    # self._configs_to_run is populated via update_stage,
                     # which is triggered after the completion of a run
                     # If by there are no more configs to run (which is the case
                     # if we run into a IndexError),
@@ -453,53 +465,53 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                         instance=None,
                         seed=None,
                         budget=None,
-                        source=self.identifier,
+                        source=self._identifier,
                     )
 
             if challenger:
                 # We see a challenger for the first time, so no
                 # instance has been launched
-                self.current_instance_indices[challenger] = 0
+                self._current_instance_indices[challenger] = 0
                 self._challenger_id += 1
-                self.running_challenger = challenger
+                self._running_challenger = challenger
 
-        if (incumbent is None or incumbent == challenger) and self.first_run:
-            self.logger.info("First run and no incumbent provided. Challenger is assumed to be the incumbent.")
+        if (incumbent is None or incumbent == challenger) and self._first_run:
+            self._logger.info("First run and no incumbent provided. Challenger is assumed to be the incumbent.")
             incumbent = challenger
 
         # Selecting instance-seed subset for this budget, depending on the kind of budget
-        if self.successive_halving.instance_as_budget:
-            prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
-            curr_insts = self.successive_halving.instance_seed_pairs[int(prev_budget) : int(curr_budget)]
+        if sh._instance_as_budget:
+            previous_budget = int(self._all_budgets[self._stage - 1]) if self._stage > 0 else 0
+            current_instances = sh._instance_seed_pairs[int(previous_budget) : int(current_budget)]
         else:
-            curr_insts = self.successive_halving.instance_seed_pairs
+            current_instances = sh._instance_seed_pairs
 
-        self.logger.debug("Running challenger - %s" % str(challenger))
+        self._logger.debug("Running challenger - %s" % str(challenger))
 
         # run the next instance-seed pair for the given configuration
-        instance, seed = curr_insts[self.current_instance_indices[challenger]]  # type: ignore[index]
-        # At this point self.current_instance_indices[challenger] will still be an integer and might
+        instance, seed = current_instances[self._current_instance_indices[challenger]]  # type: ignore[index]
+        # At this point self._current_instance_indices[challenger] will still be an integer and might
         # be marked LATER with np.inf, so ignore mypy error.
 
         # For testing purposes, this attribute highlights whether a
         # new challenger is proposed or not. Not required from a functional
         # perspective
-        self.new_challenger = new_challenger
+        self._new_challenger = new_challenger
 
-        budget = None if self.successive_halving.instance_as_budget else curr_budget
-        self.run_tracker[(challenger, instance, seed, budget)] = False
+        budget = None if sh._instance_as_budget else current_budget
+        self._run_tracker[(challenger, instance, seed, budget)] = False
 
-        # self.current_instance_indices Tell us our current instance to be run. The upcoming return
+        # self._current_instance_indices Tell us our current instance to be run. The upcoming return
         # will launch a challenger on a given instance/seed/pair. The next time this function
-        # is called, we will like to run self.current_instance_indices + 1 for this configuration
-        self.current_instance_indices[challenger] += 1
+        # is called, we will like to run self._current_instance_indices + 1 for this configuration
+        self._current_instance_indices[challenger] += 1
 
         return TrialInfoIntent.RUN, TrialInfo(
             config=challenger,
             instance=instance,
             seed=seed,
             budget=budget,
-            source=self.identifier,
+            source=self._identifier,
         )
 
     def _update_stage(self, runhistory: RunHistory) -> None:
@@ -509,96 +521,81 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
 
         Parameters
         ----------
-         runhistory : smac.runhistory.runhistory.RunHistory
-            stores all runs we ran so far
+        runhistory : RunHistory
         """
-        if not hasattr(self, "stage"):
-            # initialize all relevant variables for first run
-            # (this initialization is not a part of init because hyperband uses the same init method and has a )
-            # to track iteration and stage
-            self.sh_iters = 0
-            self.stage = 0
-            # to track challengers across stages
-            self.configs_to_run: list[Configuration] = []
-            self.current_instance_indices = {}
-            self.running_challenger = None
-            self.success_challengers = set()  # Successful configs
-            self.do_not_advance_challengers = set()  # Configs which are successful, but should not be advanced
-            self.fail_challengers = set()  # Failures configs
-            self.fail_chal_offset = 0
-        else:
-            self.stage += 1
-            # only uncapped challengers are considered valid for the next iteration
-            valid_challengers = list(
-                (self.success_challengers | self.do_not_advance_challengers) - self.fail_challengers
-            )
+        self._stage += 1
 
-            if self.stage < len(self.all_budgets) and len(valid_challengers) > 0:
-                # If this is the next stage in same iteration,
-                # use top 'k' from the evaluated configurations for next iteration
+        # Only uncapped challengers are considered valid for the next iteration
+        valid_challengers = list(
+            (self._success_challengers | self._do_not_advance_challengers) - self._failed_challengers
+        )
 
-                # Determine 'k' for the next iteration - at least 1
-                next_n_chal = int(max(1, self.n_configs_in_stage[self.stage]))
+        if self._stage < len(self._all_budgets) and len(valid_challengers) > 0:
+            # If this is the next stage in same iteration,
+            # use top 'k' from the evaluated configurations for next iteration
 
-                # Selecting the top 'k' challengers for the next iteration
-                configs_to_run = self._top_k(configs=valid_challengers, runhistory=runhistory, k=next_n_chal)
-                self.configs_to_run = [
-                    config for config in configs_to_run if config not in self.do_not_advance_challengers
-                ]
+            # Determine 'k' for the next iteration - at least 1
+            next_n_chal = int(max(1, self._n_configs_in_stage[self._stage]))
 
-                # If some runs were capped, top_k returns less than the required configurations
-                # to handle that, we keep track of how many configurations are missing
-                # (since they are technically failed here too)
-                missing_challengers = int(self.n_configs_in_stage[self.stage]) - len(self.configs_to_run)
-                if missing_challengers > 0:
-                    self.fail_chal_offset = missing_challengers
-                else:
-                    self.fail_chal_offset = 0
+            # Selecting the top 'k' challengers for the next iteration
+            configs_to_run = self._top_k(configs=valid_challengers, runhistory=runhistory, k=next_n_chal)
+            self._configs_to_run = [
+                config for config in configs_to_run if config not in self._do_not_advance_challengers
+            ]
 
-                if next_n_chal == missing_challengers:
-                    next_stage = True
-                    self.logger.info(
-                        "Successive Halving iteration-step: %d-%d with "
-                        "budget [%.2f / %d] - expected %d new challenger(s), but "
-                        "no configurations propagated to the next budget.",
-                        self.sh_iters + 1,
-                        self.stage + 1,
-                        self.all_budgets[self.stage],
-                        self.max_budget,
-                        self.n_configs_in_stage[self.stage],
-                    )
-                else:
-                    next_stage = False
+            # If some runs were capped, top_k returns less than the required configurations
+            # to handle that, we keep track of how many configurations are missing
+            # (since they are technically failed here too)
+            missing_challengers = int(self._n_configs_in_stage[self._stage]) - len(self._configs_to_run)
+            if missing_challengers > 0:
+                self._failed_challenger_offset = missing_challengers
             else:
+                self._failed_challenger_offset = 0
+
+            if next_n_chal == missing_challengers:
                 next_stage = True
+                self._logger.info(
+                    "Successive Halving iteration-step: %d-%d with "
+                    "budget [%.2f / %d] - expected %d new challenger(s), but "
+                    "no configurations propagated to the next budget.",
+                    self._sh_iters + 1,
+                    self._stage + 1,
+                    self._all_budgets[self._stage],
+                    self._max_budget,
+                    self._n_configs_in_stage[self._stage],
+                )
+            else:
+                next_stage = False
+        else:
+            next_stage = True
 
-            if next_stage:
-                # Update stats for the prev iteration
-                assert self.stats
-                self.stats.update_average_configs_per_intensify(n_configs=self._challenger_id)
+        if next_stage:
+            # Update stats for the prev iteration
+            assert self._stats
+            self._stats.update_average_configs_per_intensify(n_configs=self._challenger_id)
 
-                # reset stats for the new iteration
-                self._target_algorithm_time = 0
-                self._challenger_id = 0
-                self.num_run = 0
+            # Reset stats for the new iteration
+            self._sh_iters += 1
+            self._stage = 0
+            self._configs_to_run = []
+            self._target_algorithm_time = 0
+            self._challenger_id = 0
+            self._num_trials = 0
+            self._iteration_done = True
 
-                self.iteration_done = True
-                self.sh_iters += 1
-                self.stage = 0
-                self.run_tracker = {}
-                self.configs_to_run = []
-                self.fail_chal_offset = 0
+            self._failed_challenger_offset = 0
+            self._run_tracker = {}
 
-                # Randomize instance-seed pairs per successive halving run, if user specifies
-                if self.successive_halving.instance_order == "shuffle":
-                    self.rng.shuffle(self.instance_seed_pairs)  # type: ignore
+            # Randomize instance-seed pairs per successive halving run, if user specifies
+            if self._successive_halving._instance_order == "shuffle":
+                self._rng.shuffle(self._instance_seed_pairs)  # type: ignore
 
-        # to track configurations for the next stage
-        self.success_challengers = set()  # successful configs
-        self.do_not_advance_challengers = set()  # successful, but should not be advanced to the next budget/stage
-        self.fail_challengers = set()  # capped/failed configs
-        self.current_instance_indices = {}
-        self.running_challenger = None
+        # To track configurations for the next stage
+        self._running_challenger = None
+        self._success_challengers = set()
+        self._do_not_advance_challengers = set()
+        self._failed_challengers = set()
+        self._current_instance_indices = {}
 
     def _compare_configs(
         self,
@@ -626,19 +623,19 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         Optional[Configuration]
             incumbent configuration
         """
-        assert self.stats
+        assert self._stats
 
-        if self.successive_halving.instance_as_budget:
+        if self._successive_halving._instance_as_budget:
             new_incumbent = super()._compare_configs(incumbent, challenger, runhistory, log_trajectory)
 
             # If compare config returned none, then it is undecided. So return old incumbent.
             return incumbent if new_incumbent is None else new_incumbent
 
         # For real-valued budgets, compare configs based on the incumbent selection design
-        curr_budget = self.all_budgets[self.stage]
+        current_budget = self._all_budgets[self._stage]
 
         # incumbent selection: best on any budget
-        if self.successive_halving.incumbent_selection == "any_budget":
+        if self._successive_halving._incumbent_selection == "any_budget":
             new_incumbent = self._compare_configs_across_budgets(
                 challenger=challenger,
                 incumbent=incumbent,
@@ -672,19 +669,19 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
             raise RuntimeError("Since budgets are not used for instance optimization, this should not happen.")
 
         # Incumbent selection: highest budget only
-        if self.successive_halving.incumbent_selection == "highest_budget":
+        if self._successive_halving._incumbent_selection == "highest_budget":
             assert chall_run.budget is not None
-            if chall_run.budget < self.max_budget:
-                self.logger.debug(
+            if chall_run.budget < self._max_budget:
+                self._logger.debug(
                     "Challenger (budget=%.4f) has not been evaluated on the highest budget %.4f yet.",
                     chall_run.budget,
-                    self.max_budget,
+                    self._max_budget,
                 )
                 return incumbent
 
         # Incumbent selection: highest budget run so far
         if inc_run.budget > chall_run.budget:
-            self.logger.debug(
+            self._logger.debug(
                 "Incumbent evaluated on higher budget than challenger (%.4f > %.4f), not changing the incumbent",
                 inc_run.budget,
                 chall_run.budget,
@@ -692,17 +689,17 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
             return incumbent
 
         if inc_run.budget < chall_run.budget:
-            self.logger.debug(
+            self._logger.debug(
                 "Challenger evaluated on higher budget than incumbent (%.4f > %.4f), changing the incumbent",
                 chall_run.budget,
                 inc_run.budget,
             )
             if log_trajectory:
-                assert self.stats
-                self.stats.add_incumbent(
+                assert self._stats
+                self._stats.add_incumbent(
                     cost=runhistory.get_cost(challenger),
                     incumbent=challenger,
-                    budget=curr_budget,
+                    budget=current_budget,
                 )
 
             return challenger
@@ -711,7 +708,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         chall_cost = runhistory.get_cost(challenger)
         inc_cost = runhistory.get_cost(incumbent)
         if chall_cost < inc_cost:
-            self.logger.info(
+            self._logger.info(
                 "Challenger (%.4f) is better than incumbent (%.4f) on budget %.4f.",
                 chall_cost,
                 inc_cost,
@@ -720,22 +717,22 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
             self._log_incumbent_changes(incumbent, challenger)
             new_incumbent = challenger
             if log_trajectory:
-                assert self.stats
-                self.stats.add_incumbent(cost=chall_cost, incumbent=new_incumbent, budget=curr_budget)
+                assert self._stats
+                self._stats.add_incumbent(cost=chall_cost, incumbent=new_incumbent, budget=current_budget)
         else:
-            self.logger.debug(
+            self._logger.debug(
                 "Incumbent (%.4f) is at least as good as the challenger (%.4f) on budget %.4f.",
                 inc_cost,
                 chall_cost,
                 inc_run.budget,
             )
 
-            if log_trajectory and self.stats.incumbent_changed == 0:
-                assert self.stats
-                self.stats.add_incumbent(
+            if log_trajectory and self._stats.incumbent_changed == 0:
+                assert self._stats
+                self._stats.add_incumbent(
                     cost=inc_cost,
                     incumbent=incumbent,
-                    budget=curr_budget,
+                    budget=current_budget,
                 )
             new_incumbent = incumbent
 
@@ -766,15 +763,15 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         Optional[Configuration]
             incumbent configuration
         """
-        assert self.stats
-        curr_budget = self.all_budgets[self.stage]
+        assert self._stats
+        current_budget = self._all_budgets[self._stage]
 
         # compare challenger and incumbent based on cost
         chall_cost = runhistory.get_min_cost(challenger)
         inc_cost = runhistory.get_min_cost(incumbent)
         if np.isfinite(chall_cost) and np.isfinite(inc_cost):
             if chall_cost < inc_cost:
-                self.logger.info(
+                self._logger.info(
                     "Challenger (%.4f) is better than incumbent (%.4f) for any budget.",
                     chall_cost,
                     inc_cost,
@@ -782,23 +779,23 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                 self._log_incumbent_changes(incumbent, challenger)
                 new_incumbent = challenger
                 if log_trajectory:
-                    assert self.stats
-                    self.stats.add_incumbent(
+                    assert self._stats
+                    self._stats.add_incumbent(
                         cost=chall_cost,
                         incumbent=new_incumbent,
-                        budget=curr_budget,
+                        budget=current_budget,
                     )
             else:
-                self.logger.debug(
+                self._logger.debug(
                     "Incumbent (%.4f) is at least as good as the challenger (%.4f) for any budget.",
                     inc_cost,
                     chall_cost,
                 )
-                if log_trajectory and self.stats.incumbent_changed == 0:
-                    self.stats.add_incumbent(cost=inc_cost, incumbent=incumbent, budget=curr_budget)
+                if log_trajectory and self._stats.incumbent_changed == 0:
+                    self._stats.add_incumbent(cost=inc_cost, incumbent=incumbent, budget=current_budget)
                 new_incumbent = incumbent
         else:
-            self.logger.debug("Non-finite costs from run history!")
+            self._logger.debug("Non-finite costs from run history!")
             new_incumbent = incumbent
 
         return new_incumbent
@@ -872,7 +869,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # 1: First we count the number of configurations that have been launched
         # We only submit a new configuration M if all instance-seed pairs of (M - 1)
         # have been proposed
-        configurations_by_this_intensifier = [c for c, i, s, b in self.run_tracker]
+        configurations_by_this_intensifier = [c for c, i, s, b in self._run_tracker]
         running_configs = set()
         for k, v in runhistory.items():
             if runhistory.ids_config[k.config_id] in configurations_by_this_intensifier:
@@ -886,42 +883,44 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # currently running configuration
         total_pending_configurations = max(
             0,
-            self.n_configs_in_stage[self.stage]
+            self._n_configs_in_stage[self._stage]
             - (
                 len(
                     set().union(
-                        self.success_challengers,
-                        self.fail_challengers,
-                        self.do_not_advance_challengers,
+                        self._success_challengers,
+                        self._failed_challengers,
+                        self._do_not_advance_challengers,
                         running_configs,
                     )
                 )
-                + self.fail_chal_offset
+                + self._failed_challenger_offset
             ),
         )
 
         # 2: Second we have to account for the number of pending instances for the active
         # configuration. We assume for all (M - 1) configurations, all N instances-seeds
         # have been already been launched
-        curr_budget = self.all_budgets[self.stage]
-        if self.successive_halving.instance_as_budget:
-            prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
-            curr_insts = self.successive_halving.instance_seed_pairs[int(prev_budget) : int(curr_budget)]
+        current_budget = self._all_budgets[self._stage]
+        if self._successive_halving._instance_as_budget:
+            previous_budget = int(self._all_budgets[self._stage - 1]) if self._stage > 0 else 0
+            current_instances = self._successive_halving._instance_seed_pairs[
+                int(previous_budget) : int(current_budget)
+            ]
         else:
-            curr_insts = self.successive_halving.instance_seed_pairs
+            current_instances = self._successive_halving._instance_seed_pairs
 
         if activate_configuration_being_intensified is None:
             # When a new stage begins, there is no active configuration.
             # Therefore activate_configuration_being_intensified is empty and all instances are
             # remaining
-            pending_instances_to_launch = len(curr_insts)
+            pending_instances_to_launch = len(current_instances)
         else:
-            # self.current_instance_indices - 1 is the last proposed instance/seed pair from get_next_run
-            # But it is zero indexed, so (self.current_instance_indices - 1) + 1 is the number of
+            # self._current_instance_indices - 1 is the last proposed instance/seed pair from get_next_run
+            # But it is zero indexed, so (self._current_instance_indices - 1) + 1 is the number of
             # configurations that we have proposed to run in total for the running
             # configuration via get_next_run
             pending_instances_to_launch = max(
-                len(curr_insts) - self.current_instance_indices[activate_configuration_being_intensified], 0
+                len(current_instances) - self._current_instance_indices[activate_configuration_being_intensified], 0
             )  # type: ignore
 
         # If the there are any pending configuration, or instances/seed pending for the

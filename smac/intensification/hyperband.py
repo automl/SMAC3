@@ -23,7 +23,7 @@ class Hyperband(SuccessiveHalving):
 
     Parameters
     ----------
-    stats: smac.stats.stats.Stats
+    stats: smac._stats._stats._stats
         stats object
     rng : np.random.RandomState
     instances : List[str]
@@ -87,16 +87,13 @@ class Hyperband(SuccessiveHalving):
         from smac.intensification.hyperband_worker import HyperbandWorker
 
         assert isinstance(intensifier, HyperbandWorker)
-        assert intensifier.sh_intensifier
+        assert intensifier._sh_intensifier
 
         # For hyperband, we use the internal successive halving as a criteria
         # to see how advanced this intensifier is
-        stage = 0
-        if hasattr(intensifier.sh_intensifier, "stage"):
-            # Newly created SuccessiveHalving objects have no stage
-            stage = intensifier.sh_intensifier.stage
+        stage = intensifier._sh_intensifier.stage
 
-        return stage, len(intensifier.sh_intensifier.run_tracker)
+        return stage, len(intensifier._sh_intensifier._run_tracker)
 
     def _add_new_instance(self, n_workers: int) -> bool:
         """Decides if it is possible to add a new intensifier instance, and adds it. If a new
@@ -113,14 +110,14 @@ class Hyperband(SuccessiveHalving):
         """
         from smac.intensification.hyperband_worker import HyperbandWorker
 
-        if len(self.intensifier_instances) >= n_workers:
+        if len(self._intensifier_instances) >= n_workers:
             return False
 
         hp = HyperbandWorker(
             hyperband=self,
-            identifier=len(self.intensifier_instances),
+            identifier=len(self._intensifier_instances),
         )
-        hp.stats = self.stats
-        self.intensifier_instances[len(self.intensifier_instances)] = hp
+        hp._stats = self._stats
+        self._intensifier_instances[len(self._intensifier_instances)] = hp
 
         return True

@@ -16,7 +16,7 @@ def intensifier(make_scenario, make_stats, configspace_small):
     scenario = make_scenario(configspace_small)
     stats = make_stats(scenario)
     intensifier = SimpleIntensifier(scenario=scenario)
-    intensifier.stats = stats
+    intensifier._stats = stats
 
     return intensifier
 

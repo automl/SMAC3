@@ -4,8 +4,6 @@ from typing import Callable, Iterator
 
 import numpy as np
 
-import smac
-
 from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.logging import get_logger
@@ -30,7 +28,7 @@ class HyperbandWorker(SuccessiveHalvingWorker):
 
     Parameters
     ----------
-    stats: smac.stats.stats.Stats
+    stats: smac._stats._stats._stats
         stats object
     rng : np.random.RandomState
     instances : List[str]
@@ -78,26 +76,37 @@ class HyperbandWorker(SuccessiveHalvingWorker):
             identifier=identifier,
         )
 
+        min_budget = hyperband._min_budget
+        max_budget = hyperband._max_budget
+        eta = hyperband._eta
+
         # Overwrite logger
-        self.identifier = identifier
-        self.logger = get_logger(f"{__name__}.{identifier}")
+        self._identifier = identifier
+        self._logger = get_logger(f"{__name__}.{identifier}")
 
         # To track completed hyperband iterations
-        self.hyperband = hyperband
-        self.hb_iters = 0
-        self.sh_intensifier: SuccessiveHalvingWorker | None = None
+        self._hyperband = hyperband
+        self._hb_iters = 0
+        self._sh_intensifier: SuccessiveHalvingWorker | None = None
+
+        # Setting initial running budget for future iterations (s & s_max from Algorithm 1)
+        self._s_max = int(np.floor(np.log(max_budget / min_budget) / np.log(eta)))
+        self._s = self._s_max
+
+        # We update our sh intensifier directly
+        self._update_worker()
 
     @property
     def uses_seeds(self) -> bool:
-        return self.hyperband.uses_seeds
+        return self._hyperband.uses_seeds
 
     @property
     def uses_budgets(self) -> bool:
-        return self.hyperband.uses_budgets
+        return self._hyperband.uses_budgets
 
     @property
     def uses_instances(self) -> bool:
-        return self.hyperband.uses_instances
+        return self._hyperband.uses_instances
 
     def process_results(
         self,
@@ -114,7 +123,7 @@ class HyperbandWorker(SuccessiveHalvingWorker):
         Parameters
         ----------
         trial_info : RunInfo
-               A RunInfo containing the configuration that was evaluated
+            A RunInfo containing the configuration that was evaluated
         incumbent : Optional[Configuration]
             Best configuration seen so far
         runhistory : RunHistory
@@ -135,10 +144,10 @@ class HyperbandWorker(SuccessiveHalvingWorker):
         inc_perf: float
             empirical performance of incumbent configuration
         """
-        assert self.sh_intensifier
+        assert self._sh_intensifier
 
         # run 1 iteration of successive halving
-        incumbent, inc_perf = self.sh_intensifier.process_results(
+        incumbent, inc_perf = self._sh_intensifier.process_results(
             trial_info=trial_info,
             trial_value=trial_value,
             incumbent=incumbent,
@@ -146,10 +155,10 @@ class HyperbandWorker(SuccessiveHalvingWorker):
             time_bound=time_bound,
             log_trajectory=log_trajectory,
         )
-        self.num_run += 1
+        self._num_trials += 1
 
         # reset if SH iteration is over, else update for next iteration
-        if self.sh_intensifier.iteration_done:
+        if self._sh_intensifier._iteration_done:
             self._update_stage()
 
         return incumbent, inc_perf
@@ -199,26 +208,22 @@ class HyperbandWorker(SuccessiveHalvingWorker):
                 "the argument n_workers to get_next_run is {}".format(n_workers)
             )
 
-        if not hasattr(self, "s"):
-            # initialize tracking variables
-            self._update_stage()
+        # Sampling from next challenger marks the beginning of a new iteration
+        self._iteration_done = False
 
-        # sampling from next challenger marks the beginning of a new iteration
-        self.iteration_done = False
-
-        assert self.sh_intensifier
-        intent, trial_info = self.sh_intensifier.get_next_run(
+        assert self._sh_intensifier
+        intent, trial_info = self._sh_intensifier.get_next_run(
             challengers=challengers,
             incumbent=incumbent,
             get_next_configurations=get_next_configurations,
             runhistory=runhistory,
-            repeat_configs=self.sh_intensifier.repeat_configs,
+            repeat_configs=self._sh_intensifier._repeat_configs,
         )
 
         # For testing purposes, this attribute highlights whether a
         # new challenger is proposed or not. Not required from a functional
         # perspective
-        self.new_challenger = self.sh_intensifier.new_challenger
+        self._new_challenger = self._sh_intensifier._new_challenger
 
         return intent, trial_info
 
@@ -227,45 +232,44 @@ class HyperbandWorker(SuccessiveHalvingWorker):
         is called to initialize stage variables and after all configurations of a successive halving
         stage are completed."""
 
-        min_budget = self.hyperband.min_budget
-        max_budget = self.hyperband.max_budget
-        eta = self.hyperband.eta
-
-        if not hasattr(self, "s"):
-            # Setting initial running budget for future iterations (s & s_max from Algorithm 1)
-            self.s_max = int(np.floor(np.log(max_budget / min_budget) / np.log(eta)))
-            self.s = self.s_max
-        elif self.s == 0:
+        if self._s == 0:
             # Reset if HB iteration is over
-            self.s = self.s_max
-            self.hb_iters += 1
-            self.iteration_done = True
-            self.num_run = 0
+            self._s = self._s_max
+            self._hb_iters += 1
+            self._iteration_done = True
+            self._num_trials = 0
         else:
-            # update for next iteration
-            self.s -= 1
+            # Update for next iteration
+            self._s -= 1
 
-        # compute min budget for new SH run
-        sh_min_budget = eta**-self.s * max_budget
-        # sample challengers for next iteration (based on HpBandster package)
-        n_challengers = int(np.floor((self.s_max + 1) / (self.s + 1)) * eta**self.s)
+        self._update_worker()
+
+    def _update_worker(self) -> None:
+        """Updates the successive halving worker based on `self._s`."""
+        max_budget = self._hyperband._max_budget
+        eta = self._hyperband._eta
+
+        # Compute min budget for new SH run
+        sh_min_budget = eta**-self._s * max_budget
+        # Sample challengers for next iteration (based on HpBandster package)
+        n_challengers = int(np.floor((self._s_max + 1) / (self._s + 1)) * eta**self._s)
 
         # Compute this for the next round
-        n_configs_in_stage = n_challengers * np.power(eta, -np.linspace(0, self.s, self.s + 1))
+        n_configs_in_stage = n_challengers * np.power(eta, -np.linspace(0, self._s, self._s + 1))
         n_configs_in_stage = np.array(np.round(n_configs_in_stage), dtype=int).tolist()
 
-        self.logger.info(
+        self._logger.info(
             "Finished Hyperband iteration-step %d-%d with initial budget %d."
-            % (self.hb_iters + 1, self.s_max - self.s + 1, sh_min_budget)
+            % (self._hb_iters + 1, self._s_max - self._s + 1, sh_min_budget)
         )
 
         # Creating a new Successive Halving intensifier with the current running budget
-        self.sh_intensifier = SuccessiveHalvingWorker(
-            successive_halving=self.hyperband,
-            identifier=self.identifier,
-            _all_budgets=self.all_budgets[(-self.s - 1) :],
+        self._sh_intensifier = SuccessiveHalvingWorker(
+            successive_halving=self._hyperband,
+            identifier=self._identifier,
+            _all_budgets=self._all_budgets[(-self._s - 1) :],
             _n_configs_in_stage=n_configs_in_stage,
             _min_budget=sh_min_budget,
             _max_budget=max_budget,
         )
-        self.sh_intensifier.stats = self.stats
+        self._sh_intensifier._stats = self._stats
