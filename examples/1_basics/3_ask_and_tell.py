@@ -62,7 +62,8 @@ if __name__ == "__main__":
         intensifier=intensifier,
         overwrite=True,
     )
-    exit()
+
+    """
 
     # The scenario is saved when calling the `optimize` method
     # If we don't use it, we have to save it manually
@@ -98,3 +99,4 @@ if __name__ == "__main__":
 
     incumbent_value = model.train(incumbent)
     print(f"Incumbent value: {round(incumbent_value, 2)}")
+    """

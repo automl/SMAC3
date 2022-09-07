@@ -20,17 +20,8 @@ class SimpleIntensifier(AbstractIntensifier):
 
     Parameters
     ----------
-    stats: smac.stats.stats.Stats
-        stats object
-    rng : np.random.RandomState
-    instances : List[str]
-        list of all instance ids
-    instance_specifics : Mapping[str, str]
-        mapping from instance name to instance specific string
-    algorithm_walltime_limit : Optional[int]
-        algorithm_walltime_limit of TA runs
-    deterministic : bool
-        whether the TA is deterministic or not
+    scenario : Scenario
+    seed : int | None, defaults to None
     """
 
     def __init__(
@@ -64,9 +55,9 @@ class SimpleIntensifier(AbstractIntensifier):
         return self._instances is not None
 
     def get_meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
+            "seed": self._seed,
         }
 
     def process_results(
@@ -78,33 +69,6 @@ class SimpleIntensifier(AbstractIntensifier):
         time_bound: float,
         log_trajectory: bool = True,
     ) -> tuple[Configuration, float]:
-        """The intensifier stage will be updated based on the results/status of a configuration
-        execution. Also, a incumbent will be determined.
-
-        Parameters
-        ----------
-        trial_info : RunInfo
-            A RunInfo containing the configuration that was evaluated
-        incumbent : Optional[Configuration]
-            Best configuration seen so far
-        runhistory : RunHistory
-            stores all runs we ran so far
-            if False, an evaluated configuration will not be generated again
-        time_bound : float
-            time in [sec] available to perform intensify
-        result: RunValue
-            Contain the result (status and other methadata) of exercising
-            a challenger/incumbent.
-        log_trajectory: bool
-            Whether to log changes of incumbents in trajectory
-
-        Returns
-        -------
-        incumbent: Configuration()
-            current (maybe new) incumbent configuration
-        inc_perf: float
-            empirical performance of incumbent configuration
-        """
         # Mark the fact that we processed this configuration
         self._run_tracker[(trial_info.config, trial_info.instance, trial_info.seed, trial_info.budget)] = True
 
@@ -135,33 +99,30 @@ class SimpleIntensifier(AbstractIntensifier):
         repeat_configs: bool = True,
         n_workers: int = 1,
     ) -> tuple[TrialInfoIntent, TrialInfo]:
-        """Selects which challenger to be used. As in a traditional BO loop, we sample from the EPM,
+        """Selects which challenger to be used. As in a traditional BO loop, we sample from the surrogate model,
         which is the next configuration based on the acquisition function. The input data is read
         from the runhistory.
 
         Parameters
         ----------
-        challengers : List[Configuration]
-            promising configurations
-        incumbent: Configuration
-            incumbent configuration
-        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
-            optimizer that generates next configurations to use for racing
-        runhistory : smac.runhistory.runhistory.RunHistory
-            stores all runs we ran so far
-        repeat_configs : bool
-            if False, an evaluated configuration will not be generated again
-        n_workers: int
-            the maximum number of workers available
-            at a given time.
+        challengers : list[Configuration] | None
+            Promising configurations.
+        incumbent : Configuration
+            Incumbent configuration.
+        get_next_configurations : Callable[[], Iterator[Configuration]] | None, defaults to none
+            Function that generates next configurations to use for racing.
+        runhistory : RunHistory
+        repeat_configs : bool, defaults to true
+            If false, an evaluated configuration will not be generated again.
+        n_workers : int, optional, defaults to 1
+            The maximum number of workers available.
 
         Returns
         -------
-        intent: RunInfoIntent
-               Indicator of how to consume the RunInfo object
-        trial_info: RunInfo
-            An object that encapsulates the minimum information to
-            evaluate a configuration
+        TrialInfoIntent
+            Indicator of how to consume the TrialInfo object.
+        TrialInfo
+            An object that encapsulates necessary information of the trial.
         """
 
         # We always sample from the configs provided or the EPM

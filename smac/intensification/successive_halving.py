@@ -40,54 +40,37 @@ class SuccessiveHalving(ParallelScheduler):
 
         ``min_budget`` and ``max_budget`` are required parameters for this type of budget.
 
-    Examples for successive halving (and hyperband) can be found here:
-    * Runtime objective and multiple instances *(instances as budget)*: `examples/spear_qcp/SMAC4AC_SH_spear_qcp.py`
-    * Quality objective and multiple instances *(instances as budget)*: `examples/SMAC4MF_sgd_instances.py`
-    * Quality objective and single instance *(real-valued budget)*: `examples/SMAC4MF_mlp.py`
-
-    This class instantiates `_SuccessiveHalving` objects on a need basis, that is, to
+    This class instantiates `SuccessiveHalvingWorker` objects on a need basis, that is, to
     prevent workers from being idle. The actual logic that implements the Successive halving method
-    lies on the _SuccessiveHalving class.
+    lies in the worker class.
 
     Parameters
     ----------
-    stats: smac._stats._stats._stats
-        stats object
-    rng : np.random.RandomState
-    instances : List[str]
-        list of all instance ids
-    instance_specifics : Mapping[str, str]
-        mapping from instance name to instance specific string
-    algorithm_walltime_limit : Optional[int]
-        algorithm_walltime_limit of TA runs
-    deterministic : bool
-        whether the TA is deterministic or not
-    min_budget : Optional[float]
-        minimum budget allowed for 1 run of successive halving
-    max_budget : Optional[float]
-        maximum budget allowed for 1 run of successive halving
-    eta : float
-        'halving' factor after each iteration in a successive halving run. Defaults to 3
-    n_initial_challengers : Optional[int]
-        number of challengers to consider for the initial budget. If None, calculated internally
-    n_seeds : Optional[int]
-        Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
-    instance_order : Optional[str]
-        how to order instances. Can be set to: [None, shuffle_once, shuffle]
-        * None - use as is given by the user
-        * shuffle_once - shuffle once and use across all SH run (default)
-        * shuffle - shuffle before every SH run
-    instance_seed_pairs : List[Tuple[str, int]], optional
-        Do not set this argument, it will only be used by hyperband!
-    min_challenger: int
-        minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
-        raise an exception if a value larger than 1 is passed.
-    incumbent_selection: str
-        How to select incumbent in successive halving. Only active for real-valued budgets.
-        Can be set to: [highest_executed_budget, highest_budget, any_budget]
-        * highest_executed_budget - incumbent is the best in the highest budget run so far (default)
-        * highest_budget - incumbent is selected only based on the highest budget
-        * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
+    scenario : Scenario
+    instance_seed_pairs : list[tuple[str  |  None, int]] | None, defaults to None
+        This argument is used by Hyperband.
+    instance_order : str | None, defaults to `shuffle_once`
+        How to order the instances. Can be set to:
+        * None: Use as is given by the user.
+        * shuffle_once: Shuffle once and use across all Successive Halving run .
+        * shuffle: Shuffle before every Successive Halving run
+    incumbent_selection : str, defaults to `highest_executed_budget`
+        How to select the incumbent in Successive Halving. Only active for (real-valued) budgets. Can be set to:
+        * highest_executed_budget: Incumbent is the best in the highest budget run so far.
+        * highest_budget: Incumbent is selected only based on the highest budget.
+        * any_budget: Incumbent is the best on any budget i.e., best performance regardless of budget.
+    n_initial_challengers : int | None, defaults to None
+        Number of challengers to consider for the initial budget. If not specified, it is calculated internally.
+    min_challenger : int, defaults to 1
+        Minimal number of challengers to be considered (even if time_bound is exhausted earlier).
+    eta : float, defaults to 3
+        The "halving" factor after each iteration in a Successive Halving run.
+    intensify_percentage : float, defaults to 0.5
+        How much percentage of the time should configurations be intensified (evaluated on higher budgets or
+        more instances). This parameter is accessed in the SMBO class.
+    seed : int | None, defaults to None
+    n_seeds : int | None, defaults to None
+        The number of seeds to use if the target algorithm is non-deterministic.
     """
 
     def __init__(
@@ -103,6 +86,7 @@ class SuccessiveHalving(ParallelScheduler):
         seed: int | None = None,
         n_seeds: int | None = None,
     ) -> None:
+
         super().__init__(
             scenario=scenario,
             min_challenger=min_challenger,
@@ -219,9 +203,17 @@ class SuccessiveHalving(ParallelScheduler):
             logger.info("The argument `incumbent_selection` is ignored because instances are used as budget type.")
 
     def get_meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
+            "instance_seed_pairs": self._instance_seed_pairs,
+            "instance_order": self._instance_order,
+            "incumbent_selection": self._incumbent_selection,
+            "n_initial_challengers": self._n_initial_challengers,
+            "min_challenger": self._min_challenger,
+            "eta": self._eta,
+            "intensify_percentage": self._intensify_percentage,
+            "seed": self._seed,
+            "n_seeds": self._n_seeds,
         }
 
     @property
@@ -233,25 +225,6 @@ class SuccessiveHalving(ParallelScheduler):
         return self._instance_as_budget
 
     def _get_intensifier_ranking(self, intensifier: AbstractIntensifier) -> tuple[int, int]:
-        """Given a intensifier, returns how advance it is. This metric will be used to determine
-        what priority to assign to the intensifier.
-
-        Parameters
-        ----------
-        intensifier: AbstractRacer
-            Intensifier to rank based on run progress
-
-        Returns
-        -------
-        ranking: int
-            the higher this number, the faster the intensifier will get
-            the running resources. For hyperband we can use the
-            sh_intensifier stage, for example
-        tie_breaker: int
-            The configurations that have been launched to break ties. For
-            example, in the case of Successive Halving it can be the number
-            of configurations launched
-        """
         from smac.intensification.successive_halving_worker import SuccessiveHalvingWorker
 
         assert isinstance(intensifier, SuccessiveHalvingWorker)
@@ -263,19 +236,6 @@ class SuccessiveHalving(ParallelScheduler):
         return intensifier.stage, len(intensifier._run_tracker)
 
     def _add_new_instance(self, n_workers: int) -> bool:
-        """Decides if it is possible to add a new intensifier instance, and adds it. If a new
-        intensifier instance is added, True is returned, else False.
-
-        Parameters
-        ----------
-        n_workers: int
-            the maximum number of workers available
-            at a given time.
-
-        Returns
-        -------
-        Whether or not a successive halving instance was added
-        """
         from smac.intensification.successive_halving_worker import SuccessiveHalvingWorker
 
         if len(self._intensifier_instances) >= n_workers:

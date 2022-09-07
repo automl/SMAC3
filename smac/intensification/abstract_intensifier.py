@@ -153,7 +153,7 @@ class AbstractIntensifier:
         Parameters
         ----------
         challengers : list[Configuration] | None
-            Promising configurations
+            Promising configurations.
         incumbent : Configuration
             Incumbent configuration.
         get_next_configurations : Callable[[], Iterator[Configuration]] | None, defaults to none

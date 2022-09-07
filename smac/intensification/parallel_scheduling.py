@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Dict, Iterator, List, Tuple
+from typing import Any, Callable, Iterator
 
 import os
 
@@ -24,45 +24,13 @@ class ParallelScheduler(AbstractIntensifier):
     prevent workers from being idle. This intensifier objects will give configurations
     to run.
 
-    Parameters
-    ----------
-    stats: smac.stats.stats.Stats
-        stats object
-    rng : np.random.RandomState
-    instances : List[str]
-        list of all instance ids
-    instance_specifics : Mapping[str, str]
-        mapping from instance name to instance specific string
-    algorithm_walltime_limit : Optional[int]
-        algorithm_walltime_limit of TA runs
-    deterministic : bool
-        whether the TA is deterministic or not
-    min_budget : Optional[float]
-        minimum budget allowed for 1 run of successive halving
-    max_budget : Optional[float]
-        maximum budget allowed for 1 run of successive halving
-    eta : float
-        'halving' factor after each iteration in a successive halving run. Defaults to 3
-    n_initial_challengers : Optional[int]
-        number of challengers to consider for the initial budget. If None, calculated internally
-    n_seeds : Optional[int]
-        Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
-    instance_order : Optional[str]
-        how to order instances. Can be set to: [None, shuffle_once, shuffle]
-        * None - use as is given by the user
-        * shuffle_once - shuffle once and use across all SH run (default)
-        * shuffle - shuffle before every SH run
-    instance_seed_pairs : List[Tuple[str, int]], optional
-        Do not set this argument, it will only be used by hyperband!
-    min_challenger: int
-        minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
-        raise an exception if a value larger than 1 is passed.
-    incumbent_selection: str
-        How to select incumbent in successive halving. Only active for real-valued budgets.
-        Can be set to: [highest_executed_budget, highest_budget, any_budget]
-        * highest_executed_budget - incumbent is the best in the highest budget run so far (default)
-        * highest_budget - incumbent is selected only based on the highest budget
-        * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
+    scenario : Scenario
+    min_challenger : int, optional, defaults to 1
+        Minimum number of trials per config (summed over all calls to intensify).
+    intensify_percentage : float, defaults to 0.5
+        How much percentage of the time should configurations be intensified (evaluated on higher budgets or
+        more instances). This parameter is accessed in the SMBO class.
+    seed : int | None, defaults to None
     """
 
     def __init__(
@@ -89,7 +57,6 @@ class ParallelScheduler(AbstractIntensifier):
         return True
 
     def get_meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
         }
@@ -104,9 +71,7 @@ class ParallelScheduler(AbstractIntensifier):
         n_workers: int = 1,
     ) -> tuple[TrialInfoIntent, TrialInfo]:
         """This procedure decides from which instance to pick a config, in order to determine the
-        next run.
-
-        To prevent having idle workers, this procedure creates new instances
+        next run. To prevent having idle workers, this procedure creates new instances
         up to the maximum number of workers available.
 
         If no new intensifier instance can be created and all intensifier
@@ -114,27 +79,24 @@ class ParallelScheduler(AbstractIntensifier):
 
         Parameters
         ----------
-        challengers : List[Configuration]
-            promising configurations
-        incumbent: Configuration
-            incumbent configuration
-        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
-            optimizer that generates next configurations to use for racing
-        runhistory : smac.runhistory.runhistory.RunHistory
-            stores all runs we ran so far
-        repeat_configs : bool
-            if False, an evaluated configuration will not be generated again
-        n_workers: int
-            the maximum number of workers available
-            at a given time.
+        challengers : list[Configuration] | None
+            Promising configurations.
+        incumbent : Configuration
+            Incumbent configuration.
+        get_next_configurations : Callable[[], Iterator[Configuration]] | None, defaults to none
+            Function that generates next configurations to use for racing.
+        runhistory : RunHistory
+        repeat_configs : bool, defaults to true
+            If false, an evaluated configuration will not be generated again.
+        n_workers : int, optional, defaults to 1
+            The maximum number of workers available.
 
         Returns
         -------
-        intent: RunInfoIntent
-               Indicator of how to consume the RunInfo object
-        trial_info: RunInfo
-            An object that encapsulates the minimum information to
-            evaluate a configuration
+        TrialInfoIntent
+            Indicator of how to consume the TrialInfo object.
+        TrialInfo
+            An object that encapsulates necessary information of the trial.
         """
         if n_workers <= 1 and self._print_worker_warning:
             logger.warning(
@@ -197,11 +159,9 @@ class ParallelScheduler(AbstractIntensifier):
         runhistory: RunHistory,
         time_bound: float,
         log_trajectory: bool = True,
-    ) -> tuple[Configuration, float]:
+    ) -> tuple[Configuration, float | list[float]]:
         """The intensifier stage will be updated based on the results/status of a configuration
-        execution.
-
-        To do so, this procedures redirects the result argument, to the
+        execution. To do so, this procedures redirects the result argument, to the
         respective intensifier object that generated the original config.
 
         Also, an incumbent will be determined. This determination is done
@@ -211,27 +171,22 @@ class ParallelScheduler(AbstractIntensifier):
 
         Parameters
         ----------
-        trial_info : RunInfo
-            A RunInfo containing the configuration that was evaluated
-        incumbent : Optional[Configuration]
-            Best configuration seen so far
+        trial_info : TrialInfo
+        trial_value: TrialValue
+        incumbent : Configuration | None
+            Best configuration seen so far.
         runhistory : RunHistory
-            stores all runs we ran so far
-            if False, an evaluated configuration will not be generated again
         time_bound : float
-            time in [sec] available to perform intensify
-        result: RunValue
-            Contain the result (status and other methadata) of exercising
-            a challenger/incumbent.
+            Time [sec] available to perform intensify.
         log_trajectory: bool
-            Whether to log changes of incumbents in trajectory
+            Whether to log changes of incumbents in the trajectory.
 
         Returns
         -------
         incumbent: Configuration
-            current (maybe new) incumbent configuration
-        inc_perf: float
-            empirical performance of incumbent configuration
+            Current (maybe new) incumbent configuration.
+        incumbent_costs: float | list[float]
+            Empirical cost(s) of the incumbent configuration.
         """
         return self._intensifier_instances[trial_info.source].process_results(
             trial_info=trial_info,
@@ -244,56 +199,56 @@ class ParallelScheduler(AbstractIntensifier):
 
     def _add_new_instance(self, n_workers: int) -> bool:
         """Decides if it is possible to add a new intensifier instance, and adds it. If a new
-        intensifier instance is added, True is returned, else False.
+        intensifier instance is added, true is returned, else false.
 
         Parameters
         ----------
-        n_workers: int
-            the maximum number of workers available
-            at a given time.
+        n_workers : int
+            The maximum number of workers available at a given time.
 
         Returns
         -------
-            Whether or not a successive halving instance was added
+        successfully_added : bool
+            Whether or not an instance was added.
         """
         raise NotImplementedError()
 
-    def _get_intensifier_ranking(self, intensifier: AbstractIntensifier) -> Tuple[int, int]:
-        """Given a intensifier, returns how advance it is. This metric will be used to determine
+    def _get_intensifier_ranking(self, intensifier: AbstractIntensifier) -> tuple[int, int]:
+        """Given a intensifier, returns how advanced it is. This metric will be used to determine
         what priority to assign to the intensifier.
 
         Parameters
         ----------
-        intensifier: AbstractRacer
+        intensifier : AbstractRacer
             Intensifier to rank based on run progress
 
         Returns
         -------
-        ranking: int
+        ranking : int
             the higher this number, the faster the intensifier will get
             the running resources. For hyperband we can use the
             sh_intensifier stage, for example
-        tie_breaker: int
+        tie_breaker : int
             The configurations that have been launched to break ties. For
             example, in the case of Successive Halving it can be the number
             of configurations launched
         """
         raise NotImplementedError()
 
-    def _sort_instances_by_stage(self, instances: Dict[int, AbstractIntensifier]) -> List[int]:
+    def _sort_instances_by_stage(self, instances: dict[int, AbstractIntensifier]) -> list[int]:
         """This procedure dictates what SH to prioritize in launching jobs. It prioritizes resource
         allocation to SH instances that have higher stages. In case of tie, we prioritize the SH
         instance with more launched configs.
 
         Parameters
         ----------
-        instances: Dict[int, AbstractRacer]
-            Dict with the instances to prioritize
+        instances: dict[int, AbstractRacer]
+            Dict with the instances to prioritize.
 
         Returns
         -------
-        List:
-            The order in which to query for new jobs
+        order : list[int]
+            The order in which to query for new jobs.
         """
         # This function might be called when no intensifier instances
         # exist (first iteration), so we return an empty list in that case

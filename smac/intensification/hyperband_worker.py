@@ -16,53 +16,18 @@ __license__ = "3-clause BSD"
 
 
 class HyperbandWorker(SuccessiveHalvingWorker):
-    """Races multiple challengers against an incumbent using Hyperband method.
+    """This is the worker class for Hyperband.
 
-    This class contains the logic to implement:
-    "BOHB: Robust and Efficient Hyperparameter Optimization at Scale" (Falkner et al. 2018)
-
-    Objects from this class are meant to run on a single worker. `Hyperband` method,
-    creates multiple _Hyperband instances to allow parallelism, and for this reason
-    `Hyperband` should be considered the user interface whereas `_Hyperband` a private
-    class with the actual implementation of the method.
+    Warning
+    -------
+    Do not use this class as stand-alone.
 
     Parameters
     ----------
-    stats: smac._stats._stats._stats
-        stats object
-    rng : np.random.RandomState
-    instances : List[str]
-        list of all instance ids
-    instance_specifics : Mapping[str, str]
-        mapping from instance name to instance specific string
-    algorithm_walltime_limit : Optional[int]
-        runtime algorithm_walltime_limit of TA runs
-    deterministic : bool
-        whether the TA is deterministic or not
-    min_budget : Optional[float]
-        minimum budget allowed for 1 run of successive halving
-    max_budget : Optional[float]
-        maximum budget allowed for 1 run of successive halving
-    eta : float
-        'halving' factor after each iteration in a successive halving run. Defaults to 3
-    n_seeds : Optional[int]
-        Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
-    instance_order : Optional[str]
-        how to order instances. Can be set to: [None, shuffle_once, shuffle]
-        * None - use as is given by the user
-        * shuffle_once - shuffle once and use across all SH run (default)
-        * shuffle - shuffle before every SH run
-    min_challenger: int
-        minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
-        raise an exception if a value larger than 1 is passed.
-    incumbent_selection: str
-        How to select incumbent in successive halving. Only active for real-valued budgets.
-        Can be set to: [highest_executed_budget, highest_budget, any_budget]
-        * highest_executed_budget - incumbent is the best in the highest budget run so far (default)
-        * highest_budget - incumbent is selected only based on the highest budget
-        * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
-    identifier: int
-        Allows to identify the _Hyperband instance in case of multiple ones
+    hyperband : Hyperband
+        The controller of the instance.
+    identifier : int, defaults to 0
+        Adds a numerical identifier on the instance. Used for debug and tagging logger messages properly.
     """
 
     def __init__(
@@ -117,33 +82,6 @@ class HyperbandWorker(SuccessiveHalvingWorker):
         time_bound: float,
         log_trajectory: bool = True,
     ) -> tuple[Configuration, float]:
-        """The intensifier stage will be updated based on the results/status of a configuration
-        execution. Also, a incumbent will be determined.
-
-        Parameters
-        ----------
-        trial_info : RunInfo
-            A RunInfo containing the configuration that was evaluated
-        incumbent : Optional[Configuration]
-            Best configuration seen so far
-        runhistory : RunHistory
-            stores all runs we ran so far
-            if False, an evaluated configuration will not be generated again
-        time_bound : float
-            time in [sec] available to perform intensify
-        result: RunValue
-            Contain the result (status and other methadata) of exercising
-            a challenger/incumbent.
-        log_trajectory: bool
-            Whether to log changes of incumbents in trajectory
-
-        Returns
-        -------
-        incumbent: Configuration
-            current (maybe new) incumbent configuration
-        inc_perf: float
-            empirical performance of incumbent configuration
-        """
         assert self._sh_intensifier
 
         # run 1 iteration of successive halving
@@ -172,36 +110,6 @@ class HyperbandWorker(SuccessiveHalvingWorker):
         repeat_configs: bool = True,
         n_workers: int = 1,
     ) -> tuple[TrialInfoIntent, TrialInfo]:
-        """Selects which challenger to use based on the iteration stage and set the iteration
-        parameters. First iteration will choose configurations from the ``ask`` or input
-        challengers, while the later iterations pick top configurations from the previously selected
-        challengers in that iteration.
-
-        If no new run is available, the method returns a configuration of None.
-
-        Parameters
-        ----------
-        challengers : List[Configuration]
-            promising configurations
-        incumbent: Configuration
-               incumbent configuration
-        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
-            optimizer that generates next configurations to use for racing
-        runhistory : smac.runhistory.runhistory.RunHistory
-            stores all runs we ran so far
-        repeat_configs : bool
-            if False, an evaluated configuration will not be generated again
-        n_workers: int
-            the maximum number of workers available
-            at a given time.
-
-        Returns
-        -------
-        intent: RunInfoIntent
-            Indicator of how to consume the RunInfo object
-        trial_info: RunInfo
-            An object that encapsulates necessary information for a config run
-        """
         if n_workers > 1:
             raise ValueError(
                 "HyperBand does not support more than 1 worker, yet "
@@ -228,10 +136,6 @@ class HyperbandWorker(SuccessiveHalvingWorker):
         return intent, trial_info
 
     def _update_stage(self, runhistory: RunHistory = None) -> None:
-        """Update tracking information for a new stage/iteration and update statistics. This method
-        is called to initialize stage variables and after all configurations of a successive halving
-        stage are completed."""
-
         if self._s == 0:
             # Reset if HB iteration is over
             self._s = self._s_max

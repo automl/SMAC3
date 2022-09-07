@@ -48,8 +48,8 @@ def plot(all_x: list[float]) -> None:
 def plot_from_smac(smac: Facade) -> None:
     rh = smac.runhistory
     all_x = []
-    for runkey in rh.data.keys():
-        config = rh.ids_config[runkey.config_id]
+    for trial_key in rh:
+        config = rh.ids_config[trial_key.config_id]
         all_x.append(config["x"])
 
     plot(all_x)

@@ -20,9 +20,9 @@ logger = get_logger(__name__)
 
 
 class Intensifier(AbstractIntensifier):
-    """Races challengers against an incumbent. SMAC's intensification procedure, in detail:
+    """Races challengers against an incumbent.
 
-    Procedure 2:
+    SMAC's intensification procedure, in detail:
     Intensify(Θ_new, θ_inc, M, R, t_intensify, Π, c_hat) c_hat(θ, Π') denotes the empirical cost of θ on
     the subset of instances Π' ⊆ Π, based on the trials in R; max_config_calls is a parameter where:
     Θ_new: Sequence of parameter settings to evaluate, challengers in this class.
@@ -163,10 +163,17 @@ class Intensifier(AbstractIntensifier):
         return True
 
     def get_meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
-        return {
-            "name": self.__class__.__name__,
-        }
+        meta = super().get_meta()
+        meta.update(
+            {
+                "name": self.__class__.__name__,
+                "race_against": self._race_against,
+                "run_limit": self._run_limit,
+                "use_target_algorithm_time_bound": self._use_target_algorithm_time_bound,
+            }
+        )
+
+        return meta
 
     def get_next_run(
         self,
@@ -178,11 +185,10 @@ class Intensifier(AbstractIntensifier):
         n_workers: int = 1,
     ) -> tuple[TrialInfoIntent, TrialInfo]:
         """This procedure is in charge of generating a TrialInfo object to comply with lines 7 (in
-        case stage is stage==RUN_INCUMBENT) or line 12 (In case of stage==RUN_CHALLENGER).
+        case stage is stage == RUN_INCUMBENT) or line 12 (In case of stage == RUN_CHALLENGER).
 
-        A TrialInfo object encapsulates the necessary information for a worker
-        to execute the job, nevertheless, a challenger is not always available.
-        This could happen because no more configurations are available or the new
+        A TrialInfo object encapsulates the necessary information for a worker to execute the job, nevertheless, a
+        challenger is not always available. This could happen because no more configurations are available or the new
         configuration to try was already executed.
 
         To circumvent this, an intent is also returned:
@@ -190,6 +196,27 @@ class Intensifier(AbstractIntensifier):
         * intent == RUN: Run the TrialInfo object (Normal Execution).
         * intent == SKIP: Skip this iteration. No challenger is available. In particular because challenger is the same
             as incumbent
+
+        Parameters
+        ----------
+        challengers : list[Configuration] | None
+            Promising configurations.
+        incumbent : Configuration
+            Incumbent configuration.
+        get_next_configurations : Callable[[], Iterator[Configuration]] | None, defaults to none
+            Function that generates next configurations to use for racing.
+        runhistory : RunHistory
+        repeat_configs : bool, defaults to true
+            If false, an evaluated configuration will not be generated again.
+        n_workers : int, optional, defaults to 1
+            The maximum number of workers available.
+
+        Returns
+        -------
+        TrialInfoIntent
+            Indicator of how to consume the TrialInfo object.
+        TrialInfo
+            An object that encapsulates necessary information of the trial.
         """
         if n_workers > 1:
             raise ValueError("The selected intensifier does not support more than 1 worker.")
@@ -361,12 +388,31 @@ class Intensifier(AbstractIntensifier):
         """The intensifier stage will be updated based on the results/status of a configuration execution.
         During intensification, the following can happen:
 
-        * Challenger raced against incumbent
+        * Challenger raced against incumbent.
         * Also, during a challenger run, a capped exception can be triggered, where no racer post processing is needed.
         * A run on the incumbent for more confidence needs to be processed, IntensifierStage.PROCESS_INCUMBENT_RUN.
         * The first run results need to be processed (PROCESS_FIRST_CONFIG_RUN).
 
         At the end of any run, checks are done to move to a new iteration.
+
+        Parameters
+        ----------
+        trial_info : TrialInfo
+        trial_value: TrialValue
+        incumbent : Configuration | None
+            Best configuration seen so far.
+        runhistory : RunHistory
+        time_bound : float
+            Time [sec] available to perform intensify.
+        log_trajectory: bool
+            Whether to log changes of incumbents in the trajectory.
+
+        Returns
+        -------
+        incumbent: Configuration
+            Current (maybe new) incumbent configuration.
+        incumbent_costs: float | list[float]
+            Empirical cost(s) of the incumbent configuration.
         """
         if self._stage == IntensifierStage.PROCESS_FIRST_CONFIG_RUN:
             if incumbent is None:
@@ -662,16 +708,29 @@ class Intensifier(AbstractIntensifier):
     ) -> tuple[Configuration | None, bool]:
         """This function returns the next challenger, that should be exercised though lines 8-17.
 
-        It does so by populating configs_to_run, which is a pool of configuration from which the racer will sample.
-        Each configuration within configs_to_run, ill be intensified on different instances/seed registered in
-        self._to_run as stated in line 11.
+        It does so by populating `_configs_to_run`, which is a pool of configuration from which the racer will sample.
+        Each configuration within `_configs_to_run`, will be intensified on different instances/seed registered in
+        `self._to_run` as stated in line 11.
 
-        A brand new configuration should only be sampled, after all self._to_run
-        instance seed pairs are exhausted.
+        A brand new configuration should only be sampled, after all `self._to_run` instance seed pairs are exhausted.
 
-        This method triggers a call to _next_iteration if there are no more configurations
-        to run, for the current intensification loop. This marks the transition to Line 2,
-        where a new configuration to intensify will be drawn from epm/initial challengers.
+        This method triggers a call to `_next_iteration` if there are no more configurations to run, for the current
+        intensification loop. This marks the transition to Line 2, where a new configuration to intensify will be drawn
+        from epm/initial challengers.
+
+        Parameters
+        ----------
+        challengers : list[Configuration] | None, defaults to None
+            Promising configurations.
+        get_next_configurations : Callable[[], Iterator[Configuration]] | None
+            Function that generates next configurations to use for racing.
+
+        Returns
+        -------
+        configuration : Configuration | None
+            The configuration of the selected challenger.
+        new_challenger : bool
+            If the configuration is a new challenger.
         """
         # Select new configuration when entering 'race challenger' stage or for the first run
         if not self._current_challenger or (self._stage == IntensifierStage.RUN_CHALLENGER and not self._to_run):
@@ -700,7 +759,7 @@ class Intensifier(AbstractIntensifier):
 
             return challenger, True
 
-        # return currently running challenger
+        # Return currently running challenger
         return self._current_challenger, False
 
     def _generate_challengers(
