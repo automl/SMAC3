@@ -5,7 +5,16 @@ from smac.utils.logging import get_logger
 logger = get_logger(__name__)
 
 
-def recursively_compare_dicts(d1: dict, d2: dict, level: str = "root", diff: list[str] = []) -> list[str]:
+def recursively_compare_dicts(
+    d1: dict,
+    d2: dict,
+    *,
+    level: str = "root",
+    diff: list[str] | None = None,
+) -> list[str]:
+    if diff is None:
+        diff = []
+
     if isinstance(d1, dict) and isinstance(d2, dict):
         if d1.keys() != d2.keys():
             s1 = set(d1.keys())

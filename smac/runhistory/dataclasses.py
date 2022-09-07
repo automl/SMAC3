@@ -62,12 +62,11 @@ class TrialInfo:
 class TrajectoryItem:
     """Replaces `TrajEntry` from the original code."""
 
-    cost: float
     incumbent: Configuration | dict[str, Any]
+    cost: float | list[float]
+    budget: float | None
     walltime_used: float
-    target_algorithm_walltime_used: float
-    target_algorithm_runs: int
-    budget: float
+    num_trial: int
 
     def __post_init__(self) -> None:
         # Transform configuration to dict

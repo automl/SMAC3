@@ -11,6 +11,8 @@ __license__ = "3-clause BSD"
 
 
 class Callback:
+    """Callback interface with several methods that are called at different stages of the optimization process."""
+
     def __init__(self) -> None:
         pass
 

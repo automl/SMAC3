@@ -18,8 +18,11 @@ logger = get_logger(__name__)
 
 
 class Stats:
-    """
-    All statistics collected during run.
+    """Statistics which are collected during the optimization process.
+
+    Parameters
+    ----------
+    scenario : Scenario
     """
 
     def __init__(self, scenario: Scenario):
@@ -28,21 +31,26 @@ class Stats:
 
     @property
     def submitted(self) -> int:
+        """How many trials have been submitted."""
         return self._submitted
 
     @property
     def finished(self) -> int:
+        """How many trials have been evaluated."""
         return self._finished
 
     @property
     def n_configs(self) -> int:
+        """How many different configurations have been evaluated."""
         return self._n_configs
 
     @property
     def incumbent_changed(self) -> int:
+        """How often the incumbent (aka best found configuration) changed."""
         return self._incumbent_changed
 
     def reset(self) -> None:
+        """Resets the internal variables."""
         self._submitted = 0
         self._finished = 0
         self._n_configs = 0
@@ -51,7 +59,7 @@ class Stats:
         self._target_algorithm_walltime_used = 0.0
 
         # Trajectory
-        self.trajectory: list[TrajectoryItem] = []
+        self._trajectory: list[TrajectoryItem] = []
 
         # Debug stats
         self._n_configs_per_intensify = 0
@@ -63,30 +71,51 @@ class Stats:
 
         self._start_time = np.NaN
 
-    def add_incumbent(self, cost: float, incumbent: Configuration, budget: float = 0) -> None:
+    def add_incumbent(
+        self,
+        cost: float | list[float],
+        incumbent: Configuration,
+        budget: float | None = None,
+    ) -> None:
+        """Adds a new incumbent to the trajectory.
+
+        Parameters
+        ----------
+        cost : float | list[float]
+            Cost(s) of the incumbent.
+        incumbent : Configuration
+            The incumbent configuration.
+        budget : float | None, defaults to None
+            The used budget for the incumbent.
+        """
         self._incumbent_changed += 1
         item = TrajectoryItem(
-            cost=cost,
             incumbent=incumbent,
-            walltime_used=self.get_used_walltime(),
-            target_algorithm_walltime_used=self._target_algorithm_walltime_used,
-            target_algorithm_runs=self._finished,
+            cost=cost,
             budget=budget,
+            walltime_used=self.get_used_walltime(),
+            num_trial=self._finished,
         )
-        self.trajectory.append(item)
+        self._trajectory.append(item)
 
     def get_incumbent(self) -> Configuration | None:
+        """Returns the incumbent configuration.
+
+        Returns
+        -------
+        incumbent : Configuration | None
+            The incumbent configuration if it is available.
+        """
         if self._incumbent_changed == 0:
             return None
 
         # Transform dictionary to configuration
-        incumbent = self.trajectory[-1].incumbent
+        incumbent = self._trajectory[-1].incumbent
         return Configuration(self._scenario.configspace, values=incumbent)
 
     def start_timing(self) -> None:
-        """Starts the timer (for the runtime configuration budget).
-
-        Substracting wallclock time used so we can continue loaded Stats.
+        """Starts the timer (for the runtime configuration budget). Substracting wallclock time so we can continue
+        loaded stats.
         """
         self._start_time = time.time() - self._walltime_used
 
@@ -99,7 +128,7 @@ class Stats:
         return self._scenario.walltime_limit - (time.time() - self._start_time)
 
     def get_remaining_cputime(self) -> float:
-        """Subtracts the ta running budget with the used time."""
+        """Subtracts the target algorithm running budget with the used time."""
         return self._scenario.cputime_limit - self._target_algorithm_walltime_used
 
     def get_remaining_trials(self) -> int:
@@ -133,13 +162,7 @@ class Stats:
             ) * self._ema_n_configs_per_intensifiy + self._EMA_ALPHA * n_configs
 
     def print(self, debug: bool = True) -> None:
-        """Prints all statistics.
-
-        Parameters
-        ----------
-        debug: bool
-            use logging.debug instead of logging.info if set to true
-        """
+        """Prints all statistics."""
         log = logger.info
         if debug:
             log = logger.debug
@@ -169,7 +192,7 @@ class Stats:
             )
 
     def save(self) -> None:
-        """Save all relevant attributes to json-dictionary."""
+        """Save all relevant attributes to a json file."""
         data = {
             "submitted": self._submitted,
             "finished": self._finished,
@@ -177,7 +200,7 @@ class Stats:
             "walltime_used": self.get_used_walltime(),
             "target_algorithm_walltime_used": self._target_algorithm_walltime_used,
             "incumbent_changed": self._incumbent_changed,
-            "trajectory": [dataclasses.asdict(item) for item in self.trajectory],
+            "trajectory": [dataclasses.asdict(item) for item in self._trajectory],
         }
 
         assert self._scenario.output_directory
@@ -191,7 +214,7 @@ class Stats:
             json.dump(data, fh, indent=4)
 
     def load(self) -> None:
-        """Load all attributes from dictionary in file into stats-object."""
+        """Load all attributes from a file into the stats object."""
         assert self._scenario.output_directory
         filename = self._scenario.output_directory / "stats.json"
 
@@ -204,4 +227,4 @@ class Stats:
         self._walltime_used = data["walltime_used"]
         self._target_algorithm_walltime_used = data["target_algorithm_walltime_used"]
         self._incumbent_changed = data["incumbent_changed"]
-        self.trajectory = [TrajectoryItem(**item) for item in data["trajectory"]]
+        self._trajectory = [TrajectoryItem(**item) for item in data["trajectory"]]
