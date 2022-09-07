@@ -33,4 +33,4 @@ def test_compare_dicts():
     assert diff == ["root.a: 1 != 2"]
 
     diff = recursively_compare_dicts(B, C)
-    assert diff == ["root.b.c: 2 != 5", "root.a: 2 != 1"]
+    assert "root.b.c: 2 != 5" in diff and "root.a: 2 != 1" in diff
