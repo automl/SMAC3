@@ -20,27 +20,36 @@ class AbstractRandomDesign:
     Parameters
     ----------
     seed : int
-        Integer used to initialize random state
     """
 
     def __init__(self, seed: int = 0):
-        self.seed = seed
-        self.rng = np.random.RandomState(seed=seed)
+        self._seed = seed
+        self._rng = np.random.RandomState(seed=seed)
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
-            "seed": self.seed,
+            "seed": self._seed,
         }
 
     @abstractmethod
     def next_iteration(self) -> None:
-        """Indicate beginning of next SMBO iteration."""
+        """Indicates the beginning of the next SMBO iteration."""
         pass
 
     @abstractmethod
     def check(self, iteration: int) -> bool:
-        """Check if the next configuration should be at random. Iteration here relates
-        to the ith configuration evaluated in an SMBO iteration."""
+        """Check if the next configuration should be random.
+
+        Parameters
+        ----------
+        iteration : int
+            Number of the i-th configuration evaluated in a SMBO iteration.
+
+        Returns
+        -------
+        bool
+            Whether the next configuration should be random.
+        """
         pass

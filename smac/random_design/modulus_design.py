@@ -22,7 +22,7 @@ class NoCoolDownRandomDesign(AbstractRandomDesign):
     modulus : float
         Every modulus-th configuration will be at random.
     seed : int
-        integer used to initialize random state (not used)
+        Integer used to initialize random state. This class does not use the seed.
     """
 
     def __init__(self, modulus: float = 2.0, seed: int = 0):
@@ -30,25 +30,19 @@ class NoCoolDownRandomDesign(AbstractRandomDesign):
         assert modulus > 0
         if modulus <= 1.0:
             logger.warning("Using SMAC with random configurations only. ROAR is the better choice for this.")
-        self.modulus = modulus
+
+        self._modulus = modulus
 
     def get_meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
-            "modulus": self.modulus,
-            "seed": self.seed,
+            "modulus": self._modulus,
+            "seed": self._seed,
         }
 
-    def next_iteration(self) -> None:
-        """Does nothing."""
-        ...
-
     def check(self, iteration: int) -> bool:
-        """Checks if the next configuration should be at random. Iteration here relates
-        to the ith configuration evaluated in an SMBO iteration."""
         assert iteration >= 0
-        return iteration % self.modulus < 1
+        return iteration % self._modulus < 1
 
 
 class LinearCoolDownRandomDesign(AbstractRandomDesign):
@@ -57,15 +51,15 @@ class LinearCoolDownRandomDesign(AbstractRandomDesign):
 
     Parameters
     ----------
-    start_modulus : float
-       Initially, every modulus-th configuration will be at random
-    modulus_increment : float
-       Increase modulus by this amount in every iteration
-    end_modulus : float
-       The maximum modulus ever used in the chooser. If the value is reached before the optimization
+    start_modulus : float, defaults to 2.0
+       Initially, every modulus-th configuration will be at random.
+    modulus_increment : float, defaults to 0.3
+       Increase modulus by this amount in every iteration.
+    end_modulus : float, defaults to np.inf
+       The maximum modulus ever used. If the value is reached before the optimization
        is over, it is not further increased. If it is not reached before the optimization is over,
-       there will be no adjustment to make sure that the ``end_modulus`` is reached.
-    seed : int
+       there will be no adjustment to make sure that the `end_modulus` is reached.
+    seed : int, defaults to 0
         Integer used to initialize the random state (not used)
     """
 
@@ -81,34 +75,32 @@ class LinearCoolDownRandomDesign(AbstractRandomDesign):
         assert modulus_increment > 0
         assert end_modulus > 0
         assert end_modulus > start_modulus
+
         if start_modulus <= 1.0 and modulus_increment <= 0.0:
             logger.warning("Using SMAC with random configurations only. ROAR is the better choice for this.")
-        self.modulus = start_modulus
-        self.start_modulus = start_modulus
-        self.modulus_increment = modulus_increment
-        self.end_modulus = end_modulus
+
+        self._modulus = start_modulus
+        self._start_modulus = start_modulus
+        self._modulus_increment = modulus_increment
+        self._end_modulus = end_modulus
 
     def get_meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
-            "start_modulus": self.start_modulus,
-            "end_modulus": self.end_modulus,
-            "modulus_increment": self.modulus_increment,
-            "seed": self.seed,
+            "start_modulus": self._start_modulus,
+            "end_modulus": self._end_modulus,
+            "modulus_increment": self._modulus_increment,
+            "seed": self._seed,
         }
 
     def next_iteration(self) -> None:
-        """Increase modulus."""
-        self.modulus += self.modulus_increment
-        self.modulus = min(self.modulus, self.end_modulus)
+        self._modulus += self._modulus_increment
+        self._modulus = min(self._modulus, self._end_modulus)
 
     def check(self, iteration: int) -> bool:
-        """Check if the next configuration should be interleaved based on modulus.
-        Iteration here relates to the ith configuration evaluated in an SMBO
-        iteration."""
         assert iteration >= 0
-        if iteration % self.modulus < 1:
+
+        if iteration % self._modulus < 1:
             return True
         else:
             return False

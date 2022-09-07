@@ -16,34 +16,27 @@ class ProbabilityRandomDesign(AbstractRandomDesign):
 
     Parameters
     ----------
-    prob : float
-        Probability that a configuration will be drawn at random
-    seed : int
-        Integer used to initialize random state
+    probability : float
+        Probability that a configuration will be drawn at random.
+    seed : int, defaults to 0
     """
 
     def __init__(self, probability: float, seed: int = 0):
-        super().__init__(seed)
+        super().__init__(seed=seed)
         assert 0 <= probability <= 1
-        self.prob = probability
-
-    def next_iteration(self) -> None:
-        """Does nothing."""
-        ...
+        self._probability = probability
 
     def get_meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
-            "probability": self.prob,
-            "seed": self.seed,
+            "probability": self._probability,
+            "seed": self._seed,
         }
 
     def check(self, iteration: int) -> bool:
-        """Check if the next configuration should be at random. Iteration here relates
-        to the ith configuration evaluated in an SMBO iteration."""
         assert iteration >= 0
-        if self.rng.rand() < self.prob:
+
+        if self._rng.rand() < self._probability:
             return True
         else:
             return False
@@ -55,39 +48,43 @@ class ProbabilityCoolDownRandomDesign(AbstractRandomDesign):
 
     Parameters
     ----------
-    prob : float
-        Probility of a random configuration
+    probability : float
+        Probability that a configuration will be drawn at random.
     factor : float
-        Multiply the ``prob`` by ``cool_down_fac`` in each iteration
-    seed : int
-        Integer used to initialize random state
+        Multiply the `probability` by `factor` in each iteration.
+    seed : int, defaults to 0
     """
 
-    def __init__(self, probability: float, factor: float, seed: int = 0):
+    def __init__(
+        self,
+        probability: float,
+        factor: float,
+        seed: int = 0,
+    ):
         super().__init__(seed)
         assert 0 <= probability <= 1
         assert factor > 0
-        self.prob = probability
-        self.cool_down_fac = factor
+
+        self._probability = probability
+        self._factor = factor
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
-            "probability": self.prob,
-            "factor": self.cool_down_fac,
-            "seed": self.seed,
+            "probability": self._probability,
+            "factor": self._factor,
+            "seed": self._seed,
         }
 
     def next_iteration(self) -> None:
-        """Set the probability to the current value multiplied by the `cool_down_fac`."""
-        self.prob *= self.cool_down_fac
+        """Sets the probability to the current value multiplied by `factor`."""
+        self._probability *= self._factor
 
     def check(self, iteration: int) -> bool:
-        """Check if the next configuration should be at random. Iteration here relates
-        to the ith configuration evaluated in an SMBO iteration."""
         assert iteration >= 0
-        if self.rng.rand() <= self.prob:
+
+        if self._rng.rand() <= self._probability:
             return True
         else:
             return False
