@@ -33,14 +33,6 @@ class MultiObjectiveRandomForest(MultiObjectiveModel):
         ----------
         configspace : ConfigurationSpace
             Configuration space to tune for.
-        types : List[int]
-            Specifies the number of categorical values of an input dimension where
-            the i-th entry corresponds to the i-th input dimension. Let's say we
-            have 2 dimension where the first dimension consists of 3 different
-            categorical choices and the second dimension is continuous than we
-            have to pass [3, 0]. Note that we count starting from 0.
-        bounds : List[Tuple[float, float]]
-            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
         model_kwargs : Dict[str, Any]
             model kwargs for initializing models
         Returns

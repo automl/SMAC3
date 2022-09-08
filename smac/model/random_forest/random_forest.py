@@ -18,14 +18,6 @@ class RandomForest(AbstractRandomForest):
 
     Parameters
     ----------
-    types : list[int]
-        Specifies the number of categorical values of an input dimension where
-        the i-th entry corresponds to the i-th input dimension. Let's say we
-        have 2 dimension where the first dimension consists of 3 different
-        categorical choices and the second dimension is continuous than we
-        have to pass [3, 0]. Note that we count starting from 0.
-    bounds : list[Tuple[float, float]]
-        bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
     seed : int
         The seed that is passed to the random_forest_run library.
     log_y: bool
@@ -50,28 +42,12 @@ class RandomForest(AbstractRandomForest):
         The minimum difference between two target values to be considered
         different
     max_num_nodes : int
-        The maxmimum total number of nodes in a tree
+        The maximum total number of nodes in a tree
     instance_features : np.ndarray (I, K)
         Contains the K dimensional instance features of the I different instances
     pca_components : float
         Number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
         set n_feats (> pca_dims).
-
-    Attributes
-    ----------
-    rf_opts : regression.rf_opts
-        Random forest hyperparameter
-    n_points_per_tree : int
-    rf : regression.binary_rss_forest
-        Only available after training
-    hypers: list
-        List of random forest hyperparameters
-    unlog_y: bool
-    seed : int
-    types : np.ndarray
-    bounds : list
-    rng : np.random.RandomState
-    logger : logging.logger
     """
 
     def __init__(
@@ -99,26 +75,24 @@ class RandomForest(AbstractRandomForest):
         )
 
         self.log_y = log_y
-        self.seed = seed
-        self.rng = regression.default_random_engine(seed)
 
-        self.rf_opts = regression.forest_opts()
-        self.rf_opts.num_trees = num_trees
-        self.rf_opts.do_bootstrapping = do_bootstrapping
-        max_features = 0 if ratio_features > 1.0 else max(1, int(len(self.types) * ratio_features))
-        self.rf_opts.tree_opts.max_features = max_features
-        self.rf_opts.tree_opts.min_samples_to_split = min_samples_split
-        self.rf_opts.tree_opts.min_samples_in_leaf = min_samples_leaf
-        self.rf_opts.tree_opts.max_depth = max_depth
-        self.rf_opts.tree_opts.epsilon_purity = eps_purity
-        self.rf_opts.tree_opts.max_num_nodes = max_num_nodes
-        self.rf_opts.compute_law_of_total_variance = False
+        self._rf_opts = regression.forest_opts()
+        self._rf_opts.num_trees = num_trees
+        self._rf_opts.do_bootstrapping = do_bootstrapping
+        max_features = 0 if ratio_features > 1.0 else max(1, int(len(self._types) * ratio_features))
+        self._rf_opts.tree_opts.max_features = max_features
+        self._rf_opts.tree_opts.min_samples_to_split = min_samples_split
+        self._rf_opts.tree_opts.min_samples_in_leaf = min_samples_leaf
+        self._rf_opts.tree_opts.max_depth = max_depth
+        self._rf_opts.tree_opts.epsilon_purity = eps_purity
+        self._rf_opts.tree_opts.max_num_nodes = max_num_nodes
+        self._rf_opts.compute_law_of_total_variance = False
 
-        self.n_points_per_tree = n_points_per_tree
-        self.rf = None  # type: regression.binary_rss_forest
+        self._n_points_per_tree = n_points_per_tree
+        self._rf = None  # type: regression.binary_rss_forest
 
         # This list well be read out by save_iteration() in the solver
-        self.hypers = [
+        self._hypers = [
             num_trees,
             max_num_nodes,
             do_bootstrapping,
@@ -130,6 +104,22 @@ class RandomForest(AbstractRandomForest):
             eps_purity,
             self.seed,
         ]
+
+    @property
+    def rf_opts(self) -> regression.forest_opts:
+        """Random forest hyperparameter"""
+        return self._rf_opts
+
+    @property
+    def rf(self) -> regression.binary_rss_forest:
+        """Random Forest model, only available after training"""
+        return self._rf
+
+    @property
+    def hypers(self) -> list:
+        """List of random forest hyperparameters"""
+        return self._hypers
+
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
@@ -155,14 +145,14 @@ class RandomForest(AbstractRandomForest):
         self.X = X
         self.y = y.flatten()
 
-        if self.n_points_per_tree <= 0:
-            self.rf_opts.num_data_points_per_tree = self.X.shape[0]
+        if self._n_points_per_tree <= 0:
+            self._rf_opts.num_data_points_per_tree = self.X.shape[0]
         else:
-            self.rf_opts.num_data_points_per_tree = self.n_points_per_tree
+            self._rf_opts.num_data_points_per_tree = self._n_points_per_tree
         self.rf = regression.binary_rss_forest()
-        self.rf.options = self.rf_opts
+        self.rf.options = self._rf_opts
         data = self._init_data_container(self.X, self.y)
-        self.rf.fit(data, rng=self.rng)
+        self.rf.fit(data, rng=self._rng)
 
         return self
 
@@ -185,7 +175,7 @@ class RandomForest(AbstractRandomForest):
         # retrieve the types and the bounds from the ConfigSpace
         data = regression.default_data_container(X.shape[1])
 
-        for i, (mn, mx) in enumerate(self.bounds):
+        for i, (mn, mx) in enumerate(self._bounds):
             if np.isnan(mx):
                 data.set_type_of_feature(i, mn)
             else:
@@ -227,13 +217,13 @@ class RandomForest(AbstractRandomForest):
 
             # Gather data in a list of 2d arrays and get statistics about the required size of the 3d array
             for row_X in X:
-                preds_per_tree = self.rf.all_leaf_values(row_X)
+                preds_per_tree = self._rf.all_leaf_values(row_X)
                 all_preds.append(preds_per_tree)
                 max_num_leaf_data = max(map(len, preds_per_tree))
                 third_dimension = max(max_num_leaf_data, third_dimension)
 
             # Transform list of 2d arrays into a 3d array
-            preds_as_array = np.zeros((X.shape[0], self.rf_opts.num_trees, third_dimension)) * np.NaN
+            preds_as_array = np.zeros((X.shape[0], self._rf_opts.num_trees, third_dimension)) * np.NaN
             for i, preds_per_tree in enumerate(all_preds):
                 for j, pred in enumerate(preds_per_tree):
                     preds_as_array[i, j, : len(pred)] = pred
@@ -286,24 +276,24 @@ class RandomForest(AbstractRandomForest):
             mean_, var = self.predict(X)
             assert var is not None
 
-            var[var < self.var_threshold] = self.var_threshold
-            var[np.isnan(var)] = self.var_threshold
+            var[var < self._var_threshold] = self._var_threshold
+            var[np.isnan(var)] = self._var_threshold
             return mean_, var
 
         if len(X.shape) != 2:
             raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
 
-        if X.shape[1] != len(self.bounds):
-            raise ValueError("Rows in X should have %d entries but have %d!" % (len(self.bounds), X.shape[1]))
+        if X.shape[1] != len(self._bounds):
+            raise ValueError("Rows in X should have %d entries but have %d!" % (len(self._bounds), X.shape[1]))
 
         X = self._impute_inactive(X)
 
-        dat_ = np.zeros((X.shape[0], self.rf_opts.num_trees))  # marginalized predictions for each tree
+        dat_ = np.zeros((X.shape[0], self._rf_opts.num_trees))  # marginalized predictions for each tree
         for i, x in enumerate(X):
 
             # Marginalize over instances
             # 1. get all leaf values for each tree
-            preds_trees: list[list[float]] = [[] for i in range(self.rf_opts.num_trees)]
+            preds_trees: list[list[float]] = [[] for i in range(self._rf_opts.num_trees)]
 
             for feat in self.instance_features.values():
                 x_ = np.concatenate([x, feat])
@@ -313,10 +303,10 @@ class RandomForest(AbstractRandomForest):
 
             # 2. average in each tree
             if self.log_y:
-                for tree_id in range(self.rf_opts.num_trees):
+                for tree_id in range(self._rf_opts.num_trees):
                     dat_[i, tree_id] = np.log(np.exp(np.array(preds_trees[tree_id])).mean())
             else:
-                for tree_id in range(self.rf_opts.num_trees):
+                for tree_id in range(self._rf_opts.num_trees):
                     dat_[i, tree_id] = np.array(preds_trees[tree_id]).mean()
 
         # 3. compute statistics across trees
@@ -326,7 +316,7 @@ class RandomForest(AbstractRandomForest):
         if var is None:
             raise RuntimeError("The variance must not be none.")
 
-        var[var < self.var_threshold] = self.var_threshold
+        var[var < self._var_threshold] = self._var_threshold
 
         if len(mean_.shape) == 1:
             mean_ = mean_.reshape((-1, 1))
@@ -334,3 +324,4 @@ class RandomForest(AbstractRandomForest):
             var = var.reshape((-1, 1))
 
         return mean_, var
+

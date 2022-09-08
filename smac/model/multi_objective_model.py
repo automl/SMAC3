@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import numpy as np
 
@@ -22,18 +22,9 @@ class MultiObjectiveModel(AbstractModel):
 
     Parameters
     ----------
-    target_names : list
+    target_names : List[str]
         List of str, each entry is the name of one target dimension. Length
         of the list will be ``n_objectives``.
-    types : List[int]
-        Specifies the number of categorical values of an input dimension where
-        the i-th entry corresponds to the i-th input dimension. Let's say we
-        have 2 dimension where the first dimension consists of 3 different
-        categorical choices and the second dimension is continuous than we
-        have to pass [3, 0]. Note that we count starting from 0.
-    bounds : List[Tuple[float, float]]
-        bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan)
-        for categorical dims
     instance_features : np.ndarray (I, K)
         Contains the K dimensional instance features of I different instances
     pca_components : float
@@ -44,11 +35,11 @@ class MultiObjectiveModel(AbstractModel):
 
     Attributes
     ----------
-    target_names:
+    target_names: List[str]
         target names
     num_targets: int
         number of targets
-    estimators: List[BaseEPM]
+    estimators: List[AbstractModel]
         a list of estimators predicting different target values
     """
 
@@ -59,7 +50,7 @@ class MultiObjectiveModel(AbstractModel):
         instance_features: dict[str, list[int | float]] | None = None,
         pca_components: int | None = 7,
         seed: int = 0,
-        model_kwargs: Optional[Dict[str, Any]] = None,
+        model_kwargs: dict[str, Any] | None = None,
     ) -> None:
         super().__init__(
             configspace=configspace,
@@ -71,15 +62,15 @@ class MultiObjectiveModel(AbstractModel):
         if model_kwargs is None:
             model_kwargs = {}
 
-        self.target_names = target_names
-        self.num_targets = len(self.target_names)
-        self.estimators: List[AbstractModel] = self.construct_estimators(configspace, **model_kwargs)
+        self._target_names = target_names
+        self._num_targets = len(self._target_names)
+        self._estimators: list[AbstractModel] = self.construct_estimators(configspace, **model_kwargs)
 
     @abstractmethod
     def construct_estimators(
         self,
         configspace: ConfigurationSpace,
-        model_kwargs: Dict[str, Any],
+        model_kwargs: dict[str, Any],
     ) -> list[AbstractModel]:
         """
         Construct a list of estimators. The number of the estimators equals 'self.num_targets'
@@ -87,19 +78,11 @@ class MultiObjectiveModel(AbstractModel):
         ----------
         configspace : ConfigurationSpace
             Configuration space to tune for.
-        types : List[int]
-            Specifies the number of categorical values of an input dimension where
-            the i-th entry corresponds to the i-th input dimension. Let's say we
-            have 2 dimension where the first dimension consists of 3 different
-            categorical choices and the second dimension is continuous than we
-            have to pass [3, 0]. Note that we count starting from 0.
-        bounds : List[Tuple[float, float]]
-            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
         model_kwargs : Dict[str, Any]
             model kwargs for initializing models
         Returns
         -------
-        estimators: List[BaseEPM]
+        estimators: List[AbstractModel]
             A list of estimators
         """
         raise NotImplementedError
@@ -119,14 +102,14 @@ class MultiObjectiveModel(AbstractModel):
         -------
         self
         """
-        if len(self.estimators) == 0:
+        if len(self._estimators) == 0:
             raise ValueError("The list of estimators for this model is empty!")
-        for i, estimator in enumerate(self.estimators):
+        for i, estimator in enumerate(self._estimators):
             estimator.train(X, Y[:, i])
 
         return self
 
-    def _predict(self, X: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov") -> Tuple[np.ndarray, np.ndarray]:
+    def _predict(self, X: np.ndarray, cov_return_type: str | None = "diagonal_cov") -> tuple[np.ndarray, np.ndarray]:
         """Predict means and variances for given X.
 
         Parameters
@@ -146,16 +129,16 @@ class MultiObjectiveModel(AbstractModel):
         if cov_return_type != "diagonal_cov":
             raise ValueError("'cov_return_type' can only take 'diagonal_cov' for this model")
 
-        mean = np.zeros((X.shape[0], self.num_targets))
-        var = np.zeros((X.shape[0], self.num_targets))
-        for i, estimator in enumerate(self.estimators):
+        mean = np.zeros((X.shape[0], self._num_targets))
+        var = np.zeros((X.shape[0], self._num_targets))
+        for i, estimator in enumerate(self._estimators):
             m, v = estimator.predict(X)
-            assert v is not None  # please mypy
+            assert v is not None
             mean[:, i] = m.flatten()
             var[:, i] = v.flatten()
         return mean, var
 
-    def predict_marginalized_over_instances(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    def predict_marginalized_over_instances(self, X: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         """Predict mean and variance marginalized over all instances.
 
         Returns the predictive mean and variance marginalised over all
@@ -172,9 +155,9 @@ class MultiObjectiveModel(AbstractModel):
         vars : np.ndarray  of shape = [n_samples, n_objectives]
             Predictive variance
         """
-        mean = np.zeros((X.shape[0], self.num_targets))
-        var = np.zeros((X.shape[0], self.num_targets))
-        for i, estimator in enumerate(self.estimators):
+        mean = np.zeros((X.shape[0], self._num_targets))
+        var = np.zeros((X.shape[0], self._num_targets))
+        for i, estimator in enumerate(self._estimators):
             m, v = estimator.predict_marginalized_over_instances(X)
             mean[:, i] = m.flatten()
             var[:, i] = v.flatten()

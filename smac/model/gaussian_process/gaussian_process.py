@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, List, Optional, Tuple, Union, cast
+from typing import Any, cast, Optional
 
 import logging
 
@@ -34,24 +34,13 @@ class GaussianProcess(AbstractGaussianProcess):
 
     Parameters
     ----------
-    types : List[int]
-        Specifies the number of categorical values of an input dimension where
-        the i-th entry corresponds to the i-th input dimension. Let's say we
-        have 2 dimension where the first dimension consists of 3 different
-        categorical choices and the second dimension is continuous than we
-        have to pass [3, 0]. Note that we count starting from 0.
-    bounds : List[Tuple[float, float]]
-        bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
     seed : int
         Model seed.
     kernel : george kernel object
         Specifies the kernel that is used for all Gaussian Process
-    prior : prior object
-        Defines a prior for the hyperparameters of the GP. Make sure that
-        it implements the Prior interface.
     normalize_y : bool
         Zero mean unit variance normalization of the output values
-    n_opt_restart : int
+    n_opt_restarts : int
         Number of restarts for GP hyperparameter optimization
     instance_features : np.ndarray (I, K)
         Contains the K dimensional instance features of the I different instances
@@ -79,13 +68,23 @@ class GaussianProcess(AbstractGaussianProcess):
         )
 
         self.normalize_y = normalize_y
-        self.n_opt_restarts = n_opt_restarts
+        self._n_opt_restarts = n_opt_restarts
 
-        self.hypers = np.empty((0,))
-        self.is_trained = False
+        self._hypers = np.empty((0,))
+        self._is_trained = False
         self._n_ll_evals = 0
 
         self._set_has_conditions()
+
+    @property
+    def hypers(self) -> np.ndarray:
+        """Hyperparameters of the GP model (e.g., log values of kernel length, etc.)"""
+        return self._hypers
+
+    @property
+    def is_trained(self) -> bool:
+        """If the model is trained on datas"""
+        return self._is_trained
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
@@ -118,8 +117,8 @@ class GaussianProcess(AbstractGaussianProcess):
         n_tries = 10
         for i in range(n_tries):
             try:
-                self.gp = self._get_gp()
-                self.gp.fit(X, y)
+                self._gp = self._get_gp()
+                self._gp.fit(X, y)
                 break
             except np.linalg.LinAlgError as e:
                 if i == n_tries:
@@ -131,13 +130,13 @@ class GaussianProcess(AbstractGaussianProcess):
 
         if do_optimize:
             self._all_priors = self._get_all_priors(add_bound_priors=False)
-            self.hypers = self._optimize()
-            self.gp.kernel.theta = self.hypers
-            self.gp.fit(X, y)
+            self._hypers = self._optimize()
+            self._gp.kernel.theta = self._hypers
+            self._gp.fit(X, y)
         else:
-            self.hypers = self.gp.kernel.theta
+            self._hypers = self.gp.kernel.theta
 
-        self.is_trained = True
+        self._is_trained = True
         return self
 
     def _get_gp(self) -> GaussianProcessRegressor:
@@ -147,10 +146,10 @@ class GaussianProcess(AbstractGaussianProcess):
             optimizer=None,
             n_restarts_optimizer=-1,  # Do not use scikit-learn's optimization routine
             alpha=0,  # Governed by the kernel
-            random_state=self.rng,
+            random_state=self._rng,
         )
 
-    def _nll(self, theta: np.ndarray) -> Tuple[float, np.ndarray]:
+    def _nll(self, theta: np.ndarray) -> tuple[float, np.ndarray]:
         """Returns the negative marginal log likelihood (+ the prior) for a hyperparameter
         configuration theta. (negative because we use scipy minimize for optimization)
 
@@ -168,7 +167,7 @@ class GaussianProcess(AbstractGaussianProcess):
         self._n_ll_evals += 1
 
         try:
-            lml, grad = self.gp.log_marginal_likelihood(theta, eval_gradient=True)
+            lml, grad = self._gp.log_marginal_likelihood(theta, eval_gradient=True)
         except np.linalg.LinAlgError:
             return 1e25, np.zeros(theta.shape)
 
@@ -192,14 +191,14 @@ class GaussianProcess(AbstractGaussianProcess):
         theta : np.ndarray(H)
             Hyperparameter vector that maximizes the marginal log likelihood
         """
-        log_bounds = [(b[0], b[1]) for b in self.gp.kernel.bounds]
+        log_bounds = [(b[0], b[1]) for b in self._gp.kernel.bounds]
 
         # Start optimization from the previous hyperparameter configuration
-        p0 = [self.gp.kernel.theta]
-        if self.n_opt_restarts > 0:
+        p0 = [self._gp.kernel.theta]
+        if self._n_opt_restarts > 0:
             dim_samples = []
 
-            prior = None  # type: Optional[Union[List[Prior], Prior]]
+            prior: list[Prior] | Prior | None = None
             for dim, hp_bound in enumerate(log_bounds):
                 prior = self._all_priors[dim]
                 # Always sample from the first prior
@@ -211,16 +210,16 @@ class GaussianProcess(AbstractGaussianProcess):
                 prior = cast(Optional[Prior], prior)
                 if prior is None:
                     try:
-                        sample = self.rng.uniform(
+                        sample = self._rng.uniform(
                             low=hp_bound[0],
                             high=hp_bound[1],
-                            size=(self.n_opt_restarts,),
+                            size=(self._n_opt_restarts,),
                         )
                     except OverflowError:
                         raise ValueError("OverflowError while sampling from (%f, %f)" % (hp_bound[0], hp_bound[1]))
                     dim_samples.append(sample.flatten())
                 else:
-                    dim_samples.append(prior.sample_from_prior(self.n_opt_restarts).flatten())
+                    dim_samples.append(prior.sample_from_prior(self._n_opt_restarts).flatten())
             p0 += list(np.vstack(dim_samples).transpose())
 
         theta_star: Optional[np.ndarray] = None
@@ -238,7 +237,7 @@ class GaussianProcess(AbstractGaussianProcess):
 
     def _predict(
         self, X_test: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov"
-    ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
+    ) -> tuple[np.ndarray, np.ndarray| None]:
         r"""
         Returns the predictive mean and variance of the objective function at
         the given test points.
@@ -257,13 +256,13 @@ class GaussianProcess(AbstractGaussianProcess):
         np.array(N,) or np.array(N, N) or None
             predictive variance or standard deviation
         """
-        if not self.is_trained:
+        if not self._is_trained:
             raise Exception("Model has to be trained first!")
 
         X_test = self._impute_inactive(X_test)
 
         if cov_return_type is None:
-            mu = self.gp.predict(X_test)
+            mu = self._gp.predict(X_test)
             var = None
 
             if self.normalize_y:
@@ -306,11 +305,11 @@ class GaussianProcess(AbstractGaussianProcess):
         function_samples: np.array(N, F)
             The F function values drawn at the N test points.
         """
-        if not self.is_trained:
+        if not self._is_trained:
             raise Exception("Model has to be trained first!")
 
         X_test = self._impute_inactive(X_test)
-        funcs = self.gp.sample_y(X_test, n_samples=n_funcs, random_state=self.rng)
+        funcs = self._gp.sample_y(X_test, n_samples=n_funcs, random_state=self._rng)
 
         if self.normalize_y:
             funcs = self._untransform_y(funcs)

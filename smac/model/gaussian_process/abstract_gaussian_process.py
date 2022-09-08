@@ -31,11 +31,21 @@ class AbstractGaussianProcess(AbstractModel):
             seed=seed,
         )
 
-        self.kernel = kernel
-        self.gp = self._get_gp()
+        self._kernel = kernel
+        self._gp = self._get_gp()
+
+    @property
+    def kernel(self) -> Kernel:
+        """Kernels for the GP models"""
+        return self._kernel
+
+    @property
+    def gp(self) -> GaussianProcessRegressor:
+        """Gaussian Process models"""
+        return self._gp
 
     def _get_gp(self) -> GaussianProcessRegressor:
-        """Returns the Gaussian process."""
+        """Generate a Gaussian process."""
         raise NotImplementedError()
 
     def _normalize_y(self, y: np.ndarray) -> np.ndarray:
@@ -92,8 +102,8 @@ class AbstractGaussianProcess(AbstractModel):
         # Obtain a list of all priors for each tunable hyperparameter of the kernel
         all_priors = []
         to_visit = []
-        to_visit.append(self.gp.kernel.k1)
-        to_visit.append(self.gp.kernel.k2)
+        to_visit.append(self._gp.kernel.k1)
+        to_visit.append(self._gp.kernel.k2)
         while len(to_visit) > 0:
             current_param = to_visit.pop(0)
             if isinstance(current_param, KernelOperator):
@@ -117,7 +127,7 @@ class AbstractGaussianProcess(AbstractModel):
                                 smac.model.gaussian_process.priors.SoftTopHatPrior(
                                     lower_bound=bounds[i][0],
                                     upper_bound=bounds[i][1],
-                                    seed=self.rng.randint(0, 2**20),
+                                    seed=self._rng.randint(0, 2**20),
                                     exponent=2,
                                 )
                             )
@@ -134,9 +144,9 @@ class AbstractGaussianProcess(AbstractModel):
 
     def _set_has_conditions(self) -> None:
         """Sets `has_conditions` on `current_param`."""
-        has_conditions = len(self.configspace.get_conditions()) > 0
+        has_conditions = len(self._configspace.get_conditions()) > 0
         to_visit = []
-        to_visit.append(self.kernel)
+        to_visit.append(self._kernel)
         while len(to_visit) > 0:
             current_param = to_visit.pop(0)
             if isinstance(current_param, sklearn.gaussian_process.kernels.KernelOperator):

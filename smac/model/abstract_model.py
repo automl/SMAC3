@@ -29,7 +29,9 @@ Self = TypeVar("Self", bound="AbstractModel")
 class AbstractModel(ABC):
     """Abstract implementation of the EPM API.
 
-    **Note:** The input dimensionality of Y for training and the output dimensions
+    Note
+    ----
+    The input dimensionality of Y for training and the output dimensions
     of all predictions (also called ``n_objectives``) depends on the concrete
     implementation of this abstract class.
 
@@ -37,14 +39,6 @@ class AbstractModel(ABC):
     ----------
     configspace : ConfigurationSpace
         Configuration space to tune for.
-    types : List[int]
-        Specifies the number of categorical values of an input dimension where
-        the i-th entry corresponds to the i-th input dimension. Let's say we
-        have 2 dimension where the first dimension consists of 3 different
-        categorical choices and the second dimension is continuous than we
-        have to pass [3, 0]. Note that we count starting from 0.
-    bounds : List[Tuple[float, float]]
-        bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
     seed : int
         The seed that is passed to the model library.
     instance_features : np.ndarray (I, K)
@@ -57,25 +51,12 @@ class AbstractModel(ABC):
 
     Attributes
     ----------
-    instance_features : np.ndarray(I, K)
-        Contains the K dimensional instance features
-        of the I different instances
     pca : sklearn.decomposition.PCA
         Object to perform PCA
     pca_components : float
         Number of components to keep or None
-    n_feats : int
-        Number of instance features
-    n_params : int
-        Number of parameters in a configuration (only available after train has
-        been called)
     scaler : sklearn.preprocessing.MinMaxScaler
         Object to scale data to be withing [0, 1]
-    var_threshold : float
-        Lower bound vor variance. If estimated variance < var_threshold, the set
-        to var_threshold
-    types : list
-        If set, contains a list with feature types (cat,const) of input vector
     """
 
     def __init__(
@@ -85,40 +66,61 @@ class AbstractModel(ABC):
         pca_components: int | None = 7,
         seed: int = 0,
     ) -> None:
-        self.configspace = configspace
-        self.seed = seed
-        self.rng = np.random.RandomState(self.seed)
-        self.instance_features = instance_features
+        self._configspace = configspace
+        self._seed = seed
+        self._rng = np.random.RandomState(self._seed)
+        self._instance_features = instance_features
         self.pca_components = pca_components
 
         n_features = 0
-        if self.instance_features is not None:
-            for v in self.instance_features.values():
+        if self._instance_features is not None:
+            for v in self._instance_features.values():
                 if n_features == 0:
                     n_features = len(v)
                 else:
                     if len(v) != n_features:
                         raise RuntimeError("Instances must have the same number of features.")
 
-        self.n_features = n_features
-        self.n_params = len(self.configspace.get_hyperparameters())
+        self._n_features = n_features
+        self._n_params = len(self._configspace.get_hyperparameters())
 
         self.pca = PCA(n_components=self.pca_components)
         self.scaler = MinMaxScaler()
         self._apply_pca = False
 
         # Never use a lower variance than this
-        self.var_threshold = VERY_SMALL_NUMBER
-        self.types, self.bounds = get_types(configspace, instance_features)
+        # If estimated variance < var_threshold, the set to var_threshold
+        self._var_threshold = VERY_SMALL_NUMBER
+        self._types, self._bounds = get_types(configspace, instance_features)
         # Initial types array which is used to reset the type array at every call to train()
         self._initial_types = copy.deepcopy(self.types)
+
+    @property
+    def instance_features(self) -> dict[str, list[int | float]] | None:
+        """instance features of different instances"""
+        return self._instance_features
+
+    @property
+    def seed(self) -> int:
+        """The seed that is passed to the model library for random generator"""
+        return self._seed
+
+    @property
+    def n_params(self) -> int:
+        """Number of parameters in a configuration (only available after train has been called)"""
+        return self._n_params
+
+    @property
+    def n_features(self) -> int:
+        """Number of instances features."""
+        return self._n_features
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
-            "types": self.types,
-            "bounds": self.bounds,
+            "types": self._types,
+            "bounds": self._bounds,
             "pca_components": self.pca_components,
         }
 
@@ -135,30 +137,30 @@ class AbstractModel(ABC):
 
         Returns
         -------
-        self : BaseEPM
+        self : AbstractModel
         """
         if len(X.shape) != 2:
             raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
-        if X.shape[1] != self.n_params + self.n_features:
-            raise ValueError("Feature mismatch: X should have %d features, but has %d" % (self.n_params, X.shape[1]))
+        if X.shape[1] != self._n_params + self._n_features:
+            raise ValueError("Feature mismatch: X should have %d features, but has %d" % (self._n_params, X.shape[1]))
         if X.shape[0] != Y.shape[0]:
             raise ValueError("X.shape[0] ({}) != y.shape[0] ({})".format(X.shape[0], Y.shape[0]))
 
         # reduce dimensionality of features of larger than PCA_DIM
-        if self.pca_components and X.shape[0] > self.pca.n_components and self.n_features >= self.pca_components:
-            X_feats = X[:, -self.n_features :]
+        if self.pca_components and X.shape[0] > self.pca.n_components and self._n_features >= self.pca_components:
+            X_feats = X[:, -self.n_features:]
             # scale features
             X_feats = self.scaler.fit_transform(X_feats)
             X_feats = np.nan_to_num(X_feats)  # if features with max == min
             # PCA
             X_feats = self.pca.fit_transform(X_feats)
-            X = np.hstack((X[:, : self.n_params], X_feats))
+            X = np.hstack((X[:, : self._n_params], X_feats))
             if hasattr(self, "types"):
                 # for RF, adapt types list
                 # if X_feats.shape[0] < self.pca, X_feats.shape[1] ==
                 # X_feats.shape[0]
                 self.types = np.array(
-                    np.hstack((self.types[: self.n_params], np.zeros(X_feats.shape[1]))),
+                    np.hstack((self.types[: self._n_params], np.zeros(X_feats.shape[1]))),
                     dtype=np.uint,
                 )  # type: ignore
             self._apply_pca = True
@@ -282,32 +284,32 @@ class AbstractModel(ABC):
         """
         if len(X.shape) != 2:
             raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
-        if X.shape[1] != len(self.bounds):
-            raise ValueError("Rows in X should have %d entries but have %d!" % (len(self.bounds), X.shape[1]))
+        if X.shape[1] != len(self._bounds):
+            raise ValueError("Rows in X should have %d entries but have %d!" % (len(self._bounds), X.shape[1]))
 
-        if self.instance_features is None:
+        if self._instance_features is None:
             mean, var = self.predict(X)
             assert var is not None
 
-            var[var < self.var_threshold] = self.var_threshold
-            var[np.isnan(var)] = self.var_threshold
+            var[var < self._var_threshold] = self._var_threshold
+            var[np.isnan(var)] = self._var_threshold
 
             return mean, var
         else:
-            n_instances = self.scen
+            n_instances = self._n_features
 
             mean = np.zeros(X.shape[0])
             var = np.zeros(X.shape[0])
             for i, x in enumerate(X):
-                X_ = np.hstack((np.tile(x, (n_instances, 1)), self.instance_features))
+                X_ = np.hstack((np.tile(x, (n_instances, 1)), self._instance_features))
                 means, vars = self.predict(X_)
                 assert vars is not None  # please mypy
                 # VAR[1/n (X_1 + ... + X_n)] =
                 # 1/n^2 * ( VAR(X_1) + ... + VAR(X_n))
                 # for independent X_1 ... X_n
                 var_x = np.sum(vars) / (len(vars) ** 2)
-                if var_x < self.var_threshold:
-                    var_x = self.var_threshold
+                if var_x < self._var_threshold:
+                    var_x = self._var_threshold
 
                 var[i] = var_x
                 mean[i] = np.mean(means)
@@ -325,6 +327,7 @@ class AbstractModel(ABC):
 
         Returns
         -------
-            self.configspace: The ConfigurationSpace of the model
+            self._configspace: The ConfigurationSpace of the model
         """
-        return self.configspace
+        return self._configspace
+

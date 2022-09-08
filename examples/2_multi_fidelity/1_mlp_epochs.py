@@ -4,7 +4,8 @@ Multi-Layer Perceptron Using Multiple Epochs
 
 Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets.
 Since we want to take advantage of Multi-Fidelity, the ``MultiFidelityFacade`` is a good choice. By default,
-``MultiFidelityFacade`` internally runs with `hyperband <https://arxiv.org/abs/1603.06560>`_, which is a combination of an
+``MultiFidelityFacade`` internally runs with `hyperband <https://arxiv.org/abs/1603.06560>`_ as
+intensification, which is a combination of an
 aggressive racing mechanism and successive halving. Crucially, the target algorithm function
 must accept a budget variable, detailing how much fidelity smac wants to allocate to this
 configuration.
@@ -129,14 +130,15 @@ if __name__ == "__main__":
     # Define our environment variables
     scenario = Scenario(
         mlp.configspace,
-        walltime_limit=100,  # After 100 seconds, we stop the optimization
-        n_trials=200,  # Evaluate max 100 different trials
-        min_budget=5,  # Train the MLP for at least 5 epochs
-        max_budget=25,  # Train the MLP for at most 25 epochs
+        walltime_limit=100,  # After 100 seconds, we stop the hyperparameter optimization
+        n_trials=200,  # Evaluate max 200 different trials
+        min_budget=5,  # Train the MLP using a hyperparameter configuration for at least 5 epochs
+        max_budget=25,  # Train the MLP using a hyperparameter configuration for at most 25 epochs
     )
 
     # We want to run five random configurations before starting the optimization.
     initial_design = MultiFidelityFacade.get_initial_design(scenario, n_configs=5)
+    print(initial_design.__dict__)
 
     # Create our SMAC object and pass the scenario and the train method
     smac = MultiFidelityFacade(

@@ -209,6 +209,13 @@ class SMBO(BaseSMBO):
             self.save()
 
     def _collect_data(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """
+        Collect the data from the runhistory to train the epm model.
+        The data collection strategy if budgets are used is as follows:
+        Looking from highest to lowest budget, return those observations
+        that support at least self._min_samples_model points.
+        If no budgets are used, this is equivalent to returning all observations.
+        """
         # if we use a float value as a budget, we want to train the model only on the highest budget
         available_budgets = []
         for run_key in self._runhistory:

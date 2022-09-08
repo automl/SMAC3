@@ -1,8 +1,6 @@
-import unittest
-import unittest.mock
-
 import numpy as np
 import pytest
+from typing import Any
 
 from smac.acquisition.functions import (
     EI,
@@ -21,8 +19,6 @@ __license__ = "3-clause BSD"
 class ConfigurationMock(object):
     def __init__(self, values=None):
         self.values = values
-        self.configuration_space = unittest.mock.MagicMock()
-        self.configuration_space.get_hyperparameters.return_value = []
 
     def get_array(self):
         return self.values
@@ -60,12 +56,46 @@ class MockPrior(object):
     def get_max_density(self):
         return self.max_density
 
+    
+class GetHPDict(object):
+    def __init__(self, hyperparameter_dict) -> None:
+        self._hyperparameter_dict = None
+        self._return_value = None
+        self.return_value = hyperparameter_dict
 
+    @property
+    def hyperparameter_dict(self):
+        return self._hyperparameter_dict
+
+    @hyperparameter_dict.setter
+    def hyperparameter_dict(self, value):
+        self._hyperparameter_dict = value
+        self._return_value = value
+
+    @property
+    def return_value(self):
+        return self._return_value
+
+    @return_value.setter
+    def return_value(self, value):
+        self._return_value = value
+        self._hyperparameter_dict = value
+
+    def __call__(self, *args: Any, **kwds: Any) -> Any:
+        return self.hyperparameter_dict
+
+
+class MockConfigurationSpace(object):
+    def __init__(self, hyperparameter_dict):
+        self.hyperparameter_dict = hyperparameter_dict
+        self.get_hyperparameters_dict = GetHPDict(hyperparameter_dict=hyperparameter_dict)
+
+    
 class PriorMockModel(object):
     def __init__(self, hyperparameter_dict=None, num_targets=1, seed=0):
         self.num_targets = num_targets
         self.seed = seed
-        self.configuration_space = unittest.mock.MagicMock()
+        self.configuration_space = MockConfigurationSpace(hyperparameter_dict)
         self.hyperparameter_dict = hyperparameter_dict
         # since the PriorAcquisitionFunction needs to return the hyperparameters in dict
         # form through two function calls (self.model.get_configspace().get_hyperparameters_dict()),
