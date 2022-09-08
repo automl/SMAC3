@@ -103,6 +103,9 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 5-2 with initial budget 25.
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
     [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 6-1 with initial budget 8.
+    [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+    [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+    [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 6-2 with initial budget 25.
     [INFO][facade.py:269] Final Incumbent: {'activation': 'relu', 'n_layer': 5, 'n_neurons': 180, 'solver': 'sgd', 'batch_size': 78, 'learning_rate': 'adaptive', 'learning_rate_init': 0.008750070230028942}
     [INFO][facade.py:270] Estimated cost: 0.018362735995047785
     Incumbent value: 0.02
@@ -251,7 +254,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  52.796 seconds)
+   **Total running time of the script:** ( 1 minutes  48.570 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_1_mlp_epochs.py:

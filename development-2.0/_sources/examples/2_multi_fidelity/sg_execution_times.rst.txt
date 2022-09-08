@@ -5,10 +5,10 @@
 
 Computation times
 =================
-**02:47.616** total execution time for **examples_2_multi_fidelity** files:
+**02:32.682** total execution time for **examples_2_multi_fidelity** files:
 
 +-------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_2_multi_fidelity_1_mlp_epochs.py` (``1_mlp_epochs.py``)     | 01:52.796 | 0.0 MB |
+| :ref:`sphx_glr_examples_2_multi_fidelity_1_mlp_epochs.py` (``1_mlp_epochs.py``)     | 01:48.570 | 0.0 MB |
 +-------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_2_multi_fidelity_2_sgd_datasets.py` (``2_sgd_datasets.py``) | 00:54.820 | 0.0 MB |
+| :ref:`sphx_glr_examples_2_multi_fidelity_2_sgd_datasets.py` (``2_sgd_datasets.py``) | 00:44.112 | 0.0 MB |
 +-------------------------------------------------------------------------------------+-----------+--------+
