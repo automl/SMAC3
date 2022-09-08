@@ -34,3 +34,19 @@ def test_compare_dicts():
 
     diff = recursively_compare_dicts(B, C)
     assert "root.b.c: 2 != 5" in diff and "root.a: 2 != 1" in diff
+
+
+def test_different_keys():
+    A = {"a": 1}
+    B = {"b": 2}
+
+    diff = recursively_compare_dicts(A, B)
+    assert diff == ["root + {'a'} - {'b'}"]
+
+
+def test_different_lists():
+    A = {"a": [1, 2, 3]}
+    B = {"a": [1, 2, 4]}
+
+    diff = recursively_compare_dicts(A, B)
+    assert diff == ["root.a[2]: 3 != 4"]
