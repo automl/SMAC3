@@ -41,6 +41,7 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
             # Scaling is automatically done in configSpace
             conf = runhistory._ids_config[key.config_id]
             conf_vector = convert_configurations_to_array([conf])[0]
+
             if self._n_features > 0 and self._instance_features is not None:
                 assert isinstance(key.instance, str)
                 feats = self._instance_features[key.instance]

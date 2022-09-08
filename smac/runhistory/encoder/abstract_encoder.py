@@ -72,6 +72,15 @@ class AbstractRunHistoryEncoder:
         self._n_features = scenario.count_instance_features()
         self._n_params = len(scenario.configspace.get_hyperparameters())
 
+        if self._instances is not None and self._n_features == 0:
+            logger.warning(
+                "We strongly encourage to use instance features when using instances.",
+                "If no instance features are passed, the runhistory encoder can not distinguish between different "
+                "instances and therefore returns the same data points with different values, all of which are "
+                "used to train the surrogate model.\n"
+                "Consider using instance indices as features.",
+            )
+
         # Learned statistics
         self._min_y = np.array([np.NaN] * self._n_objectives)
         self._max_y = np.array([np.NaN] * self._n_objectives)
