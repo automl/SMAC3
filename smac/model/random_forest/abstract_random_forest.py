@@ -31,29 +31,40 @@ class AbstractRandomForest(AbstractModel):
             seed=seed,
         )
 
-        self.conditional: dict[int, bool] = dict()
-        self.impute_values: dict[int, float] = dict()
+        self._conditional: dict[int, bool] = dict()
+        self._impute_values: dict[int, float] = dict()
 
     def _impute_inactive(self, X: np.ndarray) -> np.ndarray:
         X = X.copy()
-        for idx, hp in enumerate(self.configspace.get_hyperparameters()):
-            if idx not in self.conditional:
-                parents = self.configspace.get_parents_of(hp.name)
+        for idx, hp in enumerate(self._configspace.get_hyperparameters()):
+            if idx not in self._conditional:
+                parents = self._configspace.get_parents_of(hp.name)
                 if len(parents) == 0:
-                    self.conditional[idx] = False
+                    self._conditional[idx] = False
                 else:
-                    self.conditional[idx] = True
+                    self._conditional[idx] = True
                     if isinstance(hp, CategoricalHyperparameter):
-                        self.impute_values[idx] = len(hp.choices)
+                        self._impute_values[idx] = len(hp.choices)
                     elif isinstance(hp, (UniformFloatHyperparameter, UniformIntegerHyperparameter)):
-                        self.impute_values[idx] = -1
+                        self._impute_values[idx] = -1
                     elif isinstance(hp, Constant):
-                        self.impute_values[idx] = 1
+                        self._impute_values[idx] = 1
                     else:
                         raise ValueError
 
-            if self.conditional[idx] is True:
+            if self._conditional[idx] is True:
                 nonfinite_mask = ~np.isfinite(X[:, idx])
-                X[nonfinite_mask, idx] = self.impute_values[idx]
+                X[nonfinite_mask, idx] = self._impute_values[idx]
 
         return X
+
+    @property
+    def conditional(self) -> dict[int, bool]:
+        """A dict indicating if the hyperparameter is conditioned by another hyperparameter"""
+        return self._conditional
+
+    @property
+    def impute_values(self) -> dict[int, float]:
+        """Values to impute missing items w.r.t. each hyperparameter"""
+        return self._impute_values
+

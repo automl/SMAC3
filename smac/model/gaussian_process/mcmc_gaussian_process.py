@@ -38,14 +38,6 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
 
     Parameters
     ----------
-    types : List[int]
-        Specifies the number of categorical values of an input dimension where
-        the i-th entry corresponds to the i-th input dimension. Let's say we
-        have 2 dimension where the first dimension consists of 3 different
-        categorical choices and the second dimension is continuous than we
-        have to pass [3, 0]. Note that we count starting from 0.
-    bounds : List[Tuple[float, float]]
-        bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
     seed : int
         Model seed.
     kernel : george kernel object
@@ -95,21 +87,36 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
             seed=seed,
         )
 
-        self.n_mcmc_walkers = n_mcmc_walkers
-        self.chain_length = chain_length
-        self.burned = False
-        self.burnin_steps = burnin_steps
-        self.models = []  # type: List[GaussianProcess]
+        self._n_mcmc_walkers = n_mcmc_walkers
+        self._chain_length = chain_length
+        self._burned = False
+        self._burnin_steps = burnin_steps
+        self._models: list[GaussianProcess] = []
         self.normalize_y = normalize_y
-        self.mcmc_sampler = mcmc_sampler
-        self.average_samples = average_samples
+        self._mcmc_sampler = mcmc_sampler
+        self._average_samples = average_samples
 
-        self.is_trained = False
+        self._is_trained = False
 
         self._set_has_conditions()
 
         # Internal statistics
         self._n_ll_evals = 0
+
+    @property
+    def models(self) -> list[GaussianProcess]:
+        """A list of GP models sampled by MCMC"""
+        return self._models
+
+    @property
+    def is_trained(self):
+        """If the model is trained on datas"""
+        return self._is_trained
+
+    @property
+    def mcmc_sampler(self) -> str:
+        """Get the type of mcmc sampler"""
+        return self._mcmc_sampler
 
     def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> "MCMCGaussianProcess":
         """Performs MCMC sampling to sample hyperparameter configurations from the likelihood and
@@ -136,18 +143,18 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
             # they unnormalize the data at prediction time.
             y = self._normalize_y(y)
 
-        self.gp = self._get_gp()
+        self._gp = self._get_gp()
 
         if do_optimize:
-            self.gp.fit(X, y)
+            self._gp.fit(X, y)
             self._all_priors = self._get_all_priors(
                 add_bound_priors=True,
-                add_soft_bounds=True if self.mcmc_sampler == "nuts" else False,
+                add_soft_bounds=True if self._mcmc_sampler == "nuts" else False,
             )
 
-            if self.mcmc_sampler == "emcee":
-                sampler = emcee.EnsembleSampler(self.n_mcmc_walkers, len(self.kernel.theta), self._ll)
-                sampler.random_state = self.rng.get_state()
+            if self._mcmc_sampler == "emcee":
+                sampler = emcee.EnsembleSampler(self._n_mcmc_walkers, len(self.kernel.theta), self._ll)
+                sampler.random_state = self._rng.get_state()
                 # Do a burn-in in the first iteration
                 if not self.burned:
                     # Initialize the walkers by sampling from the prior
@@ -165,24 +172,24 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
                         if prior is None:
                             raise NotImplementedError()
                         else:
-                            dim_samples.append(prior.sample_from_prior(self.n_mcmc_walkers).flatten())
+                            dim_samples.append(prior.sample_from_prior(self._n_mcmc_walkers).flatten())
                     self.p0 = np.vstack(dim_samples).transpose()
 
                     # Run MCMC sampling
                     with warnings.catch_warnings():
                         warnings.filterwarnings("ignore", r"invalid value encountered in double_scalars.*")
-                        self.p0, _, _ = sampler.run_mcmc(self.p0, self.burnin_steps)
+                        self.p0, _, _ = sampler.run_mcmc(self.p0, self._burnin_steps)
 
                     self.burned = True
 
                 # Start sampling & save the current position, it will be the start point in the next iteration
                 with warnings.catch_warnings():
                     warnings.filterwarnings("ignore", r"invalid value encountered in double_scalars.*")
-                    self.p0, _, _ = sampler.run_mcmc(self.p0, self.chain_length)
+                    self.p0, _, _ = sampler.run_mcmc(self.p0, self._chain_length)
 
                 # Take the last samples from each walker
-                self.hypers = sampler.get_chain()[-1]
-            elif self.mcmc_sampler == "nuts":
+                self._hypers = sampler.get_chain()[-1]
+            elif self._mcmc_sampler == "nuts":
                 # Originally published as:
                 # http://www.stat.columbia.edu/~gelman/research/published/nuts.pdf
                 # A good explanation of HMC:
@@ -196,21 +203,21 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
 
                 # Perform initial fit to the data to obtain theta0
                 if not self.burned:
-                    theta0 = self.gp.kernel.theta
-                    self.burned = True
+                    theta0 = self._gp.kernel.theta
+                    self._burned = True
                 else:
                     theta0 = self.p0
                 samples, _, _ = nuts.nuts.nuts6(
                     f=self._ll_w_grad,
-                    Madapt=self.burnin_steps,
-                    M=self.chain_length,
+                    Madapt=self._burnin_steps,
+                    M=self._chain_length,
                     theta0=theta0,
                     # Increasing this value results in longer running times
                     delta=0.5,
                     adapt_mass=False,
                     # Rather low max depth to keep the number of required gradient steps low
                     max_depth=10,
-                    rng=self.rng,
+                    rng=self._rng,
                 )
                 indices = [int(np.rint(ind)) for ind in np.linspace(start=0, stop=len(samples) - 1, num=10)]
                 self.hypers = samples[indices]
@@ -218,14 +225,14 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
             else:
                 raise ValueError(self.mcmc_sampler)
 
-            if self.average_samples:
+            if self._average_samples:
                 self.hypers = [self.hypers.mean(axis=0)]
 
         else:
-            self.hypers = self.gp.kernel.theta
+            self.hypers = self._gp.kernel.theta
             self.hypers = [self.hypers]
 
-        self.models = []
+        self._models = []
         for sample in self.hypers:
 
             if (sample < -50).any():
@@ -237,10 +244,10 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
             kernel = deepcopy(self.kernel)
             kernel.theta = sample
             model = GaussianProcess(
-                configspace=self.configspace,
+                configspace=self._configspace,
                 kernel=kernel,
                 normalize_y=False,
-                seed=self.rng.randint(low=0, high=10000),
+                seed=self._rng.randint(low=0, high=10000),
             )
             try:
                 model._train(X, y, do_optimize=False)
@@ -252,10 +259,10 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
             kernel = deepcopy(self.kernel)
             kernel.theta = self.p0
             model = GaussianProcess(
-                configspace=self.configspace,
+                configspace=self._configspace,
                 kernel=kernel,
                 normalize_y=False,
-                seed=self.rng.randint(low=0, high=10000),
+                seed=self._rng.randint(low=0, high=10000),
             )
             model._train(X, y, do_optimize=False)
             self.models.append(model)
@@ -268,7 +275,7 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
                 model.mean_y_ = self.mean_y_
                 model.std_y_ = self.std_y_
 
-        self.is_trained = True
+        self._is_trained = True
         return self
 
     def _get_gp(self) -> GaussianProcessRegressor:
@@ -305,7 +312,7 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
             theta[theta > 50] = 50
 
         try:
-            lml = self.gp.log_marginal_likelihood(theta)
+            lml = self._gp.log_marginal_likelihood(theta)
         except ValueError:
             return -np.inf
 
@@ -319,7 +326,7 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
         else:
             return lml
 
-    def _ll_w_grad(self, theta: np.ndarray) -> Tuple[float, np.ndarray]:
+    def _ll_w_grad(self, theta: np.ndarray) -> tuple[float, np.ndarray]:
         """Returns the marginal log likelihood (+ the prior) for a hyperparameter configuration
         theta.
 
@@ -356,7 +363,7 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
             return -1e25, np.zeros(theta.shape)
 
         try:
-            lml_, grad_ = self.gp.log_marginal_likelihood(theta, eval_gradient=True)
+            lml_, grad_ = self._gp.log_marginal_likelihood(theta, eval_gradient=True)
             lml += lml_
             grad += grad_
         except ValueError:
@@ -370,7 +377,7 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
 
     def _predict(
         self, X_test: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov"
-    ) -> Tuple[np.ndarray, np.ndarray]:
+    ) -> tuple[np.ndarray, np.ndarray]:
         r"""
         Returns the predictive mean and variance of the objective function
         at X average over all hyperparameter samples.
