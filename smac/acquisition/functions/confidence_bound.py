@@ -99,7 +99,7 @@ class LCB(AbstractAcquisitionFunction):
             )
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
-        m, var_ = self.model.predict_marginalized_over_instances(X)
+        m, var_ = self.model.predict_marginalized(X)
         std = np.sqrt(var_)
         beta_t = 2 * np.log((X.shape[1] * self.num_data**2) / self.beta)
         return -(m - np.sqrt(beta_t) * std)

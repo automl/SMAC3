@@ -92,14 +92,14 @@ class TestRFWithInstances(unittest.TestCase):
         self.assertRaisesRegex(
             ValueError,
             "Expected 2d array, got 1d array!",
-            model.predict_marginalized_over_instances,
+            model.predict_marginalized,
             X,
         )
         X = rs.rand(10, 10, 10)
         self.assertRaisesRegex(
             ValueError,
             "Expected 2d array, got 3d array!",
-            model.predict_marginalized_over_instances,
+            model.predict_marginalized,
             X,
         )
 
@@ -135,7 +135,7 @@ class TestRFWithInstances(unittest.TestCase):
             seed=1,
         )
         model.train(X_, Y)
-        means, variances = model.predict_marginalized_over_instances(X)
+        means, variances = model.predict_marginalized(X)
         self.assertEqual(means.shape, (20, 1))
         self.assertEqual(variances.shape, (20, 1))
 
@@ -167,7 +167,7 @@ class TestRFWithInstances(unittest.TestCase):
         Y = rs.randint(1, size=(len(X) * len(F), 1)) * 1.0
         X_ = rs.rand(200, 15)
         model.train(X_, Y)
-        means, variances = model.predict_marginalized_over_instances(rs.rand(11, 10))
+        means, variances = model.predict_marginalized(rs.rand(11, 10))
         # expected to be 0 as the predict is replaced by manual unloggin the trees
         self.assertEqual(rf_mock.call_count, 0)
         self.assertEqual(means.shape, (11, 1))

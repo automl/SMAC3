@@ -166,7 +166,7 @@ class LocalSearch(AbstractAcquisitionOptimizer):
         # configurations with the lowest predictive cost, check for None to make unit tests work
         if self.acquisition_function.model is not None:
             conf_array = convert_configurations_to_array(previous_configs)
-            costs = self.acquisition_function.model.predict_marginalized_over_instances(conf_array)[0]
+            costs = self.acquisition_function.model.predict_marginalized(conf_array)[0]
             assert len(conf_array) == len(costs), (conf_array.shape, costs.shape)
 
             # In case of the predictive model returning the prediction for more than one objective per configuration

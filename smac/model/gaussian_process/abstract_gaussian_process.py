@@ -1,4 +1,6 @@
 from __future__ import annotations
+from abc import abstractmethod
+from typing import Any
 
 import numpy as np
 import sklearn.gaussian_process
@@ -8,13 +10,28 @@ from sklearn.gaussian_process.kernels import Kernel, KernelOperator
 import smac.model.gaussian_process.priors
 from ConfigSpace import ConfigurationSpace
 from smac.model.abstract_model import AbstractModel
-from smac.model.gaussian_process.priors.prior import Prior
+from smac.model.gaussian_process.priors.abstract_prior import AbstractPrior
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
 class AbstractGaussianProcess(AbstractModel):
+    """Abstract base class for all Gaussian process models.
+
+    Parameters
+    ----------
+    configspace : ConfigurationSpace
+    kernel : Kernel
+        Kernel which is used for the Gaussian process.
+    instance_features : dict[str, list[int | float]] | None, defaults to None
+        Features (list of int or floats) of the instances (str). The features are incorporated into the X data,
+        on which the model is trained on.
+    pca_components : float, defaults to 7
+        Number of components to keep when using PCA to reduce dimensionality of instance features.
+    seed : int
+    """
+
     def __init__(
         self,
         configspace: ConfigurationSpace,
@@ -23,7 +40,6 @@ class AbstractGaussianProcess(AbstractModel):
         pca_components: int | None = 7,
         seed: int = 0,
     ):
-        """Abstract base class for all Gaussian process models."""
         super().__init__(
             configspace=configspace,
             instance_features=instance_features,
@@ -32,38 +48,43 @@ class AbstractGaussianProcess(AbstractModel):
         )
 
         self._kernel = kernel
-        self._gp = self._get_gp()
+        self._gp = self._get_gaussian_process()
 
-    @property
-    def kernel(self) -> Kernel:
-        """Kernels for the GP models"""
-        return self._kernel
+    def get_meta(self) -> dict[str, Any]:
+        meta = super().get_meta()
+        meta.update(
+            {
+                "name": self.__class__.__name__,
+                "kernel": self._kernel.get_meta(),
+            }
+        )
 
-    @property
-    def gp(self) -> GaussianProcessRegressor:
-        """Gaussian Process models"""
-        return self._gp
+        return meta
 
-    def _get_gp(self) -> GaussianProcessRegressor:
-        """Generate a Gaussian process."""
+    @abstractmethod
+    def _get_gaussian_process(self) -> GaussianProcessRegressor:
+        """Generates a Gaussian process."""
         raise NotImplementedError()
 
-    def _normalize_y(self, y: np.ndarray) -> np.ndarray:
+    def _normalize(self, y: np.ndarray) -> np.ndarray:
         """Normalize data to zero mean unit standard deviation.
 
         Parameters
         ----------
         y : np.ndarray
-            Targets for the Gaussian process
+            Target values for the Gaussian process.
 
         Returns
         -------
-        np.ndarray
+        normalized_y : np.ndarray
+            Normalized y values.
         """
         self.mean_y_ = np.mean(y)
         self.std_y_ = np.std(y)
+
         if self.std_y_ == 0:
             self.std_y_ = 1
+
         return (y - self.mean_y_) / self.std_y_
 
     def _untransform_y(
@@ -71,8 +92,10 @@ class AbstractGaussianProcess(AbstractModel):
         y: np.ndarray,
         var: np.ndarray | None = None,
     ) -> np.ndarray | tuple[np.ndarray, np.ndarray]:
-        """Transform zeromean unit standard deviation data into the regular space.
+        """Transform zero mean unit standard deviation data into the regular space.
 
+        Warning
+        -------
         This function should be used after a prediction with the Gaussian process which was
         trained on normalized data.
 
@@ -80,30 +103,32 @@ class AbstractGaussianProcess(AbstractModel):
         ----------
         y : np.ndarray
             Normalized data.
-        var : np.ndarray (optional)
-            Normalized variance
+        var : np.ndarray | None, defaults to None
+            Normalized variance.
 
         Returns
         -------
-        np.ndarray on tuple[np.ndarray, np.ndarray]
+        untransformed_y : np.ndarray | tuple[np.ndarray, np.ndarray]
         """
         y = y * self.std_y_ + self.mean_y_
         if var is not None:
             var = var * self.std_y_**2
             return y, var  # type: ignore
+
         return y
 
     def _get_all_priors(
         self,
         add_bound_priors: bool = True,
         add_soft_bounds: bool = False,
-    ) -> list[list[Prior]]:
+    ) -> list[list[AbstractPrior]]:
         """Returns all priors."""
         # Obtain a list of all priors for each tunable hyperparameter of the kernel
         all_priors = []
         to_visit = []
         to_visit.append(self._gp.kernel.k1)
         to_visit.append(self._gp.kernel.k2)
+
         while len(to_visit) > 0:
             current_param = to_visit.pop(0)
             if isinstance(current_param, KernelOperator):
@@ -136,7 +161,7 @@ class AbstractGaussianProcess(AbstractModel):
                                 smac.model.gaussian_process.priors.TophatPrior(
                                     lower_bound=bounds[i][0],
                                     upper_bound=bounds[i][1],
-                                    seed=self.rng.randint(0, 2**20),
+                                    seed=self._rng.randint(0, 2**20),
                                 )
                             )
                     all_priors.append(priors_for_hp)
@@ -162,4 +187,5 @@ class AbstractGaussianProcess(AbstractModel):
         """Imputes inactives."""
         X = X.copy()
         X[~np.isfinite(X)] = -1
+
         return X

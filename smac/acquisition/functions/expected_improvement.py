@@ -95,7 +95,7 @@ class EI(AbstractAcquisitionFunction):
             if len(X.shape) == 1:
                 X = X[:, np.newaxis]
 
-            m, v = self.model.predict_marginalized_over_instances(X)
+            m, v = self.model.predict_marginalized(X)
             s = np.sqrt(v)
 
             def calculate_f():
@@ -122,7 +122,7 @@ class EI(AbstractAcquisitionFunction):
             if len(X.shape) == 1:
                 X = X[:, np.newaxis]
 
-            m, var_ = self.model.predict_marginalized_over_instances(X)
+            m, var_ = self.model.predict_marginalized(X)
             std = np.sqrt(var_)
 
             def calculate_log_ei():
@@ -191,7 +191,7 @@ class EIPS(EI):
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
 
-        m, v = self.model.predict_marginalized_over_instances(X)
+        m, v = self.model.predict_marginalized(X)
         if m.shape[1] != 2:
             raise ValueError("m has wrong shape: %s != (-1, 2)" % str(m.shape))
         if v.shape[1] != 2:

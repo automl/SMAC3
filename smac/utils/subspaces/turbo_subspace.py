@@ -14,9 +14,9 @@ from smac.acquisition import AbstractAcquisitionOptimizer
 from smac.acquisition.functions import AbstractAcquisitionFunction, TS
 from ConfigSpace import Configuration, ConfigurationSpace
 from smac.model.abstract_model import AbstractModel
-from smac.model.gaussian_process.gpytorch import GloballyAugmentedLocalGaussianProcess
+from smac.model.gaussian_process.gpytorch_gaussian_process import GloballyAugmentedLocalGaussianProcess
 from smac.model.gaussian_process.abstract_gaussian_process import AbstractGaussianProcess
-from smac.model.gaussian_process.gpytorch import GPyTorchGaussianProcess
+from smac.model.gaussian_process.gpytorch_gaussian_process import GPyTorchGaussianProcess
 from smac.model.gaussian_process.mcmc_gaussian_process import MCMCGaussianProcess
 from smac.utils.logging import get_logger
 from smac.utils.subspaces import LocalSubspace

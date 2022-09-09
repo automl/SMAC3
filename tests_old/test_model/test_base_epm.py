@@ -51,14 +51,14 @@ class TestRFWithInstances(unittest.TestCase):
                 epm.train(X, y)
                 self.assertFalse(epm._apply_pca)
                 X_test, _ = get_X_y(5, None)
-                epm.predict_marginalized_over_instances(X_test)
+                epm.predict_marginalized(X_test)
 
                 # more data points than pca components
                 X, y = get_X_y(8, 10)
                 epm.train(X, y)
                 self.assertTrue(epm._apply_pca)
                 X_test, _ = get_X_y(5, None)
-                epm.predict_marginalized_over_instances(X_test)
+                epm.predict_marginalized(X_test)
 
                 # and less again - this ensures that the types array inside the epm is reverted
                 # and the pca is disabled again
@@ -66,4 +66,4 @@ class TestRFWithInstances(unittest.TestCase):
                 epm.train(X, y)
                 self.assertFalse(epm._apply_pca)
                 X_test, _ = get_X_y(5, None)
-                epm.predict_marginalized_over_instances(X_test)
+                epm.predict_marginalized(X_test)

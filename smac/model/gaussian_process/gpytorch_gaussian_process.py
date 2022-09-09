@@ -3,105 +3,79 @@ from __future__ import annotations
 import logging
 import warnings
 from collections import OrderedDict
-from typing import Any
+from typing import Any, TypeVar
 
 
 import gpytorch
 import numpy as np
+from smac.model.gaussian_process.utils.gpytorch import ExactGaussianProcessModel
 import torch
-from botorch.optim.numpy_converter import module_to_array, set_params_with_array
-from botorch.optim.utils import _get_extra_mll_args, _scipy_objective_and_grad
-from gpytorch.constraints.constraints import Interval
-from gpytorch.distributions.multivariate_normal import MultivariateNormal
-from gpytorch.kernels import Kernel
-from gpytorch.likelihoods import FixedNoiseGaussianLikelihood, GaussianLikelihood
-from gpytorch.means import ZeroMean
-from gpytorch.mlls import ExactMarginalLogLikelihood
-from gpytorch.models import ExactGP
-from gpytorch.priors import HorseshoePrior
-from gpytorch.utils.errors import NanError, NotPSDError
+from botorch.optim.numpy_converter import module_to_array, set_params_with_array  # noqa
+from botorch.optim.utils import _get_extra_mll_args, _scipy_objective_and_grad  # noqa
+from gpytorch.constraints.constraints import Interval  # noqa
+from gpytorch.distributions.multivariate_normal import MultivariateNormal  # noqa
+from gpytorch.kernels import Kernel  # noqa
+from gpytorch.likelihoods import FixedNoiseGaussianLikelihood, GaussianLikelihood  # noqa
+from gpytorch.means import ZeroMean  # noqa
+from gpytorch.mlls import ExactMarginalLogLikelihood  # noqa
+from gpytorch.models import ExactGP  # noqa
+from gpytorch.priors import HorseshoePrior  # noqa
+from gpytorch.utils.errors import NanError, NotPSDError  # noqa
 from scipy import optimize
-from scipy.stats.qmc import LatinHypercube
+from scipy.stats.qmc import LatinHypercube  # noqa
 
 from ConfigSpace import ConfigurationSpace
 from smac.constants import VERY_SMALL_NUMBER
 from smac.model.gaussian_process.abstract_gaussian_process import AbstractGaussianProcess
-from smac.model.utils import check_subspace_points
-from smac.model.gaussian_process.kernels.boing import FITCKernel, FITCMean
+
+# from smac.model.utils import check_subspace_points  # noqa
+from smac.model.gaussian_process.kernels.boing import FITCKernel, FITCMean  # noqa
 
 warnings.filterwarnings("ignore", module="gpytorch")
 
 logger = logging.getLogger(__name__)
 
 
-class ExactGPModel(ExactGP):
-    """Exact GP model serves as a backbone of the class GaussianProcessGPyTorch"""
-
-    def __init__(
-        self, train_X: torch.Tensor, train_y: torch.Tensor, base_covar_kernel: Kernel, likelihood: GaussianLikelihood
-    ):
-        """
-        Initialization function
-
-        Parameters
-        ----------
-        train_X: torch.tenor
-            input feature
-        train_y: torch.tensor
-            input observations
-        base_covar_kernel: Kernel
-            covariance kernel used to compute covariance matrix
-        likelihood: GaussianLikelihood
-            GP likelihood
-        """
-        super(ExactGPModel, self).__init__(train_X, train_y, likelihood)
-        # in our experiments we find that ZeroMean more robust than ConstantMean when y is normalized
-        self.mean_module = ZeroMean()
-        self.covar_module = base_covar_kernel
-
-    def forward(self, x: torch.Tensor) -> MultivariateNormal:
-        """Compute the posterior mean and variance"""
-        mean_x = self.mean_module(x)
-        covar_x = self.covar_module(x)
-        return MultivariateNormal(mean_x, covar_x)
+Self = TypeVar("Self", bound="GPyTorchGaussianProcess")
 
 
 class GPyTorchGaussianProcess(AbstractGaussianProcess):
+    """A Gaussian process written with GPyTorch. The interface is written to be compatible with partial sparse gaussian
+    process.
+
+    Parameters
+    ----------
+    configspace : ConfigurationSpace
+    kernel : Kernel
+        Kernel which is used for the Gaussian process.
+    n_restarts : int, defaults to 10
+        Number of restarts for the Gaussian process hyperparameter optimization.
+    normalize_y : bool, defaults to True
+        Zero mean unit variance normalization of the output values.
+    likelihood : FixedNoiseGaussianLikelihood | None, defaults to None
+        The Gaussian likelihood (or noise).
+    instance_features : dict[str, list[int | float]] | None, defaults to None
+        Features (list of int or floats) of the instances (str). The features are incorporated into the X data,
+        on which the model is trained on.
+    pca_components : float, defaults to 7
+        Number of components to keep when using PCA to reduce dimensionality of instance features.
+    seed : int
+    """
+
     def __init__(
         self,
         configspace: ConfigurationSpace,
         kernel: Kernel,
+        n_restarts: int = 10,
         normalize_y: bool = True,
-        n_opt_restarts: int = 10,
         likelihood: FixedNoiseGaussianLikelihood | None = None,
         instance_features: dict[str, list[int | float]] | None = None,
         pca_components: int | None = 7,
         seed: int = 0,
     ):
-        """
-        A Gaussian Process written with GPyTorch, its interface is written to be compatible with partial sparse gaussian
-        process
+        if n_restarts <= 0:
+            raise ValueError("The argument `n_restarts` needs to be positive.")
 
-        Parameters
-        ----------
-        configspace: ConfigurationSpace
-            Configuration space
-        seed : int
-            Model seed.
-        kernel : Kernel
-            Specifies the kernel that is used for all Gaussian Process
-        normalize_y : bool
-            Zero mean unit variance normalization of the output values
-        n_opt_restarts : int
-            Number of restarts for GP hyperparameter optimization
-        likelihood: Optional[FixedNoiseGaussianLikelihood] = None,
-            Gaussian Likelihood (or noise)
-        instance_features : np.ndarray (I, K)
-            Contains the K dimensional instance features of the I different instances
-        pca_components : float
-            The number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
-            set n_feats (> pca_dims).
-        """
         super(GPyTorchGaussianProcess, self).__init__(
             configspace=configspace,
             kernel=kernel,
@@ -109,101 +83,108 @@ class GPyTorchGaussianProcess(AbstractGaussianProcess):
             pca_components=pca_components,
             seed=seed,
         )
+
         if likelihood is None:
             noise_prior = HorseshoePrior(0.1)
             likelihood = GaussianLikelihood(
-                noise_prior=noise_prior, noise_constraint=Interval(np.exp(-25), np.exp(2), transform=None)
+                noise_prior=noise_prior,
+                noise_constraint=Interval(
+                    np.exp(-25),
+                    np.exp(2),
+                    transform=None,
+                ),
             ).double()
+
         self._likelihood = likelihood
-
-        self.normalize_y = normalize_y
-
-        n_opt_restarts = int(n_opt_restarts)
-        if n_opt_restarts <= 0:
-            raise ValueError(f"n_opt_restarts needs to be positive, however, it get {n_opt_restarts}")
-        self._n_opt_restarts = n_opt_restarts
-
+        self._normalize_y = normalize_y
+        self._n_restarts = n_restarts
         self._hypers = np.empty((0,))
-        self._property_dict = OrderedDict()  # type: OrderedDict
+        self._property_dict: OrderedDict = OrderedDict()
         self._is_trained = False
 
-    @property
-    def hypers(self) -> np.ndarray:
-        """Hyperparameters of the GP model (e.g., log values of kernel length, etc.)"""
-        return self._hypers
+    def get_meta(self) -> dict[str, Any]:
+        meta = super().get_meta()
+        meta.update(
+            {
+                "name": self.__class__.__name__,
+                "n_restarts": self._n_restarts,
+                "normalize_y": self._normalize_y,
+                "likelihood": self._likelihood.__data__,
+            }
+        )
 
-    @property
-    def is_trained(self) -> bool:
-        """If the model is trained on datas"""
-        return self._is_trained
+        return meta
 
-    @property
-    def likelihood(self) -> GaussianLikelihood:
-        """GP likelihood"""
-        return self._likelihood
-
-    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> "GPyTorchGaussianProcess":
-        """
-        Computes the Cholesky decomposition of the covariance of X and
-        estimates the GP hyperparameters by optimizing the marginal
-        loglikelihood. The prior mean of the GP is set to the empirical
-        mean of X.
+    def _train(
+        self: Self,
+        X: np.ndarray,
+        y: np.ndarray,
+        optimize_hyperparameters: bool = True,
+    ) -> Self:
+        """Computes the Cholesky decomposition of the covariance of X and estimates the GP
+        hyperparameters by optimizing the marginal loglikelihood. The prior mean of the GP is set to
+        the empirical mean of X.
 
         Parameters
         ----------
-        X: np.ndarray (N, D)
-            Input data points. The dimensionality of X is (N, D),
-            with N as the number of points and D is the number of features.
-        y: np.ndarray (N,)
-            The corresponding target values, N as the number of points
-        do_optimize: boolean
-            If set to true, the hyperparameters are optimized otherwise
-            the default hyperparameters of the kernel are used.
+        X : np.ndarray [#samples, #hyperparameter + #features]
+            Input data points.
+        Y : np.ndarray [#samples, #objectives]
+            The corresponding target values.
+        optimize_hyperparameters: boolean
+            If set to true the hyperparameters are optimized otherwise the default hyperparameters of the kernel are
+            used.
         """
         X = self._impute_inactive(X)
+
         if len(y.shape) == 1:
-            self.n_objectives_ = 1
+            self._n_objectives = 1
         else:
-            self.n_objectives_ = y.shape[1]
-        if self.n_objectives_ == 1:
+            self._n_objectives = y.shape[1]
+
+        if self._n_objectives == 1:
             y = y.flatten()
 
-        if self.normalize_y:
-            y = self._normalize_y(y)
+        if self._normalize_y:
+            y = self._normalize(y)
 
         n_tries = 10
         for i in range(n_tries):
             try:
-                self._gp = self._get_gp(X, y)
+                self._gp = self._get_gaussian_process(X, y)
                 break
             except Exception as e:
                 if i == n_tries - 1:
                     # To avoid Endless loop, we need to stop it when we have n_tries unsuccessful tries.
                     raise e
 
-        if do_optimize:
+        if optimize_hyperparameters:
             self._hypers = self._optimize()
             self._gp = set_params_with_array(self._gp, self._hypers, self._property_dict)
         else:
             self._hypers, self._property_dict, _ = module_to_array(module=self._gp)
+
         self._is_trained = True
         return self
 
-    def _get_gp(self, X: np.ndarray | None = None, y: np.ndarray | None = None) -> ExactMarginalLogLikelihood | None:
+    def _get_gaussian_process(
+        self, X: np.ndarray | None = None, y: np.ndarray | None = None
+    ) -> ExactMarginalLogLikelihood | None:
         """
         Get the GP model with the given X and y values. As GPyTorch requires the input data to initialize a new
         model, we also pass X and y here. X and y are set optional to ensure compatibility.
 
         Parameters
         ----------
-        X: np.ndarray(N, D) | None
-            input feature vectors, N is number of data points, and D is number of feature dimensions
-        y: np.ndarray(N,) | None
-            input observations, N is number of data points
+        X : np.ndarray [#samples, #hyperparameter + #features]
+            Input data points.
+        Y : np.ndarray [#samples, #objectives]
+            The corresponding target values.
+
         Returns
         -------
         mll : ExactMarginalLogLikelihood | None
-            a GPyTorch model with Zero Mean and user specified covariance
+            A GPyTorch model with zero mean and user specified covariance.
         """
         if X is None:
             # To be compatible with the base model
@@ -211,21 +192,23 @@ class GPyTorchGaussianProcess(AbstractGaussianProcess):
 
         X = torch.from_numpy(X)
         y = torch.from_numpy(y)
-        self._gp_model = ExactGPModel(X, y, likelihood=self._likelihood, base_covar_kernel=self.kernel).double()
+        self._gp_model = ExactGaussianProcessModel(
+            X, y, likelihood=self._likelihood, base_covar_kernel=self._kernel
+        ).double()
 
         mll = ExactMarginalLogLikelihood(self._likelihood, self._gp_model)
         mll.double()
+
         return mll
 
     def _optimize(self) -> np.ndarray:
-        """
-        Optimizes the marginal log likelihood and returns the best found
-        hyperparameter configuration theta.
+        """Optimizes the marginal log likelihood and returns the best found hyperparameter
+        configuration theta.
 
         Returns
         -------
-        theta : np.ndarray(H)
-            Hyperparameter vector that maximizes the marginal log likelihood
+        theta : np.ndarray
+            Hyperparameter vector that maximizes the marginal log likelihood.
         """
         x0, property_dict, bounds = module_to_array(module=self._gp)
 
@@ -251,10 +234,10 @@ class GPyTorchGaussianProcess(AbstractGaussianProcess):
                 p0.append(sample.astype(np.float64))
             except Exception as e:
                 if i == n_tries - 1:
-                    logger.debug(f"Fails to sample new hyperparameters because of {e}")
+                    logger.debug(f"Fails to sample new hyperparameters because of {e}.")
                     raise e
                 continue
-            if len(p0) == self._n_opt_restarts:
+            if len(p0) == self._n_restarts:
                 break
 
         self._gp_model.train()
@@ -271,40 +254,25 @@ class GPyTorchGaussianProcess(AbstractGaussianProcess):
                     bounds=bounds,
                 )
             except NotPSDError as e:
-                logger.warning(f"Fail to optimize the GP hyperparameters as an Error occurs: {e}")
+                logger.warning(f"Fail to optimize the GP hyperparameters as an Error occurs: {e}.")
                 f_opt = np.inf
                 theta = start_point
+
             if f_opt < f_opt_star:
                 f_opt_star = f_opt
                 theta_star = theta
+
         return theta_star
 
     def _predict(
-        self, X_test: np.ndarray, cov_return_type: str | None = "diagonal_cov"
+        self,
+        X: np.ndarray,
+        covariance_type: str | None = "diagonal",
     ) -> tuple[np.ndarray, np.ndarray | None]:
-        r"""
-        Returns the predictive mean and variance of the objective function at
-        the given test points.
-
-        Parameters
-        ----------
-        X_test: np.ndarray (N, D)
-            Input test points
-        cov_return_type: Optional[str]
-            Specifies what to return along with the mean. Refer ``predict()`` for more information.
-
-        Returns
-        -------
-        np.array(N,)
-            predictive mean
-        np.array(N,) or np.array(N, N) or None
-            predictive variance or standard deviation
-
-        """
         if not self._is_trained:
-            raise Exception("Model has to be trained first!")
+            raise Exception("Model has to be trained first.")
 
-        X_test = torch.from_numpy(self._impute_inactive(X_test))
+        X_test = torch.from_numpy(self._impute_inactive(X))
         self._likelihood.eval()
         self._gp_model.eval()
 
@@ -313,14 +281,14 @@ class GPyTorchGaussianProcess(AbstractGaussianProcess):
             observed_pred = self._likelihood(self._gp_model(X_test))
 
             mu = observed_pred.mean.numpy()
-            if cov_return_type is None:
+            if covariance_type is None:
                 var = None
 
-                if self.normalize_y:
+                if self._normalize_y:
                     mu = self._untransform_y(mu)
 
             else:
-                if cov_return_type != "full_cov":
+                if covariance_type != "full":
                     var = observed_pred.stddev.numpy()
                     var = var**2  # since we get standard deviation for faster computation
                 else:
@@ -331,29 +299,27 @@ class GPyTorchGaussianProcess(AbstractGaussianProcess):
                 # positive float value
                 var = np.clip(var, VERY_SMALL_NUMBER, np.inf)
 
-                if self.normalize_y:
+                if self._normalize_y:
                     mu, var = self._untransform_y(mu, var)
 
-                if cov_return_type == "diagonal_std":
+                if covariance_type == "diagonal":
                     var = np.sqrt(var)  # converting variance to std deviation if specified
 
         return mu, var
 
     def sample_functions(self, X_test: np.ndarray, n_funcs: int = 1) -> np.ndarray:
-        """
-        Samples F function values from the current posterior at the N
-        specified test points.
+        """Samples F function values from the current posterior at the N specified test points.
 
         Parameters
         ----------
-        X_test: np.ndarray (N, D)
-            Input test points
+        X : np.ndarray [#samples, #hyperparameter + #features]
+            Input data points.
         n_funcs: int
-            The number of function values that are drawn at each test point.
+            Number of function values that are drawn at each test point.
 
         Returns
         -------
-        function_samples: np.array(F, N)
+        function_samples : np.array
             The F function values drawn at the N test points.
         """
         if not self._is_trained:
@@ -365,7 +331,7 @@ class GPyTorchGaussianProcess(AbstractGaussianProcess):
         with torch.no_grad():
             funcs = self._likelihood(self._gp_model(X_test)).sample(torch.Size([n_funcs])).t().cpu().numpy()
 
-        if self.normalize_y:
+        if self._normalize_y:
             funcs = self._untransform_y(funcs)
 
         if len(funcs.shape) == 1:
@@ -374,81 +340,7 @@ class GPyTorchGaussianProcess(AbstractGaussianProcess):
             return funcs
 
 
-class AugmentedLocalGaussianProcess(ExactGP):
-    def __init__(
-        self,
-        X_in: torch.Tensor,
-        y_in: torch.Tensor,
-        X_out: torch.Tensor,
-        y_out: torch.Tensor,
-        likelihood: GaussianLikelihood,
-        base_covar_kernel: Kernel,
-    ):
-        """
-        An Augmented Local GP, it is trained with the points inside a subregion while its prior is augemented by the
-        points outside the subregion (global configurations)
-
-        Parameters
-        ----------
-        X_in: torch.Tensor (N_in, D),
-            feature vector of the points inside the subregion
-        y_in: torch.Tensor (N_in, 1),
-            observation inside the subregion
-        X_out: torch.Tensor (N_out, D),
-            feature vector  of the points outside the subregion
-        y_out:torch.Tensor (N_out, 1),
-            observation inside the subregion
-        likelihood: GaussianLikelihood,
-            likelihood of the GP (noise)
-        base_covar_kernel: Kernel,
-            Covariance Kernel
-        """
-        X_in = X_in.unsqueeze(-1) if X_in.ndimension() == 1 else X_in
-        X_out = X_out.unsqueeze(-1) if X_out.ndimension() == 1 else X_out
-        assert X_in.shape[-1] == X_out.shape[-1]
-
-        super(AugmentedLocalGaussianProcess, self).__init__(X_in, y_in, likelihood)
-
-        self._mean_module = ZeroMean()
-        self.base_covar = base_covar_kernel
-
-        self.X_out = X_out
-        self.y_out = y_out
-        self.augmented = False
-
-    def set_augment_module(self, X_inducing: torch.Tensor) -> None:
-        """
-        Set an augmentation module, which will be used later for inference
-
-        Parameters
-        ----------
-        X_inducing: torch.Tensor(N_inducing, D)
-           inducing points, it needs to have the same number of dimensions as X_in
-        """
-        X_inducing = X_inducing.unsqueeze(-1) if X_inducing.ndimension() == 1 else X_inducing
-        # assert X_inducing.shape[-1] == self.X_out.shape[-1]
-        self.covar_module = FITCKernel(
-            self.base_covar, X_inducing=X_inducing, X_out=self.X_out, y_out=self.y_out, likelihood=self._likelihood
-        )
-        self.mean_module = FITCMean(covar_module=self.covar_module)
-        self.augmented = True
-
-    def forward(self, x: torch.Tensor) -> MultivariateNormal:
-        """
-        Compute the prior values. If optimize_kernel_hps is set True in the training phases, this model degenerates to
-        a vanilla GP model with ZeroMean and base_covar as covariance matrix. Otherwise, we apply partial sparse GP
-        mean and kernels here.
-        """
-        if not self.augmented:
-            # we only optimize for kernel hyperparameters
-            covar_x = self.base_covar(x)
-            mean_x = self._mean_module(x)
-        else:
-            covar_x = self.covar_module(x)
-            mean_x = self.mean_module(x)
-        return MultivariateNormal(mean_x, covar_x)
-
-
+'''
 class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
     def __init__(
         self,
@@ -459,7 +351,7 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
         num_inducing_points: int = 2,
         likelihood: GaussianLikelihood | None = None,
         normalize_y: bool = True,
-        n_opt_restarts: int = 10,
+        n_restarts: int = 10,
         instance_features: dict[str, list[int | float]] | None = None,
         pca_components: int | None = 7,
         seed: int = 0,
@@ -494,7 +386,7 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
             kernel=kernel,
             likelihood=likelihood,
             normalize_y=normalize_y,
-            n_opt_restarts=n_opt_restarts,
+            n_restarts=n_restarts,
             instance_features=instance_features,
             pca_components=pca_components,
             seed=seed,
@@ -532,10 +424,10 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
         """
         X = self._impute_inactive(X)
         if len(y.shape) == 1:
-            self.n_objectives_ = 1
+            self._n_objectives = 1
         else:
-            self.n_objectives_ = y.shape[1]
-        if self.n_objectives_ == 1:
+            self._n_objectives = y.shape[1]
+        if self._n_objectives == 1:
             y = y.flatten()
 
         ss_data_indices = check_subspace_points(
@@ -549,7 +441,7 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
 
         if np.sum(ss_data_indices) > np.shape(y)[0] - self.num_inducing_points:
             # we initialize a vanilla GaussianProcessGPyTorch
-            if self.normalize_y:
+            if self._normalize_y:
                 y = self._normalize_y(y)
             self.num_points = np.shape(y)[0]
             get_gp_kwargs = {"X_in": X, "y_in": y, "X_out": None, "y_out": None}
@@ -560,7 +452,7 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
             X_out = X[~ss_data_indices]
             y_out = y[~ss_data_indices]
             self.num_points = np.shape(y_in)[0]
-            if self.normalize_y:
+            if self._normalize_y:
                 y_in = self._normalize_y(y_in)
                 y_out = (y_out - self.mean_y_) / self.std_y_
             get_gp_kwargs = {"X_in": X_in, "y_in": y_in, "X_out": X_out, "y_out": y_out}
@@ -569,7 +461,7 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
 
         for i in range(n_tries):
             try:
-                self._gp = self._get_gp(**get_gp_kwargs)
+                self._gp = self._get_gaussian_process(**get_gp_kwargs)
                 break
             except Exception as e:
                 if i == n_tries - 1:
@@ -732,7 +624,7 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
         self._is_trained = True
         return self
 
-    def _get_gp(
+    def _get_gaussian_process(
         self,
         X_in: np.ndarray | None = None,
         y_in: np.ndarray | None = None,
@@ -770,7 +662,9 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
         X_in = torch.from_numpy(X_in)
         y_in = torch.from_numpy(y_in)
         if X_out is None:
-            self._gp_model = ExactGPModel(X_in, y_in, likelihood=self._likelihood, base_covar_kernel=self.kernel).double()
+            self._gp_model = ExactGaussianProcessModel(
+                X_in, y_in, likelihood=self._likelihood, base_covar_kernel=self.kernel
+            ).double()
         else:
             X_out = torch.from_numpy(X_out)
             y_out = torch.from_numpy(y_out)
@@ -781,60 +675,4 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
         mll = ExactMarginalLogLikelihood(self._likelihood, self._gp_model)
         mll.double()
         return mll
-
-
-class VariationalGaussianProcess(gpytorch.models.ApproximateGP):
-    """
-    A variational GP to compute the position of the inducing points.
-    We only optimize for the position of the continuous dimensions and keep the categorical dimensions constant.
-    """
-
-    def __init__(self, kernel: Kernel, X_inducing: torch.Tensor):
-        """
-        Initialize a Variational GP
-        we set the lower bound and upper bounds of inducing points for numerical hyperparameters between 0 and 1,
-        that is, we constrain the inducing points to lay inside the subregion.
-
-        Parameters
-        ----------
-        kernel: Kernel
-            kernel of the variational GP, its hyperparameter needs to be fixed when it is by LGPGA
-        X_inducing: torch.tensor (N_inducing, D)
-            inducing points
-        """
-        variational_distribution = gpytorch.variational.TrilNaturalVariationalDistribution(X_inducing.size(0))
-        variational_strategy = gpytorch.variational.VariationalStrategy(
-            self, X_inducing, variational_distribution, learn_inducing_locations=True
-        )
-        super(VariationalGaussianProcess, self).__init__(variational_strategy)
-        self.mean_module = gpytorch.means.ZeroMean()
-        self.covar_module = kernel
-
-        shape_X_inducing = X_inducing.shape
-        lower_X_inducing = torch.zeros([shape_X_inducing[-1]]).repeat(shape_X_inducing[0])
-        upper_X_inducing = torch.ones([shape_X_inducing[-1]]).repeat(shape_X_inducing[0])
-
-        self.variational_strategy.register_constraint(
-            param_name="inducing_points",
-            constraint=Interval(lower_X_inducing, upper_X_inducing, transform=None),
-        )
-        self.double()
-
-        for p_name, t in self.named_hyperparameters():
-            if p_name != "variational_strategy.inducing_points":
-                t.requires_grad = False
-
-    def forward(self, x: torch.Tensor) -> MultivariateNormal:
-        """
-        Pass the posterior mean and variance given input X
-
-        Parameters
-        ----------
-        x: torch.Tensor
-            Input data
-        Returns
-        -------
-        """
-        mean_x = self.mean_module(x)
-        covar_x = self.covar_module(x, cont_only=True)
-        return MultivariateNormal(mean_x, covar_x)
+'''

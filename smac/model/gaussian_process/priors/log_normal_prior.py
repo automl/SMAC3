@@ -1,103 +1,68 @@
 from __future__ import annotations
 
 import math
-import warnings
+from typing import Any
 
 import numpy as np
-import scipy.stats as sps
 
-from smac.constants import VERY_SMALL_NUMBER
-from smac.model.gaussian_process.priors.prior import Prior
+from smac.model.gaussian_process.priors.abstract_prior import AbstractPrior
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class LogNormalPrior(Prior):
+class LogNormalPrior(AbstractPrior):
+    """Implements the log normal prior.
+
+    Parameters
+    ----------
+    sigma : float
+        Specifies the standard deviation of the normal distribution.
+    mean : float
+        Specifies the mean of the normal distribution.
+    seed : int, defaults to 0
+    """
+
     def __init__(
         self,
         sigma: float,
         mean: float = 0,
         seed: int = 0,
     ):
-        """Log normal prior.
-
-        This class is adapted from RoBO:
-
-        Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
-        RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
-        In: NIPS 2017 Bayesian Optimization Workshop
-
-        Parameters
-        ----------
-        sigma: float
-            Specifies the standard deviation of the normal
-            distribution.
-        rng: np.random.RandomState
-            Random number generator
-        mean: float
-            Specifies the mean of the normal distribution
-        """
         super().__init__(seed=seed)
 
         if mean != 0:
             raise NotImplementedError(mean)
 
-        self.sigma = sigma
-        self.sigma_square = sigma**2
-        self.mean = mean
-        self.sqrt_2_pi = np.sqrt(2 * np.pi)
+        self._sigma = sigma
+        self._sigma_square = sigma**2
+        self._mean = mean
+        self._sqrt_2_pi = np.sqrt(2 * np.pi)
 
-    def _lnprob(self, theta: float) -> float:
-        """Return the log probability of theta.
+    def get_meta(self) -> dict[str, Any]:
+        return {
+            "name": self.__class__.__name__,
+            "sigma": self._sigma,
+            "mean": self._mean,
+            "seed": self._seed,
+        }
 
-        Parameters
-        ----------
-        theta : float
-            A hyperparameter configuration
-
-        Returns
-        -------
-        float
-        """
-        if theta <= self.mean:
+    def _get_log_probability(self, theta: float) -> float:
+        if theta <= self._mean:
             return -1e25
         else:
-            rval = -((math.log(theta) - self.mean) ** 2) / (2 * self.sigma_square) - math.log(
-                self.sqrt_2_pi * self.sigma * theta
+            rval = -((math.log(theta) - self._mean) ** 2) / (2 * self._sigma_square) - math.log(
+                self._sqrt_2_pi * self._sigma * theta
             )
             return rval
 
     def _sample_from_prior(self, n_samples: int) -> np.ndarray:
-        """Returns N samples from the prior.
+        return self._rng.lognormal(mean=self._mean, sigma=self._sigma, size=n_samples)
 
-        Parameters
-        ----------
-        n_samples : int
-            The number of samples that will be drawn.
-
-        Returns
-        -------
-        np.ndarray
-        """
-        return self.rng.lognormal(mean=self.mean, sigma=self.sigma, size=n_samples)
-
-    def _gradient(self, theta: float) -> float:
-        """Computes the gradient of the prior with respect to theta.
-
-        Parameters
-        ----------
-        theta : (D,) numpy array
-            Hyperparameter configuration in log space
-
-        Returns
-        -------
-        (D) np.array
-            The gradient of the prior at theta.
-        """
+    def _get_gradient(self, theta: float) -> float:
         if theta <= 0:
             return 0
         else:
-            # derivative of log(1 / (x * s^2 * sqrt(2 pi)) * exp( - 0.5 * (log(x ) / s^2))^2))
-            # This is without the mean!!!
-            return -(self.sigma_square + math.log(theta)) / (self.sigma_square * (theta)) * theta
+            # Derivative of log(1 / (x * s^2 * sqrt(2 pi)) * exp( - 0.5 * (log(x ) / s^2))^2))
+            # This is without the mean!
+            return -(self._sigma_square + math.log(theta)) / (self._sigma_square * (theta)) * theta

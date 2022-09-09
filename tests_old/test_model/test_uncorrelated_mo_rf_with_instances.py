@@ -50,7 +50,7 @@ class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
         self.assertEqual(m.shape, (10, 2))
         self.assertEqual(v.shape, (10, 2))
 
-        m, v = model.predict_marginalized_over_instances(X[10:])
+        m, v = model.predict_marginalized(X[10:])
         self.assertEqual(m.shape, (10, 2))
         self.assertEqual(v.shape, (10, 2))
 

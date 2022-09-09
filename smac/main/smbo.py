@@ -272,7 +272,7 @@ class SMBO(BaseSMBO):
             costs = list(
                 map(
                     lambda x: (
-                        model.predict_marginalized_over_instances(x.reshape((1, -1)))[0][0][0],  # type: ignore
+                        model.predict_marginalized(x.reshape((1, -1)))[0][0][0],  # type: ignore
                         x,
                     ),
                     X,

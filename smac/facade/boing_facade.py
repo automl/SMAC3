@@ -15,7 +15,10 @@ from smac.main.boing import BOinGSMBO
 from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.facade.hyperparameter_facade import HyperparameterFacade
 from smac.model.abstract_model import AbstractModel
-from smac.model.gaussian_process.gpytorch import GloballyAugmentedLocalGaussianProcess, GPyTorchGaussianProcess
+from smac.model.gaussian_process.gpytorch_gaussian_process import (
+    GloballyAugmentedLocalGaussianProcess,
+    GPyTorchGaussianProcess,
+)
 from smac.runhistory.encoder.boing_encoder import (
     RunHistoryRawEncoder,
     RunHistoryRawScaledEncoder,

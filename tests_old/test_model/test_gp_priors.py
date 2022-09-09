@@ -39,18 +39,18 @@ class TestTophatPrior(unittest.TestCase):
 
         # Legal scalar
         for val in (-1, 0, 1):
-            self.assertEqual(prior.lnprob(val), 0, msg=str(val))
-            self.assertEqual(prior.gradient(val), 0, msg=str(val))
+            self.assertEqual(prior.get_log_probability(val), 0, msg=str(val))
+            self.assertEqual(prior.get_gradient(val), 0, msg=str(val))
 
         # Boundary
         for val in (-10, 2):
-            self.assertEqual(prior.lnprob(val), 0)
-            self.assertEqual(prior.gradient(val), 0)
+            self.assertEqual(prior.get_log_probability(val), 0)
+            self.assertEqual(prior.get_gradient(val), 0)
 
         # Values outside the boundary
         for val in (-10 - VERY_SMALL_NUMBER, 2 + VERY_SMALL_NUMBER, -50, 50):
-            self.assertTrue(np.isinf(prior.lnprob(val)))
-            self.assertEqual(prior.gradient(val), 0)
+            self.assertTrue(np.isinf(prior.get_log_probability(val)))
+            self.assertEqual(prior.get_gradient(val), 0)
 
     def test_sample_from_prior(self):
         prior = TophatPrior(lower_bound=np.exp(-10), upper_bound=np.exp(2), seed=1)
@@ -86,12 +86,12 @@ class TestHorseshoePrior(unittest.TestCase):
         prior = HorseshoePrior(scale=1, seed=1)
 
         # Legal scalar
-        self.assertEqual(prior.lnprob(-1), 1.1450937952919953)
-        self.assertEqual(prior.gradient(-1), -0.6089187456211098)
+        self.assertEqual(prior.get_log_probability(-1), 1.1450937952919953)
+        self.assertEqual(prior.get_gradient(-1), -0.6089187456211098)
 
         # Boundary
-        self.assertTrue(np.isinf(prior._lnprob(0)))
-        self.assertTrue(np.isinf(prior._gradient(0)))
+        self.assertTrue(np.isinf(prior._get_log_probability(0)))
+        self.assertTrue(np.isinf(prior._get_gradient(0)))
 
     def test_sample_from_prior(self):
         prior = HorseshoePrior(scale=1, seed=1)
@@ -145,16 +145,16 @@ class TestGammaPrior(unittest.TestCase):
 
         # Legal scalar
         x = -1
-        self.assertAlmostEqual(prior.lnprob(x), -0.46155023, 7)
-        self.assertEqual(prior.gradient(x), -1.2357588823428847)
+        self.assertAlmostEqual(prior.get_log_probability(x), -0.46155023, 7)
+        self.assertEqual(prior.get_gradient(x), -1.2357588823428847)
 
     def test_lnprob_and_grad_array(self):
         prior = GammaPrior(a=0.5, scale=1 / 2, loc=0, seed=1)
         val = np.array([-1, -1])
         with self.assertRaises(NotImplementedError):
-            prior.lnprob(val)
+            prior.get_log_probability(val)
         with self.assertRaises(NotImplementedError):
-            prior.gradient(val)
+            prior.get_gradient(val)
 
     def test_gradient(self):
         for scale in (0.5, 1.0, 2.0):
@@ -207,17 +207,17 @@ class TestSoftTopHatPrior(unittest.TestCase):
         )
 
         # Legal values
-        self.assertEqual(prior.lnprob(-5), 0)
-        self.assertEqual(prior.lnprob(0), 0)
-        self.assertEqual(prior.lnprob(5), 0)
+        self.assertEqual(prior.get_log_probability(-5), 0)
+        self.assertEqual(prior.get_log_probability(0), 0)
+        self.assertEqual(prior.get_log_probability(5), 0)
 
         # Illegal values
-        self.assertAlmostEqual(prior.lnprob(-5.1), -0.01)
-        self.assertAlmostEqual(prior.lnprob(-6), -1)
-        self.assertAlmostEqual(prior.lnprob(-7), -4)
-        self.assertAlmostEqual(prior.lnprob(5.1), -0.01)
-        self.assertAlmostEqual(prior.lnprob(6), -1)
-        self.assertAlmostEqual(prior.lnprob(7), -4)
+        self.assertAlmostEqual(prior.get_log_probability(-5.1), -0.01)
+        self.assertAlmostEqual(prior.get_log_probability(-6), -1)
+        self.assertAlmostEqual(prior.get_log_probability(-7), -4)
+        self.assertAlmostEqual(prior.get_log_probability(5.1), -0.01)
+        self.assertAlmostEqual(prior.get_log_probability(6), -1)
+        self.assertAlmostEqual(prior.get_log_probability(7), -4)
 
     def test_grad(self):
         prior = SoftTopHatPrior(
@@ -228,22 +228,22 @@ class TestSoftTopHatPrior(unittest.TestCase):
         )
 
         # Legal values
-        self.assertEqual(prior.gradient(-5), 0)
-        self.assertEqual(prior.gradient(0), 0)
-        self.assertEqual(prior.gradient(5), 0)
+        self.assertEqual(prior.get_gradient(-5), 0)
+        self.assertEqual(prior.get_gradient(0), 0)
+        self.assertEqual(prior.get_gradient(5), 0)
 
         for theta in [-10, -7, -6, -5.1, 5.1, 6, 7, 10]:
             # Gradient approximation becomes unstable when going closer to zero
             theta += 1e-2
-            grad = prior.gradient(theta)
-            grad_vector = prior.gradient(theta)
+            grad = prior.get_gradient(theta)
+            grad_vector = prior.get_gradient(theta)
             self.assertEqual(grad, grad_vector)
 
             def prob(x):
-                return prior.lnprob(x[0])
+                return prior.get_log_probability(x[0])
 
             def grad(x):
-                return prior.gradient(x[0])
+                return prior.get_gradient(x[0])
 
             error = scipy.optimize.check_grad(prob, grad, np.array([theta]), epsilon=1e-5)
             self.assertAlmostEqual(error, 0, delta=5, msg=theta)

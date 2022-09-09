@@ -12,7 +12,7 @@ import scipy.special
 import sklearn.gaussian_process.kernels as kernels
 
 from smac.model.gaussian_process.kernels.utils import get_conditional_hyperparameters
-from smac.model.gaussian_process.priors.prior import Prior
+from smac.model.gaussian_process.priors.abstract_prior import AbstractPrior
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -27,7 +27,7 @@ class MagicMixinKernel:
     # to add a few type:ignore statements when accessing a member that is declared in the
     # superclass such as self.has_conditions, self._call, super().get_params etc.
 
-    prior = None  # type: Optional[Prior]
+    prior = None  # type: Optional[AbstractPrior]
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
@@ -327,7 +327,7 @@ class ConstantKernel(MagicMixinKernel, kernels.ConstantKernel):
         constant_value: float = 1.0,
         constant_value_bounds: Tuple[float, float] = (1e-5, 1e5),
         operate_on: Optional[np.ndarray] = None,
-        prior: Optional[Prior] = None,
+        prior: Optional[AbstractPrior] = None,
         has_conditions: bool = False,
     ) -> None:
 

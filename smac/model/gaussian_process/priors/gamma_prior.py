@@ -1,85 +1,69 @@
 from __future__ import annotations
-
-import math
-import warnings
+from typing import Any
 
 import numpy as np
 import scipy.stats as sps
 
-from smac.constants import VERY_SMALL_NUMBER
-from smac.model.gaussian_process.priors.prior import Prior
+from smac.model.gaussian_process.priors.abstract_prior import AbstractPrior
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class GammaPrior(Prior):
-    def __init__(self, a: float, scale: float, loc: float, seed: int = 0):
-        """Gamma prior.
+class GammaPrior(AbstractPrior):
+    """Implementation of gamma prior.
 
-        f(x) = (x-loc)**(a-1) * e**(-(x-loc)) * (1/scale)**a / gamma(a)
+    f(x) = (x-loc)**(a-1) * e**(-(x-loc)) * (1/scale)**a / gamma(a)
 
-        Parameters
-        ----------
-        a: float > 0
-            shape parameter
-        scale: float > 0
-            scale parameter (1/scale corresponds to parameter p in canonical form)
-        loc: float
-            mean parameter for the distribution
-        rng: np.random.RandomState
-            Random number generator
-        """
+    Parameters
+    ----------
+    a : float
+        The shape parameter. Must be greater than 0.
+    scale : float
+        The scale parameter (1/scale corresponds to parameter p in canonical form). Must be greather than 0.
+    loc : float
+        Mean parameter for the distribution.
+    seed : int, defaults to 0
+    """
+
+    def __init__(
+        self,
+        a: float,
+        scale: float,
+        loc: float,
+        seed: int = 0,
+    ):
         super().__init__(seed=seed)
+        assert a > 0
+        assert scale > 0
 
-        self.a = a
-        self.loc = loc
-        self.scale = scale
+        self._a = a
+        self._loc = loc
+        self._scale = scale
 
-    def _lnprob(self, theta: float) -> float:
-        """Returns the logpdf of theta.
+    def get_meta(self) -> dict[str, Any]:
+        return {
+            "name": self.__class__.__name__,
+            "a": self._a,
+            "loc": self._loc,
+            "scale": self._scale,
+            "seed": self._seed,
+        }
 
-        Parameters
-        ----------
-        theta : float
-            Hyperparameter configuration
-
-        Returns
-        -------
-        float
-        """
+    def _get_log_probability(self, theta: float) -> float:
+        """Returns the log pdf of theta."""
         if np.ndim(theta) != 0:
             raise NotImplementedError()
-        return sps.gamma.logpdf(theta, a=self.a, scale=self.scale, loc=self.loc)
+
+        return sps.gamma.logpdf(theta, a=self._a, scale=self._scale, loc=self._loc)
 
     def _sample_from_prior(self, n_samples: int) -> np.ndarray:
-        """Returns N samples from the prior.
+        return self._rng.gamma(shape=self._a, scale=self._scale, size=n_samples)
 
-        Parameters
-        ----------
-        n_samples : int
-            The number of samples that will be drawn.
-
-        Returns
-        -------
-        np.ndarray
-        """
-        return self.rng.gamma(shape=self.a, scale=self.scale, size=n_samples)
-
-    def _gradient(self, theta: float) -> float:
-        """As computed by Wolfram Alpha.
-
-        Parameters
-        ----------
-        theta: float
-            A hyperparameter configuration
-
-        Returns
-        -------
-        float
-        """
+    def _get_gradient(self, theta: float) -> float:
+        """Get gradient as computed by Wolfram Alpha."""
         if np.ndim(theta) == 0:
             # Multiply by theta because of the chain rule...
-            return ((self.a - 1) / theta - (1 / self.scale)) * theta
+            return ((self._a - 1) / theta - (1 / self._scale)) * theta
         else:
             raise NotImplementedError()

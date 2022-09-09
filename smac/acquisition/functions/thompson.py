@@ -93,7 +93,7 @@ class TS(AbstractAcquisitionFunction):
         if callable(sample_function):
             return -sample_function(X, n_funcs=1)
 
-        m, var_ = self.model.predict_marginalized_over_instances(X)
+        m, var_ = self.model.predict_marginalized(X)
         rng = getattr(self.model, "rng", np.random.RandomState(self.model.seed))
         m = m.flatten()
         var_ = np.diag(var_.flatten())

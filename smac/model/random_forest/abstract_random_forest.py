@@ -1,10 +1,10 @@
 from __future__ import annotations
+from typing import Any
 
 import numpy as np
 
 from ConfigSpace import (
     CategoricalHyperparameter,
-    ConfigurationSpace,
     Constant,
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
@@ -16,20 +16,10 @@ __license__ = "3-clause BSD"
 
 
 class AbstractRandomForest(AbstractModel):
-    def __init__(
-        self,
-        configspace: ConfigurationSpace,
-        instance_features: dict[str, list[int | float]] | None = None,
-        pca_components: int | None = 7,
-        seed: int = 0,
-    ) -> None:
-        """Abstract base class for all random forest models."""
-        super().__init__(
-            configspace=configspace,
-            instance_features=instance_features,
-            pca_components=pca_components,
-            seed=seed,
-        )
+    """Abstract base class for all random forest models."""
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
 
         self._conditional: dict[int, bool] = dict()
         self._impute_values: dict[int, float] = dict()
@@ -57,14 +47,3 @@ class AbstractRandomForest(AbstractModel):
                 X[nonfinite_mask, idx] = self._impute_values[idx]
 
         return X
-
-    @property
-    def conditional(self) -> dict[int, bool]:
-        """A dict indicating if the hyperparameter is conditioned by another hyperparameter"""
-        return self._conditional
-
-    @property
-    def impute_values(self) -> dict[int, float]:
-        """Values to impute missing items w.r.t. each hyperparameter"""
-        return self._impute_values
-

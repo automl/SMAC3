@@ -15,7 +15,7 @@ from smac.model.gaussian_process.augmented_local_gaussian_process import (
     AugmentedLocalGaussianProcess,
     GloballyAugmentedLocalGaussianProcess,
 )
-from smac.model.gaussian_process.gpytorch import ExactGPModel
+from smac.model.gaussian_process.gpytorch_gaussian_process import ExactGaussianProcessModel
 
 from .test_boing_kernel import generate_kernel, generate_test_data
 from .test_gp_gpytorch import TestGPGPyTorch
@@ -96,14 +96,14 @@ class TestLGPGA(TestGPGPyTorch):
     def test_get_gp(self):
         self.assertIsNone(self.gp_model.gp)
         self.gp_model._get_gp(self.X_in, self.Y_in)
-        self.assertIsInstance(self.gp_model.gp_model, ExactGPModel)
+        self.assertIsInstance(self.gp_model.gp_model, ExactGaussianProcessModel)
 
         self.gp_model._get_gp(self.X_in, self.Y_in, self.X_out, self.Y_out)
         self.assertIsInstance(self.gp_model.gp_model, AugmentedLocalGaussianProcess)
 
         # num_outer is not enough, we return to a vanilla GP model
         self.gp_model._train(self.X_in, self.Y_in, do_optimize=False)
-        self.assertIsInstance(self.gp_model.gp_model, ExactGPModel)
+        self.assertIsInstance(self.gp_model.gp_model, ExactGaussianProcessModel)
 
         self.gp_model._train(self.X_all, self.Y_all, do_optimize=False)
         self.assertIsInstance(self.gp_model.gp_model, AugmentedLocalGaussianProcess)
@@ -130,7 +130,7 @@ class TestLGPGA(TestGPGPyTorch):
         augmented_gp = AugmentedLocalGaussianProcess(
             X_in, Y_in, X_out, Y_out, self.gp_model.likelihood, self.kernel
         ).double()
-        exact_gp = ExactGPModel(X_in, Y_in, self.kernel, self.gp_model.likelihood).double()
+        exact_gp = ExactGaussianProcessModel(X_in, Y_in, self.kernel, self.gp_model.likelihood).double()
 
         # if augmented_gp.augmented is false, it should behave the same as an exact gp
         output_agp = augmented_gp(X_in)

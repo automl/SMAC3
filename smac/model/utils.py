@@ -23,8 +23,8 @@ def get_types(
     instance_features: dict[str, list[float]] | None = None,
 ) -> tuple[list[int], list[tuple[float, float]]]:
     """Return the types of the hyperparameters and the bounds of the
-    hyperparameters and instance features.
-    """
+    hyperparameters and instance features."""
+
     # Extract types vector for rf from config space and the bounds
     types = [0] * len(configspace.get_hyperparameters())
     bounds = [(np.nan, np.nan)] * len(types)
@@ -50,8 +50,7 @@ def get_types(
             else:
                 bounds[i] = (0, int(n_cats) - 1)
         elif isinstance(param, Constant):
-            # for constants we simply set types to 0 which makes it a numerical
-            # parameter
+            # For constants we simply set types to 0 which makes it a numerical parameter
             if can_be_inactive:
                 bounds[i] = (2, np.nan)
                 types[i] = 2
@@ -113,6 +112,7 @@ def get_types(
     return types, bounds
 
 
+'''
 def check_subspace_points(
     X: np.ndarray,
     cont_dims: np.ndarray | list = [],
@@ -121,8 +121,8 @@ def check_subspace_points(
     bounds_cat: list[tuple] | None = None,
     expand_bound: bool = False,
 ) -> np.ndarray:
-    """
-    Check which points are place inside a given subspace
+    """Check which points are place inside a given subspace.
+    
     Parameters
     ----------
     X: Optional[np.ndarray(N,D)],
@@ -182,3 +182,4 @@ def check_subspace_points(
         data_in_ss &= np.in1d(X[:, cat_dim], bound_cat)
 
     return data_in_ss
+'''

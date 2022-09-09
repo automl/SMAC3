@@ -16,7 +16,7 @@ from ConfigSpace import Configuration
 from smac.constants import MAXINT
 from smac.main.smbo import SMBO
 from smac.model.abstract_model import AbstractModel
-from smac.model.gaussian_process.gpytorch import (
+from smac.model.gaussian_process.gpytorch_gaussian_process import (
     GloballyAugmentedLocalGaussianProcess,
 )
 from smac.model.random_forest.random_forest import (

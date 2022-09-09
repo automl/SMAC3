@@ -17,7 +17,7 @@ from smac.configspace import (
     ConfigurationSpace,
     UniformFloatHyperparameter,
 )
-from smac.model.gaussian_process.gpytorch import GPyTorchGaussianProcess
+from smac.model.gaussian_process.gpytorch_gaussian_process import GPyTorchGaussianProcess
 
 from .test_gp import TestGP, get_cat_data, get_cont_data
 
@@ -146,7 +146,7 @@ class TestGPGPyTorch(TestGP):
         self.assertEqual(model.is_trained, False)
         self.assertEqual(bool(model.property_dict), False)
 
-        mll = model._get_gp(X, Y)
+        mll = model._get_gaussian_process(X, Y)
         self.assertIsInstance(mll, ExactMarginalLogLikelihood)
         self.assertIsInstance(mll.model, ExactGP)
 
@@ -234,7 +234,7 @@ class TestGPGPyTorch(TestGP):
         with self.assertRaises(RuntimeError):
             model._train(X[:10], Y[:10], do_optimize=False)
         with self.assertRaises(RuntimeError):
-            model._get_gp(X[:10], Y[:10])
+            model._get_gaussian_process(X[:10], Y[:10])
 
     @unittest.mock.patch("gpytorch.mlls.exact_marginal_log_likelihood.ExactMarginalLogLikelihood.forward")
     def test_train_continue_on_linalg_error(self, fit_mock):
