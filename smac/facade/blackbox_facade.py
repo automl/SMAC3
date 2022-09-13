@@ -3,8 +3,6 @@ from __future__ import annotations
 import numpy as np
 import sklearn.gaussian_process.kernels as kernels
 
-from smac.acquisition import AbstractAcquisitionOptimizer
-from smac.acquisition.functions import AbstractAcquisitionFunction
 from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.local_and_random_search import LocalAndSortedRandomSearch
 from smac.random_design.probability_design import ProbabilityRandomDesign
@@ -23,7 +21,6 @@ from smac.model.gaussian_process.kernels import (
 from smac.model.gaussian_process.mcmc_gaussian_process import MCMCGaussianProcess
 from smac.model.gaussian_process.priors import HorseshoePrior, LogNormalPrior
 from smac.model.utils import get_types
-from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.scenario import Scenario

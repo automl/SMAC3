@@ -35,8 +35,8 @@ class HyperparameterFacade(Facade):
         its documentation for details."""
         return RandomForest(
             log_y=True,
-            num_trees=n_trees,
-            do_bootstrapping=bootstrapping,
+            n_trees=n_trees,
+            bootstrapping=bootstrapping,
             ratio_features=ratio_features,
             min_samples_split=min_samples_split,
             min_samples_leaf=min_samples_leaf,

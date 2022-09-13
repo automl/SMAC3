@@ -7,9 +7,7 @@ from ConfigSpace import Configuration
 from smac.facade.facade import Facade
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensification.intensification import Intensifier
-from smac.model.random_forest.random_forest import (
-    RandomForest,
-)
+from smac.model.random_forest.random_forest import RandomForest
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.scenario import Scenario
@@ -38,8 +36,8 @@ class AlgorithmConfigurationFacade(Facade):
         """Returns a RandomForestWithInstances surrogate model. Please check its documentation."""
         return RandomForest(
             log_y=False,
-            num_trees=n_trees,
-            do_bootstrapping=bootstrapping,
+            n_trees=n_trees,
+            bootstrapping=bootstrapping,
             ratio_features=ratio_features,
             min_samples_split=min_samples_split,
             min_samples_leaf=min_samples_leaf,
