@@ -19,7 +19,7 @@ from smac.configspace import (
 )
 from smac.model.gaussian_process.gpytorch_gaussian_process import GPyTorchGaussianProcess
 
-from .test_gp import TestGP, get_cat_data, get_cont_data
+from ._test_gp import TestGP, get_cat_data, get_cont_data
 
 torch.manual_seed(0)
 pyro.set_rng_seed(0)
