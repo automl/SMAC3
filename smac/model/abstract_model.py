@@ -14,7 +14,7 @@ from sklearn.preprocessing import MinMaxScaler
 from ConfigSpace import ConfigurationSpace
 from smac.constants import VERY_SMALL_NUMBER
 from smac.utils.logging import get_logger
-from smac.model.utils import get_types
+from smac.utils.configspace import get_types
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -74,12 +74,12 @@ class AbstractModel:
         self._scaler = MinMaxScaler()
         self._apply_pca = False
 
-        # Never use a lower variance than this
+        # Never use a lower variance than this.
         # If estimated variance < var_threshold, the set to var_threshold
         self._var_threshold = VERY_SMALL_NUMBER
         self._types, self._bounds = get_types(configspace, instance_features)
 
-        # Initial types array which is used to reset the type array at every call to train()
+        # Initial types array which is used to reset the type array at every call to `self.train()`
         self._initial_types = copy.deepcopy(self._types)
 
     def get_meta(self) -> dict[str, Any]:
@@ -105,19 +105,24 @@ class AbstractModel:
         -------
         self : AbstractModel
         """
+
         if len(X.shape) != 2:
             raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
+
         if X.shape[1] != self._n_hps + self._n_features:
             raise ValueError("Feature mismatch: X should have %d features, but has %d" % (self._n_hps, X.shape[1]))
+
         if X.shape[0] != Y.shape[0]:
             raise ValueError("X.shape[0] ({}) != y.shape[0] ({})".format(X.shape[0], Y.shape[0]))
 
         # Reduce dimensionality of features of larger than PCA_DIM
         if self._pca_components and X.shape[0] > self._pca.n_components and self._n_features >= self._pca_components:
             X_feats = X[:, -self._n_features :]
-            # scale features
+
+            # Scale features
             X_feats = self._scaler.fit_transform(X_feats)
             X_feats = np.nan_to_num(X_feats)  # if features with max == min
+
             # PCA
             X_feats = self._pca.fit_transform(X_feats)
             X = np.hstack((X[:, : self._n_hps], X_feats))
@@ -159,7 +164,7 @@ class AbstractModel:
     def predict(
         self,
         X: np.ndarray,
-        covariance_type: str | None = "diagonal_cov",
+        covariance_type: str | None = "diagonal",
     ) -> tuple[np.ndarray, np.ndarray | None]:
         """Predicts mean and variance for a given X. Internally, calls the method `_predict`.
 
@@ -184,6 +189,7 @@ class AbstractModel:
         """
         if len(X.shape) != 2:
             raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
+
         if X.shape[1] != self._n_hps + self._n_features:
             raise ValueError(
                 "Rows in X should have %d entries but have %d!" % (self._n_hps + self._n_features, X.shape[1])
@@ -208,6 +214,7 @@ class AbstractModel:
 
         if len(mean.shape) == 1:
             mean = mean.reshape((-1, 1))
+
         if var is not None and len(var.shape) == 1:
             var = var.reshape((-1, 1))
 

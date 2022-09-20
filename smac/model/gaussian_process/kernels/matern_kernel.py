@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import math
-from inspect import Signature, signature
 
 import numpy as np
 import scipy.optimize
@@ -11,69 +9,41 @@ import scipy.spatial.distance
 import scipy.special
 import sklearn.gaussian_process.kernels as kernels
 
-from smac.model.gaussian_process.kernels.base_kernels import MagicMixinKernel
+from smac.model.gaussian_process.kernels.base_kernels import AbstractKernel
 from smac.model.gaussian_process.priors.abstract_prior import AbstractPrior
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class Matern(MagicMixinKernel, kernels.Matern):
+class MaternKernel(AbstractKernel, kernels.Matern):
+    """Matern kernel implementation."""
+
     def __init__(
         self,
-        length_scale: Union[float, Tuple[float, ...], np.ndarray] = 1.0,
-        length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]], np.ndarray] = (
-            1e-5,
-            1e5,
-        ),
+        length_scale: float | tuple[float, ...] | np.ndarray = 1.0,
+        length_scale_bounds: tuple[float, float] | list[tuple[float, float]] | np.ndarray = (1e-5, 1e5),
         nu: float = 1.5,
-        operate_on: Optional[np.ndarray] = None,
-        prior: Optional[AbstractPrior] = None,
+        operate_on: np.ndarray | None = None,
         has_conditions: bool = False,
+        prior: AbstractPrior | None = None,
     ) -> None:
-
-        super(Matern, self).__init__(length_scale=length_scale, length_scale_bounds=length_scale_bounds, nu=nu)
-        self.set_active_dims(operate_on)
-        self.prior = prior
-        self.has_conditions = has_conditions
-
-    def get_meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
-        return {
-            "name": self.__class__.__name__,
-        }
+        super().__init__(
+            operate_on=operate_on,
+            has_conditions=has_conditions,
+            prior=prior,
+            length_scale=length_scale,
+            length_scale_bounds=length_scale_bounds,
+            nu=nu,
+        )
 
     def _call(
         self,
         X: np.ndarray,
-        Y: Optional[np.ndarray] = None,
+        Y: np.ndarray | None = None,
         eval_gradient: bool = False,
-        active: Optional[np.ndarray] = None,
-    ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
-        """Return the kernel k(X, Y) and optionally its gradient.
-
-        Parameters
-        ----------
-        X : array, shape (n_samples_X, n_features)
-            Left argument of the returned kernel k(X, Y)
-        Y : array, shape (n_samples_Y, n_features), (optional, default=None)
-            Right argument of the returned kernel k(X, Y). If None, k(X, X)
-            if evaluated instead.
-        eval_gradient : bool (optional, default=False)
-            Determines whether the gradient with respect to the kernel
-            hyperparameter is determined. Only supported when Y is None.
-        active : np.ndarray (n_samples_X, n_features) (optional)
-            Boolean array specifying which hyperparameters are active.
-
-        Returns
-        -------
-        K : array, shape (n_samples_X, n_samples_Y)
-            Kernel k(X, Y)
-        K_gradient : array (opt.), shape (n_samples_X, n_samples_X, n_dims)
-            The gradient of the kernel k(X, X) with respect to the
-            hyperparameter of the kernel. Only returned when eval_gradient
-            is True.
-        """
+        active: np.ndarray | None = None,
+    ) -> np.ndarray | tuple[np.ndarray, np.ndarray]:
         X = np.atleast_2d(X)
         length_scale = kernels._check_length_scale(X, self.length_scale)
 

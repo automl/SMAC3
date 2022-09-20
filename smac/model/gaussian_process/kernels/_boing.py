@@ -108,6 +108,7 @@ def construct_gp_kernel(
         base_kernel = cat_kernel
     else:
         raise ValueError("Either cont_dims or cat_dims must exist!")
+
     if isinstance(base_kernel, SKLKernels):
         scale_kernel_class = kernel_kwargs.get("scale_kernel", ConstantKernel)
         scale_kernel_kwargs = kernel_kwargs.get("scale_kernel_kwargs", {})
@@ -122,6 +123,7 @@ def construct_gp_kernel(
         scale_kernel_class = kernel_kwargs.get("scale_kernel", ScaleKernel)
         scale_kernel_kwargs = kernel_kwargs.get("scale_kernel_kwargs", {})
         gp_kernel = scale_kernel_class(base_kernel=base_kernel, **scale_kernel_kwargs)
+
     return gp_kernel
 
 

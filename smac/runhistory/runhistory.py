@@ -9,7 +9,7 @@ from collections import OrderedDict
 import numpy as np
 
 from ConfigSpace import ConfigurationSpace, Configuration
-from smac.multi_objective.utils import normalize_costs
+from smac.utils.multi_objective import normalize_costs
 from smac.runhistory.dataclasses import (
     InstanceSeedBudgetKey,
     InstanceSeedKey,

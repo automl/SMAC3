@@ -199,7 +199,7 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
 
                 # Do not require the installation of NUTS for SMAC
                 # This requires NUTS from https://github.com/mfeurer/NUTS
-                import nuts.nuts
+                import nuts.nuts  # type: ignore
 
                 # Perform initial fit to the data to obtain theta0
                 if not self.burned:

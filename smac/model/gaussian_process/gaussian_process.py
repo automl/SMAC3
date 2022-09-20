@@ -137,7 +137,9 @@ class GaussianProcess(AbstractGaussianProcess):
         else:
             self._hypers = self._gp.kernel.theta
 
+        # Set the flag
         self._is_trained = True
+
         return self
 
     def _get_gaussian_process(self) -> GaussianProcessRegressor:
@@ -246,7 +248,6 @@ class GaussianProcess(AbstractGaussianProcess):
 
             if self._normalize_y:
                 mu = self._untransform_y(mu)
-
         else:
             predict_kwargs = {"return_cov": False, "return_std": True}
             if covariance_type == "full":
@@ -255,7 +256,7 @@ class GaussianProcess(AbstractGaussianProcess):
             mu, var = self._gp.predict(X_test, **predict_kwargs)
 
             if covariance_type != "full":
-                var = var**2  # since we get standard deviation for faster computation
+                var = var**2  # Since we get standard deviation for faster computation
 
             # Clip negative variances and set them to the smallest
             # positive float value
@@ -265,7 +266,7 @@ class GaussianProcess(AbstractGaussianProcess):
                 mu, var = self._untransform_y(mu, var)
 
             if covariance_type == "diagonal":
-                var = np.sqrt(var)  # converting variance to std deviation if specified
+                var = np.sqrt(var)  # Converting variance to std deviation if specified
 
         return mu, var
 

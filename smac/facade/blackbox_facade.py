@@ -7,20 +7,15 @@ from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.local_and_random_search import LocalAndSortedRandomSearch
 from smac.random_design.probability_design import ProbabilityRandomDesign
 from ConfigSpace import Configuration
-from smac.facade.facade import Facade
+from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.model.gaussian_process.gaussian_process import GaussianProcess
 from smac.model.gaussian_process.abstract_gaussian_process import AbstractGaussianProcess
-from smac.model.gaussian_process.kernels import (
-    ConstantKernel,
-    HammingKernel,
-    Matern,
-    WhiteKernel,
-)
+from smac.model.gaussian_process.kernels import ConstantKernel, HammingKernel, MaternKernel, WhiteKernel
 from smac.model.gaussian_process.mcmc_gaussian_process import MCMCGaussianProcess
 from smac.model.gaussian_process.priors import HorseshoePrior, LogNormalPrior
-from smac.model.utils import get_types
+from smac.utils.configspace import get_types
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.scenario import Scenario
@@ -29,7 +24,7 @@ __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class BlackBoxFacade(Facade):
+class BlackBoxFacade(AbstractFacade):
     def _validate(self) -> None:
         """Ensure that the SMBO configuration with all its (updated) dependencies is valid."""
         super()._validate()
@@ -52,26 +47,41 @@ class BlackBoxFacade(Facade):
     def get_model(
         scenario: Scenario,
         *,
-        model_type: str = "gp",
+        model_type: str | None = None,
         kernel: kernels.Kernel | None = None,
     ) -> AbstractGaussianProcess:
-        """Returns a Gaussian Process surrogate model. Please check its documentation for
-        detials."""
-        available_model_types = ["gp", "gp_mcmc"]
+        """Returns a Gaussian Process surrogate model.
+
+        Parameters
+        ----------
+        scenario : Scenario
+        model_type : str | None, defaults to None
+            Which gaussian process model should be chosen. Choose between `vanilla` and `mcmc`.
+        kernel : kernels.Kernel | None, defaults to None
+            The kernel used in the surrogate model.
+
+        Returns
+        -------
+        model : AbstractGaussianProcess
+            The instantiated gaussian process.
+        """
+        available_model_types = [None, "vanilla", "mcmc"]
         if model_type not in available_model_types:
-            raise ValueError(f"model_type {model_type} not in available model types")
+            raise ValueError(
+                f"The model_type `{model_type}` is not supported. Choose one of {', '.join(available_model_types)}"
+            )
 
         if kernel is None:
             kernel = BlackBoxFacade.get_kernel(scenario=scenario)
 
-        if model_type == "gp":
+        if model_type is None or model_type == "vanilla":
             return GaussianProcess(
                 configspace=scenario.configspace,
                 kernel=kernel,
                 normalize_y=True,
                 seed=scenario.seed,
             )
-        elif model_type == "gp_mcmc":
+        elif model_type == "mcmc":
             n_mcmc_walkers = 3 * len(kernel.theta)
             if n_mcmc_walkers % 2 == 1:
                 n_mcmc_walkers += 1
@@ -81,7 +91,7 @@ class BlackBoxFacade(Facade):
                 kernel=kernel,
                 n_mcmc_walkers=n_mcmc_walkers,
                 chain_length=250,
-                burnin_steps=250,
+                burning_steps=250,
                 normalize_y=True,
                 seed=scenario.seed,
             )
@@ -109,14 +119,16 @@ class BlackBoxFacade(Facade):
             2.0,
             constant_value_bounds=(np.exp(-10), np.exp(2)),
             prior=LogNormalPrior(
-                mean=0.0, sigma=1.0, seed=scenario.seed
-            ),  # TODO convert expected arg RandomState -> Generator
+                mean=0.0,
+                sigma=1.0,
+                seed=scenario.seed,
+            ),
         )
 
         # Continuous / Categorical Kernels
         exp_kernel, ham_kernel = 0.0, 0.0
         if len(cont_dims) > 0:
-            exp_kernel = Matern(
+            exp_kernel = MaternKernel(
                 np.ones([len(cont_dims)]),
                 [(np.exp(-6.754111155189306), np.exp(0.0858637988771976)) for _ in range(len(cont_dims))],
                 nu=2.5,
@@ -158,9 +170,7 @@ class BlackBoxFacade(Facade):
         scenario: Scenario,
         xi: float = 0.0,
     ) -> EI:
-        """Returns the acquisition function instance (EI: Expected Improvement) for the Black-Box
-        facade.
-        """
+        """Returns the acquisition function instance (EI: Expected Improvement) for the Black-Box facade."""
         return EI(xi=xi)
 
     @staticmethod

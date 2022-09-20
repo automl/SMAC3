@@ -4,7 +4,7 @@ from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.local_and_random_search import LocalAndSortedRandomSearch
 from smac.random_design.probability_design import ProbabilityRandomDesign
 from ConfigSpace import Configuration
-from smac.facade.facade import Facade
+from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.model.random_forest.random_forest import RandomForest
@@ -20,7 +20,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class AlgorithmConfigurationFacade(Facade):
+class AlgorithmConfigurationFacade(AbstractFacade):
     @staticmethod
     def get_model(  # type: ignore
         scenario: Scenario,

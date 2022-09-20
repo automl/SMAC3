@@ -40,7 +40,7 @@ __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class Facade:
+class AbstractFacade:
     """Facade is an abstraction on top of the SMBO backend to organize the components
     of a Bayesian Optimization loop in a configurable & separable manner to suit the
     various needs of different hyperparameter optimization pipelines.

@@ -13,7 +13,7 @@ from gpytorch.likelihoods import GaussianLikelihood
 from gpytorch.means.zero_mean import ZeroMean
 from gpytorch.models.exact_gp import ExactGP
 
-from smac.model.gaussian_process.kernels.boing import FITCKernel, FITCMean
+from smac.model.gaussian_process.kernels._boing import FITCKernel, FITCMean
 from smac.model.utils import check_subspace_points
 
 

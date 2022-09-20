@@ -28,7 +28,7 @@ from smac.acquisition.functions import EI, AbstractAcquisitionFunction
 from ConfigSpace import Configuration, ConfigurationSpace
 from smac.model.abstract_model import AbstractModel
 from smac.model.gaussian_process.gpytorch_gaussian_process import GloballyAugmentedLocalGaussianProcess
-from smac.model.gaussian_process.kernels.boing import construct_gp_kernel
+from smac.model.gaussian_process.kernels._boing import construct_gp_kernel
 from smac.model.utils import check_subspace_points
 from smac.utils.logging import get_logger
 

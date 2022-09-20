@@ -11,7 +11,7 @@ from ConfigSpace.hyperparameters import (
 )
 
 from smac.model.gaussian_process.gaussian_process import GaussianProcess
-from smac.model.gaussian_process.kernels import ConstantKernel, Matern, WhiteKernel
+from smac.model.gaussian_process.kernels import ConstantKernel, MaternKernel, WhiteKernel
 from smac.model.utils import get_types
 from smac.utils.subspaces.turbo_subspace import TuRBOSubSpace
 
@@ -21,7 +21,7 @@ def get_ss_kwargs():
     cs = ConfigurationSpace()
     cs.add_hyperparameter(UniformFloatHyperparameter("x0", 0, 1, 0.5))
     model_local = GaussianProcess
-    exp_kernel = Matern(nu=2.5)
+    exp_kernel = MaternKernel(nu=2.5)
     cov_amp = ConstantKernel(
         2.0,
     )
@@ -129,7 +129,7 @@ def test_perturb_samples(get_ss_kwargs):
     cs.add_hyperparameter(UniformFloatHyperparameter("x0", 0, 1, 0.5))
     cs.add_hyperparameter(UniformFloatHyperparameter("x1", 0, 1, 0.5))
     model_local = GaussianProcess
-    exp_kernel = Matern(nu=2.5)
+    exp_kernel = MaternKernel(nu=2.5)
     cov_amp = ConstantKernel(
         2.0,
     )

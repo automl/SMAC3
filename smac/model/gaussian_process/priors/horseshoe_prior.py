@@ -62,4 +62,5 @@ class HorseshoePrior(AbstractPrior):
             b = 3 * self._scale_square + theta**2
             b *= math.log(3 * self._scale_square * theta ** (-2) + 1)
             b = max(b, 1e-14)
+
             return a / b

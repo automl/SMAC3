@@ -4,7 +4,7 @@ from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.random_search import AbstractAcquisitionOptimizer, RandomSearch
 from smac.random_design import AbstractRandomDesign, ProbabilityRandomDesign
 from ConfigSpace import Configuration
-from smac.facade.facade import Facade
+from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.model.random_model import RandomModel
@@ -17,7 +17,7 @@ __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class RandomFacade(Facade):
+class RandomFacade(AbstractFacade):
     """
     Facade to use ROAR (Random Online Aggressive Racing) mode.
 

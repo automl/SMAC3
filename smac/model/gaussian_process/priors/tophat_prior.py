@@ -55,10 +55,12 @@ class TophatPrior(AbstractPrior):
     def _sample_from_prior(self, n_samples: int) -> np.ndarray:
         if np.ndim(n_samples) != 0:
             raise ValueError("The argument `n_samples` needs to be a scalar (is %s)." % n_samples)
+
         if n_samples <= 0:
             raise ValueError("The argument `n_samples` needs to be positive (is %d)." % n_samples)
 
         p0 = np.exp(self._rng.uniform(low=self._log_min, high=self._log_max, size=(n_samples,)))
+
         return p0
 
     def get_gradient(self, theta: float) -> float:

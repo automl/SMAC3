@@ -20,14 +20,14 @@ __license__ = "3-clause BSD"
 
 
 def get_gp(n_dimensions, seed, noise=1e-3, normalize_y=True) -> GaussianProcess:
-    from smac.model.gaussian_process.kernels import ConstantKernel, Matern, WhiteKernel
+    from smac.model.gaussian_process.kernels import ConstantKernel, MaternKernel, WhiteKernel
 
     cov_amp = ConstantKernel(
         2.0,
         constant_value_bounds=(1e-10, 2),
         prior=LogNormalPrior(mean=0.0, sigma=1.0, seed=seed),
     )
-    exp_kernel = Matern(
+    exp_kernel = MaternKernel(
         np.ones([n_dimensions]),
         [(np.exp(-10), np.exp(2)) for _ in range(n_dimensions)],
         nu=2.5,
@@ -81,7 +81,7 @@ def get_mixed_gp(cat_dims, cont_dims, seed, noise=1e-3, normalize_y=True):
     from smac.model.gaussian_process.kernels import (
         ConstantKernel,
         HammingKernel,
-        Matern,
+        MaternKernel,
         WhiteKernel,
     )
 
@@ -94,7 +94,7 @@ def get_mixed_gp(cat_dims, cont_dims, seed, noise=1e-3, normalize_y=True):
         prior=LogNormalPrior(mean=0.0, sigma=1.0, seed=seed),
     )
 
-    exp_kernel = Matern(
+    exp_kernel = MaternKernel(
         np.ones([len(cont_dims)]),
         [(np.exp(-10), np.exp(2)) for _ in range(len(cont_dims))],
         nu=2.5,

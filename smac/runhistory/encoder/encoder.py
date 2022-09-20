@@ -5,7 +5,7 @@ from typing import Mapping
 import numpy as np
 
 from smac.utils.configspace import convert_configurations_to_array
-from smac.multi_objective.utils import normalize_costs
+from smac.utils.multi_objective import normalize_costs
 from smac.runhistory.encoder import AbstractRunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory, TrialKey, TrialValue
 from smac.utils.logging import get_logger

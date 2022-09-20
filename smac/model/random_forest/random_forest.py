@@ -136,19 +136,21 @@ class RandomForest(AbstractRandomForest):
 
     def _train(self, X: np.ndarray, y: np.ndarray) -> RandomForest:
         X = self._impute_inactive(X)
-        self.X = X
-        self.y = y.flatten()
+        y = y.flatten()
+
+        # self.X = X
+        # self.y = y.flatten()
 
         if self._n_points_per_tree <= 0:
-            self._rf_opts.num_data_points_per_tree = self.X.shape[0]
+            self._rf_opts.num_data_points_per_tree = X.shape[0]
         else:
             self._rf_opts.num_data_points_per_tree = self._n_points_per_tree
 
-        self.rf = regression.binary_rss_forest()
-        self.rf.options = self._rf_opts
+        self._rf = regression.binary_rss_forest()
+        self._rf.options = self._rf_opts
 
-        data = self._init_data_container(self.X, self.y)
-        self.rf.fit(data, rng=self._rng)
+        data = self._init_data_container(X, y)
+        self._rf.fit(data, rng=self._rng)
 
         return self
 
@@ -167,7 +169,7 @@ class RandomForest(AbstractRandomForest):
         data : DataContainer
             The filled data container that pyrfr can interpret.
         """
-        # retrieve the types and the bounds from the ConfigSpace
+        # Retrieve the types and the bounds from the ConfigSpace
         data = regression.default_data_container(X.shape[1])
 
         for i, (mn, mx) in enumerate(self._bounds):
@@ -178,6 +180,7 @@ class RandomForest(AbstractRandomForest):
 
         for row_X, row_y in zip(X, y):
             data.add_data_point(row_X, row_y)
+
         return data
 
     def _predict(
@@ -194,6 +197,7 @@ class RandomForest(AbstractRandomForest):
         if covariance_type != "diagonal":
             raise ValueError("`covariance_type` can only take `diagonal` for this model.")
 
+        assert self._rf is not None
         X = self._impute_inactive(X)
 
         if self._log_y:
@@ -222,7 +226,7 @@ class RandomForest(AbstractRandomForest):
         else:
             means, vars_ = [], []
             for row_X in X:
-                mean_, var = self.rf.predict_mean_var(row_X)
+                mean_, var = self._rf.predict_mean_var(row_X)
                 means.append(mean_)
                 vars_.append(var)
 
@@ -268,6 +272,7 @@ class RandomForest(AbstractRandomForest):
         if X.shape[1] != len(self._bounds):
             raise ValueError("Rows in X should have %d entries but have %d!" % (len(self._bounds), X.shape[1]))
 
+        assert self._rf is not None
         X = self._impute_inactive(X)
 
         dat_ = np.zeros((X.shape[0], self._rf_opts.num_trees))  # Marginalized predictions for each tree
@@ -279,7 +284,7 @@ class RandomForest(AbstractRandomForest):
 
             for feat in self._instance_features.values():
                 x_ = np.concatenate([x, feat])
-                preds_per_tree = self.rf.all_leaf_values(x_)
+                preds_per_tree = self._rf.all_leaf_values(x_)
                 for tree_id, preds in enumerate(preds_per_tree):
                     preds_trees[tree_id] += preds
 
