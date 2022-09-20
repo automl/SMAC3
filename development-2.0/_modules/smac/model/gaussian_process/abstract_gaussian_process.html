@@ -310,6 +310,8 @@ style="width: 100%;">
                 
   <h1>Source code for smac.model.gaussian_process.abstract_gaussian_process</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">sklearn.gaussian_process</span>
@@ -319,13 +321,28 @@ style="width: 100%;">
 <span class="kn">import</span> <span class="nn">smac.model.gaussian_process.priors</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
 <span class="kn">from</span> <span class="nn">smac.model.abstract_model</span> <span class="kn">import</span> <span class="n">AbstractModel</span>
-<span class="kn">from</span> <span class="nn">smac.model.gaussian_process.priors.prior</span> <span class="kn">import</span> <span class="n">Prior</span>
+<span class="kn">from</span> <span class="nn">smac.model.gaussian_process.priors.abstract_prior</span> <span class="kn">import</span> <span class="n">AbstractPrior</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2022, automl.org&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
 <div class="viewcode-block" id="AbstractGaussianProcess"><a class="viewcode-back" href="../../../../api/smac.model.gaussian_process.abstract_gaussian_process.html#smac.model.gaussian_process.AbstractGaussianProcess">[docs]</a><span class="k">class</span> <span class="nc">AbstractGaussianProcess</span><span class="p">(</span><span class="n">AbstractModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Abstract base class for all Gaussian process models.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    configspace : ConfigurationSpace</span>
+<span class="sd">    kernel : Kernel</span>
+<span class="sd">        Kernel which is used for the Gaussian process.</span>
+<span class="sd">    instance_features : dict[str, list[int | float]] | None, defaults to None</span>
+<span class="sd">        Features (list of int or floats) of the instances (str). The features are incorporated into the X data,</span>
+<span class="sd">        on which the model is trained on.</span>
+<span class="sd">    pca_components : float, defaults to 7</span>
+<span class="sd">        Number of components to keep when using PCA to reduce dimensionality of instance features.</span>
+<span class="sd">    seed : int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">configspace</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
@@ -334,7 +351,6 @@ style="width: 100%;">
         <span class="n">pca_components</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Abstract base class for all Gaussian process models.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">configspace</span><span class="o">=</span><span class="n">configspace</span><span class="p">,</span>
             <span class="n">instance_features</span><span class="o">=</span><span class="n">instance_features</span><span class="p">,</span>
@@ -342,29 +358,44 @@ style="width: 100%;">
             <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="n">kernel</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_gp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kernel</span> <span class="o">=</span> <span class="n">kernel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_gaussian_process</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_get_gp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GaussianProcessRegressor</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the Gaussian process.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="AbstractGaussianProcess.get_meta"><a class="viewcode-back" href="../../../../api/smac.model.gaussian_process.abstract_gaussian_process.html#smac.model.gaussian_process.AbstractGaussianProcess.get_meta">[docs]</a>    <span class="k">def</span> <span class="nf">get_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="n">meta</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_meta</span><span class="p">()</span>
+        <span class="n">meta</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="s2">&quot;kernel&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kernel</span><span class="o">.</span><span class="n">get_meta</span><span class="p">(),</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">meta</span></div>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_get_gaussian_process</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GaussianProcessRegressor</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Generates a Gaussian process.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_normalize_y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Normalize data to zero mean unit standard deviation.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        y : np.ndarray</span>
-<span class="sd">            Targets for the Gaussian process</span>
+<span class="sd">            Target values for the Gaussian process.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        np.ndarray</span>
+<span class="sd">        normalized_y : np.ndarray</span>
+<span class="sd">            Normalized y values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mean_y_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">std_y_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_y_</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">std_y_</span> <span class="o">=</span> <span class="mi">1</span>
+
         <span class="k">return</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_y_</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_y_</span>
 
     <span class="k">def</span> <span class="nf">_untransform_y</span><span class="p">(</span>
@@ -372,8 +403,10 @@ style="width: 100%;">
         <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">var</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Transform zeromean unit standard deviation data into the regular space.</span>
+        <span class="sd">&quot;&quot;&quot;Transform zero mean unit standard deviation data into the regular space.</span>
 
+<span class="sd">        Warning</span>
+<span class="sd">        -------</span>
 <span class="sd">        This function should be used after a prediction with the Gaussian process which was</span>
 <span class="sd">        trained on normalized data.</span>
 
@@ -381,30 +414,32 @@ style="width: 100%;">
 <span class="sd">        ----------</span>
 <span class="sd">        y : np.ndarray</span>
 <span class="sd">            Normalized data.</span>
-<span class="sd">        var : np.ndarray (optional)</span>
-<span class="sd">            Normalized variance</span>
+<span class="sd">        var : np.ndarray | None, defaults to None</span>
+<span class="sd">            Normalized variance.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        np.ndarray on tuple[np.ndarray, np.ndarray]</span>
+<span class="sd">        untransformed_y : np.ndarray | tuple[np.ndarray, np.ndarray]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_y_</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_y_</span>
         <span class="k">if</span> <span class="n">var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">var</span> <span class="o">=</span> <span class="n">var</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_y_</span><span class="o">**</span><span class="mi">2</span>
             <span class="k">return</span> <span class="n">y</span><span class="p">,</span> <span class="n">var</span>  <span class="c1"># type: ignore</span>
+
         <span class="k">return</span> <span class="n">y</span>
 
     <span class="k">def</span> <span class="nf">_get_all_priors</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">add_bound_priors</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">add_soft_bounds</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Prior</span><span class="p">]]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">AbstractPrior</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;Returns all priors.&quot;&quot;&quot;</span>
         <span class="c1"># Obtain a list of all priors for each tunable hyperparameter of the kernel</span>
         <span class="n">all_priors</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">to_visit</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">to_visit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gp</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">k1</span><span class="p">)</span>
-        <span class="n">to_visit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gp</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">k2</span><span class="p">)</span>
+        <span class="n">to_visit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_gp</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">k1</span><span class="p">)</span>
+        <span class="n">to_visit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_gp</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">k2</span><span class="p">)</span>
+
         <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_visit</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">current_param</span> <span class="o">=</span> <span class="n">to_visit</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">current_param</span><span class="p">,</span> <span class="n">KernelOperator</span><span class="p">):</span>
@@ -428,7 +463,7 @@ style="width: 100%;">
                                 <span class="n">smac</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">priors</span><span class="o">.</span><span class="n">SoftTopHatPrior</span><span class="p">(</span>
                                     <span class="n">lower_bound</span><span class="o">=</span><span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
                                     <span class="n">upper_bound</span><span class="o">=</span><span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
-                                    <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">),</span>
+                                    <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">),</span>
                                     <span class="n">exponent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                                 <span class="p">)</span>
                             <span class="p">)</span>
@@ -437,7 +472,7 @@ style="width: 100%;">
                                 <span class="n">smac</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">priors</span><span class="o">.</span><span class="n">TophatPrior</span><span class="p">(</span>
                                     <span class="n">lower_bound</span><span class="o">=</span><span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
                                     <span class="n">upper_bound</span><span class="o">=</span><span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
-                                    <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">),</span>
+                                    <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">),</span>
                                 <span class="p">)</span>
                             <span class="p">)</span>
                     <span class="n">all_priors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">priors_for_hp</span><span class="p">)</span>
@@ -445,9 +480,9 @@ style="width: 100%;">
 
     <span class="k">def</span> <span class="nf">_set_has_conditions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Sets `has_conditions` on `current_param`.&quot;&quot;&quot;</span>
-        <span class="n">has_conditions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_conditions</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="n">has_conditions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_configspace</span><span class="o">.</span><span class="n">get_conditions</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="n">to_visit</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">to_visit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">)</span>
+        <span class="n">to_visit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_kernel</span><span class="p">)</span>
         <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_visit</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">current_param</span> <span class="o">=</span> <span class="n">to_visit</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">current_param</span><span class="p">,</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">KernelOperator</span><span class="p">):</span>
@@ -463,6 +498,7 @@ style="width: 100%;">
         <span class="sd">&quot;&quot;&quot;Imputes inactives.&quot;&quot;&quot;</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">X</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">X</span><span class="p">)]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
         <span class="k">return</span> <span class="n">X</span></div>
 </pre></div>
 

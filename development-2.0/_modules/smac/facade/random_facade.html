@@ -315,7 +315,7 @@ style="width: 100%;">
 <span class="kn">from</span> <span class="nn">smac.acquisition.random_search</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionOptimizer</span><span class="p">,</span> <span class="n">RandomSearch</span>
 <span class="kn">from</span> <span class="nn">smac.random_design</span> <span class="kn">import</span> <span class="n">AbstractRandomDesign</span><span class="p">,</span> <span class="n">ProbabilityRandomDesign</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span> <span class="nn">smac.facade.facade</span> <span class="kn">import</span> <span class="n">Facade</span>
+<span class="kn">from</span> <span class="nn">smac.facade.abstract_facade</span> <span class="kn">import</span> <span class="n">AbstractFacade</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.default_design</span> <span class="kn">import</span> <span class="n">DefaultInitialDesign</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="kn">import</span> <span class="n">Intensifier</span>
 <span class="kn">from</span> <span class="nn">smac.model.random_model</span> <span class="kn">import</span> <span class="n">RandomModel</span>
@@ -328,7 +328,7 @@ style="width: 100%;">
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<div class="viewcode-block" id="RandomFacade"><a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade">[docs]</a><span class="k">class</span> <span class="nc">RandomFacade</span><span class="p">(</span><span class="n">Facade</span><span class="p">):</span>
+<div class="viewcode-block" id="RandomFacade"><a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade">[docs]</a><span class="k">class</span> <span class="nc">RandomFacade</span><span class="p">(</span><span class="n">AbstractFacade</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Facade to use ROAR (Random Online Aggressive Racing) mode.</span>
 

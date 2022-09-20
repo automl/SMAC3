@@ -17,7 +17,7 @@ smac.model.gaussian\_process.kernels.matern\_kernel
 
    .. autosummary::
    
-      Matern
+      MaternKernel
    
    
 

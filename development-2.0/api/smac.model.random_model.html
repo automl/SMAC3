@@ -39,7 +39,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.model.utils" href="smac.model.utils.html" />
+    <link rel="next" title="smac.acquisition" href="smac.acquisition.html" />
     <link rel="prev" title="smac.model.random_forest.random_forest" href="smac.model.random_forest.random_forest.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
@@ -331,7 +331,7 @@ style="width: 100%;">
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.random_model.RandomModel" title="smac.model.random_model.RandomModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RandomModel</span></code></a>(configspace[, ...])</p></td>
-<td><p>EPM which returns random values on a call to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></td>
+<td><p>AbstractModel which returns random values on a call to <cite>fit</cite>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -339,26 +339,7 @@ style="width: 100%;">
 <dt class="sig sig-object py" id="smac.model.random_model.RandomModel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.random_model.</span></span><span class="sig-name descname"><span class="pre">RandomModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/random_model.html#RandomModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.random_model.RandomModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.model.abstract_model.html#smac.model.abstract_model.AbstractModel" title="smac.model.abstract_model.AbstractModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractModel</span></code></a></p>
-<p>EPM which returns random values on a call to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>configspace</strong> (<em>ConfigurationSpace</em>) – Configuration space to tune for.</p></li>
-<li><p><strong>types</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Specifies the number of categorical values of an input dimension where
-the i-th entry corresponds to the i-th input dimension. Let’s say we
-have 2 dimension where the first dimension consists of 3 different
-categorical choices and the second dimension is continuous than we
-have to pass [3, 0]. Note that we count starting from 0.</p></li>
-<li><p><strong>bounds</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</p></li>
-<li><p><strong>seed</strong> (<em>int</em>) – The seed that is passed to the model library.</p></li>
-<li><p><strong>instance_features</strong> (<em>np.ndarray</em><em> (</em><em>I</em><em>, </em><em>K</em><em>)</em><em>, </em><em>optional</em>) – Contains the K dimensional instance features
-of the I different instances</p></li>
-<li><p><strong>pca_components</strong> (<em>float</em>) – Number of components to keep when using PCA to reduce
-dimensionality of instance features. Requires to
-set n_feats (&gt; pca_dims).</p></li>
-</ul>
-</dd>
-</dl>
+<p>AbstractModel which returns random values on a call to <cite>fit</cite>.</p>
 </dd></dl>
 
 </section>
@@ -376,10 +357,10 @@ set n_feats (&gt; pca_dims).</p></li>
             <p class="prev-next-title">smac.model.random_forest.random_forest</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.model.utils.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.acquisition.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.model.utils</p>
+        <p class="prev-next-title">smac.acquisition</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

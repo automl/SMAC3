@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.model.gaussian_process.priors.prior &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>smac.model.gaussian_process.priors.abstract_prior &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../../../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -308,23 +308,19 @@ style="width: 100%;">
               
               <div>
                 
-  <h1>Source code for smac.model.gaussian_process.priors.prior</h1><div class="highlight"><pre>
+  <h1>Source code for smac.model.gaussian_process.priors.abstract_prior</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-
-<span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">sps</span>
-
-<span class="kn">from</span> <span class="nn">smac.constants</span> <span class="kn">import</span> <span class="n">VERY_SMALL_NUMBER</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2022, automl.org&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<div class="viewcode-block" id="Prior"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.priors.prior.html#smac.model.gaussian_process.priors.prior.Prior">[docs]</a><span class="k">class</span> <span class="nc">Prior</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Abstract base class to define the interface for priors of GP hyperparameter.</span>
+<div class="viewcode-block" id="AbstractPrior"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.priors.abstract_prior.html#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior">[docs]</a><span class="k">class</span> <span class="nc">AbstractPrior</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Abstract base class to define the interface for priors of Gaussian process hyperparameters.</span>
 
 <span class="sd">    This class is adapted from RoBO:</span>
 
@@ -332,21 +328,30 @@ style="width: 100%;">
 <span class="sd">    RoBO: A Flexible and Robust Bayesian Optimization Framework in Python</span>
 <span class="sd">    In: NIPS 2017 Bayesian Optimization Workshop</span>
 
-<span class="sd">    [16.04.2019]: Whenever lnprob or the gradient is computed for a scalar input, we use math.* rather than np.*</span>
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    Whenever lnprob or the gradient is computed for a scalar input, we use math.* rather than np.*.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    rng: np.random.RandomState</span>
-<span class="sd">        Random number generator</span>
+<span class="sd">    seed : int, defaults to 0</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_seed</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Prior.lnprob"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.priors.prior.html#smac.model.gaussian_process.priors.prior.Prior.lnprob">[docs]</a>    <span class="k">def</span> <span class="nf">lnprob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Return the log probability of theta.</span>
+<div class="viewcode-block" id="AbstractPrior.get_meta"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.priors.abstract_prior.html#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior.get_meta">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-<span class="sd">        Theta must be on a log scale! This method exponentiates theta and calls ``self._lnprob``.</span>
+<div class="viewcode-block" id="AbstractPrior.get_log_probability"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.priors.abstract_prior.html#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior.get_log_probability">[docs]</a>    <span class="k">def</span> <span class="nf">get_log_probability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the log probability of theta. This method exponentiates theta and calls `self._get_log_probability`.</span>
+
+<span class="sd">        Warning</span>
+<span class="sd">        -------</span>
+<span class="sd">        Theta must be on a log scale!</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -358,11 +363,14 @@ style="width: 100%;">
 <span class="sd">        float</span>
 <span class="sd">            The log probability of theta</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lnprob</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_log_probability</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span></div>
 
-    <span class="k">def</span> <span class="nf">_lnprob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_get_log_probability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return the log probability of theta.</span>
 
+<span class="sd">        Warning</span>
+<span class="sd">        -------</span>
 <span class="sd">        Theta must be on the original scale.</span>
 
 <span class="sd">        Parameters</span>
@@ -377,11 +385,44 @@ style="width: 100%;">
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Prior.sample_from_prior"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.priors.prior.html#smac.model.gaussian_process.priors.prior.Prior.sample_from_prior">[docs]</a>    <span class="k">def</span> <span class="nf">sample_from_prior</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns ``n_samples`` from the prior.</span>
+<div class="viewcode-block" id="AbstractPrior.get_gradient"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.priors.abstract_prior.html#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior.get_gradient">[docs]</a>    <span class="k">def</span> <span class="nf">get_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Computes the gradient of the prior with respect to theta. Internally, his method calls `self._get_gradient`.</span>
 
-<span class="sd">        All samples are on a log scale. This method calls ``self._sample_from_prior`` and applies a log transformation</span>
-<span class="sd">        to the obtained values.</span>
+<span class="sd">        Warning</span>
+<span class="sd">        -------</span>
+<span class="sd">        Theta must be on the original scale.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        theta : float</span>
+<span class="sd">            Hyperparameter configuration in log space</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        gradient : float</span>
+<span class="sd">            The gradient of the prior at theta.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_gradient</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span></div>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_get_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Computes the gradient of the prior with respect to theta.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        theta : float</span>
+<span class="sd">            Hyperparameter configuration in the original space space</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        gradient : float</span>
+<span class="sd">            The gradient of the prior at theta.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+<div class="viewcode-block" id="AbstractPrior.sample_from_prior"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.priors.abstract_prior.html#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior.sample_from_prior">[docs]</a>    <span class="k">def</span> <span class="nf">sample_from_prior</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns `n_samples` from the prior. All samples are on a log scale. This method calls</span>
+<span class="sd">        `self._sample_from_prior` and applies a log transformation to the obtained values.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -390,10 +431,11 @@ style="width: 100%;">
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        np.ndarray</span>
+<span class="sd">        samples : np.ndarray</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;argument n_samples needs to be a scalar (is </span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">n_samples</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">n_samples</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;argument n_samples needs to be positive (is </span><span class="si">%d</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">n_samples</span><span class="p">)</span>
 
@@ -404,10 +446,9 @@ style="width: 100%;">
 
         <span class="k">return</span> <span class="n">sample</span></div>
 
+    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">_sample_from_prior</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns ``n_samples`` from the prior.</span>
-
-<span class="sd">        All samples are on a original scale.</span>
+        <span class="sd">&quot;&quot;&quot;Returns `n_samples` from the prior. All samples are on a original scale.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -417,38 +458,6 @@ style="width: 100%;">
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
-
-<div class="viewcode-block" id="Prior.gradient"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.priors.prior.html#smac.model.gaussian_process.priors.prior.Prior.gradient">[docs]</a>    <span class="k">def</span> <span class="nf">gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Computes the gradient of the prior with respect to theta.</span>
-
-<span class="sd">        Theta must be on the original scale.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        theta : float</span>
-<span class="sd">            Hyperparameter configuration in log space</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        float</span>
-<span class="sd">            The gradient of the prior at theta.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gradient</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span></div>
-
-    <span class="k">def</span> <span class="nf">_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Computes the gradient of the prior with respect to theta.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        theta : float</span>
-<span class="sd">            Hyperparameter configuration in the original space space</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        float</span>
-<span class="sd">            The gradient of the prior at theta.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 </pre></div>

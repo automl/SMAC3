@@ -17,8 +17,8 @@ smac.model.gaussian\_process.kernels.base\_kernels
 
    .. autosummary::
    
+      AbstractKernel
       ConstantKernel
-      MagicMixinKernel
       ProductKernel
       SumKernel
    

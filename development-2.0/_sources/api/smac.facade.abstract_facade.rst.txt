@@ -1,0 +1,29 @@
+smac.facade.abstract\_facade
+============================
+
+.. automodule:: smac.facade.abstract_facade
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AbstractFacade
+   
+   
+
+   
+   
+   
+
+
+

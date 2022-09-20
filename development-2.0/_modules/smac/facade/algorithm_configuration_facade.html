@@ -315,12 +315,10 @@ style="width: 100%;">
 <span class="kn">from</span> <span class="nn">smac.acquisition.local_and_random_search</span> <span class="kn">import</span> <span class="n">LocalAndSortedRandomSearch</span>
 <span class="kn">from</span> <span class="nn">smac.random_design.probability_design</span> <span class="kn">import</span> <span class="n">ProbabilityRandomDesign</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span> <span class="nn">smac.facade.facade</span> <span class="kn">import</span> <span class="n">Facade</span>
+<span class="kn">from</span> <span class="nn">smac.facade.abstract_facade</span> <span class="kn">import</span> <span class="n">AbstractFacade</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.default_design</span> <span class="kn">import</span> <span class="n">DefaultInitialDesign</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="kn">import</span> <span class="n">Intensifier</span>
-<span class="kn">from</span> <span class="nn">smac.model.random_forest.random_forest</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">RandomForest</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">smac.model.random_forest.random_forest</span> <span class="kn">import</span> <span class="n">RandomForest</span>
 <span class="kn">from</span> <span class="nn">smac.multi_objective.aggregation_strategy</span> <span class="kn">import</span> <span class="n">MeanAggregationStrategy</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.encoder.encoder</span> <span class="kn">import</span> <span class="n">RunHistoryEncoder</span>
 <span class="kn">from</span> <span class="nn">smac.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
@@ -333,7 +331,7 @@ style="width: 100%;">
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="AlgorithmConfigurationFacade"><a class="viewcode-back" href="../../../api/smac.facade.algorithm_configuration_facade.html#smac.facade.AlgorithmConfigurationFacade">[docs]</a><span class="k">class</span> <span class="nc">AlgorithmConfigurationFacade</span><span class="p">(</span><span class="n">Facade</span><span class="p">):</span>
+<div class="viewcode-block" id="AlgorithmConfigurationFacade"><a class="viewcode-back" href="../../../api/smac.facade.algorithm_configuration_facade.html#smac.facade.AlgorithmConfigurationFacade">[docs]</a><span class="k">class</span> <span class="nc">AlgorithmConfigurationFacade</span><span class="p">(</span><span class="n">AbstractFacade</span><span class="p">):</span>
 <div class="viewcode-block" id="AlgorithmConfigurationFacade.get_model"><a class="viewcode-back" href="../../../api/smac.facade.algorithm_configuration_facade.html#smac.facade.AlgorithmConfigurationFacade.get_model">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
@@ -349,8 +347,8 @@ style="width: 100%;">
         <span class="sd">&quot;&quot;&quot;Returns a RandomForestWithInstances surrogate model. Please check its documentation.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">RandomForest</span><span class="p">(</span>
             <span class="n">log_y</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">num_trees</span><span class="o">=</span><span class="n">n_trees</span><span class="p">,</span>
-            <span class="n">do_bootstrapping</span><span class="o">=</span><span class="n">bootstrapping</span><span class="p">,</span>
+            <span class="n">n_trees</span><span class="o">=</span><span class="n">n_trees</span><span class="p">,</span>
+            <span class="n">bootstrapping</span><span class="o">=</span><span class="n">bootstrapping</span><span class="p">,</span>
             <span class="n">ratio_features</span><span class="o">=</span><span class="n">ratio_features</span><span class="p">,</span>
             <span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split</span><span class="p">,</span>
             <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf</span><span class="p">,</span>

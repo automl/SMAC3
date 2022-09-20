@@ -330,114 +330,44 @@ style="width: 100%;">
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.multi_objective_model.MultiObjectiveModel" title="smac.model.multi_objective_model.MultiObjectiveModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiObjectiveModel</span></code></a>(target_names, configspace)</p></td>
-<td><p>Wrapper for the surrogate models to predict multiple targets.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.multi_objective_model.MultiObjectiveModel" title="smac.model.multi_objective_model.MultiObjectiveModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiObjectiveModel</span></code></a>(configspace, model, ...)</p></td>
+<td><p>Wrapper for the surrogate model to predict multiple objectives.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.model.multi_objective_model.MultiObjectiveModel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.multi_objective_model.</span></span><span class="sig-name descname"><span class="pre">MultiObjectiveModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/multi_objective_model.html#MultiObjectiveModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.multi_objective_model.MultiObjectiveModel" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.multi_objective_model.</span></span><span class="sig-name descname"><span class="pre">MultiObjectiveModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objectives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/multi_objective_model.html#MultiObjectiveModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.multi_objective_model.MultiObjectiveModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.model.abstract_model.html#smac.model.abstract_model.AbstractModel" title="smac.model.abstract_model.AbstractModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractModel</span></code></a></p>
-<p>Wrapper for the surrogate models to predict multiple targets.</p>
-<p>Only a list with the target names and the types array for the
-underlying model are mandatory. All other hyperparameters to
-model can be passed via kwargs. Consult the documentation of
-the corresponding model for the hyperparameters and their meanings.</p>
+<p>Wrapper for the surrogate model to predict multiple objectives.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>target_names</strong> (<em>list</em>) – List of str, each entry is the name of one target dimension. Length
-of the list will be <code class="docutils literal notranslate"><span class="pre">n_objectives</span></code>.</p></li>
-<li><p><strong>types</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Specifies the number of categorical values of an input dimension where
-the i-th entry corresponds to the i-th input dimension. Let’s say we
-have 2 dimension where the first dimension consists of 3 different
-categorical choices and the second dimension is continuous than we
-have to pass [3, 0]. Note that we count starting from 0.</p></li>
-<li><p><strong>bounds</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan)
-for categorical dims</p></li>
-<li><p><strong>instance_features</strong> (<em>np.ndarray</em><em> (</em><em>I</em><em>, </em><em>K</em><em>)</em>) – Contains the K dimensional instance features of I different instances</p></li>
-<li><p><strong>pca_components</strong> (<em>float</em>) – Number of components to keep when using PCA to reduce dimensionality of instance features.
-Requires to set n_feats (&gt; pca_dims).</p></li>
-<li><p><strong>model_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>:</em>) – arguments for initialing estimators</p></li>
+<li><p><strong>configspace</strong> (<em>ConfigurationSpace</em>) – </p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="smac.model.html#smac.model.AbstractModel" title="smac.model.AbstractModel"><em>AbstractModel</em></a>) – Which model should be used for each objective.</p></li>
+<li><p><strong>objectives</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Which objectives should be used.</p></li>
+<li><p><strong>instance_features</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>list</em><em>[</em><em>int</em><em> | </em><em>float</em><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Features (list of int or floats) of the instances (str). The features are incorporated into the X data,
+on which the model is trained on.</p></li>
+<li><p><strong>pca_components</strong> (<em>float</em><em>, </em><em>defaults to 7</em>) – Number of components to keep when using PCA to reduce dimensionality of instance features.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – </p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.multi_objective_model.MultiObjectiveModel.target_names">
-<span class="sig-name descname"><span class="pre">target_names</span></span><a class="headerlink" href="#smac.model.multi_objective_model.MultiObjectiveModel.target_names" title="Permalink to this definition">¶</a></dt>
-<dd><p>target names</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.multi_objective_model.MultiObjectiveModel.num_targets">
-<span class="sig-name descname"><span class="pre">num_targets</span></span><a class="headerlink" href="#smac.model.multi_objective_model.MultiObjectiveModel.num_targets" title="Permalink to this definition">¶</a></dt>
-<dd><p>number of targets</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.multi_objective_model.MultiObjectiveModel.estimators">
-<span class="sig-name descname"><span class="pre">estimators</span></span><a class="headerlink" href="#smac.model.multi_objective_model.MultiObjectiveModel.estimators" title="Permalink to this definition">¶</a></dt>
-<dd><p>a list of estimators predicting different target values</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[BaseEPM]</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.model.multi_objective_model.MultiObjectiveModel.construct_estimators">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">construct_estimators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/multi_objective_model.html#MultiObjectiveModel.construct_estimators"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.multi_objective_model.MultiObjectiveModel.construct_estimators" title="Permalink to this definition">¶</a></dt>
-<dd><p>Construct a list of estimators. The number of the estimators equals ‘self.num_targets’
-:type configspace: <code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigurationSpace</span></code>
-:param configspace: Configuration space to tune for.
-:type configspace: ConfigurationSpace
-:param types: Specifies the number of categorical values of an input dimension where</p>
-<blockquote>
-<div><p>the i-th entry corresponds to the i-th input dimension. Let’s say we
-have 2 dimension where the first dimension consists of 3 different
-categorical choices and the second dimension is continuous than we
-have to pass [3, 0]. Note that we count starting from 0.</p>
-</div></blockquote>
+<dt class="sig sig-object py" id="smac.model.multi_objective_model.MultiObjectiveModel.predict_marginalized">
+<span class="sig-name descname"><span class="pre">predict_marginalized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/multi_objective_model.html#MultiObjectiveModel.predict_marginalized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.multi_objective_model.MultiObjectiveModel.predict_marginalized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predicts mean and variance marginalized over all instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>bounds</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</p></li>
-<li><p><strong>model_kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – model kwargs for initializing models</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>estimators</strong> – A list of estimators</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[BaseEPM]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.model.multi_objective_model.MultiObjectiveModel.predict_marginalized_over_instances">
-<span class="sig-name descname"><span class="pre">predict_marginalized_over_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/multi_objective_model.html#MultiObjectiveModel.predict_marginalized_over_instances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.multi_objective_model.MultiObjectiveModel.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
-<dd><p>Predict mean and variance marginalized over all instances.</p>
-<p>Returns the predictive mean and variance marginalised over all
-instances for a set of configurations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray of shape =</em><em> [</em><em>n_features</em><em> (</em><em>config</em><em>)</em><em>, </em><em>]</em>) – </p>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#hyperparameter + #features</em><em>]</em>) – Input data points.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p><strong>means</strong> (<em>np.ndarray of shape = [n_samples, n_objectives]</em>) – Predictive mean</p></li>
-<li><p><strong>vars</strong> (<em>np.ndarray  of shape = [n_samples, n_objectives]</em>) – Predictive variance</p></li>
+<li><p><strong>means</strong> (<em>np.ndarray [#samples, 1]</em>) – The predictive mean.</p></li>
+<li><p><strong>vars</strong> (<em>np.ndarray [#samples, 1]</em>) – The predictive variance.</p></li>
 </ul>
 </p>
 </dd>

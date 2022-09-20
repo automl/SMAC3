@@ -1,7 +1,7 @@
-smac.multi\_objective.utils
+smac.utils.multi\_objective
 ===========================
 
-.. automodule:: smac.multi_objective.utils
+.. automodule:: smac.utils.multi_objective
 
    
    

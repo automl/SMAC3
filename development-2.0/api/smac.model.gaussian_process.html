@@ -331,36 +331,53 @@ style="width: 100%;">
 <dt class="sig sig-object py" id="smac.model.gaussian_process.AbstractGaussianProcess">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.</span></span><span class="sig-name descname"><span class="pre">AbstractGaussianProcess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/abstract_gaussian_process.html#AbstractGaussianProcess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.AbstractGaussianProcess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.model.abstract_model.html#smac.model.abstract_model.AbstractModel" title="smac.model.abstract_model.AbstractModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractModel</span></code></a></p>
+<p>Abstract base class for all Gaussian process models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configspace</strong> (<em>ConfigurationSpace</em>) – </p></li>
+<li><p><strong>kernel</strong> (<em>Kernel</em>) – Kernel which is used for the Gaussian process.</p></li>
+<li><p><strong>instance_features</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>list</em><em>[</em><em>int</em><em> | </em><em>float</em><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Features (list of int or floats) of the instances (str). The features are incorporated into the X data,
+on which the model is trained on.</p></li>
+<li><p><strong>pca_components</strong> (<em>float</em><em>, </em><em>defaults to 7</em>) – Number of components to keep when using PCA to reduce dimensionality of instance features.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.AbstractGaussianProcess.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/abstract_gaussian_process.html#AbstractGaussianProcess.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.AbstractGaussianProcess.get_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the meta data of the created object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.model.gaussian_process.GaussianProcess">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.</span></span><span class="sig-name descname"><span class="pre">GaussianProcess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_opt_restarts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/gaussian_process.html#GaussianProcess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.GaussianProcess" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.</span></span><span class="sig-name descname"><span class="pre">GaussianProcess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_restarts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/gaussian_process.html#GaussianProcess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.GaussianProcess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.model.gaussian_process.abstract_gaussian_process.html#smac.model.gaussian_process.abstract_gaussian_process.AbstractGaussianProcess" title="smac.model.gaussian_process.abstract_gaussian_process.AbstractGaussianProcess"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractGaussianProcess</span></code></a></p>
-<p>Gaussian process model.</p>
-<p>The GP hyperparameterŝ are obtained by optimizing the marginal log likelihood.</p>
-<p>This code is based on the implementation of RoBO:</p>
-<p>Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
+<p>Implementation of Gaussian process model. The Gaussian process hyperparameters are obtained by optimizing
+the marginal log likelihood.</p>
+<p>This code is based on the implementation of RoBO:
+Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
 RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
 In: NIPS 2017 Bayesian Optimization Workshop</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>types</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Specifies the number of categorical values of an input dimension where
-the i-th entry corresponds to the i-th input dimension. Let’s say we
-have 2 dimension where the first dimension consists of 3 different
-categorical choices and the second dimension is continuous than we
-have to pass [3, 0]. Note that we count starting from 0.</p></li>
-<li><p><strong>bounds</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</p></li>
-<li><p><strong>seed</strong> (<em>int</em>) – Model seed.</p></li>
-<li><p><strong>kernel</strong> (<em>george kernel object</em>) – Specifies the kernel that is used for all Gaussian Process</p></li>
-<li><p><strong>prior</strong> (<em>prior object</em>) – Defines a prior for the hyperparameters of the GP. Make sure that
-it implements the Prior interface.</p></li>
-<li><p><strong>normalize_y</strong> (<em>bool</em>) – Zero mean unit variance normalization of the output values</p></li>
-<li><p><strong>n_opt_restart</strong> (<em>int</em>) – Number of restarts for GP hyperparameter optimization</p></li>
-<li><p><strong>instance_features</strong> (<em>np.ndarray</em><em> (</em><em>I</em><em>, </em><em>K</em><em>)</em>) – Contains the K dimensional instance features of the I different instances</p></li>
-<li><p><strong>pca_components</strong> (<em>float</em>) – Number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
-set n_feats (&gt; pca_dims).</p></li>
+<li><p><strong>configspace</strong> (<em>ConfigurationSpace</em>) – </p></li>
+<li><p><strong>kernel</strong> (<em>Kernel</em>) – Kernel which is used for the Gaussian process.</p></li>
+<li><p><strong>n_restarts</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – Number of restarts for the Gaussian process hyperparameter optimization.</p></li>
+<li><p><strong>normalize_y</strong> (<em>bool</em><em>, </em><em>defaults to True</em>) – Zero mean unit variance normalization of the output values.</p></li>
+<li><p><strong>instance_features</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>list</em><em>[</em><em>int</em><em> | </em><em>float</em><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Features (list of int or floats) of the instances (str). The features are incorporated into the X data,
+on which the model is trained on.</p></li>
+<li><p><strong>pca_components</strong> (<em>float</em><em>, </em><em>defaults to 7</em>) – Number of components to keep when using PCA to reduce dimensionality of instance features.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -382,7 +399,7 @@ set n_feats (&gt; pca_dims).</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X_test</strong> (<em>np.ndarray</em><em> (</em><em>N</em><em>, </em><em>D</em><em>)</em>) – Input test points</p></li>
+<li><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#hyperparameter + #features</em><em>]</em>) – Input data points.</p></li>
 <li><p><strong>n_funcs</strong> (<em>int</em>) – Number of function values that are drawn at each test point.</p></li>
 </ul>
 </dd>
@@ -390,7 +407,7 @@ set n_feats (&gt; pca_dims).</p></li>
 <dd class="field-even"><p><strong>function_samples</strong> – The F function values drawn at the N test points.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.array(N, F)</p>
+<dd class="field-odd"><p>np.array</p>
 </dd>
 </dl>
 </dd></dl>
@@ -399,12 +416,11 @@ set n_feats (&gt; pca_dims).</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.model.gaussian_process.MCMCGaussianProcess">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.</span></span><span class="sig-name descname"><span class="pre">MCMCGaussianProcess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_mcmc_walkers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chain_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">burnin_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mcmc_sampler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'emcee'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/mcmc_gaussian_process.html#MCMCGaussianProcess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.MCMCGaussianProcess" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.</span></span><span class="sig-name descname"><span class="pre">MCMCGaussianProcess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_mcmc_walkers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chain_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">burning_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mcmc_sampler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'emcee'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/mcmc_gaussian_process.html#MCMCGaussianProcess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.MCMCGaussianProcess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.model.gaussian_process.abstract_gaussian_process.html#smac.model.gaussian_process.abstract_gaussian_process.AbstractGaussianProcess" title="smac.model.gaussian_process.abstract_gaussian_process.AbstractGaussianProcess"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractGaussianProcess</span></code></a></p>
-<p>Gaussian process model.</p>
-<p>The GP hyperparameters are integrated out by Markow-Chain-Monte-Carlo (MCMC) you use this class
-to make sure that you also use an integrated acquisition function to
-integrate over the GP’s hyperparameter as proposed by Snoek et al.</p>
+<p>Implementation of a Gaussian process model which out-integrates its hyperparameters by
+Markow-Chain-Monte-Carlo (MCMC). If you use this class make sure that you also use an integrated acquisition
+function to integrate over the GP’s hyperparameter as proposed by Snoek et al.</p>
 <p>This code is based on the implementation of RoBO:</p>
 <p>Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
 RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
@@ -412,31 +428,33 @@ In: NIPS 2017 Bayesian Optimization Workshop</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>types</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Specifies the number of categorical values of an input dimension where
-the i-th entry corresponds to the i-th input dimension. Let’s say we
-have 2 dimension where the first dimension consists of 3 different
-categorical choices and the second dimension is continuous than we
-have to pass [3, 0]. Note that we count starting from 0.</p></li>
-<li><p><strong>bounds</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</p></li>
-<li><p><strong>seed</strong> (<em>int</em>) – Model seed.</p></li>
-<li><p><strong>kernel</strong> (<em>george kernel object</em>) – Specifies the kernel that is used for all Gaussian Process</p></li>
-<li><p><strong>n_mcmc_walkers</strong> (<em>int</em>) – The number of hyperparameter samples. This also determines the
-number of walker for MCMC sampling as each walker will
-return one hyperparameter sample.</p></li>
-<li><p><strong>chain_length</strong> (<em>int</em>) – The length of the MCMC chain. We start n_mcmc_walkers walker for
-chain_length steps and we use the last sample
-in the chain as a hyperparameter sample.</p></li>
-<li><p><strong>burnin_steps</strong> (<em>int</em>) – The number of burnin steps before the actual MCMC sampling starts.</p></li>
-<li><p><strong>normalize_y</strong> (<em>bool</em>) – Zero mean unit variance normalization of the output values</p></li>
-<li><p><strong>mcmc_sampler</strong> (<em>str</em>) – Choose a self-tuning MCMC sampler. Can be either <code class="docutils literal notranslate"><span class="pre">emcee</span></code> or <code class="docutils literal notranslate"><span class="pre">nuts</span></code>.</p></li>
-<li><p><strong>instance_features</strong> (<em>np.ndarray</em><em> (</em><em>I</em><em>, </em><em>K</em><em>)</em>) – Contains the K dimensional instance features
-of the I different instances</p></li>
-<li><p><strong>pca_components</strong> (<em>float</em>) – Number of components to keep when using PCA to reduce
-dimensionality of instance features. Requires to
-set n_feats (&gt; pca_dims).</p></li>
+<li><p><strong>configspace</strong> (<em>ConfigurationSpace</em>) – </p></li>
+<li><p><strong>kernel</strong> (<em>Kernel</em>) – Kernel which is used for the Gaussian process.</p></li>
+<li><p><strong>n_mcmc_walkers</strong> (<em>int</em><em>, </em><em>defaults to 20</em>) – The number of hyperparameter samples. This also determines the number of walker for MCMC sampling as each
+walker will return one hyperparameter sample.</p></li>
+<li><p><strong>chain_length</strong> (<em>int</em><em>, </em><em>defaults to 50</em>) – The length of the MCMC chain. We start <cite>n_mcmc_walkers</cite> walker for <cite>chain_length</cite> steps and we use the last
+sample in the chain as a hyperparameter sample.</p></li>
+<li><p><strong>burning_steps</strong> (<em>int</em><em>, </em><em>defaults to 50</em>) – The number of burnin steps before the actual MCMC sampling starts.</p></li>
+<li><p><strong>mcmc_sampler</strong> (<em>str</em><em>, </em><em>defaults to &quot;emcee&quot;</em>) – Choose a self-tuning MCMC sampler. Can be either <code class="docutils literal notranslate"><span class="pre">emcee</span></code> or <code class="docutils literal notranslate"><span class="pre">nuts</span></code>.</p></li>
+<li><p><strong>normalize_y</strong> (<em>bool</em><em>, </em><em>defaults to True</em>) – Zero mean unit variance normalization of the output values.</p></li>
+<li><p><strong>instance_features</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>list</em><em>[</em><em>int</em><em> | </em><em>float</em><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Features (list of int or floats) of the instances (str). The features are incorporated into the X data,
+on which the model is trained on.</p></li>
+<li><p><strong>pca_components</strong> (<em>float</em><em>, </em><em>defaults to 7</em>) – Number of components to keep when using PCA to reduce dimensionality of instance features.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – </p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.MCMCGaussianProcess.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/mcmc_gaussian_process.html#MCMCGaussianProcess.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.MCMCGaussianProcess.get_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the meta data of the created object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <p class="rubric">Modules</p>
@@ -448,16 +466,13 @@ set n_feats (&gt; pca_dims).</p></li>
 <tr class="row-even"><td><p><a class="reference internal" href="smac.model.gaussian_process.gaussian_process.html#module-smac.model.gaussian_process.gaussian_process" title="smac.model.gaussian_process.gaussian_process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.model.gaussian_process.gaussian_process</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="smac.model.gaussian_process.gpytorch.html#module-smac.model.gaussian_process.gpytorch" title="smac.model.gaussian_process.gpytorch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.model.gaussian_process.gpytorch</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="smac.model.gaussian_process.kernels.html#module-smac.model.gaussian_process.kernels" title="smac.model.gaussian_process.kernels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.model.gaussian_process.kernels</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="smac.model.gaussian_process.kernels.html#module-smac.model.gaussian_process.kernels" title="smac.model.gaussian_process.kernels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.model.gaussian_process.kernels</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="smac.model.gaussian_process.mcmc_gaussian_process.html#module-smac.model.gaussian_process.mcmc_gaussian_process" title="smac.model.gaussian_process.mcmc_gaussian_process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.model.gaussian_process.mcmc_gaussian_process</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="smac.model.gaussian_process.mcmc_gaussian_process.html#module-smac.model.gaussian_process.mcmc_gaussian_process" title="smac.model.gaussian_process.mcmc_gaussian_process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.model.gaussian_process.mcmc_gaussian_process</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="smac.model.gaussian_process.priors.html#module-smac.model.gaussian_process.priors" title="smac.model.gaussian_process.priors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.model.gaussian_process.priors</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="smac.model.gaussian_process.priors.html#module-smac.model.gaussian_process.priors" title="smac.model.gaussian_process.priors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.model.gaussian_process.priors</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>

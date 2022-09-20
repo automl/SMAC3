@@ -39,7 +39,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.facade.algorithm_configuration_facade" href="smac.facade.algorithm_configuration_facade.html" />
+    <link rel="next" title="smac.facade.abstract_facade" href="smac.facade.abstract_facade.html" />
     <link rel="prev" title="API References" href="../api.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
@@ -328,9 +328,217 @@ style="width: 100%;">
   <section id="module-smac.facade">
 <span id="smac-facade"></span><h1>smac.facade<a class="headerlink" href="#module-smac.facade" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
+<dt class="sig sig-object py" id="smac.facade.AbstractFacade">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">AbstractFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_algorithm</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Facade is an abstraction on top of the SMBO backend to organize the components
+of a Bayesian Optimization loop in a configurable &amp; separable manner to suit the
+various needs of different hyperparameter optimization pipelines.</p>
+<p>With the exception to scenario &amp; target_algorithm, which are expected of the
+user, the parameters: model, aacquisition_function, acquisition_optimizer,
+initial_design, random_design, intensifier, multi_objective_algorithm,
+runhistory and runhistory_encoder can either be explicitly specified in the
+subclasses’ get_* methods - defining a specific BO pipeline - or be instantiated
+by the user to overwrite a pipelines components explicitly, before passing
+them to the facade. For an example of the latter see the svm_cv.py.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a><em>,</em>) – </p></li>
+<li><p><strong>target_algorithm</strong> (<a class="reference internal" href="smac.runner.html#smac.runner.AbstractRunner" title="smac.runner.AbstractRunner"><em>AbstractRunner</em></a><em> | </em><em>Callable</em>) – </p></li>
+<li><p><strong>model</strong> (<em>BaseModel</em><em> | </em><em>None</em>) – </p></li>
+<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction" title="smac.acquisition.functions.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a><em> | </em><em>None</em>) – </p></li>
+<li><p><strong>acquisition_optimizer</strong> (<a class="reference internal" href="smac.acquisition.html#smac.acquisition.AbstractAcquisitionOptimizer" title="smac.acquisition.AbstractAcquisitionOptimizer"><em>AbstractAcquisitionOptimizer</em></a><em> | </em><em>None</em>) – </p></li>
+<li><p><strong>initial_design</strong> (<em>InitialDesign</em><em> | </em><em>None</em>) – </p></li>
+<li><p><strong>random_design</strong> (<em>RandomDesign</em><em> | </em><em>None</em>) – </p></li>
+<li><p><strong>intensifier</strong> (<a class="reference internal" href="smac.intensification.html#smac.intensification.AbstractIntensifier" title="smac.intensification.AbstractIntensifier"><em>AbstractIntensifier</em></a><em> | </em><em>None</em>) – </p></li>
+<li><p><strong>multi_objective_algorithm</strong> (<a class="reference internal" href="smac.multi_objective.html#smac.multi_objective.AbstractMultiObjectiveAlgorithm" title="smac.multi_objective.AbstractMultiObjectiveAlgorithm"><em>AbstractMultiObjectiveAlgorithm</em></a><em> | </em><em>None</em>) – </p></li>
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunHistory" title="smac.runhistory.RunHistory"><em>RunHistory</em></a><em> | </em><em>None</em>) – </p></li>
+<li><p><strong>runhistory_encoder</strong> (<a class="reference internal" href="smac.runhistory.encoder.html#smac.runhistory.encoder.RunHistoryEncoder" title="smac.runhistory.encoder.RunHistoryEncoder"><em>RunHistoryEncoder</em></a><em> | </em><em>None</em>) – </p></li>
+<li><p><strong>logging_level</strong> (<em>int</em><em> | </em><em>Path</em><em> | </em><em>None</em>) – Level of logging; if path passed: yaml file expected; if none: use default logging from logging.yml</p></li>
+<li><p><strong>callbacks</strong> (<em>list</em><em>[</em><a class="reference internal" href="smac.callback.html#smac.callback.Callback" title="smac.callback.Callback"><em>Callback</em></a><em>] </em><em>=</em><em> [</em><em>]</em><em>,</em>) – </p></li>
+<li><p><strong>overwrite</strong> (<em>bool defaults to False</em>) – When True, overwrites the results (Runhistory &amp; Stats) if a previous run is found that is
+inconsistent in the meta data with the current setup. In that case, the user is prompted
+for the exact behaviour.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.facade.AbstractFacade.ask">
+<span class="sig-name descname"><span class="pre">ask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.ask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.ask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asks the intensifier for the next trial. This method returns only trials with the intend
+to run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.TrialInfo" title="smac.runhistory.dataclasses.TrialInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrialInfo</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.facade.AbstractFacade.get_acquisition_function">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_acquisition_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_acquisition_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.get_acquisition_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the acquisition function instance used in the BO loop,
+defining the exploration/exploitation trade-off.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction" title="smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.facade.AbstractFacade.get_acquisition_optimizer">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_acquisition_optimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_acquisition_optimizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.get_acquisition_optimizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the acquisition optimizer instance to be used in the BO loop,
+specifying how the acquisition function instance is optimized.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.abstract_acqusition_optimizer.html#smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer" title="smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionOptimizer</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.facade.AbstractFacade.get_initial_design">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_initial_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_initial_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.get_initial_design" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an instance of the initial design class to be used in the BO loop,
+specifying how the configurations the BO loop is ‘warm-started’ with are selected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.initial_design.abstract_initial_design.html#smac.initial_design.abstract_initial_design.AbstractInitialDesign" title="smac.initial_design.abstract_initial_design.AbstractInitialDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractInitialDesign</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.facade.AbstractFacade.get_intensifier">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.get_intensifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the intensifier instance to be used in the BO loop,
+specifying how to challenge the incumbent configuration on other problem instances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.intensification.abstract_intensifier.html#smac.intensification.abstract_intensifier.AbstractIntensifier" title="smac.intensification.abstract_intensifier.AbstractIntensifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractIntensifier</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.facade.AbstractFacade.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.get_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a hash based on all components of the facade. This is used for the run name or to determine
+whether a run should be continued or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.facade.AbstractFacade.get_model">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.get_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the surrogate cost model instance used in the BO loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.model.abstract_model.html#smac.model.abstract_model.AbstractModel" title="smac.model.abstract_model.AbstractModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractModel</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.facade.AbstractFacade.get_multi_objective_algorithm">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_multi_objective_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_multi_objective_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.get_multi_objective_algorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the multi-objective algorithm instance to be used in the BO loop,
+specifying the scalarization strategy for multiple objectives’ costs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.multi_objective.abstract_multi_objective_algorithm.html#smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm" title="smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractMultiObjectiveAlgorithm</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.facade.AbstractFacade.get_next_configurations">
+<span class="sig-name descname"><span class="pre">get_next_configurations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_next_configurations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.get_next_configurations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Choose next candidate solution with Bayesian optimization. The suggested configurations
+depend on the surrogate model acquisition optimizer/function. This method is used by
+the intensifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterator</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.facade.AbstractFacade.get_random_design">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_random_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_random_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.get_random_design" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an instance of the random design class to be used in the BO loop,
+specifying how to interleave the BO iterations with randomly selected configurations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.random_design.abstract_random_design.html#smac.random_design.abstract_random_design.AbstractRandomDesign" title="smac.random_design.abstract_random_design.AbstractRandomDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractRandomDesign</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.facade.AbstractFacade.get_runhistory_encoder">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_runhistory_encoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_runhistory_encoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.get_runhistory_encoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an instance of the runhistory encoder class to be used in the BO loop,
+specifying how the runhistory is to be prepared for the next surrogate model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder" title="smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractRunHistoryEncoder</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.facade.AbstractFacade.optimize">
+<span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force_initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.optimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optimizes the algorithm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>force_initial_design</strong> (<em>bool</em>) – The initial design is only performed if the runhistory is empty. If this flag is set to True,
+the initial design is performed regardless of the runhistory.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>incumbent</strong> – Best found configuration.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Configuration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.facade.AbstractFacade.tell">
+<span class="sig-name descname"><span class="pre">tell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.tell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.tell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the result of a trial to the runhistory and updates the intensifier. Also,
+the stats object is updated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>info</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.TrialInfo" title="smac.runhistory.TrialInfo"><em>TrialInfo</em></a>) – Describes the trial from which to process the results.</p></li>
+<li><p><strong>value</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.TrialValue" title="smac.runhistory.TrialValue"><em>TrialValue</em></a>) – Contains relevant information regarding the execution of a trial.</p></li>
+<li><p><strong>time_left</strong> (<em>float</em><em> | </em><em>None</em>) – How much time in seconds is left to perform intensification.</p></li>
+<li><p><strong>save</strong> (<em>bool</em><em>, </em><em>optional to True</em>) – Whether the runhistory should be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="smac.facade.AlgorithmConfigurationFacade">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">AlgorithmConfigurationFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_algorithm</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/algorithm_configuration_facade.html#AlgorithmConfigurationFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AlgorithmConfigurationFacade" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.facade.facade.html#smac.facade.facade.Facade" title="smac.facade.facade.Facade"><code class="xref py py-class docutils literal notranslate"><span class="pre">Facade</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="smac.facade.abstract_facade.html#smac.facade.abstract_facade.AbstractFacade" title="smac.facade.abstract_facade.AbstractFacade"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractFacade</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.AlgorithmConfigurationFacade.get_acquisition_function">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_acquisition_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/algorithm_configuration_facade.html#AlgorithmConfigurationFacade.get_acquisition_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AlgorithmConfigurationFacade.get_acquisition_function" title="Permalink to this definition">¶</a></dt>
@@ -429,12 +637,11 @@ specifying how the runhistory is to be prepared for the next surrogate model.</p
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.facade.BlackBoxFacade">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">BlackBoxFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_algorithm</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.BlackBoxFacade" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.facade.facade.html#smac.facade.facade.Facade" title="smac.facade.facade.Facade"><code class="xref py py-class docutils literal notranslate"><span class="pre">Facade</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="smac.facade.abstract_facade.html#smac.facade.abstract_facade.AbstractFacade" title="smac.facade.abstract_facade.AbstractFacade"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractFacade</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.BlackBoxFacade.get_acquisition_function">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_acquisition_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_acquisition_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.BlackBoxFacade.get_acquisition_function" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the acquisition function instance (EI: Expected Improvement) for the Black-Box
-facade.</p>
+<dd><p>Returns the acquisition function instance (EI: Expected Improvement) for the Black-Box facade.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.functions.expected_improvement.html#smac.acquisition.functions.expected_improvement.EI" title="smac.acquisition.functions.expected_improvement.EI"><code class="xref py py-class docutils literal notranslate"><span class="pre">EI</span></code></a></p>
@@ -493,12 +700,21 @@ categorical (HammingKernel), continuous (Matern), and noise kernels (White).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.BlackBoxFacade.get_model">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.BlackBoxFacade.get_model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a Gaussian Process surrogate model. Please check its documentation for
-detials.</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.BlackBoxFacade.get_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a Gaussian Process surrogate model.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
+<li><p><strong>model_type</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Which gaussian process model should be chosen. Choose between <cite>vanilla</cite> and <cite>mcmc</cite>.</p></li>
+<li><p><strong>kernel</strong> (<em>kernels.Kernel</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The kernel used in the surrogate model.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>model</strong> – The instantiated gaussian process.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.model.gaussian_process.abstract_gaussian_process.html#smac.model.gaussian_process.abstract_gaussian_process.AbstractGaussianProcess" title="smac.model.gaussian_process.abstract_gaussian_process.AbstractGaussianProcess"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractGaussianProcess</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="smac.model.gaussian_process.html#smac.model.gaussian_process.AbstractGaussianProcess" title="smac.model.gaussian_process.AbstractGaussianProcess">AbstractGaussianProcess</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -536,214 +752,6 @@ specifying how the runhistory is to be prepared for the next surrogate model.</p
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.encoder.encoder.html#smac.runhistory.encoder.encoder.RunHistoryEncoder" title="smac.runhistory.encoder.encoder.RunHistoryEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunHistoryEncoder</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="smac.facade.Facade">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">Facade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_algorithm</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.Facade" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Facade is an abstraction on top of the SMBO backend to organize the components
-of a Bayesian Optimization loop in a configurable &amp; separable manner to suit the
-various needs of different hyperparameter optimization pipelines.</p>
-<p>With the exception to scenario &amp; target_algorithm, which are expected of the
-user, the parameters: model, aacquisition_function, acquisition_optimizer,
-initial_design, random_design, intensifier, multi_objective_algorithm,
-runhistory and runhistory_encoder can either be explicitly specified in the
-subclasses’ get_* methods - defining a specific BO pipeline - or be instantiated
-by the user to overwrite a pipelines components explicitly, before passing
-them to the facade. For an example of the latter see the svm_cv.py.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a><em>,</em>) – </p></li>
-<li><p><strong>target_algorithm</strong> (<a class="reference internal" href="smac.runner.html#smac.runner.AbstractRunner" title="smac.runner.AbstractRunner"><em>AbstractRunner</em></a><em> | </em><em>Callable</em>) – </p></li>
-<li><p><strong>model</strong> (<em>BaseModel</em><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction" title="smac.acquisition.functions.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>acquisition_optimizer</strong> (<a class="reference internal" href="smac.acquisition.html#smac.acquisition.AbstractAcquisitionOptimizer" title="smac.acquisition.AbstractAcquisitionOptimizer"><em>AbstractAcquisitionOptimizer</em></a><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>initial_design</strong> (<em>InitialDesign</em><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>random_design</strong> (<em>RandomDesign</em><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>intensifier</strong> (<a class="reference internal" href="smac.intensification.html#smac.intensification.AbstractIntensifier" title="smac.intensification.AbstractIntensifier"><em>AbstractIntensifier</em></a><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>multi_objective_algorithm</strong> (<a class="reference internal" href="smac.multi_objective.html#smac.multi_objective.AbstractMultiObjectiveAlgorithm" title="smac.multi_objective.AbstractMultiObjectiveAlgorithm"><em>AbstractMultiObjectiveAlgorithm</em></a><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunHistory" title="smac.runhistory.RunHistory"><em>RunHistory</em></a><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>runhistory_encoder</strong> (<a class="reference internal" href="smac.runhistory.encoder.html#smac.runhistory.encoder.RunHistoryEncoder" title="smac.runhistory.encoder.RunHistoryEncoder"><em>RunHistoryEncoder</em></a><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>logging_level</strong> (<em>int</em><em> | </em><em>Path</em><em> | </em><em>None</em>) – Level of logging; if path passed: yaml file expected; if none: use default logging from logging.yml</p></li>
-<li><p><strong>callbacks</strong> (<em>list</em><em>[</em><a class="reference internal" href="smac.callback.html#smac.callback.Callback" title="smac.callback.Callback"><em>Callback</em></a><em>] </em><em>=</em><em> [</em><em>]</em><em>,</em>) – </p></li>
-<li><p><strong>overwrite</strong> (<em>bool defaults to False</em>) – When True, overwrites the results (Runhistory &amp; Stats) if a previous run is found that is
-inconsistent in the meta data with the current setup. In that case, the user is prompted
-for the exact behaviour.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.Facade.ask">
-<span class="sig-name descname"><span class="pre">ask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.ask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.Facade.ask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Asks the intensifier for the next trial. This method returns only trials with the intend
-to run.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.TrialInfo" title="smac.runhistory.dataclasses.TrialInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrialInfo</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.Facade.get_acquisition_function">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_acquisition_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_acquisition_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.Facade.get_acquisition_function" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the acquisition function instance used in the BO loop,
-defining the exploration/exploitation trade-off.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction" title="smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.Facade.get_acquisition_optimizer">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_acquisition_optimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_acquisition_optimizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.Facade.get_acquisition_optimizer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the acquisition optimizer instance to be used in the BO loop,
-specifying how the acquisition function instance is optimized.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.abstract_acqusition_optimizer.html#smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer" title="smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionOptimizer</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.Facade.get_initial_design">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_initial_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_initial_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.Facade.get_initial_design" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an instance of the initial design class to be used in the BO loop,
-specifying how the configurations the BO loop is ‘warm-started’ with are selected.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.initial_design.abstract_initial_design.html#smac.initial_design.abstract_initial_design.AbstractInitialDesign" title="smac.initial_design.abstract_initial_design.AbstractInitialDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractInitialDesign</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.Facade.get_intensifier">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.Facade.get_intensifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the intensifier instance to be used in the BO loop,
-specifying how to challenge the incumbent configuration on other problem instances.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.intensification.abstract_intensifier.html#smac.intensification.abstract_intensifier.AbstractIntensifier" title="smac.intensification.abstract_intensifier.AbstractIntensifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractIntensifier</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.Facade.get_meta">
-<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.Facade.get_meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates a hash based on all components of the facade. This is used for the run name or to determine
-whether a run should be continued or not.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.Facade.get_model">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.Facade.get_model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the surrogate cost model instance used in the BO loop.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.model.abstract_model.html#smac.model.abstract_model.AbstractModel" title="smac.model.abstract_model.AbstractModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractModel</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.Facade.get_multi_objective_algorithm">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_multi_objective_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_multi_objective_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.Facade.get_multi_objective_algorithm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the multi-objective algorithm instance to be used in the BO loop,
-specifying the scalarization strategy for multiple objectives’ costs</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.multi_objective.abstract_multi_objective_algorithm.html#smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm" title="smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractMultiObjectiveAlgorithm</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.Facade.get_next_configurations">
-<span class="sig-name descname"><span class="pre">get_next_configurations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_next_configurations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.Facade.get_next_configurations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Choose next candidate solution with Bayesian optimization. The suggested configurations
-depend on the surrogate model acquisition optimizer/function. This method is used by
-the intensifier.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterator</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.Facade.get_random_design">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_random_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_random_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.Facade.get_random_design" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an instance of the random design class to be used in the BO loop,
-specifying how to interleave the BO iterations with randomly selected configurations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.random_design.abstract_random_design.html#smac.random_design.abstract_random_design.AbstractRandomDesign" title="smac.random_design.abstract_random_design.AbstractRandomDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractRandomDesign</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.Facade.get_runhistory_encoder">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_runhistory_encoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_runhistory_encoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.Facade.get_runhistory_encoder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an instance of the runhistory encoder class to be used in the BO loop,
-specifying how the runhistory is to be prepared for the next surrogate model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder" title="smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractRunHistoryEncoder</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.Facade.optimize">
-<span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force_initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.Facade.optimize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optimizes the algorithm.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>force_initial_design</strong> (<em>bool</em>) – The initial design is only performed if the runhistory is empty. If this flag is set to True,
-the initial design is performed regardless of the runhistory.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>incumbent</strong> – Best found configuration.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Configuration</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.Facade.tell">
-<span class="sig-name descname"><span class="pre">tell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.tell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.Facade.tell" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the result of a trial to the runhistory and updates the intensifier. Also,
-the stats object is updated.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>info</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.TrialInfo" title="smac.runhistory.TrialInfo"><em>TrialInfo</em></a>) – Describes the trial from which to process the results.</p></li>
-<li><p><strong>value</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.TrialValue" title="smac.runhistory.TrialValue"><em>TrialValue</em></a>) – Contains relevant information regarding the execution of a trial.</p></li>
-<li><p><strong>time_left</strong> (<em>float</em><em> | </em><em>None</em>) – How much time in seconds is left to perform intensification.</p></li>
-<li><p><strong>save</strong> (<em>bool</em><em>, </em><em>optional to True</em>) – Whether the runhistory should be saved.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -793,7 +801,7 @@ J. Mach. Learn. Res. 18: 185:1-185:52 (2017)
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.facade.HyperparameterFacade">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">HyperparameterFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_algorithm</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/hyperparameter_facade.html#HyperparameterFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.HyperparameterFacade" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.facade.facade.html#smac.facade.facade.Facade" title="smac.facade.facade.Facade"><code class="xref py py-class docutils literal notranslate"><span class="pre">Facade</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="smac.facade.abstract_facade.html#smac.facade.abstract_facade.AbstractFacade" title="smac.facade.abstract_facade.AbstractFacade"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractFacade</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.HyperparameterFacade.get_acquisition_function">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_acquisition_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/hyperparameter_facade.html#HyperparameterFacade.get_acquisition_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.HyperparameterFacade.get_acquisition_function" title="Permalink to this definition">¶</a></dt>
@@ -894,6 +902,36 @@ specifying how the runhistory is to be prepared for the next surrogate model.</p
 <dt class="sig sig-object py" id="smac.facade.MultiFidelityFacade">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">MultiFidelityFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_algorithm</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/multi_fidelity_facade.html#MultiFidelityFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.MultiFidelityFacade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.facade.hyperparameter_facade.html#smac.facade.hyperparameter_facade.HyperparameterFacade" title="smac.facade.hyperparameter_facade.HyperparameterFacade"><code class="xref py py-class docutils literal notranslate"><span class="pre">HyperparameterFacade</span></code></a></p>
+<p>This facade configures SMAC in a multi-fidelity setting.
+The way this facade combines the components is the following and exploits
+fidelity information in the following form:</p>
+<ol class="arabic simple">
+<li><p>The initial design is a RandomInitialDesign.</p></li>
+</ol>
+<p>2. The intensification is Hyperband. The configurations from the initial design
+are presented as challengers and executed in the Hyperband fashion.
+3. The model is a RandomForest surrogate model. The data to train it
+is collected by SMBO._collect_data. Notably, the method searches through
+the runhistory and collects the data from the highest fidelity level, that supports at least
+SMBO._min_samples_model number of configurations.
+4. The acquisition function is EI. Presenting the value of a candidate configuration.
+5. The acquisition optimizer is LocalAndSortedRandomSearch. It optimizes the acquisition
+function to present the best configuration as challenger to the intensifier.
+From now on 2. works as follows: the intensifier runs the challenger in a Hyperband fashion
+against the existing configurations and their observed performances
+until the challenger does not survive a fidelity level. The intensifier can inquire about a
+known configuration on a yet unseen fidelity if necessary.</p>
+<p>The loop 2-5 continues until a termination criterion is reached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Note<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<p>For intensification the data acquisition and aggregation strategy in step 2 is changed.
+Incumbents are updated by the mean performance over the intersection of instances, that
+the challenger and incumbent have in common (abstract_intensifier._compare_configs).
+The model in step 3 is trained on the all the available instance performance values.
+The datapoints for a hyperparameter configuration are disambiguated by the instance features
+or an index as replacement if no instance features are available.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.MultiFidelityFacade.get_initial_design">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_initial_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs_per_hyperparamter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_config_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/multi_fidelity_facade.html#MultiFidelityFacade.get_initial_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.MultiFidelityFacade.get_initial_design" title="Permalink to this definition">¶</a></dt>
@@ -921,7 +959,7 @@ specifying how the runhistory is to be prepared for the next surrogate model.</p
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.facade.RandomFacade">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">RandomFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_algorithm</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/random_facade.html#RandomFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.RandomFacade" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.facade.facade.html#smac.facade.facade.Facade" title="smac.facade.facade.Facade"><code class="xref py py-class docutils literal notranslate"><span class="pre">Facade</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="smac.facade.abstract_facade.html#smac.facade.abstract_facade.AbstractFacade" title="smac.facade.abstract_facade.AbstractFacade"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractFacade</span></code></a></p>
 <p>Facade to use ROAR (Random Online Aggressive Racing) mode.</p>
 <p>When we have a new configuration θ we want to compare it to the current best
 configuration, the incumbent θ*.
@@ -1052,28 +1090,25 @@ specifying how the runhistory is to be prepared for the next surrogate model.</p
 <p class="rubric">Modules</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="smac.facade.algorithm_configuration_facade.html#module-smac.facade.algorithm_configuration_facade" title="smac.facade.algorithm_configuration_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.algorithm_configuration_facade</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="smac.facade.abstract_facade.html#module-smac.facade.abstract_facade" title="smac.facade.abstract_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.abstract_facade</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="smac.facade.blackbox_facade.html#module-smac.facade.blackbox_facade" title="smac.facade.blackbox_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.blackbox_facade</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="smac.facade.algorithm_configuration_facade.html#module-smac.facade.algorithm_configuration_facade" title="smac.facade.algorithm_configuration_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.algorithm_configuration_facade</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="smac.facade.boing_facade.html#module-smac.facade.boing_facade" title="smac.facade.boing_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.boing_facade</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="smac.facade.blackbox_facade.html#module-smac.facade.blackbox_facade" title="smac.facade.blackbox_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.blackbox_facade</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="smac.facade.facade.html#module-smac.facade.facade" title="smac.facade.facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.facade</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="smac.facade.hyperband_facade.html#module-smac.facade.hyperband_facade" title="smac.facade.hyperband_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.hyperband_facade</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="smac.facade.hyperband_facade.html#module-smac.facade.hyperband_facade" title="smac.facade.hyperband_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.hyperband_facade</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="smac.facade.hyperparameter_facade.html#module-smac.facade.hyperparameter_facade" title="smac.facade.hyperparameter_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.hyperparameter_facade</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="smac.facade.hyperparameter_facade.html#module-smac.facade.hyperparameter_facade" title="smac.facade.hyperparameter_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.hyperparameter_facade</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="smac.facade.multi_fidelity_facade.html#module-smac.facade.multi_fidelity_facade" title="smac.facade.multi_fidelity_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.multi_fidelity_facade</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="smac.facade.multi_fidelity_facade.html#module-smac.facade.multi_fidelity_facade" title="smac.facade.multi_fidelity_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.multi_fidelity_facade</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="smac.facade.random_facade.html#module-smac.facade.random_facade" title="smac.facade.random_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.random_facade</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="smac.facade.random_facade.html#module-smac.facade.random_facade" title="smac.facade.random_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.random_facade</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -1093,10 +1128,10 @@ specifying how the runhistory is to be prepared for the next surrogate model.</p
             <p class="prev-next-title">API References</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.facade.algorithm_configuration_facade.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.facade.abstract_facade.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.facade.algorithm_configuration_facade</p>
+        <p class="prev-next-title">smac.facade.abstract_facade</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

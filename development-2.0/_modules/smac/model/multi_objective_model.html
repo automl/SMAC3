@@ -311,8 +311,7 @@ style="width: 100%;">
   <h1>Source code for smac.model.multi_objective_model</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeVar</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -323,54 +322,35 @@ style="width: 100%;">
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<div class="viewcode-block" id="MultiObjectiveModel"><a class="viewcode-back" href="../../../api/smac.model.multi_objective_model.html#smac.model.MultiObjectiveModel">[docs]</a><span class="k">class</span> <span class="nc">MultiObjectiveModel</span><span class="p">(</span><span class="n">AbstractModel</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Wrapper for the surrogate models to predict multiple targets.</span>
+<span class="n">Self</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;Self&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s2">&quot;MultiObjectiveModel&quot;</span><span class="p">)</span>
 
-<span class="sd">    Only a list with the target names and the types array for the</span>
-<span class="sd">    underlying model are mandatory. All other hyperparameters to</span>
-<span class="sd">    model can be passed via kwargs. Consult the documentation of</span>
-<span class="sd">    the corresponding model for the hyperparameters and their meanings.</span>
+
+<div class="viewcode-block" id="MultiObjectiveModel"><a class="viewcode-back" href="../../../api/smac.model.multi_objective_model.html#smac.model.MultiObjectiveModel">[docs]</a><span class="k">class</span> <span class="nc">MultiObjectiveModel</span><span class="p">(</span><span class="n">AbstractModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wrapper for the surrogate model to predict multiple objectives.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    target_names : list</span>
-<span class="sd">        List of str, each entry is the name of one target dimension. Length</span>
-<span class="sd">        of the list will be ``n_objectives``.</span>
-<span class="sd">    types : List[int]</span>
-<span class="sd">        Specifies the number of categorical values of an input dimension where</span>
-<span class="sd">        the i-th entry corresponds to the i-th input dimension. Let&#39;s say we</span>
-<span class="sd">        have 2 dimension where the first dimension consists of 3 different</span>
-<span class="sd">        categorical choices and the second dimension is continuous than we</span>
-<span class="sd">        have to pass [3, 0]. Note that we count starting from 0.</span>
-<span class="sd">    bounds : List[Tuple[float, float]]</span>
-<span class="sd">        bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan)</span>
-<span class="sd">        for categorical dims</span>
-<span class="sd">    instance_features : np.ndarray (I, K)</span>
-<span class="sd">        Contains the K dimensional instance features of I different instances</span>
-<span class="sd">    pca_components : float</span>
+<span class="sd">    configspace : ConfigurationSpace</span>
+<span class="sd">    model : AbstractModel</span>
+<span class="sd">        Which model should be used for each objective.</span>
+<span class="sd">    objectives : list[str]</span>
+<span class="sd">        Which objectives should be used.</span>
+<span class="sd">    instance_features : dict[str, list[int | float]] | None, defaults to None</span>
+<span class="sd">        Features (list of int or floats) of the instances (str). The features are incorporated into the X data,</span>
+<span class="sd">        on which the model is trained on.</span>
+<span class="sd">    pca_components : float, defaults to 7</span>
 <span class="sd">        Number of components to keep when using PCA to reduce dimensionality of instance features.</span>
-<span class="sd">        Requires to set n_feats (&gt; pca_dims).</span>
-<span class="sd">    model_kwargs: Optional[Dict[str, Any]]:</span>
-<span class="sd">        arguments for initialing estimators</span>
-
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    target_names:</span>
-<span class="sd">        target names</span>
-<span class="sd">    num_targets: int</span>
-<span class="sd">        number of targets</span>
-<span class="sd">    estimators: List[BaseEPM]</span>
-<span class="sd">        a list of estimators predicting different target values</span>
+<span class="sd">    seed : int</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">target_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">configspace</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">AbstractModel</span><span class="p">,</span>
+        <span class="n">objectives</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">instance_features</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">pca_components</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="n">model_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">configspace</span><span class="o">=</span><span class="n">configspace</span><span class="p">,</span>
@@ -379,116 +359,46 @@ style="width: 100%;">
             <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">model_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">model_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">objectives</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_models</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AbstractModel</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">model</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span><span class="p">)]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">target_names</span> <span class="o">=</span> <span class="n">target_names</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_targets</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_names</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">estimators</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AbstractModel</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">construct_estimators</span><span class="p">(</span><span class="n">configspace</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_models</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The list of surrogate models is empty.&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="MultiObjectiveModel.construct_estimators"><a class="viewcode-back" href="../../../api/smac.model.multi_objective_model.html#smac.model.MultiObjectiveModel.construct_estimators">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">construct_estimators</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">configspace</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
-        <span class="n">model_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">AbstractModel</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Construct a list of estimators. The number of the estimators equals &#39;self.num_targets&#39;</span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        configspace : ConfigurationSpace</span>
-<span class="sd">            Configuration space to tune for.</span>
-<span class="sd">        types : List[int]</span>
-<span class="sd">            Specifies the number of categorical values of an input dimension where</span>
-<span class="sd">            the i-th entry corresponds to the i-th input dimension. Let&#39;s say we</span>
-<span class="sd">            have 2 dimension where the first dimension consists of 3 different</span>
-<span class="sd">            categorical choices and the second dimension is continuous than we</span>
-<span class="sd">            have to pass [3, 0]. Note that we count starting from 0.</span>
-<span class="sd">        bounds : List[Tuple[float, float]]</span>
-<span class="sd">            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</span>
-<span class="sd">        model_kwargs : Dict[str, Any]</span>
-<span class="sd">            model kwargs for initializing models</span>
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        estimators: List[BaseEPM]</span>
-<span class="sd">            A list of estimators</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-
-    <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MultiObjectiveModel&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Trains the models on X and y.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        X : np.ndarray [n_samples, n_features (config + instance features)]</span>
-<span class="sd">            Input data points.</span>
-<span class="sd">        Y : np.ndarray [n_samples, n_objectives]</span>
-<span class="sd">            The corresponding target values. n_objectives must match the</span>
-<span class="sd">            number of target names specified in the constructor.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        self</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The list of estimators for this model is empty!&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">estimator</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators</span><span class="p">):</span>
-            <span class="n">estimator</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_models</span><span class="p">):</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cov_return_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;diagonal_cov&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Predict means and variances for given X.</span>
+    <span class="k">def</span> <span class="nf">_predict</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">covariance_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;diagonal&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">covariance_type</span> <span class="o">!=</span> <span class="s2">&quot;diagonal&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`covariance_type` can only take `diagonal` for this model.&quot;</span><span class="p">)</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        X : np.ndarray of shape = [n_samples, n_features (config + instance</span>
-<span class="sd">        features)]</span>
-<span class="sd">        cov_return_type: Optional[str]</span>
-<span class="sd">            Specifies what to return along with the mean. Refer ``predict()`` for more information.</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span><span class="p">))</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span><span class="p">))</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        means : np.ndarray of shape = [n_samples, n_objectives]</span>
-<span class="sd">            Predictive mean</span>
-<span class="sd">        vars : np.ndarray  of shape = [n_samples, n_objectives]</span>
-<span class="sd">            Predictive variance</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">cov_return_type</span> <span class="o">!=</span> <span class="s2">&quot;diagonal_cov&quot;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;cov_return_type&#39; can only take &#39;diagonal_cov&#39; for this model&quot;</span><span class="p">)</span>
-
-        <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_targets</span><span class="p">))</span>
-        <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_targets</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">estimator</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">estimator</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_models</span><span class="p">):</span>
             <span class="n">m</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-            <span class="k">assert</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># please mypy</span>
+            <span class="k">assert</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
             <span class="n">mean</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
             <span class="n">var</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
         <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">var</span>
 
-<div class="viewcode-block" id="MultiObjectiveModel.predict_marginalized_over_instances"><a class="viewcode-back" href="../../../api/smac.model.multi_objective_model.html#smac.model.MultiObjectiveModel.predict_marginalized_over_instances">[docs]</a>    <span class="k">def</span> <span class="nf">predict_marginalized_over_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Predict mean and variance marginalized over all instances.</span>
+<div class="viewcode-block" id="MultiObjectiveModel.predict_marginalized"><a class="viewcode-back" href="../../../api/smac.model.multi_objective_model.html#smac.model.MultiObjectiveModel.predict_marginalized">[docs]</a>    <span class="k">def</span> <span class="nf">predict_marginalized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span><span class="p">))</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span><span class="p">))</span>
 
-<span class="sd">        Returns the predictive mean and variance marginalised over all</span>
-<span class="sd">        instances for a set of configurations.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        X : np.ndarray of shape = [n_features (config), ]</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        means : np.ndarray of shape = [n_samples, n_objectives]</span>
-<span class="sd">            Predictive mean</span>
-<span class="sd">        vars : np.ndarray  of shape = [n_samples, n_objectives]</span>
-<span class="sd">            Predictive variance</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_targets</span><span class="p">))</span>
-        <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_targets</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">estimator</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators</span><span class="p">):</span>
-            <span class="n">m</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">predict_marginalized_over_instances</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">estimator</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_models</span><span class="p">):</span>
+            <span class="n">m</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">predict_marginalized</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
             <span class="n">mean</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
             <span class="n">var</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
         <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">var</span></div></div>
 </pre></div>
 

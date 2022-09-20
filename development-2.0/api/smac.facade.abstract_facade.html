@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.facade.facade &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>smac.facade.abstract_facade &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -39,8 +39,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.facade.hyperband_facade" href="smac.facade.hyperband_facade.html" />
-    <link rel="prev" title="smac.facade.boing_facade" href="smac.facade.boing_facade.html" />
+    <link rel="next" title="smac.facade.algorithm_configuration_facade" href="smac.facade.algorithm_configuration_facade.html" />
+    <link rel="prev" title="smac.facade" href="smac.facade.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -325,19 +325,19 @@ style="width: 100%;">
               
               <div>
                 
-  <section id="module-smac.facade.facade">
-<span id="smac-facade-facade"></span><h1>smac.facade.facade<a class="headerlink" href="#module-smac.facade.facade" title="Permalink to this heading">¶</a></h1>
+  <section id="module-smac.facade.abstract_facade">
+<span id="smac-facade-abstract-facade"></span><h1>smac.facade.abstract_facade<a class="headerlink" href="#module-smac.facade.abstract_facade" title="Permalink to this heading">¶</a></h1>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.facade.facade.Facade" title="smac.facade.facade.Facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Facade</span></code></a>(scenario, target_algorithm, *[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.facade.abstract_facade.AbstractFacade" title="smac.facade.abstract_facade.AbstractFacade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractFacade</span></code></a>(scenario, target_algorithm, *)</p></td>
 <td><p>Facade is an abstraction on top of the SMBO backend to organize the components of a Bayesian Optimization loop in a configurable &amp; separable manner to suit the various needs of different hyperparameter optimization pipelines.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
-<dt class="sig sig-object py" id="smac.facade.facade.Facade">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.facade.</span></span><span class="sig-name descname"><span class="pre">Facade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_algorithm</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.facade.Facade" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.abstract_facade.</span></span><span class="sig-name descname"><span class="pre">AbstractFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_algorithm</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Facade is an abstraction on top of the SMBO backend to organize the components
 of a Bayesian Optimization loop in a configurable &amp; separable manner to suit the
@@ -372,8 +372,8 @@ for the exact behaviour.</p></li>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.facade.Facade.ask">
-<span class="sig-name descname"><span class="pre">ask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.ask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.facade.Facade.ask" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.ask">
+<span class="sig-name descname"><span class="pre">ask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.ask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.ask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Asks the intensifier for the next trial. This method returns only trials with the intend
 to run.</p>
 <dl class="field-list simple">
@@ -384,8 +384,8 @@ to run.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.facade.Facade.get_acquisition_function">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_acquisition_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_acquisition_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.facade.Facade.get_acquisition_function" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.get_acquisition_function">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_acquisition_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_acquisition_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.get_acquisition_function" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the acquisition function instance used in the BO loop,
 defining the exploration/exploitation trade-off.</p>
 <dl class="field-list simple">
@@ -396,8 +396,8 @@ defining the exploration/exploitation trade-off.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.facade.Facade.get_acquisition_optimizer">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_acquisition_optimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_acquisition_optimizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.facade.Facade.get_acquisition_optimizer" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.get_acquisition_optimizer">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_acquisition_optimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_acquisition_optimizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.get_acquisition_optimizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the acquisition optimizer instance to be used in the BO loop,
 specifying how the acquisition function instance is optimized.</p>
 <dl class="field-list simple">
@@ -408,8 +408,8 @@ specifying how the acquisition function instance is optimized.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.facade.Facade.get_initial_design">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_initial_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_initial_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.facade.Facade.get_initial_design" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.get_initial_design">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_initial_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_initial_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.get_initial_design" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an instance of the initial design class to be used in the BO loop,
 specifying how the configurations the BO loop is ‘warm-started’ with are selected.</p>
 <dl class="field-list simple">
@@ -420,8 +420,8 @@ specifying how the configurations the BO loop is ‘warm-started’ with are sel
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.facade.Facade.get_intensifier">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.facade.Facade.get_intensifier" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.get_intensifier">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.get_intensifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the intensifier instance to be used in the BO loop,
 specifying how to challenge the incumbent configuration on other problem instances.</p>
 <dl class="field-list simple">
@@ -432,8 +432,8 @@ specifying how to challenge the incumbent configuration on other problem instanc
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.facade.Facade.get_meta">
-<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.facade.Facade.get_meta" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.get_meta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates a hash based on all components of the facade. This is used for the run name or to determine
 whether a run should be continued or not.</p>
 <dl class="field-list simple">
@@ -444,8 +444,8 @@ whether a run should be continued or not.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.facade.Facade.get_model">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.facade.Facade.get_model" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.get_model">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.get_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the surrogate cost model instance used in the BO loop.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -455,8 +455,8 @@ whether a run should be continued or not.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.facade.Facade.get_multi_objective_algorithm">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_multi_objective_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_multi_objective_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.facade.Facade.get_multi_objective_algorithm" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.get_multi_objective_algorithm">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_multi_objective_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_multi_objective_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.get_multi_objective_algorithm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the multi-objective algorithm instance to be used in the BO loop,
 specifying the scalarization strategy for multiple objectives’ costs</p>
 <dl class="field-list simple">
@@ -467,8 +467,8 @@ specifying the scalarization strategy for multiple objectives’ costs</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.facade.Facade.get_next_configurations">
-<span class="sig-name descname"><span class="pre">get_next_configurations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_next_configurations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.facade.Facade.get_next_configurations" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.get_next_configurations">
+<span class="sig-name descname"><span class="pre">get_next_configurations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_next_configurations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.get_next_configurations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Choose next candidate solution with Bayesian optimization. The suggested configurations
 depend on the surrogate model acquisition optimizer/function. This method is used by
 the intensifier.</p>
@@ -480,8 +480,8 @@ the intensifier.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.facade.Facade.get_random_design">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_random_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_random_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.facade.Facade.get_random_design" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.get_random_design">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_random_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_random_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.get_random_design" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an instance of the random design class to be used in the BO loop,
 specifying how to interleave the BO iterations with randomly selected configurations.</p>
 <dl class="field-list simple">
@@ -492,8 +492,8 @@ specifying how to interleave the BO iterations with randomly selected configurat
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.facade.Facade.get_runhistory_encoder">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_runhistory_encoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.get_runhistory_encoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.facade.Facade.get_runhistory_encoder" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.get_runhistory_encoder">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_runhistory_encoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_runhistory_encoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.get_runhistory_encoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an instance of the runhistory encoder class to be used in the BO loop,
 specifying how the runhistory is to be prepared for the next surrogate model.</p>
 <dl class="field-list simple">
@@ -504,8 +504,8 @@ specifying how the runhistory is to be prepared for the next surrogate model.</p
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.facade.Facade.optimize">
-<span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force_initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.facade.Facade.optimize" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.optimize">
+<span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force_initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.optimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optimizes the algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -522,8 +522,8 @@ the initial design is performed regardless of the runhistory.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.facade.Facade.tell">
-<span class="sig-name descname"><span class="pre">tell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/facade.html#Facade.tell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.facade.Facade.tell" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.tell">
+<span class="sig-name descname"><span class="pre">tell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.tell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.tell" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds the result of a trial to the runhistory and updates the intensifier. Also,
 the stats object is updated.</p>
 <dl class="field-list simple">
@@ -551,17 +551,17 @@ the stats object is updated.</p>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.facade.boing_facade.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.facade.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.facade.boing_facade</p>
+            <p class="prev-next-title">smac.facade</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.facade.hyperband_facade.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.facade.algorithm_configuration_facade.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.facade.hyperband_facade</p>
+        <p class="prev-next-title">smac.facade.algorithm_configuration_facade</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

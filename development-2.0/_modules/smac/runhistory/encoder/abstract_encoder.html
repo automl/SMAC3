@@ -383,6 +383,15 @@ style="width: 100%;">
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_features</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">count_instance_features</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_features</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;We strongly encourage to use instance features when using instances.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;If no instance features are passed, the runhistory encoder can not distinguish between different &quot;</span>
+                <span class="s2">&quot;instances and therefore returns the same data points with different values, all of which are &quot;</span>
+                <span class="s2">&quot;used to train the surrogate model.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;Consider using instance indices as features.&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
         <span class="c1"># Learned statistics</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_min_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span><span class="p">)</span>

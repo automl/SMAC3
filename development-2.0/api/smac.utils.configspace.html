@@ -333,6 +333,12 @@ style="width: 100%;">
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.utils.configspace.convert_configurations_to_array" title="smac.utils.configspace.convert_configurations_to_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_configurations_to_array</span></code></a>(configs)</p></td>
 <td><p>Impute inactive hyperparameters in configurations with their default.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#smac.utils.configspace.get_conditional_hyperparameters" title="smac.utils.configspace.get_conditional_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_conditional_hyperparameters</span></code></a>(X[, Y])</p></td>
+<td><p>Returns conditional hyperparameters if values with -1 or smaller are observed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.utils.configspace.get_types" title="smac.utils.configspace.get_types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_types</span></code></a>(configspace[, instance_features])</p></td>
+<td><p>Return the types of the hyperparameters and the bounds of the hyperparameters and instance features.</p></td>
+</tr>
 </tbody>
 </table>
 <dl class="py function">
@@ -346,6 +352,30 @@ style="width: 100%;">
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="smac.utils.configspace.get_conditional_hyperparameters">
+<span class="sig-prename descclassname"><span class="pre">smac.utils.configspace.</span></span><span class="sig-name descname"><span class="pre">get_conditional_hyperparameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/configspace.html#get_conditional_hyperparameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.configspace.get_conditional_hyperparameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns conditional hyperparameters if values with -1 or smaller are observed. X is used
+if Y is not specified.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="smac.utils.configspace.get_types">
+<span class="sig-prename descclassname"><span class="pre">smac.utils.configspace.</span></span><span class="sig-name descname"><span class="pre">get_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/configspace.html#get_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.configspace.get_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the types of the hyperparameters and the bounds of the
+hyperparameters and instance features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]]</p>
 </dd>
 </dl>
 </dd></dl>

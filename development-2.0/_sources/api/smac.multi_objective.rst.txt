@@ -30,5 +30,4 @@
    smac.multi_objective.abstract_multi_objective_algorithm
    smac.multi_objective.aggregation_strategy
    smac.multi_objective.parego
-   smac.multi_objective.utils
 

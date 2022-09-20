@@ -40,7 +40,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.model.gaussian_process.priors.horseshoe_prior" href="smac.model.gaussian_process.priors.horseshoe_prior.html" />
-    <link rel="prev" title="smac.model.gaussian_process.priors" href="smac.model.gaussian_process.priors.html" />
+    <link rel="prev" title="smac.model.gaussian_process.priors.abstract_prior" href="smac.model.gaussian_process.priors.abstract_prior.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -331,14 +331,37 @@ style="width: 100%;">
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.gaussian_process.priors.gamma_prior.GammaPrior" title="smac.model.gaussian_process.priors.gamma_prior.GammaPrior"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GammaPrior</span></code></a>(a, scale, loc[, seed])</p></td>
-<td><p></p></td>
+<td><p>Implementation of gamma prior.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.model.gaussian_process.priors.gamma_prior.GammaPrior">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.priors.gamma_prior.</span></span><span class="sig-name descname"><span class="pre">GammaPrior</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/gamma_prior.html#GammaPrior"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.gamma_prior.GammaPrior" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.model.gaussian_process.priors.prior.html#smac.model.gaussian_process.priors.prior.Prior" title="smac.model.gaussian_process.priors.prior.Prior"><code class="xref py py-class docutils literal notranslate"><span class="pre">Prior</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="smac.model.gaussian_process.priors.abstract_prior.html#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior" title="smac.model.gaussian_process.priors.abstract_prior.AbstractPrior"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractPrior</span></code></a></p>
+<p>Implementation of gamma prior.</p>
+<p>f(x) = (x-loc)**(a-1) * e**(-(x-loc)) * (1/scale)**a / gamma(a)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>float</em>) – The shape parameter. Must be greater than 0.</p></li>
+<li><p><strong>scale</strong> (<em>float</em>) – The scale parameter (1/scale corresponds to parameter p in canonical form). Must be greather than 0.</p></li>
+<li><p><strong>loc</strong> (<em>float</em>) – Mean parameter for the distribution.</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.priors.gamma_prior.GammaPrior.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/gamma_prior.html#GammaPrior.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.gamma_prior.GammaPrior.get_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the meta data of the created object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -349,11 +372,11 @@ style="width: 100%;">
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.model.gaussian_process.priors.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.model.gaussian_process.priors.abstract_prior.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.model.gaussian_process.priors</p>
+            <p class="prev-next-title">smac.model.gaussian_process.priors.abstract_prior</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="smac.model.gaussian_process.priors.horseshoe_prior.html" title="next page">

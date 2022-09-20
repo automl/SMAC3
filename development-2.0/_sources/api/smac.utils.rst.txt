@@ -30,5 +30,6 @@
    smac.utils.configspace
    smac.utils.data_structures
    smac.utils.logging
+   smac.utils.multi_objective
    smac.utils.subspaces
 

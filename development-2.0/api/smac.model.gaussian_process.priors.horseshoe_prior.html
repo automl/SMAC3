@@ -331,14 +331,34 @@ style="width: 100%;">
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.gaussian_process.priors.horseshoe_prior.HorseshoePrior" title="smac.model.gaussian_process.priors.horseshoe_prior.HorseshoePrior"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HorseshoePrior</span></code></a>(scale[, seed])</p></td>
-<td><p></p></td>
+<td><p>Horseshoe Prior as it is used in spearmint.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.model.gaussian_process.priors.horseshoe_prior.HorseshoePrior">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.priors.horseshoe_prior.</span></span><span class="sig-name descname"><span class="pre">HorseshoePrior</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/horseshoe_prior.html#HorseshoePrior"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.horseshoe_prior.HorseshoePrior" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.model.gaussian_process.priors.prior.html#smac.model.gaussian_process.priors.prior.Prior" title="smac.model.gaussian_process.priors.prior.Prior"><code class="xref py py-class docutils literal notranslate"><span class="pre">Prior</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="smac.model.gaussian_process.priors.abstract_prior.html#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior" title="smac.model.gaussian_process.priors.abstract_prior.AbstractPrior"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractPrior</span></code></a></p>
+<p>Horseshoe Prior as it is used in spearmint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scale</strong> (<em>float</em>) – Scaling parameter.</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.priors.horseshoe_prior.HorseshoePrior.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/horseshoe_prior.html#HorseshoePrior.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.horseshoe_prior.HorseshoePrior.get_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the meta data of the created object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>

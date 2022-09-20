@@ -49,28 +49,20 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
     [INFO][abstract_intensifier.py:359] Changes in incumbent:
     [INFO][abstract_intensifier.py:362] --- x0: -0.9968221839517355 -> 0.03135360777378082
     [INFO][abstract_intensifier.py:362] --- x1: 4.30847043171525 -> -0.21179260686039925
-    [INFO][abstract_intensifier.py:335] Challenger (4.9344) is better than incumbent (5.4656) on 3 trials.
+    [INFO][abstract_intensifier.py:335] Challenger (4.4314) is better than incumbent (5.4656) on 3 trials.
     [INFO][abstract_intensifier.py:359] Changes in incumbent:
-    [INFO][abstract_intensifier.py:362] --- x0: 0.03135360777378082 -> 3.1521441831066923
-    [INFO][abstract_intensifier.py:362] --- x1: -0.21179260686039925 -> 9.991027821936083
-    [INFO][abstract_intensifier.py:335] Challenger (3.1692) is better than incumbent (4.9344) on 3 trials.
+    [INFO][abstract_intensifier.py:362] --- x0: 0.03135360777378082 -> 2.6502527847737536
+    [INFO][abstract_intensifier.py:362] --- x1: -0.21179260686039925 -> 7.154531223148483
+    [INFO][abstract_intensifier.py:335] Challenger (3.0818) is better than incumbent (4.4314) on 3 trials.
     [INFO][abstract_intensifier.py:359] Changes in incumbent:
-    [INFO][abstract_intensifier.py:362] --- x0: 3.1521441831066923 -> 1.4106696064172155
-    [INFO][abstract_intensifier.py:362] --- x1: 9.991027821936083 -> 1.8167666169669126
-    [INFO][abstract_intensifier.py:335] Challenger (2.144) is better than incumbent (3.1692) on 3 trials.
+    [INFO][abstract_intensifier.py:362] --- x0: 2.6502527847737536 -> -0.47602048278586295
+    [INFO][abstract_intensifier.py:362] --- x1: 7.154531223148483 -> 0.13155812805683098
+    [INFO][abstract_intensifier.py:335] Challenger (0.8351) is better than incumbent (3.0818) on 3 trials.
     [INFO][abstract_intensifier.py:359] Changes in incumbent:
-    [INFO][abstract_intensifier.py:362] --- x0: 1.4106696064172155 -> 1.403706808083208
-    [INFO][abstract_intensifier.py:362] --- x1: 1.8167666169669126 -> 1.82964389327294
-    [INFO][abstract_intensifier.py:335] Challenger (1.5901) is better than incumbent (2.144) on 3 trials.
-    [INFO][abstract_intensifier.py:359] Changes in incumbent:
-    [INFO][abstract_intensifier.py:362] --- x0: 1.403706808083208 -> 1.395035485965658
-    [INFO][abstract_intensifier.py:362] --- x1: 1.82964389327294 -> 1.8263728258094574
-    [INFO][abstract_intensifier.py:335] Challenger (0.8351) is better than incumbent (1.5901) on 3 trials.
-    [INFO][abstract_intensifier.py:359] Changes in incumbent:
-    [INFO][abstract_intensifier.py:362] --- x0: 1.395035485965658 -> 1.7031544591929872
-    [INFO][abstract_intensifier.py:362] --- x1: 1.8263728258094574 -> 2.842364243857716
-    [INFO][facade.py:269] Final Incumbent: {'x0': 1.7031544591929872, 'x1': 2.842364243857716}
-    [INFO][facade.py:270] Estimated cost: 0.8351420167215506
+    [INFO][abstract_intensifier.py:362] --- x0: -0.47602048278586295 -> 1.7031544591929872
+    [INFO][abstract_intensifier.py:362] --- x1: 0.13155812805683098 -> 2.842364243857716
+    [INFO][abstract_facade.py:269] Final Incumbent: {'x0': 1.7031544591929872, 'x1': 2.842364243857716}
+    [INFO][abstract_facade.py:270] Estimated cost: 0.8351420167215506
     Incumbent value: 0.84
 
 
@@ -140,7 +132,7 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.424 seconds)
+   **Total running time of the script:** ( 0 minutes  3.007 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_1_synthetic_function.py:

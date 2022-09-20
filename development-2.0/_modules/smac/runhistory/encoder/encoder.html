@@ -316,7 +316,7 @@ style="width: 100%;">
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">smac.utils.configspace</span> <span class="kn">import</span> <span class="n">convert_configurations_to_array</span>
-<span class="kn">from</span> <span class="nn">smac.multi_objective.utils</span> <span class="kn">import</span> <span class="n">normalize_costs</span>
+<span class="kn">from</span> <span class="nn">smac.utils.multi_objective</span> <span class="kn">import</span> <span class="n">normalize_costs</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.encoder</span> <span class="kn">import</span> <span class="n">AbstractRunHistoryEncoder</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">TrialKey</span><span class="p">,</span> <span class="n">TrialValue</span>
 <span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span>
@@ -352,6 +352,7 @@ style="width: 100%;">
             <span class="c1"># Scaling is automatically done in configSpace</span>
             <span class="n">conf</span> <span class="o">=</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">_ids_config</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">config_id</span><span class="p">]</span>
             <span class="n">conf_vector</span> <span class="o">=</span> <span class="n">convert_configurations_to_array</span><span class="p">([</span><span class="n">conf</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_features</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
                 <span class="n">feats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_features</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">instance</span><span class="p">]</span>

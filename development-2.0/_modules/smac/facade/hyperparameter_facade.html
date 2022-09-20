@@ -315,7 +315,7 @@ style="width: 100%;">
 <span class="kn">from</span> <span class="nn">smac.acquisition.local_and_random_search</span> <span class="kn">import</span> <span class="n">LocalAndSortedRandomSearch</span>
 <span class="kn">from</span> <span class="nn">smac.random_design.probability_design</span> <span class="kn">import</span> <span class="n">ProbabilityRandomDesign</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span> <span class="nn">smac.facade.facade</span> <span class="kn">import</span> <span class="n">Facade</span>
+<span class="kn">from</span> <span class="nn">smac.facade.abstract_facade</span> <span class="kn">import</span> <span class="n">AbstractFacade</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.sobol_design</span> <span class="kn">import</span> <span class="n">SobolInitialDesign</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="kn">import</span> <span class="n">Intensifier</span>
 <span class="kn">from</span> <span class="nn">smac.model.random_forest.random_forest</span> <span class="kn">import</span> <span class="p">(</span>
@@ -330,7 +330,7 @@ style="width: 100%;">
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<div class="viewcode-block" id="HyperparameterFacade"><a class="viewcode-back" href="../../../api/smac.facade.hyperparameter_facade.html#smac.facade.HyperparameterFacade">[docs]</a><span class="k">class</span> <span class="nc">HyperparameterFacade</span><span class="p">(</span><span class="n">Facade</span><span class="p">):</span>
+<div class="viewcode-block" id="HyperparameterFacade"><a class="viewcode-back" href="../../../api/smac.facade.hyperparameter_facade.html#smac.facade.HyperparameterFacade">[docs]</a><span class="k">class</span> <span class="nc">HyperparameterFacade</span><span class="p">(</span><span class="n">AbstractFacade</span><span class="p">):</span>
 <div class="viewcode-block" id="HyperparameterFacade.get_model"><a class="viewcode-back" href="../../../api/smac.facade.hyperparameter_facade.html#smac.facade.HyperparameterFacade.get_model">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
@@ -346,8 +346,8 @@ style="width: 100%;">
 <span class="sd">        its documentation for details.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">RandomForest</span><span class="p">(</span>
             <span class="n">log_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">num_trees</span><span class="o">=</span><span class="n">n_trees</span><span class="p">,</span>
-            <span class="n">do_bootstrapping</span><span class="o">=</span><span class="n">bootstrapping</span><span class="p">,</span>
+            <span class="n">n_trees</span><span class="o">=</span><span class="n">n_trees</span><span class="p">,</span>
+            <span class="n">bootstrapping</span><span class="o">=</span><span class="n">bootstrapping</span><span class="p">,</span>
             <span class="n">ratio_features</span><span class="o">=</span><span class="n">ratio_features</span><span class="p">,</span>
             <span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split</span><span class="p">,</span>
             <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf</span><span class="p">,</span>

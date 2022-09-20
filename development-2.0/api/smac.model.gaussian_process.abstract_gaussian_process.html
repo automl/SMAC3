@@ -331,7 +331,7 @@ style="width: 100%;">
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.gaussian_process.abstract_gaussian_process.AbstractGaussianProcess" title="smac.model.gaussian_process.abstract_gaussian_process.AbstractGaussianProcess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractGaussianProcess</span></code></a>(configspace, kernel)</p></td>
-<td><p></p></td>
+<td><p>Abstract base class for all Gaussian process models.</p></td>
 </tr>
 </tbody>
 </table>
@@ -339,6 +339,30 @@ style="width: 100%;">
 <dt class="sig sig-object py" id="smac.model.gaussian_process.abstract_gaussian_process.AbstractGaussianProcess">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.abstract_gaussian_process.</span></span><span class="sig-name descname"><span class="pre">AbstractGaussianProcess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/abstract_gaussian_process.html#AbstractGaussianProcess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.abstract_gaussian_process.AbstractGaussianProcess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.model.abstract_model.html#smac.model.abstract_model.AbstractModel" title="smac.model.abstract_model.AbstractModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractModel</span></code></a></p>
+<p>Abstract base class for all Gaussian process models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configspace</strong> (<em>ConfigurationSpace</em>) – </p></li>
+<li><p><strong>kernel</strong> (<em>Kernel</em>) – Kernel which is used for the Gaussian process.</p></li>
+<li><p><strong>instance_features</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>list</em><em>[</em><em>int</em><em> | </em><em>float</em><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Features (list of int or floats) of the instances (str). The features are incorporated into the X data,
+on which the model is trained on.</p></li>
+<li><p><strong>pca_components</strong> (<em>float</em><em>, </em><em>defaults to 7</em>) – Number of components to keep when using PCA to reduce dimensionality of instance features.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.abstract_gaussian_process.AbstractGaussianProcess.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/abstract_gaussian_process.html#AbstractGaussianProcess.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.abstract_gaussian_process.AbstractGaussianProcess.get_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the meta data of the created object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>

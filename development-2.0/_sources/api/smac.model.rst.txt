@@ -32,5 +32,4 @@
    smac.model.multi_objective_model
    smac.model.random_forest
    smac.model.random_model
-   smac.model.utils
 

@@ -406,8 +406,8 @@ to download the full example code</p>
 [INFO][abstract_intensifier.py:335] Challenger (0.2527) is better than incumbent (0.2558) on 3 trials.
 [INFO][abstract_intensifier.py:359] Changes in incumbent:
 [INFO][abstract_intensifier.py:362] --- x: 0.8557358664458059 -&gt; 1.0849066921609452
-[INFO][facade.py:269] Final Incumbent: {&#39;x&#39;: 1.0849066921609452}
-[INFO][facade.py:270] Estimated cost: 0.25271859054525136
+[INFO][abstract_facade.py:269] Final Incumbent: {&#39;x&#39;: 1.0849066921609452}
+[INFO][abstract_facade.py:270] Estimated cost: 0.25271859054525136
 </pre></div>
 </div>
 <div class="line-block">
@@ -422,7 +422,7 @@ to download the full example code</p>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
 <span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">HyperparameterFacade</span><span class="p">,</span> <span class="n">Scenario</span>
-<span class="kn">from</span> <span class="nn">smac.facade</span> <span class="kn">import</span> <span class="n">Facade</span>
+<span class="kn">from</span> <span class="nn">smac.facade</span> <span class="kn">import</span> <span class="n">AbstractFacade</span>
 <span class="kn">from</span> <span class="nn">smac.multi_objective.aggregation_strategy</span> <span class="kn">import</span> <span class="n">MeanAggregationStrategy</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2021, AutoML.org Freiburg-Hannover&quot;</span>
@@ -453,7 +453,7 @@ to download the full example code</p>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 
-<span class="k">def</span> <span class="nf">plot_from_smac</span><span class="p">(</span><span class="n">smac</span><span class="p">:</span> <span class="n">Facade</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">plot_from_smac</span><span class="p">(</span><span class="n">smac</span><span class="p">:</span> <span class="n">AbstractFacade</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">rh</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">runhistory</span>
     <span class="n">all_x</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">trial_key</span> <span class="ow">in</span> <span class="n">rh</span><span class="p">:</span>
@@ -486,7 +486,7 @@ to download the full example code</p>
     <span class="n">plot_from_smac</span><span class="p">(</span><span class="n">smac</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.619 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.575 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-1-schaffer-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/248d8963fe8c1a6aa3910244607b3049/1_schaffer.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_schaffer.py</span></code></a></p>

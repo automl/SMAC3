@@ -314,27 +314,19 @@ style="width: 100%;">
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">sklearn.gaussian_process.kernels</span> <span class="k">as</span> <span class="nn">kernels</span>
 
-<span class="kn">from</span> <span class="nn">smac.acquisition</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionOptimizer</span>
-<span class="kn">from</span> <span class="nn">smac.acquisition.functions</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionFunction</span>
 <span class="kn">from</span> <span class="nn">smac.acquisition.functions.expected_improvement</span> <span class="kn">import</span> <span class="n">EI</span>
 <span class="kn">from</span> <span class="nn">smac.acquisition.local_and_random_search</span> <span class="kn">import</span> <span class="n">LocalAndSortedRandomSearch</span>
 <span class="kn">from</span> <span class="nn">smac.random_design.probability_design</span> <span class="kn">import</span> <span class="n">ProbabilityRandomDesign</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span> <span class="nn">smac.facade.facade</span> <span class="kn">import</span> <span class="n">Facade</span>
+<span class="kn">from</span> <span class="nn">smac.facade.abstract_facade</span> <span class="kn">import</span> <span class="n">AbstractFacade</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.sobol_design</span> <span class="kn">import</span> <span class="n">SobolInitialDesign</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="kn">import</span> <span class="n">Intensifier</span>
 <span class="kn">from</span> <span class="nn">smac.model.gaussian_process.gaussian_process</span> <span class="kn">import</span> <span class="n">GaussianProcess</span>
 <span class="kn">from</span> <span class="nn">smac.model.gaussian_process.abstract_gaussian_process</span> <span class="kn">import</span> <span class="n">AbstractGaussianProcess</span>
-<span class="kn">from</span> <span class="nn">smac.model.gaussian_process.kernels</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">ConstantKernel</span><span class="p">,</span>
-    <span class="n">HammingKernel</span><span class="p">,</span>
-    <span class="n">Matern</span><span class="p">,</span>
-    <span class="n">WhiteKernel</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">smac.model.gaussian_process.kernels</span> <span class="kn">import</span> <span class="n">ConstantKernel</span><span class="p">,</span> <span class="n">HammingKernel</span><span class="p">,</span> <span class="n">MaternKernel</span><span class="p">,</span> <span class="n">WhiteKernel</span>
 <span class="kn">from</span> <span class="nn">smac.model.gaussian_process.mcmc_gaussian_process</span> <span class="kn">import</span> <span class="n">MCMCGaussianProcess</span>
 <span class="kn">from</span> <span class="nn">smac.model.gaussian_process.priors</span> <span class="kn">import</span> <span class="n">HorseshoePrior</span><span class="p">,</span> <span class="n">LogNormalPrior</span>
-<span class="kn">from</span> <span class="nn">smac.model.utils</span> <span class="kn">import</span> <span class="n">get_types</span>
-<span class="kn">from</span> <span class="nn">smac.multi_objective</span> <span class="kn">import</span> <span class="n">AbstractMultiObjectiveAlgorithm</span>
+<span class="kn">from</span> <span class="nn">smac.utils.configspace</span> <span class="kn">import</span> <span class="n">get_types</span>
 <span class="kn">from</span> <span class="nn">smac.multi_objective.aggregation_strategy</span> <span class="kn">import</span> <span class="n">MeanAggregationStrategy</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.encoder.encoder</span> <span class="kn">import</span> <span class="n">RunHistoryEncoder</span>
 <span class="kn">from</span> <span class="nn">smac.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
@@ -343,7 +335,7 @@ style="width: 100%;">
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<div class="viewcode-block" id="BlackBoxFacade"><a class="viewcode-back" href="../../../api/smac.facade.blackbox_facade.html#smac.facade.BlackBoxFacade">[docs]</a><span class="k">class</span> <span class="nc">BlackBoxFacade</span><span class="p">(</span><span class="n">Facade</span><span class="p">):</span>
+<div class="viewcode-block" id="BlackBoxFacade"><a class="viewcode-back" href="../../../api/smac.facade.blackbox_facade.html#smac.facade.BlackBoxFacade">[docs]</a><span class="k">class</span> <span class="nc">BlackBoxFacade</span><span class="p">(</span><span class="n">AbstractFacade</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Ensure that the SMBO configuration with all its (updated) dependencies is valid.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_validate</span><span class="p">()</span>
@@ -366,26 +358,41 @@ style="width: 100%;">
     <span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span>
         <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gp&quot;</span><span class="p">,</span>
+        <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">kernel</span><span class="p">:</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractGaussianProcess</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns a Gaussian Process surrogate model. Please check its documentation for</span>
-<span class="sd">        detials.&quot;&quot;&quot;</span>
-        <span class="n">available_model_types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;gp&quot;</span><span class="p">,</span> <span class="s2">&quot;gp_mcmc&quot;</span><span class="p">]</span>
+        <span class="sd">&quot;&quot;&quot;Returns a Gaussian Process surrogate model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        scenario : Scenario</span>
+<span class="sd">        model_type : str | None, defaults to None</span>
+<span class="sd">            Which gaussian process model should be chosen. Choose between `vanilla` and `mcmc`.</span>
+<span class="sd">        kernel : kernels.Kernel | None, defaults to None</span>
+<span class="sd">            The kernel used in the surrogate model.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        model : AbstractGaussianProcess</span>
+<span class="sd">            The instantiated gaussian process.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">available_model_types</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;vanilla&quot;</span><span class="p">,</span> <span class="s2">&quot;mcmc&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">model_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">available_model_types</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;model_type </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2"> not in available model types&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The model_type `</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">` is not supported. Choose one of </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">available_model_types</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">kernel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">kernel</span> <span class="o">=</span> <span class="n">BlackBoxFacade</span><span class="o">.</span><span class="n">get_kernel</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;gp&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">model_type</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;vanilla&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">GaussianProcess</span><span class="p">(</span>
                 <span class="n">configspace</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span>
                 <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span>
                 <span class="n">normalize_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="n">seed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;gp_mcmc&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;mcmc&quot;</span><span class="p">:</span>
             <span class="n">n_mcmc_walkers</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">kernel</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">n_mcmc_walkers</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">n_mcmc_walkers</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -395,7 +402,7 @@ style="width: 100%;">
                 <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span>
                 <span class="n">n_mcmc_walkers</span><span class="o">=</span><span class="n">n_mcmc_walkers</span><span class="p">,</span>
                 <span class="n">chain_length</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span>
-                <span class="n">burnin_steps</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span>
+                <span class="n">burning_steps</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span>
                 <span class="n">normalize_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="n">seed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
             <span class="p">)</span>
@@ -423,14 +430,16 @@ style="width: 100%;">
             <span class="mf">2.0</span><span class="p">,</span>
             <span class="n">constant_value_bounds</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span>
             <span class="n">prior</span><span class="o">=</span><span class="n">LogNormalPrior</span><span class="p">(</span>
-                <span class="n">mean</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">seed</span>
-            <span class="p">),</span>  <span class="c1"># TODO convert expected arg RandomState -&gt; Generator</span>
+                <span class="n">mean</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                <span class="n">seed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+            <span class="p">),</span>
         <span class="p">)</span>
 
         <span class="c1"># Continuous / Categorical Kernels</span>
         <span class="n">exp_kernel</span><span class="p">,</span> <span class="n">ham_kernel</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">exp_kernel</span> <span class="o">=</span> <span class="n">Matern</span><span class="p">(</span>
+            <span class="n">exp_kernel</span> <span class="o">=</span> <span class="n">MaternKernel</span><span class="p">(</span>
                 <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span><span class="p">)]),</span>
                 <span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">6.754111155189306</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.0858637988771976</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span><span class="p">))],</span>
                 <span class="n">nu</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span>
@@ -472,9 +481,7 @@ style="width: 100%;">
         <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
         <span class="n">xi</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EI</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the acquisition function instance (EI: Expected Improvement) for the Black-Box</span>
-<span class="sd">        facade.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns the acquisition function instance (EI: Expected Improvement) for the Black-Box facade.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">EI</span><span class="p">(</span><span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BlackBoxFacade.get_acquisition_optimizer"><a class="viewcode-back" href="../../../api/smac.facade.blackbox_facade.html#smac.facade.BlackBoxFacade.get_acquisition_optimizer">[docs]</a>    <span class="nd">@staticmethod</span>

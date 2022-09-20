@@ -14,6 +14,8 @@ smac.utils.configspace
    .. autosummary::
    
       convert_configurations_to_array
+      get_conditional_hyperparameters
+      get_types
    
    
 

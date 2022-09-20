@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.multi_objective.utils &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>smac.utils.multi_objective &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -308,11 +308,11 @@ style="width: 100%;">
               
               <div>
                 
-  <h1>Source code for smac.multi_objective.utils</h1><div class="highlight"><pre>
+  <h1>Source code for smac.utils.multi_objective</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 
-<div class="viewcode-block" id="normalize_costs"><a class="viewcode-back" href="../../../api/smac.multi_objective.utils.html#smac.multi_objective.utils.normalize_costs">[docs]</a><span class="k">def</span> <span class="nf">normalize_costs</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">bounds</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<div class="viewcode-block" id="normalize_costs"><a class="viewcode-back" href="../../../api/smac.utils.multi_objective.html#smac.utils.multi_objective.normalize_costs">[docs]</a><span class="k">def</span> <span class="nf">normalize_costs</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">bounds</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Normalizes a list of floats with corresponding bounds.</span>
 

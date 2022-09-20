@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.main.turbo &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>smac.utils.multi_objective &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -39,8 +39,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.model" href="smac.model.html" />
-    <link rel="prev" title="smac.main.smbo" href="smac.main.smbo.html" />
+    <link rel="next" title="smac.scenario" href="smac.scenario.html" />
+    <link rel="prev" title="smac.utils.logging" href="smac.utils.logging.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -207,7 +207,7 @@ style="width: 100%;">
      smac.facade
     </a>
    </li>
-   <li class="toctree-l2 current active">
+   <li class="toctree-l2">
     <a class="reference internal" href="smac.main.html">
      smac.main
     </a>
@@ -252,7 +252,7 @@ style="width: 100%;">
      smac.multi_objective
     </a>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 current active">
     <a class="reference internal" href="smac.utils.html">
      smac.utils
     </a>
@@ -325,57 +325,36 @@ style="width: 100%;">
               
               <div>
                 
-  <section id="module-smac.main.turbo">
-<span id="smac-main-turbo"></span><h1>smac.main.turbo<a class="headerlink" href="#module-smac.main.turbo" title="Permalink to this heading">¶</a></h1>
-<p class="rubric">Classes</p>
+  <section id="module-smac.utils.multi_objective">
+<span id="smac-utils-multi-objective"></span><h1>smac.utils.multi_objective<a class="headerlink" href="#module-smac.utils.multi_objective" title="Permalink to this heading">¶</a></h1>
+<p class="rubric">Functions</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.main.turbo.TuRBOSMBO" title="smac.main.turbo.TuRBOSMBO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TuRBOSMBO</span></code></a>([length_init, length_min, ...])</p></td>
-<td><p>Interface to train the EPM and generate next configurations with TurBO:</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.utils.multi_objective.normalize_costs" title="smac.utils.multi_objective.normalize_costs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize_costs</span></code></a>(values[, bounds])</p></td>
+<td><p>Normalizes a list of floats with corresponding bounds.</p></td>
 </tr>
 </tbody>
 </table>
-<dl class="py class">
-<dt class="sig sig-object py" id="smac.main.turbo.TuRBOSMBO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.main.turbo.</span></span><span class="sig-name descname"><span class="pre">TuRBOSMBO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.00390625</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">success_tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">failure_tol_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_init_x_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_candidate_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/turbo.html#TuRBOSMBO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.turbo.TuRBOSMBO" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.main.smbo.html#smac.main.smbo.SMBO" title="smac.main.smbo.SMBO"><code class="xref py py-class docutils literal notranslate"><span class="pre">SMBO</span></code></a></p>
-<dl class="simple">
-<dt>Interface to train the EPM and generate next configurations with TurBO:</dt><dd><p>D. Eriksson et al. Scalable Global Optimization via Local Bayesian Optimization
-<a class="reference external" href="https://papers.nips.cc/paper/2019/file/6c990b7aca7bc7058f5e98ea909e924b-Paper.pdf">https://papers.nips.cc/paper/2019/file/6c990b7aca7bc7058f5e98ea909e924b-Paper.pdf</a></p>
-</dd>
-</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="smac.utils.multi_objective.normalize_costs">
+<span class="sig-prename descclassname"><span class="pre">smac.utils.multi_objective.</span></span><span class="sig-name descname"><span class="pre">normalize_costs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/multi_objective.html#normalize_costs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.multi_objective.normalize_costs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalizes a list of floats with corresponding bounds.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>length_init</strong> (<em>float</em>) – Initialized length after restarting</p></li>
-<li><p><strong>length_min</strong> (<em>float</em>) – If the subspace length is smaller than length_min, TurBO will restart</p></li>
-<li><p><strong>length_max</strong> (<em>float</em>) – The maximum length of subspace</p></li>
-<li><p><strong>success_tol</strong> (<em>int</em>) – Number of successful suggestions (suggested points become incumbent) required for expanding subspace</p></li>
-<li><p><strong>failure_tol_min</strong> (<em>int</em>) – The minimum number of failure suggestions (suggested points fails to become incumbent) required for shrinking
-subspace</p></li>
-<li><p><strong>n_init_x_params</strong> (<em>int</em>) – how many configurations will be used at most in the initial design (X*D). Used for restarting the subspace</p></li>
-<li><p><strong>n_candidate_max</strong> (<em>int</em>) – Maximal Number of points used as candidates</p></li>
-<li><p><strong>args</strong> – additional arguments for initialize base SMBO object</p></li>
-<li><p><strong>kwargs</strong> – additional arguments for initialize base SMBO object</p></li>
+<li><p><strong>values</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – List of costs to be normalized.</p></li>
+<li><p><strong>bounds</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – List of tuple of bounds. By default None. If no bounds are passed, the values are returned
+unnormalized.</p></li>
 </ul>
 </dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.main.turbo.TuRBOSMBO.ask">
-<span class="sig-name descname"><span class="pre">ask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/turbo.html#TuRBOSMBO.ask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.turbo.TuRBOSMBO.ask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Choose next candidate solution with TuRBO</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>incumbent_value</strong> (<em>float</em>) – Cost value of incumbent configuration (required for acquisition function);
-If not given, it will be inferred from runhistory or predicted;
-if not given and runhistory is empty, it will raise a ValueError.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>normalized_costs</strong> – Normalized costs based on the bounds. If no bounds are given, the values are returned unnormalized.
+Also, if min and max bounds are the same, the value of the corresponding objective is set to 1.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Iterator</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float]</p>
 </dd>
 </dl>
-</dd></dl>
-
 </dd></dl>
 
 </section>
@@ -386,17 +365,17 @@ if not given and runhistory is empty, it will raise a ValueError.</p>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.main.smbo.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.utils.logging.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.main.smbo</p>
+            <p class="prev-next-title">smac.utils.logging</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.model.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.scenario.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.model</p>
+        <p class="prev-next-title">smac.scenario</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

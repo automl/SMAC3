@@ -14,7 +14,7 @@ from ConfigSpace import Configuration, ConfigurationSpace, Float
 from matplotlib import pyplot as plt
 
 from smac import HyperparameterFacade, Scenario
-from smac.facade import Facade
+from smac.facade import AbstractFacade
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -45,7 +45,7 @@ def plot(all_x: list[float]) -> None:
     plt.show()
 
 
-def plot_from_smac(smac: Facade) -> None:
+def plot_from_smac(smac: AbstractFacade) -> None:
     rh = smac.runhistory
     all_x = []
     for trial_key in rh:

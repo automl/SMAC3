@@ -40,7 +40,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.model.random_model" href="smac.model.random_model.html" />
-    <link rel="prev" title="smac.model.random_forest.multi_objective_random_forest" href="smac.model.random_forest.multi_objective_random_forest.html" />
+    <link rel="prev" title="smac.model.random_forest.abstract_random_forest" href="smac.model.random_forest.abstract_random_forest.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -330,148 +330,37 @@ style="width: 100%;">
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.random_forest.random_forest.RandomForest" title="smac.model.random_forest.random_forest.RandomForest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RandomForest</span></code></a>(configspace[, log_y, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.random_forest.random_forest.RandomForest" title="smac.model.random_forest.random_forest.RandomForest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RandomForest</span></code></a>(configspace[, n_trees, ...])</p></td>
 <td><p>Random forest that takes instance features into account.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.model.random_forest.random_forest.RandomForest">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.random_forest.random_forest.</span></span><span class="sig-name descname"><span class="pre">RandomForest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_trees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_bootstrapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points_per_tree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8333333333333334</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples_split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples_leaf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1048576</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_purity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_num_nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1048576</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/random_forest/random_forest.html#RandomForest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.random_forest.random_forest.RandomForest" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.random_forest.random_forest.</span></span><span class="sig-name descname"><span class="pre">RandomForest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_trees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points_per_tree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8333333333333334</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples_split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples_leaf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1048576</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_purity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1048576</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bootstrapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/random_forest/random_forest.html#RandomForest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.random_forest.random_forest.RandomForest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.model.random_forest.abstract_random_forest.html#smac.model.random_forest.abstract_random_forest.AbstractRandomForest" title="smac.model.random_forest.abstract_random_forest.AbstractRandomForest"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractRandomForest</span></code></a></p>
 <p>Random forest that takes instance features into account.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>types</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – Specifies the number of categorical values of an input dimension where
-the i-th entry corresponds to the i-th input dimension. Let’s say we
-have 2 dimension where the first dimension consists of 3 different
-categorical choices and the second dimension is continuous than we
-have to pass [3, 0]. Note that we count starting from 0.</p></li>
-<li><p><strong>bounds</strong> (<em>list</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</p></li>
-<li><p><strong>seed</strong> (<em>int</em>) – The seed that is passed to the random_forest_run library.</p></li>
-<li><p><strong>log_y</strong> (<em>bool</em>) – y values (passed to this RF) are expected to be log(y) transformed;
-this will be considered during predicting</p></li>
-<li><p><strong>num_trees</strong> (<em>int</em>) – The number of trees in the random forest.</p></li>
-<li><p><strong>do_bootstrapping</strong> (<em>bool</em>) – Turns on / off bootstrapping in the random forest.</p></li>
-<li><p><strong>n_points_per_tree</strong> (<em>int</em>) – Number of points per tree. If &lt;= 0 X.shape[0] will be used
-in _train(X, y) instead</p></li>
-<li><p><strong>ratio_features</strong> (<em>float</em>) – The ratio of features that are considered for splitting.</p></li>
-<li><p><strong>min_samples_split</strong> (<em>int</em>) – The minimum number of data points to perform a split.</p></li>
-<li><p><strong>min_samples_leaf</strong> (<em>int</em>) – The minimum number of data points in a leaf.</p></li>
-<li><p><strong>max_depth</strong> (<em>int</em>) – The maximum depth of a single tree.</p></li>
-<li><p><strong>eps_purity</strong> (<em>float</em>) – The minimum difference between two target values to be considered
-different</p></li>
-<li><p><strong>max_num_nodes</strong> (<em>int</em>) – The maxmimum total number of nodes in a tree</p></li>
-<li><p><strong>instance_features</strong> (<em>np.ndarray</em><em> (</em><em>I</em><em>, </em><em>K</em><em>)</em>) – Contains the K dimensional instance features of the I different instances</p></li>
-<li><p><strong>pca_components</strong> (<em>float</em>) – Number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
-set n_feats (&gt; pca_dims).</p></li>
+<li><p><strong>n_trees</strong> (int, defaults to <cite>N_TREES</cite>) – The number of trees in the random forest.</p></li>
+<li><p><strong>n_points_per_tree</strong> (<em>int</em><em>, </em><em>defaults to -1</em>) – Number of points per tree. If the value is smaller than 0, the number of samples will be used.</p></li>
+<li><p><strong>ratio_features</strong> (<em>float</em><em>, </em><em>defaults to 5.0 / 6.0</em>) – The ratio of features that are considered for splitting.</p></li>
+<li><p><strong>min_samples_split</strong> (<em>int</em><em>, </em><em>defaults to 3</em>) – The minimum number of data points to perform a split.</p></li>
+<li><p><strong>min_samples_leaf</strong> (<em>int</em><em>, </em><em>defaults to 3</em>) – The minimum number of data points in a leaf.</p></li>
+<li><p><strong>max_depth</strong> (<em>int</em><em>, </em><em>defaults to 2**20</em>) – The maximum depth of a single tree.</p></li>
+<li><p><strong>eps_purity</strong> (<em>float</em><em>, </em><em>defaults to 1e-8</em>) – The minimum difference between two target values to be considered.</p></li>
+<li><p><strong>max_nodes</strong> (<em>int</em><em>, </em><em>defaults to 2**20</em>) – The maximum total number of nodes in a tree.</p></li>
+<li><p><strong>bootstrapping</strong> (<em>bool</em><em>, </em><em>defaults to True</em>) – Enables bootstrapping.</p></li>
+<li><p><strong>log_y</strong> (<em>bool</em><em>, </em><em>defaults to False</em>) – The y values (passed to this random forest) are expected to be log(y) transformed.
+This will be considered during predicting.</p></li>
+<li><p><strong>instance_features</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>list</em><em>[</em><em>int</em><em> | </em><em>float</em><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Features (list of int or floats) of the instances (str). The features are incorporated into the X data,
+on which the model is trained on.</p></li>
+<li><p><strong>pca_components</strong> (<em>float</em><em>, </em><em>defaults to 7</em>) – Number of components to keep when using PCA to reduce dimensionality of instance features.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – </p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.random_forest.random_forest.RandomForest.rf_opts">
-<span class="sig-name descname"><span class="pre">rf_opts</span></span><a class="headerlink" href="#smac.model.random_forest.random_forest.RandomForest.rf_opts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Random forest hyperparameter</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>regression.rf_opts</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.random_forest.random_forest.RandomForest.n_points_per_tree">
-<span class="sig-name descname"><span class="pre">n_points_per_tree</span></span><a class="headerlink" href="#smac.model.random_forest.random_forest.RandomForest.n_points_per_tree" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.random_forest.random_forest.RandomForest.rf">
-<span class="sig-name descname"><span class="pre">rf</span></span><a class="headerlink" href="#smac.model.random_forest.random_forest.RandomForest.rf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Only available after training</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>regression.binary_rss_forest</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.random_forest.random_forest.RandomForest.hypers">
-<span class="sig-name descname"><span class="pre">hypers</span></span><a class="headerlink" href="#smac.model.random_forest.random_forest.RandomForest.hypers" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of random forest hyperparameters</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.random_forest.random_forest.RandomForest.unlog_y">
-<span class="sig-name descname"><span class="pre">unlog_y</span></span><a class="headerlink" href="#smac.model.random_forest.random_forest.RandomForest.unlog_y" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.random_forest.random_forest.RandomForest.seed">
-<span class="sig-name descname"><span class="pre">seed</span></span><a class="headerlink" href="#smac.model.random_forest.random_forest.RandomForest.seed" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.random_forest.random_forest.RandomForest.types">
-<span class="sig-name descname"><span class="pre">types</span></span><a class="headerlink" href="#smac.model.random_forest.random_forest.RandomForest.types" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.random_forest.random_forest.RandomForest.bounds">
-<span class="sig-name descname"><span class="pre">bounds</span></span><a class="headerlink" href="#smac.model.random_forest.random_forest.RandomForest.bounds" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.random_forest.random_forest.RandomForest.rng">
-<span class="sig-name descname"><span class="pre">rng</span></span><a class="headerlink" href="#smac.model.random_forest.random_forest.RandomForest.rng" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.random.RandomState</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.random_forest.random_forest.RandomForest.logger">
-<span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#smac.model.random_forest.random_forest.RandomForest.logger" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>logging.logger</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.model.random_forest.random_forest.RandomForest.get_meta">
 <span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/random_forest/random_forest.html#RandomForest.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.random_forest.random_forest.RandomForest.get_meta" title="Permalink to this definition">¶</a></dt>
@@ -484,30 +373,25 @@ set n_feats (&gt; pca_dims).</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.model.random_forest.random_forest.RandomForest.predict_marginalized_over_instances">
-<span class="sig-name descname"><span class="pre">predict_marginalized_over_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/random_forest/random_forest.html#RandomForest.predict_marginalized_over_instances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.random_forest.random_forest.RandomForest.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
-<dd><p>Predict mean and variance marginalized over all instances.</p>
-<p>Returns the predictive mean and variance marginalised over all
-instances for a set of configurations.</p>
+<dt class="sig sig-object py" id="smac.model.random_forest.random_forest.RandomForest.predict_marginalized">
+<span class="sig-name descname"><span class="pre">predict_marginalized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/random_forest/random_forest.html#RandomForest.predict_marginalized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.random_forest.random_forest.RandomForest.predict_marginalized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predicts mean and variance marginalized over all instances.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This method overwrites the same method of ~smac.epm.base_epm.AbstractEPM;
-the following method is random forest specific
-and follows the SMAC2 implementation;
-it requires no distribution assumption
-to marginalize the uncertainty estimates</p>
+<p>The method is random forest specific and follows the SMAC2 implementation. It requires
+no distribution assumption to marginalize the uncertainty estimates.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em>) – [n_samples, n_features (config)]</p>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#hyperparameter + #features</em><em>]</em>) – Input data points.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p><strong>means</strong> (<em>np.ndarray of shape = [n_samples, 1]</em>) – Predictive mean</p></li>
-<li><p><strong>vars</strong> (<em>np.ndarray  of shape = [n_samples, 1]</em>) – Predictive variance</p></li>
+<li><p><strong>means</strong> (<em>np.ndarray [#samples, 1]</em>) – The predictive mean.</p></li>
+<li><p><strong>vars</strong> (<em>np.ndarray [#samples, 1]</em>) – The predictive variance.</p></li>
 </ul>
 </p>
 </dd>
@@ -524,11 +408,11 @@ to marginalize the uncertainty estimates</p>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.model.random_forest.multi_objective_random_forest.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.model.random_forest.abstract_random_forest.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.model.random_forest.multi_objective_random_forest</p>
+            <p class="prev-next-title">smac.model.random_forest.abstract_random_forest</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="smac.model.random_model.html" title="next page">

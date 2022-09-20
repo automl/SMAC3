@@ -39,7 +39,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.model.gaussian_process.priors.prior" href="smac.model.gaussian_process.priors.prior.html" />
+    <link rel="next" title="smac.model.gaussian_process.priors.tophat_prior" href="smac.model.gaussian_process.priors.tophat_prior.html" />
     <link rel="prev" title="smac.model.gaussian_process.priors.horseshoe_prior" href="smac.model.gaussian_process.priors.horseshoe_prior.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
@@ -331,14 +331,35 @@ style="width: 100%;">
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.gaussian_process.priors.log_normal_prior.LogNormalPrior" title="smac.model.gaussian_process.priors.log_normal_prior.LogNormalPrior"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LogNormalPrior</span></code></a>(sigma[, mean, seed])</p></td>
-<td><p></p></td>
+<td><p>Implements the log normal prior.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.model.gaussian_process.priors.log_normal_prior.LogNormalPrior">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.priors.log_normal_prior.</span></span><span class="sig-name descname"><span class="pre">LogNormalPrior</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sigma</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/log_normal_prior.html#LogNormalPrior"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.log_normal_prior.LogNormalPrior" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.model.gaussian_process.priors.prior.html#smac.model.gaussian_process.priors.prior.Prior" title="smac.model.gaussian_process.priors.prior.Prior"><code class="xref py py-class docutils literal notranslate"><span class="pre">Prior</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="smac.model.gaussian_process.priors.abstract_prior.html#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior" title="smac.model.gaussian_process.priors.abstract_prior.AbstractPrior"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractPrior</span></code></a></p>
+<p>Implements the log normal prior.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sigma</strong> (<em>float</em>) – Specifies the standard deviation of the normal distribution.</p></li>
+<li><p><strong>mean</strong> (<em>float</em>) – Specifies the mean of the normal distribution.</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.priors.log_normal_prior.LogNormalPrior.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/log_normal_prior.html#LogNormalPrior.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.log_normal_prior.LogNormalPrior.get_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the meta data of the created object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -356,10 +377,10 @@ style="width: 100%;">
             <p class="prev-next-title">smac.model.gaussian_process.priors.horseshoe_prior</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.model.gaussian_process.priors.prior.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.model.gaussian_process.priors.tophat_prior.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.model.gaussian_process.priors.prior</p>
+        <p class="prev-next-title">smac.model.gaussian_process.priors.tophat_prior</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

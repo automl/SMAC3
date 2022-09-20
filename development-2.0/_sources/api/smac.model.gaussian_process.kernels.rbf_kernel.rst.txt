@@ -17,7 +17,7 @@ smac.model.gaussian\_process.kernels.rbf\_kernel
 
    .. autosummary::
    
-      RBF
+      RBFKernel
    
    
 

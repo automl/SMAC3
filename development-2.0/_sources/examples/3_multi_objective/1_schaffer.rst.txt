@@ -110,8 +110,8 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
     [INFO][abstract_intensifier.py:335] Challenger (0.2527) is better than incumbent (0.2558) on 3 trials.
     [INFO][abstract_intensifier.py:359] Changes in incumbent:
     [INFO][abstract_intensifier.py:362] --- x: 0.8557358664458059 -> 1.0849066921609452
-    [INFO][facade.py:269] Final Incumbent: {'x': 1.0849066921609452}
-    [INFO][facade.py:270] Estimated cost: 0.25271859054525136
+    [INFO][abstract_facade.py:269] Final Incumbent: {'x': 1.0849066921609452}
+    [INFO][abstract_facade.py:270] Estimated cost: 0.25271859054525136
 
 
 
@@ -132,7 +132,7 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
     from matplotlib import pyplot as plt
 
     from smac import HyperparameterFacade, Scenario
-    from smac.facade import Facade
+    from smac.facade import AbstractFacade
     from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 
     __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -163,7 +163,7 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
         plt.show()
 
 
-    def plot_from_smac(smac: Facade) -> None:
+    def plot_from_smac(smac: AbstractFacade) -> None:
         rh = smac.runhistory
         all_x = []
         for trial_key in rh:
@@ -198,7 +198,7 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.619 seconds)
+   **Total running time of the script:** ( 0 minutes  1.575 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_1_schaffer.py:

@@ -331,142 +331,31 @@ style="width: 100%;">
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.abstract_model.AbstractModel" title="smac.model.abstract_model.AbstractModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractModel</span></code></a>(configspace[, ...])</p></td>
-<td><p>Abstract implementation of the EPM API.</p></td>
+<td><p>Abstract implementation of the surrogate model.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.model.abstract_model.AbstractModel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.abstract_model.</span></span><span class="sig-name descname"><span class="pre">AbstractModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/abstract_model.html#AbstractModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.abstract_model.AbstractModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
-<p>Abstract implementation of the EPM API.</p>
-<p><strong>Note:</strong> The input dimensionality of Y for training and the output dimensions
-of all predictions (also called <code class="docutils literal notranslate"><span class="pre">n_objectives</span></code>) depends on the concrete
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Abstract implementation of the surrogate model.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The input dimensionality of Y for training and the output dimensions of all predictions depends on the concrete
 implementation of this abstract class.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>configspace</strong> (<em>ConfigurationSpace</em>) – Configuration space to tune for.</p></li>
-<li><p><strong>types</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Specifies the number of categorical values of an input dimension where
-the i-th entry corresponds to the i-th input dimension. Let’s say we
-have 2 dimension where the first dimension consists of 3 different
-categorical choices and the second dimension is continuous than we
-have to pass [3, 0]. Note that we count starting from 0.</p></li>
-<li><p><strong>bounds</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</p></li>
-<li><p><strong>seed</strong> (<em>int</em>) – The seed that is passed to the model library.</p></li>
-<li><p><strong>instance_features</strong> (<em>np.ndarray</em><em> (</em><em>I</em><em>, </em><em>K</em><em>)</em>) – Contains the K dimensional instance features
-of the I different instances</p></li>
-<li><p><strong>pca_components</strong> (<em>float</em>) – Number of components to keep when using PCA to reduce
-dimensionality of instance features. Requires to
-set n_feats (&gt; pca_dims).</p></li>
+<li><p><strong>configspace</strong> (<em>ConfigurationSpace</em>) – </p></li>
+<li><p><strong>instance_features</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>list</em><em>[</em><em>int</em><em> | </em><em>float</em><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Features (list of int or floats) of the instances (str). The features are incorporated into the X data,
+on which the model is trained on.</p></li>
+<li><p><strong>pca_components</strong> (<em>float</em><em>, </em><em>defaults to 7</em>) – Number of components to keep when using PCA to reduce dimensionality of instance features.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – </p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.abstract_model.AbstractModel.instance_features">
-<span class="sig-name descname"><span class="pre">instance_features</span></span><a class="headerlink" href="#smac.model.abstract_model.AbstractModel.instance_features" title="Permalink to this definition">¶</a></dt>
-<dd><p>Contains the K dimensional instance features
-of the I different instances</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray(I, K)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.abstract_model.AbstractModel.pca">
-<span class="sig-name descname"><span class="pre">pca</span></span><a class="headerlink" href="#smac.model.abstract_model.AbstractModel.pca" title="Permalink to this definition">¶</a></dt>
-<dd><p>Object to perform PCA</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>sklearn.decomposition.PCA</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.abstract_model.AbstractModel.pca_components">
-<span class="sig-name descname"><span class="pre">pca_components</span></span><a class="headerlink" href="#smac.model.abstract_model.AbstractModel.pca_components" title="Permalink to this definition">¶</a></dt>
-<dd><p>Number of components to keep or None</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.abstract_model.AbstractModel.n_feats">
-<span class="sig-name descname"><span class="pre">n_feats</span></span><a class="headerlink" href="#smac.model.abstract_model.AbstractModel.n_feats" title="Permalink to this definition">¶</a></dt>
-<dd><p>Number of instance features</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.abstract_model.AbstractModel.n_params">
-<span class="sig-name descname"><span class="pre">n_params</span></span><a class="headerlink" href="#smac.model.abstract_model.AbstractModel.n_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Number of parameters in a configuration (only available after train has
-been called)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.abstract_model.AbstractModel.scaler">
-<span class="sig-name descname"><span class="pre">scaler</span></span><a class="headerlink" href="#smac.model.abstract_model.AbstractModel.scaler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Object to scale data to be withing [0, 1]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>sklearn.preprocessing.MinMaxScaler</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.abstract_model.AbstractModel.var_threshold">
-<span class="sig-name descname"><span class="pre">var_threshold</span></span><a class="headerlink" href="#smac.model.abstract_model.AbstractModel.var_threshold" title="Permalink to this definition">¶</a></dt>
-<dd><p>Lower bound vor variance. If estimated variance &lt; var_threshold, the set
-to var_threshold</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.model.abstract_model.AbstractModel.types">
-<span class="sig-name descname"><span class="pre">types</span></span><a class="headerlink" href="#smac.model.abstract_model.AbstractModel.types" title="Permalink to this definition">¶</a></dt>
-<dd><p>If set, contains a list with feature types (cat,const) of input vector</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.model.abstract_model.AbstractModel.get_configspace">
-<span class="sig-name descname"><span class="pre">get_configspace</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/abstract_model.html#AbstractModel.get_configspace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.abstract_model.AbstractModel.get_configspace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves the ConfigurationSpace used for the model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>self.configspace</strong></p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>The ConfigurationSpace of the model</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.model.abstract_model.AbstractModel.get_meta">
 <span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/abstract_model.html#AbstractModel.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.abstract_model.AbstractModel.get_meta" title="Permalink to this definition">¶</a></dt>
@@ -480,18 +369,18 @@ to var_threshold</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.model.abstract_model.AbstractModel.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov_return_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'diagonal_cov'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/abstract_model.html#AbstractModel.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.abstract_model.AbstractModel.predict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Predict means and variances for given X.</p>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covariance_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'diagonal'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/abstract_model.html#AbstractModel.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.abstract_model.AbstractModel.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predicts mean and variance for a given X. Internally, calls the method <cite>_predict</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<em>np.ndarray of shape =</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em> (</em><em>config + instance features</em><em>)</em><em>]</em>) – Training samples</p></li>
-<li><p><strong>cov_return_type</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Specifies what to return along with the mean. (Applies to only Gaussian Process for now)
-Can take 4 values: [None, diagonal_std, diagonal_cov, full_cov]
-* None - only mean is returned
-* diagonal_std - standard deviation at test points is returned
-* diagonal_cov - diagonal of the covariance matrix is returned
-* full_cov - whole covariance matrix between the test points is returned</p></li>
+<li><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#hyperparameter + #features</em><em>]</em>) – Input data points.</p></li>
+<li><p><strong>covariance_type</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to &quot;diagonal&quot;</em>) – Specifies what to return along with the mean. Applied only to Gaussian Processes.
+Takes four valid inputs:
+* None: Only the mean is returned.
+* “std”: Standard deviation at test points is returned.
+* “diagonal”: Diagonal of the covariance matrix is returned.
+* “full”: Whole covariance matrix between the test points is returned.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -499,8 +388,8 @@ Can take 4 values: [None, diagonal_std, diagonal_cov, full_cov]
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p><strong>means</strong> (<em>np.ndarray of shape = [n_samples, n_objectives]</em>) – Predictive mean</p></li>
-<li><p><strong>vars</strong> (<em>None or np.ndarray of shape = [n_samples, n_objectives] or [n_samples, n_samples]</em>) – Predictive variance or standard deviation</p></li>
+<li><p><strong>means</strong> (<em>np.ndarray [#samples, #objectives]</em>) – The predictive mean.</p></li>
+<li><p><strong>vars</strong> (<em>np.ndarray [#samples, #objectives] or [#samples, #samples] | None</em>) – Predictive variance or standard deviation.</p></li>
 </ul>
 </p>
 </dd>
@@ -508,22 +397,20 @@ Can take 4 values: [None, diagonal_std, diagonal_cov, full_cov]
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.model.abstract_model.AbstractModel.predict_marginalized_over_instances">
-<span class="sig-name descname"><span class="pre">predict_marginalized_over_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/abstract_model.html#AbstractModel.predict_marginalized_over_instances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.abstract_model.AbstractModel.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
-<dd><p>Predict mean and variance marginalized over all instances.</p>
-<p>Returns the predictive mean and variance marginalised over all
-instances for a set of configurations.</p>
+<dt class="sig sig-object py" id="smac.model.abstract_model.AbstractModel.predict_marginalized">
+<span class="sig-name descname"><span class="pre">predict_marginalized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/abstract_model.html#AbstractModel.predict_marginalized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.abstract_model.AbstractModel.predict_marginalized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predicts mean and variance marginalized over all instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em>) – [n_samples, n_features (config)]</p>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#hyperparameter + #features</em><em>]</em>) – Input data points.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p><strong>means</strong> (<em>np.ndarray of shape = [n_samples, 1]</em>) – Predictive mean</p></li>
-<li><p><strong>vars</strong> (<em>np.ndarray  of shape = [n_samples, 1]</em>) – Predictive variance</p></li>
+<li><p><strong>means</strong> (<em>np.ndarray [#samples, 1]</em>) – The predictive mean.</p></li>
+<li><p><strong>vars</strong> (<em>np.ndarray [#samples, 1]</em>) – The predictive variance.</p></li>
 </ul>
 </p>
 </dd>
@@ -533,20 +420,19 @@ instances for a set of configurations.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.model.abstract_model.AbstractModel.train">
 <span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/abstract_model.html#AbstractModel.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.abstract_model.AbstractModel.train" title="Permalink to this definition">¶</a></dt>
-<dd><p>Trains the EPM on X and Y.</p>
+<dd><p>Trains the random forest on X and Y. Internally, calls the method <cite>_train</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em> (</em><em>config + instance features</em><em>)</em><em>]</em>) – Input data points.</p></li>
-<li><p><strong>Y</strong> (<em>np.ndarray</em><em> [</em><em>n_samples</em><em>, </em><em>n_objectives</em><em>]</em>) – The corresponding target values. n_objectives must match the
-number of target names specified in the constructor.</p></li>
+<li><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#hyperparameter + #features</em><em>]</em>) – Input data points.</p></li>
+<li><p><strong>Y</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#objectives</em><em>]</em>) – The corresponding target values.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>self</strong></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>BaseEPM</p>
+<dd class="field-odd"><p><a class="reference internal" href="#smac.model.abstract_model.AbstractModel" title="smac.model.abstract_model.AbstractModel">AbstractModel</a></p>
 </dd>
 </dl>
 </dd></dl>

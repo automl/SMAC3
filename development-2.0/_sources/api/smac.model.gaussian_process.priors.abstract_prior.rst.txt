@@ -1,0 +1,29 @@
+smac.model.gaussian\_process.priors.abstract\_prior
+===================================================
+
+.. automodule:: smac.model.gaussian_process.priors.abstract_prior
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AbstractPrior
+   
+   
+
+   
+   
+   
+
+
+

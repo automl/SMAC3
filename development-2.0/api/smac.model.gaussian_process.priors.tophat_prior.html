@@ -40,7 +40,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.model.multi_objective_model" href="smac.model.multi_objective_model.html" />
-    <link rel="prev" title="smac.model.gaussian_process.priors.prior" href="smac.model.gaussian_process.priors.prior.html" />
+    <link rel="prev" title="smac.model.gaussian_process.priors.log_normal_prior" href="smac.model.gaussian_process.priors.log_normal_prior.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -331,35 +331,77 @@ style="width: 100%;">
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior" title="smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftTopHatPrior</span></code></a>(lower_bound, upper_bound, ...)</p></td>
-<td><p></p></td>
+<td><p>Soft Tophat prior as it used in the original spearmint code.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#smac.model.gaussian_process.priors.tophat_prior.TophatPrior" title="smac.model.gaussian_process.priors.tophat_prior.TophatPrior"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TophatPrior</span></code></a>(lower_bound, upper_bound[, seed])</p></td>
-<td><p></p></td>
+<td><p>Tophat prior as it used in the original spearmint code.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.priors.tophat_prior.</span></span><span class="sig-name descname"><span class="pre">SoftTopHatPrior</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exponent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/tophat_prior.html#SoftTopHatPrior"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.model.gaussian_process.priors.prior.html#smac.model.gaussian_process.priors.prior.Prior" title="smac.model.gaussian_process.priors.prior.Prior"><code class="xref py py-class docutils literal notranslate"><span class="pre">Prior</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior.gradient">
-<span class="sig-name descname"><span class="pre">gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/tophat_prior.html#SoftTopHatPrior.gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior.gradient" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the gradient of the prior at theta.</p>
+<dd><p>Bases: <a class="reference internal" href="smac.model.gaussian_process.priors.abstract_prior.html#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior" title="smac.model.gaussian_process.priors.abstract_prior.AbstractPrior"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractPrior</span></code></a></p>
+<p>Soft Tophat prior as it used in the original spearmint code.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lower_bound</strong> (<em>float</em>) – Lower bound of the prior. In original scale.</p></li>
+<li><p><strong>upper_bound</strong> (<em>float</em>) – Upper bound of the prior. In original scale.</p></li>
+<li><p><strong>exponent</strong> (<em>float</em>) – Exponent of the prior.</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior.get_gradient">
+<span class="sig-name descname"><span class="pre">get_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/tophat_prior.html#SoftTopHatPrior.get_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior.get_gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the gradient of the prior with respect to theta. Internally, his method calls <cite>self._get_gradient</cite>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Theta must be on the original scale.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – Hyperparameter configuration in log space</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>gradient</strong> – The gradient of the prior at theta.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior.lnprob">
-<span class="sig-name descname"><span class="pre">lnprob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/tophat_prior.html#SoftTopHatPrior.lnprob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior.lnprob" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the log probability of theta.</p>
+<dt class="sig sig-object py" id="smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior.get_log_probability">
+<span class="sig-name descname"><span class="pre">get_log_probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/tophat_prior.html#SoftTopHatPrior.get_log_probability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior.get_log_probability" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the log probability of theta. This method exponentiates theta and calls <cite>self._get_log_probability</cite>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Theta must be on a log scale!</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – Hyperparameter configuration in log space.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The log probability of theta</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/tophat_prior.html#SoftTopHatPrior.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior.get_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the meta data of the created object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -369,23 +411,45 @@ style="width: 100%;">
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.model.gaussian_process.priors.tophat_prior.TophatPrior">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.priors.tophat_prior.</span></span><span class="sig-name descname"><span class="pre">TophatPrior</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/tophat_prior.html#TophatPrior"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.tophat_prior.TophatPrior" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.model.gaussian_process.priors.prior.html#smac.model.gaussian_process.priors.prior.Prior" title="smac.model.gaussian_process.priors.prior.Prior"><code class="xref py py-class docutils literal notranslate"><span class="pre">Prior</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="smac.model.gaussian_process.priors.abstract_prior.html#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior" title="smac.model.gaussian_process.priors.abstract_prior.AbstractPrior"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractPrior</span></code></a></p>
+<p>Tophat prior as it used in the original spearmint code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lower_bound</strong> (<em>float</em>) – Lower bound of the prior. In original scale.</p></li>
+<li><p><strong>upper_bound</strong> (<em>float</em>) – Upper bound of the prior. In original scale.</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.model.gaussian_process.priors.tophat_prior.TophatPrior.gradient">
-<span class="sig-name descname"><span class="pre">gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/tophat_prior.html#TophatPrior.gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.tophat_prior.TophatPrior.gradient" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the gradient of the prior with respect to theta.</p>
+<dt class="sig sig-object py" id="smac.model.gaussian_process.priors.tophat_prior.TophatPrior.get_gradient">
+<span class="sig-name descname"><span class="pre">get_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/tophat_prior.html#TophatPrior.get_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.tophat_prior.TophatPrior.get_gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the gradient of the prior with respect to theta. Internally, his method calls <cite>self._get_gradient</cite>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Theta must be on the original scale.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – Hyperparameter configuration in log space</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The gradient of the prior at theta.</p>
+<dd class="field-even"><p><strong>gradient</strong> – The gradient of the prior at theta.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ol class="upperalpha simple" start="4">
-<li><p>np.array</p></li>
-</ol>
-</p>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.priors.tophat_prior.TophatPrior.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/tophat_prior.html#TophatPrior.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.tophat_prior.TophatPrior.get_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the meta data of the created object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -400,11 +464,11 @@ style="width: 100%;">
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.model.gaussian_process.priors.prior.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.model.gaussian_process.priors.log_normal_prior.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.model.gaussian_process.priors.prior</p>
+            <p class="prev-next-title">smac.model.gaussian_process.priors.log_normal_prior</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="smac.model.multi_objective_model.html" title="next page">

@@ -72,8 +72,8 @@ the target algorithm now is required to have an instance argument.
     [INFO][abstract_intensifier.py:362] --- l1_ratio: 0.24875314351995803 -> 0.26756551376906273
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-2 with budget [45.00 / 45] and 2 evaluated challenger(s).
     [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 1-4 with initial budget 45.
-    [INFO][facade.py:269] Final Incumbent: {'alpha': 0.12435576832412187, 'eta0': 0.08244597846698355, 'l1_ratio': 0.26756551376906273, 'learning_rate': 'adaptive'}
-    [INFO][facade.py:270] Estimated cost: 0.006063174109298513
+    [INFO][abstract_facade.py:269] Final Incumbent: {'alpha': 0.12435576832412187, 'eta0': 0.08244597846698355, 'l1_ratio': 0.26756551376906273, 'learning_rate': 'adaptive'}
+    [INFO][abstract_facade.py:270] Estimated cost: 0.006063174109298513
     Incumbent cost: 0.01
 
 
@@ -224,7 +224,7 @@ the target algorithm now is required to have an instance argument.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  44.112 seconds)
+   **Total running time of the script:** ( 0 minutes  43.198 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_2_sgd_datasets.py:

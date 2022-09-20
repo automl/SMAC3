@@ -331,7 +331,7 @@ style="width: 100%;">
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.facade.multi_fidelity_facade.MultiFidelityFacade" title="smac.facade.multi_fidelity_facade.MultiFidelityFacade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiFidelityFacade</span></code></a>(scenario, ...[, model, ...])</p></td>
-<td><p></p></td>
+<td><p>This facade configures SMAC in a multi-fidelity setting.</p></td>
 </tr>
 </tbody>
 </table>
@@ -339,6 +339,36 @@ style="width: 100%;">
 <dt class="sig sig-object py" id="smac.facade.multi_fidelity_facade.MultiFidelityFacade">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.multi_fidelity_facade.</span></span><span class="sig-name descname"><span class="pre">MultiFidelityFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_algorithm</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/multi_fidelity_facade.html#MultiFidelityFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.multi_fidelity_facade.MultiFidelityFacade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.facade.hyperparameter_facade.html#smac.facade.hyperparameter_facade.HyperparameterFacade" title="smac.facade.hyperparameter_facade.HyperparameterFacade"><code class="xref py py-class docutils literal notranslate"><span class="pre">HyperparameterFacade</span></code></a></p>
+<p>This facade configures SMAC in a multi-fidelity setting.
+The way this facade combines the components is the following and exploits
+fidelity information in the following form:</p>
+<ol class="arabic simple">
+<li><p>The initial design is a RandomInitialDesign.</p></li>
+</ol>
+<p>2. The intensification is Hyperband. The configurations from the initial design
+are presented as challengers and executed in the Hyperband fashion.
+3. The model is a RandomForest surrogate model. The data to train it
+is collected by SMBO._collect_data. Notably, the method searches through
+the runhistory and collects the data from the highest fidelity level, that supports at least
+SMBO._min_samples_model number of configurations.
+4. The acquisition function is EI. Presenting the value of a candidate configuration.
+5. The acquisition optimizer is LocalAndSortedRandomSearch. It optimizes the acquisition
+function to present the best configuration as challenger to the intensifier.
+From now on 2. works as follows: the intensifier runs the challenger in a Hyperband fashion
+against the existing configurations and their observed performances
+until the challenger does not survive a fidelity level. The intensifier can inquire about a
+known configuration on a yet unseen fidelity if necessary.</p>
+<p>The loop 2-5 continues until a termination criterion is reached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Note<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<p>For intensification the data acquisition and aggregation strategy in step 2 is changed.
+Incumbents are updated by the mean performance over the intersection of instances, that
+the challenger and incumbent have in common (abstract_intensifier._compare_configs).
+The model in step 3 is trained on the all the available instance performance values.
+The datapoints for a hyperparameter configuration are disambiguated by the instance features
+or an index as replacement if no instance features are available.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.multi_fidelity_facade.MultiFidelityFacade.get_initial_design">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_initial_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs_per_hyperparamter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_config_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/multi_fidelity_facade.html#MultiFidelityFacade.get_initial_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.multi_fidelity_facade.MultiFidelityFacade.get_initial_design" title="Permalink to this definition">¶</a></dt>

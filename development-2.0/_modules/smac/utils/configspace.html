@@ -316,6 +316,18 @@ style="width: 100%;">
 
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace.util</span> <span class="kn">import</span> <span class="n">get_one_exchange_neighbourhood</span>
+<span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
+<span class="kn">from</span> <span class="nn">ConfigSpace.hyperparameters</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BetaFloatHyperparameter</span><span class="p">,</span>
+    <span class="n">BetaIntegerHyperparameter</span><span class="p">,</span>
+    <span class="n">CategoricalHyperparameter</span><span class="p">,</span>
+    <span class="n">Constant</span><span class="p">,</span>
+    <span class="n">NormalFloatHyperparameter</span><span class="p">,</span>
+    <span class="n">NormalIntegerHyperparameter</span><span class="p">,</span>
+    <span class="n">OrdinalHyperparameter</span><span class="p">,</span>
+    <span class="n">UniformFloatHyperparameter</span><span class="p">,</span>
+    <span class="n">UniformIntegerHyperparameter</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2022, automl.org&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
@@ -339,6 +351,188 @@ style="width: 100%;">
 <span class="sd">    np.ndarray</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">config</span><span class="o">.</span><span class="n">get_array</span><span class="p">()</span> <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_types"><a class="viewcode-back" href="../../../api/smac.utils.configspace.html#smac.utils.configspace.get_types">[docs]</a><span class="k">def</span> <span class="nf">get_types</span><span class="p">(</span>
+    <span class="n">configspace</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
+    <span class="n">instance_features</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]:</span>
+    <span class="sd">&quot;&quot;&quot;Return the types of the hyperparameters and the bounds of the</span>
+<span class="sd">    hyperparameters and instance features.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Extract types vector for rf from config space and the bounds</span>
+    <span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span>
+    <span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">types</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()):</span>
+        <span class="n">parents</span> <span class="o">=</span> <span class="n">configspace</span><span class="o">.</span><span class="n">get_parents_of</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">can_be_inactive</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">can_be_inactive</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="p">(</span><span class="n">CategoricalHyperparameter</span><span class="p">)):</span>
+            <span class="n">n_cats</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">choices</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">can_be_inactive</span><span class="p">:</span>
+                <span class="n">n_cats</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">choices</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_cats</span>
+            <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">n_cats</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="p">(</span><span class="n">OrdinalHyperparameter</span><span class="p">)):</span>
+            <span class="n">n_cats</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
+            <span class="n">types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">can_be_inactive</span><span class="p">:</span>
+                <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_cats</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_cats</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">Constant</span><span class="p">):</span>
+            <span class="c1"># For constants we simply set types to 0 which makes it a numerical parameter</span>
+            <span class="k">if</span> <span class="n">can_be_inactive</span><span class="p">:</span>
+                <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                <span class="n">types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                <span class="n">types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="c1"># and we leave the bounds to be 0 for now</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">UniformFloatHyperparameter</span><span class="p">):</span>
+            <span class="c1"># Are sampled on the unit hypercube thus the bounds</span>
+            <span class="c1"># are always 0.0, 1.0</span>
+            <span class="k">if</span> <span class="n">can_be_inactive</span><span class="p">:</span>
+                <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">UniformIntegerHyperparameter</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">can_be_inactive</span><span class="p">:</span>
+                <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">NormalFloatHyperparameter</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">can_be_inactive</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Inactive parameters not supported for Beta and Normal Hyperparameters&quot;</span><span class="p">)</span>
+
+            <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">_lower</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">_upper</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">NormalIntegerHyperparameter</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">can_be_inactive</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Inactive parameters not supported for Beta and Normal Hyperparameters&quot;</span><span class="p">)</span>
+
+            <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">nfhp</span><span class="o">.</span><span class="n">_lower</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">nfhp</span><span class="o">.</span><span class="n">_upper</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">BetaFloatHyperparameter</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">can_be_inactive</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Inactive parameters not supported for Beta and Normal Hyperparameters&quot;</span><span class="p">)</span>
+
+            <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">_lower</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">_upper</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">BetaIntegerHyperparameter</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">can_be_inactive</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Inactive parameters not supported for Beta and Normal Hyperparameters&quot;</span><span class="p">)</span>
+
+            <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">bfhp</span><span class="o">.</span><span class="n">_lower</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">bfhp</span><span class="o">.</span><span class="n">_upper</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">param</span><span class="p">,</span>
+            <span class="p">(</span>
+                <span class="n">UniformFloatHyperparameter</span><span class="p">,</span>
+                <span class="n">UniformIntegerHyperparameter</span><span class="p">,</span>
+                <span class="n">OrdinalHyperparameter</span><span class="p">,</span>
+                <span class="n">CategoricalHyperparameter</span><span class="p">,</span>
+                <span class="n">NormalFloatHyperparameter</span><span class="p">,</span>
+                <span class="n">NormalIntegerHyperparameter</span><span class="p">,</span>
+                <span class="n">BetaFloatHyperparameter</span><span class="p">,</span>
+                <span class="n">BetaIntegerHyperparameter</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Unknown hyperparameter type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">param</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">instance_features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">instance_features</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">types</span> <span class="o">=</span> <span class="n">types</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_features</span>
+
+    <span class="k">return</span> <span class="n">types</span><span class="p">,</span> <span class="n">bounds</span></div>
+
+
+<div class="viewcode-block" id="get_conditional_hyperparameters"><a class="viewcode-back" href="../../../api/smac.utils.configspace.html#smac.utils.configspace.get_conditional_hyperparameters">[docs]</a><span class="k">def</span> <span class="nf">get_conditional_hyperparameters</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Returns conditional hyperparameters if values with -1 or smaller are observed. X is used</span>
+<span class="sd">    if Y is not specified.&quot;&quot;&quot;</span>
+    <span class="c1"># Taking care of conditional hyperparameters according to Levesque et al.</span>
+    <span class="n">X_cond</span> <span class="o">=</span> <span class="n">X</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">Y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">Y_cond</span> <span class="o">=</span> <span class="n">Y</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">Y_cond</span> <span class="o">=</span> <span class="n">X</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="n">active</span> <span class="o">=</span> <span class="o">~</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">X_cond</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="n">Y_cond</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">active</span></div>
+
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">def check_subspace_points(</span>
+<span class="sd">    X: np.ndarray,</span>
+<span class="sd">    cont_dims: np.ndarray | list = [],</span>
+<span class="sd">    cat_dims: np.ndarray | list = [],</span>
+<span class="sd">    bounds_cont: np.ndarray | None = None,</span>
+<span class="sd">    bounds_cat: list[tuple] | None = None,</span>
+<span class="sd">    expand_bound: bool = False,</span>
+<span class="sd">) -&gt; np.ndarray:</span>
+<span class="sd">    &quot;&quot;&quot;Check which points are place inside a given subspace.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X: Optional[np.ndarray(N,D)],</span>
+<span class="sd">        points to be checked, where D = D_cont + D_cat</span>
+<span class="sd">    cont_dims: Union[np.ndarray(D_cont), List]</span>
+<span class="sd">        which dimensions represent continuous hyperparameters</span>
+<span class="sd">    cat_dims: Union[np.ndarray(D_cat), List]</span>
+<span class="sd">        which dimensions represent categorical hyperparameters</span>
+<span class="sd">    bounds_cont: optional[List[Tuple]]</span>
+<span class="sd">        subspaces bounds of categorical hyperparameters, its length is the number of continuous hyperparameters</span>
+<span class="sd">    bounds_cat: Optional[List[Tuple]]</span>
+<span class="sd">        subspaces bounds of continuous hyperparameters, its length is the number of categorical hyperparameters</span>
+<span class="sd">    expand_bound: bool</span>
+<span class="sd">        if the bound needs to be expanded to contain more points rather than the points inside the subregion</span>
+<span class="sd">    Return</span>
+<span class="sd">    ----------</span>
+<span class="sd">    indices_in_ss:np.ndarray(N)</span>
+<span class="sd">        indices of data that included in subspaces</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    if len(X.shape) == 1:</span>
+<span class="sd">        X = X[np.newaxis, :]</span>
+<span class="sd">    if len(cont_dims) == 0 and len(cat_dims) == 0:</span>
+<span class="sd">        return np.ones(X.shape[0], dtype=bool)</span>
+
+<span class="sd">    if len(cont_dims) &gt; 0:</span>
+<span class="sd">        if bounds_cont is None:</span>
+<span class="sd">            raise ValueError(&quot;bounds_cont must be given if cont_dims provided&quot;)</span>
+
+<span class="sd">        if len(bounds_cont.shape) != 2 or bounds_cont.shape[1] != 2 or bounds_cont.shape[0] != len(cont_dims):</span>
+<span class="sd">            raise ValueError(</span>
+<span class="sd">                f&quot;bounds_cont (with shape  {bounds_cont.shape}) should be an array with shape of&quot;</span>
+<span class="sd">                f&quot;({len(cont_dims)}, 2)&quot;</span>
+<span class="sd">            )</span>
+
+<span class="sd">        data_in_ss = np.all(X[:, cont_dims] &lt;= bounds_cont[:, 1], axis=1) &amp; np.all(</span>
+<span class="sd">            X[:, cont_dims] &gt;= bounds_cont[:, 0], axis=1</span>
+<span class="sd">        )</span>
+
+<span class="sd">        if expand_bound:</span>
+<span class="sd">            bound_left = bounds_cont[:, 0] - np.min(X[data_in_ss][:, cont_dims] - bounds_cont[:, 0], axis=0)</span>
+<span class="sd">            bound_right = bounds_cont[:, 1] + np.min(bounds_cont[:, 1] - X[data_in_ss][:, cont_dims], axis=0)</span>
+<span class="sd">            data_in_ss = np.all(X[:, cont_dims] &lt;= bound_right, axis=1) &amp; np.all(X[:, cont_dims] &gt;= bound_left, axis=1)</span>
+<span class="sd">    else:</span>
+<span class="sd">        data_in_ss = np.ones(X.shape[0], dtype=bool)</span>
+
+<span class="sd">    if len(cat_dims) == 0:</span>
+<span class="sd">        return data_in_ss</span>
+<span class="sd">    if bounds_cat is None:</span>
+<span class="sd">        raise ValueError(&quot;bounds_cat must be given if cat_dims provided&quot;)</span>
+
+<span class="sd">    if len(bounds_cat) != len(cat_dims):</span>
+<span class="sd">        raise ValueError(</span>
+<span class="sd">            f&quot;bounds_cat ({len(bounds_cat)}) and cat_dims ({len(cat_dims)}) must have &quot; f&quot;the same number of elements&quot;</span>
+<span class="sd">        )</span>
+
+<span class="sd">    for bound_cat, cat_dim in zip(bounds_cat, cat_dims):</span>
+<span class="sd">        data_in_ss &amp;= np.in1d(X[:, cat_dim], bound_cat)</span>
+
+<span class="sd">    return data_in_ss</span>
+<span class="sd">&#39;&#39;&#39;</span>
 </pre></div>
 
               </div>

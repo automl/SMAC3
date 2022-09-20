@@ -39,7 +39,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.facade.boing_facade" href="smac.facade.boing_facade.html" />
+    <link rel="next" title="smac.facade.hyperband_facade" href="smac.facade.hyperband_facade.html" />
     <link rel="prev" title="smac.facade.algorithm_configuration_facade" href="smac.facade.algorithm_configuration_facade.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
@@ -338,12 +338,11 @@ style="width: 100%;">
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.facade.blackbox_facade.BlackBoxFacade">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.blackbox_facade.</span></span><span class="sig-name descname"><span class="pre">BlackBoxFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_algorithm</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.blackbox_facade.BlackBoxFacade" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.facade.facade.html#smac.facade.facade.Facade" title="smac.facade.facade.Facade"><code class="xref py py-class docutils literal notranslate"><span class="pre">Facade</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="smac.facade.abstract_facade.html#smac.facade.abstract_facade.AbstractFacade" title="smac.facade.abstract_facade.AbstractFacade"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractFacade</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.blackbox_facade.BlackBoxFacade.get_acquisition_function">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_acquisition_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_acquisition_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.blackbox_facade.BlackBoxFacade.get_acquisition_function" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the acquisition function instance (EI: Expected Improvement) for the Black-Box
-facade.</p>
+<dd><p>Returns the acquisition function instance (EI: Expected Improvement) for the Black-Box facade.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.functions.expected_improvement.html#smac.acquisition.functions.expected_improvement.EI" title="smac.acquisition.functions.expected_improvement.EI"><code class="xref py py-class docutils literal notranslate"><span class="pre">EI</span></code></a></p>
@@ -402,12 +401,21 @@ categorical (HammingKernel), continuous (Matern), and noise kernels (White).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.blackbox_facade.BlackBoxFacade.get_model">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.blackbox_facade.BlackBoxFacade.get_model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a Gaussian Process surrogate model. Please check its documentation for
-detials.</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.blackbox_facade.BlackBoxFacade.get_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a Gaussian Process surrogate model.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
+<li><p><strong>model_type</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Which gaussian process model should be chosen. Choose between <cite>vanilla</cite> and <cite>mcmc</cite>.</p></li>
+<li><p><strong>kernel</strong> (<em>kernels.Kernel</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The kernel used in the surrogate model.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>model</strong> – The instantiated gaussian process.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.model.gaussian_process.abstract_gaussian_process.html#smac.model.gaussian_process.abstract_gaussian_process.AbstractGaussianProcess" title="smac.model.gaussian_process.abstract_gaussian_process.AbstractGaussianProcess"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractGaussianProcess</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="smac.model.gaussian_process.html#smac.model.gaussian_process.AbstractGaussianProcess" title="smac.model.gaussian_process.AbstractGaussianProcess">AbstractGaussianProcess</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -466,10 +474,10 @@ specifying how the runhistory is to be prepared for the next surrogate model.</p
             <p class="prev-next-title">smac.facade.algorithm_configuration_facade</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.facade.boing_facade.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.facade.hyperband_facade.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.facade.boing_facade</p>
+        <p class="prev-next-title">smac.facade.hyperband_facade</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

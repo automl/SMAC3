@@ -40,7 +40,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.facade.blackbox_facade" href="smac.facade.blackbox_facade.html" />
-    <link rel="prev" title="smac.facade" href="smac.facade.html" />
+    <link rel="prev" title="smac.facade.abstract_facade" href="smac.facade.abstract_facade.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -338,7 +338,7 @@ style="width: 100%;">
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.facade.algorithm_configuration_facade.AlgorithmConfigurationFacade">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.algorithm_configuration_facade.</span></span><span class="sig-name descname"><span class="pre">AlgorithmConfigurationFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_algorithm</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/algorithm_configuration_facade.html#AlgorithmConfigurationFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.algorithm_configuration_facade.AlgorithmConfigurationFacade" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.facade.facade.html#smac.facade.facade.Facade" title="smac.facade.facade.Facade"><code class="xref py py-class docutils literal notranslate"><span class="pre">Facade</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="smac.facade.abstract_facade.html#smac.facade.abstract_facade.AbstractFacade" title="smac.facade.abstract_facade.AbstractFacade"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractFacade</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.algorithm_configuration_facade.AlgorithmConfigurationFacade.get_acquisition_function">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_acquisition_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/algorithm_configuration_facade.html#AlgorithmConfigurationFacade.get_acquisition_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.algorithm_configuration_facade.AlgorithmConfigurationFacade.get_acquisition_function" title="Permalink to this definition">¶</a></dt>
@@ -442,11 +442,11 @@ specifying how the runhistory is to be prepared for the next surrogate model.</p
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.facade.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.facade.abstract_facade.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.facade</p>
+            <p class="prev-next-title">smac.facade.abstract_facade</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="smac.facade.blackbox_facade.html" title="next page">

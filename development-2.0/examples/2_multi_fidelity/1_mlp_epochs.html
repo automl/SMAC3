@@ -334,7 +334,8 @@ to download the full example code</p>
 <span id="sphx-glr-examples-2-multi-fidelity-1-mlp-epochs-py"></span><h1>Multi-Layer Perceptron Using Multiple Epochs<a class="headerlink" href="#multi-layer-perceptron-using-multiple-epochs" title="Permalink to this heading">¶</a></h1>
 <p>Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets.
 Since we want to take advantage of Multi-Fidelity, the <code class="docutils literal notranslate"><span class="pre">MultiFidelityFacade</span></code> is a good choice. By default,
-<code class="docutils literal notranslate"><span class="pre">MultiFidelityFacade</span></code> internally runs with <a class="reference external" href="https://arxiv.org/abs/1603.06560">hyperband</a>, which is a combination of an
+<code class="docutils literal notranslate"><span class="pre">MultiFidelityFacade</span></code> internally runs with <a class="reference external" href="https://arxiv.org/abs/1603.06560">hyperband</a> as
+intensification, which is a combination of an
 aggressive racing mechanism and successive halving. Crucially, the target algorithm function
 must accept a budget variable, detailing how much fidelity smac wants to allocate to this
 configuration.</p>
@@ -347,6 +348,20 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 <a class="reference external" href="https://github.com/automl/HpBandSter">BOHB</a>.</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Default value: 0.38
+{&#39;_configspace&#39;: Configuration space object:
+  Hyperparameters:
+    activation, Type: Categorical, Choices: {logistic, tanh, relu}, Default: tanh
+    batch_size, Type: UniformInteger, Range: [30, 300], Default: 200
+    learning_rate, Type: Categorical, Choices: {constant, invscaling, adaptive}, Default: constant
+    learning_rate_init, Type: UniformFloat, Range: [0.0001, 1.0], Default: 0.001, on log-scale
+    n_layer, Type: UniformInteger, Range: [1, 5], Default: 1
+    n_neurons, Type: UniformInteger, Range: [8, 256], Default: 10, on log-scale
+    solver, Type: Categorical, Choices: {lbfgs, sgd, adam}, Default: adam
+  Conditions:
+    batch_size | solver in {&#39;sgd&#39;, &#39;adam&#39;}
+    learning_rate | solver == &#39;sgd&#39;
+    learning_rate_init | solver in {&#39;sgd&#39;, &#39;adam&#39;}
+, &#39;_seed&#39;: 0, &#39;_rng&#39;: RandomState(MT19937) at 0x7F4FEB9BC940, &#39;_configs&#39;: None, &#39;_n_configs_per_hyperparameter&#39;: 10, &#39;_n_configs&#39;: 5}
 [WARNING][successive_halving.py:129] The target algorithm is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider increasing `n_seeds` from the intensifier.
 [INFO][successive_halving.py:183] Using successive halving with budget type BUDGETS, min budget 5, max budget 25 and eta 3.
 [INFO][abstract_initial_design.py:144] Using 5 initial design configurations.
@@ -406,8 +421,8 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
 [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
 [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 6-2 with initial budget 25.
-[INFO][facade.py:269] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 5, &#39;n_neurons&#39;: 180, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 78, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.008750070230028942}
-[INFO][facade.py:270] Estimated cost: 0.018362735995047785
+[INFO][abstract_facade.py:269] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 5, &#39;n_neurons&#39;: 180, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 78, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.008750070230028942}
+[INFO][abstract_facade.py:270] Estimated cost: 0.018362735995047785
 Incumbent value: 0.02
 </pre></div>
 </div>
@@ -524,14 +539,15 @@ Incumbent value: 0.02
     <span class="c1"># Define our environment variables</span>
     <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span>
         <span class="n">mlp</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span>
-        <span class="n">walltime_limit</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>  <span class="c1"># After 100 seconds, we stop the optimization</span>
-        <span class="n">n_trials</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>  <span class="c1"># Evaluate max 100 different trials</span>
-        <span class="n">min_budget</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>  <span class="c1"># Train the MLP for at least 5 epochs</span>
-        <span class="n">max_budget</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>  <span class="c1"># Train the MLP for at most 25 epochs</span>
+        <span class="n">walltime_limit</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>  <span class="c1"># After 100 seconds, we stop the hyperparameter optimization</span>
+        <span class="n">n_trials</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>  <span class="c1"># Evaluate max 200 different trials</span>
+        <span class="n">min_budget</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>  <span class="c1"># Train the MLP using a hyperparameter configuration for at least 5 epochs</span>
+        <span class="n">max_budget</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>  <span class="c1"># Train the MLP using a hyperparameter configuration for at most 25 epochs</span>
     <span class="p">)</span>
 
     <span class="c1"># We want to run five random configurations before starting the optimization.</span>
     <span class="n">initial_design</span> <span class="o">=</span> <span class="n">MultiFidelityFacade</span><span class="o">.</span><span class="n">get_initial_design</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">n_configs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">initial_design</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
 
     <span class="c1"># Create our SMAC object and pass the scenario and the train method</span>
     <span class="n">smac</span> <span class="o">=</span> <span class="n">MultiFidelityFacade</span><span class="p">(</span>
@@ -546,7 +562,7 @@ Incumbent value: 0.02
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent value: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">incumbent_value</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  48.570 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  53.401 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e36c26bb3a993c4641a06c811122b11e/1_mlp_epochs.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_mlp_epochs.py</span></code></a></p>

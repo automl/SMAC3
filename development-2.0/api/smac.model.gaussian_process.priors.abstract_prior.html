@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.model.random_forest.multi_objective_random_forest &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>smac.model.gaussian_process.priors.abstract_prior &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -39,8 +39,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.model.random_forest.random_forest" href="smac.model.random_forest.random_forest.html" />
-    <link rel="prev" title="smac.model.random_forest.abstract_random_forest" href="smac.model.random_forest.abstract_random_forest.html" />
+    <link rel="next" title="smac.model.gaussian_process.priors.gamma_prior" href="smac.model.gaussian_process.priors.gamma_prior.html" />
+    <link rel="prev" title="smac.model.gaussian_process.priors" href="smac.model.gaussian_process.priors.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -325,51 +325,101 @@ style="width: 100%;">
               
               <div>
                 
-  <section id="module-smac.model.random_forest.multi_objective_random_forest">
-<span id="smac-model-random-forest-multi-objective-random-forest"></span><h1>smac.model.random_forest.multi_objective_random_forest<a class="headerlink" href="#module-smac.model.random_forest.multi_objective_random_forest" title="Permalink to this heading">¶</a></h1>
+  <section id="module-smac.model.gaussian_process.priors.abstract_prior">
+<span id="smac-model-gaussian-process-priors-abstract-prior"></span><h1>smac.model.gaussian_process.priors.abstract_prior<a class="headerlink" href="#module-smac.model.gaussian_process.priors.abstract_prior" title="Permalink to this heading">¶</a></h1>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.random_forest.multi_objective_random_forest.MultiObjectiveRandomForest" title="smac.model.random_forest.multi_objective_random_forest.MultiObjectiveRandomForest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiObjectiveRandomForest</span></code></a>(target_names, ...)</p></td>
-<td><p>Wrapper for the random forest to predict multiple targets.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior" title="smac.model.gaussian_process.priors.abstract_prior.AbstractPrior"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractPrior</span></code></a>([seed])</p></td>
+<td><p>Abstract base class to define the interface for priors of Gaussian process hyperparameters.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
-<dt class="sig sig-object py" id="smac.model.random_forest.multi_objective_random_forest.MultiObjectiveRandomForest">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.random_forest.multi_objective_random_forest.</span></span><span class="sig-name descname"><span class="pre">MultiObjectiveRandomForest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/random_forest/multi_objective_random_forest.html#MultiObjectiveRandomForest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.random_forest.multi_objective_random_forest.MultiObjectiveRandomForest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.model.multi_objective_model.html#smac.model.multi_objective_model.MultiObjectiveModel" title="smac.model.multi_objective_model.MultiObjectiveModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiObjectiveModel</span></code></a></p>
-<p>Wrapper for the random forest to predict multiple targets.</p>
-<p>Only a list with the target names and the types array for the
-underlying forest model are mandatory. All other hyperparameters to
-the random forest can be passed via kwargs. Consult the documentation of
-the random forest for the hyperparameters and their meanings.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.model.random_forest.multi_objective_random_forest.MultiObjectiveRandomForest.construct_estimators">
-<span class="sig-name descname"><span class="pre">construct_estimators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/random_forest/multi_objective_random_forest.html#MultiObjectiveRandomForest.construct_estimators"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.random_forest.multi_objective_random_forest.MultiObjectiveRandomForest.construct_estimators" title="Permalink to this definition">¶</a></dt>
-<dd><p>Construct a list of estimators. The number of the estimators equals ‘self.num_targets’
-:type configspace: <code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigurationSpace</span></code>
-:param configspace: Configuration space to tune for.
-:type configspace: ConfigurationSpace
-:param types: Specifies the number of categorical values of an input dimension where</p>
-<blockquote>
-<div><p>the i-th entry corresponds to the i-th input dimension. Let’s say we
-have 2 dimension where the first dimension consists of 3 different
-categorical choices and the second dimension is continuous than we
-have to pass [3, 0]. Note that we count starting from 0.</p>
-</div></blockquote>
+<dt class="sig sig-object py" id="smac.model.gaussian_process.priors.abstract_prior.AbstractPrior">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.priors.abstract_prior.</span></span><span class="sig-name descname"><span class="pre">AbstractPrior</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/abstract_prior.html#AbstractPrior"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Abstract base class to define the interface for priors of Gaussian process hyperparameters.</p>
+<p>This class is adapted from RoBO:</p>
+<p>Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
+RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
+In: NIPS 2017 Bayesian Optimization Workshop</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Whenever lnprob or the gradient is computed for a scalar input, we use math.* rather than np.*.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>bounds</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</p></li>
-<li><p><strong>model_kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – model kwargs for initializing models</p></li>
-</ul>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>) – </p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.priors.abstract_prior.AbstractPrior.get_gradient">
+<span class="sig-name descname"><span class="pre">get_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/abstract_prior.html#AbstractPrior.get_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior.get_gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the gradient of the prior with respect to theta. Internally, his method calls <cite>self._get_gradient</cite>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Theta must be on the original scale.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – Hyperparameter configuration in log space</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>estimators</strong> – A list of Random Forests</p>
+<dd class="field-even"><p><strong>gradient</strong> – The gradient of the prior at theta.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[BaseEPM]</p>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.priors.abstract_prior.AbstractPrior.get_log_probability">
+<span class="sig-name descname"><span class="pre">get_log_probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/abstract_prior.html#AbstractPrior.get_log_probability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior.get_log_probability" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the log probability of theta. This method exponentiates theta and calls <cite>self._get_log_probability</cite>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Theta must be on a log scale!</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – Hyperparameter configuration in log space.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The log probability of theta</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.priors.abstract_prior.AbstractPrior.get_meta">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/abstract_prior.html#AbstractPrior.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior.get_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the meta data of the created object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.priors.abstract_prior.AbstractPrior.sample_from_prior">
+<span class="sig-name descname"><span class="pre">sample_from_prior</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_samples</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/priors/abstract_prior.html#AbstractPrior.sample_from_prior"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior.sample_from_prior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns <cite>n_samples</cite> from the prior. All samples are on a log scale. This method calls
+<cite>self._sample_from_prior</cite> and applies a log transformation to the obtained values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>samples</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -384,17 +434,17 @@ have to pass [3, 0]. Note that we count starting from 0.</p>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.model.random_forest.abstract_random_forest.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.model.gaussian_process.priors.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.model.random_forest.abstract_random_forest</p>
+            <p class="prev-next-title">smac.model.gaussian_process.priors</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.model.random_forest.random_forest.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.model.gaussian_process.priors.gamma_prior.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.model.random_forest.random_forest</p>
+        <p class="prev-next-title">smac.model.gaussian_process.priors.gamma_prior</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
