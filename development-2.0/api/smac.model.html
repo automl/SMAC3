@@ -392,9 +392,13 @@ Takes four valid inputs:
 <dt class="sig sig-object py" id="smac.model.AbstractModel.predict_marginalized">
 <span class="sig-name descname"><span class="pre">predict_marginalized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/abstract_model.html#AbstractModel.predict_marginalized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.AbstractModel.predict_marginalized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predicts mean and variance marginalized over all instances.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The input data must not include any features.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#hyperparameter + #features</em><em>]</em>) – Input data points.</p>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#hyperparameter</em><em>]</em>) – Input data points.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
@@ -453,9 +457,13 @@ on which the model is trained on.</p></li>
 <dt class="sig sig-object py" id="smac.model.MultiObjectiveModel.predict_marginalized">
 <span class="sig-name descname"><span class="pre">predict_marginalized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/multi_objective_model.html#MultiObjectiveModel.predict_marginalized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.MultiObjectiveModel.predict_marginalized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predicts mean and variance marginalized over all instances.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The input data must not include any features.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#hyperparameter + #features</em><em>]</em>) – Input data points.</p>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#hyperparameter</em><em>]</em>) – Input data points.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>

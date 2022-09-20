@@ -374,6 +374,9 @@ style="width: 100%;">
 
         <span class="k">return</span> <span class="n">p0</span>
 
+    <span class="k">def</span> <span class="nf">_get_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
 <div class="viewcode-block" id="TophatPrior.get_gradient"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.priors.tophat_prior.html#smac.model.gaussian_process.priors.TophatPrior.get_gradient">[docs]</a>    <span class="k">def</span> <span class="nf">get_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="k">return</span> <span class="mi">0</span></div></div>
 
@@ -434,6 +437,9 @@ style="width: 100%;">
             <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed</span><span class="p">,</span>
         <span class="p">}</span></div>
 
+    <span class="k">def</span> <span class="nf">_get_log_probability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
 <div class="viewcode-block" id="SoftTopHatPrior.get_log_probability"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.priors.tophat_prior.html#smac.model.gaussian_process.priors.SoftTopHatPrior.get_log_probability">[docs]</a>    <span class="k">def</span> <span class="nf">get_log_probability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="c1"># We need to use lnprob here instead of _lnprob to have the squared function work</span>
         <span class="c1"># in the logarithmic space, too.</span>
@@ -449,6 +455,9 @@ style="width: 100%;">
 
     <span class="k">def</span> <span class="nf">_sample_from_prior</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_log_lower_bound</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log_upper_bound</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,)))</span>
+
+    <span class="k">def</span> <span class="nf">_get_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="SoftTopHatPrior.get_gradient"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.priors.tophat_prior.html#smac.model.gaussian_process.priors.SoftTopHatPrior.get_gradient">[docs]</a>    <span class="k">def</span> <span class="nf">get_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
