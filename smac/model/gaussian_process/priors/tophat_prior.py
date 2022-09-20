@@ -63,6 +63,9 @@ class TophatPrior(AbstractPrior):
 
         return p0
 
+    def _get_gradient(self, theta: float) -> float:
+        return 0
+
     def get_gradient(self, theta: float) -> float:
         return 0
 
@@ -123,6 +126,9 @@ class SoftTopHatPrior(AbstractPrior):
             "seed": self._seed,
         }
 
+    def _get_log_probability(self, theta: float) -> float:
+        return 0
+
     def get_log_probability(self, theta: float) -> float:
         # We need to use lnprob here instead of _lnprob to have the squared function work
         # in the logarithmic space, too.
@@ -138,6 +144,9 @@ class SoftTopHatPrior(AbstractPrior):
 
     def _sample_from_prior(self, n_samples: int) -> np.ndarray:
         return np.exp(self._rng.uniform(self._log_lower_bound, self._log_upper_bound, size=(n_samples,)))
+
+    def _get_gradient(self, theta: float) -> float:
+        return 0
 
     def get_gradient(self, theta: float) -> float:
         if np.ndim(theta) == 0:

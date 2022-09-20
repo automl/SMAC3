@@ -7,10 +7,11 @@ import sklearn.gaussian_process
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Kernel, KernelOperator
 
-import smac.model.gaussian_process.priors
 from ConfigSpace import ConfigurationSpace
 from smac.model.abstract_model import AbstractModel
 from smac.model.gaussian_process.priors.abstract_prior import AbstractPrior
+from smac.model.gaussian_process.priors.tophat_prior import TophatPrior
+from smac.model.gaussian_process.priors.tophat_prior import SoftTopHatPrior
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -149,7 +150,7 @@ class AbstractGaussianProcess(AbstractModel):
                     if add_bound_priors:
                         if add_soft_bounds:
                             priors_for_hp.append(
-                                smac.model.gaussian_process.priors.SoftTopHatPrior(
+                                SoftTopHatPrior(
                                     lower_bound=bounds[i][0],
                                     upper_bound=bounds[i][1],
                                     seed=self._rng.randint(0, 2**20),
@@ -158,7 +159,7 @@ class AbstractGaussianProcess(AbstractModel):
                             )
                         else:
                             priors_for_hp.append(
-                                smac.model.gaussian_process.priors.TophatPrior(
+                                TophatPrior(
                                     lower_bound=bounds[i][0],
                                     upper_bound=bounds[i][1],
                                     seed=self._rng.randint(0, 2**20),

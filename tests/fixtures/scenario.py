@@ -12,6 +12,7 @@ def make_scenario() -> Callable:
         use_multi_objective: bool = False,
         use_instances: bool = False,
         n_instances: int = 3,
+        n_instance_features: int = 3,
         min_budget: int = 2,
         max_budget: int = 5,
         n_workers: int = 1,
@@ -28,7 +29,7 @@ def make_scenario() -> Callable:
             for i in range(n_instances):
                 instance_name = f"i{i+1}"
                 instances += [instance_name]
-                instance_features[instance_name] = [j + i for j in range(3)]
+                instance_features[instance_name] = [j + i for j in range(n_instance_features)]
 
         return Scenario(
             configspace=configspace,

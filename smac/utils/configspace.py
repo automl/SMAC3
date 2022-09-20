@@ -47,7 +47,12 @@ def get_types(
     instance_features: dict[str, list[float]] | None = None,
 ) -> tuple[list[int], list[tuple[float, float]]]:
     """Return the types of the hyperparameters and the bounds of the
-    hyperparameters and instance features."""
+    hyperparameters and instance features.
+
+    Warning
+    -------
+    The bounds for the instance features are *NOT* added in this function.
+    """
 
     # Extract types vector for rf from config space and the bounds
     types = [0] * len(configspace.get_hyperparameters())

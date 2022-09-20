@@ -28,7 +28,7 @@ import warnings
 from collections import OrderedDict
 from typing import Any, TypeVar
 
-
+"""
 import gpytorch
 import numpy as np
 import torch
@@ -45,6 +45,7 @@ from gpytorch.priors import HorseshoePrior
 from gpytorch.utils.errors import NanError, NotPSDError
 from scipy import optimize
 from scipy.stats.qmc import LatinHypercube
+"""
 
 from ConfigSpace import ConfigurationSpace
 from smac.constants import VERY_SMALL_NUMBER
@@ -52,9 +53,6 @@ from smac.model.gaussian_process.abstract_gaussian_process import AbstractGaussi
 from smac.model.utils import check_subspace_points
 from smac.model.gaussian_process.kernels._boing import FITCKernel, FITCMean
 
-from ConfigSpace import ConfigurationSpace
-from smac.constants import VERY_SMALL_NUMBER
-from smac.model.gaussian_process.abstract_gaussian_process import AbstractGaussianProcess
 
 # from smac.model.utils import check_subspace_points  # noqa
 from smac.model.gaussian_process.kernels._boing import FITCKernel, FITCMean  # noqa

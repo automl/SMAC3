@@ -110,13 +110,20 @@ class AbstractModel:
             raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
 
         if X.shape[1] != self._n_hps + self._n_features:
-            raise ValueError("Feature mismatch: X should have %d features, but has %d" % (self._n_hps, X.shape[1]))
+            raise ValueError(
+                f"Feature mismatch: X should have {self._n_hps} hyperparameters + {self._n_features} features, "
+                f"but has {X.shape[1]} in total."
+            )
 
         if X.shape[0] != Y.shape[0]:
             raise ValueError("X.shape[0] ({}) != y.shape[0] ({})".format(X.shape[0], Y.shape[0]))
 
         # Reduce dimensionality of features of larger than PCA_DIM
-        if self._pca_components and X.shape[0] > self._pca.n_components and self._n_features >= self._pca_components:
+        if (
+            self._pca_components is not None
+            and X.shape[0] > self._pca.n_components
+            and self._n_features >= self._pca_components
+        ):
             X_feats = X[:, -self._n_features :]
 
             # Scale features
@@ -192,7 +199,8 @@ class AbstractModel:
 
         if X.shape[1] != self._n_hps + self._n_features:
             raise ValueError(
-                "Rows in X should have %d entries but have %d!" % (self._n_hps + self._n_features, X.shape[1])
+                f"Feature mismatch: X should have {self._n_hps} hyperparameters + {self._n_features} features, "
+                f"but has {X.shape[1]} in total."
             )
 
         if self._apply_pca:
@@ -251,9 +259,13 @@ class AbstractModel:
     def predict_marginalized(self, X: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         """Predicts mean and variance marginalized over all instances.
 
+        Warning
+        -------
+        The input data must not include any features.
+
         Parameters
         ----------
-        X : np.ndarray [#samples, #hyperparameter + #features]
+        X : np.ndarray [#samples, #hyperparameter]
             Input data points.
 
         Returns
@@ -266,8 +278,11 @@ class AbstractModel:
         if len(X.shape) != 2:
             raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
 
-        if X.shape[1] != len(self._bounds):
-            raise ValueError("Rows in X should have %d entries but have %d!" % (len(self._bounds), X.shape[1]))
+        if X.shape[1] != self._n_hps:
+            raise ValueError(
+                f"Feature mismatch: X should have {self._n_hps} hyperparameters (and no features) for this method, "
+                f"but has {X.shape[1]} in total."
+            )
 
         if self._instance_features is None:
             mean, var = self.predict(X)
@@ -278,12 +293,16 @@ class AbstractModel:
 
             return mean, var
         else:
-            n_instances = self._n_features
+            n_instances = len(self._instance_features)
 
             mean = np.zeros(X.shape[0])
             var = np.zeros(X.shape[0])
             for i, x in enumerate(X):
-                X_ = np.hstack((np.tile(x, (n_instances, 1)), self._instance_features))  # type: ignore
+                features = np.array(list(self._instance_features.values()))
+                x_tiled = np.tile(x, (n_instances, 1))
+                print(features.shape, x_tiled.shape)
+                X_ = np.hstack((x_tiled, features))
+
                 means, vars = self.predict(X_)
                 assert vars is not None
 
