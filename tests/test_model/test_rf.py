@@ -10,7 +10,7 @@ from ConfigSpace import (
 )
 
 from smac.model.random_forest.random_forest import RandomForest
-from smac.utils.configspace import convert_configurations_to_array, get_types
+from smac.utils.configspace import convert_configurations_to_array
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

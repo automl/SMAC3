@@ -1,3 +1,4 @@
+'''
 from __future__ import annotations
 
 from typing import Dict, List, Tuple, Type
@@ -174,3 +175,4 @@ class BOinGSubspace(LocalSubspace):
             return next_configs_by_acq_value
         else:
             return self.acq_optimizer_local._maximize([], num_points_rs)  # type: ignore
+'''

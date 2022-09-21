@@ -1,4 +1,5 @@
 from __future__ import annotations
+import copy
 
 from typing import Any
 
@@ -124,7 +125,16 @@ class Scenario:
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Scenario):
             # When using __dict__, we make sure to include the meta data
-            return self.__dict__ == other.__dict__
+            # However, tuples are saved as lists in json. Therefore, we compare the json string
+            # to make sure we have the same conversion.
+            a = copy.deepcopy(self.__dict__)
+            b = copy.deepcopy(other.__dict__)
+            del a["configspace"]
+            del b["configspace"]
+            a["output_directory"] = str(a["output_directory"])
+            b["output_directory"] = str(b["output_directory"])
+
+            return json.dumps(a) == json.dumps(b)
 
         raise RuntimeError("Can only compare scenario objects.")
 

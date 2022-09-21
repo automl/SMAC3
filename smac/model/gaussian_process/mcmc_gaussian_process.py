@@ -98,6 +98,12 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
         self._n_ll_evals = 0
         self._burned = False
         self._is_trained = False
+        self._samples: Any = None  # TODO: What type does this variable hold?
+
+    @property
+    def models(self) -> list[GaussianProcess]:
+        """Returns the internally used gaussian processes."""
+        return self._models
 
     def get_meta(self) -> dict[str, Any]:
         meta = super().get_meta()
@@ -188,7 +194,7 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
                     self.p0, _, _ = sampler.run_mcmc(self.p0, self._chain_length)
 
                 # Take the last samples from each walker
-                self._hypers = sampler.get_chain()[-1]
+                self._samples = sampler.get_chain()[-1]
             elif self._mcmc_sampler == "nuts":
                 # Originally published as:
                 # http://www.stat.columbia.edu/~gelman/research/published/nuts.pdf
@@ -220,20 +226,20 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
                     rng=self._rng,
                 )
                 indices = [int(np.rint(ind)) for ind in np.linspace(start=0, stop=len(samples) - 1, num=10)]
-                self.hypers = samples[indices]
-                self.p0 = self.hypers.mean(axis=0)
+                self._samples = samples[indices]
+                self.p0 = self._samples.mean(axis=0)
             else:
                 raise ValueError(self._mcmc_sampler)
 
             if self._average_samples:
-                self.hypers = [self.hypers.mean(axis=0)]
+                self._samples = [self._samples.mean(axis=0)]
 
         else:
-            self.hypers = self._gp.kernel.theta
-            self.hypers = [self.hypers]
+            self._samples = self._gp.kernel.theta
+            self._samples = [self._samples]
 
         self._models = []
-        for sample in self.hypers:
+        for sample in self._samples:
 
             if (sample < -50).any():
                 sample[sample < -50] = -50

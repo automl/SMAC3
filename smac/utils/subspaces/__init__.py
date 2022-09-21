@@ -1,3 +1,4 @@
+'''
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -658,3 +659,4 @@ class ChallengerListLocal(Iterator):
         if self.challengers is None:
             self.challengers = []
         return len(self.challengers) - self._index
+'''

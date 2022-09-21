@@ -4,7 +4,6 @@ from typing import TypeVar
 
 import numpy as np
 
-from ConfigSpace import ConfigurationSpace
 from smac.model.abstract_model import AbstractModel
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -19,37 +18,45 @@ class MultiObjectiveModel(AbstractModel):
 
     Parameters
     ----------
-    configspace : ConfigurationSpace
-    model : AbstractModel
-        Which model should be used for each objective.
+    models : AbstractModel | list[AbstractModel]
+        Which model should be used. If it is a list, then it must provide as many models as objectives.
+        If it is a single model only, the model is used for all objectives.
     objectives : list[str]
         Which objectives should be used.
-    instance_features : dict[str, list[int | float]] | None, defaults to None
-        Features (list of int or floats) of the instances (str). The features are incorporated into the X data,
-        on which the model is trained on.
-    pca_components : float, defaults to 7
-        Number of components to keep when using PCA to reduce dimensionality of instance features.
     seed : int
     """
 
     def __init__(
         self,
-        configspace: ConfigurationSpace,
-        model: AbstractModel,
+        models: AbstractModel | list[AbstractModel],
         objectives: list[str],
-        instance_features: dict[str, list[int | float]] | None = None,
-        pca_components: int | None = 7,
         seed: int = 0,
     ) -> None:
+        self._n_objectives = len(objectives)
+        if isinstance(models, list):
+            assert len(models) == len(objectives)
+
+            # Make sure the configspace is the same
+            configspace = models[0]._configspace
+            for m in models:
+                assert configspace == m._configspace
+
+            self._models = models
+        else:
+            configspace = models._configspace
+            self._models = [models for _ in range(self._n_objectives)]
+
         super().__init__(
             configspace=configspace,
-            instance_features=instance_features,
-            pca_components=pca_components,
+            instance_features=None,
+            pca_components=None,
             seed=seed,
         )
 
-        self._n_objectives = len(objectives)
-        self._models: list[AbstractModel] = [model for _ in range(self._n_objectives)]
+    @property
+    def models(self) -> list[AbstractModel]:
+        """The internally used surrogate models."""
+        return self._models
 
     def _train(self: Self, X: np.ndarray, Y: np.ndarray) -> Self:
         if len(self._models) == 0:

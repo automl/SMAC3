@@ -1,3 +1,4 @@
+'''
 from __future__ import annotations
 
 from typing import Callable, Dict, Type
@@ -188,3 +189,4 @@ class BOinGFacade(HyperparameterFacade):
             noise_prior=noise_prior, noise_constraint=Interval(1e-5, np.exp(2), transform=None)
         ).double()
         return dict(kernel_kwargs=kernel_kwargs, likelihood=likelihood)
+'''

@@ -1,3 +1,4 @@
+'''
 from __future__ import annotations
 
 from typing import Any, Dict, Tuple
@@ -568,3 +569,4 @@ class FITCMean(Mean):
         # which might result in an error
         res = self.covar_module.posterior_mean(input).detach()
         return res
+'''

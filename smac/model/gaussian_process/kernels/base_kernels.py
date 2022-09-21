@@ -37,7 +37,7 @@ class AbstractKernel:
     operate_on : np.ndarray, defaults to None
         On which numpy array should be operated on.
     has_conditions : bool, defaults to False
-        Whether the kernel has conditions.
+        Whether the kernel has conditions. Might be changed by the gaussian process.
     prior : AbstractPrior, defaults to None
         Which prior the kernel is using. Primarily used by sklearn.
     """

@@ -1,3 +1,5 @@
+'''
+
 from __future__ import annotations
 
 from typing import Dict, Iterator, List, Tuple, Type, Union
@@ -629,3 +631,4 @@ def subspace_extraction(
             traverse_forest(False)
 
     return ss_bounds_cont, ss_bounds_cat, ss_indices  # type: ignore[return-value]
+'''

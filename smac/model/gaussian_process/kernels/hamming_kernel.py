@@ -28,21 +28,21 @@ class HammingKernel(
         has_conditions: bool = False,
         prior: AbstractPrior | None = None,
     ) -> None:
+        self.length_scale = length_scale
+        self.length_scale_bounds = length_scale_bounds
+
         super().__init__(
             operate_on=operate_on,
             has_conditions=has_conditions,
             prior=prior,
         )
 
-        self._length_scale = length_scale
-        self._length_scale_bounds = length_scale_bounds
-
     def get_meta(self) -> dict[str, Any]:
         meta = super().get_meta()
         meta.update(
             {
-                "length_scale": self._length_scale,
-                "lengthscale_bounds": self._length_scale_bounds,
+                "length_scale": self.length_scale,
+                "lengthscale_bounds": self.length_scale_bounds,
             }
         )
 
@@ -51,21 +51,21 @@ class HammingKernel(
     @property
     def hyperparameter_length_scale(self) -> kernels.Hyperparameter:
         """Hyperparameter of the length scale."""
-        length_scale = self._length_scale
+        length_scale = self.length_scale
         anisotropic = np.iterable(length_scale) and len(length_scale) > 1  # type: ignore
 
         if anisotropic:
             return kernels.Hyperparameter(
                 "length_scale",
                 "numeric",
-                self._length_scale_bounds,
+                self.length_scale_bounds,
                 len(length_scale),  # type: ignore
             )
 
         return kernels.Hyperparameter(
             "length_scale",
             "numeric",
-            self._length_scale_bounds,
+            self.length_scale_bounds,
         )
 
     def _call(
@@ -76,7 +76,7 @@ class HammingKernel(
         active: np.ndarray | None = None,
     ) -> np.ndarray | tuple[np.ndarray, np.ndarray]:
         X = np.atleast_2d(X)
-        length_scale = kernels._check_length_scale(X, self._length_scale)
+        length_scale = kernels._check_length_scale(X, self.length_scale)
 
         if Y is None:
             Y = X

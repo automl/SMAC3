@@ -10,7 +10,6 @@ from smac.intensification.intensification import Intensifier
 from smac.model.random_forest.random_forest import (
     RandomForest,
 )
-from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.runhistory.encoder.log_scaled_encoder import RunHistoryLogScaledEncoder
 from smac.scenario import Scenario

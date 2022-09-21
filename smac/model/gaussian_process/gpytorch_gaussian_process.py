@@ -1,3 +1,4 @@
+'''
 from __future__ import annotations
 
 import logging
@@ -366,7 +367,6 @@ class GPyTorchGaussianProcess(AbstractGaussianProcess):
             return funcs
 
 
-'''
 class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
     def __init__(
         self,

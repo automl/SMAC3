@@ -71,6 +71,7 @@ class GaussianProcess(AbstractGaussianProcess):
         self._normalize_y = normalize_y
         self._n_restarts = n_restarts
 
+        # Internal variables
         self._hypers = np.empty((0,))
         self._is_trained = False
         self._n_ll_evals = 0
@@ -124,6 +125,7 @@ class GaussianProcess(AbstractGaussianProcess):
             except np.linalg.LinAlgError as e:
                 if i == n_tries:
                     raise e
+
                 # Assume that the last entry of theta is the noise
                 theta = np.exp(self._kernel.theta)
                 theta[-1] += 1
@@ -204,6 +206,7 @@ class GaussianProcess(AbstractGaussianProcess):
                         prior = None
                     else:
                         prior = prior[0]
+
                 prior = cast(Optional[AbstractPrior], prior)
                 if prior is None:
                     try:
@@ -214,6 +217,7 @@ class GaussianProcess(AbstractGaussianProcess):
                         )
                     except OverflowError:
                         raise ValueError("OverflowError while sampling from (%f, %f)" % (hp_bound[0], hp_bound[1]))
+
                     dim_samples.append(sample.flatten())
                 else:
                     dim_samples.append(prior.sample_from_prior(self._n_restarts).flatten())

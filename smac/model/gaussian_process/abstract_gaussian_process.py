@@ -139,14 +139,18 @@ class AbstractGaussianProcess(AbstractModel):
             elif isinstance(current_param, Kernel):
                 hps = current_param.hyperparameters
                 assert len(hps) == 1
+
                 hp = hps[0]
                 if hp.fixed:
                     continue
+
                 bounds = hps[0].bounds
                 for i in range(hps[0].n_elements):
                     priors_for_hp = []
+
                     if current_param.prior is not None:
                         priors_for_hp.append(current_param.prior)
+
                     if add_bound_priors:
                         if add_soft_bounds:
                             priors_for_hp.append(
@@ -166,6 +170,7 @@ class AbstractGaussianProcess(AbstractModel):
                                 )
                             )
                     all_priors.append(priors_for_hp)
+
         return all_priors
 
     def _set_has_conditions(self) -> None:
@@ -173,6 +178,7 @@ class AbstractGaussianProcess(AbstractModel):
         has_conditions = len(self._configspace.get_conditions()) > 0
         to_visit = []
         to_visit.append(self._kernel)
+
         while len(to_visit) > 0:
             current_param = to_visit.pop(0)
             if isinstance(current_param, sklearn.gaussian_process.kernels.KernelOperator):
