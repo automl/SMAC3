@@ -348,7 +348,7 @@ style="width: 100%;">
 <span class="sd">    operate_on : np.ndarray, defaults to None</span>
 <span class="sd">        On which numpy array should be operated on.</span>
 <span class="sd">    has_conditions : bool, defaults to False</span>
-<span class="sd">        Whether the kernel has conditions.</span>
+<span class="sd">        Whether the kernel has conditions. Might be changed by the gaussian process.</span>
 <span class="sd">    prior : AbstractPrior, defaults to None</span>
 <span class="sd">        Which prior the kernel is using. Primarily used by sklearn.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -356,12 +356,12 @@ style="width: 100%;">
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">operate_on</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">operate_on</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">has_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">prior</span><span class="p">:</span> <span class="n">AbstractPrior</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span> <span class="o">=</span> <span class="n">operate_on</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_active_dims</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span>
@@ -373,6 +373,7 @@ style="width: 100%;">
         <span class="c1"># We make it explicit here to make sure the next class really has this attributes.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">kernels</span><span class="o">.</span><span class="n">Hyperparameter</span><span class="p">]</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">hyperparameters</span>  <span class="c1"># type: ignore</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_dims</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">n_dims</span>  <span class="c1"># type: ignore</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_len_active</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">kernels</span><span class="o">.</span><span class="n">Hyperparameter</span><span class="p">]:</span>
@@ -565,8 +566,8 @@ style="width: 100%;">
             <span class="k">if</span> <span class="n">operate_on</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The dtype of argument `operate_on` needs to be int, but is </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">operate_on</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">operate_on</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_len_active</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span> <span class="o">=</span> <span class="n">operate_on</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_len_active</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_len_active</span> <span class="o">=</span> <span class="kc">None</span></div>

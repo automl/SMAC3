@@ -1,0 +1,29 @@
+smac.acquisition.maximizers.abstract\_acqusition\_optimizer
+===========================================================
+
+.. automodule:: smac.acquisition.maximizers.abstract_acqusition_optimizer
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AbstractAcquisitionOptimizer
+   
+   
+
+   
+   
+   
+
+
+

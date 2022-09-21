@@ -1,0 +1,599 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>smac.facade.boing_facade &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet">
+  <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="smac.facade.hyperband_facade" href="smac.facade.hyperband_facade.html" />
+    <link rel="prev" title="smac.facade.blackbox_facade" href="smac.facade.blackbox_facade.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+  <a class="navbar-brand" href="../index.html">
+    <img src="../_static/logo.png" class="logo" alt="logo">
+  </a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org?lang=de" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../search.html" method="get"
+style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../package_overview.html">
+   Package Overview
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../getting_started.html">
+   Getting Started
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../minimal_example.html">
+   Minimal Example
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../examples/index.html">
+   Examples
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/1_basics/index.html">
+     Basics
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/2_multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/3_multi_objective/index.html">
+     Multi-Objective
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/4_commandline/index.html">
+     Commandline
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../advanced_usage/index.html">
+   Advanced Usage
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/resumption.html">
+     Resumption
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/callbacks.html">
+     Callbacks
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../api.html">
+   API References
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 current active">
+    <a class="reference internal" href="smac.facade.html">
+     smac.facade
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.main.html">
+     smac.main
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.model.html">
+     smac.model
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.acquisition.html">
+     smac.acquisition
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.intensification.html">
+     smac.intensification
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.runner.html">
+     smac.runner
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.runhistory.html">
+     smac.runhistory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.multi_objective.html">
+     smac.multi_objective
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.utils.html">
+     smac.utils
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.constants.html">
+     smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.callback.html">
+     smac.callback
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../glossary.html">
+   Glossary
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../faq.html">
+   F.A.Q.
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../license.html">
+   License
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="module-smac.facade.boing_facade">
+<span id="smac-facade-boing-facade"></span><h1>smac.facade.boing_facade<a class="headerlink" href="#module-smac.facade.boing_facade" title="Permalink to this heading">¶</a></h1>
+<p>from __future__ import annotations</p>
+<p>from typing import Callable, Dict, Type</p>
+<p>import numpy as np
+from botorch.models.kernels.categorical import CategoricalKernel
+from gpytorch.constraints.constraints import Interval
+from gpytorch.kernels import MaternKernel, ScaleKernel
+from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
+from gpytorch.priors import HorseshoePrior, LogNormalPrior</p>
+<p>from smac.acquisition import AbstractAcquisitionOptimizer, LocalAndSortedRandomSearch
+from smac.acquisition.functions import EI, AbstractAcquisitionFunction
+from smac.main.boing import BOinGSMBO
+from smac.random_design.probability_design import ProbabilityRandomDesign
+from smac.facade.hyperparameter_facade import HyperparameterFacade
+from smac.model.abstract_model import AbstractModel
+from smac.model.gaussian_process.gpytorch_gaussian_process import (</p>
+<blockquote>
+<div><p>GloballyAugmentedLocalGaussianProcess,
+GPyTorchGaussianProcess,</p>
+</div></blockquote>
+<p>)
+from smac.runhistory.encoder.boing_encoder import (</p>
+<blockquote>
+<div><p>RunHistoryRawEncoder,
+RunHistoryRawScaledEncoder,</p>
+</div></blockquote>
+<p>)
+from smac.runner.abstract_runner import AbstractRunner
+from smac.scenario import Scenario</p>
+<dl>
+<dt>class BOinGFacade(HyperparameterFacade):</dt><dd><p>“””
+SMAC wrapper for BO inside Grove(BOinG):</p>
+<blockquote>
+<div><p>Deng and Lindauer, Searching in the Forest for Local Bayesian Optimization
+<a class="reference external" href="https://arxiv.org/abs/2111.05834">https://arxiv.org/abs/2111.05834</a></p>
+</div></blockquote>
+<p>BOiNG is a two-stages optimizer: at the first stage, the global optimizer extracts the global optimum with a random
+forest (RF) model. Then in the second stage, the optimizer constructs a local model in the vicinity of the
+configuration suggested by the global surrogate model.</p>
+<p>Its Hyperparameter settings follow the implementation from smac.facade.smac_bb_facade.SMAC4BB:
+Hyperparameters are chosen according to the best configuration for Gaussian process maximum likelihood found in
+“Towards Assessing the Impact of Bayesian Optimization’s Own Hyperparameters” by Lindauer et al., presented at the
+DSO workshop 2019 (<a class="reference external" href="https://arxiv.org/abs/1908.06674">https://arxiv.org/abs/1908.06674</a>).</p>
+<dl class="simple">
+<dt>model_local: Type[BaseModel],</dt><dd><p>local empirical performance model, used in subspace. Since the subspace might have different amount of
+hyperparameters compared to the search space. We only instantiate them under the subspace.</p>
+</dd>
+<dt>model_local_kwargs: Optional[Dict] = None,</dt><dd><p>parameters for initializing a local model</p>
+</dd>
+<dt>acquisition_func_local: AbstractAcquisitionFunction,</dt><dd><p>local acquisition function,  used in subspace</p>
+</dd>
+<dt>acquisition_func_local_kwargs: Optional[Dict] = None,</dt><dd><p>parameters for initializing a local acquisition function optimizer</p>
+</dd>
+<dt>acq_optimizer_local: Optional[AcquisitionFunctionMaximizer] = None,</dt><dd><p>Optimizer of acquisition function of local models, same as above</p>
+</dd>
+<dt>acq_optimizer_local_kwargs: typing: Optional[Dict] = None,</dt><dd><p>parameters for the optimizer of acquisition function of local models</p>
+</dd>
+<dt>max_configs_local_fracs<span class="classifier">float</span></dt><dd><p>The maximal number of fractions of samples to be included in the subspace. If the number of samples in the
+subspace is greater than this value and n_min_config_inner, the subspace will be cropped to fit the requirement</p>
+</dd>
+<dt>min_configs_local: int,</dt><dd><p>Minimum number of samples included in the inner loop model</p>
+</dd>
+<dt>do_switching: bool</dt><dd><p>if we want to switch between turbo and boing or do a pure BOinG search</p>
+</dd>
+<dt>turbo_kwargs: Optional[Dict] = None</dt><dd><p>parameters for building a turbo optimizer. For details, please refer to smac.utils.subspace.turbo</p>
+</dd>
+</dl>
+<p>“””</p>
+<dl>
+<dt>def __init__(</dt><dd><p>self,
+scenario: Scenario,
+target_algorithm: AbstractRunner | Callable,
+<a href="#id1"><span class="problematic" id="id2">*</span></a>,
+model_local: Type[AbstractModel] = GloballyAugmentedLocalGaussianProcess,
+model_local_kwargs: Dict | None = None,
+acquisition_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
+acquisition_func_local_kwargs: Dict | None = None,
+acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
+acq_optimizer_local_kwargs: Dict | None = None,
+max_configs_local_fracs: float = 0.5,
+min_configs_local: int | None = None,
+do_switching: bool = False,
+turbo_kwargs: Dict | None = None,
+<a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs,</p>
+</dd>
+<dt>):</dt><dd><p>self.model_local = model_local
+if model_local_kwargs is None and issubclass(model_local, GPyTorchGaussianProcess):</p>
+<blockquote>
+<div><p>model_local_kwargs = self.get_lgpga_local_components()</p>
+</div></blockquote>
+<p>self.model_local_kwargs = model_local_kwargs
+self.acquisition_func_local = acquisition_func_local
+self.acquisition_func_local_kwargs = acquisition_func_local_kwargs
+self.acq_optimizer_local = acq_optimizer_local
+self.acq_optimizer_local_kwargs = acq_optimizer_local_kwargs
+self.max_configs_local_fracs = max_configs_local_fracs
+self.min_configs_local = min_configs_local
+self.do_switching = do_switching
+self.turbo_kwargs = turbo_kwargs
+# we attach here to allow the users to pass their own arguments to the boing optimizer
+super().__init__(scenario=scenario, target_algorithm=target_algorithm, <a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs)</p>
+</dd>
+</dl>
+<p>&#64;staticmethod
+def get_runhistory_encoder(scenario: Scenario) -&gt; RunHistoryRawEncoder:</p>
+<blockquote>
+<div><p>return RunHistoryRawScaledEncoder(scenario, scale_percentage=5)</p>
+</div></blockquote>
+<p>&#64;staticmethod
+def get_random_design(scenario: Scenario, <a href="#id7"><span class="problematic" id="id8">*</span></a>, probability: float = 0.08447232371720552) -&gt; ProbabilityRandomDesign:</p>
+<blockquote>
+<div><p>return super(BOinGFacade, BOinGFacade).get_random_design(scenario=scenario, probability=probability)</p>
+</div></blockquote>
+<p>&#64;staticmethod
+def get_acquisition_optimizer(</p>
+<blockquote>
+<div><p>scenario: Scenario,
+<a href="#id9"><span class="problematic" id="id10">*</span></a>,
+local_search_iterations: int = 10,
+challengers: int = 1000,</p>
+</div></blockquote>
+<dl>
+<dt>) -&gt; AbstractAcquisitionOptimizer:</dt><dd><p>“””Returns the acquisition optimizer instance for finding the next candidate configuration
+based on the acquisition function.”””
+optimizer = LocalAndSortedRandomSearch(</p>
+<blockquote>
+<div><p>configspace=scenario.configspace,
+local_search_iterations=local_search_iterations,
+challengers=challengers,
+seed=scenario.seed,</p>
+</div></blockquote>
+<p>)
+return optimizer</p>
+</dd>
+<dt>def _get_optimizer(</dt><dd><p>self,</p>
+</dd>
+<dt>) -&gt; BOinGSMBO:</dt><dd><p>“””Configure the BOinGSMBO optimizer, that defines the particular BO loop.”””
+return BOinGSMBO(</p>
+<blockquote>
+<div><p>scenario=self._scenario,
+stats=self.stats,
+runner=self.runner,
+initial_design=self.initial_design,
+runhistory=self.runhistory,
+runhistory_encoder=self.runhistory_encoder,
+intensifier=self.intensifier,
+model=self.model,
+acquisition_function=self.acquisition_function,
+acquisition_optimizer=self.acquisition_optimizer,
+random_design=self.random_design,
+seed=self.seed,
+model_local=self.model_local,
+model_local_kwargs=self.model_local_kwargs,
+acquisition_func_local=self.acquisition_func_local,
+acq_optimizer_local_kwargs=self.acquisition_func_local_kwargs,
+max_configs_local_fracs=self.max_configs_local_fracs,
+min_configs_local=self.min_configs_local,
+do_switching=self.do_switching,
+turbo_kwargs=self.turbo_kwargs,</p>
+</div></blockquote>
+<p>)</p>
+</dd>
+</dl>
+<p>&#64;staticmethod
+def get_lgpga_local_components() -&gt; Dict:</p>
+<blockquote>
+<div><p>“””
+A function to construct the required components that could be implemented to construct a LGPGA model.
+“””
+# The lower bound and upper bounds are set to be identical as SMAC4BB
+cont_kernel_kwargs = {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>“lengthscale_constraint”: Interval(</dt><dd><p>np.exp(-6.754111155189306), np.exp(0.0858637988771976), transform=None, initial_value=1.0</p>
+</dd>
+</dl>
+<p>),</p>
+</div></blockquote>
+<p>}
+cat_kernel_kwargs = {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>“lengthscale_constraint”: Interval(</dt><dd><p>np.exp(-6.754111155189306), np.exp(0.0858637988771976), transform=None, initial_value=1.0</p>
+</dd>
+</dl>
+<p>),</p>
+</div></blockquote>
+<p>}
+scale_kernel_kwargs = {</p>
+<blockquote>
+<div><p>“outputscale_constraint”: Interval(np.exp(-10.0), np.exp(2.0), transform=None, initial_value=2.0),
+“outputscale_prior”: LogNormalPrior(0.0, 1.0),</p>
+</div></blockquote>
+<p>}</p>
+<dl class="simple">
+<dt>kernel_kwargs = {</dt><dd><p>“cont_kernel”: MaternKernel,
+“cont_kernel_kwargs”: cont_kernel_kwargs,
+“cat_kernel”: CategoricalKernel,
+“cat_kernel_kwargs”: cat_kernel_kwargs,
+“scale_kernel”: ScaleKernel,
+“scale_kernel_kwargs”: scale_kernel_kwargs,</p>
+</dd>
+</dl>
+<p>}</p>
+<p># by setting lower bound of noise_constraint we could make it more stable
+noise_prior = HorseshoePrior(0.1)
+likelihood = GaussianLikelihood(</p>
+<blockquote>
+<div><p>noise_prior=noise_prior, noise_constraint=Interval(1e-5, np.exp(2), transform=None)</p>
+</div></blockquote>
+<p>).double()
+return dict(kernel_kwargs=kernel_kwargs, likelihood=likelihood)</p>
+</div></blockquote>
+</dd>
+</dl>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="smac.facade.blackbox_facade.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">smac.facade.blackbox_facade</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="smac.facade.hyperband_facade.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">smac.facade.hyperband_facade</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 
+    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
+    and Frank Hutter
+.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+5.1.1. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

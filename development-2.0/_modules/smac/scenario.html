@@ -310,6 +310,7 @@ style="width: 100%;">
                 
   <h1>Source code for smac.scenario</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">import</span> <span class="nn">copy</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
@@ -434,8 +435,17 @@ style="width: 100%;">
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Scenario</span><span class="p">):</span>
-            <span class="c1"># When using __dict__, we make sure to include the meta data</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="vm">__dict__</span>
+            <span class="c1"># When using __dict__, we make sure to include the meta data.</span>
+            <span class="c1"># However, tuples are saved as lists in json. Therefore, we compare the json string</span>
+            <span class="c1"># to make sure we have the same conversion.</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+            <span class="k">del</span> <span class="n">a</span><span class="p">[</span><span class="s2">&quot;configspace&quot;</span><span class="p">]</span>
+            <span class="k">del</span> <span class="n">b</span><span class="p">[</span><span class="s2">&quot;configspace&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="p">[</span><span class="s2">&quot;output_directory&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s2">&quot;output_directory&quot;</span><span class="p">])</span>
+            <span class="n">b</span><span class="p">[</span><span class="s2">&quot;output_directory&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="s2">&quot;output_directory&quot;</span><span class="p">])</span>
+
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">==</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
 
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Can only compare scenario objects.&quot;</span><span class="p">)</span>
 

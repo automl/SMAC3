@@ -386,8 +386,8 @@ style="width: 100%;">
 
         <span class="n">challengers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_optimizer</span><span class="o">.</span><span class="n">maximize</span><span class="p">(</span>
             <span class="n">previous_configs</span><span class="p">,</span>
+            <span class="n">n_points</span><span class="o">=</span><span class="n">n</span><span class="p">,</span>
             <span class="n">random_design</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_random_design</span><span class="p">,</span>
-            <span class="n">num_points</span><span class="o">=</span><span class="n">n</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>

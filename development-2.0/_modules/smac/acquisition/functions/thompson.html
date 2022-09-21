@@ -310,14 +310,12 @@ style="width: 100%;">
                 
   <h1>Source code for smac.acquisition.functions.thompson</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">smac.acquisition.functions.abstract_acquisition_function</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">smac.model.abstract_model</span> <span class="kn">import</span> <span class="n">AbstractModel</span>
 <span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2022, automl.org&quot;</span>
@@ -327,87 +325,61 @@ style="width: 100%;">
 
 
 <div class="viewcode-block" id="TS"><a class="viewcode-back" href="../../../../api/smac.acquisition.functions.thompson.html#smac.acquisition.functions.TS">[docs]</a><span class="k">class</span> <span class="nc">TS</span><span class="p">(</span><span class="n">AbstractAcquisitionFunction</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Do a Thompson Sampling for a given x over the best so far value as</span>
-<span class="sd">    acquisition value.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Do a Thompson Sampling for a given x over the best so far value as acquisition value.</span>
 
 <span class="sd">    Warning</span>
 <span class="sd">    -------</span>
-<span class="sd">    Thompson Sampling can only be used together with</span>
-<span class="sd">    smac.acquisition.random_search.RandomSearch, please do not use</span>
-<span class="sd">    smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch to optimize TS</span>
-<span class="sd">    acquisition function!</span>
+<span class="sd">    Thompson Sampling can only be used together with `RandomSearch`. Please do not use `LocalAndSortedRandomSearch` to</span>
+<span class="sd">    optimize the TS acquisition function!</span>
 
 <span class="sd">    :math:`TS(X) ~ \mathcal{N}(\mu(\mathbf{X}),\sigma(\mathbf{X}))&#39;</span>
 <span class="sd">    Returns -TS(X) as the acquisition_function optimizer maximizes the acquisition value.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    par : float, defaults to 0.0</span>
-<span class="sd">        TS does not require par here, we only wants to make it consistent with</span>
+<span class="sd">    xi : float, defaults to 0.0</span>
+<span class="sd">        TS does not require xi here, we only wants to make it consistent with</span>
 <span class="sd">        other acquisition functions.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    long_name : str</span>
-<span class="sd">    par : float</span>
+<span class="sd">    xi : float</span>
 <span class="sd">        Exploration/exploitation trade-off parameter.</span>
-<span class="sd">    num_data : int</span>
-<span class="sd">        Number of data points (t).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># TODO check if TS is used with RandomSearch only</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">TS</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">long_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Thompson Sampling&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">par</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_data</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-
-<div class="viewcode-block" id="TS.get_meta"><a class="viewcode-back" href="../../../../api/smac.acquisition.functions.thompson.html#smac.acquisition.functions.TS.get_meta">[docs]</a>    <span class="k">def</span> <span class="nf">get_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-        <span class="p">}</span></div>
-
-<div class="viewcode-block" id="TS.update"><a class="viewcode-back" href="../../../../api/smac.acquisition.functions.thompson.html#smac.acquisition.functions.TS.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractModel</span><span class="p">,</span> <span class="n">num_data</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Update the acquisition function attributes required for calculation.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        model : BaseModel</span>
-<span class="sd">            Models the objective function.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_data</span> <span class="o">=</span> <span class="n">num_data</span>
-        <span class="k">if</span> <span class="n">par</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span></div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Thompson Sampling&quot;</span>
 
     <span class="k">def</span> <span class="nf">_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Sample a new value from a gaussian distribution whose mean and covariance values</span>
-<span class="sd">        are given by model.</span>
+        <span class="sd">&quot;&quot;&quot;Sample a new value from a gaussian distribution whose mean and covariance values are given by model.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X: np.ndarray(N, D)</span>
+<span class="sd">        X: np.ndarray [N, D]</span>
 <span class="sd">           Points to be evaluated where we could sample a value. N is the number of points and D the dimension</span>
-<span class="sd">           for the points</span>
+<span class="sd">           for the points.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        np.ndarray(N,1)</span>
-<span class="sd">            negative sample value of X</span>
+<span class="sd">        np.ndarray [N, 1]</span>
+<span class="sd">            Negative sample value of X.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
-        <span class="n">sample_function</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;sample_functions&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="n">sample_function</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="p">,</span> <span class="s2">&quot;sample_functions&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">sample_function</span><span class="p">):</span>
             <span class="k">return</span> <span class="o">-</span><span class="n">sample_function</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">n_funcs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="n">m</span><span class="p">,</span> <span class="n">var_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_marginalized</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-        <span class="n">rng</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;rng&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">seed</span><span class="p">))</span>
+        <span class="n">m</span><span class="p">,</span> <span class="n">var_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">predict_marginalized</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">_rng</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
         <span class="n">var_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">var_</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+
         <span class="k">return</span> <span class="o">-</span><span class="n">rng</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">var_</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span></div>
 </pre></div>
 

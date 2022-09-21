@@ -319,10 +319,8 @@ style="width: 100%;">
 <span class="kn">import</span> <span class="nn">joblib</span>
 
 <span class="kn">import</span> <span class="nn">smac</span>
-<span class="kn">from</span> <span class="nn">smac.acquisition.abstract_acqusition_optimizer</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionOptimizer</span>
-<span class="kn">from</span> <span class="nn">smac.acquisition.functions.abstract_acquisition_function</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">smac.acquisition.maximizers.abstract_acqusition_optimizer</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionOptimizer</span>
+<span class="kn">from</span> <span class="nn">smac.acquisition.functions.abstract_acquisition_function</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionFunction</span>
 <span class="kn">from</span> <span class="nn">smac.callback</span> <span class="kn">import</span> <span class="n">Callback</span>
 <span class="kn">from</span> <span class="nn">smac.random_design.abstract_random_design</span> <span class="kn">import</span> <span class="n">AbstractRandomDesign</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
@@ -667,9 +665,9 @@ style="width: 100%;">
 <span class="sd">        it might be a bit hacky.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stats</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory_encoder</span><span class="o">.</span><span class="n">_set_multi_objective_algorithm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_multi_objective_algorithm</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span><span class="o">.</span><span class="n">_set_model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_optimizer</span><span class="o">.</span><span class="n">_set_acquisition_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory_encoder</span><span class="o">.</span><span class="n">multi_objective_algorithm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multi_objective_algorithm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_optimizer</span><span class="o">.</span><span class="n">acquisition_function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span>
         <span class="c1"># TODO: self._runhistory_encoder.set_success_states etc. for different intensifier?</span>
 
     <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -677,7 +675,7 @@ style="width: 100%;">
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span>
 
         <span class="c1"># Make sure the same acquisition function is used</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_optimizer</span><span class="o">.</span><span class="n">acquisition_function</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_optimizer</span><span class="o">.</span><span class="n">_acquisition_function</span>
 
     <span class="k">def</span> <span class="nf">_get_signature_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="n">arguments</span> <span class="o">=</span> <span class="p">[]</span>

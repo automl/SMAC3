@@ -41,7 +41,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.acquisition.functions.abstract_acquisition_function" href="smac.acquisition.functions.abstract_acquisition_function.html" />
-    <link rel="prev" title="smac.acquisition.differential_evolution" href="smac.acquisition.differential_evolution.html" />
+    <link rel="prev" title="smac.acquisition" href="smac.acquisition.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -333,42 +333,26 @@ style="width: 100%;">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.functions.</span></span><span class="sig-name descname"><span class="pre">AbstractAcquisitionFunction</span></span><a class="reference internal" href="../_modules/smac/acquisition/functions/abstract_acquisition_function.html#AbstractAcquisitionFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.AbstractAcquisitionFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Abstract base class for acquisition function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>model</strong> (<em>BaseModel</em>) – Models the objective function.</p>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.AbstractAcquisitionFunction.model">
-<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#smac.acquisition.functions.AbstractAcquisitionFunction.model" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>BaseModel</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.acquisition.functions.AbstractAcquisitionFunction.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configurations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/abstract_acquisition_function.html#AbstractAcquisitionFunction.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.AbstractAcquisitionFunction.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the acquisition value for a given X.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>configurations</strong> (<em>list</em><em>[</em><em>Configuration</em><em>]</em>) – The configurations where the acquisition function
-should be evaluated.</p>
+<dd class="field-odd"><p><strong>configurations</strong> (<em>list</em><em>[</em><em>Configuration</em><em>]</em>) – The configurations where the acquisition function should be evaluated.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Acquisition values for X</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray(N, 1)</p>
+<dd class="field-odd"><p>np.ndarray [N, 1]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.acquisition.functions.AbstractAcquisitionFunction.get_meta">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/abstract_acquisition_function.html#AbstractAcquisitionFunction.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.AbstractAcquisitionFunction.get_meta" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/abstract_acquisition_function.html#AbstractAcquisitionFunction.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.AbstractAcquisitionFunction.get_meta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the meta data of the created object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -379,15 +363,18 @@ should be evaluated.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.acquisition.functions.AbstractAcquisitionFunction.update">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/abstract_acquisition_function.html#AbstractAcquisitionFunction.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.AbstractAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the acquisition function attributes required for calculation.</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/abstract_acquisition_function.html#AbstractAcquisitionFunction.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.AbstractAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the acquisition function attributes required for calculation.</p>
 <p>This method will be called after fitting the model, but before maximizing the acquisition
-function. As an examples, EI uses it to update the current fmin.</p>
-<p>The default implementation only updates the attributes of the acqusition function which
-are already present.</p>
+function. As an examples, EI uses it to update the current fmin. The default implementation only updates the
+attributes of the acqusition function which are already present.</p>
+<p>Calls <cite>_update</cite> to update the acquisition function attributes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>kwargs</strong> (<em>Any</em>) – </p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<a class="reference internal" href="smac.model.html#smac.model.AbstractModel" title="smac.model.AbstractModel"><em>AbstractModel</em></a>) – The model which was used to fit the data.</p></li>
+<li><p><strong>kwargs</strong> (<em>Any</em>) – Additional arguments to update the specific acquisition function.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
@@ -401,7 +388,7 @@ are already present.</p>
 <dt class="sig sig-object py" id="smac.acquisition.functions.EI">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.functions.</span></span><span class="sig-name descname"><span class="pre">EI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/expected_improvement.html#EI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.EI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction" title="smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a></p>
-<p>Compute the expected improvement for a given x.</p>
+<p>Computes the expected improvement for a given x.</p>
 <p><span class="math notranslate nohighlight">\(EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]\)</span>,
 with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the best location.</p>
 <dl class="field-list simple">
@@ -413,49 +400,6 @@ acquisition function.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.EI.long_name">
-<span class="sig-name descname"><span class="pre">long_name</span></span><a class="headerlink" href="#smac.acquisition.functions.EI.long_name" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.EI.log">
-<span class="sig-name descname"><span class="pre">log</span></span><a class="headerlink" href="#smac.acquisition.functions.EI.log" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether the function values are in log-space.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.EI.xi">
-<span class="sig-name descname"><span class="pre">xi</span></span><a class="headerlink" href="#smac.acquisition.functions.EI.xi" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exploration/exploitation trade-off parameter.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.EI.eta">
-<span class="sig-name descname"><span class="pre">eta</span></span><a class="headerlink" href="#smac.acquisition.functions.EI.eta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Current incumbent value.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.acquisition.functions.EI.get_meta">
 <span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/expected_improvement.html#EI.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.EI.get_meta" title="Permalink to this definition">¶</a></dt>
@@ -467,104 +411,42 @@ acquisition function.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.acquisition.functions.EI.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/expected_improvement.html#EI.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.EI.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the acquisition function attributes required for calculation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>BaseModel</em>) – Models the objective function.</p></li>
-<li><p><strong>eta</strong> (<em>float</em>) – Current incumbent value.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.acquisition.functions.EIPS">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.functions.</span></span><span class="sig-name descname"><span class="pre">EIPS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/expected_improvement.html#EIPS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.EIPS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.functions.expected_improvement.html#smac.acquisition.functions.expected_improvement.EI" title="smac.acquisition.functions.expected_improvement.EI"><code class="xref py py-class docutils literal notranslate"><span class="pre">EI</span></code></a></p>
-<p>Computes for a given x the expected improvement as
-acquisition value.
-<span class="math notranslate nohighlight">\(EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}\)</span>,
+<p>Computess for a given x the expected improvement as acquisition value.</p>
+<p><span class="math notranslate nohighlight">\(EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}\)</span>,
 with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the best location and <span class="math notranslate nohighlight">\(r(x)\)</span> as runtime.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>xi</strong> (<em>float</em><em>, </em><em>defaults to 0.0</em>) – Controls the balance between exploration and exploitation of the
-acquisition function.</p>
+<dd class="field-odd"><p><strong>xi</strong> (<em>float</em><em>, </em><em>defaults to 0.0</em>) – Controls the balance between exploration and exploitation of the acquisition function.</p>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.EIPS.long_name">
-<span class="sig-name descname"><span class="pre">long_name</span></span><a class="headerlink" href="#smac.acquisition.functions.EIPS.long_name" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.EIPS.xi">
-<span class="sig-name descname"><span class="pre">xi</span></span><a class="headerlink" href="#smac.acquisition.functions.EIPS.xi" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exploration/exploitation trade-off parameter.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.acquisition.functions.IntegratedAcquisitionFunction">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.functions.</span></span><span class="sig-name descname"><span class="pre">IntegratedAcquisitionFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/integrated.html#IntegratedAcquisitionFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.IntegratedAcquisitionFunction" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.functions.</span></span><span class="sig-name descname"><span class="pre">IntegratedAcquisitionFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/integrated_acquisition_function.html#IntegratedAcquisitionFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.IntegratedAcquisitionFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction" title="smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a></p>
-<p>Marginalize over Model hyperparameters to compute the integrated acquisition function.</p>
+<p>Marginalizes over model hyperparameters to compute the integrated acquisition function.</p>
 <p>See “Practical Bayesian Optimization of Machine Learning Algorithms” by Jasper Snoek et al.
 (<a class="reference external" href="https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf">https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf</a>)
 for further details.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>long_name</strong> (<em>str</em>) – </p></li>
-<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="#smac.acquisition.functions.AbstractAcquisitionFunction" title="smac.acquisition.functions.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </p></li>
-<li><p><strong>eta</strong> (<em>float</em>) – Current incumbent value.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>acquisition_function</strong> (<a class="reference internal" href="#smac.acquisition.functions.AbstractAcquisitionFunction" title="smac.acquisition.functions.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – The acquisition function, which should be integrated.</p>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.acquisition.functions.IntegratedAcquisitionFunction.get_meta">
-<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/integrated.html#IntegratedAcquisitionFunction.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.IntegratedAcquisitionFunction.get_meta" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/integrated_acquisition_function.html#IntegratedAcquisitionFunction.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.IntegratedAcquisitionFunction.get_meta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the meta data of the created object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.acquisition.functions.IntegratedAcquisitionFunction.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/integrated.html#IntegratedAcquisitionFunction.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.IntegratedAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the acquisition functions values.</p>
-<p>This method will be called if the model is updated. E.g. entropy search uses it to update its approximation
-of P(x=x_min), EI uses it to update the current fmin.</p>
-<p>This implementation creates an acquisition function object for each model to integrate over and sets the
-respective attributes for each acquisition function object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>kwargs</strong> (<em>Any</em>) – Keyword arguments for</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -575,8 +457,7 @@ respective attributes for each acquisition function object.</p>
 <dt class="sig sig-object py" id="smac.acquisition.functions.LCB">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.functions.</span></span><span class="sig-name descname"><span class="pre">LCB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/confidence_bound.html#LCB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.LCB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction" title="smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a></p>
-<p>Computes the lower confidence bound for a given x over the best so far value as
-acquisition value.</p>
+<p>Computes the lower confidence bound for a given x over the best so far value as acquisition value.</p>
 <p><span class="math notranslate nohighlight">\(LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})\)</span> <a href="#id7"><span class="problematic" id="id1">[1]_</span></a></p>
 <p>with</p>
 <p><span class="math notranslate nohighlight">\(\beta_t = 2 \log( |D| t^2 / \beta)\)</span></p>
@@ -594,42 +475,9 @@ acquisition value.</p>
 </aside>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>beta</strong> (<em>float</em><em>, </em><em>defaults to 1.0</em>) – Controls the balance between exploration and exploitation of the
-acquisition function.</p>
+<dd class="field-odd"><p><strong>beta</strong> (<em>float</em><em>, </em><em>defaults to 1.0</em>) – Controls the balance between exploration and exploitation of the acquisition function.</p>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.LCB.long_name">
-<span class="sig-name descname"><span class="pre">long_name</span></span><a class="headerlink" href="#smac.acquisition.functions.LCB.long_name" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.LCB.beta">
-<span class="sig-name descname"><span class="pre">beta</span></span><a class="headerlink" href="#smac.acquisition.functions.LCB.beta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exploration / exploitation trade-off parameter.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.LCB.num_data">
-<span class="sig-name descname"><span class="pre">num_data</span></span><a class="headerlink" href="#smac.acquisition.functions.LCB.num_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Number of data points (t).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int | None</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.acquisition.functions.LCB.get_meta">
 <span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/confidence_bound.html#LCB.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.LCB.get_meta" title="Permalink to this definition">¶</a></dt>
@@ -637,23 +485,6 @@ acquisition function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.acquisition.functions.LCB.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/confidence_bound.html#LCB.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.LCB.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the acquisition function attributes required for calculation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>BaseModel</em>) – Models the objective function.</p></li>
-<li><p><strong>num_data</strong> (<em>int</em>) – Number of data points (t).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -669,42 +500,9 @@ acquisition function.</p>
 { \sigma(\mathbf{X}) })\)</span> with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the incumbent and <span class="math notranslate nohighlight">\(\Phi\)</span> the cdf of the standard normal</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>par</strong> (<em>float</em><em>, </em><em>default=0.0</em>) – Controls the balance between exploration and exploitation of the
-acquisition function.</p>
+<dd class="field-odd"><p><strong>xi</strong> (<em>float</em><em>, </em><em>defaults to 0.0</em>) – Controls the balance between exploration and exploitation of the acquisition function.</p>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.PI.long_name">
-<span class="sig-name descname"><span class="pre">long_name</span></span><a class="headerlink" href="#smac.acquisition.functions.PI.long_name" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.PI.xi">
-<span class="sig-name descname"><span class="pre">xi</span></span><a class="headerlink" href="#smac.acquisition.functions.PI.xi" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exploration/exploitation trade-off parameter.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.PI.eta">
-<span class="sig-name descname"><span class="pre">eta</span></span><a class="headerlink" href="#smac.acquisition.functions.PI.eta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Current incumbent value.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.acquisition.functions.PI.get_meta">
 <span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/probability_improvement.html#PI.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.PI.get_meta" title="Permalink to this definition">¶</a></dt>
@@ -716,30 +514,13 @@ acquisition function.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.acquisition.functions.PI.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/probability_improvement.html#PI.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.PI.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the acquisition function attributes required for calculation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>BaseModel</em>) – Models the objective function.</p></li>
-<li><p><strong>eta</strong> (<em>float</em>) – Current incumbent value.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.acquisition.functions.PriorAcquisitionFunction">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.functions.</span></span><span class="sig-name descname"><span class="pre">PriorAcquisitionFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decay_beta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prior_floor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discretize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discrete_bins_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/prior.html#PriorAcquisitionFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.PriorAcquisitionFunction" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.functions.</span></span><span class="sig-name descname"><span class="pre">PriorAcquisitionFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decay_beta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prior_floor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discretize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discrete_bins_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/prior_acqusition_function.html#PriorAcquisitionFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.PriorAcquisitionFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction" title="smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a></p>
-<p>Weight the acquisition function with a user-defined prior over the optimum.</p>
+<p>Weights the acquisition function with a user-defined prior over the optimum.</p>
 <p>See “piBO: Augmenting Acquisition Functions with User Beliefs for Bayesian Optimization” by Carl
 Hvarfner et al. <a href="#id8"><span class="problematic" id="id3">[1]_</span></a> for further details.</p>
 <p class="rubric">References</p>
@@ -752,23 +533,18 @@ Hvarfner et al. <a href="#id8"><span class="problematic" id="id3">[1]_</span></a
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>decay_beta</strong> (<em>float</em>) – Decay factor on the user prior - defaults to n_iterations / 10 if not specifed
-otherwise.</p></li>
-<li><p><strong>prior_floor</strong> (<em>float</em><em>, </em><em>defaults to 1e-12</em>) – Lowest possible value of the prior, to ensure non-negativity for all values
-in the search space.</p></li>
-<li><p><strong>discretize</strong> (<em>bool</em><em>, </em><em>defaults to False</em>) – Whether to discretize (bin) the densities for continous parameters. Triggered
-for Random Forest models and continous hyperparameters to avoid a pathological case
-where all Random Forest randomness is removed (RF surrogates require piecewise constant
-acquisition functions to be well-behaved).</p></li>
-<li><p><strong>discrete_bins_factor</strong> (<em>float</em><em>, </em><em>defaults to 10.0</em>) – If discretizing, the multiple on the number of allowed bins for
-each parameter.</p></li>
-<li><p><strong>kwargs</strong> (<em>Any</em>) – Additional keyword arguments</p></li>
+<li><p><strong>decay_beta</strong> (<em>float</em>) – Decay factor on the user prior.</p></li>
+<li><p><strong>prior_floor</strong> (<em>float</em><em>, </em><em>defaults to 1e-12</em>) – Lowest possible value of the prior to ensure non-negativity for all values in the search space.</p></li>
+<li><p><strong>discretize</strong> (<em>bool</em><em>, </em><em>defaults to False</em>) – Whether to discretize (bin) the densities for continous parameters. Triggered for Random Forest models and
+continous hyperparameters to avoid a pathological case where all Random Forest randomness is removed
+(RF surrogates require piecewise constant acquisition functions to be well-behaved).</p></li>
+<li><p><strong>discrete_bins_factor</strong> (<em>float</em><em>, </em><em>defaults to 10.0</em>) – If discretizing, the multiple on the number of allowed bins for each parameter.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.acquisition.functions.PriorAcquisitionFunction.get_meta">
-<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/prior.html#PriorAcquisitionFunction.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.PriorAcquisitionFunction.get_meta" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/prior_acqusition_function.html#PriorAcquisitionFunction.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.PriorAcquisitionFunction.get_meta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the meta data of the created object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -777,40 +553,23 @@ each parameter.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.acquisition.functions.PriorAcquisitionFunction.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/prior.html#PriorAcquisitionFunction.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.PriorAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the acquisition function attributes required for calculation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>eta</strong> (<em>float</em>) – Current incumbent value.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.acquisition.functions.TS">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.functions.</span></span><span class="sig-name descname"><span class="pre">TS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/thompson.html#TS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.TS" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.functions.</span></span><span class="sig-name descname"><span class="pre">TS</span></span><a class="reference internal" href="../_modules/smac/acquisition/functions/thompson.html#TS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.TS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction" title="smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a></p>
-<p>Do a Thompson Sampling for a given x over the best so far value as
-acquisition value.</p>
+<p>Do a Thompson Sampling for a given x over the best so far value as acquisition value.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Thompson Sampling can only be used together with
-smac.acquisition.random_search.RandomSearch, please do not use
-smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch to optimize TS
-acquisition function!</p>
+<p>Thompson Sampling can only be used together with <cite>RandomSearch</cite>. Please do not use <cite>LocalAndSortedRandomSearch</cite> to
+optimize the TS acquisition function!</p>
 <p>:math:<a href="#id5"><span class="problematic" id="id6">`</span></a>TS(X) ~ mathcal{N}(mu(mathbf{X}),sigma(mathbf{X}))’
 Returns -TS(X) as the acquisition_function optimizer maximizes the acquisition value.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>par</strong> (<em>float</em><em>, </em><em>defaults to 0.0</em>) – TS does not require par here, we only wants to make it consistent with
+<dd class="field-odd"><p><strong>xi</strong> (<em>float</em><em>, </em><em>defaults to 0.0</em>) – TS does not require xi here, we only wants to make it consistent with
 other acquisition functions.</p>
 </dd>
 </dl>
@@ -825,48 +584,12 @@ other acquisition functions.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.TS.par">
-<span class="sig-name descname"><span class="pre">par</span></span><a class="headerlink" href="#smac.acquisition.functions.TS.par" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.acquisition.functions.TS.xi">
+<span class="sig-name descname"><span class="pre">xi</span></span><a class="headerlink" href="#smac.acquisition.functions.TS.xi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exploration/exploitation trade-off parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.TS.num_data">
-<span class="sig-name descname"><span class="pre">num_data</span></span><a class="headerlink" href="#smac.acquisition.functions.TS.num_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Number of data points (t).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.acquisition.functions.TS.get_meta">
-<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/thompson.html#TS.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.TS.get_meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the meta data of the created object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.acquisition.functions.TS.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">par</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/thompson.html#TS.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.TS.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the acquisition function attributes required for calculation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>model</strong> (<em>BaseModel</em>) – Models the objective function.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -885,10 +608,10 @@ other acquisition functions.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="smac.acquisition.functions.expected_improvement.html#module-smac.acquisition.functions.expected_improvement" title="smac.acquisition.functions.expected_improvement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.acquisition.functions.expected_improvement</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="smac.acquisition.functions.integrated.html#module-smac.acquisition.functions.integrated" title="smac.acquisition.functions.integrated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.acquisition.functions.integrated</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="smac.acquisition.functions.integrated_acquisition_function.html#module-smac.acquisition.functions.integrated_acquisition_function" title="smac.acquisition.functions.integrated_acquisition_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.acquisition.functions.integrated_acquisition_function</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="smac.acquisition.functions.prior.html#module-smac.acquisition.functions.prior" title="smac.acquisition.functions.prior"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.acquisition.functions.prior</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="smac.acquisition.functions.prior_acqusition_function.html#module-smac.acquisition.functions.prior_acqusition_function" title="smac.acquisition.functions.prior_acqusition_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.acquisition.functions.prior_acqusition_function</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="smac.acquisition.functions.probability_improvement.html#module-smac.acquisition.functions.probability_improvement" title="smac.acquisition.functions.probability_improvement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.acquisition.functions.probability_improvement</span></code></a></p></td>
@@ -907,11 +630,11 @@ other acquisition functions.</p>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.acquisition.differential_evolution.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.acquisition.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.acquisition.differential_evolution</p>
+            <p class="prev-next-title">smac.acquisition</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="smac.acquisition.functions.abstract_acquisition_function.html" title="next page">

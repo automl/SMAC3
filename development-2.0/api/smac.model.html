@@ -40,7 +40,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.model.abstract_model" href="smac.model.abstract_model.html" />
-    <link rel="prev" title="smac.main.smbo" href="smac.main.smbo.html" />
+    <link rel="prev" title="smac.main.turbo" href="smac.main.turbo.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -437,22 +437,30 @@ Takes four valid inputs:
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.model.MultiObjectiveModel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.</span></span><span class="sig-name descname"><span class="pre">MultiObjectiveModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objectives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/multi_objective_model.html#MultiObjectiveModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.MultiObjectiveModel" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.</span></span><span class="sig-name descname"><span class="pre">MultiObjectiveModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objectives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/multi_objective_model.html#MultiObjectiveModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.MultiObjectiveModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.model.abstract_model.html#smac.model.abstract_model.AbstractModel" title="smac.model.abstract_model.AbstractModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractModel</span></code></a></p>
 <p>Wrapper for the surrogate model to predict multiple objectives.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>configspace</strong> (<em>ConfigurationSpace</em>) – </p></li>
-<li><p><strong>model</strong> (<a class="reference internal" href="#smac.model.AbstractModel" title="smac.model.AbstractModel"><em>AbstractModel</em></a>) – Which model should be used for each objective.</p></li>
+<li><p><strong>models</strong> (<a class="reference internal" href="#smac.model.AbstractModel" title="smac.model.AbstractModel"><em>AbstractModel</em></a><em> | </em><em>list</em><em>[</em><a class="reference internal" href="#smac.model.AbstractModel" title="smac.model.AbstractModel"><em>AbstractModel</em></a><em>]</em>) – Which model should be used. If it is a list, then it must provide as many models as objectives.
+If it is a single model only, the model is used for all objectives.</p></li>
 <li><p><strong>objectives</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Which objectives should be used.</p></li>
-<li><p><strong>instance_features</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>list</em><em>[</em><em>int</em><em> | </em><em>float</em><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Features (list of int or floats) of the instances (str). The features are incorporated into the X data,
-on which the model is trained on.</p></li>
-<li><p><strong>pca_components</strong> (<em>float</em><em>, </em><em>defaults to 7</em>) – Number of components to keep when using PCA to reduce dimensionality of instance features.</p></li>
 <li><p><strong>seed</strong> (<em>int</em>) – </p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="smac.model.MultiObjectiveModel.models">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">models</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.model.abstract_model.html#smac.model.abstract_model.AbstractModel" title="smac.model.abstract_model.AbstractModel"><span class="pre">smac.model.abstract_model.AbstractModel</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.model.MultiObjectiveModel.models" title="Permalink to this definition">¶</a></dt>
+<dd><p>The internally used surrogate models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="smac.model.abstract_model.html#smac.model.abstract_model.AbstractModel" title="smac.model.abstract_model.AbstractModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractModel</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.model.MultiObjectiveModel.predict_marginalized">
 <span class="sig-name descname"><span class="pre">predict_marginalized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/multi_objective_model.html#MultiObjectiveModel.predict_marginalized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.MultiObjectiveModel.predict_marginalized" title="Permalink to this definition">¶</a></dt>
@@ -515,11 +523,11 @@ on which the model is trained on.</p></li>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.main.smbo.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.main.turbo.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.main.smbo</p>
+            <p class="prev-next-title">smac.main.turbo</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="smac.model.abstract_model.html" title="next page">

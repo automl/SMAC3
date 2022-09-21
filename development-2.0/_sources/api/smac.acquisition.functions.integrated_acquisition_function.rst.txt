@@ -1,0 +1,29 @@
+smac.acquisition.functions.integrated\_acquisition\_function
+============================================================
+
+.. automodule:: smac.acquisition.functions.integrated_acquisition_function
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      IntegratedAcquisitionFunction
+   
+   
+
+   
+   
+   
+
+
+

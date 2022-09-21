@@ -340,8 +340,7 @@ style="width: 100%;">
 <dt class="sig sig-object py" id="smac.acquisition.functions.confidence_bound.LCB">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.functions.confidence_bound.</span></span><span class="sig-name descname"><span class="pre">LCB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/confidence_bound.html#LCB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.confidence_bound.LCB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction" title="smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a></p>
-<p>Computes the lower confidence bound for a given x over the best so far value as
-acquisition value.</p>
+<p>Computes the lower confidence bound for a given x over the best so far value as acquisition value.</p>
 <p><span class="math notranslate nohighlight">\(LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})\)</span> <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p>
 <p>with</p>
 <p><span class="math notranslate nohighlight">\(\beta_t = 2 \log( |D| t^2 / \beta)\)</span></p>
@@ -359,42 +358,9 @@ acquisition value.</p>
 </aside>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>beta</strong> (<em>float</em><em>, </em><em>defaults to 1.0</em>) – Controls the balance between exploration and exploitation of the
-acquisition function.</p>
+<dd class="field-odd"><p><strong>beta</strong> (<em>float</em><em>, </em><em>defaults to 1.0</em>) – Controls the balance between exploration and exploitation of the acquisition function.</p>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.confidence_bound.LCB.long_name">
-<span class="sig-name descname"><span class="pre">long_name</span></span><a class="headerlink" href="#smac.acquisition.functions.confidence_bound.LCB.long_name" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.confidence_bound.LCB.beta">
-<span class="sig-name descname"><span class="pre">beta</span></span><a class="headerlink" href="#smac.acquisition.functions.confidence_bound.LCB.beta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exploration / exploitation trade-off parameter.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.confidence_bound.LCB.num_data">
-<span class="sig-name descname"><span class="pre">num_data</span></span><a class="headerlink" href="#smac.acquisition.functions.confidence_bound.LCB.num_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Number of data points (t).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int | None</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.acquisition.functions.confidence_bound.LCB.get_meta">
 <span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/confidence_bound.html#LCB.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.confidence_bound.LCB.get_meta" title="Permalink to this definition">¶</a></dt>
@@ -402,23 +368,6 @@ acquisition function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.acquisition.functions.confidence_bound.LCB.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/confidence_bound.html#LCB.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.confidence_bound.LCB.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the acquisition function attributes required for calculation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>BaseModel</em>) – Models the objective function.</p></li>
-<li><p><strong>num_data</strong> (<em>int</em>) – Number of data points (t).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>

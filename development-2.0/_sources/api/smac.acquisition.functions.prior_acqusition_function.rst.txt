@@ -1,0 +1,29 @@
+smac.acquisition.functions.prior\_acqusition\_function
+======================================================
+
+.. automodule:: smac.acquisition.functions.prior_acqusition_function
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      PriorAcquisitionFunction
+   
+   
+
+   
+   
+   
+
+
+

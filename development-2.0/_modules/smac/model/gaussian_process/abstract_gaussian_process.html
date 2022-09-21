@@ -450,14 +450,18 @@ style="width: 100%;">
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">current_param</span><span class="p">,</span> <span class="n">Kernel</span><span class="p">):</span>
                 <span class="n">hps</span> <span class="o">=</span> <span class="n">current_param</span><span class="o">.</span><span class="n">hyperparameters</span>
                 <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">hps</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+
                 <span class="n">hp</span> <span class="o">=</span> <span class="n">hps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">hp</span><span class="o">.</span><span class="n">fixed</span><span class="p">:</span>
                     <span class="k">continue</span>
+
                 <span class="n">bounds</span> <span class="o">=</span> <span class="n">hps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bounds</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">hps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">n_elements</span><span class="p">):</span>
                     <span class="n">priors_for_hp</span> <span class="o">=</span> <span class="p">[]</span>
+
                     <span class="k">if</span> <span class="n">current_param</span><span class="o">.</span><span class="n">prior</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">priors_for_hp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_param</span><span class="o">.</span><span class="n">prior</span><span class="p">)</span>
+
                     <span class="k">if</span> <span class="n">add_bound_priors</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">add_soft_bounds</span><span class="p">:</span>
                             <span class="n">priors_for_hp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -477,6 +481,7 @@ style="width: 100%;">
                                 <span class="p">)</span>
                             <span class="p">)</span>
                     <span class="n">all_priors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">priors_for_hp</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">all_priors</span>
 
     <span class="k">def</span> <span class="nf">_set_has_conditions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -484,6 +489,7 @@ style="width: 100%;">
         <span class="n">has_conditions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_configspace</span><span class="o">.</span><span class="n">get_conditions</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="n">to_visit</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">to_visit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_kernel</span><span class="p">)</span>
+
         <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_visit</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">current_param</span> <span class="o">=</span> <span class="n">to_visit</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">current_param</span><span class="p">,</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">KernelOperator</span><span class="p">):</span>

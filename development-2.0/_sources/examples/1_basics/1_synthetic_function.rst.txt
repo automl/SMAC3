@@ -61,8 +61,8 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
     [INFO][abstract_intensifier.py:359] Changes in incumbent:
     [INFO][abstract_intensifier.py:362] --- x0: -0.47602048278586295 -> 1.7031544591929872
     [INFO][abstract_intensifier.py:362] --- x1: 0.13155812805683098 -> 2.842364243857716
-    [INFO][abstract_facade.py:269] Final Incumbent: {'x0': 1.7031544591929872, 'x1': 2.842364243857716}
-    [INFO][abstract_facade.py:270] Estimated cost: 0.8351420167215506
+    [INFO][abstract_facade.py:267] Final Incumbent: {'x0': 1.7031544591929872, 'x1': 2.842364243857716}
+    [INFO][abstract_facade.py:268] Estimated cost: 0.8351420167215506
     Incumbent value: 0.84
 
 
@@ -132,7 +132,7 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.881 seconds)
+   **Total running time of the script:** ( 0 minutes  3.882 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_1_synthetic_function.py:

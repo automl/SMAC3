@@ -348,7 +348,7 @@ them to the facade. For an example of the latter see the svm_cv.py.</p>
 <li><p><strong>target_algorithm</strong> (<a class="reference internal" href="smac.runner.html#smac.runner.AbstractRunner" title="smac.runner.AbstractRunner"><em>AbstractRunner</em></a><em> | </em><em>Callable</em>) – </p></li>
 <li><p><strong>model</strong> (<em>BaseModel</em><em> | </em><em>None</em>) – </p></li>
 <li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction" title="smac.acquisition.functions.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>acquisition_optimizer</strong> (<a class="reference internal" href="smac.acquisition.html#smac.acquisition.AbstractAcquisitionOptimizer" title="smac.acquisition.AbstractAcquisitionOptimizer"><em>AbstractAcquisitionOptimizer</em></a><em> | </em><em>None</em>) – </p></li>
+<li><p><strong>acquisition_optimizer</strong> (<a class="reference internal" href="smac.acquisition.maximizers.html#smac.acquisition.maximizers.AbstractAcquisitionOptimizer" title="smac.acquisition.maximizers.AbstractAcquisitionOptimizer"><em>AbstractAcquisitionOptimizer</em></a><em> | </em><em>None</em>) – </p></li>
 <li><p><strong>initial_design</strong> (<em>InitialDesign</em><em> | </em><em>None</em>) – </p></li>
 <li><p><strong>random_design</strong> (<em>RandomDesign</em><em> | </em><em>None</em>) – </p></li>
 <li><p><strong>intensifier</strong> (<a class="reference internal" href="smac.intensification.html#smac.intensification.AbstractIntensifier" title="smac.intensification.AbstractIntensifier"><em>AbstractIntensifier</em></a><em> | </em><em>None</em>) – </p></li>
@@ -394,7 +394,7 @@ defining the exploration/exploitation trade-off.</p>
 specifying how the acquisition function instance is optimized.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.abstract_acqusition_optimizer.html#smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer" title="smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionOptimizer</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.maximizers.abstract_acqusition_optimizer.html#smac.acquisition.maximizers.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer" title="smac.acquisition.maximizers.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionOptimizer</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -557,7 +557,7 @@ the stats object is updated.</p>
 specifying how the acquisition function instance is optimized.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.local_and_random_search.html#smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch" title="smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch"><code class="xref py py-class docutils literal notranslate"><span class="pre">LocalAndSortedRandomSearch</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.maximizers.local_and_random_search.html#smac.acquisition.maximizers.local_and_random_search.LocalAndSortedRandomSearch" title="smac.acquisition.maximizers.local_and_random_search.LocalAndSortedRandomSearch"><code class="xref py py-class docutils literal notranslate"><span class="pre">LocalAndSortedRandomSearch</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -656,7 +656,7 @@ specifying how the runhistory is to be prepared for the next surrogate model.</p
 Black-Box facade. Please check its documentation for detials.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.local_and_random_search.html#smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch" title="smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch"><code class="xref py py-class docutils literal notranslate"><span class="pre">LocalAndSortedRandomSearch</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.maximizers.local_and_random_search.html#smac.acquisition.maximizers.local_and_random_search.LocalAndSortedRandomSearch" title="smac.acquisition.maximizers.local_and_random_search.LocalAndSortedRandomSearch"><code class="xref py py-class docutils literal notranslate"><span class="pre">LocalAndSortedRandomSearch</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -821,7 +821,7 @@ for details.</p>
 strategy for the acquisition function. Please check its documentation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.local_and_random_search.html#smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch" title="smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch"><code class="xref py py-class docutils literal notranslate"><span class="pre">LocalAndSortedRandomSearch</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.maximizers.local_and_random_search.html#smac.acquisition.maximizers.local_and_random_search.LocalAndSortedRandomSearch" title="smac.acquisition.maximizers.local_and_random_search.LocalAndSortedRandomSearch"><code class="xref py py-class docutils literal notranslate"><span class="pre">LocalAndSortedRandomSearch</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1009,7 +1009,7 @@ defining the exploration/exploitation trade-off.</p>
 specifying how the acquisition function instance is optimized.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.abstract_acqusition_optimizer.html#smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer" title="smac.acquisition.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionOptimizer</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.maximizers.abstract_acqusition_optimizer.html#smac.acquisition.maximizers.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer" title="smac.acquisition.maximizers.abstract_acqusition_optimizer.AbstractAcquisitionOptimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionOptimizer</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1099,16 +1099,19 @@ specifying how the runhistory is to be prepared for the next surrogate model.</p
 <tr class="row-odd"><td><p><a class="reference internal" href="smac.facade.blackbox_facade.html#module-smac.facade.blackbox_facade" title="smac.facade.blackbox_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.blackbox_facade</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="smac.facade.hyperband_facade.html#module-smac.facade.hyperband_facade" title="smac.facade.hyperband_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.hyperband_facade</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="smac.facade.boing_facade.html#module-smac.facade.boing_facade" title="smac.facade.boing_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.boing_facade</span></code></a></p></td>
+<td><p>from __future__ import annotations</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="smac.facade.hyperband_facade.html#module-smac.facade.hyperband_facade" title="smac.facade.hyperband_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.hyperband_facade</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="smac.facade.hyperparameter_facade.html#module-smac.facade.hyperparameter_facade" title="smac.facade.hyperparameter_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.hyperparameter_facade</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="smac.facade.hyperparameter_facade.html#module-smac.facade.hyperparameter_facade" title="smac.facade.hyperparameter_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.hyperparameter_facade</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="smac.facade.multi_fidelity_facade.html#module-smac.facade.multi_fidelity_facade" title="smac.facade.multi_fidelity_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.multi_fidelity_facade</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="smac.facade.multi_fidelity_facade.html#module-smac.facade.multi_fidelity_facade" title="smac.facade.multi_fidelity_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.multi_fidelity_facade</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="smac.facade.random_facade.html#module-smac.facade.random_facade" title="smac.facade.random_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.random_facade</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="smac.facade.random_facade.html#module-smac.facade.random_facade" title="smac.facade.random_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.random_facade</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>

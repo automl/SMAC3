@@ -39,7 +39,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.acquisition.local_and_random_search" href="smac.acquisition.local_and_random_search.html" />
+    <link rel="next" title="smac.acquisition.maximizers" href="smac.acquisition.maximizers.html" />
     <link rel="prev" title="smac.acquisition.functions.probability_improvement" href="smac.acquisition.functions.probability_improvement.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
@@ -330,29 +330,26 @@ style="width: 100%;">
 <p class="rubric">Classes</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.acquisition.functions.thompson.TS" title="smac.acquisition.functions.thompson.TS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TS</span></code></a>([par])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.acquisition.functions.thompson.TS" title="smac.acquisition.functions.thompson.TS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TS</span></code></a>()</p></td>
 <td><p>Do a Thompson Sampling for a given x over the best so far value as acquisition value.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.acquisition.functions.thompson.TS">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.functions.thompson.</span></span><span class="sig-name descname"><span class="pre">TS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/thompson.html#TS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.thompson.TS" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.functions.thompson.</span></span><span class="sig-name descname"><span class="pre">TS</span></span><a class="reference internal" href="../_modules/smac/acquisition/functions/thompson.html#TS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.thompson.TS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction" title="smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a></p>
-<p>Do a Thompson Sampling for a given x over the best so far value as
-acquisition value.</p>
+<p>Do a Thompson Sampling for a given x over the best so far value as acquisition value.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Thompson Sampling can only be used together with
-smac.acquisition.random_search.RandomSearch, please do not use
-smac.acquisition.local_and_random_search.LocalAndSortedRandomSearch to optimize TS
-acquisition function!</p>
+<p>Thompson Sampling can only be used together with <cite>RandomSearch</cite>. Please do not use <cite>LocalAndSortedRandomSearch</cite> to
+optimize the TS acquisition function!</p>
 <p>:math:<a href="#id1"><span class="problematic" id="id2">`</span></a>TS(X) ~ mathcal{N}(mu(mathbf{X}),sigma(mathbf{X}))’
 Returns -TS(X) as the acquisition_function optimizer maximizes the acquisition value.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>par</strong> (<em>float</em><em>, </em><em>defaults to 0.0</em>) – TS does not require par here, we only wants to make it consistent with
+<dd class="field-odd"><p><strong>xi</strong> (<em>float</em><em>, </em><em>defaults to 0.0</em>) – TS does not require xi here, we only wants to make it consistent with
 other acquisition functions.</p>
 </dd>
 </dl>
@@ -367,48 +364,12 @@ other acquisition functions.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.thompson.TS.par">
-<span class="sig-name descname"><span class="pre">par</span></span><a class="headerlink" href="#smac.acquisition.functions.thompson.TS.par" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.acquisition.functions.thompson.TS.xi">
+<span class="sig-name descname"><span class="pre">xi</span></span><a class="headerlink" href="#smac.acquisition.functions.thompson.TS.xi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exploration/exploitation trade-off parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.thompson.TS.num_data">
-<span class="sig-name descname"><span class="pre">num_data</span></span><a class="headerlink" href="#smac.acquisition.functions.thompson.TS.num_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Number of data points (t).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.acquisition.functions.thompson.TS.get_meta">
-<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/thompson.html#TS.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.thompson.TS.get_meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the meta data of the created object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.acquisition.functions.thompson.TS.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">par</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/thompson.html#TS.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.thompson.TS.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the acquisition function attributes required for calculation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>model</strong> (<em>BaseModel</em>) – Models the objective function.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -430,10 +391,10 @@ other acquisition functions.</p>
             <p class="prev-next-title">smac.acquisition.functions.probability_improvement</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.acquisition.local_and_random_search.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.acquisition.maximizers.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.acquisition.local_and_random_search</p>
+        <p class="prev-next-title">smac.acquisition.maximizers</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

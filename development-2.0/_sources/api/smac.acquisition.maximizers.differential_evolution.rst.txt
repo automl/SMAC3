@@ -1,0 +1,29 @@
+smac.acquisition.maximizers.differential\_evolution
+===================================================
+
+.. automodule:: smac.acquisition.maximizers.differential_evolution
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      DifferentialEvolution
+   
+   
+
+   
+   
+   
+
+
+

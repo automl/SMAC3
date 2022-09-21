@@ -1,0 +1,29 @@
+smac.acquisition.maximizers.local\_search
+=========================================
+
+.. automodule:: smac.acquisition.maximizers.local_search
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      LocalSearch
+   
+   
+
+   
+   
+   
+
+
+

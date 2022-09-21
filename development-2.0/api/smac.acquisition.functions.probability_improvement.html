@@ -41,7 +41,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.acquisition.functions.thompson" href="smac.acquisition.functions.thompson.html" />
-    <link rel="prev" title="smac.acquisition.functions.prior" href="smac.acquisition.functions.prior.html" />
+    <link rel="prev" title="smac.acquisition.functions.prior_acqusition_function" href="smac.acquisition.functions.prior_acqusition_function.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -345,42 +345,9 @@ style="width: 100%;">
 { \sigma(\mathbf{X}) })\)</span> with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the incumbent and <span class="math notranslate nohighlight">\(\Phi\)</span> the cdf of the standard normal</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>par</strong> (<em>float</em><em>, </em><em>default=0.0</em>) – Controls the balance between exploration and exploitation of the
-acquisition function.</p>
+<dd class="field-odd"><p><strong>xi</strong> (<em>float</em><em>, </em><em>defaults to 0.0</em>) – Controls the balance between exploration and exploitation of the acquisition function.</p>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.probability_improvement.PI.long_name">
-<span class="sig-name descname"><span class="pre">long_name</span></span><a class="headerlink" href="#smac.acquisition.functions.probability_improvement.PI.long_name" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.probability_improvement.PI.xi">
-<span class="sig-name descname"><span class="pre">xi</span></span><a class="headerlink" href="#smac.acquisition.functions.probability_improvement.PI.xi" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exploration/exploitation trade-off parameter.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.probability_improvement.PI.eta">
-<span class="sig-name descname"><span class="pre">eta</span></span><a class="headerlink" href="#smac.acquisition.functions.probability_improvement.PI.eta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Current incumbent value.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.acquisition.functions.probability_improvement.PI.get_meta">
 <span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/probability_improvement.html#PI.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.probability_improvement.PI.get_meta" title="Permalink to this definition">¶</a></dt>
@@ -388,23 +355,6 @@ acquisition function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.acquisition.functions.probability_improvement.PI.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/probability_improvement.html#PI.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.probability_improvement.PI.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the acquisition function attributes required for calculation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>BaseModel</em>) – Models the objective function.</p></li>
-<li><p><strong>eta</strong> (<em>float</em>) – Current incumbent value.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -419,11 +369,11 @@ acquisition function.</p>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.acquisition.functions.prior.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.acquisition.functions.prior_acqusition_function.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.acquisition.functions.prior</p>
+            <p class="prev-next-title">smac.acquisition.functions.prior_acqusition_function</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="smac.acquisition.functions.thompson.html" title="next page">

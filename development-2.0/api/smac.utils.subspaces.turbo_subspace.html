@@ -1,0 +1,698 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>smac.utils.subspaces.turbo_subspace &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet">
+  <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="smac.scenario" href="smac.scenario.html" />
+    <link rel="prev" title="smac.utils.subspaces.boing_subspace" href="smac.utils.subspaces.boing_subspace.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+  <a class="navbar-brand" href="../index.html">
+    <img src="../_static/logo.png" class="logo" alt="logo">
+  </a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org?lang=de" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../search.html" method="get"
+style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../package_overview.html">
+   Package Overview
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../getting_started.html">
+   Getting Started
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../minimal_example.html">
+   Minimal Example
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../examples/index.html">
+   Examples
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/1_basics/index.html">
+     Basics
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/2_multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/3_multi_objective/index.html">
+     Multi-Objective
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/4_commandline/index.html">
+     Commandline
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../advanced_usage/index.html">
+   Advanced Usage
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/resumption.html">
+     Resumption
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/callbacks.html">
+     Callbacks
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../api.html">
+   API References
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.facade.html">
+     smac.facade
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.main.html">
+     smac.main
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.model.html">
+     smac.model
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.acquisition.html">
+     smac.acquisition
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.intensification.html">
+     smac.intensification
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.random_design.html">
+     smac.random_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.runner.html">
+     smac.runner
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.runhistory.html">
+     smac.runhistory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.multi_objective.html">
+     smac.multi_objective
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="reference internal" href="smac.utils.html">
+     smac.utils
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.constants.html">
+     smac.constants
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.callback.html">
+     smac.callback
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../glossary.html">
+   Glossary
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../faq.html">
+   F.A.Q.
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../license.html">
+   License
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="module-smac.utils.subspaces.turbo_subspace">
+<span id="smac-utils-subspaces-turbo-subspace"></span><h1>smac.utils.subspaces.turbo_subspace<a class="headerlink" href="#module-smac.utils.subspaces.turbo_subspace" title="Permalink to this heading">¶</a></h1>
+<p>from __future__ import annotations</p>
+<p>from typing import Dict, List, Optional, Tuple, Type, Union</p>
+<p>import math
+import warnings</p>
+<p>import numpy as np
+from ConfigSpace.hyperparameters import NumericalHyperparameter
+from ConfigSpace.util import deactivate_inactive_hyperparameters
+from scipy.stats.qmc import LatinHypercube, Sobol</p>
+<p>from smac.acquisition import AbstractAcquisitionOptimizer
+from smac.acquisition.functions import AbstractAcquisitionFunction, TS
+from ConfigSpace import Configuration, ConfigurationSpace
+from smac.model.abstract_model import AbstractModel
+from smac.model.gaussian_process.gpytorch_gaussian_process import GloballyAugmentedLocalGaussianProcess
+from smac.model.gaussian_process.abstract_gaussian_process import AbstractGaussianProcess
+from smac.model.gaussian_process.gpytorch_gaussian_process import GPyTorchGaussianProcess
+from smac.model.gaussian_process.mcmc_gaussian_process import MCMCGaussianProcess
+from smac.utils.logging import get_logger
+from smac.utils.subspaces import LocalSubspace</p>
+<p>logger = get_logger(__name__)</p>
+<p>warnings.filterwarnings(“ignore”, message=”The balance properties of Sobol’ points require” ” n to be a power of 2.”)</p>
+<dl>
+<dt>class TuRBOSubSpace(LocalSubspace):</dt><dd><p>“””
+Subspace designed for TurBO:</p>
+<blockquote>
+<div><p>D. Eriksson et al. Scalable Global Optimization via Local Bayesian Optimization
+<a class="reference external" href="https://proceedings.neurips.cc/paper/2019/hash/6c990b7aca7bc7058f5e98ea909e924b-Abstract.html">https://proceedings.neurips.cc/paper/2019/hash/6c990b7aca7bc7058f5e98ea909e924b-Abstract.html</a></p>
+</div></blockquote>
+<p>The hyperparameters follow the illustration under supplementary D, <cite>TuRBO details</cite>.</p>
+<dl class="simple">
+<dt>length_init: float</dt><dd><p>initialized length of subspace</p>
+</dd>
+<dt>length_min: float</dt><dd><p>the minimal length of subspace, if the subspace has a length smaller than this value, turbo will restart</p>
+</dd>
+<dt>length_max: float</dt><dd><p>the maximal length of subspace</p>
+</dd>
+<dt>success_tol: float</dt><dd><p>the number of successive successful evaluations required for expanding the subregion</p>
+</dd>
+<dt>failure_tol_min: float</dt><dd><p>the minimal number of successive successful evaluations required for shrinking the subregion (otherwise
+this value is set as number of feature dimensions)</p>
+</dd>
+<dt>n_init_x_params: int</dt><dd><p>how many configurations will be used at most in the initial design (X*D). Used for restarting the subspace</p>
+</dd>
+<dt>n_candidate_max: int</dt><dd><p>The maximal Number of points used as candidates</p>
+</dd>
+</dl>
+<p>“””</p>
+<dl>
+<dt>def __init__(</dt><dd><p>self,
+config_space: ConfigurationSpace,
+bounds: List[Tuple[float, float]],
+hps_types: List[int],
+bounds_ss_cont: Optional[np.ndarray] = None,
+bounds_ss_cat: Optional[List[Tuple]] = None,
+model_local: Union[AbstractModel, Type[AbstractModel]] = GPyTorchGaussianProcess,
+model_local_kwargs: Dict = {},
+acq_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = TS,
+acq_func_local_kwargs: Optional[Dict] = None,
+rng: Optional[np.random.RandomState] = None,
+initial_data: Optional[Tuple[np.ndarray, np.ndarray]] = None,
+activate_dims: Optional[np.ndarray] = None,
+incumbent_array: Optional[np.ndarray] = None,
+length_init: float = 0.8,
+length_min: float = 0.5**7,
+length_max: float = 1.6,
+success_tol: int = 3,
+failure_tol_min: int = 4,
+n_init_x_params: int = 2,
+n_candidate_max: int = 5000,</p>
+</dd>
+<dt>):</dt><dd><p>self.num_valid_observations = 0
+super(TuRBOSubSpace, self).__init__(</p>
+<blockquote>
+<div><p>config_space=config_space,
+bounds=bounds,
+hps_types=hps_types,
+bounds_ss_cont=bounds_ss_cont,
+bounds_ss_cat=bounds_ss_cat,
+model_local=model_local,
+model_local_kwargs=model_local_kwargs,
+acq_func_local=acq_func_local,
+acq_func_local_kwargs=acq_func_local_kwargs,
+rng=rng,
+initial_data=initial_data,
+activate_dims=activate_dims,
+incumbent_array=incumbent_array,</p>
+</div></blockquote>
+<p>)
+hps = config_space.get_hyperparameters()
+for hp in hps:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>if not isinstance(hp, NumericalHyperparameter):</dt><dd><p>raise ValueError(“Current TurBO Optimizer only supports Numerical Hyperparameters”)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>if len(config_space.get_conditions()) &gt; 0 or len(config_space.get_forbiddens()) &gt; 0:</dt><dd><p>raise ValueError(“Currently TurBO does not support Conditional or Forbidden Hyperparameters”)</p>
+</dd>
+</dl>
+<p>n_hps = len(self.activate_dims)
+self.n_dims = n_hps
+self.n_init = n_init_x_params * self.n_dims
+self.n_candidates = min(100 * n_hps, n_candidate_max)</p>
+<p>self.failure_tol = max(failure_tol_min, n_hps)
+self.success_tol = success_tol
+self.length = length_init
+self.length_init = length_init
+self.length_min = length_min
+self.length_max = length_max
+self._restart_turbo(n_init_points=self.n_init)</p>
+<dl class="simple">
+<dt>if initial_data is not None:</dt><dd><p>self.add_new_observations(initial_data[0], initial_data[1])
+self.init_configs = []  # type: List[Configuration]</p>
+</dd>
+</dl>
+<p>self.lb = np.zeros(self.n_dims)
+self.ub = np.ones(self.n_dims)
+self.config_origin = “TuRBO”</p>
+</dd>
+<dt>def _restart_turbo(</dt><dd><p>self,
+n_init_points: int,</p>
+</dd>
+<dt>) -&gt; None:</dt><dd><p>“””
+Restart TurBO with a certain number of initialized points. New points are initialized with latin hypercube</p>
+<dl class="simple">
+<dt>n_init_points: int</dt><dd><p>number of points required for initializing a new subspace</p>
+</dd>
+</dl>
+<p>“””
+logger.debug(“Current length is smaller than the minimal value, a new TuRBO restarts”)
+self.success_count = 0
+self.failure_count = 0</p>
+<p>self.num_eval_this_round = 0
+self.last_incumbent_value = np.inf
+self.length = self.length_init</p>
+<p>self.num_valid_observations = 0</p>
+<dl class="simple">
+<dt>init_vectors = LatinHypercube(d=self.n_dims, seed=np.random.seed(self.rng.randint(1, 2**20))).random(</dt><dd><p>n=n_init_points</p>
+</dd>
+</dl>
+<p>)</p>
+<p>self.init_configs = [Configuration(self.cs_local, vector=init_vector) for init_vector in init_vectors]</p>
+</dd>
+<dt>def adjust_length(self, new_observation: Union[float, np.ndarray]) -&gt; None:</dt><dd><p>“””
+Adjust the subspace length according to the performance of the latest suggested values
+Parameters
+———-
+new_observation: Union[float, np.ndarray]</p>
+<blockquote>
+<div><p>new observations</p>
+</div></blockquote>
+<p>“””
+# see Section 2: ‘Trust regions’
+optim_observation = new_observation if np.isscalar(new_observation) else np.min(new_observation)</p>
+<p># We define a <a href="#id1"><span class="problematic" id="id2">``</span></a>success’’ as a candidate that improves upon $¾st$, and a <a href="#id3"><span class="problematic" id="id4">``</span></a>failure’’ as a candidate that
+# does not.
+if optim_observation &lt; np.min(self.model_y) - 1e-3 * math.fabs(np.min(self.model_y)):</p>
+<blockquote>
+<div><p>logger.debug(“New suggested value is better than the incumbent, success_count increases”)
+self.success_count += 1
+self.failure_count = 0</p>
+</div></blockquote>
+<dl class="simple">
+<dt>else:</dt><dd><p>logger.debug(“New suggested value is worse than the incumbent, failure_count increases”)
+self.success_count = 0
+self.failure_count += 1</p>
+</dd>
+</dl>
+<p># After $       au_{    ext{succ}}$ consecutive successes, we double the size of the TR,
+# i.e., $len gets min{len_{        extrm{max}}, 2len}$.
+if self.success_count == self.success_tol:  # Expand trust region</p>
+<blockquote>
+<div><p>self.length = min([2.0 * self.length, self.length_max])
+self.success_count = 0
+logger.debug(f”Subspace length expands to {self.length}”)</p>
+</div></blockquote>
+<p># After $       au_{    ext{fail}}$ consecutive failures, we halve the size of the TR: $len gets len/2$.
+# We reset the success and failure counters to zero after we change the size of the TR.
+elif self.failure_count == self.failure_tol:  # Shrink trust region</p>
+<blockquote>
+<div><p>self.length /= 2.0
+self.failure_count = 0
+logger.debug(f”Subspace length shrinks to {self.length}”)</p>
+</div></blockquote>
+</dd>
+<dt>def _generate_challengers(  # type: ignore[override]</dt><dd><p>self, _sorted: bool = True</p>
+</dd>
+<dt>) -&gt; List[Tuple[float, Configuration]]:</dt><dd><p>“””
+Generate new challengers list for this subspace</p>
+<dl class="simple">
+<dt>_sorted: bool</dt><dd><p>if the generated challengers are sorted by their acquisition function values</p>
+</dd>
+</dl>
+<p>“””
+if len(self.init_configs) &gt; 0:</p>
+<blockquote>
+<div><p>config_next = self.init_configs.pop()
+return [(0, config_next)]</p>
+</div></blockquote>
+<dl class="simple">
+<dt>if self.length &lt; self.length_min:</dt><dd><p>self._restart_turbo(n_init_points=self.n_init)
+config_next = self.init_configs.pop()
+return [(0, config_next)]</p>
+</dd>
+</dl>
+<p>self.model.train(self.model_x[-self.num_valid_observations :], self.model_y[-self.num_valid_observations :])
+self.update_model(predict_x_best=False, update_incumbent_array=True)</p>
+<p>sobol_gen = Sobol(d=self.n_dims, scramble=True, seed=self.rng.randint(low=0, high=10000000))
+sobol_seq = sobol_gen.random(self.n_candidates)</p>
+<p># adjust length according to kernel length
+if isinstance(</p>
+<blockquote>
+<div><p>self.model,
+(</p>
+<blockquote>
+<div><p>AbstractGaussianProcess,
+MCMCGaussianProcess,
+GloballyAugmentedLocalGaussianProcess,
+GPyTorchGaussianProcess,</p>
+</div></blockquote>
+<p>),</p>
+</div></blockquote>
+<dl>
+<dt>):</dt><dd><dl class="simple">
+<dt>if isinstance(self.model, AbstractGaussianProcess):</dt><dd><p>kernel_length = np.exp(self.model.hypers[1:-1])</p>
+</dd>
+<dt>elif isinstance(self.model, MCMCGaussianProcess):</dt><dd><p>kernel_length = np.exp(np.mean((np.array(self.model.hypers)[:, 1:-1]), axis=0))</p>
+</dd>
+<dt>elif isinstance(self.model, (GPyTorchGaussianProcess, GloballyAugmentedLocalGaussianProcess)):</dt><dd><p>kernel_length = self.model.kernel.base_kernel.lengthscale.cpu().detach().numpy()</p>
+</dd>
+</dl>
+<p># See section ‘Trust regions’ of section 2
+#  $len_i = lambda_i L / (prod_{j=1}^d lambda_j)^{1/d}$,
+# We now have weights.prod() = 1
+# This makes the result more stable
+subspace_scale = kernel_length / np.prod(np.power(kernel_length, 1.0 / self.n_dims))</p>
+<p>subspace_length = self.length * subspace_scale</p>
+<p>subspace_lb = np.clip(self.incumbent_array - subspace_length * 0.5, 0.0, 1.0)
+subspace_ub = np.clip(self.incumbent_array + subspace_length * 0.5, 0.0, 1.0)
+sobol_seq = sobol_seq * (subspace_ub - subspace_lb) + subspace_lb</p>
+</dd>
+</dl>
+<p>prob_perturb = min(20.0 / self.n_dims, 1.0)
+design = self._perturb_samples(prob_perturb, sobol_seq)</p>
+<p># Only numerical hyperpameters are considered for TuRBO, we don’t need to transfer the vectors to fit the
+# requirements of other sorts of hyperparameters
+configs = []
+for vector in design:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>conf = deactivate_inactive_hyperparameters(</dt><dd><p>configuration=None, configuration_space=self.cs_local, vector=vector</p>
+</dd>
+</dl>
+<p>)
+configs.append(conf)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>if _sorted:</dt><dd><p>return AbstractAcquisitionOptimizer._sort_configs_by_acq_value(self, configs)</p>
+</dd>
+<dt>else:</dt><dd><p>return [(0, configs[i]) for i in range(len(configs))]</p>
+</dd>
+</dl>
+</dd>
+<dt>def _perturb_samples(self, prob_perturb: float, design: np.ndarray) -&gt; np.ndarray:</dt><dd><p>“””
+See Supplementary D, ‘TuRBO details’:
+In order to not perturb all coordinates at once, we use the value in the Sobol sequence
+with probability min{1,20/d} for a given candidate and dimension, and the value of the center otherwise</p>
+<p>perturb the generated design with the incumbent array accordingly</p>
+<dl class="simple">
+<dt>prob_perturb: float</dt><dd><p>probability that a design is perturbed by the incumbent value</p>
+</dd>
+<dt>design: np.ndarray(self.n_candidates, self.n_dims)</dt><dd><p>design array to be perturbed</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>design_perturbed: np.ndarray(self.n_candidates, self.n_dims)</dt><dd><p>perturbed design array</p>
+</dd>
+</dl>
+<p>“””
+# we will use masked array, thus the indices that will be replaced will be marked with True
+mask = self.rng.rand(self.n_candidates, self.n_dims) &gt; prob_perturb</p>
+<p>ind = np.where(np.sum(mask, axis=1) == self.n_dims)[0]
+if self.n_dims == 1:</p>
+<blockquote>
+<div><p>mask[ind, 0] = 0</p>
+</div></blockquote>
+<dl class="simple">
+<dt>else:</dt><dd><p># ensure that no candidate will be completely replaced by the incumbent value
+mask[ind, self.rng.randint(0, self.n_dims, size=len(ind))] = 0</p>
+</dd>
+</dl>
+<p>return np.ma.array(design, mask=mask, fill_value=self.incumbent_array).filled()</p>
+</dd>
+<dt>def add_new_observations(self, X: np.ndarray, y: np.ndarray) -&gt; None:</dt><dd><p>“””
+Add new observations to the subspace, meanwhile, we add the number of valid observation to ensure that the
+subspace could be scaled properly.</p>
+<dl class="simple">
+<dt>X: np.ndarray(N,D),</dt><dd><p>new feature vector of the observations, constructed by the global configuration space</p>
+</dd>
+<dt>y: np.ndarray(N)</dt><dd><p>new performances of the observations</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>indices_in_ss:np.ndarray(N)</dt><dd><p>indices of data that included in subspaces</p>
+</dd>
+</dl>
+<p>“””
+super(TuRBOSubSpace, self).add_new_observations(X, y)
+self.num_valid_observations += len(y)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="smac.utils.subspaces.boing_subspace.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">smac.utils.subspaces.boing_subspace</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="smac.scenario.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">smac.scenario</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 
+    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
+    and Frank Hutter
+.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+5.1.1. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

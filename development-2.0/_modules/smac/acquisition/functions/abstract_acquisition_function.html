@@ -329,44 +329,50 @@ style="width: 100%;">
 
 
 <div class="viewcode-block" id="AbstractAcquisitionFunction"><a class="viewcode-back" href="../../../../api/smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.AbstractAcquisitionFunction">[docs]</a><span class="k">class</span> <span class="nc">AbstractAcquisitionFunction</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Abstract base class for acquisition function.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    model : BaseModel</span>
-<span class="sd">        Models the objective function.</span>
-
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    model : BaseModel</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Abstract base class for acquisition function.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">:</span> <span class="n">AbstractModel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="p">:</span> <span class="n">AbstractModel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">_set_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-<div class="viewcode-block" id="AbstractAcquisitionFunction.get_meta"><a class="viewcode-back" href="../../../../api/smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.AbstractAcquisitionFunction.get_meta">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">get_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractModel</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span>
+
+    <span class="nd">@model</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span>
+
+<div class="viewcode-block" id="AbstractAcquisitionFunction.get_meta"><a class="viewcode-back" href="../../../../api/smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.AbstractAcquisitionFunction.get_meta">[docs]</a>    <span class="k">def</span> <span class="nf">get_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="p">}</span></div>
 
-<div class="viewcode-block" id="AbstractAcquisitionFunction.update"><a class="viewcode-back" href="../../../../api/smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.AbstractAcquisitionFunction.update">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Update the acquisition function attributes required for calculation.</span>
+<div class="viewcode-block" id="AbstractAcquisitionFunction.update"><a class="viewcode-back" href="../../../../api/smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.AbstractAcquisitionFunction.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractModel</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Updates the acquisition function attributes required for calculation.</span>
 
 <span class="sd">        This method will be called after fitting the model, but before maximizing the acquisition</span>
-<span class="sd">        function. As an examples, EI uses it to update the current fmin.</span>
+<span class="sd">        function. As an examples, EI uses it to update the current fmin. The default implementation only updates the</span>
+<span class="sd">        attributes of the acqusition function which are already present.</span>
 
-<span class="sd">        The default implementation only updates the attributes of the acqusition function which</span>
-<span class="sd">        are already present.</span>
+<span class="sd">        Calls `_update` to update the acquisition function attributes.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
+<span class="sd">        model : AbstractModel</span>
+<span class="sd">            The model which was used to fit the data.</span>
 <span class="sd">        kwargs : Any</span>
+<span class="sd">            Additional arguments to update the specific acquisition function.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
 
 <div class="viewcode-block" id="AbstractAcquisitionFunction.__call__"><a class="viewcode-back" href="../../../../api/smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.AbstractAcquisitionFunction.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configurations</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Compute the acquisition value for a given X.</span>
@@ -374,12 +380,11 @@ style="width: 100%;">
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        configurations : list[Configuration]</span>
-<span class="sd">            The configurations where the acquisition function</span>
-<span class="sd">            should be evaluated.</span>
+<span class="sd">            The configurations where the acquisition function should be evaluated.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        np.ndarray(N, 1)</span>
+<span class="sd">        np.ndarray [N, 1]</span>
 <span class="sd">            Acquisition values for X</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">convert_configurations_to_array</span><span class="p">(</span><span class="n">configurations</span><span class="p">)</span>
@@ -390,6 +395,7 @@ style="width: 100%;">
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">acq</span><span class="p">)):</span>
             <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">acq</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">acq</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">max</span>
+
         <span class="k">return</span> <span class="n">acq</span></div>
 
     <span class="nd">@abstractmethod</span>
@@ -399,16 +405,14 @@ style="width: 100%;">
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : np.ndarray</span>
-<span class="sd">            The input points where the acquisition function</span>
-<span class="sd">            should be evaluated. The dimensionality of X is (N, D), with N as</span>
-<span class="sd">            the number of points to evaluate at and D is the number of</span>
-<span class="sd">            dimensions of one X.</span>
+<span class="sd">        X : np.ndarray [N, D]</span>
+<span class="sd">            The input points where the acquisition function should be evaluated. The dimensionality of X is (N, D),</span>
+<span class="sd">            with N as the number of points to evaluate at and D is the number of dimensions of one X.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        np.ndarray(N,1)</span>
-<span class="sd">            Acquisition function values wrt X</span>
+<span class="sd">        np.ndarray [N,1]</span>
+<span class="sd">            Acquisition function values wrt X.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 </pre></div>

@@ -382,6 +382,7 @@ style="width: 100%;">
         <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_y</span> <span class="o">=</span> <span class="n">normalize_y</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_restarts</span> <span class="o">=</span> <span class="n">n_restarts</span>
 
+        <span class="c1"># Internal variables</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hypers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_is_trained</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_ll_evals</span> <span class="o">=</span> <span class="mi">0</span>
@@ -435,6 +436,7 @@ style="width: 100%;">
             <span class="k">except</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">n_tries</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="n">e</span>
+
                 <span class="c1"># Assume that the last entry of theta is the noise</span>
                 <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_kernel</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span>
                 <span class="n">theta</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -515,6 +517,7 @@ style="width: 100%;">
                         <span class="n">prior</span> <span class="o">=</span> <span class="kc">None</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
                 <span class="n">prior</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Optional</span><span class="p">[</span><span class="n">AbstractPrior</span><span class="p">],</span> <span class="n">prior</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">prior</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">try</span><span class="p">:</span>
@@ -525,6 +528,7 @@ style="width: 100%;">
                         <span class="p">)</span>
                     <span class="k">except</span> <span class="ne">OverflowError</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;OverflowError while sampling from (</span><span class="si">%f</span><span class="s2">, </span><span class="si">%f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">hp_bound</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hp_bound</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
                     <span class="n">dim_samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">dim_samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prior</span><span class="o">.</span><span class="n">sample_from_prior</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_restarts</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>

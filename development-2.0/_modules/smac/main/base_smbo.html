@@ -316,9 +316,8 @@ style="width: 100%;">
 
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">smac.acquisition.abstract_acqusition_optimizer</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionOptimizer</span>
+<span class="kn">from</span> <span class="nn">smac.acquisition.maximizers.abstract_acqusition_optimizer</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionOptimizer</span>
 <span class="kn">from</span> <span class="nn">smac.acquisition.functions.abstract_acquisition_function</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
 <span class="p">)</span>
@@ -458,14 +457,14 @@ style="width: 100%;">
 <div class="viewcode-block" id="BaseSMBO.update_model"><a class="viewcode-back" href="../../../api/smac.main.base_smbo.html#smac.main.BaseSMBO.update_model">[docs]</a>    <span class="k">def</span> <span class="nf">update_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Updates the model and updates the acquisition function.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span><span class="o">.</span><span class="n">_set_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span></div>
 
 <div class="viewcode-block" id="BaseSMBO.update_acquisition_function"><a class="viewcode-back" href="../../../api/smac.main.base_smbo.html#smac.main.BaseSMBO.update_acquisition_function">[docs]</a>    <span class="k">def</span> <span class="nf">update_acquisition_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Updates acquisition function and assosiates the current model. Also, the acquisition</span>
 <span class="sd">        optimizer is updated.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="o">=</span> <span class="n">acquisition_function</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span><span class="o">.</span><span class="n">_set_model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_optimizer</span><span class="o">.</span><span class="n">_set_acquisition_function</span><span class="p">(</span><span class="n">acquisition_function</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_optimizer</span><span class="o">.</span><span class="n">acquisition_function</span> <span class="o">=</span> <span class="n">acquisition_function</span></div>
 
 <div class="viewcode-block" id="BaseSMBO.run"><a class="viewcode-back" href="../../../api/smac.main.base_smbo.html#smac.main.BaseSMBO.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force_initial_design</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Runs the Bayesian optimization loop.</span>
@@ -612,7 +611,8 @@ style="width: 100%;">
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        n : int | None, defaults to None</span>
-<span class="sd">            Number of configurations to return. If None, uses the number of challengers defined in the acquisition optimizer.</span>
+<span class="sd">            Number of configurations to return. If None, uses the number of challengers defined in the acquisition</span>
+<span class="sd">            optimizer.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -691,8 +691,8 @@ style="width: 100%;">
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">diff</span> <span class="o">=</span> <span class="n">recursively_compare_dicts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span> <span class="n">old_scenario</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;scenario&quot;</span><span class="p">)</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;Found old run in `</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">output_directory</span><span class="si">}</span><span class="s2">` but it is not the same as the current one:</span><span class="se">\n</span><span class="s2">&quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Found old run in `</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">output_directory</span><span class="si">}</span><span class="s2">` but it is not the same as the current&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;one:</span><span class="se">\n</span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s2">&quot;</span>
                     <span class="p">)</span>
 
                     <span class="n">feedback</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span>

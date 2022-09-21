@@ -1,0 +1,29 @@
+smac.acquisition.maximizers.helpers
+===================================
+
+.. automodule:: smac.acquisition.maximizers.helpers
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ChallengerList
+   
+   
+
+   
+   
+   
+
+
+

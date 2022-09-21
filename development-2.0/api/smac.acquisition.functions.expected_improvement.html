@@ -40,7 +40,7 @@
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.acquisition.functions.integrated" href="smac.acquisition.functions.integrated.html" />
+    <link rel="next" title="smac.acquisition.functions.integrated_acquisition_function" href="smac.acquisition.functions.integrated_acquisition_function.html" />
     <link rel="prev" title="smac.acquisition.functions.confidence_bound" href="smac.acquisition.functions.confidence_bound.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
@@ -332,10 +332,10 @@ style="width: 100%;">
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.acquisition.functions.expected_improvement.EI" title="smac.acquisition.functions.expected_improvement.EI"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EI</span></code></a>([xi, log])</p></td>
-<td><p>Compute the expected improvement for a given x.</p></td>
+<td><p>Computes the expected improvement for a given x.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#smac.acquisition.functions.expected_improvement.EIPS" title="smac.acquisition.functions.expected_improvement.EIPS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EIPS</span></code></a>([xi])</p></td>
-<td><p>Computes for a given x the expected improvement as acquisition value.</p></td>
+<td><p>Computess for a given x the expected improvement as acquisition value.</p></td>
 </tr>
 </tbody>
 </table>
@@ -343,7 +343,7 @@ style="width: 100%;">
 <dt class="sig sig-object py" id="smac.acquisition.functions.expected_improvement.EI">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.functions.expected_improvement.</span></span><span class="sig-name descname"><span class="pre">EI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/expected_improvement.html#EI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.expected_improvement.EI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction" title="smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a></p>
-<p>Compute the expected improvement for a given x.</p>
+<p>Computes the expected improvement for a given x.</p>
 <p><span class="math notranslate nohighlight">\(EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]\)</span>,
 with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the best location.</p>
 <dl class="field-list simple">
@@ -355,49 +355,6 @@ acquisition function.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.expected_improvement.EI.long_name">
-<span class="sig-name descname"><span class="pre">long_name</span></span><a class="headerlink" href="#smac.acquisition.functions.expected_improvement.EI.long_name" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.expected_improvement.EI.log">
-<span class="sig-name descname"><span class="pre">log</span></span><a class="headerlink" href="#smac.acquisition.functions.expected_improvement.EI.log" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether the function values are in log-space.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.expected_improvement.EI.xi">
-<span class="sig-name descname"><span class="pre">xi</span></span><a class="headerlink" href="#smac.acquisition.functions.expected_improvement.EI.xi" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exploration/exploitation trade-off parameter.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.expected_improvement.EI.eta">
-<span class="sig-name descname"><span class="pre">eta</span></span><a class="headerlink" href="#smac.acquisition.functions.expected_improvement.EI.eta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Current incumbent value.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.acquisition.functions.expected_improvement.EI.get_meta">
 <span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/expected_improvement.html#EI.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.expected_improvement.EI.get_meta" title="Permalink to this definition">¶</a></dt>
@@ -409,60 +366,20 @@ acquisition function.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.acquisition.functions.expected_improvement.EI.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/expected_improvement.html#EI.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.expected_improvement.EI.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the acquisition function attributes required for calculation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>BaseModel</em>) – Models the objective function.</p></li>
-<li><p><strong>eta</strong> (<em>float</em>) – Current incumbent value.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.acquisition.functions.expected_improvement.EIPS">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.functions.expected_improvement.</span></span><span class="sig-name descname"><span class="pre">EIPS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/functions/expected_improvement.html#EIPS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.functions.expected_improvement.EIPS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.acquisition.functions.expected_improvement.EI" title="smac.acquisition.functions.expected_improvement.EI"><code class="xref py py-class docutils literal notranslate"><span class="pre">EI</span></code></a></p>
-<p>Computes for a given x the expected improvement as
-acquisition value.
-<span class="math notranslate nohighlight">\(EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}\)</span>,
+<p>Computess for a given x the expected improvement as acquisition value.</p>
+<p><span class="math notranslate nohighlight">\(EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}\)</span>,
 with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the best location and <span class="math notranslate nohighlight">\(r(x)\)</span> as runtime.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>xi</strong> (<em>float</em><em>, </em><em>defaults to 0.0</em>) – Controls the balance between exploration and exploitation of the
-acquisition function.</p>
+<dd class="field-odd"><p><strong>xi</strong> (<em>float</em><em>, </em><em>defaults to 0.0</em>) – Controls the balance between exploration and exploitation of the acquisition function.</p>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.expected_improvement.EIPS.long_name">
-<span class="sig-name descname"><span class="pre">long_name</span></span><a class="headerlink" href="#smac.acquisition.functions.expected_improvement.EIPS.long_name" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.acquisition.functions.expected_improvement.EIPS.xi">
-<span class="sig-name descname"><span class="pre">xi</span></span><a class="headerlink" href="#smac.acquisition.functions.expected_improvement.EIPS.xi" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exploration/exploitation trade-off parameter.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 </section>
@@ -480,10 +397,10 @@ acquisition function.</p>
             <p class="prev-next-title">smac.acquisition.functions.confidence_bound</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.acquisition.functions.integrated.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.acquisition.functions.integrated_acquisition_function.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.acquisition.functions.integrated</p>
+        <p class="prev-next-title">smac.acquisition.functions.integrated_acquisition_function</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

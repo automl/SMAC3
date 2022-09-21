@@ -339,21 +339,21 @@ style="width: 100%;">
         <span class="n">has_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">prior</span><span class="p">:</span> <span class="n">AbstractPrior</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">length_scale</span> <span class="o">=</span> <span class="n">length_scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">length_scale_bounds</span> <span class="o">=</span> <span class="n">length_scale_bounds</span>
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">operate_on</span><span class="o">=</span><span class="n">operate_on</span><span class="p">,</span>
             <span class="n">has_conditions</span><span class="o">=</span><span class="n">has_conditions</span><span class="p">,</span>
             <span class="n">prior</span><span class="o">=</span><span class="n">prior</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_length_scale</span> <span class="o">=</span> <span class="n">length_scale</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_length_scale_bounds</span> <span class="o">=</span> <span class="n">length_scale_bounds</span>
-
 <div class="viewcode-block" id="HammingKernel.get_meta"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.hamming_kernel.html#smac.model.gaussian_process.kernels.HammingKernel.get_meta">[docs]</a>    <span class="k">def</span> <span class="nf">get_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="n">meta</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_meta</span><span class="p">()</span>
         <span class="n">meta</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
             <span class="p">{</span>
-                <span class="s2">&quot;length_scale&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_length_scale</span><span class="p">,</span>
-                <span class="s2">&quot;lengthscale_bounds&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_length_scale_bounds</span><span class="p">,</span>
+                <span class="s2">&quot;length_scale&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">length_scale</span><span class="p">,</span>
+                <span class="s2">&quot;lengthscale_bounds&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">length_scale_bounds</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">)</span>
 
@@ -362,21 +362,21 @@ style="width: 100%;">
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">hyperparameter_length_scale</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Hyperparameter</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Hyperparameter of the length scale.&quot;&quot;&quot;</span>
-        <span class="n">length_scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_length_scale</span>
+        <span class="n">length_scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">length_scale</span>
         <span class="n">anisotropic</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">iterable</span><span class="p">(</span><span class="n">length_scale</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">length_scale</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>  <span class="c1"># type: ignore</span>
 
         <span class="k">if</span> <span class="n">anisotropic</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Hyperparameter</span><span class="p">(</span>
                 <span class="s2">&quot;length_scale&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;numeric&quot;</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_length_scale_bounds</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">length_scale_bounds</span><span class="p">,</span>
                 <span class="nb">len</span><span class="p">(</span><span class="n">length_scale</span><span class="p">),</span>  <span class="c1"># type: ignore</span>
             <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Hyperparameter</span><span class="p">(</span>
             <span class="s2">&quot;length_scale&quot;</span><span class="p">,</span>
             <span class="s2">&quot;numeric&quot;</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_length_scale_bounds</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">length_scale_bounds</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
@@ -387,7 +387,7 @@ style="width: 100%;">
         <span class="n">active</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-        <span class="n">length_scale</span> <span class="o">=</span> <span class="n">kernels</span><span class="o">.</span><span class="n">_check_length_scale</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_length_scale</span><span class="p">)</span>
+        <span class="n">length_scale</span> <span class="o">=</span> <span class="n">kernels</span><span class="o">.</span><span class="n">_check_length_scale</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">length_scale</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">Y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">Y</span> <span class="o">=</span> <span class="n">X</span>
