@@ -99,8 +99,6 @@ class LocalSearch(AbstractAcquisitionOptimizer):
         for _, inc in configs_acq:
             inc.origin = "Local Search"
 
-        print(configs_acq)
-
         return configs_acq
 
     def _get_initial_points(
