@@ -114,7 +114,9 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         assert "eta" in kwargs
         self._iteration_number += 1
         self._eta = kwargs["eta"]
-        self._acquisition_function.update(**kwargs)
+
+        assert self.model is not None
+        self._acquisition_function.update(model=self.model, **kwargs)
 
     def _compute_prior(self, X: np.ndarray) -> np.ndarray:
         """Computes the prior-weighted acquisition function values, where the prior on each

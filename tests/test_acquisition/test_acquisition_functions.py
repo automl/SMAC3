@@ -16,7 +16,7 @@ __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class ConfigurationMock(object):
+class ConfigurationMock:
     def __init__(self, values=None):
         self.values = values
 
@@ -24,28 +24,29 @@ class ConfigurationMock(object):
         return self.values
 
 
-class MockModel(object):
+class MockModel:
     def __init__(self, num_targets=1, seed=0):
         self.num_targets = num_targets
-        self.seed = seed
+        self._seed = seed
+        self._rng = np.random.RandomState(self._seed)
 
-    def predict_marginalized_over_instances(self, X):
+    def predict_marginalized(self, X):
         return np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 1)), np.array(
             [np.mean(X, axis=1).reshape((1, -1))] * self.num_targets
         ).reshape((-1, 1))
 
 
-class MockModelDual(object):
+class MockModelDual:
     def __init__(self, num_targets=1):
         self.num_targets = num_targets
 
-    def predict_marginalized_over_instances(self, X):
+    def predict_marginalized(self, X):
         return np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 2)), np.array(
             [np.mean(X, axis=1).reshape((1, -1))] * self.num_targets
         ).reshape((-1, 2))
 
 
-class MockPrior(object):
+class MockPrior:
     def __init__(self, pdf, max_density):
         self.pdf = pdf
         self.max_density = max_density
@@ -56,8 +57,8 @@ class MockPrior(object):
     def get_max_density(self):
         return self.max_density
 
-    
-class GetHPDict(object):
+
+class GetHPDict:
     def __init__(self, hyperparameter_dict) -> None:
         self._hyperparameter_dict = None
         self._return_value = None
@@ -85,53 +86,54 @@ class GetHPDict(object):
         return self.hyperparameter_dict
 
 
-class MockConfigurationSpace(object):
+class MockConfigurationSpace:
     def __init__(self, hyperparameter_dict):
         self.hyperparameter_dict = hyperparameter_dict
         self.get_hyperparameters_dict = GetHPDict(hyperparameter_dict=hyperparameter_dict)
 
-    
-class PriorMockModel(object):
+
+class PriorMockModel:
     def __init__(self, hyperparameter_dict=None, num_targets=1, seed=0):
         self.num_targets = num_targets
-        self.seed = seed
-        self.configuration_space = MockConfigurationSpace(hyperparameter_dict)
+        self._seed = seed
+        self._rng = np.random.RandomState(self._seed)
+        self._configspace = MockConfigurationSpace(hyperparameter_dict)
         self.hyperparameter_dict = hyperparameter_dict
         # since the PriorAcquisitionFunction needs to return the hyperparameters in dict
         # form through two function calls (self.model.get_configspace().get_hyperparameters_dict()),
         # we need a slightly intricate solution
-        self.configuration_space.get_hyperparameters_dict.return_value = self.hyperparameter_dict
+        self._configspace.get_hyperparameters_dict.return_value = self.hyperparameter_dict
 
     def get_configspace(self):
-        return self.configuration_space
+        return self._configspace
 
-    def predict_marginalized_over_instances(self, X):
+    def predict_marginalized(self, X):
         return np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 1)), np.array(
             [np.mean(X, axis=1).reshape((1, -1))] * self.num_targets
         ).reshape((-1, 1))
 
     def update_prior(self, hyperparameter_dict):
-        self.configuration_space.get_hyperparameters_dict.return_value = hyperparameter_dict
+        self._configspace.get_hyperparameters_dict.return_value = hyperparameter_dict
 
 
 class MockModelRNG(MockModel):
     def __init__(self, num_targets=1, seed=0):
         self.num_targets = num_targets
-        self.seed = seed
-        self.rng = np.random.RandomState(self.seed)
+        self._seed = seed
+        self._rng = np.random.RandomState(self._seed)
 
 
 class MockModelSampler(MockModelRNG):
     def __init__(self, num_targets=1, seed=0):
         self.num_targets = num_targets
-        self.seed = seed
-        self.rng = np.random.RandomState(seed)
+        self._seed = seed
+        self._rng = np.random.RandomState(seed)
 
     def sample_functions(self, X, n_funcs=1):
         m = np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1,))
         var = np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1,))
         var = np.diag(var)
-        return self.rng.multivariate_normal(m, var, n_funcs).T
+        return self._rng.multivariate_normal(m, var, n_funcs).T
 
 
 @pytest.fixture
@@ -142,7 +144,8 @@ def model():
 @pytest.fixture
 def acquisition_function(model):
     ei = EI()
-    ei._set_model(model=model)
+    ei.model = model
+
     return ei
 
 
@@ -153,10 +156,10 @@ def acquisition_function(model):
 
 def test_update_model_and_eta(model, acquisition_function):
     model = "abc"
-    assert acquisition_function.eta is None
+    assert acquisition_function._eta is None
     acquisition_function.update(model=model, eta=0.1)
     assert acquisition_function.model == model
-    assert acquisition_function.eta == 0.1
+    assert acquisition_function._eta == 0.1
 
 
 def test_update_with_kwargs(acquisition_function):
@@ -185,21 +188,21 @@ def multimodel():
 
 @pytest.fixture
 def acq_multi(multimodel, acquisition_function):
-    acquisition_function._set_model(multimodel)
+    acquisition_function.model = multimodel
     return acquisition_function
 
 
 @pytest.fixture
 def iaf(multimodel, acq_multi):
     iaf = IntegratedAcquisitionFunction(acquisition_function=acq_multi)
-    iaf._set_model(model=multimodel)
+    iaf.model = multimodel
     return iaf
 
 
 def test_integrated_acquisition_function_update(iaf, model, multimodel):
     iaf.update(model=multimodel, eta=2)
     for func in iaf._functions:
-        assert func.eta == 2
+        assert func._eta == 2
 
     with pytest.raises(ValueError) as exc_info:
         iaf.update(model=MockModel())
@@ -283,21 +286,21 @@ def prior_floor():
 def test_prior_init_ei(prior_model, acquisition_function, beta):
     acq_ei = acquisition_function
     paf = PriorAcquisitionFunction(prior_model, acq_ei, beta)
-    assert paf.rescale_acq is False
+    assert paf._rescale is False
 
 
 def test_prior_init_ts(prior_model, acq_ts, beta):
     paf = PriorAcquisitionFunction(acquisition_function=acq_ts, decay_beta=beta)
     paf.update(model=prior_model, eta=1, num_data=1)
-    assert paf.rescale_acq is True
+    assert paf._rescale is True
 
 
 def test_prior_update(prior_model, acquisition_function, beta):
     paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta)
     paf.update(model=prior_model, eta=2)
-    assert paf.eta == 2
-    assert paf.acq.eta == 2
-    assert paf.iteration_number == 1
+    assert paf._eta == 2
+    assert paf._acquisition_function._eta == 2
+    assert paf._iteration_number == 1
 
 
 def test_prior_compute_prior_Nx1(prior_model, hyperparameter_dict, acquisition_function, beta):
@@ -379,7 +382,7 @@ def test_prior_1xD(hp_dict3, prior_model, acquisition_function, beta, prior_floo
     acq = paf(configurations)
     assert acq.shape == (1, 1)
 
-    prior_0_factor = np.power(2.0 * 1.0 * 0.0 + paf.prior_floor, beta / 1.0)
+    prior_0_factor = np.power(2.0 * 1.0 * 0.0 + paf._prior_floor, beta / 1.0)
 
     assert np.isclose(acq[0][0], 0.3989422804014327 * prior_0_factor)
 
@@ -398,9 +401,9 @@ def test_prior_NxD(hp_dict3, prior_model, acquisition_function, beta, prior_floo
     acq = paf(configurations)
     assert acq.shape == (3, 1)
 
-    prior_0_factor = np.power(0.0 * 1.0 * 2.0 + paf.prior_floor, beta / 1.0)
-    prior_1_factor = np.power(0.2 * 1.0 * 1.8 + paf.prior_floor, beta / 1.0)
-    prior_2_factor = np.power(2.0 * 1.0 * 0.0 + paf.prior_floor, beta / 1.0)
+    prior_0_factor = np.power(0.0 * 1.0 * 2.0 + paf._prior_floor, beta / 1.0)
+    prior_1_factor = np.power(0.2 * 1.0 * 1.8 + paf._prior_floor, beta / 1.0)
+    prior_2_factor = np.power(2.0 * 1.0 * 0.0 + paf._prior_floor, beta / 1.0)
 
     # We do only one update, so we are at iteration 1 (beta/iteration_nbr=2)
     assert np.isclose(acq[0][0], 0.0 * prior_0_factor)
@@ -428,9 +431,9 @@ def test_prior_NxD_TS(prior_model, hp_dict3, acq_ts, beta, prior_floor):
     ts_value_1 = -0.22654082
     ts_value_2 = -2.76405235
 
-    prior_0_factor = np.power(0.0002 * 1 * 1.9998 + paf.prior_floor, beta / 1.0)
-    prior_1_factor = np.power(0.2 * 1.0 * 1.8 + paf.prior_floor, beta / 1.0)
-    prior_2_factor = np.power(2.0 * 1.0 * 0.0 + paf.prior_floor, beta / 1.0)
+    prior_0_factor = np.power(0.0002 * 1 * 1.9998 + paf._prior_floor, beta / 1.0)
+    prior_1_factor = np.power(0.2 * 1.0 * 1.8 + paf._prior_floor, beta / 1.0)
+    prior_2_factor = np.power(2.0 * 1.0 * 0.0 + paf._prior_floor, beta / 1.0)
 
     # rescaling to avoid negative values, and keep the TS ranking intact
     combined_value_0 = np.clip(ts_value_0 + eta, 0, np.inf) * prior_0_factor
@@ -449,7 +452,7 @@ def test_prior_decay(hp_dict3, prior_model, acquisition_function, beta, prior_fl
     configurations = [ConfigurationMock([0.1, 0.1, 0.1])]
 
     for i in range(1, 6):
-        prior_factor = np.power(0.2 * 1.0 * 1.8 + paf.prior_floor, beta / i)
+        prior_factor = np.power(0.2 * 1.0 * 1.8 + paf._prior_floor, beta / i)
         acq = paf(configurations)
         print(acq, 0.90020601136712231 * prior_factor)
         assert np.isclose(acq[0][0], 0.90020601136712231 * prior_factor)
@@ -558,7 +561,7 @@ def model_eips():
 @pytest.fixture
 def acq_eips(model_eips):
     ei = EIPS()
-    ei._set_model(model=model_eips)
+    ei.model = model_eips
     return ei
 
 
@@ -581,7 +584,7 @@ def test_eips_fail(model_eips, acq_eips):
 @pytest.fixture
 def acq_logei(model):
     ei = EI(log=True)
-    ei._set_model(model=model)
+    ei.model = model
     return ei
 
 
@@ -617,7 +620,7 @@ def test_logei_NxD(model, acq_logei):
 @pytest.fixture
 def acq_pi(model):
     pi = PI()
-    pi._set_model(model=model)
+    pi.model = model
     return pi
 
 
@@ -662,7 +665,7 @@ def test_pi_NxD(model, acq_pi):
 @pytest.fixture
 def acq_lcb(model):
     lcb = LCB()
-    lcb._set_model(model=model)
+    lcb.model = model
     return lcb
 
 
@@ -716,7 +719,7 @@ def test_lcb_NxD(model, acq_lcb):
 @pytest.fixture
 def acq_ts(model):
     ts = TS()
-    ts._set_model(model=model)
+    ts.model = model
     return ts
 
 
@@ -746,11 +749,11 @@ def test_ts_rng():
     """Test TS acqusition function with model that only has attribute 'rng'"""
     model = MockModelRNG()
     ts = TS()
-    ts._set_model(model=model)
+    ts.model = model
 
 
 def test_ts_sampler():
     "Test TS acqusition function with model that only has attribute 'sample_functions'"
     model = MockModelSampler()
     ts = TS()
-    ts._set_model(model=model)
+    ts.model = model

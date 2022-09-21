@@ -29,15 +29,6 @@ class EI(AbstractAcquisitionFunction):
     log : bool, defaults to False
         Whether the function values are in log-space.
 
-    Attributes
-    ----------
-    long_name : str
-    log : bool
-        Whether the function values are in log-space.
-    xi : float
-        Exploration/exploitation trade-off parameter.
-    eta : float
-        Current incumbent value.
     """
 
     def __init__(
