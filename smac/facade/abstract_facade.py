@@ -8,7 +8,7 @@ from pathlib import Path
 import joblib
 
 import smac
-from smac.acquisition.optimizers.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition.maximizers.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
 from smac.acquisition.functions.abstract_acquisition_function import AbstractAcquisitionFunction
 from smac.callback import Callback
 from smac.random_design.abstract_random_design import AbstractRandomDesign

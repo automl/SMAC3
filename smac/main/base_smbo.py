@@ -6,7 +6,7 @@ from typing import Iterator
 import time
 
 
-from smac.acquisition.optimizers.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition.maximizers.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )

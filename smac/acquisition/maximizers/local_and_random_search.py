@@ -3,10 +3,10 @@ from __future__ import annotations
 from typing import Any
 
 
-from smac.acquisition.optimizers.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition.maximizers.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
 from smac.acquisition.functions import AbstractAcquisitionFunction
-from smac.acquisition.optimizers.local_search import LocalSearch
-from smac.acquisition.optimizers.random_search import RandomSearch
+from smac.acquisition.maximizers.local_search import LocalSearch
+from smac.acquisition.maximizers.random_search import RandomSearch
 
 from ConfigSpace import Configuration, ConfigurationSpace
 

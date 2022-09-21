@@ -1,7 +1,7 @@
 from __future__ import annotations
 import numpy as np
 
-from smac.acquisition.optimizers import AbstractAcquisitionOptimizer
+from smac.acquisition.maximizers import AbstractAcquisitionOptimizer
 from ConfigSpace import Configuration
 from scipy.optimize._differentialevolution import DifferentialEvolutionSolver
 

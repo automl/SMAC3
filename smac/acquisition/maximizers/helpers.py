@@ -34,8 +34,6 @@ class ChallengerList(Iterator):
         self._challengers: list[Configuration] | None = None
         self._configspace = configspace
         self._index = 0
-
-        # TODO: Double-check whether this is still true / necessary
         self._iteration = 1  # 1-based to prevent from starting with a random configuration
         self._random_design = random_design
 

@@ -4,7 +4,7 @@ import numpy as np
 import sklearn.gaussian_process.kernels as kernels
 
 from smac.acquisition.functions.expected_improvement import EI
-from smac.acquisition.optimizers.local_and_random_search import LocalAndSortedRandomSearch
+from smac.acquisition.maximizers.local_and_random_search import LocalAndSortedRandomSearch
 from smac.random_design.probability_design import ProbabilityRandomDesign
 from ConfigSpace import Configuration
 from smac.facade.abstract_facade import AbstractFacade

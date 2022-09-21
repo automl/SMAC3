@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from smac.acquisition.functions.expected_improvement import EI
-from smac.acquisition.optimizers.random_search import AbstractAcquisitionOptimizer, RandomSearch
+from smac.acquisition.maximizers.random_search import AbstractAcquisitionOptimizer, RandomSearch
 from smac.random_design import AbstractRandomDesign, ProbabilityRandomDesign
 from ConfigSpace import Configuration
 from smac.facade.abstract_facade import AbstractFacade

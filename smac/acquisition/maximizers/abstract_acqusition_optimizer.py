@@ -11,7 +11,7 @@ from smac.acquisition.functions.abstract_acquisition_function import (
 from smac.random_design.abstract_random_design import AbstractRandomDesign
 from ConfigSpace import Configuration, ConfigurationSpace
 from smac.utils.logging import get_logger
-from smac.acquisition.optimizers.helpers import ChallengerList
+from smac.acquisition.maximizers.helpers import ChallengerList
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
