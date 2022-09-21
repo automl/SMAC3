@@ -7,7 +7,6 @@ from scipy.stats import norm
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.model.abstract_model import AbstractModel
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -17,7 +16,7 @@ logger = get_logger(__name__)
 
 
 class EI(AbstractAcquisitionFunction):
-    r"""Compute the expected improvement for a given x.
+    r"""Computes the expected improvement for a given x.
 
     :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]`,
     with :math:`f(X^+)` as the best location.
@@ -41,66 +40,57 @@ class EI(AbstractAcquisitionFunction):
         Current incumbent value.
     """
 
-    def __init__(self, xi: float = 0.0, log: bool = False) -> None:
+    def __init__(
+        self,
+        xi: float = 0.0,
+        log: bool = False,
+    ) -> None:
         super(EI, self).__init__()
-        self.long_name: str = "Expected Improvement"
-        self.log: bool = log
-        self.xi: float = xi
-        self.eta: float | None = None
+
+        self._xi: float = xi
+        self._log: bool = log
+        self._eta: float | None = None
+
+    @property
+    def name(self) -> str:
+        return "Expected Improvement"
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
-        return {
-            "name": self.__class__.__name__,
-        }
+        meta = super().get_meta()
+        meta.update(
+            {
+                "xi": self._xi,
+                "log": self._log,
+            }
+        )
 
-    def update(self, model: AbstractModel, eta: float, xi: float | None = None, **kwargs: Any) -> None:
-        """Update the acquisition function attributes required for calculation.
+        return meta
 
-        Parameters
-        ----------
-        model : BaseModel
-           Models the objective function.
-        eta : float
-            Current incumbent value.
-        """
-        self.model = model
-        self.eta = eta
-        if xi is not None:
-            self.xi = xi
+    def _update(self, **kwargs: Any) -> None:
+        assert "eta" in kwargs
+        self._eta = kwargs["eta"]
+
+        if "xi" in kwargs and kwargs["xi"] is not None:
+            self._xi = kwargs["xi"]
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
-        """Computes the EI value and its derivatives.
+        """Computess the EI value and its derivatives."""
+        assert self._model is not None
+        assert self._xi is not None
+        if self._eta is None:
+            raise ValueError("No `eta` specified. Call `update` to inform the acqusition function.")
 
-        Parameters
-        ----------
-        X: np.ndarray(N, D), The input points where the acquisition function
-            should be evaluated. The dimensionality of X is (N, D), with N as
-            the number of points to evaluate at and D is the number of
-            dimensions of one X.
-
-        Returns
-        -------
-        np.ndarray(N,1)
-            Expected Improvement of X
-        """
-        if self.eta is None:
-            raise ValueError(
-                "No current best specified. Call update("
-                "eta=<float>) to inform the acquisition function "
-                "about the current best value."
-            )
-
-        if not self.log:
+        if not self._log:
             if len(X.shape) == 1:
                 X = X[:, np.newaxis]
 
-            m, v = self.model.predict_marginalized(X)
+            m, v = self._model.predict_marginalized(X)
             s = np.sqrt(v)
 
-            def calculate_f():
-                z = (self.eta - m - self.xi) / s
-                return (self.eta - m - self.xi) * norm.cdf(z) + s * norm.pdf(z)
+            def calculate_f() -> np.ndarray:
+                z = (self._eta - m - self._xi) / s
+                return (self._eta - m - self._xi) * norm.cdf(z) + s * norm.pdf(z)
 
             if np.any(s == 0.0):
                 # if std is zero, we have observed x on all instances
@@ -122,12 +112,15 @@ class EI(AbstractAcquisitionFunction):
             if len(X.shape) == 1:
                 X = X[:, np.newaxis]
 
-            m, var_ = self.model.predict_marginalized(X)
+            m, var_ = self._model.predict_marginalized(X)
             std = np.sqrt(var_)
 
-            def calculate_log_ei():
+            def calculate_log_ei() -> np.ndarray:
                 # we expect that f_min is in log-space
-                f_min = self.eta - self.xi
+                assert self._eta is not None
+                assert self._xi is not None
+
+                f_min = self._eta - self._xi
                 v = (f_min - m) / std
                 return (np.exp(f_min) * norm.cdf(v)) - (np.exp(0.5 * var_ + m) * norm.cdf(v - std))
 
@@ -151,47 +144,31 @@ class EI(AbstractAcquisitionFunction):
 
 
 class EIPS(EI):
-    r"""Computes for a given x the expected improvement as
-    acquisition value.
+    r"""Computess for a given x the expected improvement as acquisition value.
+
     :math:`EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}`,
     with :math:`f(X^+)` as the best location and :math:`r(x)` as runtime.
 
     Parameters
     ----------
     xi : float, defaults to 0.0
-        Controls the balance between exploration and exploitation of the
-        acquisition function.
-
-    Attributes
-    ----------
-    long_name : str
-    xi : float
-        Exploration/exploitation trade-off parameter.
+        Controls the balance between exploration and exploitation of the acquisition function.
     """
 
     def __init__(self, xi: float = 0.0) -> None:
         super(EIPS, self).__init__(xi=xi)
-        self.long_name: str = "Expected Improvement per Second"
+
+    @property
+    def name(self) -> str:
+        return "Expected Improvement per Second"
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
-        """Computes the EIPS value.
-
-        Parameters
-        ----------
-        X: np.ndarray(N, D), The input point where the acquisition function
-            should be evaluate. The dimensionality of X is (N, D), with N as
-            the number of points to evaluate at and D is the number of
-            dimensions of one X.
-
-        Returns
-        -------
-        np.ndarray(N,1)
-            Expected Improvement per Second of X
-        """
+        """Computess the EIPS value."""
+        assert self._model is not None
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
 
-        m, v = self.model.predict_marginalized(X)
+        m, v = self._model.predict_marginalized(X)
         if m.shape[1] != 2:
             raise ValueError("m has wrong shape: %s != (-1, 2)" % str(m.shape))
         if v.shape[1] != 2:
@@ -199,21 +176,23 @@ class EIPS(EI):
 
         m_cost = m[:, 0]
         v_cost = v[:, 0]
+
         # The model already predicts log(runtime)
         m_runtime = m[:, 1]
         s = np.sqrt(v_cost)
 
-        if self.eta is None:
+        if self._eta is None:
             raise ValueError(
                 "No current best specified. Call update("
                 "eta=<int>) to inform the acquisition function "
                 "about the current best value."
             )
 
-        def calculate_f():
-            z = (self.eta - m_cost - self.xi) / s
-            f = (self.eta - m_cost - self.xi) * norm.cdf(z) + s * norm.pdf(z)
+        def calculate_f() -> np.ndarray:
+            z = (self._eta - m_cost - self._xi) / s
+            f = (self._eta - m_cost - self._xi) * norm.cdf(z) + s * norm.pdf(z)
             f = f / m_runtime
+
             return f
 
         if np.any(s == 0.0):

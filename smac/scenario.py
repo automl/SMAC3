@@ -124,7 +124,7 @@ class Scenario:
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Scenario):
-            # When using __dict__, we make sure to include the meta data
+            # When using __dict__, we make sure to include the meta data.
             # However, tuples are saved as lists in json. Therefore, we compare the json string
             # to make sure we have the same conversion.
             a = copy.deepcopy(self.__dict__)

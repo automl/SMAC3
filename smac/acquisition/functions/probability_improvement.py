@@ -4,10 +4,7 @@ from typing import Any
 import numpy as np
 from scipy.stats import norm
 
-from smac.acquisition.functions.abstract_acquisition_function import (
-    AbstractAcquisitionFunction,
-)
-from smac.model.abstract_model import AbstractModel
+from smac.acquisition.functions.abstract_acquisition_function import AbstractAcquisitionFunction
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -24,60 +21,47 @@ class PI(AbstractAcquisitionFunction):
 
     Parameters
     ----------
-    par : float, default=0.0
-        Controls the balance between exploration and exploitation of the
-        acquisition function.
-
-    Attributes
-    ----------
-    long_name : str
-    xi : float
-        Exploration/exploitation trade-off parameter.
-    eta : float
-        Current incumbent value.
+    xi : float, defaults to 0.0
+        Controls the balance between exploration and exploitation of the acquisition function.
     """
 
     def __init__(self, xi: float = 0.0):
         super(PI, self).__init__()
-        self.long_name: str = "Probability of Improvement"
-        self.xi: float = xi
-        self.eta: float | None = None
+        self._xi: float = xi
+        self._eta: float | None = None
+
+    @property
+    def name(self) -> str:
+        return "Probability of Improvement"
 
     def get_meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
-        return {
-            "name": self.__class__.__name__,
-        }
+        meta = super().get_meta()
+        meta.update({"xi": self._xi})
 
-    def update(self, model: AbstractModel, eta: float, xi: float | None = None, **kwargs: Any) -> None:
-        """Update the acquisition function attributes required for calculation.
+        return meta
 
-        Parameters
-        ----------
-        model : BaseModel
-            Models the objective function.
-        eta : float
-            Current incumbent value.
-        """
-        self.model = model
-        self.eta = eta
-        if xi is not None:
-            self.xi = xi
+    def _update(self, **kwargs: Any) -> None:
+        assert "eta" in kwargs
+        self._eta = kwargs["eta"]
+
+        if "xi" in kwargs and kwargs["xi"] is not None:
+            self._xi = kwargs["xi"]
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the PI value.
 
         Parameters
         ----------
-        X: np.ndarray(N, D)
-           Points to evaluate PI. N is the number of points and D the dimension for the points
+        X: np.ndarray [N, D]
+           Points to evaluate PI. N is the number of points and D the dimension for the points.
 
         Returns
         -------
-        np.ndarray(N,1)
-            Expected Improvement of X
+        np.ndarray [N, 1]
+            Expected Improvement of X.
         """
-        if self.eta is None:
+        assert self._model is not None
+        if self._eta is None:
             raise ValueError(
                 "No current best specified. Call update("
                 "eta=<float>) to inform the acquisition function "
@@ -86,7 +70,7 @@ class PI(AbstractAcquisitionFunction):
 
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
-        m, var_ = self.model.predict_marginalized(X)
+        m, var_ = self._model.predict_marginalized(X)
         std = np.sqrt(var_)
 
-        return norm.cdf((self.eta - m - self.xi) / std)
+        return norm.cdf((self._eta - m - self._xi) / std)

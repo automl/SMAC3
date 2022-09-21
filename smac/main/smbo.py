@@ -75,8 +75,8 @@ class SMBO(BaseSMBO):
 
         challengers = self._acquisition_optimizer.maximize(
             previous_configs,
+            n_points=n,
             random_design=self._random_design,
-            num_points=n,
         )
 
         for callback in self._callbacks:

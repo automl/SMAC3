@@ -45,12 +45,12 @@ class AbstractKernel:
     def __init__(
         self,
         *,
-        operate_on: np.ndarray = None,
+        operate_on: np.ndarray | None = None,
         has_conditions: bool = False,
         prior: AbstractPrior | None = None,
         **kwargs: Any,
     ) -> None:
-        self.operate_on = None
+        self.operate_on = operate_on
         self.has_conditions = has_conditions
         self.prior = prior
         self._set_active_dims(operate_on)
@@ -62,6 +62,7 @@ class AbstractKernel:
         # We make it explicit here to make sure the next class really has this attributes.
         self._hyperparameters: list[kernels.Hyperparameter] = super().hyperparameters  # type: ignore
         self._n_dims: int = super().n_dims  # type: ignore
+        self._len_active: int | None
 
     @property
     def hyperparameters(self) -> list[kernels.Hyperparameter]:
@@ -254,8 +255,8 @@ class AbstractKernel:
             if operate_on.dtype != int:
                 raise ValueError("The dtype of argument `operate_on` needs to be int, but is %s" % operate_on.dtype)
 
-            self.operate_on: np.ndarray | None = operate_on
-            self._len_active: int | None = len(operate_on)
+            self.operate_on = operate_on
+            self._len_active = len(operate_on)
         else:
             self.operate_on = None
             self._len_active = None

@@ -18,44 +18,50 @@ logger = get_logger(__name__)
 
 
 class AbstractAcquisitionFunction(metaclass=ABCMeta):
-    """Abstract base class for acquisition function.
-
-    Parameters
-    ----------
-    model : BaseModel
-        Models the objective function.
-
-    Attributes
-    ----------
-    model : BaseModel
-    """
+    """Abstract base class for acquisition function."""
 
     def __init__(self) -> None:
-        self.model: AbstractModel | None = None
+        self._model: AbstractModel | None = None
 
-    def _set_model(self, model: AbstractModel) -> None:
-        self.model = model
-
-    @abstractmethod
-    def get_meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
+    @property
+    def name(self) -> str:
         raise NotImplementedError
 
-    @abstractmethod
-    def update(self, **kwargs: Any) -> None:
-        """Update the acquisition function attributes required for calculation.
+    @property
+    def model(self) -> AbstractModel | None:
+        return self._model
+
+    @model.setter
+    def model(self, model: AbstractModel) -> None:
+        self._model = model
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+        }
+
+    def update(self, model: AbstractModel, **kwargs: Any) -> None:
+        """Updates the acquisition function attributes required for calculation.
 
         This method will be called after fitting the model, but before maximizing the acquisition
-        function. As an examples, EI uses it to update the current fmin.
+        function. As an examples, EI uses it to update the current fmin. The default implementation only updates the
+        attributes of the acqusition function which are already present.
 
-        The default implementation only updates the attributes of the acqusition function which
-        are already present.
+        Calls `_update` to update the acquisition function attributes.
 
         Parameters
         ----------
+        model : AbstractModel
+            The model which was used to fit the data.
         kwargs : Any
+            Additional arguments to update the specific acquisition function.
         """
-        raise NotImplementedError
+        self.model = model
+        self._update(**kwargs)
+
+    def _update(self, **kwargs: Any) -> None:
+        pass
 
     def __call__(self, configurations: list[Configuration]) -> np.ndarray:
         """Compute the acquisition value for a given X.
@@ -63,12 +69,11 @@ class AbstractAcquisitionFunction(metaclass=ABCMeta):
         Parameters
         ----------
         configurations : list[Configuration]
-            The configurations where the acquisition function
-            should be evaluated.
+            The configurations where the acquisition function should be evaluated.
 
         Returns
         -------
-        np.ndarray(N, 1)
+        np.ndarray [N, 1]
             Acquisition values for X
         """
         X = convert_configurations_to_array(configurations)
@@ -79,6 +84,7 @@ class AbstractAcquisitionFunction(metaclass=ABCMeta):
         if np.any(np.isnan(acq)):
             idx = np.where(np.isnan(acq))[0]
             acq[idx, :] = -np.finfo(float).max
+
         return acq
 
     @abstractmethod
@@ -88,15 +94,13 @@ class AbstractAcquisitionFunction(metaclass=ABCMeta):
 
         Parameters
         ----------
-        X : np.ndarray
-            The input points where the acquisition function
-            should be evaluated. The dimensionality of X is (N, D), with N as
-            the number of points to evaluate at and D is the number of
-            dimensions of one X.
+        X : np.ndarray [N, D]
+            The input points where the acquisition function should be evaluated. The dimensionality of X is (N, D),
+            with N as the number of points to evaluate at and D is the number of dimensions of one X.
 
         Returns
         -------
-        np.ndarray(N,1)
-            Acquisition function values wrt X
+        np.ndarray [N,1]
+            Acquisition function values wrt X.
         """
         raise NotImplementedError

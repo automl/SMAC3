@@ -1,15 +1,13 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Iterator, Set
+from typing import Any
 
-import copy
 import itertools
-import logging
 import time
 
 import numpy as np
 
-from smac.acquisition import AbstractAcquisitionOptimizer
+from smac.acquisition.optimizers.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
 from smac.acquisition.functions import AbstractAcquisitionFunction
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.exceptions import ForbiddenValueError
@@ -29,6 +27,8 @@ class LocalSearch(AbstractAcquisitionOptimizer):
     ----------
     configspace : ConfigurationSpace
     acquisition_function : AbstractAcquisitionFunction
+    challengers : int, defaults to 5000
+        Number of challengers.
     max_steps: int | None, defaults to None
         Maximum number of iterations that the local search will perform.
     n_steps_plateau_walk: int, defaults to 10
@@ -39,76 +39,59 @@ class LocalSearch(AbstractAcquisitionOptimizer):
     vectorization_max_obtain : int, defaults to 64
         Maximal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
         reduce the overhead of SMAC.
-    challengers : int, defaults to 5000
-        Number of challengers.
     seed : int, defaults to 0
-
-    Attributes
-    ----------
-    max_steps : int
-        Maximum number of iterations that the local search will perform.
-    n_steps_plateau_walk : int
-        Number of steps during a plateau walk before local search terminates.
-    vectorization_min_obtain : int
-        Minimal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
-        reduce the overhead of SMAC.
-    vectorization_max_obtain : int
-        Maximal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
-        reduce the overhead of SMAC.
     """
 
     def __init__(
         self,
         configspace: ConfigurationSpace,
         acquisition_function: AbstractAcquisitionFunction | None = None,
+        challengers: int = 5000,
         max_steps: int | None = None,
         n_steps_plateau_walk: int = 10,
         vectorization_min_obtain: int = 2,
         vectorization_max_obtain: int = 64,
-        challengers: int = 5000,
         seed: int = 0,
     ) -> None:
-        super().__init__(configspace, acquisition_function, challengers=challengers, seed=seed)
-        self.max_steps = max_steps
-        self.n_steps_plateau_walk = n_steps_plateau_walk
-        self.vectorization_min_obtain = vectorization_min_obtain
-        self.vectorization_max_obtain = vectorization_max_obtain
+        super().__init__(
+            configspace,
+            acquisition_function,
+            challengers=challengers,
+            seed=seed,
+        )
+
+        self._max_steps = max_steps
+        self._n_steps_plateau_walk = n_steps_plateau_walk
+        self._vectorization_min_obtain = vectorization_min_obtain
+        self._vectorization_max_obtain = vectorization_max_obtain
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
-        return {
-            "name": self.__class__.__name__,
-        }
+        meta = super().get_meta()
+        meta.update(
+            {
+                "max_steps": self._max_steps,
+                "n_steps_plateau_walk": self._n_steps_plateau_walk,
+                "vectorization_min_obtain": self._vectorization_min_obtain,
+                "vectorization_max_obtain": self._vectorization_max_obtain,
+            }
+        )
+
+        return meta
 
     def _maximize(
         self,
         previous_configs: list[Configuration],
-        num_points: int,
+        n_points: int,
         additional_start_points: list[tuple[float, Configuration]] | None = None,
     ) -> list[tuple[float, Configuration]]:
         """Starts a local search from the given startpoint and quits if either the max number of
-        steps is reached or no neighbor with an higher improvement was found.
-
-        Parameters
-        ----------
-        previous_configs: list[Configuration]
-            Previously evaluated configurations.
-        response_values: np.ndarray | list[float]
-            response values of the configurations
-        num_points: int
-            number of points to be sampled
-        additional_start_points : Optional[list[tuple[float, Configuration]]]
-            Additional start point
-
-        Returns
-        -------
-        list[tuple[float, Configuration]]
-        """
-        init_points = self._get_initial_points(num_points, previous_configs, additional_start_points)
-        configs_acq = self._do_search(init_points)
+        steps is reached or no neighbor with an higher improvement was found."""
+        init_points = self._get_initial_points(previous_configs, n_points, additional_start_points)
+        configs_acq = self._search(init_points)
 
         # shuffle for random tie-break
-        self.rng.shuffle(configs_acq)
+        self._rng.shuffle(configs_acq)
 
         # sort according to acq value
         configs_acq.sort(reverse=True, key=lambda x: x[0])
@@ -119,23 +102,26 @@ class LocalSearch(AbstractAcquisitionOptimizer):
 
     def _get_initial_points(
         self,
-        num_points: int,
         previous_configs: list[Configuration],
+        n_points: int,
         additional_start_points: list[tuple[float, Configuration]] | None,
     ) -> list[Configuration]:
 
         if len(previous_configs) == 0:
-            init_points = self.configspace.sample_configuration(size=num_points)
+            init_points = self._configspace.sample_configuration(size=n_points)
         else:
             init_points = self._get_init_points_from_previous_configs(
-                num_points, previous_configs, additional_start_points
+                previous_configs,
+                n_points,
+                additional_start_points,
             )
+
         return init_points
 
     def _get_init_points_from_previous_configs(
         self,
-        num_points: int,
         previous_configs: list[Configuration],
+        n_points: int,
         additional_start_points: list[tuple[float, Configuration]] | None,
     ) -> list[Configuration]:
         """
@@ -145,7 +131,7 @@ class LocalSearch(AbstractAcquisitionOptimizer):
 
         Parameters
         ----------
-        num_points: int
+        n_points: int
             Number of initial points to be generated
         previous_configs: list[Configuration]
             Previous configuration from runhistory
@@ -157,45 +143,45 @@ class LocalSearch(AbstractAcquisitionOptimizer):
         init_points: list[Configuration]
             a set of initial points
         """
-        assert self.acquisition_function is not None
+        assert self._acquisition_function is not None
 
         # configurations with the highest previous EI
-        configs_previous_runs_sorted = self._sort_configs_by_acq_value(previous_configs)
-        configs_previous_runs_sorted = [conf[1] for conf in configs_previous_runs_sorted[:num_points]]
+        configs_previous_runs_sorted = self._sort_by_acquisition_value(previous_configs)
+        configs_previous_runs_sorted = [conf[1] for conf in configs_previous_runs_sorted[:n_points]]
 
         # configurations with the lowest predictive cost, check for None to make unit tests work
-        if self.acquisition_function.model is not None:
+        if self._acquisition_function.model is not None:
             conf_array = convert_configurations_to_array(previous_configs)
-            costs = self.acquisition_function.model.predict_marginalized(conf_array)[0]
+            costs = self._acquisition_function.model.predict_marginalized(conf_array)[0]
             assert len(conf_array) == len(costs), (conf_array.shape, costs.shape)
 
             # In case of the predictive model returning the prediction for more than one objective per configuration
             # (for example multi-objective or EIPS) it is not immediately clear how to sort according to the cost
             # of a configuration. Therefore, we simply follow the ParEGO approach and use a random scalarization.
             if len(costs.shape) == 2 and costs.shape[1] > 1:
-                weights = np.array([self.rng.rand() for _ in range(costs.shape[1])])
+                weights = np.array([self._rng.rand() for _ in range(costs.shape[1])])
                 weights = weights / np.sum(weights)
                 costs = costs @ weights
 
             # From here
             # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
-            random = self.rng.rand(len(costs))
+            random = self._rng.rand(len(costs))
             # Last column is primary sort key!
             indices = np.lexsort((random.flatten(), costs.flatten()))
 
             # Cannot use zip here because the indices array cannot index the
             # rand_configs list, because the second is a pure python list
-            previous_configs_sorted_by_cost = [previous_configs[ind] for ind in indices][:num_points]
+            previous_configs_sorted_by_cost = [previous_configs[ind] for ind in indices][:n_points]
         else:
             previous_configs_sorted_by_cost = []
 
         if additional_start_points is not None:
-            additional_start_points = [asp[1] for asp in additional_start_points[:num_points]]
+            additional_start_points = [asp[1] for asp in additional_start_points[:n_points]]
         else:
             additional_start_points = []
 
         init_points = []
-        init_points_as_set: Set[Configuration] = set()
+        init_points_as_set: set[Configuration] = set()
         for cand in itertools.chain(
             configs_previous_runs_sorted,
             previous_configs_sorted_by_cost,
@@ -204,21 +190,24 @@ class LocalSearch(AbstractAcquisitionOptimizer):
             if cand not in init_points_as_set:
                 init_points.append(cand)
                 init_points_as_set.add(cand)
+
         return init_points
 
-    def _do_search(
+    def _search(
         self,
         start_points: list[Configuration],
     ) -> list[tuple[float, Configuration]]:
-        assert self.acquisition_function is not None
+        assert self._acquisition_function is not None
 
         # Gather data structure for starting points
         if isinstance(start_points, Configuration):
             start_points = [start_points]
+
         candidates = start_points
         # Compute the acquisition value of the candidates
         num_candidates = len(candidates)
-        acq_val_candidates_ = self.acquisition_function(candidates)
+        acq_val_candidates_ = self._acquisition_function(candidates)
+
         if num_candidates == 1:
             acq_val_candidates = [acq_val_candidates_[0][0]]
         else:
@@ -238,7 +227,7 @@ class LocalSearch(AbstractAcquisitionOptimizer):
         neighbors_generated = [0] * num_candidates
         # how many neighbors were obtained for the i-th local search. Important to map the individual acquisition
         # function values to the correct local search run
-        obtain_n = [self.vectorization_min_obtain] * num_candidates
+        obtain_n = [self._vectorization_min_obtain] * num_candidates
         # Tracking the time it takes to compute the acquisition function
         times = []
 
@@ -246,15 +235,15 @@ class LocalSearch(AbstractAcquisitionOptimizer):
         neighborhood_iterators = []
         for i, inc in enumerate(candidates):
             neighborhood_iterators.append(
-                get_one_exchange_neighbourhood(inc, seed=self.rng.randint(low=0, high=100000))
+                get_one_exchange_neighbourhood(inc, seed=self._rng.randint(low=0, high=100000))
             )
             local_search_steps[i] += 1
+
         # Keeping track of configurations with equal acquisition value for plateau walking
         neighbors_w_equal_acq: list[list[Configuration]] = [[] for _ in range(num_candidates)]
 
         num_iters = 0
         while np.any(active):
-
             num_iters += 1
             # Whether the i-th local search improved. When a new neighborhood is generated, this is used to determine
             # whether a step was made (improvement) or not (iterator exhausted)
@@ -285,7 +274,7 @@ class LocalSearch(AbstractAcquisitionOptimizer):
 
             if len(neighbors) != 0:
                 start_time = time.time()
-                acq_val = self.acquisition_function(neighbors)
+                acq_val = self._acquisition_function(neighbors)
                 end_time = time.time()
                 times.append(end_time - start_time)
                 if np.ndim(acq_val.shape) == 0:
@@ -297,6 +286,7 @@ class LocalSearch(AbstractAcquisitionOptimizer):
                 for i in range(num_candidates):
                     if not active[i]:
                         continue
+
                     # And for each local search we know how many neighbors we obtained
                     for j in range(obtain_n[i]):
                         # The next line is only true if there was an improvement and we basically need to iterate to
@@ -339,24 +329,26 @@ class LocalSearch(AbstractAcquisitionOptimizer):
             for i in range(num_candidates):
                 if not active[i]:
                     continue
+
                 if obtain_n[i] == 0 or improved[i]:
                     obtain_n[i] = 2
                 else:
                     obtain_n[i] = obtain_n[i] * 2
-                    obtain_n[i] = min(obtain_n[i], self.vectorization_max_obtain)
+                    obtain_n[i] = min(obtain_n[i], self._vectorization_max_obtain)
+
                 if new_neighborhood[i]:
-                    if not improved[i] and n_no_plateau_walk[i] < self.n_steps_plateau_walk:
+                    if not improved[i] and n_no_plateau_walk[i] < self._n_steps_plateau_walk:
                         if len(neighbors_w_equal_acq[i]) != 0:
                             candidates[i] = neighbors_w_equal_acq[i][0]
                             neighbors_w_equal_acq[i] = []
                         n_no_plateau_walk[i] += 1
-                    if n_no_plateau_walk[i] >= self.n_steps_plateau_walk:
+                    if n_no_plateau_walk[i] >= self._n_steps_plateau_walk:
                         active[i] = False
                         continue
 
                     neighborhood_iterators[i] = get_one_exchange_neighbourhood(
                         candidates[i],
-                        seed=self.rng.randint(low=0, high=100000),
+                        seed=self._rng.randint(low=0, high=100000),
                     )
 
         logger.debug(

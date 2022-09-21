@@ -4,7 +4,7 @@ import numpy as np
 import sklearn.gaussian_process.kernels as kernels
 
 from smac.acquisition.functions.expected_improvement import EI
-from smac.acquisition.local_and_random_search import LocalAndSortedRandomSearch
+from smac.acquisition.optimizers.local_and_random_search import LocalAndSortedRandomSearch
 from smac.random_design.probability_design import ProbabilityRandomDesign
 from ConfigSpace import Configuration
 from smac.facade.abstract_facade import AbstractFacade
@@ -67,9 +67,8 @@ class BlackBoxFacade(AbstractFacade):
         """
         available_model_types = [None, "vanilla", "mcmc"]
         if model_type not in available_model_types:
-            raise ValueError(
-                f"The model_type `{model_type}` is not supported. Choose one of {', '.join(available_model_types)}"
-            )
+            types = [str(t) for t in available_model_types]
+            raise ValueError(f"The model_type `{model_type}` is not supported. Choose one of {', '.join(types)}")
 
         if kernel is None:
             kernel = BlackBoxFacade.get_kernel(scenario=scenario)

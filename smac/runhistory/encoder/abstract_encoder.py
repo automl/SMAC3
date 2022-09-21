@@ -87,6 +87,14 @@ class AbstractRunHistoryEncoder:
         self._percentile = np.array([np.NaN] * self._n_objectives)
         self._multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None
 
+    @property
+    def multi_objective_algorithm(self) -> AbstractMultiObjectiveAlgorithm | None:
+        return self._multi_objective_algorithm
+
+    @multi_objective_algorithm.setter
+    def multi_objective_algorithm(self, algorithm: AbstractMultiObjectiveAlgorithm) -> None:
+        self._multi_objective_algorithm = algorithm
+
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
@@ -96,9 +104,6 @@ class AbstractRunHistoryEncoder:
             "scale_percentage": self._scale_percentage,
             "seed": self._seed,
         }
-
-    def _set_multi_objective_algorithm(self, multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None) -> None:
-        self._multi_objective_algorithm = multi_objective_algorithm
 
     @abstractmethod
     def _build_matrix(

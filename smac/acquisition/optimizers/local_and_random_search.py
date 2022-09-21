@@ -1,19 +1,12 @@
 from __future__ import annotations
 
-import abc
-from typing import Any, Callable, Iterator, Set
+from typing import Any
 
-import copy
-import itertools
-import logging
-import time
 
-import numpy as np
-
-from smac.acquisition import AbstractAcquisitionOptimizer
+from smac.acquisition.optimizers.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
 from smac.acquisition.functions import AbstractAcquisitionFunction
-from smac.acquisition.local_search import LocalSearch
-from smac.acquisition.random_search import RandomSearch
+from smac.acquisition.optimizers.local_search import LocalSearch
+from smac.acquisition.optimizers.random_search import RandomSearch
 
 from ConfigSpace import Configuration, ConfigurationSpace
 
@@ -29,80 +22,96 @@ logger = get_logger(__name__)
 class LocalAndSortedRandomSearch(AbstractAcquisitionOptimizer):
     """Implements SMAC's default acquisition function optimization.
 
-    This optimizer performs local search from the previous best points
-    according, to the acquisition function, uses the acquisition function to
-    sort randomly sampled configurations. Random configurations are
-    interleaved by the main SMAC code.
+    This optimizer performs local search from the previous best points according, to the acquisition function, uses the
+    acquisition function to sort randomly sampled configurations. Random configurations are interleaved by the main SMAC
+    code.
 
     Parameters
     ----------
     configspace : ConfigurationSpace
     acquisition_function : AbstractAcquisitionFunction | None, defaults to None
+    challengers : int, defaults to 5000
+        Number of challengers.
     max_steps: int | None, defaults to None
         [LocalSearch] Maximum number of steps that the local search will perform.
     n_steps_plateau_walk: int, defaults to 10
         [LocalSearch] number of steps during a plateau walk before local search terminates
-    local_search_iterations: int, defauts to 0
+    local_search_iterations: int, defauts to 10
         [Local Search] number of local search iterations
-    challengers : int, defaults to 5000
-        Number of challengers.
     seed : int, defaults to 0
-
-    Attributes
-    ----------
-    random_search : RandomSearch
-    local_search : LocalSearch
-    local_search_iterations : int
     """
 
     def __init__(
         self,
         configspace: ConfigurationSpace,
         acquisition_function: AbstractAcquisitionFunction | None = None,
+        challengers: int = 5000,
         max_steps: int | None = None,
         n_steps_plateau_walk: int = 10,
         local_search_iterations: int = 10,
-        challengers: int = 5000,
         seed: int = 0,
     ) -> None:
-        super().__init__(configspace, acquisition_function=acquisition_function, challengers=challengers, seed=seed)
-        self.random_search = RandomSearch(configspace=configspace, acquisition_function=acquisition_function, seed=seed)
-        self.local_search = LocalSearch(
+        super().__init__(
+            configspace,
+            acquisition_function=acquisition_function,
+            challengers=challengers,
+            seed=seed,
+        )
+
+        self._random_search = RandomSearch(
+            configspace=configspace,
+            acquisition_function=acquisition_function,
+            seed=seed,
+        )
+
+        self._local_search = LocalSearch(
             configspace=configspace,
             acquisition_function=acquisition_function,
             max_steps=max_steps,
             n_steps_plateau_walk=n_steps_plateau_walk,
             seed=seed,
         )
-        self.local_search_iterations = local_search_iterations
+
+        self._local_search_iterations = local_search_iterations
+
+    @property
+    def acquisition_function(self) -> AbstractAcquisitionFunction | None:
+        return self._acquisition_function
+
+    @acquisition_function.setter
+    def acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
+        self._acquisition_function = acquisition_function
+        self._random_search._acquisition_function = acquisition_function
+        self._local_search._acquisition_function = acquisition_function
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
-        return {
-            "name": self.__class__.__name__,
-        }
+        meta = super().get_meta()
+        meta.update(
+            {
+                "random_search": self._random_search.get_meta(),
+                "local_search": self._local_search.get_meta(),
+            }
+        )
 
-    def _set_acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
-        self.acquisition_function = acquisition_function
-        self.random_search._set_acquisition_function(acquisition_function)
-        self.local_search._set_acquisition_function(acquisition_function)
+        return meta
 
     def _maximize(
         self,
         previous_configs: list[Configuration],
-        num_points: int,
+        n_points: int,
     ) -> list[tuple[float, Configuration]]:
 
         # Get configurations sorted by EI
-        next_configs_by_random_search_sorted = self.random_search._maximize(
-            previous_configs,
-            num_points,
+        next_configs_by_random_search_sorted = self._random_search._maximize(
+            previous_configs=previous_configs,
+            n_points=n_points,
             _sorted=True,
         )
 
-        next_configs_by_local_search = self.local_search._maximize(
-            previous_configs,
-            self.local_search_iterations,
+        next_configs_by_local_search = self._local_search._maximize(
+            previous_configs=previous_configs,
+            n_points=self._local_search_iterations,
             additional_start_points=next_configs_by_random_search_sorted,
         )
 
@@ -120,83 +129,82 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionOptimizer):
             "First 5 acquisition function values of selected configurations:\n%s",
             ", ".join(first_five),
         )
+
         return next_configs_by_acq_value
 
 
 class LocalAndSortedPriorRandomSearch(AbstractAcquisitionOptimizer):
     """Implements SMAC's default acquisition function optimization.
 
-    This optimizer performs local search from the previous best points
-    according to the acquisition function, uses the acquisition function to
-    sort randomly sampled configurations. Random configurations are
-    interleaved by the main SMAC code. The random configurations are retrieved
-    from two different ConfigurationSpaces - one which uses priors (e.g. NormalFloatHP)
-    and is defined by the user, and one that is a uniform version of the same
-    space, i.e. with the priors removed.
+    This optimizer performs local search from the previous best points according to the acquisition function, uses the
+    acquisition function to sort randomly sampled configurations. Random configurations are interleaved by the main SMAC
+    code. The random configurations are retrieved from two different ConfigurationSpaces - one which uses priors
+    (e.g. NormalFloatHP) and is defined by the user, and one that is a uniform version of the same space, i.e. with the
+    priors removed.
 
     Parameters
     ----------
     configspace : ConfigurationSpace
-        The original ConfigurationSpace specified by the user
-    acquisition_function : AbstractAcquisitionFunction
+        The original ConfigurationSpace specified by the user.
     uniform_configspace : ConfigurationSpace
-        A version of the user-defined ConfigurationSpace where all parameters are
-        uniform (or have their weights removed in the case of a categorical
-        hyperparameter)
-    max_steps: int, defaults to None
-        [LocalSearch] Maximum number of steps that the local search will perform
-    n_steps_plateau_walk: int, defaults to 10
-        [LocalSearch] number of steps during a plateau walk before local search terminates
-    local_search_iterations: int, defaults to 10
-        [Local Search] number of local search iterations
-    prior_sampling_fraction: float, defaults to 0.5
-        The ratio of random samples that are taken from the user-defined ConfigurationSpace,
-        as opposed to the uniform version.
+        A version of the user-defined ConfigurationSpace where all parameters are uniform (or have their weights removed
+        in the case of a categorical hyperparameter).
+    acquisition_function : AbstractAcquisitionFunction | None, defaults to None
     challengers : int, defaults to 5000
         Number of challengers.
+    max_steps: int, defaults to None
+        [LocalSearch] Maximum number of steps that the local search will perform.
+    n_steps_plateau_walk: int, defaults to 10
+        [LocalSearch] number of steps during a plateau walk before local search terminates.
+    local_search_iterations: int, defaults to 10
+        [Local Search] number of local search iterations.
+    prior_sampling_fraction: float, defaults to 0.5
+        The ratio of random samples that are taken from the user-defined ConfigurationSpace, as opposed to the uniform
+        version.
     seed : int, defaults to 0
-
-    Attributes
-    ----------
-    prior_random_search : RandomSearch
-        Search over the prior configuration space.
-    uniform_random_search : RandomSearch
-        Search ove rthe normal configuration space.
-    local_search : LocalSearch
-    local_search_iterations : int
-    prior_sampling_fraction : float
-        The ratio of random samples that are taken from the user-defined ConfigurationSpace,
-        as opposed to the uniform version.
     """
 
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        acquisition_function: AbstractAcquisitionFunction,
         uniform_configspace: ConfigurationSpace,
+        acquisition_function: AbstractAcquisitionFunction | None = None,
+        challengers: int = 5000,
         max_steps: int | None = None,
         n_steps_plateau_walk: int = 10,
         local_search_iterations: int = 10,
         prior_sampling_fraction: float = 0.5,
-        challengers: int = 5000,
         seed: int = 0,
     ) -> None:
-        super().__init__(acquisition_function, configspace, challengers=challengers, seed=seed)
-        self.prior_random_search = RandomSearch(
-            acquisition_function=acquisition_function, configspace=configspace, seed=seed
+        super().__init__(
+            acquisition_function,
+            configspace,
+            challengers=challengers,
+            seed=seed,
         )
-        self.uniform_random_search = RandomSearch(
-            acquisition_function=acquisition_function, configspace=uniform_configspace, seed=seed
+
+        self._prior_random_search = RandomSearch(
+            acquisition_function=acquisition_function,
+            configspace=configspace,
+            seed=seed,
         )
-        self.local_search = LocalSearch(
+
+        self._uniform_random_search = RandomSearch(
+            acquisition_function=acquisition_function,
+            configspace=uniform_configspace,
+            seed=seed,
+        )
+
+        self._local_search = LocalSearch(
             acquisition_function=acquisition_function,
             configspace=configspace,
             max_steps=max_steps,
             n_steps_plateau_walk=n_steps_plateau_walk,
             seed=seed,
         )
-        self.local_search_iterations = local_search_iterations
-        self.prior_sampling_fraction = prior_sampling_fraction
+
+        self._local_search_iterations = local_search_iterations
+        self._prior_sampling_fraction = prior_sampling_fraction
 
     def _maximize(
         self,
@@ -205,25 +213,25 @@ class LocalAndSortedPriorRandomSearch(AbstractAcquisitionOptimizer):
     ) -> list[tuple[float, Configuration]]:
 
         # Get configurations sorted by EI
-        next_configs_by_prior_random_search_sorted = self.prior_random_search._maximize(
+        next_configs_by_prior_random_search_sorted = self._prior_random_search._maximize(
             previous_configs,
-            round(num_points * self.prior_sampling_fraction),
+            round(num_points * self._prior_sampling_fraction),
             _sorted=True,
         )
 
         # Get configurations sorted by EI
-        next_configs_by_uniform_random_search_sorted = self.uniform_random_search._maximize(
+        next_configs_by_uniform_random_search_sorted = self._uniform_random_search._maximize(
             previous_configs,
-            round(num_points * (1 - self.prior_sampling_fraction)),
+            round(num_points * (1 - self._prior_sampling_fraction)),
             _sorted=True,
         )
         next_configs_by_random_search_sorted = []
         next_configs_by_random_search_sorted.extend(next_configs_by_prior_random_search_sorted)
         next_configs_by_random_search_sorted.extend(next_configs_by_uniform_random_search_sorted)
 
-        next_configs_by_local_search = self.local_search._maximize(
+        next_configs_by_local_search = self._local_search._maximize(
             previous_configs,
-            self.local_search_iterations,
+            self._local_search_iterations,
             additional_start_points=next_configs_by_random_search_sorted,
         )
 
@@ -239,4 +247,5 @@ class LocalAndSortedPriorRandomSearch(AbstractAcquisitionOptimizer):
             "First 5 acq func (origin) values of selected configurations: %s",
             str([[_[0], _[1].origin] for _ in next_configs_by_acq_value[:5]]),
         )
+
         return next_configs_by_acq_value

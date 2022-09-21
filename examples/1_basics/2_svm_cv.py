@@ -95,7 +95,7 @@ if __name__ == "__main__":
         scenario,
         classifier.train,
         initial_design=initial_design,
-        overwrite=False,  # If the run exists, we do not overwrite it but continue the run
+        overwrite=True,  # If the run exists, we overwrite it; alternatively, we can continue from last state
     )
 
     incumbent = smac.optimize()

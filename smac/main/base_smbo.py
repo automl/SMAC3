@@ -5,9 +5,8 @@ from typing import Iterator
 
 import time
 
-import numpy as np
 
-from smac.acquisition.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition.optimizers.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
@@ -147,14 +146,14 @@ class BaseSMBO:
     def update_model(self, model: AbstractModel) -> None:
         """Updates the model and updates the acquisition function."""
         self._model = model
-        self._acquisition_function._set_model(model)
+        self._acquisition_function.model = model
 
     def update_acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
         """Updates acquisition function and assosiates the current model. Also, the acquisition
         optimizer is updated."""
         self._acquisition_function = acquisition_function
-        self._acquisition_function._set_model(self._model)
-        self._acquisition_optimizer._set_acquisition_function(acquisition_function)
+        self._acquisition_function.model = self._model
+        self._acquisition_optimizer.acquisition_function = acquisition_function
 
     def run(self, force_initial_design: bool = False) -> Configuration:
         """Runs the Bayesian optimization loop.
@@ -301,7 +300,8 @@ class BaseSMBO:
         Parameters
         ----------
         n : int | None, defaults to None
-            Number of configurations to return. If None, uses the number of challengers defined in the acquisition optimizer.
+            Number of configurations to return. If None, uses the number of challengers defined in the acquisition
+            optimizer.
 
         Returns
         -------
@@ -380,8 +380,8 @@ class BaseSMBO:
                 else:
                     diff = recursively_compare_dicts(self._scenario.__dict__, old_scenario.__dict__, level="scenario")
                     logger.info(
-                        f"Found old run in `{self._scenario.output_directory}` but it is not the same as the current one:\n"
-                        f"{diff}"
+                        f"Found old run in `{self._scenario.output_directory}` but it is not the same as the current"
+                        f"one:\n{diff}"
                     )
 
                     feedback = input(

@@ -8,10 +8,8 @@ from pathlib import Path
 import joblib
 
 import smac
-from smac.acquisition.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
-from smac.acquisition.functions.abstract_acquisition_function import (
-    AbstractAcquisitionFunction,
-)
+from smac.acquisition.optimizers.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition.functions.abstract_acquisition_function import AbstractAcquisitionFunction
 from smac.callback import Callback
 from smac.random_design.abstract_random_design import AbstractRandomDesign
 from ConfigSpace import Configuration
@@ -356,9 +354,9 @@ class AbstractFacade:
         it might be a bit hacky.
         """
         self._intensifier._stats = self._stats
-        self._runhistory_encoder._set_multi_objective_algorithm(self._multi_objective_algorithm)
-        self._acquisition_function._set_model(self._model)
-        self._acquisition_optimizer._set_acquisition_function(self._acquisition_function)
+        self._runhistory_encoder.multi_objective_algorithm = self._multi_objective_algorithm
+        self._acquisition_function.model = self._model
+        self._acquisition_optimizer.acquisition_function = self._acquisition_function
         # TODO: self._runhistory_encoder.set_success_states etc. for different intensifier?
 
     def _validate(self) -> None:
@@ -366,7 +364,7 @@ class AbstractFacade:
         assert self._optimizer
 
         # Make sure the same acquisition function is used
-        assert self._acquisition_function == self._acquisition_optimizer.acquisition_function
+        assert self._acquisition_function == self._acquisition_optimizer._acquisition_function
 
     def _get_signature_arguments(self) -> list[str]:
         arguments = []
