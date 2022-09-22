@@ -37,8 +37,8 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
 
  .. code-block:: none
 
-    [INFO][abstract_initial_design.py:92] Using `n_configs_per_hyperparameter` and ignoring `configs` and `n_configs`.
-    [INFO][abstract_initial_design.py:144] Using 10 initial design configurations.
+    [INFO][abstract_initial_design.py:82] Using `n_configs_per_hyperparameter` and ignoring `configs` and `n_configs`.
+    [INFO][abstract_initial_design.py:134] Using 10 initial design configurations.
     [INFO][intensification.py:248] No incumbent provided in the first run. Sampling a new challenger...
     [INFO][intensification.py:423] First run and no incumbent provided. Challenger is assumed to be the incumbent.
     [INFO][intensification.py:558] Updated estimated cost of incumbent on 1 trials: 1.0
@@ -198,7 +198,7 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.046 seconds)
+   **Total running time of the script:** ( 0 minutes  1.858 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_1_schaffer.py:

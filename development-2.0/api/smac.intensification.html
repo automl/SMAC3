@@ -975,27 +975,27 @@ execution. Also, a incumbent will be determined.</p>
 <p>Implementation following the description in
 “BOHB: Robust and Efficient Hyperparameter Optimization at Scale” (Falkner et al. 2018)
 Supplementary reference: <a class="reference external" href="http://proceedings.mlr.press/v80/falkner18a/falkner18a-supp.pdf">http://proceedings.mlr.press/v80/falkner18a/falkner18a-supp.pdf</a></p>
-<p>Successive Halving intensifier (and Hyperband) can operate on two kinds of budgets:
-1. Instances as budget:</p>
+<p>Successive Halving intensifier (and Hyperband) can operate on two kinds of budgets:</p>
+<ol class="arabic simple">
+<li><p>Instances as budget:</p></li>
+</ol>
 <blockquote>
 <div><p>When multiple instances are provided or when run objective is “runtime”, this is the criterion used as budget
 for successive halving iterations i.e., the budget determines how many instances the challengers are evaluated
 on at a time. Top challengers for the next iteration are selected based on the combined performance across
-all instances used.</p>
-<p>If <cite>min_budget</cite> and <cite>max_budget</cite> are not provided, then they are set to 1 and total number
+all instances used. If <cite>min_budget</cite> and <cite>max_budget</cite> are not provided, then they are set to 1 and total number
 of available instances respectively by default.</p>
 </div></blockquote>
-<ol class="arabic" start="2">
-<li><dl>
-<dt>Real-valued budget:</dt><dd><p>This is used when there is only one instance provided and when run objective is “quality”,
-i.e., budget is a positive, real-valued number that can be passed to the target algorithm as an argument.
-It can be used to control anything by the target algorithm, Eg: number of epochs for training a neural network.</p>
-<p><cite>min_budget</cite> and <cite>max_budget</cite> are required parameters for this type of budget.</p>
-</dd>
-</dl>
-</li>
+<ol class="arabic simple" start="2">
+<li><p>Real-valued budget:</p></li>
 </ol>
-<p>This class instantiates <cite>SuccessiveHalvingWorker</cite> objects on a need basis, that is, to
+<blockquote>
+<div><p>This is used when there is only one instance provided and when run objective is “quality”,
+i.e., budget is a positive, real-valued number that can be passed to the target algorithm as an argument.
+It can be used to control anything by the target algorithm, Eg: number of epochs for training a neural network.
+The parameters <cite>min_budget</cite> and <cite>max_budget</cite> are required for this type of budget.</p>
+</div></blockquote>
+<p>This class instantiates <code class="docutils literal notranslate"><span class="pre">SuccessiveHalvingWorker</span></code> objects on a need basis, that is, to
 prevent workers from being idle. The actual logic that implements the Successive halving method
 lies in the worker class.</p>
 <dl class="field-list simple">

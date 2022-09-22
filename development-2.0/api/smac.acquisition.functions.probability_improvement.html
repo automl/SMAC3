@@ -342,7 +342,7 @@ style="width: 100%;">
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction" title="smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a></p>
 <p>Computes the probability of improvement for a given x over the best so far value as acquisition value.</p>
 <p><span class="math notranslate nohighlight">\(P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+}))\)</span> <span class="math notranslate nohighlight">\(:= \Phi(\\frac{ \mu(\mathbf{X})-f(\mathbf{X^+}) }
-{ \sigma(\mathbf{X}) })\)</span> with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the incumbent and <span class="math notranslate nohighlight">\(\Phi\)</span> the cdf of the standard normal</p>
+{ \sigma(\mathbf{X}) })\)</span> with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the incumbent and <span class="math notranslate nohighlight">\(\Phi\)</span> the cdf of the standard normal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>xi</strong> (<em>float</em><em>, </em><em>defaults to 0.0</em>) – Controls the balance between exploration and exploitation of the acquisition function.</p>

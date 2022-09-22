@@ -361,10 +361,10 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
     batch_size | solver in {&#39;sgd&#39;, &#39;adam&#39;}
     learning_rate | solver == &#39;sgd&#39;
     learning_rate_init | solver in {&#39;sgd&#39;, &#39;adam&#39;}
-, &#39;_seed&#39;: 0, &#39;_rng&#39;: RandomState(MT19937) at 0x7FEAF9EBD640, &#39;_configs&#39;: None, &#39;_n_configs_per_hyperparameter&#39;: 10, &#39;_n_configs&#39;: 5}
-[WARNING][successive_halving.py:129] The target algorithm is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider increasing `n_seeds` from the intensifier.
-[INFO][successive_halving.py:183] Using successive halving with budget type BUDGETS, min budget 5, max budget 25 and eta 3.
-[INFO][abstract_initial_design.py:144] Using 5 initial design configurations.
+, &#39;_seed&#39;: 0, &#39;_rng&#39;: RandomState(MT19937) at 0x7F19D5A31040, &#39;_configs&#39;: None, &#39;_n_configs_per_hyperparameter&#39;: 10, &#39;_n_configs&#39;: 5}
+[WARNING][successive_halving.py:126] The target algorithm is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider increasing `n_seeds` from the intensifier.
+[INFO][successive_halving.py:180] Using successive halving with budget type BUDGETS, min budget 5, max budget 25 and eta 3.
+[INFO][abstract_initial_design.py:134] Using 5 initial design configurations.
 [WARNING][parallel_scheduling.py:102] Hyperband is executed with 1 worker(s) only. However, your system supports up to 2 workers. Consider increasing the workers in the scenario.
 [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 1-1 with initial budget 8.
 [INFO][successive_halving_worker.py:384] First run and no incumbent provided. Challenger is assumed to be the incumbent.
@@ -416,6 +416,8 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
 [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
 [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 5-2 with initial budget 25.
+[INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
+[INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 6-1 with initial budget 8.
 [INFO][abstract_facade.py:267] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 5, &#39;n_neurons&#39;: 180, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 78, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.008750070230028942}
 [INFO][abstract_facade.py:268] Estimated cost: 0.018362735995047785
 Incumbent value: 0.02
@@ -557,7 +559,7 @@ Incumbent value: 0.02
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent value: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">incumbent_value</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  53.528 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  54.462 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e36c26bb3a993c4641a06c811122b11e/1_mlp_epochs.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_mlp_epochs.py</span></code></a></p>

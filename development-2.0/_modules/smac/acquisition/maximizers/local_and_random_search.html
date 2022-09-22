@@ -520,20 +520,20 @@ style="width: 100%;">
     <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">previous_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
-        <span class="n">num_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
 
         <span class="c1"># Get configurations sorted by EI</span>
         <span class="n">next_configs_by_prior_random_search_sorted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prior_random_search</span><span class="o">.</span><span class="n">_maximize</span><span class="p">(</span>
             <span class="n">previous_configs</span><span class="p">,</span>
-            <span class="nb">round</span><span class="p">(</span><span class="n">num_points</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prior_sampling_fraction</span><span class="p">),</span>
+            <span class="nb">round</span><span class="p">(</span><span class="n">n_points</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prior_sampling_fraction</span><span class="p">),</span>
             <span class="n">_sorted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="c1"># Get configurations sorted by EI</span>
         <span class="n">next_configs_by_uniform_random_search_sorted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uniform_random_search</span><span class="o">.</span><span class="n">_maximize</span><span class="p">(</span>
             <span class="n">previous_configs</span><span class="p">,</span>
-            <span class="nb">round</span><span class="p">(</span><span class="n">num_points</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prior_sampling_fraction</span><span class="p">)),</span>
+            <span class="nb">round</span><span class="p">(</span><span class="n">n_points</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prior_sampling_fraction</span><span class="p">)),</span>
             <span class="n">_sorted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">next_configs_by_random_search_sorted</span> <span class="o">=</span> <span class="p">[]</span>

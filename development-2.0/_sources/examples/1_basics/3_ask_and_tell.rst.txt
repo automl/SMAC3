@@ -33,7 +33,7 @@ This examples show how to use the Ask-and-Tell interface.
  .. code-block:: none
 
     Default value: 16916.0
-    [INFO][abstract_initial_design.py:92] Using `n_configs_per_hyperparameter` and ignoring `configs` and `n_configs`.
+    [INFO][abstract_initial_design.py:82] Using `n_configs_per_hyperparameter` and ignoring `configs` and `n_configs`.
 
 
 
