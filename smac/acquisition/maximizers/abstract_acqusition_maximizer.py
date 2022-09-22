@@ -19,7 +19,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class AbstractAcquisitionOptimizer:
+class AbstractAcquisitionMaximizer:
     """Abstract class for the acquisition maximization. In order to use this class it has to be subclassed and the
     method `_maximize` must be implemented.
 

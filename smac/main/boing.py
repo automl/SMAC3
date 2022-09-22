@@ -10,7 +10,7 @@ from itertools import chain
 import numpy as np
 from ConfigSpace.hyperparameters import NumericalHyperparameter
 
-from smac.acquisition import AbstractAcquisitionOptimizer
+from smac.acquisition import AbstractAcquisitionMaximizer
 from smac.acquisition.functions import AbstractAcquisitionFunction
 from smac.acquisition.functions.expected_improvement import EI
 from smac.acquisition.functions.thompson import TS
@@ -52,7 +52,7 @@ class BOinGSMBO(SMBO):
         local acquisition function,  used in subspace
     acquisition_func_local_kwargs: Dict | None = None,
         parameters for initializing a local acquisition function optimizer
-    acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
+    acq_optimizer_local: AbstractAcquisitionMaximizer | None = None,
         Optimizer of acquisition function of local models, same as above, since an acquisition function optimizer
         requires
     acq_optimizer_local_kwargs: Dict | None = None,
@@ -79,7 +79,7 @@ class BOinGSMBO(SMBO):
         acquisition_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
         model_local_kwargs: Dict | None = None,
         acquisition_func_local_kwargs: Dict | None = None,
-        acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
+        acq_optimizer_local: AbstractAcquisitionMaximizer | None = None,
         acq_optimizer_local_kwargs: Dict | None = None,
         max_configs_local_fracs: float = 0.5,
         min_configs_local: int | None = None,

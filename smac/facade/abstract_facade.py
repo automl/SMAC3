@@ -8,7 +8,7 @@ from pathlib import Path
 import joblib
 
 import smac
-from smac.acquisition.maximizers.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition.maximizers.abstract_acqusition_maximizer import AbstractAcquisitionMaximizer
 from smac.acquisition.functions.abstract_acquisition_function import AbstractAcquisitionFunction
 from smac.callback import Callback
 from smac.random_design.abstract_random_design import AbstractRandomDesign
@@ -58,7 +58,7 @@ class AbstractFacade:
 
     model: BaseModel | None
     acquisition_function: AbstractAcquisitionFunction | None
-    acquisition_optimizer: AbstractAcquisitionOptimizer | None
+    acquisition_optimizer: AbstractAcquisitionMaximizer | None
     initial_design: InitialDesign | None
     random_design: RandomDesign | None
     intensifier: AbstractIntensifier | None
@@ -82,7 +82,7 @@ class AbstractFacade:
         *,
         model: AbstractModel | None = None,
         acquisition_function: AbstractAcquisitionFunction | None = None,
-        acquisition_optimizer: AbstractAcquisitionOptimizer | None = None,
+        acquisition_optimizer: AbstractAcquisitionMaximizer | None = None,
         initial_design: AbstractInitialDesign | None = None,
         random_design: AbstractRandomDesign | None = None,
         intensifier: AbstractIntensifier | None = None,
@@ -284,7 +284,7 @@ class AbstractFacade:
 
     @staticmethod
     @abstractmethod
-    def get_acquisition_optimizer(scenario: Scenario) -> AbstractAcquisitionOptimizer:
+    def get_acquisition_optimizer(scenario: Scenario) -> AbstractAcquisitionMaximizer:
         """Returns the acquisition optimizer instance to be used in the BO loop,
         specifying how the acquisition function instance is optimized."""
         raise NotImplementedError

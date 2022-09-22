@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 
-from smac.acquisition.maximizers.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition.maximizers.abstract_acqusition_maximizer import AbstractAcquisitionMaximizer
 from ConfigSpace import Configuration
 from smac.utils.logging import get_logger
 
@@ -11,7 +11,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class RandomSearch(AbstractAcquisitionOptimizer):
+class RandomSearch(AbstractAcquisitionMaximizer):
     """Get candidate solutions via random sampling of configurations."""
 
     def _maximize(

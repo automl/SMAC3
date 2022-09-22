@@ -6,7 +6,7 @@ from typing import Iterator
 import time
 
 
-from smac.acquisition.maximizers.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition.maximizers.abstract_acqusition_maximizer import AbstractAcquisitionMaximizer
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
@@ -103,7 +103,7 @@ class BaseSMBO:
         runhistory_encoder: RunHistoryEncoder,
         intensifier: AbstractIntensifier,
         model: AbstractModel,
-        acquisition_optimizer: AbstractAcquisitionOptimizer,
+        acquisition_optimizer: AbstractAcquisitionMaximizer,
         acquisition_function: AbstractAcquisitionFunction,
         random_design: AbstractRandomDesign,
         overwrite: bool = False,

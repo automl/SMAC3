@@ -70,7 +70,7 @@ class ChallengerList(Iterator):
 
 
 '''
-class FixedSet(AbstractAcquisitionOptimizer):
+class FixedSet(AbstractAcquisitionMaximizer):
     def __init__(
         self,
         configurations: list[Configuration],

@@ -7,7 +7,7 @@ import time
 
 import numpy as np
 
-from smac.acquisition.maximizers.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition.maximizers.abstract_acqusition_maximizer import AbstractAcquisitionMaximizer
 from smac.acquisition.functions import AbstractAcquisitionFunction
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.exceptions import ForbiddenValueError
@@ -20,7 +20,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class LocalSearch(AbstractAcquisitionOptimizer):
+class LocalSearch(AbstractAcquisitionMaximizer):
     """Implementation of SMAC's local search.
 
     Parameters

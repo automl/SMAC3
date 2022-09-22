@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 
-from smac.acquisition.maximizers.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition.maximizers.abstract_acqusition_maximizer import AbstractAcquisitionMaximizer
 from smac.acquisition.functions import AbstractAcquisitionFunction
 from smac.acquisition.maximizers.local_search import LocalSearch
 from smac.acquisition.maximizers.random_search import RandomSearch
@@ -19,7 +19,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class LocalAndSortedRandomSearch(AbstractAcquisitionOptimizer):
+class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
     """Implements SMAC's default acquisition function optimization.
 
     This optimizer performs local search from the previous best points according, to the acquisition function, uses the
@@ -133,7 +133,7 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionOptimizer):
         return next_configs_by_acq_value
 
 
-class LocalAndSortedPriorRandomSearch(AbstractAcquisitionOptimizer):
+class LocalAndSortedPriorRandomSearch(AbstractAcquisitionMaximizer):
     """Implements SMAC's default acquisition function optimization.
 
     This optimizer performs local search from the previous best points according to the acquisition function, uses the

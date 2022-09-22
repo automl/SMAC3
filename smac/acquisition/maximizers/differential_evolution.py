@@ -1,7 +1,7 @@
 from __future__ import annotations
 import numpy as np
 
-from smac.acquisition.maximizers import AbstractAcquisitionOptimizer
+from smac.acquisition.maximizers import AbstractAcquisitionMaximizer
 from ConfigSpace import Configuration
 from scipy.optimize._differentialevolution import DifferentialEvolutionSolver
 
@@ -9,7 +9,7 @@ __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class DifferentialEvolution(AbstractAcquisitionOptimizer):
+class DifferentialEvolution(AbstractAcquisitionMaximizer):
     """Get candidate solutions via `DifferentialEvolutionSolvers` from scipy."""
 
     def _maximize(

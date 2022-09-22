@@ -8,7 +8,7 @@ import inspect
 import numpy as np
 from ConfigSpace import ConfigurationSpace
 
-from smac.acquisition import AbstractAcquisitionOptimizer, LocalAndSortedRandomSearch
+from smac.acquisition import AbstractAcquisitionMaximizer, LocalAndSortedRandomSearch
 from smac.acquisition.functions import EI, AbstractAcquisitionFunction
 from ConfigSpace import Configuration
 from smac.model.abstract_model import AbstractModel
@@ -48,7 +48,7 @@ class BOinGSubspace(LocalSubspace):
         initial_data: Tuple[np.ndarray, np.ndarray] | None = None,
         activate_dims: np.ndarray | None = None,
         incumbent_array: np.ndarray | None = None,
-        acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
+        acq_optimizer_local: AbstractAcquisitionMaximizer | None = None,
         acq_optimizer_local_kwargs: Dict | None = None,
     ):
         super(BOinGSubspace, self).__init__(
@@ -80,7 +80,7 @@ class BOinGSubspace(LocalSubspace):
             "seed": self.rng.randint(1, 2**20),
         }
 
-        if isinstance(acq_optimizer_local, AbstractAcquisitionOptimizer):
+        if isinstance(acq_optimizer_local, AbstractAcquisitionMaximizer):
             # we copy the attribute of the local acquisition function optimizer but replace it with our local model
             # setting. This helps a better exploration in the beginning.
             for key in inspect.signature(acq_optimizer_local.__init__).parameters.keys():  # type: ignore[misc]
@@ -114,7 +114,7 @@ class BOinGSubspace(LocalSubspace):
                         {"n_steps_plateau_walk": 5, "local_search_iterations": local_search_iterations}
                     )
 
-            elif inspect.isclass(acq_optimizer_local, AbstractAcquisitionOptimizer):
+            elif inspect.isclass(acq_optimizer_local, AbstractAcquisitionMaximizer):
                 subspace_acq_func_opt_kwargs.update(acq_optimizer_local_kwargs)
             else:
                 raise TypeError(

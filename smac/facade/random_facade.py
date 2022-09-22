@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from smac.acquisition.functions.expected_improvement import EI
-from smac.acquisition.maximizers.random_search import AbstractAcquisitionOptimizer, RandomSearch
+from smac.acquisition.maximizers.random_search import AbstractAcquisitionMaximizer, RandomSearch
 from smac.random_design import AbstractRandomDesign, ProbabilityRandomDesign
 from ConfigSpace import Configuration
 from smac.facade.abstract_facade import AbstractFacade
@@ -117,7 +117,7 @@ class RandomFacade(AbstractFacade):
         )
 
     @staticmethod
-    def get_acquisition_optimizer(scenario: Scenario) -> AbstractAcquisitionOptimizer:
+    def get_acquisition_optimizer(scenario: Scenario) -> AbstractAcquisitionMaximizer:
         optimizer = RandomSearch(
             scenario.configspace,
             seed=scenario.seed,

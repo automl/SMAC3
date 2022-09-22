@@ -11,7 +11,7 @@ from ConfigSpace.hyperparameters import NumericalHyperparameter
 from ConfigSpace.util import deactivate_inactive_hyperparameters
 from scipy.stats.qmc import LatinHypercube, Sobol
 
-from smac.acquisition import AbstractAcquisitionOptimizer
+from smac.acquisition import AbstractAcquisitionMaximizer
 from smac.acquisition.functions import AbstractAcquisitionFunction, TS
 from ConfigSpace import Configuration, ConfigurationSpace
 from smac.model.abstract_model import AbstractModel
@@ -252,7 +252,7 @@ class TuRBOSubSpace(LocalSubspace):
             configs.append(conf)
 
         if _sorted:
-            return AbstractAcquisitionOptimizer._sort_configs_by_acq_value(self, configs)
+            return AbstractAcquisitionMaximizer._sort_configs_by_acq_value(self, configs)
         else:
             return [(0, configs[i]) for i in range(len(configs))]
 

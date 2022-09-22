@@ -13,7 +13,7 @@ from smac import (
 
 from smac.callback import Callback
 from smac.initial_design import LatinHypercubeInitialDesign
-from smac.acquisition.abstract_acqusition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition.maximizers.abstract_acqusition_maximizer import AbstractAcquisitionMaximizer
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
@@ -66,7 +66,7 @@ def test_facades(rosenbrock):
         # And check components here
         assert isinstance(facade.get_model(scenario), AbstractModel)
         assert isinstance(facade.get_acquisition_function(scenario), AbstractAcquisitionFunction)
-        assert isinstance(facade.get_acquisition_optimizer(scenario), AbstractAcquisitionOptimizer)
+        assert isinstance(facade.get_acquisition_optimizer(scenario), AbstractAcquisitionMaximizer)
         assert isinstance(facade.get_intensifier(scenario), AbstractIntensifier)
         assert isinstance(facade.get_initial_design(scenario), AbstractInitialDesign)
         assert isinstance(facade.get_random_design(scenario), AbstractRandomDesign)

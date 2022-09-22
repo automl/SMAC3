@@ -10,7 +10,7 @@ from gpytorch.kernels import MaternKernel, ScaleKernel
 from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
 from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
-from smac.acquisition import AbstractAcquisitionOptimizer, LocalAndSortedRandomSearch
+from smac.acquisition import AbstractAcquisitionMaximizer, LocalAndSortedRandomSearch
 from smac.acquisition.functions import EI, AbstractAcquisitionFunction
 from smac.main.boing import BOinGSMBO
 from smac.random_design.probability_design import ProbabilityRandomDesign
@@ -78,7 +78,7 @@ class BOinGFacade(HyperparameterFacade):
         model_local_kwargs: Dict | None = None,
         acquisition_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
         acquisition_func_local_kwargs: Dict | None = None,
-        acq_optimizer_local: AbstractAcquisitionOptimizer | None = None,
+        acq_optimizer_local: AbstractAcquisitionMaximizer | None = None,
         acq_optimizer_local_kwargs: Dict | None = None,
         max_configs_local_fracs: float = 0.5,
         min_configs_local: int | None = None,
@@ -115,7 +115,7 @@ class BOinGFacade(HyperparameterFacade):
         *,
         local_search_iterations: int = 10,
         challengers: int = 1000,
-    ) -> AbstractAcquisitionOptimizer:
+    ) -> AbstractAcquisitionMaximizer:
         """Returns the acquisition optimizer instance for finding the next candidate configuration
         based on the acquisition function."""
         optimizer = LocalAndSortedRandomSearch(
