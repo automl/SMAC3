@@ -27,14 +27,8 @@ class TS(AbstractAcquisitionFunction):
     Parameters
     ----------
     xi : float, defaults to 0.0
-        TS does not require xi here, we only wants to make it consistent with
-        other acquisition functions.
+        TS does not require xi here, we only wants to make it consistent with other acquisition functions.
 
-    Attributes
-    ----------
-    long_name : str
-    xi : float
-        Exploration/exploitation trade-off parameter.
     """
 
     @property

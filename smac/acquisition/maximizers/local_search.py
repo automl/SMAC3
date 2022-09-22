@@ -94,9 +94,9 @@ class LocalSearch(AbstractAcquisitionOptimizer):
         # Shuffle for random tie-break
         self._rng.shuffle(configs_acq)
 
-        # sort according to acq value
+        # Sort according to acq value
         configs_acq.sort(reverse=True, key=lambda x: x[0])
-        for _, inc in configs_acq:
+        for a, inc in configs_acq:
             inc.origin = "Local Search"
 
         return configs_acq
@@ -166,6 +166,7 @@ class LocalSearch(AbstractAcquisitionOptimizer):
             # From here
             # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
             random = self._rng.rand(len(costs))
+
             # Last column is primary sort key!
             indices = np.lexsort((random.flatten(), costs.flatten()))
 

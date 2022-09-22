@@ -24,23 +24,20 @@ class SuccessiveHalving(ParallelScheduler):
     Supplementary reference: http://proceedings.mlr.press/v80/falkner18a/falkner18a-supp.pdf
 
     Successive Halving intensifier (and Hyperband) can operate on two kinds of budgets:
+
     1. Instances as budget:
-        When multiple instances are provided or when run objective is "runtime", this is the criterion used as budget
-        for successive halving iterations i.e., the budget determines how many instances the challengers are evaluated
-        on at a time. Top challengers for the next iteration are selected based on the combined performance across
-        all instances used.
-
-        If `min_budget` and `max_budget` are not provided, then they are set to 1 and total number
-        of available instances respectively by default.
-
+      When multiple instances are provided or when run objective is "runtime", this is the criterion used as budget
+      for successive halving iterations i.e., the budget determines how many instances the challengers are evaluated
+      on at a time. Top challengers for the next iteration are selected based on the combined performance across
+      all instances used. If `min_budget` and `max_budget` are not provided, then they are set to 1 and total number
+      of available instances respectively by default.
     2. Real-valued budget:
-        This is used when there is only one instance provided and when run objective is "quality",
-        i.e., budget is a positive, real-valued number that can be passed to the target algorithm as an argument.
-        It can be used to control anything by the target algorithm, Eg: number of epochs for training a neural network.
+      This is used when there is only one instance provided and when run objective is "quality",
+      i.e., budget is a positive, real-valued number that can be passed to the target algorithm as an argument.
+      It can be used to control anything by the target algorithm, Eg: number of epochs for training a neural network.
+      The parameters `min_budget` and `max_budget` are required for this type of budget.
 
-        `min_budget` and `max_budget` are required parameters for this type of budget.
-
-    This class instantiates `SuccessiveHalvingWorker` objects on a need basis, that is, to
+    This class instantiates ``SuccessiveHalvingWorker`` objects on a need basis, that is, to
     prevent workers from being idle. The actual logic that implements the Successive halving method
     lies in the worker class.
 

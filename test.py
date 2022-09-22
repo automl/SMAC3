@@ -5,28 +5,13 @@ class A:
 
         # print(self.b)
 
-    def get_a(self):
-        return self.__class__.__name__
+    @property
+    def meta(self):
+        return self.a
 
 
-class B:
-    def __init__(self, b):
-        # print("B")
-        self.b = b
+blub = A()
 
-    def get_a(self):
-        return self.__class__.__name__
-
-
-class C(A, B):
-    def __init__(self):
-        # super(A, self).__init__()
-        # super(C, self).__init__()
-        # super(B).__init__()
-        super().__init__(b="blub")
-        # print("C")
-
-
-blub = C()
-
-print(blub.get_a())
+print(blub.meta)
+blub.a = "ajskedfö"
+print(blub.meta)

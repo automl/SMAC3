@@ -50,16 +50,6 @@ class AbstractInitialDesign:
         provided.
     seed : int | None, default to None.
         Random seed. If None, will use the seed from the scenario.
-
-    Attributes
-    ----------
-    configspace : ConfigurationSpace
-    configs : list[Configuration]
-        List of configurations to be evaluated
-    n_configs : int
-        Number of configurations to be evaluated. It is dynamically computed.
-    seed
-    rng
     """
 
     def __init__(

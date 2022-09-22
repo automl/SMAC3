@@ -209,20 +209,20 @@ class LocalAndSortedPriorRandomSearch(AbstractAcquisitionOptimizer):
     def _maximize(
         self,
         previous_configs: list[Configuration],
-        num_points: int,
+        n_points: int,
     ) -> list[tuple[float, Configuration]]:
 
         # Get configurations sorted by EI
         next_configs_by_prior_random_search_sorted = self._prior_random_search._maximize(
             previous_configs,
-            round(num_points * self._prior_sampling_fraction),
+            round(n_points * self._prior_sampling_fraction),
             _sorted=True,
         )
 
         # Get configurations sorted by EI
         next_configs_by_uniform_random_search_sorted = self._uniform_random_search._maximize(
             previous_configs,
-            round(num_points * (1 - self._prior_sampling_fraction)),
+            round(n_points * (1 - self._prior_sampling_fraction)),
             _sorted=True,
         )
         next_configs_by_random_search_sorted = []

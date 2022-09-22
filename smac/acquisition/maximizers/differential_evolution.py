@@ -45,7 +45,7 @@ class DifferentialEvolution(AbstractAcquisitionOptimizer):
         _ = ds.solve()
         for pop, val in zip(ds.population, ds.population_energies):
             rc = Configuration(self._configspace, vector=pop)
-            rc.origin = "DifferentialEvolution"
+            rc.origin = "Differential Evolution"
             configs.append((-val, rc))
 
         configs.sort(key=lambda t: t[0])
