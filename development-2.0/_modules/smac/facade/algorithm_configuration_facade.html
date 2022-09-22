@@ -926,15 +926,18 @@ style="width: 100%;">
   <h1>Source code for smac.facade.algorithm_configuration_facade</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">smac.acquisition.functions.expected_improvement</span> <span class="kn">import</span> <span class="n">EI</span>
-<span class="kn">from</span> <span class="nn">smac.acquisition.maximizers.local_and_random_search</span> <span class="kn">import</span> <span class="n">LocalAndSortedRandomSearch</span>
-<span class="kn">from</span> <span class="nn">smac.random_design.probability_design</span> <span class="kn">import</span> <span class="n">ProbabilityRandomDesign</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
+
+<span class="kn">from</span> <span class="nn">smac.acquisition.functions.expected_improvement</span> <span class="kn">import</span> <span class="n">EI</span>
+<span class="kn">from</span> <span class="nn">smac.acquisition.maximizers.local_and_random_search</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">LocalAndSortedRandomSearch</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">smac.facade.abstract_facade</span> <span class="kn">import</span> <span class="n">AbstractFacade</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.default_design</span> <span class="kn">import</span> <span class="n">DefaultInitialDesign</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="kn">import</span> <span class="n">Intensifier</span>
 <span class="kn">from</span> <span class="nn">smac.model.random_forest.random_forest</span> <span class="kn">import</span> <span class="n">RandomForest</span>
 <span class="kn">from</span> <span class="nn">smac.multi_objective.aggregation_strategy</span> <span class="kn">import</span> <span class="n">MeanAggregationStrategy</span>
+<span class="kn">from</span> <span class="nn">smac.random_design.probability_design</span> <span class="kn">import</span> <span class="n">ProbabilityRandomDesign</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.encoder.encoder</span> <span class="kn">import</span> <span class="n">RunHistoryEncoder</span>
 <span class="kn">from</span> <span class="nn">smac.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span>

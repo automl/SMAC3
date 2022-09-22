@@ -955,11 +955,11 @@ use of the Normal and Beta Hyperparameters, as well as the “weights” propert
 but we stick with the hyperparameter optimization facade here. To incorporate user priors into the
 optimization, you have to change the acquisition function to <code class="docutils literal notranslate"><span class="pre">PriorAcquisitionFunction</span></code>.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Default value: 0.04
-[WARNING][prior_acqusition_function.py:89] Discretizing the prior for random forest models.
+[WARNING][prior_acqusition_function.py:92] Discretizing the prior for random forest models.
 [INFO][abstract_initial_design.py:132] Using 4 initial design and 1 additional configurations.
-[INFO][intensification.py:248] No incumbent provided in the first run. Sampling a new challenger...
-[INFO][intensification.py:423] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-[INFO][intensification.py:558] Updated estimated cost of incumbent on 1 trials: 0.8987
+[INFO][intensification.py:254] No incumbent provided in the first run. Sampling a new challenger...
+[INFO][intensification.py:429] First run and no incumbent provided. Challenger is assumed to be the incumbent.
+[INFO][intensification.py:564] Updated estimated cost of incumbent on 1 trials: 0.8987
 [INFO][abstract_intensifier.py:335] Challenger (0.039) is better than incumbent (0.8987) on 1 trials.
 [INFO][abstract_intensifier.py:359] Changes in incumbent:
 [INFO][abstract_intensifier.py:362] --- activation: &#39;logistic&#39; -&gt; &#39;relu&#39;
@@ -984,15 +984,12 @@ optimization, you have to change the acquisition function to <code class="docuti
 [INFO][abstract_intensifier.py:359] Changes in incumbent:
 [INFO][abstract_intensifier.py:362] --- batch_size: 85 -&gt; 83
 [INFO][abstract_intensifier.py:362] --- learning_rate_init: 0.0008727032445149441 -&gt; 0.0009409147904300142
-[INFO][abstract_intensifier.py:335] Challenger (0.0295) is better than incumbent (0.0301) on 1 trials.
-[INFO][abstract_intensifier.py:359] Changes in incumbent:
-[INFO][abstract_intensifier.py:362] --- learning_rate_init: 0.0009409147904300142 -&gt; 0.001166363918388242
-[INFO][abstract_intensifier.py:335] Challenger (0.0284) is better than incumbent (0.0295) on 1 trials.
+[INFO][abstract_intensifier.py:335] Challenger (0.0273) is better than incumbent (0.0301) on 1 trials.
 [INFO][abstract_intensifier.py:359] Changes in incumbent:
 [INFO][abstract_intensifier.py:362] --- batch_size: 83 -&gt; 82
-[INFO][abstract_facade.py:267] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;batch_size&#39;: 82, &#39;learning_rate_init&#39;: 0.001166363918388242, &#39;n_layer&#39;: 5, &#39;n_neurons&#39;: 108, &#39;optimizer&#39;: &#39;adam&#39;}
-[INFO][abstract_facade.py:268] Estimated cost: 0.028387496131228707
-Incumbent value: 0.03
+[INFO][abstract_facade.py:270] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;batch_size&#39;: 82, &#39;learning_rate_init&#39;: 0.0009409147904300142, &#39;n_layer&#39;: 5, &#39;n_neurons&#39;: 108, &#39;optimizer&#39;: &#39;adam&#39;}
+[INFO][abstract_facade.py:271] Estimated cost: 0.027273290003095085
+Incumbent value: 0.04
 </pre></div>
 </div>
 <div class="line-block">
@@ -1002,10 +999,10 @@ Incumbent value: 0.03
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">Configuration</span><span class="p">,</span>
-    <span class="n">ConfigurationSpace</span><span class="p">,</span>
     <span class="n">BetaIntegerHyperparameter</span><span class="p">,</span>
     <span class="n">CategoricalHyperparameter</span><span class="p">,</span>
+    <span class="n">Configuration</span><span class="p">,</span>
+    <span class="n">ConfigurationSpace</span><span class="p">,</span>
     <span class="n">NormalFloatHyperparameter</span><span class="p">,</span>
     <span class="n">UniformIntegerHyperparameter</span><span class="p">,</span>
 <span class="p">)</span>
@@ -1158,7 +1155,7 @@ Incumbent value: 0.03
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent value: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">incumbent_value</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  10.331 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  17.302 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-4-priors-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/2c71a8adc4f8a6f1720d8360af787b12/4_priors.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">4_priors.py</span></code></a></p>

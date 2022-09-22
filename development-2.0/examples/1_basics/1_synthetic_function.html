@@ -954,11 +954,11 @@ The facade works best on a numerical hyperparameter configuration space and shou
 be applied to problems with large evaluation budgets (up to 1000 evaluations).</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Default value: 16916.0
 [INFO][abstract_initial_design.py:132] Using 20 initial design and 0 additional configurations.
-[INFO][intensification.py:248] No incumbent provided in the first run. Sampling a new challenger...
-[INFO][intensification.py:423] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-[INFO][intensification.py:558] Updated estimated cost of incumbent on 1 trials: 1102.7878
-[INFO][intensification.py:558] Updated estimated cost of incumbent on 2 trials: 1102.7878
-[INFO][intensification.py:558] Updated estimated cost of incumbent on 3 trials: 1102.7878
+[INFO][intensification.py:254] No incumbent provided in the first run. Sampling a new challenger...
+[INFO][intensification.py:429] First run and no incumbent provided. Challenger is assumed to be the incumbent.
+[INFO][intensification.py:564] Updated estimated cost of incumbent on 1 trials: 1102.7878
+[INFO][intensification.py:564] Updated estimated cost of incumbent on 2 trials: 1102.7878
+[INFO][intensification.py:564] Updated estimated cost of incumbent on 3 trials: 1102.7878
 [INFO][abstract_intensifier.py:335] Challenger (5.4656) is better than incumbent (1102.7878) on 3 trials.
 [INFO][abstract_intensifier.py:359] Changes in incumbent:
 [INFO][abstract_intensifier.py:362] --- x0: -0.9968221839517355 -&gt; 0.03135360777378082
@@ -975,8 +975,8 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).</
 [INFO][abstract_intensifier.py:359] Changes in incumbent:
 [INFO][abstract_intensifier.py:362] --- x0: -0.47602048278586295 -&gt; 1.7031544591929872
 [INFO][abstract_intensifier.py:362] --- x1: 0.13155812805683098 -&gt; 2.842364243857716
-[INFO][abstract_facade.py:267] Final Incumbent: {&#39;x0&#39;: 1.7031544591929872, &#39;x1&#39;: 2.842364243857716}
-[INFO][abstract_facade.py:268] Estimated cost: 0.8351420167215506
+[INFO][abstract_facade.py:270] Final Incumbent: {&#39;x0&#39;: 1.7031544591929872, &#39;x1&#39;: 2.842364243857716}
+[INFO][abstract_facade.py:271] Estimated cost: 0.8351420167215506
 Incumbent value: 0.84
 </pre></div>
 </div>
@@ -1038,7 +1038,7 @@ Incumbent value: 0.84
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent value: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">incumbent_value</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.092 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.495 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-1-synthetic-function-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/222fbc0704729080b4cf7f98b0522bbc/1_synthetic_function.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_synthetic_function.py</span></code></a></p>

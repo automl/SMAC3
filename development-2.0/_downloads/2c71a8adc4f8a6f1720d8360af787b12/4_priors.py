@@ -15,10 +15,10 @@ import warnings
 
 import numpy as np
 from ConfigSpace import (
-    Configuration,
-    ConfigurationSpace,
     BetaIntegerHyperparameter,
     CategoricalHyperparameter,
+    Configuration,
+    ConfigurationSpace,
     NormalFloatHyperparameter,
     UniformIntegerHyperparameter,
 )

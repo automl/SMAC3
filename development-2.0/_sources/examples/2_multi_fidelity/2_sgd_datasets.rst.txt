@@ -32,7 +32,7 @@ If we use instance as our fidelity, we need to initialize scenario with argument
 budget is no longer required by the target function. But due to the scenario instance argument,
 the target function now is required to have an instance argument.
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-151
+.. GENERATED FROM PYTHON SOURCE LINES 16-152
 
 
 
@@ -42,12 +42,12 @@ the target function now is required to have an instance argument.
  .. code-block:: none
 
     Default cost: 0.14
-    [WARNING][successive_halving.py:126] The target function is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider increasing `n_seeds` from the intensifier.
-    [INFO][successive_halving.py:180] Using successive halving with budget type INSTANCES, min budget 1, max budget 45 and eta 3.
-    [INFO][successive_halving.py:200] The argument `incumbent_selection` is ignored because instances are used as budget type.
+    [WARNING][successive_halving.py:127] The target function is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider increasing `n_seeds` from the intensifier.
+    [INFO][successive_halving.py:181] Using successive halving with budget type INSTANCES, min budget 1, max budget 45 and eta 3.
+    [INFO][successive_halving.py:201] The argument `incumbent_selection` is ignored because instances are used as budget type.
     [INFO][abstract_initial_design.py:132] Using 40 initial design and 0 additional configurations.
-    [WARNING][parallel_scheduling.py:102] Hyperband is executed with 1 worker(s) only. However, your system supports up to 2 workers. Consider increasing the workers in the scenario.
-    [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 1-1 with initial budget 1.
+    [WARNING][parallel_scheduling.py:103] Hyperband is executed with 1 worker(s) only. However, your system supports up to 2 workers. Consider increasing the workers in the scenario.
+    [INFO][hyperband_worker.py:164] Finished Hyperband iteration-step 1-1 with initial budget 1.
     [INFO][successive_halving_worker.py:384] First run and no incumbent provided. Challenger is assumed to be the incumbent.
     [INFO][abstract_intensifier.py:335] Challenger (0.0137) is better than incumbent (0.0164) on 1 trials.
     [INFO][abstract_intensifier.py:359] Changes in incumbent:
@@ -58,14 +58,13 @@ the target function now is required to have an instance argument.
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-2 with budget [5.00 / 45] and 9 evaluated challenger(s).
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-3 with budget [15.00 / 45] and 3 evaluated challenger(s).
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-4 with budget [45.00 / 45] and 1 evaluated challenger(s).
-    [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 1-2 with initial budget 5.
+    [INFO][hyperband_worker.py:164] Finished Hyperband iteration-step 1-2 with initial budget 5.
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [5.00 / 45] and 9 evaluated challenger(s).
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-2 with budget [15.00 / 45] and 3 evaluated challenger(s).
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-3 with budget [45.00 / 45] and 1 evaluated challenger(s).
-    [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 1-3 with initial budget 15.
-    [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [15.00 / 45] and 6 evaluated challenger(s).
-    [INFO][abstract_facade.py:267] Final Incumbent: {'alpha': 0.11827442586893322, 'eta0': 9.614170248896958e-05, 'l1_ratio': 0.24875314351995803, 'learning_rate': 'adaptive'}
-    [INFO][abstract_facade.py:268] Estimated cost: 0.008231389269086701
+    [INFO][hyperband_worker.py:164] Finished Hyperband iteration-step 1-3 with initial budget 15.
+    [INFO][abstract_facade.py:270] Final Incumbent: {'alpha': 0.11827442586893322, 'eta0': 9.614170248896958e-05, 'l1_ratio': 0.24875314351995803, 'learning_rate': 'adaptive'}
+    [INFO][abstract_facade.py:271] Estimated cost: 0.008231389269086701
     Incumbent cost: 0.01
 
 
@@ -79,11 +78,12 @@ the target function now is required to have an instance argument.
 
 
     from __future__ import annotations
+
     import itertools
     import warnings
 
     import numpy as np
-    from ConfigSpace import Float, Categorical, Configuration, ConfigurationSpace
+    from ConfigSpace import Categorical, Configuration, ConfigurationSpace, Float
     from sklearn import datasets
     from sklearn.linear_model import SGDClassifier
     from sklearn.model_selection import StratifiedKFold, cross_val_score
@@ -216,7 +216,7 @@ the target function now is required to have an instance argument.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  44.091 seconds)
+   **Total running time of the script:** ( 0 minutes  45.033 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_2_sgd_datasets.py:

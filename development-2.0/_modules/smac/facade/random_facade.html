@@ -927,16 +927,19 @@ style="width: 100%;">
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">smac.acquisition.maximizers.random_search</span> <span class="kn">import</span> <span class="n">RandomSearch</span>
-<span class="kn">from</span> <span class="nn">smac.random_design</span> <span class="kn">import</span> <span class="n">AbstractRandomDesign</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span> <span class="nn">smac.acquisition.functions.abstract_acquisition_function</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionFunction</span>
+
+<span class="kn">from</span> <span class="nn">smac.acquisition.functions.abstract_acquisition_function</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">smac.acquisition.maximizers.random_search</span> <span class="kn">import</span> <span class="n">RandomSearch</span>
 <span class="kn">from</span> <span class="nn">smac.facade.abstract_facade</span> <span class="kn">import</span> <span class="n">AbstractFacade</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.default_design</span> <span class="kn">import</span> <span class="n">DefaultInitialDesign</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="kn">import</span> <span class="n">Intensifier</span>
 <span class="kn">from</span> <span class="nn">smac.model.random_model</span> <span class="kn">import</span> <span class="n">RandomModel</span>
 <span class="kn">from</span> <span class="nn">smac.multi_objective</span> <span class="kn">import</span> <span class="n">AbstractMultiObjectiveAlgorithm</span>
 <span class="kn">from</span> <span class="nn">smac.multi_objective.aggregation_strategy</span> <span class="kn">import</span> <span class="n">MeanAggregationStrategy</span>
+<span class="kn">from</span> <span class="nn">smac.random_design</span> <span class="kn">import</span> <span class="n">AbstractRandomDesign</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.encoder.encoder</span> <span class="kn">import</span> <span class="n">RunHistoryEncoder</span>
 <span class="kn">from</span> <span class="nn">smac.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 

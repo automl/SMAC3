@@ -929,17 +929,20 @@ style="width: 100%;">
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace.hyperparameters</span> <span class="kn">import</span> <span class="n">FloatHyperparameter</span>
 
-<span class="kn">from</span> <span class="nn">smac.acquisition.functions.abstract_acquisition_function</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionFunction</span>
-<span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span>
-<span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">smac.acquisition.functions.abstract_acquisition_function</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">smac.acquisition.functions.confidence_bound</span> <span class="kn">import</span> <span class="n">LCB</span>
+<span class="kn">from</span> <span class="nn">smac.acquisition.functions.integrated_acquisition_function</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">IntegratedAcquisitionFunction</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">smac.acquisition.functions.thompson</span> <span class="kn">import</span> <span class="n">TS</span>
 <span class="kn">from</span> <span class="nn">smac.model.abstract_model</span> <span class="kn">import</span> <span class="n">AbstractModel</span>
 <span class="kn">from</span> <span class="nn">smac.model.random_forest.abstract_random_forest</span> <span class="kn">import</span> <span class="n">AbstractRandomForest</span>
-<span class="kn">from</span> <span class="nn">smac.acquisition.functions.integrated_acquisition_function</span> <span class="kn">import</span> <span class="n">IntegratedAcquisitionFunction</span>
-<span class="kn">from</span> <span class="nn">smac.acquisition.functions.thompson</span> <span class="kn">import</span> <span class="n">TS</span>
-<span class="kn">from</span> <span class="nn">smac.acquisition.functions.confidence_bound</span> <span class="kn">import</span> <span class="n">LCB</span>
-
+<span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2022, automl.org&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>

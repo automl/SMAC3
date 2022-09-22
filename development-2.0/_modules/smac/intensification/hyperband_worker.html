@@ -929,13 +929,13 @@ style="width: 100%;">
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 
+<span class="kn">from</span> <span class="nn">smac.intensification.hyperband</span> <span class="kn">import</span> <span class="n">Hyperband</span>
+<span class="kn">from</span> <span class="nn">smac.intensification.successive_halving_worker</span> <span class="kn">import</span> <span class="n">SuccessiveHalvingWorker</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory</span> <span class="kn">import</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="n">TrialInfoIntent</span><span class="p">,</span> <span class="n">TrialValue</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span>
-<span class="kn">from</span> <span class="nn">smac.intensification.hyperband</span> <span class="kn">import</span> <span class="n">Hyperband</span>
-<span class="kn">from</span> <span class="nn">smac.intensification.successive_halving_worker</span> <span class="kn">import</span> <span class="n">SuccessiveHalvingWorker</span>
-<span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2022, automl.org&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
@@ -1054,9 +1054,8 @@ style="width: 100%;">
             <span class="n">repeat_configs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_sh_intensifier</span><span class="o">.</span><span class="n">_repeat_configs</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="c1"># For testing purposes, this attribute highlights whether a</span>
-        <span class="c1"># new challenger is proposed or not. Not required from a functional</span>
-        <span class="c1"># perspective</span>
+        <span class="c1"># For testing purposes, this attribute highlights whether a new challenger is proposed or not</span>
+        <span class="c1"># Not required from a functional perspective</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_new_challenger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sh_intensifier</span><span class="o">.</span><span class="n">_new_challenger</span>
 
         <span class="k">return</span> <span class="n">intent</span><span class="p">,</span> <span class="n">trial_info</span></div>

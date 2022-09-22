@@ -932,20 +932,24 @@ style="width: 100%;">
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">import</span> <span class="nn">joblib</span>
+<span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 
 <span class="kn">import</span> <span class="nn">smac</span>
-<span class="kn">from</span> <span class="nn">smac.acquisition.maximizers.abstract_acqusition_maximizer</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionMaximizer</span>
-<span class="kn">from</span> <span class="nn">smac.acquisition.functions.abstract_acquisition_function</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionFunction</span>
+<span class="kn">from</span> <span class="nn">smac.acquisition.functions.abstract_acquisition_function</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">smac.acquisition.maximizers.abstract_acqusition_maximizer</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AbstractAcquisitionMaximizer</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">smac.callback</span> <span class="kn">import</span> <span class="n">Callback</span>
-<span class="kn">from</span> <span class="nn">smac.random_design.abstract_random_design</span> <span class="kn">import</span> <span class="n">AbstractRandomDesign</span>
-<span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.abstract_initial_design</span> <span class="kn">import</span> <span class="n">AbstractInitialDesign</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.abstract_intensifier</span> <span class="kn">import</span> <span class="n">AbstractIntensifier</span>
+<span class="kn">from</span> <span class="nn">smac.main</span> <span class="kn">import</span> <span class="n">SMBO</span>
 <span class="kn">from</span> <span class="nn">smac.model.abstract_model</span> <span class="kn">import</span> <span class="n">AbstractModel</span>
-
 <span class="kn">from</span> <span class="nn">smac.multi_objective.abstract_multi_objective_algorithm</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">AbstractMultiObjectiveAlgorithm</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">smac.random_design.abstract_random_design</span> <span class="kn">import</span> <span class="n">AbstractRandomDesign</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.dataclasses</span> <span class="kn">import</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="n">TrialValue</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.encoder.abstract_encoder</span> <span class="kn">import</span> <span class="n">AbstractRunHistoryEncoder</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.enumerations</span> <span class="kn">import</span> <span class="n">TrialInfoIntent</span>
@@ -954,9 +958,8 @@ style="width: 100%;">
 <span class="kn">from</span> <span class="nn">smac.runner.dask_runner</span> <span class="kn">import</span> <span class="n">DaskParallelRunner</span>
 <span class="kn">from</span> <span class="nn">smac.runner.target_function_runner</span> <span class="kn">import</span> <span class="n">TargetFunctionRunner</span>
 <span class="kn">from</span> <span class="nn">smac.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
-<span class="kn">from</span> <span class="nn">smac.main</span> <span class="kn">import</span> <span class="n">SMBO</span>
-<span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span><span class="p">,</span> <span class="n">setup_logging</span>
 <span class="kn">from</span> <span class="nn">smac.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
+<span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span><span class="p">,</span> <span class="n">setup_logging</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
