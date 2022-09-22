@@ -444,7 +444,6 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=1, deterministic=False)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario, race_against=None, run_limit=1, min_challenger=2)
-    print(intensifier._min_challenger)
     intensifier._stats = stats
     target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(20)

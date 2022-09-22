@@ -39,7 +39,6 @@ class CustomCallback(Callback):
         self.next_configurations_start_counter += 1
 
     def on_next_configurations_end(self, smbo: smac.main.BaseSMBO, configurations: list[Configuration]) -> None:
-        print(len(configurations))
         self.next_configurations_end_counter += 1
 
     def on_ask_start(self, smbo: smac.main.BaseSMBO) -> None:

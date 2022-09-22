@@ -64,16 +64,16 @@ class MultiFidelityFacade(HyperparameterFacade):
     def get_initial_design(  # type: ignore
         scenario: Scenario,
         *,
-        configs: list[Configuration] | None = None,
         n_configs: int | None = None,
         n_configs_per_hyperparamter: int = 10,
-        max_config_ratio: float = 0.25,  # Use at most X*budget in the initial design
+        max_ratio: float = 0.25,
+        additional_configs: list[Configuration] = [],
     ) -> RandomInitialDesign:
         """Returns a random initial design instance. Please check its documentation for details."""
         return RandomInitialDesign(
             scenario=scenario,
-            configs=configs,
             n_configs=n_configs,
             n_configs_per_hyperparameter=n_configs_per_hyperparamter,
-            max_config_ratio=max_config_ratio,
+            max_ratio=max_ratio,
+            additional_configs=additional_configs,
         )

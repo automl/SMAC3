@@ -215,21 +215,20 @@ class BlackBoxFacade(AbstractFacade):
     def get_initial_design(  # type: ignore
         scenario: Scenario,
         *,
-        configs: list[Configuration] | None = None,
         n_configs: int | None = None,
         n_configs_per_hyperparamter: int = 10,
-        max_config_ratio: float = 0.25,  # Use at most X*budget in the initial design
+        max_ratio: float = 0.1,
+        additional_configs: list[Configuration] = [],
     ) -> SobolInitialDesign:
         """Returns a Sobol design instance for the Black-Box facade.
         Please check its documentation."""
-        initial_design = SobolInitialDesign(
+        return SobolInitialDesign(
             scenario=scenario,
-            configs=configs,
             n_configs=n_configs,
             n_configs_per_hyperparameter=n_configs_per_hyperparamter,
-            max_config_ratio=max_config_ratio,
+            max_ratio=max_ratio,
+            additional_configs=additional_configs,
         )
-        return initial_design
 
     @staticmethod
     def get_random_design(  # type: ignore

@@ -300,7 +300,6 @@ class AbstractModel:
             for i, x in enumerate(X):
                 features = np.array(list(self._instance_features.values()))
                 x_tiled = np.tile(x, (n_instances, 1))
-                print(features.shape, x_tiled.shape)
                 X_ = np.hstack((x_tiled, features))
 
                 means, vars = self.predict(X_)

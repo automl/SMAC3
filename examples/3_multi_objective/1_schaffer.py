@@ -10,7 +10,7 @@ from __future__ import annotations
 from typing import Dict, Tuple
 
 import numpy as np
-from ConfigSpace import Configuration, ConfigurationSpace, Float
+from ConfigSpace import Configuration, ConfigurationSpace
 from matplotlib import pyplot as plt
 
 from smac import HyperparameterFacade, Scenario

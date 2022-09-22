@@ -20,14 +20,11 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     `BOHB <https://github.com/automl/HpBandSter>`_.
 """
 
-import logging
-
-logging.basicConfig(level=logging.INFO)
-
 import warnings
 
 import numpy as np
 from ConfigSpace import (
+    Configuration,
     Categorical,
     ConfigurationSpace,
     EqualsCondition,
@@ -36,7 +33,6 @@ from ConfigSpace import (
     Integer,
 )
 from sklearn.datasets import load_digits
-from sklearn.exceptions import ConvergenceWarning
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.neural_network import MLPClassifier
 
@@ -90,7 +86,7 @@ class MLP:
 
         return cs
 
-    def train(self, config, seed=0, budget=25) -> float:
+    def train(self, config: Configuration, seed: int = 0, budget: int = 25) -> float:
         # For deactivated parameters (by virtue of the conditions),
         # the configuration stores None-values.
         # This is not accepted by the MLP, so we replace them with placeholder values.
@@ -99,7 +95,7 @@ class MLP:
         batch_size = config["batch_size"] if config["batch_size"] else 200
 
         with warnings.catch_warnings():
-            warnings.filterwarnings("ignore", category=ConvergenceWarning)
+            warnings.filterwarnings("ignore")
 
             classifier = MLPClassifier(
                 hidden_layer_sizes=[config["n_neurons"]] * config["n_layer"],
@@ -138,7 +134,6 @@ if __name__ == "__main__":
 
     # We want to run five random configurations before starting the optimization.
     initial_design = MultiFidelityFacade.get_initial_design(scenario, n_configs=5)
-    print(initial_design.__dict__)
 
     # Create our SMAC object and pass the scenario and the train method
     smac = MultiFidelityFacade(

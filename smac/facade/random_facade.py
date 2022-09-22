@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 import numpy as np
-from smac.acquisition.maximizers.random_search import AbstractAcquisitionMaximizer, RandomSearch
-from smac.model.abstract_model import AbstractModel
-from smac.random_design import AbstractRandomDesign, ProbabilityRandomDesign
+from smac.acquisition.maximizers.random_search import RandomSearch
+from smac.random_design import AbstractRandomDesign
 from ConfigSpace import Configuration
 from smac.acquisition.functions.abstract_acquisition_function import AbstractAcquisitionFunction
 from smac.facade.abstract_facade import AbstractFacade
@@ -86,12 +85,12 @@ class RandomFacade(AbstractFacade):
     def get_initial_design(
         scenario: Scenario,
         *,
-        configs: list[Configuration] | None = None,
+        additional_configs: list[Configuration] = [],
     ) -> DefaultInitialDesign:
         """Before starting the random optimization, we first evaluate the default initial design."""
         return DefaultInitialDesign(
             scenario=scenario,
-            configs=configs,
+            additional_configs=additional_configs,
         )
 
     @staticmethod

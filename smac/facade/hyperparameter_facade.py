@@ -101,16 +101,16 @@ class HyperparameterFacade(AbstractFacade):
         *,
         n_configs: int | None = None,
         n_configs_per_hyperparamter: int = 10,
-        additional_configs: list[Configuration] = [],
         max_ratio: float = 0.1,
+        additional_configs: list[Configuration] = [],
     ) -> SobolInitialDesign:
         """Returns an Sobol initial design instance. Please check its documentation for details."""
         return SobolInitialDesign(
             scenario=scenario,
             n_configs=n_configs,
             n_configs_per_hyperparameter=n_configs_per_hyperparamter,
-            additional_configs=additional_configs,
             max_ratio=max_ratio,
+            additional_configs=additional_configs,
         )
 
     @staticmethod

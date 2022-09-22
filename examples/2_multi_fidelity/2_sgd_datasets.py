@@ -31,7 +31,7 @@ __license__ = "3-clause BSD"
 
 
 class DigitsDataset:
-    def __init__(self):
+    def __init__(self) -> None:
         self._data = datasets.load_digits()
 
     def get_instances(self) -> list[str]:
@@ -60,7 +60,7 @@ class DigitsDataset:
 
 
 class SGD:
-    def __init__(self, dataset) -> None:
+    def __init__(self, dataset: DigitsDataset) -> None:
         self.dataset = dataset
 
     @property
