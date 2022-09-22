@@ -133,7 +133,7 @@ if __name__ == "__main__":
     mlp = MLP()
     default_config = mlp.configspace.get_default_configuration()
 
-    # Example call of the target algorithm (for debugging)
+    # Example call of the target function (for debugging)
     default_value = mlp.train(default_config, seed=209652396)
     print(f"Default value: {round(default_value, 2)}")
 

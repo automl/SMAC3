@@ -9,7 +9,7 @@ from smac.intensification.successive_halving import SuccessiveHalving
 from smac.intensification.successive_halving_worker import SuccessiveHalvingWorker
 from smac.runhistory import RunHistory, TrialInfo, TrialValue, TrialInfoIntent
 from smac.runner.abstract_runner import StatusType
-from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
+from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -18,7 +18,7 @@ __license__ = "3-clause BSD"
 
 def evaluate_challenger(
     trial_info: TrialInfo,
-    target_algorithm: TargetAlgorithmRunner,
+    target_function: TargetFunctionRunner,
     stats: Stats,
     runhistory: RunHistory,
     force_update=False,
@@ -31,11 +31,11 @@ def evaluate_challenger(
     wrapper to launch the taf and add it to the history
     """
     # evaluating configuration
-    trial_info, result = target_algorithm.run_wrapper(
+    trial_info, result = target_function.run_wrapper(
         trial_info=trial_info,
     )
 
-    stats._target_algorithm_walltime_used += float(result.time)
+    stats._target_function_walltime_used += float(result.time)
     stats._finished += 1
 
     runhistory.add(
@@ -131,10 +131,10 @@ def make_sh_worker(make_scenario, make_stats, configspace_small):
 
 
 @pytest.fixture
-def make_target_algorithm():
+def make_target_function():
     def _make(scenario, stats, func, required_arguments=[]):
-        return TargetAlgorithmRunner(
-            target_algorithm=func,
+        return TargetFunctionRunner(
+            target_function=func,
             scenario=scenario,
             stats=stats,
             required_arguments=required_arguments,
@@ -745,7 +745,7 @@ def test_get_next_run_1(make_sh_worker, runhistory, configs):
         return 1
 
     intensifier = make_sh_worker(deterministic=False, n_instances=2, min_budget=1, max_budget=2, n_seeds=1, eta=2)
-    target_algorithm = TargetAlgorithmRunner(target, intensifier._scenario, intensifier._stats)
+    target_function = TargetFunctionRunner(target, intensifier._scenario, intensifier._stats)
     config1 = configs[0]
     config2 = configs[1]
 
@@ -796,7 +796,7 @@ def test_get_next_run_1(make_sh_worker, runhistory, configs):
 
     # evaluating configuration
     assert trial_info.config is not None
-    trial_value = evaluate_challenger(trial_info, target_algorithm, intensifier._stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_function, intensifier._stats, runhistory)
     inc, inc_value = intensifier.process_results(
         trial_info=trial_info,
         incumbent=None,
@@ -936,7 +936,7 @@ def test_update_stage_2(make_sh_worker, runhistory, configs):
 '''
 
 
-def test_evaluate_challenger_1(make_sh_worker, make_target_algorithm, runhistory, configs):
+def test_evaluate_challenger_1(make_sh_worker, make_target_function, runhistory, configs):
     """Test evaluate_challenger with quality objective & real-valued budget."""
 
     def target(x: Configuration, seed: int, budget: float):
@@ -950,7 +950,7 @@ def test_evaluate_challenger_1(make_sh_worker, make_target_algorithm, runhistory
     intensifier = make_sh_worker(deterministic=True, n_instances=0, min_budget=0.25, max_budget=0.5, eta=2)
     intensifier._update_stage(runhistory=None)
 
-    target_algorithm = make_target_algorithm(
+    target_function = make_target_function(
         intensifier._scenario, intensifier._stats, target, required_arguments=["seed", "budget"]
     )
 
@@ -988,7 +988,7 @@ def test_evaluate_challenger_1(make_sh_worker, make_target_algorithm, runhistory
         incumbent=config1,
         runhistory=runhistory,
     )
-    trial_value = evaluate_challenger(trial_info, target_algorithm, intensifier._stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_function, intensifier._stats, runhistory)
     inc, inc_value = intensifier.process_results(
         trial_info=trial_info,
         incumbent=config1,
@@ -1003,7 +1003,7 @@ def test_evaluate_challenger_1(make_sh_worker, make_target_algorithm, runhistory
     assert intensifier._stats.incumbent_changed == 1
 
 
-def test_incumbent_selection_default(make_sh_worker, make_target_algorithm, runhistory, configs):
+def test_incumbent_selection_default(make_sh_worker, make_target_function, runhistory, configs):
     """Test _compare_config for default incumbent selection design (highest budget so far)."""
 
     config1 = configs[0]
@@ -1128,7 +1128,7 @@ def test_incumbent_selection_default(make_sh_worker, make_target_algorithm, runh
     assert inc == config4
 
 
-def test_incumbent_selection_designs(make_sh_worker, make_target_algorithm, runhistory, configs):
+def test_incumbent_selection_designs(make_sh_worker, make_target_function, runhistory, configs):
     """Test _compare_config with different incumbent selection designs."""
 
     config1 = configs[0]
@@ -1258,7 +1258,7 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_algorithm, runh
     assert config3 == inc
 
 
-def test_launched_all_configs_for_current_stage(make_sh_worker, make_target_algorithm, runhistory, configs):
+def test_launched_all_configs_for_current_stage(make_sh_worker, make_target_function, runhistory, configs):
     """This check makes sure we can identify when all the current runs (config/instance/seed) pairs for a given stage
     have been launched."""
 
@@ -1321,7 +1321,7 @@ def test_launched_all_configs_for_current_stage(make_sh_worker, make_target_algo
     assert intent == TrialInfoIntent.WAIT
 
 
-def _exhaust_stage_execution(intensifier, target_algorithm, runhistory, challengers, incumbent):
+def _exhaust_stage_execution(intensifier, target_function, runhistory, challengers, incumbent):
     """
     Exhaust configuration/instances seed and returns the
     trial_info that were not launched.
@@ -1378,7 +1378,7 @@ def _exhaust_stage_execution(intensifier, target_algorithm, runhistory, challeng
 
         if toggle.pop():
             trial_value = evaluate_challenger(
-                trial_info, target_algorithm, intensifier._stats, runhistory, force_update=True
+                trial_info, target_function, intensifier._stats, runhistory, force_update=True
             )
             incumbent, inc_value = intensifier.process_results(
                 trial_info=trial_info,
@@ -1400,7 +1400,7 @@ def _exhaust_stage_execution(intensifier, target_algorithm, runhistory, challeng
 
 
 def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
-    make_sh_worker, make_target_algorithm, runhistory, configs
+    make_sh_worker, make_target_function, runhistory, configs
 ):
     """Makes sure that iteration done for a given stage is asserted ONLY after all
     configurations AND instances are completed, when instance is used as budget."""
@@ -1414,8 +1414,8 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
     intensifier = make_sh_worker(deterministic=True, n_instances=5, min_budget=2, max_budget=5, eta=2)
     intensifier._update_stage(runhistory=None)
 
-    target_algorithm = make_target_algorithm(intensifier._scenario, intensifier._stats, target)
-    target_algorithm.runhistory = runhistory
+    target_function = make_target_function(intensifier._scenario, intensifier._stats, target)
+    target_function.runhistory = runhistory
 
     # we want to test instance as budget
     assert intensifier._successive_halving._instance_as_budget
@@ -1427,7 +1427,7 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
     challengers = configs[:4]
     incumbent = None
     pending_processing, incumbent = _exhaust_stage_execution(
-        intensifier, target_algorithm, runhistory, challengers, incumbent
+        intensifier, target_function, runhistory, challengers, incumbent
     )
 
     # We have configurations pending, so iteration should NOT be done
@@ -1446,7 +1446,7 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
     # as we are in stage 1 out of 2
     for trial_info in pending_processing:
         trial_value = evaluate_challenger(
-            trial_info, target_algorithm, intensifier._stats, runhistory, force_update=True
+            trial_info, target_function, intensifier._stats, runhistory, force_update=True
         )
         incumbent, inc_value = intensifier.process_results(
             trial_info=trial_info,
@@ -1463,7 +1463,7 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
 
     pending_processing, incumbent = _exhaust_stage_execution(
         intensifier,
-        target_algorithm,
+        target_function,
         runhistory,
         challengers,
         incumbent,
@@ -1486,7 +1486,7 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
     # Finish the pending runs
     for trial_info in pending_processing:
         trial_value = evaluate_challenger(
-            trial_info, target_algorithm, intensifier._stats, runhistory, force_update=True
+            trial_info, target_function, intensifier._stats, runhistory, force_update=True
         )
         incumbent, _ = intensifier.process_results(
             trial_info=trial_info,
@@ -1502,7 +1502,7 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
 
 
 def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
-    make_sh_worker, make_target_algorithm, runhistory, configs
+    make_sh_worker, make_target_function, runhistory, configs
 ):
     """Makes sure that iteration done for a given stage is asserted ONLY after all
     configurations AND instances are completed, when instance is NOT used as budget."""
@@ -1520,13 +1520,13 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
     )
     intensifier._update_stage(runhistory=None)
 
-    target_algorithm = make_target_algorithm(
+    target_function = make_target_function(
         intensifier._scenario,
         intensifier._stats,
         target,
         required_arguments=["seed", "budget"],
     )
-    target_algorithm.runhistory = runhistory
+    target_function.runhistory = runhistory
 
     # we do not want to test instance as budget
     assert not intensifier._successive_halving._instance_as_budget
@@ -1538,7 +1538,7 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
     challengers = configs[:4]
     incumbent = None
     pending_processing, incumbent = _exhaust_stage_execution(
-        intensifier, target_algorithm, runhistory, challengers, incumbent
+        intensifier, target_function, runhistory, challengers, incumbent
     )
 
     # We have configurations pending, so iteration should NOT be done
@@ -1558,7 +1558,7 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
     for trial_info in pending_processing:
         trial_value = evaluate_challenger(
             trial_info,
-            target_algorithm,
+            target_function,
             intensifier._stats,
             runhistory,
             force_update=True,
@@ -1577,7 +1577,7 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
     assert intensifier._stage == 1
 
     pending_processing, incumbent = _exhaust_stage_execution(
-        intensifier, target_algorithm, runhistory, challengers, incumbent
+        intensifier, target_function, runhistory, challengers, incumbent
     )
 
     # The next configuration per stage is just one (n_configs_in_stage=[2.0, 1.0])
@@ -1594,7 +1594,7 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
     assert [k.budget for k in runhistory._data.keys()] == [2.5, 2.5, 5]
 
 
-def test_budget_initialization(make_sh_worker, make_target_algorithm, runhistory, configs):
+def test_budget_initialization(make_sh_worker, make_target_function, runhistory, configs):
     """Check computing budgets (only for non-instance cases)."""
     intensifier = make_sh_worker(deterministic=True, n_instances=0, min_budget=1, max_budget=81, eta=3)
 

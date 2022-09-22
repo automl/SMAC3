@@ -56,7 +56,7 @@ class Stats:
         self._n_configs = 0
         self._incumbent_changed = 0
         self._walltime_used = 0.0
-        self._target_algorithm_walltime_used = 0.0
+        self._target_function_walltime_used = 0.0
 
         # Trajectory
         self._trajectory: list[TrajectoryItem] = []
@@ -128,11 +128,11 @@ class Stats:
         return self._scenario.walltime_limit - (time.time() - self._start_time)
 
     def get_remaining_cputime(self) -> float:
-        """Subtracts the target algorithm running budget with the used time."""
-        return self._scenario.cputime_limit - self._target_algorithm_walltime_used
+        """Subtracts the target function running budget with the used time."""
+        return self._scenario.cputime_limit - self._target_function_walltime_used
 
     def get_remaining_trials(self) -> int:
-        """Subtract the target algorithm runs in the scenario with the used ta runs."""
+        """Subtract the target function runs in the scenario with the used ta runs."""
         return self._scenario.n_trials - self._submitted
 
     def is_budget_exhausted(self) -> bool:
@@ -171,12 +171,12 @@ class Stats:
             "\n"
             f"--- STATISTICS -------------------------------------\n"
             f"--- Incumbent changed: {self._incumbent_changed - 1}\n"
-            f"--- Submitted target algorithm runs: {self._submitted} / {self._scenario.n_trials}\n"
-            f"--- Finished target algorithm runs: {self._finished} / {self._scenario.n_trials}\n"
+            f"--- Submitted target function runs: {self._submitted} / {self._scenario.n_trials}\n"
+            f"--- Finished target function runs: {self._finished} / {self._scenario.n_trials}\n"
             f"--- Configurations: {self._n_configs}\n"
             f"--- Used wallclock time: {round(self.get_used_walltime())} / {self._scenario.walltime_limit} sec\n"
-            "--- Used target algorithm runtime: "
-            f"{round(self._target_algorithm_walltime_used, 2)} / {self._scenario.cputime_limit} sec\n"
+            "--- Used target function runtime: "
+            f"{round(self._target_function_walltime_used, 2)} / {self._scenario.cputime_limit} sec\n"
             f"----------------------------------------------------"
         )
 
@@ -198,7 +198,7 @@ class Stats:
             "finished": self._finished,
             "n_configs": self._n_configs,
             "walltime_used": self.get_used_walltime(),
-            "target_algorithm_walltime_used": self._target_algorithm_walltime_used,
+            "target_function_walltime_used": self._target_function_walltime_used,
             "incumbent_changed": self._incumbent_changed,
             "trajectory": [dataclasses.asdict(item) for item in self._trajectory],
         }
@@ -225,6 +225,6 @@ class Stats:
         self._finished = data["finished"]
         self._n_configs = data["n_configs"]
         self._walltime_used = data["walltime_used"]
-        self._target_algorithm_walltime_used = data["target_algorithm_walltime_used"]
+        self._target_function_walltime_used = data["target_function_walltime_used"]
         self._incumbent_changed = data["incumbent_changed"]
         self._trajectory = [TrajectoryItem(**item) for item in data["trajectory"]]

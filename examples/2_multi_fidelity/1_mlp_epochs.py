@@ -6,7 +6,7 @@ Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets.
 Since we want to take advantage of Multi-Fidelity, the ``MultiFidelityFacade`` is a good choice. By default,
 ``MultiFidelityFacade`` internally runs with `hyperband <https://arxiv.org/abs/1603.06560>`_ as
 intensification, which is a combination of an
-aggressive racing mechanism and successive halving. Crucially, the target algorithm function
+aggressive racing mechanism and successive halving. Crucially, the target function function
 must accept a budget variable, detailing how much fidelity smac wants to allocate to this
 configuration.
 
@@ -123,7 +123,7 @@ if __name__ == "__main__":
     mlp = MLP()
     default_config = mlp.configspace.get_default_configuration()
 
-    # Example call of the target algorithm (for debugging)
+    # Example call of the target function (for debugging)
     default_value = mlp.train(default_config)
     print(f"Default value: {round(default_value, 2)}")
 

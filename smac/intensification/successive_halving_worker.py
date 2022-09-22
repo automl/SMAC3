@@ -120,7 +120,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # self._num_trials = 0
         # self._challenger_id = 0
         # self._iteration_done = False
-        # self._target_algorithm_time = 0
+        # self._target_function_time = 0
 
     @property
     def stage(self) -> int:
@@ -167,8 +167,8 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # if result.status == StatusType.CAPPED and trial_info.config == self._running_challenger:
         #    self._current_instance_indices[trial_info.config] = np.inf
         # else:
-        self._target_algorithm_time = self._target_algorithm_time
-        self._target_algorithm_time += trial_value.time
+        self._target_function_time = self._target_function_time
+        self._target_function_time += trial_value.time
         self._num_trials += 1
 
         # 0: Before moving to a new stage, we have to complete M x N tasks, where M is the
@@ -478,7 +478,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
             self._sh_iters += 1
             self._stage = 0
             self._configs_to_run = []
-            self._target_algorithm_time = 0
+            self._target_function_time = 0
             self._challenger_id = 0
             self._num_trials = 0
             self._iteration_done = True

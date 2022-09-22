@@ -3,13 +3,13 @@ Parallelism
 
 SMAC also provides a parallel mode to use several parallel computational resources (such as CPU cores).
 This variant of SMAC is called pSMAC (parallel SMAC) [1]_.
-The general idea is that all target algorithm run evaluations are shared between the individual SMAC runs
+The general idea is that all target function run evaluations are shared between the individual SMAC runs
 such that all SMAC runs are better informed and can work together.
 
 .. warning::
 
 	To use pSMAC, please note that it communicates via the file space,
-	i.e., all pSMAC runs write from time to time its runhistory (all target algorithm evaluations)
+	i.e., all pSMAC runs write from time to time its runhistory (all target function evaluations)
 	to disk and read the runhistories of all other pSMAC runs.
 	So, a requirement for pSMAC is that it can write to a shared file space.
 

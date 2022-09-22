@@ -86,7 +86,7 @@ class AbstractIntensifier:
         self._challenger_id = 0
         self._repeat_configs = False  # Repeating configurations is discouraged for parallel trials.
         self._iteration_done = False  # Marks the end of an iteration.
-        self._target_algorithm_time = 0.0
+        self._target_function_time = 0.0
 
     @property
     def intensify_percentage(self) -> float:

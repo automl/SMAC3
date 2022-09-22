@@ -91,7 +91,7 @@
 #     # Scenario object
 #     scenario = Scenario(model.configspace, n_trials=100)
 
-#     # Example call of the target algorithm
+#     # Example call of the target function
 #     default_value = model.train(model.configspace.get_default_configuration())
 #     print(f"Default value: {round(default_value, 2)}")
 
@@ -99,7 +99,7 @@
 #     print("Optimizing! Depending on your machine, this might take a few minutes.")
 #     smac = TuRBOFacade(
 #         scenario=scenario,
-#         target_algorithm=model.train,
+#         target_function=model.train,
 #         overwrite=True,
 #     )
 #     smac.optimize()

@@ -11,7 +11,7 @@ from dask.distributed import Client
 from smac.runhistory import TrialInfo, TrialValue
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.abstract_runner import StatusType
-from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
+from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.scenario import Scenario
 from smac.stats import Stats
 
@@ -43,13 +43,13 @@ def make_dummy_ta(
     configspace_small: ConfigurationSpace,
     make_scenario: Callable[..., Scenario],
     make_stats: Callable[..., Stats],
-) -> Callable[..., TargetAlgorithmRunner]:
-    """Make a TargetAlgorithmRunner, ``make_dummy_ta(func)``"""
+) -> Callable[..., TargetFunctionRunner]:
+    """Make a TargetFunctionRunner, ``make_dummy_ta(func)``"""
 
-    def _make(target_algorithm: Callable, n_workers: int = 2) -> TargetAlgorithmRunner:
+    def _make(target_function: Callable, n_workers: int = 2) -> TargetFunctionRunner:
         scenario = make_scenario(configspace=configspace_small, n_workers=n_workers)
-        return TargetAlgorithmRunner(
-            target_algorithm=target_algorithm,
+        return TargetFunctionRunner(
+            target_function=target_function,
             scenario=scenario,
             stats=make_stats(scenario),
             required_arguments=["seed", "instance"],
@@ -58,7 +58,7 @@ def make_dummy_ta(
     return _make
 
 
-def test_run(make_dummy_ta: Callable[..., TargetAlgorithmRunner]) -> None:
+def test_run(make_dummy_ta: Callable[..., TargetFunctionRunner]) -> None:
     """Makes sure that we are able to run a configuration and get expected values/types"""
     single_worker = make_dummy_ta(target, n_workers=2)
     runner = DaskParallelRunner(single_worker=single_worker)
@@ -84,7 +84,7 @@ def test_run(make_dummy_ta: Callable[..., TargetAlgorithmRunner]) -> None:
     assert run_value.status == StatusType.SUCCESS
 
 
-def test_parallel_runs(make_dummy_ta: Callable[..., TargetAlgorithmRunner]) -> None:
+def test_parallel_runs(make_dummy_ta: Callable[..., TargetFunctionRunner]) -> None:
     """Make sure because there are 2 workers, the trials are launched close in time"""
     single_runner = make_dummy_ta(target_delayed, n_workers=2)
     runner = DaskParallelRunner(single_worker=single_runner)
@@ -130,7 +130,7 @@ def test_parallel_runs(make_dummy_ta: Callable[..., TargetAlgorithmRunner]) -> N
     assert int(first_run_value.starttime) <= int(second_run_value.endtime)
 
 
-def test_additional_info_crash_msg(make_dummy_ta: Callable[..., TargetAlgorithmRunner]) -> None:
+def test_additional_info_crash_msg(make_dummy_ta: Callable[..., TargetFunctionRunner]) -> None:
     """
     We want to make sure we catch errors as additional info, and in particular when
     doing multiprocessing runs, we want to make sure we capture dask exceptions
@@ -148,7 +148,7 @@ def test_additional_info_crash_msg(make_dummy_ta: Callable[..., TargetAlgorithmR
     assert "RuntimeError" in run_value.additional_info["traceback"]
 
 
-def test_internally_created_client(make_dummy_ta: Callable[..., TargetAlgorithmRunner]) -> None:
+def test_internally_created_client(make_dummy_ta: Callable[..., TargetFunctionRunner]) -> None:
     """
     Expects
     -------
@@ -172,7 +172,7 @@ def test_internally_created_client(make_dummy_ta: Callable[..., TargetAlgorithmR
     assert client.status == "closed"
 
 
-def test_with_external_client(make_dummy_ta: Callable[..., TargetAlgorithmRunner]) -> None:
+def test_with_external_client(make_dummy_ta: Callable[..., TargetFunctionRunner]) -> None:
     """
     Expects
     -------

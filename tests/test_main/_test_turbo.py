@@ -53,7 +53,7 @@ def test_choose_next(make_scenario):
     rh = RunHistory()
     rh.add(config, 10, 10, StatusType.SUCCESS)
     tae = lambda x: x
-    smbo = TuRBOFacade(scenario=scenario, target_algorithm=tae, runhistory=rh, overwrite=True).optimizer
+    smbo = TuRBOFacade(scenario=scenario, target_function=tae, runhistory=rh, overwrite=True).optimizer
 
     x = next(smbo.ask()).get_array()
     assert x.shape == (2,)

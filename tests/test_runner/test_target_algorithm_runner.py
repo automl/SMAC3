@@ -9,7 +9,7 @@ import pytest
 from ConfigSpace import Configuration, ConfigurationSpace
 from smac.runhistory import TrialInfo
 from smac.runner.abstract_runner import StatusType
-from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
+from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.scenario import Scenario
 from smac.stats import Stats
 
@@ -63,14 +63,14 @@ def make_runner(
     configspace_small: ConfigurationSpace,
     make_scenario: Callable[..., Scenario],
     make_stats: Callable[..., Stats],
-) -> Callable[..., TargetAlgorithmRunner]:
-    """Make a TargetAlgorithmRunner, ``make_dummy_ta(func)``"""
+) -> Callable[..., TargetFunctionRunner]:
+    """Make a TargetFunctionRunner, ``make_dummy_ta(func)``"""
 
     def _make(
-        target_algorithm: Callable,
+        target_function: Callable,
         use_multi_objective: bool = False,
         use_instances: bool = False,
-    ) -> TargetAlgorithmRunner:
+    ) -> TargetFunctionRunner:
         scenario = make_scenario(
             configspace=configspace_small,
             use_multi_objective=use_multi_objective,
@@ -80,8 +80,8 @@ def make_runner(
         if use_instances:
             required_arguments += ["instance"]
 
-        return TargetAlgorithmRunner(
-            target_algorithm=target_algorithm,
+        return TargetFunctionRunner(
+            target_function=target_function,
             scenario=scenario,
             stats=make_stats(scenario),
             required_arguments=required_arguments,
@@ -90,7 +90,7 @@ def make_runner(
     return _make
 
 
-def test_run(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
+def test_run(make_runner: Callable[..., TargetFunctionRunner]) -> None:
     """Makes sure that we are able to run a config and return the expected values/types"""
     runner = make_runner(target, use_instances=True)
     run_info = TrialInfo(config=2, instance="test", seed=0, budget=0.0)
@@ -107,7 +107,7 @@ def test_run(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
     assert run_value.status == StatusType.SUCCESS
 
 
-def test_serial_runs(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
+def test_serial_runs(make_runner: Callable[..., TargetFunctionRunner]) -> None:
     """Test submitting two runs in succession and that they complete after eachother in results"""
     runner = make_runner(target_delayed, use_instances=True)
 
@@ -132,7 +132,7 @@ def test_serial_runs(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
     assert int(first_run_value.endtime) <= int(second_run_value.starttime)
 
 
-def test_fail(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
+def test_fail(make_runner: Callable[..., TargetFunctionRunner]) -> None:
     """Test traceback and error end up in the additional info of a failing run"""
     runner = make_runner(target_failed, use_instances=True)
     run_info = TrialInfo(config=2, instance="test", seed=0, budget=0.0)
@@ -145,7 +145,7 @@ def test_fail(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
     assert "RuntimeError" in run_value.additional_info["traceback"]
 
 
-def test_call(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
+def test_call(make_runner: Callable[..., TargetFunctionRunner]) -> None:
     """Test call functionality returns things as expected"""
     runner = make_runner(target_dummy)
     config = runner._scenario.configspace.get_default_configuration()
@@ -157,10 +157,10 @@ def test_call(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
     assert status == StatusType.SUCCESS
 
 
-def test_multi_objective(make_runner: Callable[..., TargetAlgorithmRunner]) -> None:
+def test_multi_objective(make_runner: Callable[..., TargetFunctionRunner]) -> None:
     """Test multiobjective function processed properly"""
     # We always expect a list of costs (although a dict is returned).
-    # Internally, target algorithm runner maps the dict to a list of costs in the right order.
+    # Internally, target function runner maps the dict to a list of costs in the right order.
     for target in [target_multi_objective1, target_multi_objective2]:
         runner = make_runner(target, use_multi_objective=True)
         config = runner._scenario.configspace.get_default_configuration()

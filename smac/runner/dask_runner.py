@@ -60,7 +60,7 @@ class DaskParallelRunner(AbstractRunner):
         dask_client: Client | None = None,
     ):
         super().__init__(
-            target_algorithm=single_worker._target_algorithm,
+            target_function=single_worker._target_function,
             scenario=single_worker._scenario,
             stats=single_worker._stats,
             required_arguments=single_worker._required_arguments,
@@ -99,7 +99,7 @@ class DaskParallelRunner(AbstractRunner):
     def get_meta(self) -> dict[str, Any]:
         return {
             "name": self.__class__.__name__,
-            "code": self._target_algorithm.__code__.co_code,
+            "code": self._target_function.__code__.co_code,
         }
 
     def submit_trial(self, trial_info: TrialInfo) -> None:

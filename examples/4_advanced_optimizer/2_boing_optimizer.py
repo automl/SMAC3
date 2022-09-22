@@ -5,7 +5,7 @@
 # An example of applying SMAC with BO inside Grove (BOinG) to optimize a
 # synthetic function (2d rosenbrock function).
 
-# BOinG optimizer requires a SMAC4BOING wrapper to optimize the target algorithm. It is a two stage BO algorithm.
+# BOinG optimizer requires a SMAC4BOING wrapper to optimize the target function. It is a two stage BO algorithm.
 # In the first stage, BOinG constructs an RF to capture the global loss landscape. Then in the second stage, it only
 # optimizes inside a subregion near the candidate suggested by the RF model with a GP model to focus only on the most
 # promising region.
@@ -54,7 +54,7 @@
 #     # Scenario object
 #     scenario = Scenario(model.configspace, n_trials=100)
 
-#     # Example call of the target algorithm
+#     # Example call of the target function
 #     default_value = model.train(model.configspace.get_default_configuration())
 #     print(f"Default value: {round(default_value, 2)}")
 
@@ -62,7 +62,7 @@
 #     print("Optimizing! Depending on your machine, this might take a few minutes.")
 #     smac = BOinGFacade(
 #         scenario=scenario,
-#         target_algorithm=model.train,
+#         target_function=model.train,
 #         overwrite=True,
 #     )
 

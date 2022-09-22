@@ -33,9 +33,9 @@ class Scenario:
     output_directory : Path, defaults to Path("smac3_output")
         The directory in which to save the output. The files are saved in `./output_directory/name/seed`.
     deterministic : bool, defaults to False
-        If deterministic is set to true, only one seed is passed to the target algorithm.
+        If deterministic is set to true, only one seed is passed to the target function.
         Otherwise, multiple seeds (if n_seeds of the intensifier is greater than 1) are passed
-        to the target algorithm to ensure generalization.
+        to the target function to ensure generalization.
     objective : str | list[str] | None, defaults to "cost"
         The objective(s) to optimize. This argument is required for multi-objective optimization.
     crash_cost : float | list[float], defaults to np.inf

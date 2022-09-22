@@ -57,7 +57,7 @@ def test_mean_aggregation(make_scenario, configspace):
     for facade in [BlackBoxFacade, HyperparameterFacade, AlgorithmConfigurationFacade]:
         smac = facade(
             scenario=scenario,
-            target_algorithm=tae,
+            target_function=tae,
             multi_objective_algorithm=MeanAggregationStrategy(scenario=scenario),
             overwrite=True,
         )
@@ -80,7 +80,7 @@ def test_parego(make_scenario, configspace):
     for facade in [BlackBoxFacade, HyperparameterFacade, AlgorithmConfigurationFacade]:
         smac = facade(
             scenario=scenario,
-            target_algorithm=tae,
+            target_function=tae,
             multi_objective_algorithm=ParEGO(scenario=scenario),
             overwrite=True,
         )

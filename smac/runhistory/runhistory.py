@@ -26,7 +26,7 @@ logger = get_logger(__name__)
 
 
 class RunHistory(Mapping[TrialKey, TrialValue]):
-    """Container for the target algorithm run information.
+    """Container for the target function run information.
 
     Most importantly, the runhistory contains an efficient mapping from each evaluated configuration to the
     empirical cost observed on either the full instance set or a subset. The cost is the average over all

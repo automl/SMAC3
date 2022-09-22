@@ -71,9 +71,9 @@ class Intensifier(AbstractIntensifier):
         If incumbent changes, race this configuration always against new incumbent.  Prevents sometimes
         over-tuning.
     run_limit : int, defaults to MAXINT
-        Maximum number of target algorithm trials per call to intensify.
-    use_target_algorithm_time_bound : bool, defaults to false
-        If true, trust time reported by the target algorithms instead of measuring the wallclock time for limiting
+        Maximum number of target function trials per call to intensify.
+    use_target_function_time_bound : bool, defaults to false
+        If true, trust time reported by the target functions instead of measuring the wallclock time for limiting
         the time of intensification.
     seed : int | None, defaults to none
     """
@@ -87,7 +87,7 @@ class Intensifier(AbstractIntensifier):
         intensify_percentage: float = 0.5,
         race_against: Configuration | None = None,
         run_limit: int = MAXINT,
-        use_target_algorithm_time_bound: bool = False,
+        use_target_function_time_bound: bool = False,
         seed: int | None = None,
     ):
         if scenario.deterministic:
@@ -123,7 +123,7 @@ class Intensifier(AbstractIntensifier):
         if self._run_limit < 1:
             raise ValueError("The argument `run_limit` must be greather than 1.")
 
-        self._use_target_algorithm_time_bound = use_target_algorithm_time_bound
+        self._use_target_function_time_bound = use_target_function_time_bound
         self._elapsed_time = 0.0
 
         # Stage variables
@@ -173,7 +173,7 @@ class Intensifier(AbstractIntensifier):
                 "name": self.__class__.__name__,
                 "race_against": race_against,
                 "run_limit": self._run_limit,
-                "use_target_algorithm_time_bound": self._use_target_algorithm_time_bound,
+                "use_target_function_time_bound": self._use_target_function_time_bound,
             }
         )
 
@@ -427,7 +427,7 @@ class Intensifier(AbstractIntensifier):
             IntensifierStage.PROCESS_INCUMBENT_RUN,
             IntensifierStage.PROCESS_FIRST_CONFIG_RUN,
         ]:
-            self._target_algorithm_time += trial_value.time
+            self._target_function_time += trial_value.time
             self._num_trials += 1
             self._process_incumbent(
                 incumbent=incumbent,
@@ -437,7 +437,7 @@ class Intensifier(AbstractIntensifier):
         else:
             self._num_trials += 1
             self._num_challenger_run += 1
-            self._target_algorithm_time += trial_value.time
+            self._target_function_time += trial_value.time
             incumbent = self._process_racer_results(
                 challenger=trial_info.config,
                 incumbent=incumbent,
@@ -458,7 +458,7 @@ class Intensifier(AbstractIntensifier):
                 logger.debug("Maximum number of trials for intensification reached.")
                 self._next_iteration()
 
-            if not self._use_target_algorithm_time_bound and self._elapsed_time - time_bound >= 0:
+            if not self._use_target_function_time_bound and self._elapsed_time - time_bound >= 0:
                 logger.debug(
                     "Wallclock time limit for intensification reached (used: %f sec, available: %f sec)",
                     self._elapsed_time,
@@ -467,10 +467,10 @@ class Intensifier(AbstractIntensifier):
 
                 self._next_iteration()
 
-            elif self._target_algorithm_time - time_bound >= 0:
+            elif self._target_function_time - time_bound >= 0:
                 logger.debug(
                     "Target function time limit for intensification reached (used: %f sec, available: %f sec)",
-                    self._target_algorithm_time,
+                    self._target_function_time,
                     time_bound,
                 )
 
@@ -802,6 +802,6 @@ class Intensifier(AbstractIntensifier):
         self._num_challenger_run = 0
         self._challenger_id = 0
         self._elapsed_time = 0
-        self._target_algorithm_time = 0.0
+        self._target_function_time = 0.0
 
         self._stats.update_average_configs_per_intensify(n_configs=self._challenger_id)

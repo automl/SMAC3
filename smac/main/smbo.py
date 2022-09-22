@@ -136,7 +136,7 @@ class SMBO(BaseSMBO):
             raise FirstRunCrashedException("The first run crashed. Please check your setup again." + additional_info)
 
         # Update SMAC stats
-        self._stats._target_algorithm_walltime_used += float(value.time)
+        self._stats._target_function_walltime_used += float(value.time)
         self._stats._finished += 1
 
         logger.debug(
@@ -160,7 +160,7 @@ class SMBO(BaseSMBO):
 
         if value.status == StatusType.ABORT:
             raise TargetAlgorithmAbortException(
-                "The target algorithm was aborted. The last incumbent can be found in the trajectory file."
+                "The target function was aborted. The last incumbent can be found in the trajectory file."
             )
         elif value.status == StatusType.STOP:
             logger.debug("Value holds the status stop. Abort is requested.")

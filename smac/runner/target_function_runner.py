@@ -22,11 +22,11 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class TargetAlgorithmRunner(AbstractRunner):
-    """Class to execute target algorithms which are (python) functions. Evaluates functions for given configuration and
+class TargetFunctionRunner(AbstractRunner):
+    """Class to execute target functions which are (python) functions. Evaluates functions for given configuration and
     resource limit.
 
-    The target algorithm can either return a float (the loss), or a tuple
+    The target function can either return a float (the loss), or a tuple
     with the first element being a float and the second being additional run
     information. In a multi-objective setting, the float value is replaced by a list of floats.
     """
@@ -84,18 +84,18 @@ class TargetAlgorithmRunner(AbstractRunner):
         budget: float | None = None,
         seed: int | None = None,
     ) -> tuple[StatusType, float | list[float], float, dict]:
-        """Calls the target algorithm with pynisher if algorithm walltime limit or memory limit is set. Otherwise
+        """Calls the target function with pynisher if algorithm walltime limit or memory limit is set. Otherwise
         the function is called directly.
 
         Parameters
         ----------
         config : Configuration
-            Configuration to be passed to the target algorithm.
+            Configuration to be passed to the target function.
         instance : str | None, defaults to None
             The Problem instance.
         budget : float | None, defaults to None
-            A positive, real-valued number representing an arbitrary limit to the target algorithm handled by the
-            target algorithm internally.
+            A positive, real-valued number representing an arbitrary limit to the target function handled by the
+            target function internally.
         seed : int, defaults to None
 
         Returns
@@ -105,11 +105,11 @@ class TargetAlgorithmRunner(AbstractRunner):
         cost : float | list[float]
             Resulting cost(s) of the trial.
         runtime : float
-            The time the target algorithm function took to run.
+            The time the target function function took to run.
         additional_info : dict
             All further additional trial information.
         """
-        # The kwargs are passed to the target algorithm.
+        # The kwargs are passed to the target function.
         kwargs: dict[str, Any] = {}
         if "seed" in self._required_arguments:
             kwargs["seed"] = seed
@@ -125,24 +125,24 @@ class TargetAlgorithmRunner(AbstractRunner):
         status = StatusType.CRASHED
 
         # If memory limit or walltime limit is set, we wanna use pynisher
-        target_algorithm: Callable
+        target_function: Callable
         if self._memory_limit is not None or self._algorithm_walltime_limit is not None:
-            target_algorithm = limit(
-                self._target_algorithm,
+            target_function = limit(
+                self._target_function,
                 memory=self._memory_limit,
                 wall_time=self._algorithm_walltime_limit,
                 wrap_errors=True,  # Hard to describe; see https://github.com/automl/pynisher
             )
         else:
-            target_algorithm = self._target_algorithm
+            target_function = self._target_function
 
         # We don't want the user to change the configuration
         config_copy = copy.deepcopy(config)
 
-        # Call target algorithm
+        # Call target function
         try:
             start_time = time.time()
-            rval = self(config_copy, target_algorithm, kwargs)
+            rval = self(config_copy, target_function, kwargs)
             runtime = time.time() - start_time
             status = StatusType.SUCCESS
         except WallTimeoutException:

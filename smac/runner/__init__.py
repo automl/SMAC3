@@ -4,12 +4,12 @@ from smac.runner.exceptions import (
     TargetAlgorithmAbortException,
 )
 from smac.runner.abstract_runner import AbstractRunner
-from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
+from smac.runner.target_function_runner import TargetFunctionRunner
 
 __all__ = [
     # Runner
     "AbstractRunner",
-    "TargetAlgorithmRunner",
+    "TargetFunctionRunner",
     "DaskParallelRunner",
     # Exceptions
     "TargetAlgorithmAbortException",

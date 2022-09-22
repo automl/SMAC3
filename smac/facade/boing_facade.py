@@ -73,7 +73,7 @@
 #     def __init__(
 #         self,
 #         scenario: Scenario,
-#         target_algorithm: AbstractRunner | Callable,
+#         target_function: AbstractRunner | Callable,
 #         *,
 #         model_local: Type[AbstractModel] = GloballyAugmentedLocalGaussianProcess,
 #         model_local_kwargs: Dict | None = None,
@@ -100,7 +100,7 @@
 #         self.do_switching = do_switching
 #         self.turbo_kwargs = turbo_kwargs
 #         we attach here to allow the users to pass their own arguments to the boing optimizer
-#         super().__init__(scenario=scenario, target_algorithm=target_algorithm, **kwargs)
+#         super().__init__(scenario=scenario, target_function=target_function, **kwargs)
 
 #     @staticmethod
 #     def get_runhistory_encoder(scenario: Scenario) -> RunHistoryRawEncoder:

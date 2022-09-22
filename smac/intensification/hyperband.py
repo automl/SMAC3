@@ -45,7 +45,7 @@ class Hyperband(SuccessiveHalving):
         more instances). This parameter is accessed in the SMBO class.
     seed : int | None, defaults to None
     n_seeds : int | None, defaults to None
-        The number of seeds to use if the target algorithm is non-deterministic.
+        The number of seeds to use if the target function is non-deterministic.
     """
 
     def _get_intensifier_ranking(self, intensifier: AbstractIntensifier) -> tuple[int, int]:

@@ -42,17 +42,17 @@ class AbstractRunner(ABC):
 
     Parameters
     ----------
-    target_algorithm : Callable
-        The target algorithm function.
+    target_function : Callable
+        The target function function.
     scenario : Scenario
     stats : Stats
     required_arguments : list[str]
-        A list of required arguments, which the target algorithm function must have.
+        A list of required arguments, which the target function function must have.
     """
 
     def __init__(
         self,
-        target_algorithm: Callable,
+        target_function: Callable,
         scenario: Scenario,
         stats: Stats,
         required_arguments: list[str] = [],
@@ -65,7 +65,7 @@ class AbstractRunner(ABC):
         self._results_queue: list[tuple[TrialInfo, TrialValue]] = []
 
         # Below state the support for a Runner algorithm that implements a ta
-        self._target_algorithm = target_algorithm
+        self._target_function = target_function
         self._stats = stats
         self._crash_cost = scenario.crash_cost
         self._supports_memory_limit = False
@@ -78,14 +78,14 @@ class AbstractRunner(ABC):
         self._objectives = objectives
         self._n_objectives = scenario.count_objectives()
 
-        # Check if target algorithm is callable
-        if not callable(self._target_algorithm):
+        # Check if target function is callable
+        if not callable(self._target_function):
             raise TypeError(
-                "Argument `target_algorithm` must be a callable but is type" f"`{type(self._target_algorithm)}`."
+                "Argument `target_function` must be a callable but is type" f"`{type(self._target_function)}`."
             )
 
         # Signatures here
-        signature = inspect.signature(self._target_algorithm).parameters
+        signature = inspect.signature(self._target_function).parameters
         for argument in required_arguments:
             if argument not in signature.keys():
                 raise RuntimeError(
@@ -147,7 +147,7 @@ class AbstractRunner(ABC):
         # Catch NaN or inf
         if not np.all(np.isfinite(cost)):
             logger.warning(
-                "Target algorithm returned infinity or nothing at all. Result is treated as CRASHED"
+                "Target function returned infinity or nothing at all. Result is treated as CRASHED"
                 f" and cost is set to {self._crash_cost}."
             )
             status = StatusType.CRASHED
@@ -169,7 +169,7 @@ class AbstractRunner(ABC):
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
-            "code": str(self._target_algorithm.__code__.co_code),
+            "code": str(self._target_function.__code__.co_code),
         }
 
     @abstractmethod
@@ -199,17 +199,17 @@ class AbstractRunner(ABC):
         budget: float | None = None,
         seed: int | None = None,
     ) -> tuple[StatusType, float | list[float], float, dict]:
-        """Runs the target algorithm with a configuration on a single instance-budget-seed combination (aka trial).
+        """Runs the target function with a configuration on a single instance-budget-seed combination (aka trial).
 
         Parameters
         ----------
         config : Configuration
-            Configuration to be passed to the target algorithm.
+            Configuration to be passed to the target function.
         instance : str | None, defaults to None
             The Problem instance.
         budget : float | None, defaults to None
-            A positive, real-valued number representing an arbitrary limit to the target algorithm handled by the
-            target algorithm internally.
+            A positive, real-valued number representing an arbitrary limit to the target function handled by the
+            target function internally.
         seed : int, defaults to None
 
         Returns
@@ -219,7 +219,7 @@ class AbstractRunner(ABC):
         cost : float | list[float]
             Resulting cost(s) of the trial.
         runtime : float
-            The time the target algorithm function took to run.
+            The time the target function function took to run.
         additional_info : dict
             All further additional trial information.
         """

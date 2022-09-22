@@ -49,14 +49,14 @@ if __name__ == "__main__":
     # Scenario object specifying the optimization "environment"
     scenario = Scenario(model.configspace, n_trials=300)
 
-    # Example call of the target algorithm (for debugging)
+    # Example call of the target function (for debugging)
     default_value = model.train(model.configspace.get_default_configuration())
     print(f"Default value: {round(default_value, 2)}")
 
     # Now we use SMAC to find the best hyperparameters
     smac = BlackBoxFacade(
         scenario,
-        model.train,  # We pass the target algorithm here
+        model.train,  # We pass the target function here
         overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data.
     )
     incumbent = smac.optimize()

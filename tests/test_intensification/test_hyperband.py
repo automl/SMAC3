@@ -10,7 +10,7 @@ from smac.intensification.successive_halving import SuccessiveHalving
 from smac.intensification.successive_halving_worker import SuccessiveHalvingWorker
 from smac.runhistory import RunHistory, TrialInfo, TrialValue, TrialInfoIntent
 from smac.runner.abstract_runner import StatusType
-from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
+from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.stats import Stats
 
 
@@ -20,7 +20,7 @@ __license__ = "3-clause BSD"
 
 def evaluate_challenger(
     trial_info: TrialInfo,
-    target_algorithm: TargetAlgorithmRunner,
+    target_function: TargetFunctionRunner,
     stats: Stats,
     runhistory: RunHistory,
     force_update=False,
@@ -30,11 +30,11 @@ def evaluate_challenger(
 
     SMBO objects handles run history now, but to keep
     same testing functionality this function is a small
-    wrapper to launch the target_algorithm and add it to the history
+    wrapper to launch the target_function and add it to the history
     """
     # evaluating configuration
-    trial_info, result = target_algorithm.run_wrapper(trial_info=trial_info)
-    stats._target_algorithm_walltime_used += float(result.time)
+    trial_info, result = target_function.run_wrapper(trial_info=trial_info)
+    stats._target_function_walltime_used += float(result.time)
     stats._finished += 1
 
     runhistory.add(
@@ -125,10 +125,10 @@ def make_hb_worker(make_scenario, make_stats, configspace_small):
 
 
 @pytest.fixture
-def make_target_algorithm():
+def make_target_function():
     def _make(scenario, stats, func, required_arguments=[]):
-        return TargetAlgorithmRunner(
-            target_algorithm=func,
+        return TargetFunctionRunner(
+            target_function=func,
             scenario=scenario,
             stats=stats,
             required_arguments=required_arguments,
@@ -501,7 +501,7 @@ def test_update_stage(make_hb_worker):
     assert intensifier._sh_intensifier._n_configs_in_stage == [8.0, 4.0, 2.0, 1.0]
 
 
-def test_eval_challenger(runhistory, make_target_algorithm, make_hb_worker, configs):
+def test_eval_challenger(runhistory, make_target_function, make_hb_worker, configs):
     """
     since hyperband uses eval_challenger and get_next_run of the internal successive halving,
     we don't test these method extensively
@@ -522,7 +522,7 @@ def test_eval_challenger(runhistory, make_target_algorithm, make_hb_worker, conf
         deterministic=True,
     )
 
-    target_algorithm = make_target_algorithm(
+    target_function = make_target_function(
         intensifier._scenario, intensifier._stats, target, required_arguments=["seed", "budget"]
     )
 
@@ -562,7 +562,7 @@ def test_eval_challenger(runhistory, make_target_algorithm, make_hb_worker, conf
 
     # evaluation should change the incumbent to config2
     assert trial_info.config is not None
-    trial_value = evaluate_challenger(trial_info, target_algorithm, intensifier._stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_function, intensifier._stats, runhistory)
 
     inc, inc_value = intensifier.process_results(
         trial_info=trial_info,

@@ -26,7 +26,7 @@ from smac.runhistory.enumerations import TrialInfoIntent
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.abstract_runner import AbstractRunner
 from smac.runner.dask_runner import DaskParallelRunner
-from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
+from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.scenario import Scenario
 from smac.main import SMBO
 from smac.utils.logging import get_logger, setup_logging
@@ -43,7 +43,7 @@ class AbstractFacade:
     of a Bayesian Optimization loop in a configurable & separable manner to suit the
     various needs of different hyperparameter optimization pipelines.
 
-    With the exception to scenario & target_algorithm, which are expected of the
+    With the exception to scenario and target_function, which are expected of the
     user, the parameters: model, aacquisition_function, acquisition_optimizer,
     initial_design, random_design, intensifier, multi_objective_algorithm,
     runhistory and runhistory_encoder can either be explicitly specified in the
@@ -54,7 +54,7 @@ class AbstractFacade:
     Parameters
     ----------
     scenario: Scenario,
-    target_algorithm: AbstractRunner | Callable
+    target_function: AbstractRunner | Callable
 
     model: BaseModel | None
     acquisition_function: AbstractAcquisitionFunction | None
@@ -78,7 +78,7 @@ class AbstractFacade:
     def __init__(
         self,
         scenario: Scenario,
-        target_algorithm: Callable,
+        target_function: Callable,
         *,
         model: AbstractModel | None = None,
         acquisition_function: AbstractAcquisitionFunction | None = None,
@@ -140,8 +140,8 @@ class AbstractFacade:
         self._overwrite = overwrite
 
         # Prepare the algorithm executer
-        runner: AbstractRunner = TargetAlgorithmRunner(
-            target_algorithm,
+        runner: AbstractRunner = TargetFunctionRunner(
+            target_function,
             scenario=scenario,
             stats=stats,
             required_arguments=self._get_signature_arguments(),

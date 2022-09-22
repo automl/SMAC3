@@ -63,7 +63,7 @@ class BaseSMBO:
     rng: np.random.RandomState
         Random number generator
     runner : AbstractRunner
-        target algorithm run executor
+        target function run executor
     random_design
         Chooser for random configuration -- one of
         * ChooserNoCoolDown(modulus)
@@ -250,7 +250,7 @@ class BaseSMBO:
                 self.tell(trial_info, trial_value, time_left)
 
             logger.debug(
-                "Remaining budget: %f (wallclock time), %f (target algorithm time), %f (target algorithm runs)"
+                "Remaining budget: %f (wallclock time), %f (target function time), %f (target function runs)"
                 % (
                     self._stats.get_remaing_walltime(),
                     self._stats.get_remaining_cputime(),

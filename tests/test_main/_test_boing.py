@@ -27,18 +27,18 @@ def test_init(make_scenario):
     )
     tae = lambda x: x
     with pytest.raises(ValueError) as excinfo:
-        BOinGFacade(scenario=scenario, target_algorithm=tae, model=BlackBoxFacade.get_model(scenario))
+        BOinGFacade(scenario=scenario, target_function=tae, model=BlackBoxFacade.get_model(scenario))
         assert excinfo.values == "BOinG only supports RandomForestWithInstances as its global optimizer"
 
     with pytest.raises(ValueError) as excinfo:
         BOinGFacade(
             scenario=scenario,
-            target_algorithm=tae,
+            target_function=tae,
             runhistory_encoder=HyperparameterFacade.get_runhistory_encoder(scenario),
         )
         assert excinfo.values == "BOinG only supports RunHistory2EPM4CostWithRaw as its rh transformer"
 
-    facade = BOinGFacade(scenario=scenario, target_algorithm=tae, overwrite=True)
+    facade = BOinGFacade(scenario=scenario, target_function=tae, overwrite=True)
     assert not hasattr(facade._optimizer, "turbo_optimizer")
 
     # facade.do_switching = True
@@ -55,7 +55,7 @@ def test_chooser_next(make_scenario):
     rh = RunHistory()
     rh.add(config, 10, 10, StatusType.SUCCESS)
     tae = lambda x: x
-    facade = BOinGFacade(scenario=scenario, runhistory=rh, target_algorithm=tae, do_switching=False, overwrite=True)
+    facade = BOinGFacade(scenario=scenario, runhistory=rh, target_function=tae, do_switching=False, overwrite=True)
     optimizer = facade.optimizer
 
     x = next(optimizer.ask())
@@ -92,7 +92,7 @@ def test_do_switching(make_scenario):
     facade = BOinGFacade(
         scenario=scenario,
         runhistory=rh,
-        target_algorithm=tae,
+        target_function=tae,
         do_switching=True,
         turbo_kwargs=turbo_kwargs,
         overwrite=True,

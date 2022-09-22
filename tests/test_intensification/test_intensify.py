@@ -6,13 +6,13 @@ from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFac
 from smac.intensification.intensification import Intensifier, IntensifierStage
 from smac.runhistory import RunHistory, TrialInfo, TrialInfoIntent
 from smac.runner.abstract_runner import StatusType
-from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
+from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.stats import Stats
 
 
 def evaluate_challenger(
     trial_info: TrialInfo,
-    target_algorithm: TargetAlgorithmRunner,
+    target_function: TargetFunctionRunner,
     stats: Stats,
     runhistory: RunHistory,
     force_update: bool = False,
@@ -24,9 +24,9 @@ def evaluate_challenger(
     wrapper to launch the taf and add it to the history.
     """
     # Evaluating configuration
-    trial_info, result = target_algorithm.run_wrapper(trial_info=trial_info)
+    trial_info, result = target_function.run_wrapper(trial_info=trial_info)
 
-    stats._target_algorithm_walltime_used += float(result.time)
+    stats._target_function_walltime_used += float(result.time)
     stats._finished += 1
 
     runhistory.add(
@@ -60,7 +60,7 @@ def test_race_challenger_1(make_scenario, make_stats, configspace_small, runhist
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
     intensifier._stats = stats
-    target_algorithm = TargetAlgorithmRunner(target, scenario, stats, required_arguments=["seed"])
+    target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(3)
 
     assert intensifier._stage == IntensifierStage.RUN_FIRST_CONFIG
@@ -90,7 +90,7 @@ def test_race_challenger_1(make_scenario, make_stats, configspace_small, runhist
     # Here we evaluate configs[1] and add it to the runhistory.
     # Cost is around ~7.1 on the sampled config.
     trial_info = TrialInfo(config=configs[1], instance=instance, seed=seed, budget=0.0)
-    trial_value = evaluate_challenger(trial_info, target_algorithm, stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_function, stats, runhistory)
 
     incumbent, _ = intensifier.process_results(
         trial_info=trial_info,
@@ -117,7 +117,7 @@ def test_race_challenger_large(make_scenario, make_stats, configspace_small, run
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
     intensifier._stats = stats
-    target_algorithm = TargetAlgorithmRunner(target, scenario, stats, required_arguments=["seed", "instance"])
+    target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed", "instance"])
     configs = configspace_small.sample_configuration(3)
 
     for i in range(3):
@@ -148,7 +148,7 @@ def test_race_challenger_large(make_scenario, make_stats, configspace_small, run
         )
 
         trial_info = TrialInfo(config=config, instance=instance, seed=seed)
-        trial_value = evaluate_challenger(trial_info, target_algorithm, stats, runhistory)
+        trial_value = evaluate_challenger(trial_info, target_function, stats, runhistory)
 
         incumbent, _ = intensifier.process_results(
             trial_info=trial_info,
@@ -184,7 +184,7 @@ def test_race_challenger_large_blocked_seed(make_scenario, make_stats, configspa
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
     intensifier._stats = stats
-    target_algorithm = TargetAlgorithmRunner(target, scenario, stats, required_arguments=["seed"])
+    target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(3)
 
     for i in range(3):
@@ -214,7 +214,7 @@ def test_race_challenger_large_blocked_seed(make_scenario, make_stats, configspa
         )
 
         trial_info = TrialInfo(config=config, instance=instance, seed=seed, budget=None)
-        trial_value = evaluate_challenger(trial_info, target_algorithm, stats, runhistory)
+        trial_value = evaluate_challenger(trial_info, target_function, stats, runhistory)
 
         incumbent, _ = intensifier.process_results(
             trial_info=trial_info,
@@ -254,7 +254,7 @@ def test_add_incumbent(make_scenario, make_stats, configspace_small, runhistory)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
     intensifier._stats = stats
-    target_algorithm = TargetAlgorithmRunner(target, scenario, stats, required_arguments=["seed"])
+    target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(3)
 
     instance, seed = intensifier._get_next_instance(
@@ -262,7 +262,7 @@ def test_add_incumbent(make_scenario, make_stats, configspace_small, runhistory)
     )
 
     trial_info = TrialInfo(config=configs[0], instance=instance, seed=seed, budget=0.0)
-    trial_value = evaluate_challenger(trial_info, target_algorithm, stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_function, stats, runhistory)
     intensifier._stage = IntensifierStage.PROCESS_FIRST_CONFIG_RUN
     inc, perf = intensifier.process_results(
         trial_info=trial_info,
@@ -311,14 +311,14 @@ def test_add_incumbent_non_deterministic(make_scenario, make_stats, configspace_
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
     intensifier._stats = stats
-    target_algorithm = TargetAlgorithmRunner(target, scenario, stats, required_arguments=["seed"])
+    target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(3)
 
     instance, seed = intensifier._get_next_instance(
         pending_instances=intensifier._get_pending_instances(incumbent=configs[0], runhistory=runhistory)
     )
     trial_info = TrialInfo(config=configs[0], instance=instance, seed=seed, budget=0.0)
-    trial_value = evaluate_challenger(trial_info, target_algorithm, stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_function, stats, runhistory)
     intensifier.process_results(
         trial_info=trial_info,
         incumbent=configs[0],
@@ -332,7 +332,7 @@ def test_add_incumbent_non_deterministic(make_scenario, make_stats, configspace_
         pending_instances=intensifier._get_pending_instances(incumbent=configs[0], runhistory=runhistory)
     )
     trial_info = TrialInfo(config=configs[0], instance=instance, seed=seed, budget=0.0)
-    trial_value = evaluate_challenger(trial_info, target_algorithm, stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_function, stats, runhistory)
     intensifier.process_results(
         trial_info=trial_info,
         incumbent=configs[0],
@@ -351,7 +351,7 @@ def test_add_incumbent_non_deterministic(make_scenario, make_stats, configspace_
         pending_instances=intensifier._get_pending_instances(incumbent=configs[0], runhistory=runhistory)
     )
     trial_info = TrialInfo(config=configs[0], instance=instance, seed=seed, budget=0.0)
-    trial_value = evaluate_challenger(trial_info, target_algorithm, stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_function, stats, runhistory)
     intensifier.process_results(
         trial_info=trial_info,
         incumbent=configs[0],
@@ -446,7 +446,7 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
     intensifier = Intensifier(scenario=scenario, race_against=None, run_limit=1, min_challenger=2)
     print(intensifier._min_challenger)
     intensifier._stats = stats
-    target_algorithm = TargetAlgorithmRunner(target, scenario, stats, required_arguments=["seed"])
+    target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(20)
 
     config0 = configs[16]
@@ -468,7 +468,7 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
     assert intensifier._stage == IntensifierStage.PROCESS_FIRST_CONFIG_RUN
 
     # eval config 2 (=first run)
-    trial_value = evaluate_challenger(trial_info, target_algorithm, stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_function, stats, runhistory)
     inc, perf = intensifier.process_results(
         trial_info=trial_info,
         trial_value=trial_value,
@@ -506,7 +506,7 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
     # So this call happen above, to save one iteration
     # assert intensifier._stage == IntensifierStage.RUN_CHALLENGER
     assert trial_info.config == config2
-    trial_value = evaluate_challenger(trial_info, target_algorithm, stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_function, stats, runhistory)
     inc, perf = intensifier.process_results(
         trial_info=trial_info,
         trial_value=trial_value,
@@ -539,7 +539,7 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
     # assert intensifier._stage == IntensifierStage.RUN_CHALLENGER
     assert intensifier._stage == IntensifierStage.RUN_CHALLENGER
 
-    trial_value = evaluate_challenger(trial_info, target_algorithm, stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_function, stats, runhistory)
     inc, perf = intensifier.process_results(
         trial_info=trial_info,
         trial_value=trial_value,
@@ -557,7 +557,7 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
     )
     assert trial_info.config == config2
     assert intensifier._stage == IntensifierStage.PROCESS_INCUMBENT_RUN
-    trial_value = evaluate_challenger(trial_info, target_algorithm, stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_function, stats, runhistory)
     inc, perf = intensifier.process_results(
         trial_info=trial_info,
         incumbent=inc,
@@ -592,7 +592,7 @@ def test_evaluate_challenger_2(make_scenario, make_stats, configspace_small, run
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario, race_against=None, run_limit=1)
     intensifier._stats = stats
-    target_algorithm = TargetAlgorithmRunner(target, scenario, stats, required_arguments=["seed"])
+    target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(20)
 
     config0 = configs[16]
@@ -619,7 +619,7 @@ def test_evaluate_challenger_2(make_scenario, make_stats, configspace_small, run
         runhistory=runhistory,
         get_next_configurations=None,
     )
-    trial_value = evaluate_challenger(trial_info, target_algorithm, stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_function, stats, runhistory)
     inc, perf = intensifier.process_results(
         trial_info=trial_info,
         incumbent=config0,
@@ -644,7 +644,7 @@ def test_no_new_intensification_wo_challenger_run(make_scenario, make_stats, con
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario, race_against=None, run_limit=1, min_challenger=1)
     intensifier._stats = stats
-    target_algorithm = TargetAlgorithmRunner(target, scenario, stats, required_arguments=["seed"])
+    target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(20)
 
     config0 = configs[16]
@@ -662,7 +662,7 @@ def test_no_new_intensification_wo_challenger_run(make_scenario, make_stats, con
     )
     assert trial_info.config == config2
     assert intensifier._stage == IntensifierStage.PROCESS_FIRST_CONFIG_RUN
-    trial_value = evaluate_challenger(trial_info, target_algorithm, stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_function, stats, runhistory)
     inc, perf = intensifier.process_results(
         trial_info=trial_info,
         incumbent=None,
@@ -729,7 +729,7 @@ def test_no_new_intensification_wo_challenger_run(make_scenario, make_stats, con
     intent, trial_info = intensifier.get_next_run(
         challengers=[config1], incumbent=inc, runhistory=runhistory, get_next_configurations=None
     )
-    trial_value = evaluate_challenger(trial_info, target_algorithm, stats, runhistory)
+    trial_value = evaluate_challenger(trial_info, target_function, stats, runhistory)
     inc, perf = intensifier.process_results(
         trial_info=trial_info,
         incumbent=inc,

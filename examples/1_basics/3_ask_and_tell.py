@@ -46,7 +46,7 @@ if __name__ == "__main__":
     # Scenario object
     scenario = Scenario(model.configspace, n_trials=100)
 
-    # Example call of the target algorithm
+    # Example call of the target function
     default_value = model.train(model.configspace.get_default_configuration())
     print(f"Default value: {round(default_value, 2)}")
 

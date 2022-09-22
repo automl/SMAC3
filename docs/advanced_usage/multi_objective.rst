@@ -6,13 +6,13 @@ SMAC offers a multi-objective optimization interface to do exactly that.
 Right now, the algorithm used for this is `ParEgo`_ [Christescu & Knowles, 2015].
 `ParEgo`_ weights and sums the individual objectives so that we can optimize a single scalar.
 
-The costs returned by your target algorithm are stored as usual in the runhistory object, such that
+The costs returned by your target function are stored as usual in the runhistory object, such that
 you can recover the Pareto front later on.
 
 
 The basic recipe is as follows:
 
-#. Make sure that your target algorithm returns a cost *dictionary* containing the objective names as keys
+#. Make sure that your target function returns a cost *dictionary* containing the objective names as keys
    and the objective values as values, e.g. ``{'myobj1': 0.3, 'myobj2': 200}``. Alternatively, you can simply
    return a list, e.g ``[0.3, 200]``.
 #. When instantiating SMAC pass the names of your objectives to the scenario object via the ``multi_objectives``

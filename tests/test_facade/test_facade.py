@@ -126,7 +126,7 @@ def test_continue_run(rosenbrock):
     scenario = Scenario(rosenbrock.configspace, n_trials=8)
     smac1 = HyperparameterFacade(
         scenario=scenario,
-        target_algorithm=rosenbrock.train,
+        target_function=rosenbrock.train,
         initial_design=LatinHypercubeInitialDesign(scenario, n_configs=3),
     )
 

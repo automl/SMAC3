@@ -33,8 +33,8 @@ class SuccessiveHalving(ParallelScheduler):
       of available instances respectively by default.
     2. Real-valued budget:
       This is used when there is only one instance provided and when run objective is "quality",
-      i.e., budget is a positive, real-valued number that can be passed to the target algorithm as an argument.
-      It can be used to control anything by the target algorithm, Eg: number of epochs for training a neural network.
+      i.e., budget is a positive, real-valued number that can be passed to the target function as an argument.
+      It can be used to control anything by the target function, Eg: number of epochs for training a neural network.
       The parameters `min_budget` and `max_budget` are required for this type of budget.
 
     This class instantiates ``SuccessiveHalvingWorker`` objects on a need basis, that is, to
@@ -67,7 +67,7 @@ class SuccessiveHalving(ParallelScheduler):
         more instances). This parameter is accessed in the SMBO class.
     seed : int | None, defaults to None
     n_seeds : int | None, defaults to None
-        The number of seeds to use if the target algorithm is non-deterministic.
+        The number of seeds to use if the target function is non-deterministic.
     """
 
     def __init__(
@@ -124,7 +124,7 @@ class SuccessiveHalving(ParallelScheduler):
                 seeds = [int(s) for s in self._rng.randint(low=0, high=MAXINT, size=self._n_seeds)]
                 if self._n_seeds == 1:
                     logger.warning(
-                        "The target algorithm is specified to be non-deterministic, "
+                        "The target function is specified to be non-deterministic, "
                         "but number of seeds to evaluate are set to 1. "
                         "Consider increasing `n_seeds` from the intensifier."
                     )
