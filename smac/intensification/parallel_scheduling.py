@@ -105,6 +105,8 @@ class ParallelScheduler(AbstractIntensifier):
                 "in the scenario."
             )
             self._print_worker_warning = False
+        else:
+            self._print_worker_warning = False
 
         # If repeat_configs is True, that means that not only self can repeat
         # configurations, but also in the context of multiprocessing, N

@@ -128,9 +128,8 @@ class HyperbandWorker(SuccessiveHalvingWorker):
             repeat_configs=self._sh_intensifier._repeat_configs,
         )
 
-        # For testing purposes, this attribute highlights whether a
-        # new challenger is proposed or not. Not required from a functional
-        # perspective
+        # For testing purposes, this attribute highlights whether a new challenger is proposed or not
+        # Not required from a functional perspective
         self._new_challenger = self._sh_intensifier._new_challenger
 
         return intent, trial_info

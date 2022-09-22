@@ -126,10 +126,11 @@ if __name__ == "__main__":
     # Define our environment variables
     scenario = Scenario(
         mlp.configspace,
-        walltime_limit=100,  # After 100 seconds, we stop the hyperparameter optimization
+        walltime_limit=40,  # After 40 seconds, we stop the hyperparameter optimization
         n_trials=200,  # Evaluate max 200 different trials
         min_budget=5,  # Train the MLP using a hyperparameter configuration for at least 5 epochs
         max_budget=25,  # Train the MLP using a hyperparameter configuration for at most 25 epochs
+        n_workers=1,
     )
 
     # We want to run five random configurations before starting the optimization.

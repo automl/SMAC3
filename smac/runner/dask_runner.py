@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Iterator
+from typing import Iterator
 
 import time
 from pathlib import Path
@@ -95,12 +95,6 @@ class DaskParallelRunner(AbstractRunner):
             # We just use their set up
             self._client = dask_client
             self._close_client_at_del = False
-
-    def get_meta(self) -> dict[str, Any]:
-        return {
-            "name": self.__class__.__name__,
-            "code": self._target_function.__code__.co_code,
-        }
 
     def submit_trial(self, trial_info: TrialInfo) -> None:
         """This function submits a configuration embedded in a `trial_info` object, and uses one of the

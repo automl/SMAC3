@@ -97,7 +97,8 @@
 #                     subspace_acq_func_opt_kwargs.update(acq_optimizer_local_kwargs)
 #                 else:
 #                     # Here are the setting used by squirrel-optimizer
-#                     # https://github.com/automl/Squirrel-Optimizer-BBO-NeurIPS20-automlorg/blob/main/squirrel-optimizer/smac_optim.py
+#                     # https://github.com/automl/Squirrel-Optimizer-BBO-NeurIPS20-automlorg/blob/main/squirrel-optim
+# izer/smac_optim.py
 #                     local_search_iterations = {
 #                         1: 10,
 #                         2: 10,
@@ -142,7 +143,8 @@
 #             if len(self.ss_x) == 0:
 #                 init_points_local = self.cs_local.sample_configuration(size=self.acq_optimizer_local.n_sls_iterations)
 #             else:
-#                 previous_configs = [Configuration(configuration_space=self.cs_local, vector=ss_x) for ss_x in self.ss_x]
+#                 previous_configs = [Configuration(configuration_space=self.cs_local, vector=ss_x) for ss_x in
+# self.ss_x]
 #                 init_points_local = self.acq_optimizer_local.local_search._get_init_points_from_previous_configs(
 #                     self.acq_optimizer_local.local_search_iterations, previous_configs, next_configs_random
 #                 )

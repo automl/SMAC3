@@ -250,8 +250,10 @@
 #                             if param.log:
 #                                 lower_log = np.log(lower)
 #                                 upper_log = np.log(upper)
-#                                 hp_new_lower = np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][0] + lower_log)
-#                                 hp_new_upper = np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][1] + lower_log)
+#                                 hp_new_lower = np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][0] +
+# lower_log)
+#                                 hp_new_upper = np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][1] +
+# lower_log)
 #                                 hp_new = UniformFloatHyperparameter(
 #                                     name=param.name,
 #                                     lower=max(hp_new_lower, lower),
@@ -280,7 +282,8 @@
 #                                     )
 #                                 )
 #                                 hp_new_upper = int(
-#                                     math.ceil(np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][1] + lower_log))
+#                                     math.ceil(np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][1] +
+# lower_log))
 #                                 )
 
 #                                 hp_new_lower_log = np.log(hp_new_lower)
@@ -331,7 +334,8 @@
 
 #         model_kwargs = dict(
 #             configspace=self.cs_local,
-#             # types=[model_types[activate_dim] for activate_dim in activate_dims] if model_types is not None else None,
+#             # types=[model_types[activate_dim] for activate_dim in activate_dims] if model_types is not None else
+# None,
 #             # bounds=[model_bounds[activate_dim] for activate_dim in activate_dims] if model_bounds is not None
 #             # else None,
 #             bounds_cont=np.array([[0, 1.0] for _ in range(len(activate_dims_cont))]),
@@ -615,7 +619,8 @@
 #         config_origin: str
 #             configuration origin
 #         incumbent_array: np.ndarray | None = None,
-#             global incumbent array, used when cs_local and cs_global have different number of dimensions and we need to
+#             global incumbent array, used when cs_local and cs_global have different number of dimensions and we need
+# to
 #             supplement the missing values.
 #         """
 #         self.cs_local = cs_local
