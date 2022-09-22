@@ -1,17 +1,14 @@
 """
-HPO with User Priors over the Optimum
-^^^^^^^^^^^^^^^^^^^^^^^
+User Priors over the Optimum
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Example for optimizing a Multi-Layer Perceptron (MLP) setting priors over the optimum on the
-hyperparameters. These priors are derived from user knowledge - from previous runs on similar
-tasks, common knowledge or intuition gained from manual tuning. To create the priors, we make
+hyperparameters. These priors are derived from user knowledge (from previous runs on similar
+tasks, common knowledge or intuition gained from manual tuning). To create the priors, we make
 use of the Normal and Beta Hyperparameters, as well as the "weights" property of the
-CategoricalHyperparameter. This can be integrated into the optimiztion for any SMAC facade,
-but we stick with SMAC4HPO here. To incorporate user priors into the optimization, 
-πBO (nolinkexistsyet) is used to bias the point selection strategy.
-
-MLP is used as the deep neural network.
-The digits datasetis chosen to optimize the average accuracy on 5-fold cross validation.
+``CategoricalHyperparameter``. This can be integrated into the optimiztion for any SMAC facade,
+but we stick with the hyperparameter optimization facade here. To incorporate user priors into the 
+optimization, you have to change the acquisition function to ``PriorAcquisitionFunction``.
 """
 
 import warnings
