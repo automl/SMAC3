@@ -19,15 +19,24 @@ smac.acquisition.maximizers
    
    
 
+   
+   Interfaces
+   ^^^^^^^^^^
+   
 
 
-.. rubric:: Modules
+
+
+
+Modules
+^^^^^^^
 
 .. autosummary::
+   :template: module.rst
    :toctree:
    :recursive:
 
-   smac.acquisition.maximizers.abstract_acqusition_optimizer
+   smac.acquisition.maximizers.abstract_acqusition_maximizer
    smac.acquisition.maximizers.differential_evolution
    smac.acquisition.maximizers.helpers
    smac.acquisition.maximizers.local_and_random_search

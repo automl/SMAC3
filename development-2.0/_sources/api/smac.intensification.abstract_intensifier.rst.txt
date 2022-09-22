@@ -13,7 +13,9 @@ smac.intensification.abstract\_intensifier
 
    
    
-   .. rubric:: Classes
+   
+   Classes
+   ^^^^^^^
 
    .. autosummary::
    
@@ -24,6 +26,12 @@ smac.intensification.abstract\_intensifier
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

@@ -13,7 +13,9 @@ smac.acquisition.maximizers.local\_and\_random\_search
 
    
    
-   .. rubric:: Classes
+   
+   Classes
+   ^^^^^^^
 
    .. autosummary::
    
@@ -25,6 +27,12 @@ smac.acquisition.maximizers.local\_and\_random\_search
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

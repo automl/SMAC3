@@ -13,7 +13,9 @@ smac.model.multi\_objective\_model
 
    
    
-   .. rubric:: Classes
+   
+   Classes
+   ^^^^^^^
 
    .. autosummary::
    
@@ -24,6 +26,12 @@ smac.model.multi\_objective\_model
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

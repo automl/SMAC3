@@ -31,8 +31,8 @@ Glossary
         Multi-Fidelity. Refers to running an algorithm on multiple budgets (such as number of epochs or
         subsets of data) and thereby evaluating the performance prematurely.
 
-    TAE
-        Target Algorithm Evaluator. Your model, which returns a cost based on the given config,
+    TFE
+        Target Function Evaluator. Your model, which returns a cost based on the given config,
         budget and instance.
 
     RF
@@ -52,7 +52,7 @@ Glossary
         the data subset the algorithm is trained on.
 
     Trial
-        Trial is a single run of a target algorithm on a combination of configuration, seed, budget and/or instance.
+        Trial is a single run of a target function on a combination of configuration, seed, budget and/or instance.
 
     PCS
         `ConfigurationSpace <https://automl.github.io/ConfigSpace/main>`_ can be written/read from a PCS file.

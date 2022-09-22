@@ -13,7 +13,9 @@ smac.runhistory.enumerations
 
    
    
-   .. rubric:: Classes
+   
+   Classes
+   ^^^^^^^
 
    .. autosummary::
    
@@ -26,6 +28,12 @@ smac.runhistory.enumerations
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

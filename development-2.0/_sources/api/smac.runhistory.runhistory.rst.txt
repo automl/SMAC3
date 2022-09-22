@@ -13,7 +13,9 @@ smac.runhistory.runhistory
 
    
    
-   .. rubric:: Classes
+   
+   Classes
+   ^^^^^^^
 
    .. autosummary::
    
@@ -24,6 +26,12 @@ smac.runhistory.runhistory
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

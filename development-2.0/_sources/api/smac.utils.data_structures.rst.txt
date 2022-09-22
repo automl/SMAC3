@@ -9,7 +9,9 @@ smac.utils.data\_structures
 
    
    
-   .. rubric:: Functions
+
+   Functions
+   ^^^^^^^^^
 
    .. autosummary::
    
@@ -24,6 +26,12 @@ smac.utils.data\_structures
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

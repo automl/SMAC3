@@ -21,7 +21,7 @@ pyrfr raises cryptic import errors.
   :ref:`Installation <installation>` for a solution.
 
 
-My target algorithm is not accepted when using the scenario-file.
+My target function is not accepted when using the scenario-file.
   Make sure that your algorithm accepts commandline options as provided by
   SMAC. Refer to :ref:`commandline execution <Basic Usage>` for
   details on how to wrap your algorithm.
@@ -58,21 +58,21 @@ I want to contribute code or discuss a new idea. Where should I report to?
 
 
 What is the meaning of *deterministic*?
-  If the ``deterministic`` flag is set to `False` the target algorithm is assumed to be non-deterministic.
+  If the ``deterministic`` flag is set to `False` the target function is assumed to be non-deterministic.
   To evaluate a configuration of a non-deterministic algorithm, multiple runs with different seeds will be evaluated
   to determine the performance of that configuration on one instance.
   Deterministic algorithms don't depend on seeds, thus requiring only one evaluation of a configuration on an instance
   to evaluate the performance on that instance. Nevertheless the default seed 0 is still passed to the
-  target algorithm.
+  target function.
 
 
 I want my algorithm to be optimized across different datasets. How should I realize that?
-  Generally, you have two options: Validate all datasets within your :ref:`TAE<Target Algorithm Evaluator>` or use instances.
+  Generally, you have two options: Validate all datasets within your :ref:`TFE<Target Function Evaluator>` or use instances.
   The significant advantage of instances is that not all datasets necessarily have to be processed.
   If the first instances already perform worse, the configuration might be discarded early. This
   will lead to a speed-up.
 
 
 Why does SMAC not run on Colab/Mac and crashes with the error "Child process not yet created"?
-  SMAC uses pynisher to enforce time and memory limits on the target algorithm runner. However, pynisher may not always
+  SMAC uses pynisher to enforce time and memory limits on the target function runner. However, pynisher may not always
   work on specific setups. To overcome this error, it is recommended to set `limit_resources` to false to make SMAC run.

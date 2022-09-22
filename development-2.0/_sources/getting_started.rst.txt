@@ -5,7 +5,7 @@ In the core, SMAC needs four components to run an optimization process, which ar
 four components are:
 
 * Configuration space
-* Target algorithm 
+* Target function 
 * Scenario
 * Facade
 
@@ -27,10 +27,10 @@ ranges and default values.
 Please see the documentation of ``ConfigSpace`` for more details.
 
 
-Target Algorithm
-----------------
+Target Function
+---------------
 
-The target algorithm takes a configuration from the configuration space and returns a performance value.
+The target function takes a configuration from the configuration space and returns a performance value.
 For example, you could use a Neural Network and predict the performance based on the learning rate. Every configuration
 would (most likely) return a different value. However, SMAC tries to find the best learning rate by trying 
 different and potentially improving configurations.
@@ -46,7 +46,7 @@ different and potentially improving configurations.
 
 .. note::
 
-    In general, the arguments of the target algorithm depend on the intensifier. However,
+    In general, the arguments of the target function depend on the intensifier. However,
     in all cases, the first argument must be the configuration (arbitrary argument name is possible here) and a seed.
     If you specified instances in the scenario, SMAC requires `instance` as argument additionally. If you use
     `SuccessiveHalving` or `Hyperband` as intensifier but you did not specify instances, SMAC passes `budget` as
@@ -100,7 +100,7 @@ Each facade might differ in the following ways (but are not limited to that):
 
     smac = BlackBoxFacade(
         scenario=scenario,
-        target_algorithm=train,
+        target_function=train,
         ...
     )
 

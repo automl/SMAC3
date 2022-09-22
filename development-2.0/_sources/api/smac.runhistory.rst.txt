@@ -19,11 +19,20 @@
    
    
 
+   
+   Interfaces
+   ^^^^^^^^^^
+   
 
 
-.. rubric:: Modules
+
+
+
+Modules
+^^^^^^^
 
 .. autosummary::
+   :template: module.rst
    :toctree:
    :recursive:
 

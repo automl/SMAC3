@@ -1,0 +1,37 @@
+smac.acquisition.maximizers.abstract\_acqusition\_maximizer
+===========================================================
+
+.. automodule:: smac.acquisition.maximizers.abstract_acqusition_maximizer
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      AbstractAcquisitionMaximizer
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

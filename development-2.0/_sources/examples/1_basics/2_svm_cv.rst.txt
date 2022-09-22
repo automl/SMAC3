@@ -36,7 +36,7 @@ types as well as conditional hyperparameters.
  .. code-block:: none
 
     Default value: 0.03
-    [INFO][abstract_initial_design.py:134] Using 10 initial design configurations.
+    [INFO][abstract_initial_design.py:132] Using 10 initial design and 0 additional configurations.
     [INFO][intensification.py:248] No incumbent provided in the first run. Sampling a new challenger...
     [INFO][intensification.py:423] First run and no incumbent provided. Challenger is assumed to be the incumbent.
     [INFO][intensification.py:558] Updated estimated cost of incumbent on 1 trials: 0.0667
@@ -125,7 +125,7 @@ types as well as conditional hyperparameters.
         configspace = classifier.configspace
         default_config = configspace.get_default_configuration()
 
-        # Example call of the target algorithm
+        # Example call of the target function
         default_value = classifier.train(default_config)
         print(f"Default value: {round(default_value, 2)}")
 
@@ -158,7 +158,7 @@ types as well as conditional hyperparameters.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.686 seconds)
+   **Total running time of the script:** ( 0 minutes  2.884 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_2_svm_cv.py:

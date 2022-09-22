@@ -38,8 +38,7 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
  .. code-block:: none
 
     Default value: 16916.0
-    [INFO][abstract_initial_design.py:82] Using `n_configs_per_hyperparameter` and ignoring `configs` and `n_configs`.
-    [INFO][abstract_initial_design.py:134] Using 20 initial design configurations.
+    [INFO][abstract_initial_design.py:132] Using 20 initial design and 0 additional configurations.
     [INFO][intensification.py:248] No incumbent provided in the first run. Sampling a new challenger...
     [INFO][intensification.py:423] First run and no incumbent provided. Challenger is assumed to be the incumbent.
     [INFO][intensification.py:558] Updated estimated cost of incumbent on 1 trials: 1102.7878
@@ -114,14 +113,14 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
         # Scenario object specifying the optimization "environment"
         scenario = Scenario(model.configspace, n_trials=300)
 
-        # Example call of the target algorithm (for debugging)
+        # Example call of the target function (for debugging)
         default_value = model.train(model.configspace.get_default_configuration())
         print(f"Default value: {round(default_value, 2)}")
 
         # Now we use SMAC to find the best hyperparameters
         smac = BlackBoxFacade(
             scenario,
-            model.train,  # We pass the target algorithm here
+            model.train,  # We pass the target function here
             overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data.
         )
         incumbent = smac.optimize()
@@ -132,7 +131,7 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.608 seconds)
+   **Total running time of the script:** ( 0 minutes  4.092 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_1_synthetic_function.py:

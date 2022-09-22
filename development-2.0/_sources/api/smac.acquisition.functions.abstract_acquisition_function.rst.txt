@@ -13,7 +13,9 @@ smac.acquisition.functions.abstract\_acquisition\_function
 
    
    
-   .. rubric:: Classes
+   
+   Classes
+   ^^^^^^^
 
    .. autosummary::
    
@@ -24,6 +26,12 @@ smac.acquisition.functions.abstract\_acquisition\_function
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

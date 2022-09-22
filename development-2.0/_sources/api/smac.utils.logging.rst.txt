@@ -9,7 +9,9 @@ smac.utils.logging
 
    
    
-   .. rubric:: Functions
+
+   Functions
+   ^^^^^^^^^
 
    .. autosummary::
    
@@ -26,6 +28,12 @@ smac.utils.logging
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

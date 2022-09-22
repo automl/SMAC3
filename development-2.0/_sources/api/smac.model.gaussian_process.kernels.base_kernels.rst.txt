@@ -13,7 +13,9 @@ smac.model.gaussian\_process.kernels.base\_kernels
 
    
    
-   .. rubric:: Classes
+   
+   Classes
+   ^^^^^^^
 
    .. autosummary::
    
@@ -27,6 +29,12 @@ smac.model.gaussian\_process.kernels.base\_kernels
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

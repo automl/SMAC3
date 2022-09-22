@@ -11,7 +11,7 @@ digit-2 vs digit-3.
 
 If we use instance as our fidelity, we need to initialize scenario with argument instance. In this case the argument
 budget is no longer required by the target function. But due to the scenario instance argument,
-the target algorithm now is required to have an instance argument.
+the target function now is required to have an instance argument.
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ __license__ = "3-clause BSD"
 
 
 class DigitsDataset:
-    def __init__(self):
+    def __init__(self) -> None:
         self._data = datasets.load_digits()
 
     def get_instances(self) -> list[str]:
@@ -60,7 +60,7 @@ class DigitsDataset:
 
 
 class SGD:
-    def __init__(self, dataset) -> None:
+    def __init__(self, dataset: DigitsDataset) -> None:
         self.dataset = dataset
 
     @property

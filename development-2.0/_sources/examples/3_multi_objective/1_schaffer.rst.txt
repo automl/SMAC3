@@ -37,8 +37,7 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
 
  .. code-block:: none
 
-    [INFO][abstract_initial_design.py:82] Using `n_configs_per_hyperparameter` and ignoring `configs` and `n_configs`.
-    [INFO][abstract_initial_design.py:134] Using 10 initial design configurations.
+    [INFO][abstract_initial_design.py:132] Using 10 initial design and 0 additional configurations.
     [INFO][intensification.py:248] No incumbent provided in the first run. Sampling a new challenger...
     [INFO][intensification.py:423] First run and no incumbent provided. Challenger is assumed to be the incumbent.
     [INFO][intensification.py:558] Updated estimated cost of incumbent on 1 trials: 1.0
@@ -128,7 +127,7 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
     from typing import Dict, Tuple
 
     import numpy as np
-    from ConfigSpace import Configuration, ConfigurationSpace, Float
+    from ConfigSpace import Configuration, ConfigurationSpace
     from matplotlib import pyplot as plt
 
     from smac import HyperparameterFacade, Scenario
@@ -146,7 +145,7 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
         return f1, f2
 
 
-    def target_algorithm(config: Configuration, seed: int = 0) -> Dict[str, float]:
+    def target_function(config: Configuration, seed: int = 0) -> Dict[str, float]:
         f1, f2 = schaffer(config["x"])
         return {"metric1": f1, "metric2": f2}
 
@@ -186,7 +185,7 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
 
         smac = HyperparameterFacade(
             scenario=scenario,
-            target_algorithm=target_algorithm,
+            target_function=target_function,
             multi_objective_algorithm=MeanAggregationStrategy(scenario),
             overwrite=True,
         )
@@ -198,7 +197,7 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.858 seconds)
+   **Total running time of the script:** ( 0 minutes  2.183 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_1_schaffer.py:

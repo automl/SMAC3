@@ -10,7 +10,7 @@ from __future__ import annotations
 from typing import Dict, Tuple
 
 import numpy as np
-from ConfigSpace import Configuration, ConfigurationSpace, Float
+from ConfigSpace import Configuration, ConfigurationSpace
 from matplotlib import pyplot as plt
 
 from smac import HyperparameterFacade, Scenario
@@ -28,7 +28,7 @@ def schaffer(x: float) -> Tuple[float, float]:
     return f1, f2
 
 
-def target_algorithm(config: Configuration, seed: int = 0) -> Dict[str, float]:
+def target_function(config: Configuration, seed: int = 0) -> Dict[str, float]:
     f1, f2 = schaffer(config["x"])
     return {"metric1": f1, "metric2": f2}
 
@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
     smac = HyperparameterFacade(
         scenario=scenario,
-        target_algorithm=target_algorithm,
+        target_function=target_function,
         multi_objective_algorithm=MeanAggregationStrategy(scenario),
         overwrite=True,
     )

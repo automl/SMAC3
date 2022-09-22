@@ -11,7 +11,7 @@ This chapter gives more details of single components of SMAC.
     resumption
     callbacks
     .. facades
-    .. target_algorithm_evaluator
+    .. target_function_evaluator
     .. scenario
     .. arguments
     .. multi_objective

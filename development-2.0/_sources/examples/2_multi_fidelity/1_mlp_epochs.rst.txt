@@ -25,7 +25,7 @@ Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets.
 Since we want to take advantage of Multi-Fidelity, the ``MultiFidelityFacade`` is a good choice. By default,
 ``MultiFidelityFacade`` internally runs with `hyperband <https://arxiv.org/abs/1603.06560>`_ as
 intensification, which is a combination of an
-aggressive racing mechanism and successive halving. Crucially, the target algorithm function
+aggressive racing mechanism and successive halving. Crucially, the target function function
 must accept a budget variable, detailing how much fidelity smac wants to allocate to this
 configuration.
 
@@ -38,7 +38,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     This example uses the ``MultiFidelityFacade`` facade, which is the closest implementation to
     `BOHB <https://github.com/automl/HpBandSter>`_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-154
+.. GENERATED FROM PYTHON SOURCE LINES 22-149
 
 
 
@@ -48,23 +48,9 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
  .. code-block:: none
 
     Default value: 0.38
-    {'_configspace': Configuration space object:
-      Hyperparameters:
-        activation, Type: Categorical, Choices: {logistic, tanh, relu}, Default: tanh
-        batch_size, Type: UniformInteger, Range: [30, 300], Default: 200
-        learning_rate, Type: Categorical, Choices: {constant, invscaling, adaptive}, Default: constant
-        learning_rate_init, Type: UniformFloat, Range: [0.0001, 1.0], Default: 0.001, on log-scale
-        n_layer, Type: UniformInteger, Range: [1, 5], Default: 1
-        n_neurons, Type: UniformInteger, Range: [8, 256], Default: 10, on log-scale
-        solver, Type: Categorical, Choices: {lbfgs, sgd, adam}, Default: adam
-      Conditions:
-        batch_size | solver in {'sgd', 'adam'}
-        learning_rate | solver == 'sgd'
-        learning_rate_init | solver in {'sgd', 'adam'}
-    , '_seed': 0, '_rng': RandomState(MT19937) at 0x7F19D5A31040, '_configs': None, '_n_configs_per_hyperparameter': 10, '_n_configs': 5}
-    [WARNING][successive_halving.py:126] The target algorithm is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider increasing `n_seeds` from the intensifier.
+    [WARNING][successive_halving.py:126] The target function is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider increasing `n_seeds` from the intensifier.
     [INFO][successive_halving.py:180] Using successive halving with budget type BUDGETS, min budget 5, max budget 25 and eta 3.
-    [INFO][abstract_initial_design.py:134] Using 5 initial design configurations.
+    [INFO][abstract_initial_design.py:132] Using 5 initial design and 0 additional configurations.
     [WARNING][parallel_scheduling.py:102] Hyperband is executed with 1 worker(s) only. However, your system supports up to 2 workers. Consider increasing the workers in the scenario.
     [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 1-1 with initial budget 8.
     [INFO][successive_halving_worker.py:384] First run and no incumbent provided. Challenger is assumed to be the incumbent.
@@ -81,7 +67,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
     [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 2-1 with initial budget 8.
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
-    [INFO][successive_halving_worker.py:600] Challenger (0.0345) is better than incumbent (0.0406) on budget 25.0000.
+    [INFO][successive_halving_worker.py:600] Challenger (0.0345) is better than incumbent (0.0384) on budget 25.0000.
     [INFO][abstract_intensifier.py:359] Changes in incumbent:
     [INFO][abstract_intensifier.py:362] --- activation: 'tanh' -> 'relu'
     [INFO][abstract_intensifier.py:362] --- batch_size: 155 -> 117
@@ -94,21 +80,24 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
     [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 3-1 with initial budget 8.
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
-    [INFO][successive_halving_worker.py:600] Challenger (0.0189) is better than incumbent (0.0345) on budget 25.0000.
+    [INFO][successive_halving_worker.py:600] Challenger (0.0228) is better than incumbent (0.0345) on budget 25.0000.
     [INFO][abstract_intensifier.py:359] Changes in incumbent:
-    [INFO][abstract_intensifier.py:362] --- batch_size: 117 -> 91
-    [INFO][abstract_intensifier.py:362] --- learning_rate_init: 0.008282754423021153 -> 0.006390670908394775
-    [INFO][abstract_intensifier.py:362] --- n_neurons: 52 -> 183
+    [INFO][abstract_intensifier.py:362] --- batch_size: 117 -> 67
+    [INFO][abstract_intensifier.py:362] --- learning_rate_init: 0.008282754423021153 -> 0.0070322204321926806
+    [INFO][abstract_intensifier.py:362] --- n_layer: 5 -> 1
+    [INFO][abstract_intensifier.py:362] --- n_neurons: 52 -> 165
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
     [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 3-2 with initial budget 25.
+    [INFO][successive_halving_worker.py:600] Challenger (0.0211) is better than incumbent (0.0228) on budget 25.0000.
+    [INFO][abstract_intensifier.py:359] Changes in incumbent:
+    [INFO][abstract_intensifier.py:362] --- activation: 'relu' -> 'tanh'
+    [INFO][abstract_intensifier.py:362] --- batch_size: 67 -> 71
+    [INFO][abstract_intensifier.py:362] --- learning_rate_init: 0.0070322204321926806 -> 0.0019149401337143304
+    [INFO][abstract_intensifier.py:362] --- n_neurons: 165 -> 203
+    [INFO][abstract_intensifier.py:362] --- solver: 'sgd' -> 'adam'
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
     [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 4-1 with initial budget 8.
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
-    [INFO][successive_halving_worker.py:600] Challenger (0.0184) is better than incumbent (0.0189) on budget 25.0000.
-    [INFO][abstract_intensifier.py:359] Changes in incumbent:
-    [INFO][abstract_intensifier.py:362] --- batch_size: 91 -> 78
-    [INFO][abstract_intensifier.py:362] --- learning_rate_init: 0.006390670908394775 -> 0.008750070230028942
-    [INFO][abstract_intensifier.py:362] --- n_neurons: 183 -> 180
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
     [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 4-2 with initial budget 25.
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
@@ -116,10 +105,26 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
     [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 5-2 with initial budget 25.
+    [INFO][successive_halving_worker.py:600] Challenger (0.0206) is better than incumbent (0.0211) on budget 25.0000.
+    [INFO][abstract_intensifier.py:359] Changes in incumbent:
+    [INFO][abstract_intensifier.py:362] --- batch_size: 71 -> 79
+    [INFO][abstract_intensifier.py:362] --- learning_rate_init: 0.0019149401337143304 -> 0.0017528250934479572
+    [INFO][abstract_intensifier.py:362] --- n_neurons: 203 -> 199
     [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
     [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 6-1 with initial budget 8.
-    [INFO][abstract_facade.py:267] Final Incumbent: {'activation': 'relu', 'n_layer': 5, 'n_neurons': 180, 'solver': 'sgd', 'batch_size': 78, 'learning_rate': 'adaptive', 'learning_rate_init': 0.008750070230028942}
-    [INFO][abstract_facade.py:268] Estimated cost: 0.018362735995047785
+    [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+    [INFO][successive_halving_worker.py:600] Challenger (0.0178) is better than incumbent (0.0206) on budget 25.0000.
+    [INFO][abstract_intensifier.py:359] Changes in incumbent:
+    [INFO][abstract_intensifier.py:362] --- activation: 'tanh' -> 'logistic'
+    [INFO][abstract_intensifier.py:362] --- batch_size: 79 -> 73
+    [INFO][abstract_intensifier.py:362] --- learning_rate_init: 0.0017528250934479572 -> 0.0013821474906436412
+    [INFO][abstract_intensifier.py:362] --- n_neurons: 199 -> 202
+    [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+    [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 6-2 with initial budget 25.
+    [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
+    [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 7-1 with initial budget 8.
+    [INFO][abstract_facade.py:267] Final Incumbent: {'activation': 'logistic', 'n_layer': 1, 'n_neurons': 202, 'solver': 'adam', 'batch_size': 73, 'learning_rate_init': 0.0013821474906436412}
+    [INFO][abstract_facade.py:268] Estimated cost: 0.017810275456515035
     Incumbent value: 0.02
 
 
@@ -132,14 +137,11 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 .. code-block:: default
 
 
-    import logging
-
-    logging.basicConfig(level=logging.INFO)
-
     import warnings
 
     import numpy as np
     from ConfigSpace import (
+        Configuration,
         Categorical,
         ConfigurationSpace,
         EqualsCondition,
@@ -148,7 +150,6 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
         Integer,
     )
     from sklearn.datasets import load_digits
-    from sklearn.exceptions import ConvergenceWarning
     from sklearn.model_selection import StratifiedKFold, cross_val_score
     from sklearn.neural_network import MLPClassifier
 
@@ -202,7 +203,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
             return cs
 
-        def train(self, config, seed=0, budget=25) -> float:
+        def train(self, config: Configuration, seed: int = 0, budget: int = 25) -> float:
             # For deactivated parameters (by virtue of the conditions),
             # the configuration stores None-values.
             # This is not accepted by the MLP, so we replace them with placeholder values.
@@ -211,7 +212,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
             batch_size = config["batch_size"] if config["batch_size"] else 200
 
             with warnings.catch_warnings():
-                warnings.filterwarnings("ignore", category=ConvergenceWarning)
+                warnings.filterwarnings("ignore")
 
                 classifier = MLPClassifier(
                     hidden_layer_sizes=[config["n_neurons"]] * config["n_layer"],
@@ -235,7 +236,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
         mlp = MLP()
         default_config = mlp.configspace.get_default_configuration()
 
-        # Example call of the target algorithm (for debugging)
+        # Example call of the target function (for debugging)
         default_value = mlp.train(default_config)
         print(f"Default value: {round(default_value, 2)}")
 
@@ -250,7 +251,6 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
         # We want to run five random configurations before starting the optimization.
         initial_design = MultiFidelityFacade.get_initial_design(scenario, n_configs=5)
-        print(initial_design.__dict__)
 
         # Create our SMAC object and pass the scenario and the train method
         smac = MultiFidelityFacade(
@@ -267,7 +267,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  54.462 seconds)
+   **Total running time of the script:** ( 1 minutes  43.968 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_1_mlp_epochs.py:

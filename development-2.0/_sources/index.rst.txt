@@ -12,6 +12,7 @@ Home
    examples/index
    advanced_usage/index
    api
+   references
    glossary
    faq
    license

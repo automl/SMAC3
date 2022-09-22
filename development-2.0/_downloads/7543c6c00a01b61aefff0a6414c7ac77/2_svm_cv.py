@@ -72,7 +72,7 @@ if __name__ == "__main__":
     configspace = classifier.configspace
     default_config = configspace.get_default_configuration()
 
-    # Example call of the target algorithm
+    # Example call of the target function
     default_value = classifier.train(default_config)
     print(f"Default value: {round(default_value, 2)}")
 

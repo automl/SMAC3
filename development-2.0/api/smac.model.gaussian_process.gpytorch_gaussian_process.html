@@ -148,23 +148,84 @@ style="width: 100%;">
    </i>
   </label>
   <ul>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="../examples/1_basics/index.html">
      Basics
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/1_synthetic_function.html">
+       Synthetic Function
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/2_svm_cv.html">
+       Support Vector Machine with Cross-Validation
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/3_ask_and_tell.html">
+       Ask-and-Tell Interface
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/4_priors.html">
+       User Priors over the Optimum
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/5_full_customization.html">
+       Full Customization
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="../examples/2_multi_fidelity/index.html">
      Multi-Fidelity and Multi-Instances
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/2_multi_fidelity/1_mlp_epochs.html">
+       Multi-Layer Perceptron Using Multiple Epochs
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/2_multi_fidelity/2_sgd_datasets.html">
+       Stochastic Gradient Descent On Multiple Datasets
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="../examples/3_multi_objective/index.html">
      Multi-Objective
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+    <label for="toctree-checkbox-4">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/3_multi_objective/1_schaffer.html">
+       2D Schaffer Function
+      </a>
+     </li>
+    </ul>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/4_commandline/index.html">
+    <a class="reference internal" href="../examples/5_commandline/index.html">
      Commandline
     </a>
    </li>
@@ -174,8 +235,8 @@ style="width: 100%;">
   <a class="reference internal" href="../advanced_usage/index.html">
    Advanced Usage
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -196,66 +257,615 @@ style="width: 100%;">
   <a class="reference internal" href="../api.html">
    API References
   </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
-  <label for="toctree-checkbox-3">
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul class="current">
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.facade.html">
      smac.facade
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+    <label for="toctree-checkbox-7">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.facade.abstract_facade.html">
+       smac.facade.abstract_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.facade.algorithm_configuration_facade.html">
+       smac.facade.algorithm_configuration_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.facade.blackbox_facade.html">
+       smac.facade.blackbox_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.facade.boing_facade.html">
+       smac.facade.boing_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.facade.hyperparameter_facade.html">
+       smac.facade.hyperparameter_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.facade.multi_fidelity_facade.html">
+       smac.facade.multi_fidelity_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.facade.random_facade.html">
+       smac.facade.random_facade
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.main.html">
      smac.main
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+    <label for="toctree-checkbox-8">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.main.base_smbo.html">
+       smac.main.base_smbo
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.main.boing.html">
+       smac.main.boing
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.main.smbo.html">
+       smac.main.smbo
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.main.turbo.html">
+       smac.main.turbo
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2 current active">
+   <li class="toctree-l2 current active has-children">
     <a class="reference internal" href="smac.model.html">
      smac.model
     </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+    <label for="toctree-checkbox-9">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.model.abstract_model.html">
+       smac.model.abstract_model
+      </a>
+     </li>
+     <li class="toctree-l3 current active has-children">
+      <a class="reference internal" href="smac.model.gaussian_process.html">
+       smac.model.gaussian_process
+      </a>
+      <input checked="" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+      <label for="toctree-checkbox-10">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul class="current">
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.model.gaussian_process.abstract_gaussian_process.html">
+         smac.model.gaussian_process.abstract_gaussian_process
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.model.gaussian_process.gaussian_process.html">
+         smac.model.gaussian_process.gaussian_process
+        </a>
+       </li>
+       <li class="toctree-l4 current active">
+        <a class="current reference internal" href="#">
+         smac.model.gaussian_process.gpytorch_gaussian_process
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.model.gaussian_process.kernels.html">
+         smac.model.gaussian_process.kernels
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.model.gaussian_process.mcmc_gaussian_process.html">
+         smac.model.gaussian_process.mcmc_gaussian_process
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.model.gaussian_process.priors.html">
+         smac.model.gaussian_process.priors
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.model.multi_objective_model.html">
+       smac.model.multi_objective_model
+      </a>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="smac.model.random_forest.html">
+       smac.model.random_forest
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+      <label for="toctree-checkbox-11">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.model.random_forest.abstract_random_forest.html">
+         smac.model.random_forest.abstract_random_forest
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.model.random_forest.random_forest.html">
+         smac.model.random_forest.random_forest
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.model.random_model.html">
+       smac.model.random_model
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.acquisition.html">
      smac.acquisition
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+    <label for="toctree-checkbox-12">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="smac.acquisition.functions.html">
+       smac.acquisition.functions
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+      <label for="toctree-checkbox-13">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.functions.abstract_acquisition_function.html">
+         smac.acquisition.functions.abstract_acquisition_function
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.functions.confidence_bound.html">
+         smac.acquisition.functions.confidence_bound
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.functions.expected_improvement.html">
+         smac.acquisition.functions.expected_improvement
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.functions.integrated_acquisition_function.html">
+         smac.acquisition.functions.integrated_acquisition_function
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.functions.prior_acqusition_function.html">
+         smac.acquisition.functions.prior_acqusition_function
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.functions.probability_improvement.html">
+         smac.acquisition.functions.probability_improvement
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.functions.thompson.html">
+         smac.acquisition.functions.thompson
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="smac.acquisition.maximizers.html">
+       smac.acquisition.maximizers
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+      <label for="toctree-checkbox-14">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.maximizers.abstract_acqusition_maximizer.html">
+         smac.acquisition.maximizers.abstract_acqusition_maximizer
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.maximizers.differential_evolution.html">
+         smac.acquisition.maximizers.differential_evolution
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.maximizers.helpers.html">
+         smac.acquisition.maximizers.helpers
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.maximizers.local_and_random_search.html">
+         smac.acquisition.maximizers.local_and_random_search
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.maximizers.local_search.html">
+         smac.acquisition.maximizers.local_search
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.maximizers.random_search.html">
+         smac.acquisition.maximizers.random_search
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.intensification.html">
      smac.intensification
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+    <label for="toctree-checkbox-15">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.intensification.abstract_intensifier.html">
+       smac.intensification.abstract_intensifier
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.intensification.hyperband.html">
+       smac.intensification.hyperband
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.intensification.hyperband_worker.html">
+       smac.intensification.hyperband_worker
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.intensification.intensification.html">
+       smac.intensification.intensification
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.intensification.parallel_scheduling.html">
+       smac.intensification.parallel_scheduling
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.intensification.simple_intensifier.html">
+       smac.intensification.simple_intensifier
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.intensification.stages.html">
+       smac.intensification.stages
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.intensification.successive_halving.html">
+       smac.intensification.successive_halving
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.intensification.successive_halving_worker.html">
+       smac.intensification.successive_halving_worker
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.initial_design.html">
      smac.initial_design
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+    <label for="toctree-checkbox-16">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.initial_design.abstract_initial_design.html">
+       smac.initial_design.abstract_initial_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.initial_design.default_design.html">
+       smac.initial_design.default_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.initial_design.factorial_design.html">
+       smac.initial_design.factorial_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.initial_design.latin_hypercube_design.html">
+       smac.initial_design.latin_hypercube_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.initial_design.random_design.html">
+       smac.initial_design.random_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.initial_design.sobol_design.html">
+       smac.initial_design.sobol_design
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.random_design.html">
      smac.random_design
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+    <label for="toctree-checkbox-17">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.random_design.abstract_random_design.html">
+       smac.random_design.abstract_random_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.random_design.annealing_design.html">
+       smac.random_design.annealing_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.random_design.modulus_design.html">
+       smac.random_design.modulus_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.random_design.probability_design.html">
+       smac.random_design.probability_design
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.runner.html">
      smac.runner
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.runner.abstract_runner.html">
+       smac.runner.abstract_runner
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.runner.dask_runner.html">
+       smac.runner.dask_runner
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.runner.exceptions.html">
+       smac.runner.exceptions
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.runner.target_function_runner.html">
+       smac.runner.target_function_runner
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.runhistory.html">
      smac.runhistory
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+    <label for="toctree-checkbox-19">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.runhistory.dataclasses.html">
+       smac.runhistory.dataclasses
+      </a>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="smac.runhistory.encoder.html">
+       smac.runhistory.encoder
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
+      <label for="toctree-checkbox-20">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.runhistory.encoder.abstract_encoder.html">
+         smac.runhistory.encoder.abstract_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.runhistory.encoder.boing_encoder.html">
+         smac.runhistory.encoder.boing_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.runhistory.encoder.eips_encoder.html">
+         smac.runhistory.encoder.eips_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.runhistory.encoder.encoder.html">
+         smac.runhistory.encoder.encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.runhistory.encoder.inverse_scaled_encoder.html">
+         smac.runhistory.encoder.inverse_scaled_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.runhistory.encoder.log_encoder.html">
+         smac.runhistory.encoder.log_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.runhistory.encoder.log_scaled_encoder.html">
+         smac.runhistory.encoder.log_scaled_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.runhistory.encoder.scaled_encoder.html">
+         smac.runhistory.encoder.scaled_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.runhistory.encoder.sqrt_scaled_encoder.html">
+         smac.runhistory.encoder.sqrt_scaled_encoder
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.runhistory.enumerations.html">
+       smac.runhistory.enumerations
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.runhistory.runhistory.html">
+       smac.runhistory.runhistory
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.multi_objective.html">
      smac.multi_objective
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/>
+    <label for="toctree-checkbox-21">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.multi_objective.abstract_multi_objective_algorithm.html">
+       smac.multi_objective.abstract_multi_objective_algorithm
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.multi_objective.aggregation_strategy.html">
+       smac.multi_objective.aggregation_strategy
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.multi_objective.parego.html">
+       smac.multi_objective.parego
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.utils.html">
      smac.utils
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" type="checkbox"/>
+    <label for="toctree-checkbox-22">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.utils.configspace.html">
+       smac.utils.configspace
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.utils.data_structures.html">
+       smac.utils.data_structures
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.utils.logging.html">
+       smac.utils.logging
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.utils.multi_objective.html">
+       smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="smac.utils.subspaces.html">
+       smac.utils.subspaces
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" type="checkbox"/>
+      <label for="toctree-checkbox-23">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.utils.subspaces.boing_subspace.html">
+         smac.utils.subspaces.boing_subspace
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.utils.subspaces.turbo_subspace.html">
+         smac.utils.subspaces.turbo_subspace
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.scenario.html">
@@ -273,6 +883,11 @@ style="width: 100%;">
     </a>
    </li>
   </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../references.html">
+   References
+  </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../glossary.html">
@@ -303,9 +918,19 @@ style="width: 100%;">
               
               <div class="toc-item">
                 
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
 
 <nav id="bd-toc-nav">
-    
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#interfaces">
+   Interfaces
+  </a>
+ </li>
+</ul>
+
 </nav>
               </div>
               
@@ -327,929 +952,9 @@ style="width: 100%;">
                 
   <section id="module-smac.model.gaussian_process.gpytorch_gaussian_process">
 <span id="smac-model-gaussian-process-gpytorch-gaussian-process"></span><h1>smac.model.gaussian_process.gpytorch_gaussian_process<a class="headerlink" href="#module-smac.model.gaussian_process.gpytorch_gaussian_process" title="Permalink to this heading">¶</a></h1>
-<p>from __future__ import annotations</p>
-<p>import logging
-import warnings
-from collections import OrderedDict
-from typing import Any, TypeVar</p>
-<p>import gpytorch
-import numpy as np
-from smac.model.gaussian_process.utils.gpytorch import ExactGaussianProcessModel
-import torch
-from botorch.optim.numpy_converter import module_to_array, set_params_with_array  # noqa
-from botorch.optim.utils import _get_extra_mll_args, _scipy_objective_and_grad  # noqa
-from gpytorch.constraints.constraints import Interval  # noqa
-from gpytorch.distributions.multivariate_normal import MultivariateNormal  # noqa
-from gpytorch.kernels import Kernel  # noqa
-from gpytorch.likelihoods import FixedNoiseGaussianLikelihood, GaussianLikelihood  # noqa
-from gpytorch.means import ZeroMean  # noqa
-from gpytorch.mlls import ExactMarginalLogLikelihood  # noqa
-from gpytorch.models import ExactGP  # noqa
-from gpytorch.priors import HorseshoePrior  # noqa
-from gpytorch.utils.errors import NanError, NotPSDError  # noqa
-from scipy import optimize
-from scipy.stats.qmc import LatinHypercube  # noqa
-import logging
-import warnings
-from collections import OrderedDict
-from typing import Any, TypeVar</p>
-<p>“””
-import gpytorch
-import numpy as np
-import torch
-from botorch.optim.numpy_converter import module_to_array, set_params_with_array
-from botorch.optim.utils import _get_extra_mll_args, _scipy_objective_and_grad
-from gpytorch.constraints.constraints import Interval
-from gpytorch.distributions.multivariate_normal import MultivariateNormal
-from gpytorch.kernels import Kernel
-from gpytorch.likelihoods import FixedNoiseGaussianLikelihood, GaussianLikelihood
-from gpytorch.means import ZeroMean
-from gpytorch.mlls import ExactMarginalLogLikelihood
-from gpytorch.models import ExactGP
-from gpytorch.priors import HorseshoePrior
-from gpytorch.utils.errors import NanError, NotPSDError
-from scipy import optimize
-from scipy.stats.qmc import LatinHypercube
-“””</p>
-<p>from ConfigSpace import ConfigurationSpace
-from smac.constants import VERY_SMALL_NUMBER
-from smac.model.gaussian_process.abstract_gaussian_process import AbstractGaussianProcess
-from smac.model.utils import check_subspace_points
-from smac.model.gaussian_process.kernels._boing import FITCKernel, FITCMean</p>
-<p># from smac.model.utils import check_subspace_points  # noqa
-from smac.model.gaussian_process.kernels._boing import FITCKernel, FITCMean  # noqa</p>
-<p>warnings.filterwarnings(“ignore”, module=”gpytorch”)</p>
-<p>logger = logging.getLogger(__name__)</p>
-<p>Self = TypeVar(“Self”, bound=”GPyTorchGaussianProcess”)</p>
-<dl>
-<dt>class GPyTorchGaussianProcess(AbstractGaussianProcess):</dt><dd><p>“””A Gaussian process written with GPyTorch. The interface is written to be compatible with partial sparse gaussian
-process.</p>
-<p>configspace : ConfigurationSpace
-kernel : Kernel</p>
-<blockquote>
-<div><p>Kernel which is used for the Gaussian process.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>n_restarts<span class="classifier">int, defaults to 10</span></dt><dd><p>Number of restarts for the Gaussian process hyperparameter optimization.</p>
-</dd>
-<dt>normalize_y<span class="classifier">bool, defaults to True</span></dt><dd><p>Zero mean unit variance normalization of the output values.</p>
-</dd>
-<dt>likelihood<span class="classifier">FixedNoiseGaussianLikelihood | None, defaults to None</span></dt><dd><p>The Gaussian likelihood (or noise).</p>
-</dd>
-<dt>instance_features<span class="classifier">dict[str, list[int | float]] | None, defaults to None</span></dt><dd><p>Features (list of int or floats) of the instances (str). The features are incorporated into the X data,
-on which the model is trained on.</p>
-</dd>
-<dt>pca_components<span class="classifier">float, defaults to 7</span></dt><dd><p>Number of components to keep when using PCA to reduce dimensionality of instance features.</p>
-</dd>
-</dl>
-<p>seed : int
-“””</p>
-<dl>
-<dt>def __init__(</dt><dd><p>self,
-configspace: ConfigurationSpace,
-kernel: Kernel,
-n_restarts: int = 10,
-normalize_y: bool = True,
-likelihood: FixedNoiseGaussianLikelihood | None = None,
-instance_features: dict[str, list[int | float]] | None = None,
-pca_components: int | None = 7,
-seed: int = 0,</p>
-</dd>
-<dt>):</dt><dd><dl class="simple">
-<dt>if n_restarts &lt;= 0:</dt><dd><p>raise ValueError(“The argument <cite>n_restarts</cite> needs to be positive.”)</p>
-</dd>
-<dt>super(GPyTorchGaussianProcess, self).__init__(</dt><dd><p>configspace=configspace,
-kernel=kernel,
-instance_features=instance_features,
-pca_components=pca_components,
-seed=seed,</p>
-</dd>
-</dl>
-<p>)</p>
-<dl>
-<dt>if likelihood is None:</dt><dd><p>noise_prior = HorseshoePrior(0.1)
-likelihood = GaussianLikelihood(</p>
-<blockquote>
-<div><p>noise_prior=noise_prior,
-noise_constraint=Interval(</p>
-<blockquote>
-<div><p>np.exp(-25),
-np.exp(2),
-transform=None,</p>
-</div></blockquote>
-<p>),</p>
-</div></blockquote>
-<p>).double()</p>
-</dd>
-</dl>
-<p>self._likelihood = likelihood
-self._normalize_y = normalize_y
-self._n_restarts = n_restarts
-self._hypers = np.empty((0,))
-self._property_dict: OrderedDict = OrderedDict()
-self._is_trained = False</p>
-</dd>
-<dt>def get_meta(self) -&gt; dict[str, Any]:</dt><dd><p>meta = super().get_meta()
-meta.update(</p>
-<blockquote>
-<div><dl class="simple">
-<dt>{</dt><dd><p>“name”: self.__class__.__name__,
-“n_restarts”: self._n_restarts,
-“normalize_y”: self._normalize_y,
-“likelihood”: self._likelihood.__data__,</p>
-</dd>
-</dl>
-<p>}</p>
-</div></blockquote>
-<p>)</p>
-<p>return meta</p>
-</dd>
-<dt>def _train(</dt><dd><p>self: Self,
-X: np.ndarray,
-y: np.ndarray,
-optimize_hyperparameters: bool = True,</p>
-</dd>
-<dt>) -&gt; Self:</dt><dd><p>“””Computes the Cholesky decomposition of the covariance of X and estimates the GP
-hyperparameters by optimizing the marginal loglikelihood. The prior mean of the GP is set to
-the empirical mean of X.</p>
-<dl class="simple">
-<dt>X<span class="classifier">np.ndarray [#samples, #hyperparameter + #features]</span></dt><dd><p>Input data points.</p>
-</dd>
-<dt>Y<span class="classifier">np.ndarray [#samples, #objectives]</span></dt><dd><p>The corresponding target values.</p>
-</dd>
-<dt>optimize_hyperparameters: boolean</dt><dd><p>If set to true the hyperparameters are optimized otherwise the default hyperparameters of the kernel are
-used.</p>
-</dd>
-</dl>
-<p>“””
-X = self._impute_inactive(X)</p>
-<dl class="simple">
-<dt>if len(y.shape) == 1:</dt><dd><p>self._n_objectives = 1</p>
-</dd>
-<dt>else:</dt><dd><p>self._n_objectives = y.shape[1]</p>
-</dd>
-<dt>if self._n_objectives == 1:</dt><dd><p>y = y.flatten()</p>
-</dd>
-<dt>if self._normalize_y:</dt><dd><p>y = self._normalize(y)</p>
-</dd>
-</dl>
-<p>n_tries = 10
-for i in range(n_tries):</p>
-<blockquote>
-<div><dl class="simple">
-<dt>try:</dt><dd><p>self._gp = self._get_gaussian_process(X, y)
-break</p>
-</dd>
-<dt>except Exception as e:</dt><dd><dl class="simple">
-<dt>if i == n_tries - 1:</dt><dd><p># To avoid Endless loop, we need to stop it when we have n_tries unsuccessful tries.
-raise e</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
-<dl class="simple">
-<dt>if optimize_hyperparameters:</dt><dd><p>self._hypers = self._optimize()
-self._gp = set_params_with_array(self._gp, self._hypers, self._property_dict)</p>
-</dd>
-<dt>else:</dt><dd><p>self._hypers, self._property_dict, _ = module_to_array(module=self._gp)</p>
-</dd>
-</dl>
-<p>self._is_trained = True
-return self</p>
-</dd>
-<dt>def _get_gaussian_process(</dt><dd><p>self, X: np.ndarray | None = None, y: np.ndarray | None = None</p>
-</dd>
-<dt>) -&gt; ExactMarginalLogLikelihood | None:</dt><dd><p>“””
-Get the GP model with the given X and y values. As GPyTorch requires the input data to initialize a new
-model, we also pass X and y here. X and y are set optional to ensure compatibility.</p>
-<dl class="simple">
-<dt>X<span class="classifier">np.ndarray [#samples, #hyperparameter + #features]</span></dt><dd><p>Input data points.</p>
-</dd>
-<dt>Y<span class="classifier">np.ndarray [#samples, #objectives]</span></dt><dd><p>The corresponding target values.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>mll<span class="classifier">ExactMarginalLogLikelihood | None</span></dt><dd><p>A GPyTorch model with zero mean and user specified covariance.</p>
-</dd>
-</dl>
-<p>“””
-if X is None:</p>
-<blockquote>
-<div><p># To be compatible with the base model
-return None</p>
-</div></blockquote>
-<p>X = torch.from_numpy(X)
-y = torch.from_numpy(y)
-self._gp_model = ExactGaussianProcessModel(</p>
-<blockquote>
-<div><p>X, y, likelihood=self._likelihood, base_covar_kernel=self._kernel</p>
-</div></blockquote>
-<p>).double()</p>
-<p>mll = ExactMarginalLogLikelihood(self._likelihood, self._gp_model)
-mll.double()</p>
-<p>return mll</p>
-</dd>
-<dt>def _optimize(self) -&gt; np.ndarray:</dt><dd><p>“””Optimizes the marginal log likelihood and returns the best found hyperparameter
-configuration theta.</p>
-<dl class="simple">
-<dt>theta<span class="classifier">np.ndarray</span></dt><dd><p>Hyperparameter vector that maximizes the marginal log likelihood.</p>
-</dd>
-</dl>
-<p>“””
-x0, property_dict, bounds = module_to_array(module=self._gp)</p>
-<p>bounds = np.asarray(bounds).transpose().tolist()</p>
-<p>self._property_dict = property_dict</p>
-<p>p0 = [x0]</p>
-<p># Avoid infinite sampling
-n_tries = 5000
-for i in range(n_tries):</p>
-<blockquote>
-<div><dl>
-<dt>try:</dt><dd><p>gp_model = self._gp.pyro_sample_from_prior()
-x_out = []
-for key in property_dict.keys():</p>
-<blockquote>
-<div><p>param = gp_model
-param_names = key.split(“.”)
-for name in param_names:</p>
-<blockquote>
-<div><p>param = getattr(param, name)</p>
-</div></blockquote>
-<p>x_out.append(param.detach().view(-1).cpu().double().clone().numpy())</p>
-</div></blockquote>
-<p>sample = np.concatenate(x_out)
-p0.append(sample.astype(np.float64))</p>
-</dd>
-<dt>except Exception as e:</dt><dd><dl class="simple">
-<dt>if i == n_tries - 1:</dt><dd><p>logger.debug(f”Fails to sample new hyperparameters because of {e}.”)
-raise e</p>
-</dd>
-</dl>
-<p>continue</p>
-</dd>
-<dt>if len(p0) == self._n_restarts:</dt><dd><p>break</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>self._gp_model.train()
-self._likelihood.train()</p>
-<p>theta_star = x0
-f_opt_star = np.inf
-for i, start_point in enumerate(p0):</p>
-<blockquote>
-<div><dl>
-<dt>try:</dt><dd><dl class="simple">
-<dt>theta, f_opt, _ = optimize.fmin_l_bfgs_b(</dt><dd><p>_scipy_objective_and_grad,
-start_point,
-args=(self._gp, property_dict),
-bounds=bounds,</p>
-</dd>
-</dl>
-<p>)</p>
-</dd>
-<dt>except NotPSDError as e:</dt><dd><p>logger.warning(f”Fail to optimize the GP hyperparameters as an Error occurs: {e}.”)
-f_opt = np.inf
-theta = start_point</p>
-</dd>
-<dt>if f_opt &lt; f_opt_star:</dt><dd><p>f_opt_star = f_opt
-theta_star = theta</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>return theta_star</p>
-</dd>
-<dt>def _predict(</dt><dd><p>self,
-X: np.ndarray,
-covariance_type: str | None = “diagonal”,</p>
-</dd>
-<dt>) -&gt; tuple[np.ndarray, np.ndarray | None]:</dt><dd><dl class="simple">
-<dt>if not self._is_trained:</dt><dd><p>raise Exception(“Model has to be trained first.”)</p>
-</dd>
-</dl>
-<p>X_test = torch.from_numpy(self._impute_inactive(X))
-self._likelihood.eval()
-self._gp_model.eval()</p>
-<p>with torch.no_grad(), gpytorch.settings.fast_pred_var():</p>
-<blockquote>
-<div><p>observed_pred = self._likelihood(self._gp_model(X_test))</p>
-<p>mu = observed_pred.mean.numpy()
-if covariance_type is None:</p>
-<blockquote>
-<div><p>var = None</p>
-<dl class="simple">
-<dt>if self._normalize_y:</dt><dd><p>mu = self._untransform_y(mu)</p>
-</dd>
-</dl>
-</div></blockquote>
-<dl>
-<dt>else:</dt><dd><dl class="simple">
-<dt>if covariance_type != “full”:</dt><dd><p>var = observed_pred.stddev.numpy()
-var = var**2  # since we get standard deviation for faster computation</p>
-</dd>
-<dt>else:</dt><dd><p># output full covariance
-var = observed_pred.covariance_matrix.numpy()</p>
-</dd>
-</dl>
-<p># Clip negative variances and set them to the smallest
-# positive float value
-var = np.clip(var, VERY_SMALL_NUMBER, np.inf)</p>
-<dl class="simple">
-<dt>if self._normalize_y:</dt><dd><p>mu, var = self._untransform_y(mu, var)</p>
-</dd>
-<dt>if covariance_type == “diagonal”:</dt><dd><p>var = np.sqrt(var)  # converting variance to std deviation if specified</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
-<p>return mu, var</p>
-</dd>
-<dt>def sample_functions(self, X_test: np.ndarray, n_funcs: int = 1) -&gt; np.ndarray:</dt><dd><p>“””Samples F function values from the current posterior at the N specified test points.</p>
-<dl class="simple">
-<dt>X<span class="classifier">np.ndarray [#samples, #hyperparameter + #features]</span></dt><dd><p>Input data points.</p>
-</dd>
-<dt>n_funcs: int</dt><dd><p>Number of function values that are drawn at each test point.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>function_samples<span class="classifier">np.array</span></dt><dd><p>The F function values drawn at the N test points.</p>
-</dd>
-</dl>
-<p>“””
-if not self._is_trained:</p>
-<blockquote>
-<div><p>raise Exception(“Model has to be trained first!”)</p>
-</div></blockquote>
-<p>self._likelihood.eval()
-self._gp_model.eval()</p>
-<p>X_test = torch.from_numpy(self._impute_inactive(X_test))
-with torch.no_grad():</p>
-<blockquote>
-<div><p>funcs = self._likelihood(self._gp_model(X_test)).sample(torch.Size([n_funcs])).t().cpu().numpy()</p>
-</div></blockquote>
-<dl class="simple">
-<dt>if self._normalize_y:</dt><dd><p>funcs = self._untransform_y(funcs)</p>
-</dd>
-<dt>if len(funcs.shape) == 1:</dt><dd><p>return funcs[None, :]</p>
-</dd>
-<dt>else:</dt><dd><p>return funcs</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-<dt>class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):</dt><dd><dl>
-<dt>def __init__(</dt><dd><p>self,
-configspace: ConfigurationSpace,
-bounds_cont: np.ndarray,
-bounds_cat: list[tuple],
-kernel: Kernel,
-num_inducing_points: int = 2,
-likelihood: GaussianLikelihood | None = None,
-normalize_y: bool = True,
-n_restarts: int = 10,
-instance_features: dict[str, list[int | float]] | None = None,
-pca_components: int | None = 7,
-seed: int = 0,</p>
-</dd>
-<dt>):</dt><dd><p>“””
-The GP hyperparameters are obtained by optimizing the marginal log-likelihood and optimized with botorch
-We train an LGPGA in two stages:
-In the first stage, we only train the kernel hyperparameter and thus deactivate the gradient w.r.t the position
-of the inducing points.
-In the second stage, we use the kernel hyperparameter acquired in the first stage to initialize a new
-variational Gaussian process and only optimize its inducing points’ position with natural gradients.
-Finally, we update the position of the inducing points and use it for evaluation.</p>
-<dl class="simple">
-<dt>bounds_cont: np.ndarray(N_cont, 2),</dt><dd><p>bounds of the continuous hyperparameters, store as [[0,1] * N_cont]</p>
-</dd>
-<dt>bounds_cat: List[Tuple],</dt><dd><p>bounds of categorical hyperparameters</p>
-</dd>
-<dt>kernel<span class="classifier">gpytorch kernel object</span></dt><dd><p>Specifies the kernel that is used for all Gaussian Process</p>
-</dd>
-<dt>num_inducing_points: int</dt><dd><p>Number of inducing points</p>
-</dd>
-<dt>likelihood: Optional[GaussianLikelihood]</dt><dd><p>Likelihood values</p>
-</dd>
-<dt>normalize_y<span class="classifier">bool</span></dt><dd><p>Zero mean unit variance normalization of the output values when the model is a partial sparse GP model.</p>
-</dd>
-</dl>
-<p>“””
-super(GloballyAugmentedLocalGaussianProcess, self).__init__(</p>
-<blockquote>
-<div><p>configspace=configspace,
-kernel=kernel,
-likelihood=likelihood,
-normalize_y=normalize_y,
-n_restarts=n_restarts,
-instance_features=instance_features,
-pca_components=pca_components,
-seed=seed,</p>
-</div></blockquote>
-<p>)
-self.cont_dims = np.where(np.array(self.types) == 0)[0]
-self.cat_dims = np.where(np.array(self.types) != 0)[0]
-self.bounds_cont = bounds_cont
-self.bounds_cat = bounds_cat
-self.num_inducing_points = num_inducing_points</p>
-</dd>
-<dt>def update_attribute(self, <a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs: Any) -&gt; None:</dt><dd><p>“””We update the class attribute (for instance, number of inducing points)”””
-for key in kwargs:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>if not hasattr(self, key):</dt><dd><p>raise AttributeError(f”{self.__class__.__name__} has no attribute named {key}”)</p>
-</dd>
-</dl>
-<p>setattr(self, key, kwargs[key])</p>
-</div></blockquote>
-</dd>
-<dt>def _train(</dt><dd><p>self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True</p>
-</dd>
-<dt>) -&gt; AugmentedLocalGaussianProcess | GPyTorchGaussianProcess:</dt><dd><p>“””
-Update the hyperparameters of the partial sparse kernel. Depending on the number of inputs inside and
-outside the subregion, we initialize a  PartialSparseGaussianProcess or a GaussianProcessGPyTorch</p>
-<dl class="simple">
-<dt>X: np.ndarray (N, D)</dt><dd><p>Input data points. The dimensionality of X is (N, D),
-with N as the number of points and D is the number of features., N = N_in + N_out</p>
-</dd>
-<dt>y: np.ndarray (N,)</dt><dd><p>The corresponding target values.</p>
-</dd>
-<dt>do_optimize: boolean</dt><dd><p>If set to true, the hyperparameters are optimized otherwise,
-the default hyperparameters of the kernel are used.</p>
-</dd>
-</dl>
-<p>“””
-X = self._impute_inactive(X)
-if len(y.shape) == 1:</p>
-<blockquote>
-<div><p>self._n_objectives = 1</p>
-</div></blockquote>
-<dl class="simple">
-<dt>else:</dt><dd><p>self._n_objectives = y.shape[1]</p>
-</dd>
-<dt>if self._n_objectives == 1:</dt><dd><p>y = y.flatten()</p>
-</dd>
-<dt>ss_data_indices = check_subspace_points(</dt><dd><p>X,
-cont_dims=self.cont_dims,
-cat_dims=self.cat_dims,
-bounds_cont=self.bounds_cont,
-bounds_cat=self.bounds_cat,
-expand_bound=True,</p>
-</dd>
-</dl>
-<p>)</p>
-<dl>
-<dt>if np.sum(ss_data_indices) &gt; np.shape(y)[0] - self.num_inducing_points:</dt><dd><p># we initialize a vanilla GaussianProcessGPyTorch
-if self._normalize_y:</p>
-<blockquote>
-<div><p>y = self._normalize_y(y)</p>
-</div></blockquote>
-<p>self.num_points = np.shape(y)[0]
-get_gp_kwargs = {“X_in”: X, “y_in”: y, “X_out”: None, “y_out”: None}</p>
-</dd>
-<dt>else:</dt><dd><p># we initialize a PartialSparseGaussianProcess object
-X_in = X[ss_data_indices]
-y_in = y[ss_data_indices]
-X_out = X[~ss_data_indices]
-y_out = y[~ss_data_indices]
-self.num_points = np.shape(y_in)[0]
-if self._normalize_y:</p>
-<blockquote>
-<div><p>y_in = self._normalize_y(y_in)
-y_out = (y_out - <a href="#id11"><span class="problematic" id="id12">self.mean_y_</span></a>) / <a href="#id13"><span class="problematic" id="id14">self.std_y_</span></a></p>
-</div></blockquote>
-<p>get_gp_kwargs = {“X_in”: X_in, “y_in”: y_in, “X_out”: X_out, “y_out”: y_out}</p>
-</dd>
-</dl>
-<p>n_tries = 10</p>
-<dl>
-<dt>for i in range(n_tries):</dt><dd><dl class="simple">
-<dt>try:</dt><dd><p>self._gp = self._get_gaussian_process(<a href="#id3"><span class="problematic" id="id4">**</span></a>get_gp_kwargs)
-break</p>
-</dd>
-<dt>except Exception as e:</dt><dd><dl class="simple">
-<dt>if i == n_tries - 1:</dt><dd><p>raise RuntimeError(f”Fails to initialize a GP model, {e}”)</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-<dt>if do_optimize:</dt><dd><p>self._hypers = self._optimize()
-self._gp = set_params_with_array(self._gp, self._hypers, self._property_dict)
-if isinstance(self._gp.model, AugmentedLocalGaussianProcess):</p>
-<blockquote>
-<div><p># we optimize the position of the inducing points and thus needs to deactivate the gradient of kernel
-# hyperparameters
-lhd = LatinHypercube(d=X.shape[-1], seed=self.rng.randint(0, 1000000))</p>
-<p>inducing_points = torch.from_numpy(lhd.random(n=self.num_inducing_points))</p>
-<p>kernel = self._gp.model.base_covar
-var_gp = VariationalGaussianProcess(kernel, X_inducing=inducing_points)</p>
-<p><a href="#id15"><span class="problematic" id="id16">X_out_</span></a> = torch.from_numpy(X_out)
-<a href="#id17"><span class="problematic" id="id18">y_out_</span></a> = torch.from_numpy(y_out)</p>
-<dl class="simple">
-<dt>variational_ngd_optimizer = gpytorch.optim.NGD(</dt><dd><p>var_gp.variational_parameters(), num_data=y_out_.size(0), lr=0.1</p>
-</dd>
-</dl>
-<p>)</p>
-<p>var_gp.train()
-likelihood = GaussianLikelihood().double()
-likelihood.train()</p>
-<p>mll_func = gpytorch.mlls.PredictiveLogLikelihood</p>
-<p>var_mll = mll_func(likelihood, var_gp, num_data=y_out_.size(0))</p>
-<dl class="simple">
-<dt>for t in var_gp.variational_parameters():</dt><dd><p>t.requires_grad = False</p>
-</dd>
-</dl>
-<p>x0, property_dict, bounds = module_to_array(module=var_mll)
-for t in var_gp.variational_parameters():</p>
-<blockquote>
-<div><p>t.requires_grad = True</p>
-</div></blockquote>
-<p>bounds = np.asarray(bounds).transpose().tolist()</p>
-<p>start_points = [x0]</p>
-<p>inducing_idx = 0</p>
-<p>inducing_size = X_out.shape[-1] * self.num_inducing_points
-for p_name, attrs in property_dict.items():</p>
-<blockquote>
-<div><dl>
-<dt>if p_name != “model.variational_strategy.inducing_points”:</dt><dd><p># Construct the new tensor
-if len(attrs.shape) == 0:  # deal with scalar tensors</p>
-<blockquote>
-<div><p>inducing_idx = inducing_idx + 1</p>
-</div></blockquote>
-<dl class="simple">
-<dt>else:</dt><dd><p>inducing_idx = inducing_idx + np.prod(attrs.shape)</p>
-</dd>
-</dl>
-</dd>
-<dt>else:</dt><dd><p>break</p>
-</dd>
-</dl>
-</div></blockquote>
-<dl>
-<dt>while len(start_points) &lt; 3:</dt><dd><p>new_start_point = np.random.rand(<a href="#id5"><span class="problematic" id="id6">*</span></a>x0.shape)
-new_inducing_points = torch.from_numpy(lhd.random(n=self.num_inducing_points)).flatten()
-new_start_point[inducing_idx : inducing_idx + inducing_size] = new_inducing_points
-start_points.append(new_start_point)</p>
-</dd>
-<dt>def sci_opi_wrapper(</dt><dd><p>x: np.ndarray,
-mll: gpytorch.module,
-property_dict: dict,
-train_inputs: torch.Tensor,
-train_targets: torch.Tensor,</p>
-</dd>
-<dt>) -&gt; tuple[float, np.ndarray]:</dt><dd><p>“””
-A modification of from botorch.optim.utils._scipy_objective_and_grad, the key difference is that
-we do an additional natural gradient update before computing the gradient values
-Parameters
-———-
-x: np.ndarray</p>
-<blockquote>
-<div><p>optimizer input</p>
-</div></blockquote>
-<dl class="simple">
-<dt>mll: gpytorch.module</dt><dd><p>a gpytorch module whose hyperparameters are defined by x</p>
-</dd>
-<dt>property_dict: Dict</dt><dd><p>a dict describing how x is mapped to initialize mll</p>
-</dd>
-<dt>train_inputs: torch.Tensor (N_input, D)</dt><dd><p>input points of the GP model</p>
-</dd>
-<dt>train_targets: torch.Tensor (N_input, 1)</dt><dd><p>target value of the GP model</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>loss: np.ndarray</dt><dd><p>loss value</p>
-</dd>
-<dt>grad: np.ndarray</dt><dd><p>gradient w.r.t. the inputs</p>
-</dd>
-</dl>
-<p>“””
-# A modification of from botorch.optim.utils._scipy_objective_and_grad:
-# <a class="reference external" href="https://botorch.org/api/_modules/botorch/optim/utils.html">https://botorch.org/api/_modules/botorch/optim/utils.html</a>
-# The key difference is that we do an additional natural gradient update here
-variational_ngd_optimizer.zero_grad()</p>
-<p>mll = set_params_with_array(mll, x, property_dict)
-mll.zero_grad()
-try:  # catch linear algebra errors in gpytorch</p>
-<blockquote>
-<div><p>output = mll.model(train_inputs)
-args = [output, train_targets] + _get_extra_mll_args(mll)
-loss = -mll(<a href="#id7"><span class="problematic" id="id8">*</span></a>args).sum()</p>
-</div></blockquote>
-<dl class="simple">
-<dt>except RuntimeError as e:</dt><dd><dl class="simple">
-<dt>if isinstance(e, NanError) or “singular” in e.args[0]:</dt><dd><p>return float(“nan”), np.full_like(x, “nan”)</p>
-</dd>
-<dt>else:</dt><dd><p>raise e  # pragma: nocover</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p>loss.backward()
-variational_ngd_optimizer.step()
-param_dict = OrderedDict(mll.named_parameters())
-grad = []
-for p_name in property_dict:</p>
-<blockquote>
-<div><p>t = param_dict[p_name].grad
-if t is None:</p>
-<blockquote>
-<div><p># this deals with parameters that do not affect the loss
-grad.append(np.zeros(property_dict[p_name].shape.numel()))</p>
-</div></blockquote>
-<dl class="simple">
-<dt>else:</dt><dd><p>grad.append(t.detach().view(-1).cpu().double().clone().numpy())</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>mll.zero_grad()
-return loss.item(), np.concatenate(grad)</p>
-</dd>
-</dl>
-<p>theta_star = x0
-f_opt_star = np.inf
-for start_point in start_points:</p>
-<blockquote>
-<div><dl>
-<dt>try:</dt><dd><dl class="simple">
-<dt>theta, f_opt, res_dict = optimize.fmin_l_bfgs_b(</dt><dd><p>sci_opi_wrapper,
-start_point,
-args=(var_mll, property_dict, <a href="#id19"><span class="problematic" id="id20">X_out_</span></a>, <a href="#id21"><span class="problematic" id="id22">y_out_</span></a>),
-bounds=bounds,
-maxiter=50,</p>
-</dd>
-</dl>
-<p>)
-if f_opt &lt; f_opt_star:</p>
-<blockquote>
-<div><p>f_opt_star = f_opt
-theta_star = theta</p>
-</div></blockquote>
-</dd>
-<dt>except Exception as e:</dt><dd><p>logger.warning(f”An exception {e} occurs during the optimizaiton”)</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>start_idx = 0
-# modification on botorch.optim.numpy_converter.set_params_with_array as we only need to extract the
-# positions of inducing points
-for p_name, attrs in property_dict.items():</p>
-<blockquote>
-<div><dl>
-<dt>if p_name != “model.variational_strategy.inducing_points”:</dt><dd><p># Construct the new tensor
-if len(attrs.shape) == 0:  # deal with scalar tensors</p>
-<blockquote>
-<div><p>start_idx = start_idx + 1</p>
-</div></blockquote>
-<dl class="simple">
-<dt>else:</dt><dd><p>start_idx = start_idx + np.prod(attrs.shape)</p>
-</dd>
-</dl>
-</dd>
-<dt>else:</dt><dd><p>end_idx = start_idx + np.prod(attrs.shape)
-X_inducing = torch.tensor(</p>
-<blockquote>
-<div><p>theta_star[start_idx:end_idx], dtype=attrs.dtype, device=attrs.device</p>
-</div></blockquote>
-<p>).view(<a href="#id9"><span class="problematic" id="id10">*</span></a>attrs.shape)
-break</p>
-</dd>
-</dl>
-</div></blockquote>
-<p># set inducing points for covariance module here
-self._gp_model.set_augment_module(X_inducing)</p>
-</div></blockquote>
-</dd>
-<dt>else:</dt><dd><p>self._hypers, self._property_dict, _ = module_to_array(module=self._gp)</p>
-</dd>
-</dl>
-<p>self._is_trained = True
-return self</p>
-</dd>
-<dt>def _get_gaussian_process(</dt><dd><p>self,
-X_in: np.ndarray | None = None,
-y_in: np.ndarray | None = None,
-X_out: np.ndarray | None = None,
-y_out: np.ndarray | None = None,</p>
-</dd>
-<dt>) -&gt; ExactMarginalLogLikelihood | None:</dt><dd><p>“””
-Construct a new GP model based on the inputs
-If both in and out are None: return an empty model
-If only in_x and in_y are given: return a vanilla GP model
-If in_x, in_y, out_x, out_y are given: return a partial sparse GP model.</p>
-<dl class="simple">
-<dt>X_in: np.ndarray (N_in, D) | None</dt><dd><p>Input data points inside the subregion. The dimensionality of X_in is (N_in, D),
-with N_in as the number of points inside the subregion and D is the number of features. If it is not given,
-this function will return None to be compatible with the implementation of its parent class</p>
-</dd>
-<dt>y_in: np.ndarray (N_in,) | None</dt><dd><p>The corresponding target values inside the subregion.</p>
-</dd>
-<dt>X_out: np.ndarray (N_out, D) | None</dt><dd><p>Input data points outside the subregion. The dimensionality of X_out is (N_out, D). If it is not given, this</p>
-</dd>
-</dl>
-<p>function will return a vanilla Gaussian Process
-y_out: np.ndarray (N_out) | None</p>
-<blockquote>
-<div><p>The corresponding target values outside the subregion.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>mll: ExactMarginalLogLikelihood</dt><dd><p>a gp module</p>
-</dd>
-</dl>
-<p>“””
-if X_in is None:</p>
-<blockquote>
-<div><p>return None</p>
-</div></blockquote>
-<p>X_in = torch.from_numpy(X_in)
-y_in = torch.from_numpy(y_in)
-if X_out is None:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>self._gp_model = ExactGaussianProcessModel(</dt><dd><p>X_in, y_in, likelihood=self._likelihood, base_covar_kernel=self.kernel</p>
-</dd>
-</dl>
-<p>).double()</p>
-</div></blockquote>
-<dl>
-<dt>else:</dt><dd><p>X_out = torch.from_numpy(X_out)
-y_out = torch.from_numpy(y_out)</p>
-<dl class="simple">
-<dt>self._gp_model = AugmentedLocalGaussianProcess(</dt><dd><p>X_in, y_in, X_out, y_out, likelihood=self._likelihood, base_covar_kernel=self.kernel  # type:ignore</p>
-</dd>
-</dl>
-<p>).double()</p>
-</dd>
-</dl>
-<p>mll = ExactMarginalLogLikelihood(self._likelihood, self._gp_model)
-mll.double()
-return mll</p>
-</dd>
-</dl>
-</dd>
-<dt>class ExactGaussianProcessModel(ExactGP):</dt><dd><p>“””Exact GP model that serves as a backbone for <cite>GPyTorchGaussianProcess</cite>.”</p>
-<dl class="simple">
-<dt>train_X: torch.tenor</dt><dd><p>input feature</p>
-</dd>
-<dt>train_y: torch.tensor</dt><dd><p>input observations</p>
-</dd>
-<dt>base_covar_kernel: Kernel</dt><dd><p>covariance kernel used to compute covariance matrix</p>
-</dd>
-<dt>likelihood: GaussianLikelihood</dt><dd><p>GP likelihood</p>
-</dd>
-</dl>
-<p>“””</p>
-<dl>
-<dt>def __init__(</dt><dd><p>self,
-train_X: torch.Tensor,
-train_y: torch.Tensor,
-base_covar_kernel: Kernel,
-likelihood: GaussianLikelihood,</p>
-</dd>
-<dt>):</dt><dd><p>super(ExactGaussianProcessModel, self).__init__(train_X, train_y, likelihood)</p>
-<p># In our experiments we find that ZeroMean more robust than ConstantMean when y is normalized
-self._mean_module = ZeroMean()
-self._covar_module = base_covar_kernel</p>
-</dd>
-<dt>def forward(self, x: torch.Tensor) -&gt; MultivariateNormal:</dt><dd><p>“””Computes the posterior mean and variance.”””
-mean_x = self._mean_module(x)
-covar_x = self._covar_module(x)</p>
-<p>return MultivariateNormal(mean_x, covar_x)</p>
-</dd>
-</dl>
-</dd>
-<dt>class AugmentedLocalGaussianProcess(ExactGP):</dt><dd><dl>
-<dt>def __init__(</dt><dd><p>self,
-X_in: torch.Tensor,
-y_in: torch.Tensor,
-X_out: torch.Tensor,
-y_out: torch.Tensor,
-likelihood: GaussianLikelihood,
-base_covar_kernel: Kernel,</p>
-</dd>
-<dt>):</dt><dd><p>“””
-An Augmented Local GP, it is trained with the points inside a subregion while its prior is augemented by the
-points outside the subregion (global configurations)</p>
-<dl class="simple">
-<dt>X_in: torch.Tensor (N_in, D),</dt><dd><p>feature vector of the points inside the subregion</p>
-</dd>
-<dt>y_in: torch.Tensor (N_in, 1),</dt><dd><p>observation inside the subregion</p>
-</dd>
-<dt>X_out: torch.Tensor (N_out, D),</dt><dd><p>feature vector  of the points outside the subregion</p>
-</dd>
-<dt>y_out:torch.Tensor (N_out, 1),</dt><dd><p>observation inside the subregion</p>
-</dd>
-<dt>likelihood: GaussianLikelihood,</dt><dd><p>likelihood of the GP (noise)</p>
-</dd>
-<dt>base_covar_kernel: Kernel,</dt><dd><p>Covariance Kernel</p>
-</dd>
-</dl>
-<p>“””
-X_in = X_in.unsqueeze(-1) if X_in.ndimension() == 1 else X_in
-X_out = X_out.unsqueeze(-1) if X_out.ndimension() == 1 else X_out
-assert X_in.shape[-1] == X_out.shape[-1]</p>
-<p>super(AugmentedLocalGaussianProcess, self).__init__(X_in, y_in, likelihood)</p>
-<p>self._mean_module = ZeroMean()
-self.base_covar = base_covar_kernel</p>
-<p>self.X_out = X_out
-self.y_out = y_out
-self.augmented = False</p>
-</dd>
-<dt>def set_augment_module(self, X_inducing: torch.Tensor) -&gt; None:</dt><dd><p>“””
-Set an augmentation module, which will be used later for inference</p>
-<dl class="simple">
-<dt>X_inducing: torch.Tensor(N_inducing, D)</dt><dd><p>inducing points, it needs to have the same number of dimensions as X_in</p>
-</dd>
-</dl>
-<p>“””
-X_inducing = X_inducing.unsqueeze(-1) if X_inducing.ndimension() == 1 else X_inducing
-# assert X_inducing.shape[-1] == self.X_out.shape[-1]
-self.covar_module = FITCKernel(</p>
-<blockquote>
-<div><p>self.base_covar, X_inducing=X_inducing, X_out=self.X_out, y_out=self.y_out, likelihood=self._likelihood</p>
-</div></blockquote>
-<p>)
-self.mean_module = FITCMean(covar_module=self.covar_module)
-self.augmented = True</p>
-</dd>
-<dt>def forward(self, x: torch.Tensor) -&gt; MultivariateNormal:</dt><dd><p>“””
-Compute the prior values. If optimize_kernel_hps is set True in the training phases, this model degenerates to
-a vanilla GP model with ZeroMean and base_covar as covariance matrix. Otherwise, we apply partial sparse GP
-mean and kernels here.
-“””
-if not self.augmented:</p>
-<blockquote>
-<div><p># we only optimize for kernel hyperparameters
-covar_x = self.base_covar(x)
-mean_x = self._mean_module(x)</p>
-</div></blockquote>
-<dl class="simple">
-<dt>else:</dt><dd><p>covar_x = self.covar_module(x)
-mean_x = self.mean_module(x)</p>
-</dd>
-</dl>
-<p>return MultivariateNormal(mean_x, covar_x)</p>
-</dd>
-</dl>
-</dd>
-<dt>class VariationalGaussianProcess(gpytorch.models.ApproximateGP):</dt><dd><p>“””
-A variational GP to compute the position of the inducing points.
-We only optimize for the position of the continuous dimensions and keep the categorical dimensions constant.
-“””</p>
-<dl>
-<dt>def __init__(self, kernel: Kernel, X_inducing: torch.Tensor):</dt><dd><p>“””
-Initialize a Variational GP
-we set the lower bound and upper bounds of inducing points for numerical hyperparameters between 0 and 1,
-that is, we constrain the inducing points to lay inside the subregion.</p>
-<dl class="simple">
-<dt>kernel: Kernel</dt><dd><p>kernel of the variational GP, its hyperparameter needs to be fixed when it is by LGPGA</p>
-</dd>
-<dt>X_inducing: torch.tensor (N_inducing, D)</dt><dd><p>inducing points</p>
-</dd>
-</dl>
-<p>“””
-variational_distribution = gpytorch.variational.TrilNaturalVariationalDistribution(X_inducing.size(0))
-variational_strategy = gpytorch.variational.VariationalStrategy(</p>
-<blockquote>
-<div><p>self, X_inducing, variational_distribution, learn_inducing_locations=True</p>
-</div></blockquote>
-<p>)
-super(VariationalGaussianProcess, self).__init__(variational_strategy)
-self.mean_module = gpytorch.means.ZeroMean()
-self.covar_module = kernel</p>
-<p>shape_X_inducing = X_inducing.shape
-lower_X_inducing = torch.zeros([shape_X_inducing[-1]]).repeat(shape_X_inducing[0])
-upper_X_inducing = torch.ones([shape_X_inducing[-1]]).repeat(shape_X_inducing[0])</p>
-<dl class="simple">
-<dt>self.variational_strategy.register_constraint(</dt><dd><p>param_name=”inducing_points”,
-constraint=Interval(lower_X_inducing, upper_X_inducing, transform=None),</p>
-</dd>
-</dl>
-<p>)
-self.double()</p>
-<dl class="simple">
-<dt>for p_name, t in self.named_hyperparameters():</dt><dd><dl class="simple">
-<dt>if p_name != “variational_strategy.inducing_points”:</dt><dd><p>t.requires_grad = False</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-<dt>def forward(self, x: torch.Tensor) -&gt; MultivariateNormal:</dt><dd><p>“””
-Pass the posterior mean and variance given input X</p>
-<dl class="simple">
-<dt>x: torch.Tensor</dt><dd><p>Input data</p>
-</dd>
-</dl>
-<p>“””
-mean_x = self.mean_module(x)
-covar_x = self.covar_module(x, cont_only=True)
-return MultivariateNormal(mean_x, covar_x)</p>
-</dd>
-</dl>
-</dd>
-</dl>
+<section id="interfaces">
+<h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this heading">¶</a></h2>
+</section>
 </section>
 
 

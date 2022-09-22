@@ -148,23 +148,84 @@ style="width: 100%;">
    </i>
   </label>
   <ul>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="../examples/1_basics/index.html">
      Basics
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/1_synthetic_function.html">
+       Synthetic Function
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/2_svm_cv.html">
+       Support Vector Machine with Cross-Validation
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/3_ask_and_tell.html">
+       Ask-and-Tell Interface
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/4_priors.html">
+       User Priors over the Optimum
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/5_full_customization.html">
+       Full Customization
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="../examples/2_multi_fidelity/index.html">
      Multi-Fidelity and Multi-Instances
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/2_multi_fidelity/1_mlp_epochs.html">
+       Multi-Layer Perceptron Using Multiple Epochs
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/2_multi_fidelity/2_sgd_datasets.html">
+       Stochastic Gradient Descent On Multiple Datasets
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="../examples/3_multi_objective/index.html">
      Multi-Objective
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+    <label for="toctree-checkbox-4">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/3_multi_objective/1_schaffer.html">
+       2D Schaffer Function
+      </a>
+     </li>
+    </ul>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/4_commandline/index.html">
+    <a class="reference internal" href="../examples/5_commandline/index.html">
      Commandline
     </a>
    </li>
@@ -174,8 +235,8 @@ style="width: 100%;">
   <a class="reference internal" href="../advanced_usage/index.html">
    Advanced Usage
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -196,66 +257,615 @@ style="width: 100%;">
   <a class="reference internal" href="../api.html">
    API References
   </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
-  <label for="toctree-checkbox-3">
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul class="current">
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.facade.html">
      smac.facade
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+    <label for="toctree-checkbox-7">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.facade.abstract_facade.html">
+       smac.facade.abstract_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.facade.algorithm_configuration_facade.html">
+       smac.facade.algorithm_configuration_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.facade.blackbox_facade.html">
+       smac.facade.blackbox_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.facade.boing_facade.html">
+       smac.facade.boing_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.facade.hyperparameter_facade.html">
+       smac.facade.hyperparameter_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.facade.multi_fidelity_facade.html">
+       smac.facade.multi_fidelity_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.facade.random_facade.html">
+       smac.facade.random_facade
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.main.html">
      smac.main
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+    <label for="toctree-checkbox-8">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.main.base_smbo.html">
+       smac.main.base_smbo
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.main.boing.html">
+       smac.main.boing
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.main.smbo.html">
+       smac.main.smbo
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.main.turbo.html">
+       smac.main.turbo
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.model.html">
      smac.model
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+    <label for="toctree-checkbox-9">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.model.abstract_model.html">
+       smac.model.abstract_model
+      </a>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="smac.model.gaussian_process.html">
+       smac.model.gaussian_process
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+      <label for="toctree-checkbox-10">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.model.gaussian_process.abstract_gaussian_process.html">
+         smac.model.gaussian_process.abstract_gaussian_process
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.model.gaussian_process.gaussian_process.html">
+         smac.model.gaussian_process.gaussian_process
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.model.gaussian_process.gpytorch_gaussian_process.html">
+         smac.model.gaussian_process.gpytorch_gaussian_process
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.model.gaussian_process.kernels.html">
+         smac.model.gaussian_process.kernels
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.model.gaussian_process.mcmc_gaussian_process.html">
+         smac.model.gaussian_process.mcmc_gaussian_process
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.model.gaussian_process.priors.html">
+         smac.model.gaussian_process.priors
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.model.multi_objective_model.html">
+       smac.model.multi_objective_model
+      </a>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="smac.model.random_forest.html">
+       smac.model.random_forest
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+      <label for="toctree-checkbox-11">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.model.random_forest.abstract_random_forest.html">
+         smac.model.random_forest.abstract_random_forest
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.model.random_forest.random_forest.html">
+         smac.model.random_forest.random_forest
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.model.random_model.html">
+       smac.model.random_model
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.acquisition.html">
      smac.acquisition
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+    <label for="toctree-checkbox-12">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="smac.acquisition.functions.html">
+       smac.acquisition.functions
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+      <label for="toctree-checkbox-13">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.functions.abstract_acquisition_function.html">
+         smac.acquisition.functions.abstract_acquisition_function
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.functions.confidence_bound.html">
+         smac.acquisition.functions.confidence_bound
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.functions.expected_improvement.html">
+         smac.acquisition.functions.expected_improvement
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.functions.integrated_acquisition_function.html">
+         smac.acquisition.functions.integrated_acquisition_function
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.functions.prior_acqusition_function.html">
+         smac.acquisition.functions.prior_acqusition_function
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.functions.probability_improvement.html">
+         smac.acquisition.functions.probability_improvement
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.functions.thompson.html">
+         smac.acquisition.functions.thompson
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="smac.acquisition.maximizers.html">
+       smac.acquisition.maximizers
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+      <label for="toctree-checkbox-14">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.maximizers.abstract_acqusition_maximizer.html">
+         smac.acquisition.maximizers.abstract_acqusition_maximizer
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.maximizers.differential_evolution.html">
+         smac.acquisition.maximizers.differential_evolution
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.maximizers.helpers.html">
+         smac.acquisition.maximizers.helpers
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.maximizers.local_and_random_search.html">
+         smac.acquisition.maximizers.local_and_random_search
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.maximizers.local_search.html">
+         smac.acquisition.maximizers.local_search
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.acquisition.maximizers.random_search.html">
+         smac.acquisition.maximizers.random_search
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.intensification.html">
      smac.intensification
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+    <label for="toctree-checkbox-15">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.intensification.abstract_intensifier.html">
+       smac.intensification.abstract_intensifier
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.intensification.hyperband.html">
+       smac.intensification.hyperband
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.intensification.hyperband_worker.html">
+       smac.intensification.hyperband_worker
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.intensification.intensification.html">
+       smac.intensification.intensification
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.intensification.parallel_scheduling.html">
+       smac.intensification.parallel_scheduling
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.intensification.simple_intensifier.html">
+       smac.intensification.simple_intensifier
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.intensification.stages.html">
+       smac.intensification.stages
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.intensification.successive_halving.html">
+       smac.intensification.successive_halving
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.intensification.successive_halving_worker.html">
+       smac.intensification.successive_halving_worker
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.initial_design.html">
      smac.initial_design
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+    <label for="toctree-checkbox-16">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.initial_design.abstract_initial_design.html">
+       smac.initial_design.abstract_initial_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.initial_design.default_design.html">
+       smac.initial_design.default_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.initial_design.factorial_design.html">
+       smac.initial_design.factorial_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.initial_design.latin_hypercube_design.html">
+       smac.initial_design.latin_hypercube_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.initial_design.random_design.html">
+       smac.initial_design.random_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.initial_design.sobol_design.html">
+       smac.initial_design.sobol_design
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.random_design.html">
      smac.random_design
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+    <label for="toctree-checkbox-17">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.random_design.abstract_random_design.html">
+       smac.random_design.abstract_random_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.random_design.annealing_design.html">
+       smac.random_design.annealing_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.random_design.modulus_design.html">
+       smac.random_design.modulus_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.random_design.probability_design.html">
+       smac.random_design.probability_design
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.runner.html">
      smac.runner
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.runner.abstract_runner.html">
+       smac.runner.abstract_runner
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.runner.dask_runner.html">
+       smac.runner.dask_runner
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.runner.exceptions.html">
+       smac.runner.exceptions
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.runner.target_function_runner.html">
+       smac.runner.target_function_runner
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.runhistory.html">
      smac.runhistory
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+    <label for="toctree-checkbox-19">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.runhistory.dataclasses.html">
+       smac.runhistory.dataclasses
+      </a>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="smac.runhistory.encoder.html">
+       smac.runhistory.encoder
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
+      <label for="toctree-checkbox-20">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.runhistory.encoder.abstract_encoder.html">
+         smac.runhistory.encoder.abstract_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.runhistory.encoder.boing_encoder.html">
+         smac.runhistory.encoder.boing_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.runhistory.encoder.eips_encoder.html">
+         smac.runhistory.encoder.eips_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.runhistory.encoder.encoder.html">
+         smac.runhistory.encoder.encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.runhistory.encoder.inverse_scaled_encoder.html">
+         smac.runhistory.encoder.inverse_scaled_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.runhistory.encoder.log_encoder.html">
+         smac.runhistory.encoder.log_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.runhistory.encoder.log_scaled_encoder.html">
+         smac.runhistory.encoder.log_scaled_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.runhistory.encoder.scaled_encoder.html">
+         smac.runhistory.encoder.scaled_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.runhistory.encoder.sqrt_scaled_encoder.html">
+         smac.runhistory.encoder.sqrt_scaled_encoder
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.runhistory.enumerations.html">
+       smac.runhistory.enumerations
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.runhistory.runhistory.html">
+       smac.runhistory.runhistory
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.multi_objective.html">
      smac.multi_objective
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/>
+    <label for="toctree-checkbox-21">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.multi_objective.abstract_multi_objective_algorithm.html">
+       smac.multi_objective.abstract_multi_objective_algorithm
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.multi_objective.aggregation_strategy.html">
+       smac.multi_objective.aggregation_strategy
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.multi_objective.parego.html">
+       smac.multi_objective.parego
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2 current active">
+   <li class="toctree-l2 current active has-children">
     <a class="reference internal" href="smac.utils.html">
      smac.utils
     </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" type="checkbox"/>
+    <label for="toctree-checkbox-22">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.utils.configspace.html">
+       smac.utils.configspace
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.utils.data_structures.html">
+       smac.utils.data_structures
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.utils.logging.html">
+       smac.utils.logging
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.utils.multi_objective.html">
+       smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3 current active has-children">
+      <a class="current reference internal" href="#">
+       smac.utils.subspaces
+      </a>
+      <input checked="" class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" type="checkbox"/>
+      <label for="toctree-checkbox-23">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.utils.subspaces.boing_subspace.html">
+         smac.utils.subspaces.boing_subspace
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="smac.utils.subspaces.turbo_subspace.html">
+         smac.utils.subspaces.turbo_subspace
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.scenario.html">
@@ -273,6 +883,11 @@ style="width: 100%;">
     </a>
    </li>
   </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../references.html">
+   References
+  </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../glossary.html">
@@ -303,9 +918,24 @@ style="width: 100%;">
               
               <div class="toc-item">
                 
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
 
 <nav id="bd-toc-nav">
-    
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#interfaces">
+   Interfaces
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#modules">
+   Modules
+  </a>
+ </li>
+</ul>
+
 </nav>
               </div>
               
@@ -327,765 +957,22 @@ style="width: 100%;">
                 
   <section id="module-smac.utils.subspaces">
 <span id="smac-utils-subspaces"></span><h1>smac.utils.subspaces<a class="headerlink" href="#module-smac.utils.subspaces" title="Permalink to this heading">¶</a></h1>
-<p>from __future__ import annotations</p>
-<p>from abc import ABC, abstractmethod
-from typing import Any, Dict, Iterator, List, Tuple, Type</p>
-<p>import copy
-import inspect
-import logging
-import math</p>
-<p>import numpy as np
-from ConfigSpace.forbidden import (</p>
-<blockquote>
-<div><p>AbstractForbiddenComponent,
-ForbiddenAndConjunction,
-MultipleValueForbiddenClause,</p>
-</div></blockquote>
-<p>)
-from ConfigSpace.hyperparameters import (</p>
-<blockquote>
-<div><p>CategoricalHyperparameter,
-Constant,
-Hyperparameter,
-NumericalHyperparameter,
-OrdinalHyperparameter,
-UniformFloatHyperparameter,
-UniformIntegerHyperparameter,</p>
-</div></blockquote>
-<p>)</p>
-<p>from smac.acquisition.functions import EI, AbstractAcquisitionFunction
-from ConfigSpace import Configuration, ConfigurationSpace
-from smac.model.abstract_model import AbstractModel
-from smac.model.gaussian_process.gpytorch_gaussian_process import GloballyAugmentedLocalGaussianProcess
-from smac.model.gaussian_process.kernels._boing import construct_gp_kernel
-from smac.model.utils import check_subspace_points
-from smac.utils.logging import get_logger</p>
-<p>logger = get_logger(__name__)</p>
-<dl>
-<dt>class LocalSubspace(ABC):</dt><dd><p>“””
-A subspace that is designed for local Bayesian Optimization. If bounds_ss_cont and bounds_ss_cat are not given,
-this subspace is equivalent to the original configuration space. Additionally, this subspace
-supports local BO that only works with a subset of the dimensions, where the missing values are filled by the
-corresponding values from incumbent_array.</p>
-<dl class="simple">
-<dt>config_space: ConfigurationSpace</dt><dd><p>raw Configuration space</p>
-</dd>
-<dt>bounds: List[Tuple[float, float]]</dt><dd><p>raw bounds of the Configuration space, notice that here bounds denotes the bounds of the entire space</p>
-</dd>
-<dt>hps_types: List[int],</dt><dd><p>types of the hyperparameters</p>
-</dd>
-<dt>bounds_ss_cont: np.ndarray(D_cont, 2)</dt><dd><p>subspaces bounds of continuous hyperparameters, its length is the number of continuous hyperparameters</p>
-</dd>
-<dt>bounds_ss_cat: List[Tuple]</dt><dd><p>subspaces bounds of categorical hyperparameters, its length is the number of categorical hyperparameters</p>
-</dd>
-<dt>rng: np.random.RandomState</dt><dd><p>random state</p>
-</dd>
-<dt>model_local: ~smac.epm.base_epm.BaseEPM</dt><dd><p>model in subspace</p>
-</dd>
-<dt>model_local_kwargs: Dict | None</dt><dd><p>argument for subspace model</p>
-</dd>
-<dt>acq_func_local: ~smac.optimizer.ei_optimization.AbstractAcquisitionFunction</dt><dd><p>local acquisition function</p>
-</dd>
-<dt>acq_func_local_kwargs: Dict | None</dt><dd><p>argument for acquisition function</p>
-</dd>
-<dt>activate_dims: np.ndarray | None</dt><dd><p>activate dimensions in the subspace, if it is None, we preserve all the dimensions</p>
-</dd>
-<dt>incumbent_array: np.ndarray | None</dt><dd><p>incumbent array, used when activate_dims has less dimension and this value is used to complementary the
-resulted configurations</p>
-</dd>
-</dl>
-<p>“””</p>
-<dl>
-<dt>def __init__(</dt><dd><p>self,
-config_space: ConfigurationSpace,
-bounds: List[Tuple[float, float]],
-hps_types: List[int],
-bounds_ss_cont: np.ndarray | None = None,
-bounds_ss_cat: List[Tuple] | None = None,
-model_local: AbstractModel | Type[AbstractModel] = GloballyAugmentedLocalGaussianProcess,
-model_local_kwargs: Dict = {},
-acq_func_local: AbstractAcquisitionFunction | Type[AbstractAcquisitionFunction] = EI,
-acq_func_local_kwargs: Dict | None = None,
-rng: np.random.RandomState | None = None,
-initial_data: Tuple[np.ndarray, np.ndarray] | None = None,
-activate_dims: np.ndarray | None = None,
-incumbent_array: np.ndarray | None = None,</p>
-</dd>
-<dt>):</dt><dd><p>self.cs_global = config_space
-if rng is None:</p>
-<blockquote>
-<div><p>self.rng = np.random.RandomState(1)</p>
-</div></blockquote>
-<dl class="simple">
-<dt>else:</dt><dd><p>self.rng = np.random.RandomState(rng.randint(0, 2**20))</p>
-</dd>
-</dl>
-<p>n_hypers = len(config_space.get_hyperparameters())
-model_types = copy.deepcopy(hps_types)
-model_bounds = copy.deepcopy(bounds)</p>
-<p>cat_dims = np.where(np.array(hps_types) != 0)[0]
-cont_dims = np.where(np.array(hps_types) == 0)[0]</p>
-<dl>
-<dt>if activate_dims is None:</dt><dd><p>activate_dims = np.arange(n_hypers)
-activate_dims_cont = cont_dims
-activate_dims_cat = cat_dims
-self.activate_dims = activate_dims
-activate_dims_cont_ss = np.arange(len(activate_dims_cont))
-activate_dims_cat_ss = np.arange(len(activate_dims_cat))</p>
-</dd>
-<dt>else:</dt><dd><dl class="simple">
-<dt>activate_dims_cont, _, activate_dims_cont_ss = np.intersect1d(</dt><dd><p>activate_dims, cont_dims, assume_unique=True, return_indices=True</p>
-</dd>
-</dl>
-<p>)
-activate_dims_cat, _, activate_dims_cat_ss = np.intersect1d(</p>
-<blockquote>
-<div><p>activate_dims, cat_dims, assume_unique=True, return_indices=True</p>
-</div></blockquote>
-<p>)
-self.activate_dims = activate_dims</p>
-</dd>
-</dl>
-<p>self.activate_dims_cont = activate_dims_cont_ss
-self.activate_dims_cat = activate_dims_cat_ss</p>
-<p>lbs = np.full(n_hypers, 0.0)
-scales = np.full(n_hypers, 1.0)</p>
-<dl>
-<dt>if bounds_ss_cont is None and bounds_ss_cat is None:</dt><dd><p># cs_inner is cs
-self.cs_local = config_space
-self.new_config_space = False
-self.bounds_ss_cont = np.tile([0.0, 1.0], [len(self.activate_dims_cont), 1])
-self.bounds_ss_cat = []  # type: Optional[List[Tuple]]
-self.lbs = lbs
-self.scales = scales
-self.new_config = False</p>
-</dd>
-<dt>else:</dt><dd><p>self.new_config = True
-# we normalize the non-CategoricalHyperparameter by x = (x-lb)*scale</p>
-<p>hps = config_space.get_hyperparameters()</p>
-<p># deal with categorical hyperaprameters
-for i, cat_idx in enumerate(activate_dims_cat):</p>
-<blockquote>
-<div><p>hp_cat = hps[cat_idx]  # type: CategoricalHyperparameter
-parents = config_space.get_parents_of(hp_cat.name)
-if len(parents) == 0:</p>
-<blockquote>
-<div><p>can_be_inactive = False</p>
-</div></blockquote>
-<dl class="simple">
-<dt>else:</dt><dd><p>can_be_inactive = True</p>
-</dd>
-<dt>if bounds_ss_cat is None:</dt><dd><p>n_cats = len(hp_cat.choices)</p>
-</dd>
-<dt>else:</dt><dd><p>n_cats = len(bounds_ss_cat[i])</p>
-</dd>
-<dt>if can_be_inactive:</dt><dd><p>n_cats = n_cats + 1</p>
-</dd>
-</dl>
-<p>model_types[cat_idx] = n_cats
-model_bounds[cat_idx] = (int(n_cats), np.nan)</p>
-</div></blockquote>
-<p># store the dimensions of numerical hyperparameters, UniformFloatHyperparameter and
-# UniformIntegerHyperparameter
-dims_cont_num = []
-idx_cont_num = []
-dims_cont_ord = []
-idx_cont_ord = []
-ord_hps = {}</p>
-<p># deal with ordinary hyperaprameters
-for i, cont_idx in enumerate(activate_dims_cont):</p>
-<blockquote>
-<div><p>param = hps[cont_idx]
-if isinstance(param, OrdinalHyperparameter):</p>
-<blockquote>
-<div><p>parents = config_space.get_parents_of(param.name)
-if len(parents) == 0:</p>
-<blockquote>
-<div><p>can_be_inactive = False</p>
-</div></blockquote>
-<dl class="simple">
-<dt>else:</dt><dd><p>can_be_inactive = True</p>
-</dd>
-<dt>if bounds_ss_cont is None:</dt><dd><p>n_seqs = len(param.sequence)</p>
-</dd>
-<dt>else:</dt><dd><p>n_seqs = bounds_ss_cont[i][1] - bounds_ss_cont[i][0] + 1</p>
-</dd>
-<dt>if can_be_inactive:</dt><dd><p>model_bounds[cont_idx] = (0, int(n_seqs))</p>
-</dd>
-<dt>else:</dt><dd><p>model_bounds[cont_idx] = (0, int(n_seqs) - 1)</p>
-</dd>
-<dt>if bounds_ss_cont is None:</dt><dd><p>lbs[cont_idx] = 0  # in subspace, it should start from 0
-ord_hps[param.name] = (0, int(n_seqs))</p>
-</dd>
-<dt>else:</dt><dd><p>lbs[cont_idx] = bounds_ss_cont[i][0]  # in subspace, it should start from 0
-ord_hps[param.name] = bounds_ss_cont[i]</p>
-</dd>
-</dl>
-<p>dims_cont_ord.append(cont_idx)
-idx_cont_ord.append(i)</p>
-</div></blockquote>
-<dl class="simple">
-<dt>else:</dt><dd><p>dims_cont_num.append(cont_idx)
-idx_cont_num.append(i)</p>
-</dd>
-</dl>
-</div></blockquote>
-<dl class="simple">
-<dt>if bounds_ss_cat is not None:</dt><dd><p>self.bounds_ss_cat = [bounds_ss_cat[act_dims_cat_ss] for act_dims_cat_ss in activate_dims_cat_ss]</p>
-</dd>
-<dt>else:</dt><dd><p>self.bounds_ss_cat = None</p>
-</dd>
-</dl>
-<p>self.bounds_ss_cont = bounds_ss_cont[activate_dims_cont_ss] if bounds_ss_cont is not None else None</p>
-<dl class="simple">
-<dt>if bounds_ss_cont is None:</dt><dd><p>lbs[dims_cont_num] = 0.0
-scales[dims_cont_num] = 1.0</p>
-</dd>
-<dt>else:</dt><dd><p>lbs[dims_cont_num] = bounds_ss_cont[idx_cont_num, 0]
-# rescale numerical hyperparameters to [0., 1.]
-scales[dims_cont_num] = 1.0 / (bounds_ss_cont[idx_cont_num, 1] - bounds_ss_cont[idx_cont_num, 0])</p>
-</dd>
-</dl>
-<p>self.lbs = lbs[activate_dims]
-self.scales = scales[activate_dims]</p>
-<p>self.cs_local = ConfigurationSpace()
-hp_list = []
-idx_cont = 0
-idx_cat = 0</p>
-<p>hps = config_space.get_hyperparameters()</p>
-<dl>
-<dt>for idx in self.activate_dims:</dt><dd><p>param = hps[idx]
-if isinstance(param, CategoricalHyperparameter):</p>
-<blockquote>
-<div><dl class="simple">
-<dt>if bounds_ss_cat is None:</dt><dd><p>hp_new = copy.deepcopy(param)
-idx_cat += 1</p>
-</dd>
-<dt>else:</dt><dd><p>choices = [param.choices[int(choice_idx)] for choice_idx in bounds_ss_cat[idx_cat]]
-# cat_freq_arr = np.array((cats_freq[idx_cat]))
-# weights = cat_freq_arr / np.sum(cat_freq_arr)
-hp_new = CategoricalHyperparameter(param.name, choices=choices)  # , weights=weights)
-idx_cat += 1</p>
-</dd>
-</dl>
-</div></blockquote>
-<dl>
-<dt>elif isinstance(param, OrdinalHyperparameter):</dt><dd><p>param_seq = ord_hps.get(param.name)
-raw_seq = param.sequence
-ord_indices = np.arange(<a href="#id1"><span class="problematic" id="id2">*</span></a>param_seq)
-new_seq = [raw_seq[int(round(idx))] for idx in ord_indices]
-hp_new = OrdinalHyperparameter(param.name, sequence=new_seq)
-idx_cont += 1</p>
-</dd>
-<dt>elif isinstance(param, Constant):</dt><dd><p>hp_new = copy.deepcopy(param)</p>
-</dd>
-<dt>elif isinstance(param, (UniformFloatHyperparameter, UniformIntegerHyperparameter)):</dt><dd><dl>
-<dt>if bounds_ss_cont is None:</dt><dd><p>hp_new = copy.deepcopy(param)
-idx_cont += 1</p>
-</dd>
-<dt>else:</dt><dd><dl>
-<dt>if isinstance(param, UniformFloatHyperparameter):</dt><dd><p>lower = param.lower
-upper = param.upper
-if param.log:</p>
-<blockquote>
-<div><p>lower_log = np.log(lower)
-upper_log = np.log(upper)
-hp_new_lower = np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][0] + lower_log)
-hp_new_upper = np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][1] + lower_log)
-hp_new = UniformFloatHyperparameter(</p>
-<blockquote>
-<div><p>name=param.name,
-lower=max(hp_new_lower, lower),
-upper=min(hp_new_upper, upper),
-log=True,</p>
-</div></blockquote>
-<p>)</p>
-</div></blockquote>
-<dl>
-<dt>else:</dt><dd><p>hp_new_lower = (upper - lower) * bounds_ss_cont[idx_cont][0] + lower
-hp_new_upper = (upper - lower) * bounds_ss_cont[idx_cont][1] + lower
-hp_new = UniformFloatHyperparameter(</p>
-<blockquote>
-<div><p>name=param.name,
-lower=max(hp_new_lower, lower),
-upper=min(hp_new_upper, upper),
-log=False,</p>
-</div></blockquote>
-<p>)</p>
-</dd>
-</dl>
-<p>idx_cont += 1</p>
-</dd>
-<dt>elif isinstance(param, UniformIntegerHyperparameter):</dt><dd><p>lower = param.lower
-upper = param.upper
-if param.log:</p>
-<blockquote>
-<div><p>lower_log = np.log(lower)
-upper_log = np.log(upper)
-hp_new_lower = int(</p>
-<blockquote>
-<div><dl class="simple">
-<dt>math.floor(</dt><dd><p>np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][0] + lower_log)</p>
-</dd>
-</dl>
-<p>)</p>
-</div></blockquote>
-<p>)
-hp_new_upper = int(</p>
-<blockquote>
-<div><p>math.ceil(np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][1] + lower_log))</p>
-</div></blockquote>
-<p>)</p>
-<p>hp_new_lower_log = np.log(hp_new_lower)
-hp_new_upper_log = np.log(hp_new_upper)
-new_scale = (upper_log - lower_log) / (hp_new_upper_log - hp_new_lower_log)
-new_lb = (hp_new_lower_log - lower_log) / (hp_new_upper_log - hp_new_lower_log)</p>
-<p>self.scales[idx] = new_scale
-self.lbs[idx] = new_lb</p>
-<dl class="simple">
-<dt>hp_new = UniformIntegerHyperparameter(</dt><dd><p>name=param.name,
-lower=max(hp_new_lower, lower),
-upper=min(hp_new_upper, upper),
-log=True,</p>
-</dd>
-</dl>
-<p>)</p>
-</div></blockquote>
-<dl>
-<dt>else:</dt><dd><p>hp_new_lower = int(math.floor((upper - lower) * bounds_ss_cont[idx_cont][0])) + lower
-hp_new_upper = int(math.ceil((upper - lower) * bounds_ss_cont[idx_cont][1])) + lower</p>
-<p>new_scale = (upper - lower) / (hp_new_upper - hp_new_lower)
-new_lb = (hp_new_lower - lower) / (hp_new_upper - hp_new_lower)
-self.scales[idx] = new_scale
-self.lbs[idx] = new_lb</p>
-<dl class="simple">
-<dt>hp_new = UniformIntegerHyperparameter(</dt><dd><p>name=param.name,
-lower=max(hp_new_lower, lower),
-upper=min(hp_new_upper, upper),
-log=False,</p>
-</dd>
-</dl>
-<p>)</p>
-</dd>
-</dl>
-<p>idx_cont += 1</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-<dt>else:</dt><dd><p>raise ValueError(f”Unsupported type of Hyperparameter: {type(param)}”)</p>
-</dd>
-</dl>
-<p>hp_list.append(hp_new)</p>
-</dd>
-</dl>
-<p># We only consider plain hyperparameters
-self.cs_local.add_hyperparameters(hp_list)
-forbiddens_ss = []
-forbiddens = config_space.get_forbiddens()
-for forbidden in forbiddens:</p>
-<blockquote>
-<div><p>forbiden_ss = self.fit_forbidden_to_ss(cs_local=self.cs_local, forbidden=forbidden)
-if forbiden_ss is not None:</p>
-<blockquote>
-<div><p>forbiddens_ss.append(forbiden_ss)</p>
-</div></blockquote>
-</div></blockquote>
-<dl class="simple">
-<dt>if len(forbiddens_ss) &gt; 0:</dt><dd><p>self.cs_local.add_forbidden_clauses(forbiddens_ss)</p>
-</dd>
-</dl>
-</dd>
-<dt>model_kwargs = dict(</dt><dd><p>configspace=self.cs_local,
-# types=[model_types[activate_dim] for activate_dim in activate_dims] if model_types is not None else None,
-# bounds=[model_bounds[activate_dim] for activate_dim in activate_dims] if model_bounds is not None
-# else None,
-bounds_cont=np.array([[0, 1.0] for _ in range(len(activate_dims_cont))]),
-bounds_cat=self.bounds_ss_cat,
-seed=self.rng.randint(0, 2**20),</p>
-</dd>
-</dl>
-<p>)</p>
-<dl>
-<dt>if inspect.isclass(model_local):</dt><dd><p>model_local_kwargs_copy = copy.deepcopy(model_local_kwargs)
-if “kernel_kwargs” in model_local_kwargs_copy:</p>
-<blockquote>
-<div><p>kernel_kwargs = model_local_kwargs_copy[“kernel_kwargs”]
-kernel = construct_gp_kernel(kernel_kwargs, activate_dims_cont_ss, activate_dims_cat_ss)
-del model_local_kwargs_copy[“kernel_kwargs”]
-model_local_kwargs_copy[“kernel”] = kernel</p>
-</div></blockquote>
-<dl class="simple">
-<dt>if model_local_kwargs is not None:</dt><dd><p>model_kwargs.update(model_local_kwargs_copy)</p>
-</dd>
-</dl>
-<p>all_arguments = inspect.signature(model_local).parameters.keys()
-if “bounds_cont” not in all_arguments:</p>
-<blockquote>
-<div><p>del model_kwargs[“bounds_cont”]</p>
-</div></blockquote>
-<dl class="simple">
-<dt>if “bounds_cat” not in all_arguments:</dt><dd><p>del model_kwargs[“bounds_cat”]</p>
-</dd>
-</dl>
-<p>model = model_local(<a href="#id3"><span class="problematic" id="id4">**</span></a>model_kwargs)  # type: ignore</p>
-</dd>
-<dt>else:</dt><dd><p>model = model_local</p>
-</dd>
-</dl>
-<p>self.model = model</p>
-<dl>
-<dt>if inspect.isclass(acq_func_local):</dt><dd><p>acq_func_kwargs = {}
-if acq_func_local_kwargs is not None:</p>
-<blockquote>
-<div><p>acq_func_kwargs.update(acq_func_local_kwargs)</p>
-</div></blockquote>
-<p>acquisition_function = acq_func_local(<a href="#id5"><span class="problematic" id="id6">**</span></a>acq_func_kwargs)  # type: ignore</p>
-</dd>
-<dt>else:</dt><dd><p>acquisition_function = acq_func_local</p>
-</dd>
-</dl>
-<p>self.acquisition_function = acquisition_function</p>
-<p>self.incumbent_array = incumbent_array</p>
-<p>self.model_x = np.empty([0, len(activate_dims)])
-self.ss_x = np.empty([0, len(activate_dims)])
-self.model_y = np.empty([0, 1])
-self.ss_y = np.empty([0, 1])</p>
-<dl>
-<dt>if initial_data is not None:</dt><dd><p>X = initial_data[0]
-y = initial_data[1]</p>
-<p>self.add_new_observations(X, y)</p>
-</dd>
-</dl>
-<p>self.config_origin = “subspace”</p>
-</dd>
-</dl>
-<p>&#64;staticmethod
-def fit_forbidden_to_ss(</p>
-<blockquote>
-<div><p>cs_local: ConfigurationSpace, forbidden: AbstractForbiddenComponent</p>
-</div></blockquote>
-<dl>
-<dt>) -&gt; AbstractForbiddenComponent | None:</dt><dd><p>“””
-Fit the forbidden to subspaces. If the target forbidden can be added to subspace, we return a new forbidden
-with exactly the same type of the input forbidden. Otherwise, None is returned.</p>
-<dl class="simple">
-<dt>cs_local: ConfigurationSpace</dt><dd><p>local configuration space of the subspace</p>
-</dd>
-<dt>forbidden: AbstractForbiddenComponent</dt><dd><p>forbidden to check</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>forbidden_ss: AbstractForbiddenComponent | None</dt><dd><p>forbidden in subspaces</p>
-</dd>
-</dl>
-<p>“””
-if isinstance(forbidden, ForbiddenAndConjunction):</p>
-<blockquote>
-<div><p>forbidden_ss_components = []
-for forbid in forbidden.components:</p>
-<blockquote>
-<div><p># If any of the AndConjunction is not supported by the subspace, we simply ignore them
-forbid_ss = LocalSubspace.fit_forbidden_to_ss(cs_local, forbid)
-if forbid_ss is None:</p>
-<blockquote>
-<div><p>return None</p>
-</div></blockquote>
-<p>forbidden_ss_components.append(forbid_ss)</p>
-</div></blockquote>
-<p>return type(forbidden)(<a href="#id7"><span class="problematic" id="id8">*</span></a>forbidden_ss_components)</p>
-</div></blockquote>
-<dl>
-<dt>else:</dt><dd><p>forbidden_hp_name = forbidden.hyperparameter.name
-if forbidden_hp_name not in cs_local:</p>
-<blockquote>
-<div><p>return None</p>
-</div></blockquote>
-<p>hp_ss = cs_local.get_hyperparameter(forbidden_hp_name)</p>
-<dl>
-<dt>def is_value_in_hp(value: Any, hp: Hyperparameter) -&gt; bool:</dt><dd><p>“””Check if the value is in the range of the hp.”””
-if isinstance(hp, NumericalHyperparameter):</p>
-<blockquote>
-<div><p>return hp.lower &lt;= value &lt;= hp.upper</p>
-</div></blockquote>
-<dl class="simple">
-<dt>elif isinstance(hp, OrdinalHyperparameter):</dt><dd><p>return value in hp.sequence</p>
-</dd>
-<dt>elif isinstance(hp, CategoricalHyperparameter):</dt><dd><p>return value in hp.choices</p>
-</dd>
-<dt>else:</dt><dd><p>raise NotImplementedError(“Unsupported type of hyperparameter!”)</p>
-</dd>
-</dl>
-</dd>
-<dt>if isinstance(forbidden, MultipleValueForbiddenClause):</dt><dd><p>forbidden_values = forbidden.values
-for forbidden_value in forbidden_values:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>if not is_value_in_hp(forbidden_value, hp_ss):</dt><dd><p>return None</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>return type(forbidden)(hp_ss, forbidden_values)</p>
-</dd>
-<dt>else:</dt><dd><p>forbidden_value = forbidden.value
-if is_value_in_hp(forbidden_value, hp_ss):</p>
-<blockquote>
-<div><p>return type(forbidden)(hp_ss, forbidden_value)</p>
-</div></blockquote>
-</dd>
-</dl>
-<p>return None</p>
-</dd>
-</dl>
-</dd>
-<dt>def update_model(self, predict_x_best: bool = True, update_incumbent_array: bool = False) -&gt; None:</dt><dd><p>“””
-Update the model and acquisition function parameters</p>
-<dl class="simple">
-<dt>predict_x_best: bool,</dt><dd><p>if the incumbent is acquired by the predicted mean of a surrogate model</p>
-</dd>
-<dt>update_incumbent_array: bool</dt><dd><p>if the incumbent_array of this subspace is replaced with the newly updated incumbent</p>
-</dd>
-</dl>
-<p>“””
-acq_func_kwargs = {“model”: self.model, “num_data”: len(self.ss_x)}</p>
-<dl>
-<dt>if predict_x_best:</dt><dd><dl class="simple">
-<dt>try:</dt><dd><p>mu, _ = self.model.predict(self.ss_x)</p>
-</dd>
-<dt>except Exception as e:</dt><dd><p># Some times it could occur that LGPGA fails to predict the mean value of ss_x because of
-# numerical issues
-logger.warning(f”Fail to predict ss_x due to {e}”)
-mu = self.ss_y</p>
-</dd>
-</dl>
-<p>idx_eta = np.argmin(mu)
-incumbent_array = self.ss_x[idx_eta]
-acq_func_kwargs.update({“incumbent_array”: incumbent_array, “eta”: mu[idx_eta]})</p>
-</dd>
-<dt>else:</dt><dd><p>idx_eta = np.argmin(self.ss_y)
-incumbent_array = self.ss_x[idx_eta]
-acq_func_kwargs.update({“incumbent_array”: incumbent_array, “eta”: self.ss_y[idx_eta]})</p>
-</dd>
-<dt>if update_incumbent_array:</dt><dd><dl class="simple">
-<dt>if self.incumbent_array is None:</dt><dd><p>self.incumbent_array = self.ss_x[idx_eta]</p>
-</dd>
-<dt>else:</dt><dd><p>self.incumbent_array[self.activate_dims] = self.ss_x[idx_eta]</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p>self.acquisition_function.update(<a href="#id9"><span class="problematic" id="id10">**</span></a>acq_func_kwargs)</p>
-</dd>
-<dt>def add_new_observations(self, X: np.ndarray, y: np.ndarray) -&gt; None:</dt><dd><p>“””
-Add new observations to the subspace</p>
-<dl class="simple">
-<dt>X: np.ndarray(N,D),</dt><dd><p>new feature vector of the observations, constructed by the global configuration space</p>
-</dd>
-<dt>y: np.ndarray(N)</dt><dd><p>new performances of the observations</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>indices_in_ss:np.ndarray(N)</dt><dd><p>indices of data that included in subspaces</p>
-</dd>
-</dl>
-<p>“””
-if len(X.shape) == 1:</p>
-<blockquote>
-<div><p>X = X[np.newaxis, :]</p>
-</div></blockquote>
-<dl class="simple">
-<dt>if len(y.shape) == 1:</dt><dd><p>y = y[:, np.newaxis]</p>
-</dd>
-</dl>
-<p>X = X[:, self.activate_dims]</p>
-<dl class="simple">
-<dt>ss_indices = check_subspace_points(</dt><dd><p>X=X,
-cont_dims=self.activate_dims_cont,
-cat_dims=self.activate_dims_cat,
-bounds_cont=self.bounds_ss_cont,
-bounds_cat=self.bounds_ss_cat,</p>
-</dd>
-</dl>
-<p>)</p>
-<p>X = self.normalize_input(X=X)</p>
-<p>self.model_x = np.vstack([self.model_x, X])
-self.model_y = np.vstack([self.model_y, y])</p>
-<p>self.ss_x = np.vstack([self.ss_x, X[ss_indices]])
-self.ss_y = np.vstack([self.ss_y, y[ss_indices]])</p>
-</dd>
-<dt>def update_incumbent_array(self, new_incumbent: np.ndarray) -&gt; None:</dt><dd><p>“””
-Update a new incumbent array. The array is generated from the global configuration</p>
-<dl class="simple">
-<dt>new_incumbent: np.ndarray(D)</dt><dd><p>new incumbent, which correspondences to the global configuration</p>
-</dd>
-</dl>
-<p>“””
-self.incumbent_array = self.normalize_input(X=new_incumbent)</p>
-</dd>
-<dt>def generate_challengers(self, <a href="#id11"><span class="problematic" id="id12">**</span></a>optimizer_kwargs: Any) -&gt; Iterator:</dt><dd><p>“””
-Generate a list of challengers that will be transformed into the global configuration space</p>
-<dl class="simple">
-<dt>optimizer_kwargs: Any</dt><dd><p>additional configurations passed to ‘self._generate_challengers’</p>
-</dd>
-</dl>
-<blockquote>
-<div><p>A list of challengers in the global configuration space</p>
-</div></blockquote>
-<p>“””
-challengers = self._generate_challengers(<a href="#id13"><span class="problematic" id="id14">**</span></a>optimizer_kwargs)
-return ChallengerListLocal(</p>
-<blockquote>
-<div><p>cs_local=self.cs_local,
-cs_global=self.cs_global,
-challengers=challengers,
-config_origin=self.config_origin,
-incumbent_array=self.incumbent_array,</p>
-</div></blockquote>
-<p>)</p>
-</dd>
-</dl>
-<p>&#64;abstractmethod
-def _generate_challengers(self, <a href="#id15"><span class="problematic" id="id16">**</span></a>optimizer_kwargs: Any) -&gt; List[Tuple[float, Configuration]]:</p>
-<blockquote>
-<div><p>“””Generate new challengers list for this subspace”””
-raise NotImplementedError</p>
-</div></blockquote>
-<dl>
-<dt>def normalize_input(self, X: np.ndarray) -&gt; np.ndarray:</dt><dd><p>“””
-Normalize X to fit the local configuration space</p>
-<dl class="simple">
-<dt>X: np.ndarray(N,D)</dt><dd><p>input X, configurations arrays</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>X_normalized: np.ndarray(N,D)</dt><dd><p>normalized input X</p>
-</dd>
-</dl>
-<p>“””
-if not self.new_config:</p>
-<blockquote>
-<div><p>return X</p>
-</div></blockquote>
-<dl class="simple">
-<dt>if len(X.shape) == 1:</dt><dd><p>X = X[np.newaxis, :]</p>
-</dd>
-</dl>
-<p># normalize X
-X_normalized = (X - self.lbs) * self.scales
-if self.bounds_ss_cat is not None:</p>
-<blockquote>
-<div><p># normalize categorical function, for instance, if bounds_subspace[i] is a categorical bound contains
-# elements [1, 3, 5], then we map 1-&gt;0, 3-&gt;1, 5-&gt;2
-for cat_idx, cat_bound in zip(self.activate_dims_cat, self.bounds_ss_cat):</p>
-<blockquote>
-<div><p>X_i = X_normalized[:, cat_idx]
-cond_list = [X_i == cat for cat in cat_bound]
-choice_list = np.arange(len(cat_bound))
-X_i = np.select(cond_list, choice_list)
-X_normalized[:, cat_idx] = X_i</p>
-</div></blockquote>
-</div></blockquote>
-<p>return X_normalized</p>
-</dd>
-</dl>
-</dd>
-<dt>class ChallengerListLocal(Iterator):</dt><dd><dl>
-<dt>def __init__(</dt><dd><p>self,
-cs_local: ConfigurationSpace,
-cs_global: ConfigurationSpace,
-challengers: List[Tuple[float, Configuration]],
-config_origin: str,
-incumbent_array: np.ndarray | None = None,</p>
-</dd>
-<dt>):</dt><dd><p>“””
-A Challenger list to convert the configuration from the local configuration space to the global configuration</p>
-<blockquote>
-<div><p>space</p>
-</div></blockquote>
-<dl class="simple">
-<dt>cs_local: ConfigurationSpace</dt><dd><p>local configuration space</p>
-</dd>
-<dt>cs_global: ConfigurationSpace</dt><dd><p>global configuration space</p>
-</dd>
-<dt>challengers: List[Tuple[float, Configuration]],</dt><dd><p>challenger lists</p>
-</dd>
-<dt>config_origin: str</dt><dd><p>configuration origin</p>
-</dd>
-<dt>incumbent_array: np.ndarray | None = None,</dt><dd><p>global incumbent array, used when cs_local and cs_global have different number of dimensions and we need to
-supplement the missing values.</p>
-</dd>
-</dl>
-<p>“””
-self.cs_local = cs_local
-self.challengers = challengers
-self.cs_global = cs_global
-self._index = 0
-self.config_origin = config_origin
-# In case cs_in and cs_out have different dimensions
-self.expand_dims = len(cs_global.get_hyperparameters()) != len(cs_local.get_hyperparameters())
-self.incumbent_array = incumbent_array</p>
-<dl>
-<dt>if self.expand_dims and self.incumbent_array is None:</dt><dd><dl class="simple">
-<dt>raise ValueError(</dt><dd><p>“Incumbent array must be provided if the global configuration space has more ”
-“hyperparameters then the local configuration space”</p>
-</dd>
-</dl>
-<p>)</p>
-</dd>
-</dl>
-</dd>
-<dt>def __next__(self) -&gt; Configuration:</dt><dd><dl class="simple">
-<dt>if self.challengers is not None and self._index == len(self.challengers):</dt><dd><p>raise StopIteration</p>
-</dd>
-</dl>
-<p>challenger = self.challengers[self._index][1]
-self._index += 1
-value = challenger.get_dictionary()
-if self.expand_dims:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>incumbent_array = Configuration(</dt><dd><p>configuration_space=self.cs_global, vector=self.incumbent_array</p>
-</dd>
-</dl>
-<p>).get_dictionary()
-# we replace the cooresponding value in incumbent array with the value suggested by our optimizer
-for k in value.keys():</p>
-<blockquote>
-<div><p>incumbent_array[k] = value[k]</p>
-</div></blockquote>
-<p>config = Configuration(configuration_space=self.cs_global, values=incumbent_array)</p>
-</div></blockquote>
-<dl class="simple">
-<dt>else:</dt><dd><p>config = Configuration(configuration_space=self.cs_global, values=value)</p>
-</dd>
-<dt>if self.config_origin is not None:</dt><dd><p>config.origin = self.config_origin</p>
-</dd>
-<dt>else:</dt><dd><p>config.origin = challenger.origin</p>
-</dd>
-</dl>
-<p>return config</p>
-</dd>
-<dt>def __len__(self) -&gt; int:</dt><dd><dl class="simple">
-<dt>if self.challengers is None:</dt><dd><p>self.challengers = []</p>
-</dd>
-</dl>
-<p>return len(self.challengers) - self._index</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Modules</p>
+<section id="interfaces">
+<h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="modules">
+<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this heading">¶</a></h2>
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="smac.utils.subspaces.boing_subspace.html#module-smac.utils.subspaces.boing_subspace" title="smac.utils.subspaces.boing_subspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.utils.subspaces.boing_subspace</span></code></a></p></td>
-<td><p>from __future__ import annotations</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="smac.utils.subspaces.turbo_subspace.html#module-smac.utils.subspaces.turbo_subspace" title="smac.utils.subspaces.turbo_subspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.utils.subspaces.turbo_subspace</span></code></a></p></td>
-<td><p>from __future__ import annotations</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
+</section>
 </section>
 
 

@@ -13,7 +13,9 @@ smac.model.gaussian\_process.priors.tophat\_prior
 
    
    
-   .. rubric:: Classes
+   
+   Classes
+   ^^^^^^^
 
    .. autosummary::
    
@@ -25,6 +27,12 @@ smac.model.gaussian\_process.priors.tophat\_prior
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

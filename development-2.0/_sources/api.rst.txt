@@ -2,6 +2,7 @@ API References
 ==============
 
 .. autosummary::
+   :template: module.rst
    :toctree: api
    :recursive:
 

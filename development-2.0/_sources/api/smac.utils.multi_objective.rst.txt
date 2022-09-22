@@ -9,7 +9,9 @@ smac.utils.multi\_objective
 
    
    
-   .. rubric:: Functions
+
+   Functions
+   ^^^^^^^^^
 
    .. autosummary::
    
@@ -24,6 +26,12 @@ smac.utils.multi\_objective
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

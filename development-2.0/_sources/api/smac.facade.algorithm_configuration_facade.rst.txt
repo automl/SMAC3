@@ -13,7 +13,9 @@ smac.facade.algorithm\_configuration\_facade
 
    
    
-   .. rubric:: Classes
+   
+   Classes
+   ^^^^^^^
 
    .. autosummary::
    
@@ -24,6 +26,12 @@ smac.facade.algorithm\_configuration\_facade
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

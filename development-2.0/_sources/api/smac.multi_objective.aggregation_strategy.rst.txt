@@ -13,7 +13,9 @@ smac.multi\_objective.aggregation\_strategy
 
    
    
-   .. rubric:: Classes
+   
+   Classes
+   ^^^^^^^
 
    .. autosummary::
    
@@ -24,6 +26,12 @@ smac.multi\_objective.aggregation\_strategy
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

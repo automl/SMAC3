@@ -13,7 +13,9 @@ smac.model.gaussian\_process.mcmc\_gaussian\_process
 
    
    
-   .. rubric:: Classes
+   
+   Classes
+   ^^^^^^^
 
    .. autosummary::
    
@@ -24,6 +26,12 @@ smac.model.gaussian\_process.mcmc\_gaussian\_process
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

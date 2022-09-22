@@ -13,7 +13,9 @@ smac.random\_design.modulus\_design
 
    
    
-   .. rubric:: Classes
+   
+   Classes
+   ^^^^^^^
 
    .. autosummary::
    
@@ -25,6 +27,12 @@ smac.random\_design.modulus\_design
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

@@ -13,7 +13,9 @@ smac.multi\_objective.abstract\_multi\_objective\_algorithm
 
    
    
-   .. rubric:: Classes
+   
+   Classes
+   ^^^^^^^
 
    .. autosummary::
    
@@ -24,6 +26,12 @@ smac.multi\_objective.abstract\_multi\_objective\_algorithm
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 
