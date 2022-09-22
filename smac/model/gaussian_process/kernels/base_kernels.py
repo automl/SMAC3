@@ -1,6 +1,6 @@
 from __future__ import annotations
-from abc import abstractmethod
 
+from abc import abstractmethod
 from typing import Any, Callable
 
 from inspect import Signature, signature
@@ -8,8 +8,8 @@ from inspect import Signature, signature
 import numpy as np
 import sklearn.gaussian_process.kernels as kernels
 
-from smac.utils.configspace import get_conditional_hyperparameters
 from smac.model.gaussian_process.priors.abstract_prior import AbstractPrior
+from smac.utils.configspace import get_conditional_hyperparameters
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 from typing import Any
+
 import numpy as np
 
+from smac.constants import MAXINT
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.intensification.parallel_scheduling import ParallelScheduler
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
-from smac.constants import MAXINT
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -222,7 +223,9 @@ class SuccessiveHalving(ParallelScheduler):
         return self._instance_as_budget
 
     def _get_intensifier_ranking(self, intensifier: AbstractIntensifier) -> tuple[int, int]:
-        from smac.intensification.successive_halving_worker import SuccessiveHalvingWorker
+        from smac.intensification.successive_halving_worker import (
+            SuccessiveHalvingWorker,
+        )
 
         assert isinstance(intensifier, SuccessiveHalvingWorker)
 
@@ -233,7 +236,9 @@ class SuccessiveHalving(ParallelScheduler):
         return intensifier.stage, len(intensifier._run_tracker)
 
     def _add_new_instance(self, n_workers: int) -> bool:
-        from smac.intensification.successive_halving_worker import SuccessiveHalvingWorker
+        from smac.intensification.successive_halving_worker import (
+            SuccessiveHalvingWorker,
+        )
 
         if len(self._intensifier_instances) >= n_workers:
             return False

@@ -1,14 +1,20 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Iterator, cast, Optional
+from typing import Any, Callable, Iterator, Optional, cast
 
 from collections import Counter
 
 from ConfigSpace import Configuration
+
 from smac.constants import MAXINT
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.intensification.stages import IntensifierStage
-from smac.runhistory import InstanceSeedBudgetKey, TrialInfo, TrialInfoIntent, TrialValue
+from smac.runhistory import (
+    InstanceSeedBudgetKey,
+    TrialInfo,
+    TrialInfoIntent,
+    TrialValue,
+)
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.logging import format_array, get_logger

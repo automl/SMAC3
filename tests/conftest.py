@@ -68,7 +68,6 @@ import signal
 from pathlib import Path
 
 import psutil
-
 import pytest
 from pytest import ExitCode, Item, Session
 

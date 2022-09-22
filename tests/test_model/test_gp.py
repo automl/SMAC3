@@ -1,21 +1,31 @@
 from unittest.mock import patch
-import pytest
 
 import numpy as np
+import pytest
 import scipy.optimize
 import sklearn.datasets
 import sklearn.model_selection
-from ConfigSpace import EqualsCondition, CategoricalHyperparameter, ConfigurationSpace, UniformFloatHyperparameter
-from smac.utils.configspace import convert_configurations_to_array
+from ConfigSpace import (
+    CategoricalHyperparameter,
+    ConfigurationSpace,
+    EqualsCondition,
+    UniformFloatHyperparameter,
+)
+
 from smac.model.gaussian_process.gaussian_process import GaussianProcess
 from smac.model.gaussian_process.priors import HorseshoePrior, LogNormalPrior
+from smac.utils.configspace import convert_configurations_to_array
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
 def get_gp(n_dimensions, seed, noise=1e-3, normalize_y=True) -> GaussianProcess:
-    from smac.model.gaussian_process.kernels import ConstantKernel, MaternKernel, WhiteKernel
+    from smac.model.gaussian_process.kernels import (
+        ConstantKernel,
+        MaternKernel,
+        WhiteKernel,
+    )
 
     cov_amp = ConstantKernel(
         2.0,

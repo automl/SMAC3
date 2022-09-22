@@ -3,9 +3,10 @@ from __future__ import annotations
 from typing import Any, Callable, Iterator
 
 from ConfigSpace import Configuration
+
 from smac.constants import MAXINT
 from smac.intensification.abstract_intensifier import AbstractIntensifier
-from smac.runhistory import TrialInfo, TrialValue, TrialInfoIntent, RunHistory
+from smac.runhistory import RunHistory, TrialInfo, TrialInfoIntent, TrialValue
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 

@@ -1,6 +1,9 @@
 import numpy as np
 
-from smac.random_design.probability_design import ProbabilityRandomDesign, DynamicProbabilityRandomDesign
+from smac.random_design.probability_design import (
+    DynamicProbabilityRandomDesign,
+    ProbabilityRandomDesign,
+)
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from typing import Any
 
 import numpy as np
-from typing import Any
 
 from smac import constants
 from smac.runhistory.encoder.encoder import RunHistoryEncoder

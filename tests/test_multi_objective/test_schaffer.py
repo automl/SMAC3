@@ -1,10 +1,13 @@
-import pytest
-
 import numpy as np
-from ConfigSpace import Float
+import pytest
+from ConfigSpace import ConfigurationSpace, Float
 
-from smac import AlgorithmConfigurationFacade, BlackBoxFacade, HyperparameterFacade, RandomFacade
-from ConfigSpace import ConfigurationSpace
+from smac import (
+    AlgorithmConfigurationFacade,
+    BlackBoxFacade,
+    HyperparameterFacade,
+    RandomFacade,
+)
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.multi_objective.parego import ParEGO
 

@@ -1,14 +1,17 @@
 from __future__ import annotations
 
-from smac.acquisition.functions.expected_improvement import EI
-from smac.acquisition.maximizers.local_and_random_search import LocalAndSortedRandomSearch
-from smac.random_design.probability_design import ProbabilityRandomDesign
 from ConfigSpace import Configuration
+
+from smac.acquisition.functions.expected_improvement import EI
+from smac.acquisition.maximizers.local_and_random_search import (
+    LocalAndSortedRandomSearch,
+)
 from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.model.random_forest.random_forest import RandomForest
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
+from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger

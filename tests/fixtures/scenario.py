@@ -1,7 +1,9 @@
 from typing import Callable
-from ConfigSpace import ConfigurationSpace
-from smac import Scenario
+
 import pytest
+from ConfigSpace import ConfigurationSpace
+
+from smac import Scenario
 
 
 @pytest.fixture

@@ -6,10 +6,10 @@ import time
 from pathlib import Path
 
 import dask
+from ConfigSpace import Configuration
 from dask.distributed import Client, Future, wait
 
-from ConfigSpace import Configuration
-from smac.runhistory import TrialInfo, TrialValue, StatusType
+from smac.runhistory import StatusType, TrialInfo, TrialValue
 from smac.runner.abstract_runner import AbstractRunner
 from smac.utils.logging import get_logger
 

@@ -1,11 +1,11 @@
 from __future__ import annotations
 
+import warnings
+
 import numpy as np
 
-import warnings
 from smac import constants
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
-
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"

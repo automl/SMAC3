@@ -1,5 +1,6 @@
-import pytest
 import numpy as np
+import pytest
+
 from smac.model.abstract_model import AbstractModel
 from smac.utils.configspace import convert_configurations_to_array
 

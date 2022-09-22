@@ -1,30 +1,29 @@
 import pytest
 
 from smac import (
-    BlackBoxFacade,
-    Scenario,
     AlgorithmConfigurationFacade,
-    HyperparameterFacade,
-    RandomFacade,
-    MultiFidelityFacade,
+    BlackBoxFacade,
     HyperbandFacade,
+    HyperparameterFacade,
+    MultiFidelityFacade,
+    RandomFacade,
+    Scenario,
 )
-
-
-from smac.callback import Callback
-from smac.initial_design import LatinHypercubeInitialDesign
-from smac.acquisition.maximizers.abstract_acqusition_maximizer import AbstractAcquisitionMaximizer
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.random_design.abstract_random_design import AbstractRandomDesign
+from smac.acquisition.maximizers.abstract_acqusition_maximizer import (
+    AbstractAcquisitionMaximizer,
+)
+from smac.callback import Callback
+from smac.initial_design import LatinHypercubeInitialDesign
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.model.abstract_model import AbstractModel
-
 from smac.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
 )
+from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.runhistory.encoder.abstract_encoder import AbstractRunHistoryEncoder
 
 

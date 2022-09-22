@@ -1,8 +1,8 @@
 import copy
-import pytest
 import unittest
 
 import numpy as np
+import pytest
 from ConfigSpace import ConfigurationSpace
 from ConfigSpace.conditions import GreaterThanCondition
 from ConfigSpace.hyperparameters import (
@@ -11,7 +11,11 @@ from ConfigSpace.hyperparameters import (
 )
 
 from smac.model.gaussian_process.gaussian_process import GaussianProcess
-from smac.model.gaussian_process.kernels import ConstantKernel, MaternKernel, WhiteKernel
+from smac.model.gaussian_process.kernels import (
+    ConstantKernel,
+    MaternKernel,
+    WhiteKernel,
+)
 from smac.model.utils import get_types
 from smac.utils.subspaces.turbo_subspace import TuRBOSubSpace
 

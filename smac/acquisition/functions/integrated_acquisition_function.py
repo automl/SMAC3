@@ -1,13 +1,15 @@
 from __future__ import annotations
 
 from typing import Any
+
 import copy
+
 import numpy as np
 
-from smac.model.abstract_model import AbstractModel
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
+from smac.model.abstract_model import AbstractModel
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"

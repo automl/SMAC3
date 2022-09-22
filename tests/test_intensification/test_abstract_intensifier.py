@@ -1,6 +1,5 @@
 import pytest
 
-
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.runner.abstract_runner import StatusType
 

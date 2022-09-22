@@ -5,8 +5,8 @@ from typing import Optional
 import os
 import pickle
 import tempfile
-import pytest
 
+import pytest
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 

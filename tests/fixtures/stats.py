@@ -1,7 +1,9 @@
 from typing import Callable
+
+import pytest
+
 from smac import Scenario
 from smac.stats import Stats
-import pytest
 
 
 @pytest.fixture

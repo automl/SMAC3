@@ -5,12 +5,11 @@ from typing import Any, Mapping
 
 import numpy as np
 
-from smac.utils.configspace import convert_configurations_to_array
-
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.runhistory.runhistory import RunHistory, TrialKey, TrialValue
 from smac.runner.abstract_runner import StatusType
 from smac.scenario import Scenario
+from smac.utils.configspace import convert_configurations_to_array
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"

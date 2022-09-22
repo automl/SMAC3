@@ -1,6 +1,5 @@
-import pytest
-
 import numpy as np
+import pytest
 
 from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 from smac.intensification.intensification import Intensifier, IntensifierStage

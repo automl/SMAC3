@@ -8,12 +8,14 @@ from copy import deepcopy
 
 import emcee
 import numpy as np
+from ConfigSpace import ConfigurationSpace
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Kernel
 
-from ConfigSpace import ConfigurationSpace
+from smac.model.gaussian_process.abstract_gaussian_process import (
+    AbstractGaussianProcess,
+)
 from smac.model.gaussian_process.gaussian_process import GaussianProcess
-from smac.model.gaussian_process.abstract_gaussian_process import AbstractGaussianProcess
 from smac.model.gaussian_process.priors.abstract_prior import AbstractPrior
 
 __copyright__ = "Copyright 2022, automl.org"

@@ -2,8 +2,8 @@ import unittest
 from unittest import mock
 
 import numpy as np
-
 from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter
+
 from smac.model.multi_objective_model import MultiObjectiveModel
 from smac.model.random_forest.random_forest import RandomForest
 

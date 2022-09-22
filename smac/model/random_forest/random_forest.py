@@ -3,11 +3,11 @@ from __future__ import annotations
 from typing import Any
 
 import numpy as np
+from ConfigSpace import ConfigurationSpace
 from pyrfr import regression
 from pyrfr.regression import binary_rss_forest as BinaryForest
 from pyrfr.regression import default_data_container as DataContainer
 
-from ConfigSpace import ConfigurationSpace
 from smac.constants import N_TREES, VERY_SMALL_NUMBER
 from smac.model.random_forest import AbstractRandomForest
 

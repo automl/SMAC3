@@ -1,18 +1,17 @@
 import time
-import pytest
 from unittest import mock
 
 import numpy as np
+import pytest
 
 from smac.intensification.hyperband import Hyperband
 from smac.intensification.hyperband_worker import HyperbandWorker
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.intensification.successive_halving_worker import SuccessiveHalvingWorker
-from smac.runhistory import RunHistory, TrialInfo, TrialValue, TrialInfoIntent
+from smac.runhistory import RunHistory, TrialInfo, TrialInfoIntent, TrialValue
 from smac.runner.abstract_runner import StatusType
 from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.stats import Stats
-
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

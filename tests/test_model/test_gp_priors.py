@@ -1,7 +1,7 @@
-import pytest
 from functools import partial
 
 import numpy as np
+import pytest
 import scipy.optimize
 
 from smac.constants import VERY_SMALL_NUMBER

@@ -4,10 +4,10 @@ from abc import abstractmethod
 from typing import Any
 
 import numpy as np
-
 from ConfigSpace import Configuration
-from smac.utils.configspace import convert_configurations_to_array
+
 from smac.model.abstract_model import AbstractModel
+from smac.utils.configspace import convert_configurations_to_array
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"

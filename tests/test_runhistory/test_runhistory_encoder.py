@@ -1,16 +1,17 @@
-import pytest
 import numpy as np
-from smac.runhistory.encoder.encoder import RunHistoryEncoder
-from smac.runner.abstract_runner import StatusType
+import pytest
+
+from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.runhistory.encoder import (
-    RunHistoryLogEncoder,
     RunHistoryEIPSEncoder,
     RunHistoryInverseScaledEncoder,
+    RunHistoryLogEncoder,
     RunHistoryLogScaledEncoder,
     RunHistoryScaledEncoder,
     RunHistorySqrtScaledEncoder,
 )
-from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
+from smac.runhistory.encoder.encoder import RunHistoryEncoder
+from smac.runner.abstract_runner import StatusType
 
 
 @pytest.fixture

@@ -1,13 +1,14 @@
-import pytest
-
 import numpy as np
+import pytest
 from ConfigSpace import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from gpytorch.kernels import MaternKernel, ScaleKernel
 
-from smac.model.gaussian_process.gpytorch_gaussian_process import GloballyAugmentedLocalGaussianProcess
-from smac.model.utils import get_types
 from smac.acquisition import LocalAndSortedRandomSearch
+from smac.model.gaussian_process.gpytorch_gaussian_process import (
+    GloballyAugmentedLocalGaussianProcess,
+)
+from smac.model.utils import get_types
 from smac.utils.subspaces import ChallengerListLocal
 from smac.utils.subspaces.boing_subspace import BOinGSubspace
 

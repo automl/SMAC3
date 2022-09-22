@@ -1,5 +1,5 @@
 import pytest
-from ConfigSpace import ConfigurationSpace, Float, Configuration
+from ConfigSpace import Configuration, ConfigurationSpace, Float
 
 
 class Rosenbrock2D:

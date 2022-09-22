@@ -1,10 +1,11 @@
 from unittest.mock import patch
-import pytest
+
 import numpy as np
+import pytest
 import sklearn.datasets
 import sklearn.model_selection
-
 from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter
+
 from smac.model.gaussian_process.mcmc_gaussian_process import MCMCGaussianProcess
 from smac.model.gaussian_process.priors import HorseshoePrior, LogNormalPrior
 
@@ -13,7 +14,11 @@ __license__ = "3-clause BSD"
 
 
 def get_gp(n_dimensions, seed, noise=1e-3, normalize_y=True, average_samples=False, n_iter=50):
-    from smac.model.gaussian_process.kernels import ConstantKernel, MaternKernel, WhiteKernel
+    from smac.model.gaussian_process.kernels import (
+        ConstantKernel,
+        MaternKernel,
+        WhiteKernel,
+    )
 
     cov_amp = ConstantKernel(
         2.0,

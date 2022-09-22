@@ -5,8 +5,8 @@ from typing import Callable
 import time
 
 import pytest
-
 from ConfigSpace import Configuration, ConfigurationSpace
+
 from smac.runhistory import TrialInfo
 from smac.runner.abstract_runner import StatusType
 from smac.runner.target_function_runner import TargetFunctionRunner

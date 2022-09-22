@@ -24,8 +24,8 @@ import warnings
 
 import numpy as np
 from ConfigSpace import (
-    Configuration,
     Categorical,
+    Configuration,
     ConfigurationSpace,
     EqualsCondition,
     Float,

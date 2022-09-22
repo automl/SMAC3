@@ -1,13 +1,22 @@
 from __future__ import annotations
 
+from typing import Any
+
 import os
 import unittest
 import unittest.mock
-import pytest
-from typing import Any
 
 import numpy as np
-from ConfigSpace import ConfigurationSpace, Configuration, Integer, Categorical, Float, EqualsCondition, InCondition
+import pytest
+from ConfigSpace import (
+    Categorical,
+    Configuration,
+    ConfigurationSpace,
+    EqualsCondition,
+    Float,
+    InCondition,
+    Integer,
+)
 from ConfigSpace.hyperparameters import (
     BetaIntegerHyperparameter,
     CategoricalHyperparameter,
@@ -15,19 +24,18 @@ from ConfigSpace.hyperparameters import (
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
-from smac.model.random_forest.random_forest import RandomForest
+from ConfigSpace.read_and_write import pcs
 from scipy.spatial.distance import euclidean
 
-from ConfigSpace import ConfigurationSpace
-from ConfigSpace.read_and_write import pcs
+from smac.acquisition.functions import EI
 from smac.acquisition.maximizers import (
+    DifferentialEvolution,
     LocalAndSortedPriorRandomSearch,
+    LocalAndSortedRandomSearch,
     LocalSearch,
     RandomSearch,
-    LocalAndSortedRandomSearch,
-    DifferentialEvolution,
 )
-from smac.acquisition.functions import EI
+from smac.model.random_forest.random_forest import RandomForest
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.abstract_runner import StatusType
 

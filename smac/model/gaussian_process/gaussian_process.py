@@ -1,17 +1,19 @@
 from __future__ import annotations
 
-from typing import Any, TypeVar, cast, Optional
+from typing import Any, Optional, TypeVar, cast
 
 import logging
 
 import numpy as np
+from ConfigSpace import ConfigurationSpace
 from scipy import optimize
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Kernel
 
-from ConfigSpace import ConfigurationSpace
 from smac.constants import VERY_SMALL_NUMBER
-from smac.model.gaussian_process.abstract_gaussian_process import AbstractGaussianProcess
+from smac.model.gaussian_process.abstract_gaussian_process import (
+    AbstractGaussianProcess,
+)
 from smac.model.gaussian_process.priors.abstract_prior import AbstractPrior
 
 __copyright__ = "Copyright 2022, automl.org"

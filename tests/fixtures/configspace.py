@@ -1,6 +1,12 @@
-from ConfigSpace import ConfigurationSpace, Integer, Categorical, Float, EqualsCondition, InCondition
-
 import pytest
+from ConfigSpace import (
+    Categorical,
+    ConfigurationSpace,
+    EqualsCondition,
+    Float,
+    InCondition,
+    Integer,
+)
 
 
 @pytest.fixture

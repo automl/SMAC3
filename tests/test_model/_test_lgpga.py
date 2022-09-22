@@ -15,7 +15,9 @@ from smac.model.gaussian_process.augmented_local_gaussian_process import (
     AugmentedLocalGaussianProcess,
     GloballyAugmentedLocalGaussianProcess,
 )
-from smac.model.gaussian_process.gpytorch_gaussian_process import ExactGaussianProcessModel
+from smac.model.gaussian_process.gpytorch_gaussian_process import (
+    ExactGaussianProcessModel,
+)
 
 from ._test_boing_kernel import generate_kernel, generate_test_data
 from ._test_gp_gpytorch import TestGPGPyTorch

@@ -2,11 +2,11 @@ import unittest
 
 import numpy as np
 
-from smac.scenario import Scenario
 from smac.facade.blackbox_facade import BlackBoxFacade
 from smac.main.turbo import TuRBOSMBO
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.abstract_runner import StatusType
+from smac.scenario import Scenario
 from smac.utils import _test_helpers
 
 

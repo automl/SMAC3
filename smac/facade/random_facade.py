@@ -1,16 +1,19 @@
 from __future__ import annotations
 
 import numpy as np
-from smac.acquisition.maximizers.random_search import RandomSearch
-from smac.random_design import AbstractRandomDesign
 from ConfigSpace import Configuration
-from smac.acquisition.functions.abstract_acquisition_function import AbstractAcquisitionFunction
+
+from smac.acquisition.functions.abstract_acquisition_function import (
+    AbstractAcquisitionFunction,
+)
+from smac.acquisition.maximizers.random_search import RandomSearch
 from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.model.random_model import RandomModel
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
+from smac.random_design import AbstractRandomDesign
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.scenario import Scenario
 

@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from abc import abstractmethod
 
-import smac
-from smac.runhistory import TrialInfo, TrialValue, TrialInfoIntent
 from ConfigSpace import Configuration
+
+import smac
+from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

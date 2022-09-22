@@ -1,10 +1,8 @@
+import numpy as np
 import pytest
 
-import numpy as np
-
-from smac.runhistory import TrialInfoIntent
 from smac.intensification.simple_intensifier import SimpleIntensifier
-from smac.runhistory import TrialInfo, TrialValue
+from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
 from smac.runner.abstract_runner import StatusType
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

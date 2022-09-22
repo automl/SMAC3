@@ -2,23 +2,32 @@ from __future__ import annotations
 
 import numpy as np
 import sklearn.gaussian_process.kernels as kernels
+from ConfigSpace import Configuration
 
 from smac.acquisition.functions.expected_improvement import EI
-from smac.acquisition.maximizers.local_and_random_search import LocalAndSortedRandomSearch
-from smac.random_design.probability_design import ProbabilityRandomDesign
-from ConfigSpace import Configuration
+from smac.acquisition.maximizers.local_and_random_search import (
+    LocalAndSortedRandomSearch,
+)
 from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.intensification.intensification import Intensifier
+from smac.model.gaussian_process.abstract_gaussian_process import (
+    AbstractGaussianProcess,
+)
 from smac.model.gaussian_process.gaussian_process import GaussianProcess
-from smac.model.gaussian_process.abstract_gaussian_process import AbstractGaussianProcess
-from smac.model.gaussian_process.kernels import ConstantKernel, HammingKernel, MaternKernel, WhiteKernel
+from smac.model.gaussian_process.kernels import (
+    ConstantKernel,
+    HammingKernel,
+    MaternKernel,
+    WhiteKernel,
+)
 from smac.model.gaussian_process.mcmc_gaussian_process import MCMCGaussianProcess
 from smac.model.gaussian_process.priors import HorseshoePrior, LogNormalPrior
-from smac.utils.configspace import get_types
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
+from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.scenario import Scenario
+from smac.utils.configspace import get_types
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

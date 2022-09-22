@@ -1,9 +1,7 @@
 import pytest
 
-
 from smac.initial_design import AbstractInitialDesign
 from smac.initial_design.default_design import DefaultInitialDesign
-
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

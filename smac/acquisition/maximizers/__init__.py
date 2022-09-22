@@ -1,4 +1,6 @@
-from smac.acquisition.maximizers.abstract_acqusition_maximizer import AbstractAcquisitionMaximizer
+from smac.acquisition.maximizers.abstract_acqusition_maximizer import (
+    AbstractAcquisitionMaximizer,
+)
 from smac.acquisition.maximizers.differential_evolution import DifferentialEvolution
 from smac.acquisition.maximizers.local_and_random_search import (
     LocalAndSortedPriorRandomSearch,

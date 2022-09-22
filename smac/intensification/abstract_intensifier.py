@@ -1,18 +1,18 @@
 from __future__ import annotations
-from abc import abstractmethod
 
+from abc import abstractmethod
 from typing import Any, Callable, Iterator, Optional
 
 import time
 
 import numpy as np
-
 from ConfigSpace import Configuration
+
 from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
-from smac.utils.logging import format_array, get_logger
 from smac.stats import Stats
+from smac.utils.logging import format_array, get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

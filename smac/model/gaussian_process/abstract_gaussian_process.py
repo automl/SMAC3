@@ -1,17 +1,17 @@
 from __future__ import annotations
+
 from abc import abstractmethod
 from typing import Any
 
 import numpy as np
 import sklearn.gaussian_process
+from ConfigSpace import ConfigurationSpace
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Kernel, KernelOperator
 
-from ConfigSpace import ConfigurationSpace
 from smac.model.abstract_model import AbstractModel
 from smac.model.gaussian_process.priors.abstract_prior import AbstractPrior
-from smac.model.gaussian_process.priors.tophat_prior import TophatPrior
-from smac.model.gaussian_process.priors.tophat_prior import SoftTopHatPrior
+from smac.model.gaussian_process.priors.tophat_prior import SoftTopHatPrior, TophatPrior
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

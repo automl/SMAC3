@@ -1,6 +1,6 @@
 from smac.model.gaussian_process.kernels.base_kernels import (
-    ConstantKernel,
     AbstractKernel,
+    ConstantKernel,
     ProductKernel,
     SumKernel,
 )

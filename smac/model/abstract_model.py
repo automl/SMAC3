@@ -1,20 +1,20 @@
 from __future__ import annotations
-from abc import abstractmethod
 
+from abc import abstractmethod
 from typing import Any, TypeVar
 
 import copy
 import warnings
 
 import numpy as np
+from ConfigSpace import ConfigurationSpace
 from sklearn.decomposition import PCA
 from sklearn.exceptions import NotFittedError
 from sklearn.preprocessing import MinMaxScaler
 
-from ConfigSpace import ConfigurationSpace
 from smac.constants import VERY_SMALL_NUMBER
-from smac.utils.logging import get_logger
 from smac.utils.configspace import get_types
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

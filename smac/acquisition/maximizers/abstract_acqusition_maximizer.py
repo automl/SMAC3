@@ -1,17 +1,17 @@
 from __future__ import annotations
+
 from abc import abstractmethod
 from typing import Any, Iterator
 
-
 import numpy as np
+from ConfigSpace import Configuration, ConfigurationSpace
 
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.random_design.abstract_random_design import AbstractRandomDesign
-from ConfigSpace import Configuration, ConfigurationSpace
-from smac.utils.logging import get_logger
 from smac.acquisition.maximizers.helpers import ChallengerList
+from smac.random_design.abstract_random_design import AbstractRandomDesign
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

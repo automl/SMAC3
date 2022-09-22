@@ -1,8 +1,10 @@
 from __future__ import annotations
 
-
-from smac.acquisition.maximizers.abstract_acqusition_maximizer import AbstractAcquisitionMaximizer
 from ConfigSpace import Configuration
+
+from smac.acquisition.maximizers.abstract_acqusition_maximizer import (
+    AbstractAcquisitionMaximizer,
+)
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"

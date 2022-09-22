@@ -5,7 +5,7 @@ from smac.runhistory.dataclasses import (
     TrialKey,
     TrialValue,
 )
-from smac.runhistory.enumerations import DataOrigin, TrialInfoIntent, StatusType
+from smac.runhistory.enumerations import DataOrigin, StatusType, TrialInfoIntent
 from smac.runhistory.runhistory import RunHistory
 
 __all__ = [

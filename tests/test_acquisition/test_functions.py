@@ -1,6 +1,7 @@
+from typing import Any
+
 import numpy as np
 import pytest
-from typing import Any
 
 from smac.acquisition.functions import (
     EI,

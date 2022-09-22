@@ -1,11 +1,9 @@
 from __future__ import annotations
+
 from functools import partial
 
 import numpy as np
-
-from ConfigSpace import Configuration
-from ConfigSpace.util import get_one_exchange_neighbourhood
-from ConfigSpace import ConfigurationSpace
+from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import (
     BetaFloatHyperparameter,
     BetaIntegerHyperparameter,
@@ -17,6 +15,7 @@ from ConfigSpace.hyperparameters import (
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
+from ConfigSpace.util import get_one_exchange_neighbourhood
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

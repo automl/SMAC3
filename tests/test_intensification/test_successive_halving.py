@@ -1,13 +1,13 @@
 import time
-import pytest
 from unittest import mock
 
 import numpy as np
-
+import pytest
 from ConfigSpace import Configuration
+
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.intensification.successive_halving_worker import SuccessiveHalvingWorker
-from smac.runhistory import RunHistory, TrialInfo, TrialValue, TrialInfoIntent
+from smac.runhistory import RunHistory, TrialInfo, TrialInfoIntent, TrialValue
 from smac.runner.abstract_runner import StatusType
 from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.stats import Stats

@@ -6,20 +6,24 @@ from typing import Any, Callable, Iterator
 from pathlib import Path
 
 import joblib
+from ConfigSpace import Configuration
 
 import smac
-from smac.acquisition.maximizers.abstract_acqusition_maximizer import AbstractAcquisitionMaximizer
-from smac.acquisition.functions.abstract_acquisition_function import AbstractAcquisitionFunction
+from smac.acquisition.functions.abstract_acquisition_function import (
+    AbstractAcquisitionFunction,
+)
+from smac.acquisition.maximizers.abstract_acqusition_maximizer import (
+    AbstractAcquisitionMaximizer,
+)
 from smac.callback import Callback
-from smac.random_design.abstract_random_design import AbstractRandomDesign
-from ConfigSpace import Configuration
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier
+from smac.main import SMBO
 from smac.model.abstract_model import AbstractModel
-
 from smac.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
 )
+from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.runhistory.dataclasses import TrialInfo, TrialValue
 from smac.runhistory.encoder.abstract_encoder import AbstractRunHistoryEncoder
 from smac.runhistory.enumerations import TrialInfoIntent
@@ -28,9 +32,8 @@ from smac.runner.abstract_runner import AbstractRunner
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.scenario import Scenario
-from smac.main import SMBO
-from smac.utils.logging import get_logger, setup_logging
 from smac.stats import Stats
+from smac.utils.logging import get_logger, setup_logging
 
 logger = get_logger(__name__)
 

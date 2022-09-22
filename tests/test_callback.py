@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import pytest
+from ConfigSpace import Categorical, Configuration, ConfigurationSpace, Float, Integer
+
 import smac
 from smac import HyperparameterFacade, Scenario
-from smac.intensification.intensification import Intensifier
-from ConfigSpace import Configuration, ConfigurationSpace, Integer, Float, Categorical
 from smac.callback import Callback
 from smac.initial_design import DefaultInitialDesign
-from smac.runhistory import TrialInfo, TrialValue, TrialInfoIntent
+from smac.intensification.intensification import Intensifier
+from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
 
 
 class CustomCallback(Callback):

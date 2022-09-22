@@ -1,10 +1,13 @@
 from __future__ import annotations
+
 from typing import Any
 
 import numpy as np
 from scipy.stats import norm
 
-from smac.acquisition.functions.abstract_acquisition_function import AbstractAcquisitionFunction
+from smac.acquisition.functions.abstract_acquisition_function import (
+    AbstractAcquisitionFunction,
+)
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"

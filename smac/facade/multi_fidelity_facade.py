@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from ConfigSpace import Configuration
+
 from smac.facade.hyperparameter_facade import HyperparameterFacade
 from smac.initial_design.random_design import RandomInitialDesign
 from smac.intensification.hyperband import Hyperband

@@ -8,13 +8,12 @@ import time
 import traceback
 
 import numpy as np
+from ConfigSpace import Configuration
 from pynisher import MemoryLimitException, WallTimeoutException, limit
 
-from ConfigSpace import Configuration
-from smac.runner.abstract_runner import StatusType
-from smac.runner.abstract_runner import AbstractRunner
-from smac.utils.logging import get_logger
 from smac.runhistory.dataclasses import TrialInfo, TrialValue
+from smac.runner.abstract_runner import AbstractRunner, StatusType
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

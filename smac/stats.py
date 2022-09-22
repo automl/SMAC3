@@ -1,12 +1,13 @@
 from __future__ import annotations
+
 import dataclasses
 import json
 import time
 
 import numpy as np
 from ConfigSpace.configuration_space import Configuration
-from smac.runhistory.dataclasses import TrajectoryItem
 
+from smac.runhistory.dataclasses import TrajectoryItem
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 

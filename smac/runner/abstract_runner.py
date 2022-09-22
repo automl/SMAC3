@@ -7,17 +7,17 @@ __license__ = "3-clause BSD"
 from abc import ABC, abstractmethod
 from typing import Any, Callable, Iterator
 
+import inspect
 import time
 import traceback
-import inspect
 
 import numpy as np
-
-from smac.scenario import Scenario
 from ConfigSpace import Configuration
-from smac.runhistory import TrialInfo, TrialValue, StatusType
-from smac.utils.logging import get_logger
+
+from smac.runhistory import StatusType, TrialInfo, TrialValue
+from smac.scenario import Scenario
 from smac.stats import Stats
+from smac.utils.logging import get_logger
 
 logger = get_logger(__name__)
 

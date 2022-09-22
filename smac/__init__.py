@@ -27,10 +27,10 @@ try:
     from smac.facade import (
         AlgorithmConfigurationFacade,
         BlackBoxFacade,
+        HyperbandFacade,
         HyperparameterFacade,
         MultiFidelityFacade,
         RandomFacade,
-        HyperbandFacade,
     )
     from smac.runhistory.runhistory import RunHistory
     from smac.scenario import Scenario

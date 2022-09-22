@@ -5,6 +5,7 @@ from typing import Any, Callable, Iterator
 import os
 
 from ConfigSpace import Configuration
+
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
 from smac.runhistory.runhistory import RunHistory

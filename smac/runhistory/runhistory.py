@@ -1,15 +1,14 @@
 from __future__ import annotations
-from pathlib import Path
 
 from typing import Any, Iterable, Iterator, Mapping, cast
 
 import json
 from collections import OrderedDict
+from pathlib import Path
 
 import numpy as np
+from ConfigSpace import Configuration, ConfigurationSpace
 
-from ConfigSpace import ConfigurationSpace, Configuration
-from smac.utils.multi_objective import normalize_costs
 from smac.runhistory.dataclasses import (
     InstanceSeedBudgetKey,
     InstanceSeedKey,
@@ -18,6 +17,7 @@ from smac.runhistory.dataclasses import (
 )
 from smac.runhistory.enumerations import DataOrigin, StatusType
 from smac.utils.logging import get_logger
+from smac.utils.multi_objective import normalize_costs
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

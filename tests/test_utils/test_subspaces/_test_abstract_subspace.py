@@ -1,7 +1,7 @@
-import pytest
 import unittest
 
 import numpy as np
+import pytest
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.forbidden import (
     ForbiddenAndConjunction,

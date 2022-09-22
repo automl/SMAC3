@@ -6,12 +6,17 @@ import itertools
 import time
 
 import numpy as np
-
-from smac.acquisition.maximizers.abstract_acqusition_maximizer import AbstractAcquisitionMaximizer
-from smac.acquisition.functions import AbstractAcquisitionFunction
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.exceptions import ForbiddenValueError
-from smac.utils.configspace import get_one_exchange_neighbourhood, convert_configurations_to_array
+
+from smac.acquisition.functions import AbstractAcquisitionFunction
+from smac.acquisition.maximizers.abstract_acqusition_maximizer import (
+    AbstractAcquisitionMaximizer,
+)
+from smac.utils.configspace import (
+    convert_configurations_to_array,
+    get_one_exchange_neighbourhood,
+)
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"

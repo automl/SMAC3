@@ -1,7 +1,7 @@
-import pytest
 from unittest.mock import patch
 
 import numpy as np
+import pytest
 from ConfigSpace import (
     CategoricalHyperparameter,
     ConfigurationSpace,
@@ -9,13 +9,12 @@ from ConfigSpace import (
 )
 
 import smac
-from smac.model.random_forest.random_forest import RandomForest
-from smac.model.utils import get_types
-from smac.facade.boing_facade import BOinGFacade
 from smac.facade.blackbox_facade import BlackBoxFacade
+from smac.facade.boing_facade import BOinGFacade
 from smac.facade.hyperparameter_facade import HyperparameterFacade
 from smac.main.boing import subspace_extraction
-from smac.model.utils import check_subspace_points
+from smac.model.random_forest.random_forest import RandomForest
+from smac.model.utils import check_subspace_points, get_types
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.abstract_runner import StatusType
 from smac.utils import _test_helpers

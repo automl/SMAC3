@@ -3,13 +3,13 @@ from __future__ import annotations
 from typing import Callable, Iterator
 
 import numpy as np
+from ConfigSpace import Configuration
 
+from smac.intensification.hyperband import Hyperband
+from smac.intensification.successive_halving_worker import SuccessiveHalvingWorker
 from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.logging import get_logger
-from smac.intensification.hyperband import Hyperband
-from smac.intensification.successive_halving_worker import SuccessiveHalvingWorker
-from ConfigSpace import Configuration
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

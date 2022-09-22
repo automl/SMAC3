@@ -3,17 +3,20 @@ from __future__ import annotations
 from typing import Any
 
 import numpy as np
+from ConfigSpace import Configuration
 from ConfigSpace.hyperparameters import FloatHyperparameter
 
-from smac.acquisition.functions.abstract_acquisition_function import AbstractAcquisitionFunction
-from smac.utils.logging import get_logger
-from ConfigSpace import Configuration
+from smac.acquisition.functions.abstract_acquisition_function import (
+    AbstractAcquisitionFunction,
+)
+from smac.acquisition.functions.confidence_bound import LCB
+from smac.acquisition.functions.integrated_acquisition_function import (
+    IntegratedAcquisitionFunction,
+)
+from smac.acquisition.functions.thompson import TS
 from smac.model.abstract_model import AbstractModel
 from smac.model.random_forest.abstract_random_forest import AbstractRandomForest
-from smac.acquisition.functions.integrated_acquisition_function import IntegratedAcquisitionFunction
-from smac.acquisition.functions.thompson import TS
-from smac.acquisition.functions.confidence_bound import LCB
-
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

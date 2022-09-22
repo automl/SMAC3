@@ -1,22 +1,21 @@
 from __future__ import annotations
-import copy
 
 from typing import Any, Iterator
 
+import copy
+
 import numpy as np
-
-
 from ConfigSpace import Configuration
-from smac.utils.configspace import convert_configurations_to_array
-from smac.runhistory.enumerations import TrialInfoIntent
-from smac.utils.logging import get_logger
+
 from smac.main.base_smbo import BaseSMBO
-from smac.runhistory import TrialInfo, TrialValue, StatusType
+from smac.runhistory import StatusType, TrialInfo, TrialValue
+from smac.runhistory.enumerations import TrialInfoIntent
 from smac.runner.exceptions import (
     FirstRunCrashedException,
     TargetAlgorithmAbortException,
 )
-
+from smac.utils.configspace import convert_configurations_to_array
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

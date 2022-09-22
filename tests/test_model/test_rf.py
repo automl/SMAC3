@@ -1,8 +1,8 @@
-import pytest
 import numpy as np
+import pytest
 from ConfigSpace import (
-    ConfigurationSpace,
     CategoricalHyperparameter,
+    ConfigurationSpace,
     EqualsCondition,
     OrdinalHyperparameter,
     UniformFloatHyperparameter,

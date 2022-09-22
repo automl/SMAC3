@@ -1,6 +1,7 @@
-from ConfigSpace import ConfigurationSpace, Float
-from smac.initial_design.sobol_design import SobolInitialDesign
 import pytest
+from ConfigSpace import ConfigurationSpace, Float
+
+from smac.initial_design.sobol_design import SobolInitialDesign
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

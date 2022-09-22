@@ -3,11 +3,11 @@ from __future__ import annotations
 from typing import Callable, Iterator
 
 import numpy as np
-
 from ConfigSpace import Configuration
+
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.intensification.successive_halving import SuccessiveHalving
-from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue, StatusType
+from smac.runhistory import StatusType, TrialInfo, TrialInfoIntent, TrialValue
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.logging import get_logger
 

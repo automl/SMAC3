@@ -15,11 +15,12 @@ the target function now is required to have an instance argument.
 """
 
 from __future__ import annotations
+
 import itertools
 import warnings
 
 import numpy as np
-from ConfigSpace import Float, Categorical, Configuration, ConfigurationSpace
+from ConfigSpace import Categorical, Configuration, ConfigurationSpace, Float
 from sklearn import datasets
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import StratifiedKFold, cross_val_score

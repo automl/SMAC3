@@ -1,30 +1,32 @@
 from __future__ import annotations
-from abc import abstractmethod
 
+from abc import abstractmethod
 from typing import Iterator
 
 import time
 
+from ConfigSpace import Configuration
 
-from smac.acquisition.maximizers.abstract_acqusition_maximizer import AbstractAcquisitionMaximizer
 from smac.acquisition.functions.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
+from smac.acquisition.maximizers.abstract_acqusition_maximizer import (
+    AbstractAcquisitionMaximizer,
+)
 from smac.callback import Callback
-from ConfigSpace import Configuration
 from smac.constants import MAXINT
 from smac.initial_design import AbstractInitialDesign
 from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.model.abstract_model import AbstractModel
-from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue, StatusType
+from smac.random_design.abstract_random_design import AbstractRandomDesign
+from smac.runhistory import StatusType, TrialInfo, TrialInfoIntent, TrialValue
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.abstract_runner import AbstractRunner
 from smac.scenario import Scenario
-from smac.utils.logging import get_logger
 from smac.stats import Stats
-from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.utils.data_structures import recursively_compare_dicts
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

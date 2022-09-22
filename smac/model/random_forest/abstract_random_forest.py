@@ -1,14 +1,15 @@
 from __future__ import annotations
+
 from typing import Any
 
 import numpy as np
-
 from ConfigSpace import (
     CategoricalHyperparameter,
     Constant,
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
+
 from smac.model.abstract_model import AbstractModel
 
 __copyright__ = "Copyright 2022, automl.org"

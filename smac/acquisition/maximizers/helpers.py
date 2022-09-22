@@ -1,9 +1,11 @@
 from __future__ import annotations
+
 from typing import Callable, Iterator
 
-from smac.random_design.modulus_design import ModulusRandomDesign
-from smac.random_design.abstract_random_design import AbstractRandomDesign
 from ConfigSpace import Configuration, ConfigurationSpace
+
+from smac.random_design.abstract_random_design import AbstractRandomDesign
+from smac.random_design.modulus_design import ModulusRandomDesign
 
 
 class ChallengerList(Iterator):
