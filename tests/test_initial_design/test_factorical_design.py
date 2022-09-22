@@ -43,10 +43,9 @@ def test_factorial(make_scenario):
 
         design = FactorialInitialDesign(
             make_scenario(configspace=cs),
-            configs=None,
             n_configs=10,
             n_configs_per_hyperparameter=None,
-            max_config_ratio=0.25,
+            max_ratio=0.25,
             seed=1,
         )
         design.select_configurations()

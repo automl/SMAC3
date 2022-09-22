@@ -101,7 +101,7 @@ class AbstractFacade:
             acquisition_function = self.get_acquisition_function(scenario)
 
         if acquisition_optimizer is None:
-            acquisition_optimizer = self.get_acquisition_optimizer(scenario)
+            acquisition_optimizer = self.get_acquisition_maximizer(scenario)
 
         if initial_design is None:
             initial_design = self.get_initial_design(scenario)
@@ -284,7 +284,7 @@ class AbstractFacade:
 
     @staticmethod
     @abstractmethod
-    def get_acquisition_optimizer(scenario: Scenario) -> AbstractAcquisitionMaximizer:
+    def get_acquisition_maximizer(scenario: Scenario) -> AbstractAcquisitionMaximizer:
         """Returns the acquisition optimizer instance to be used in the BO loop,
         specifying how the acquisition function instance is optimized."""
         raise NotImplementedError

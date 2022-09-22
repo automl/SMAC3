@@ -29,36 +29,28 @@ class AbstractInitialDesign:
 
     Parameters
     ----------
-    configspace: ConfigurationSpace
-        configuration space object
-    rng: np.random.RandomState
-        Random state
-    n_runs: int
-        Number of iterations allowed for the target algorithm
-    configs: list[Configuration] | None
-        List of initial configurations. Disables the arguments ``n_configs_per_hyperparameter`` if given.
-        Either this, or ``n_configs_per_hyperparameter`` or ``n_configs`` must be provided.
+    scenario : Scenario
+    n_configs : int | None, defaults to None
+        Number of initial configurations (disables the arguments ``n_configs_per_hyperparameter``).
     n_configs_per_hyperparameter: int, defaults to 10
-        how many configurations will be used at most in the initial design (X*D). Either
-        this, or ``n_configs`` or ``configs`` must be provided. Disables the argument
-        ``n_configs_per_hyperparameter`` if given.
-    max_config_ratio: float, defaults to 0.25
-        use at most X*budget in the initial design. Not active if a time limit is given.
-    n_configs : int, optional
-        Maximal initial budget (disables the arguments ``n_configs_per_hyperparameter`` and ``configs``
-        if both are given). Either this, or ``n_configs_per_hyperparameter`` or ``configs`` must be
-        provided.
-    seed : int | None, default to None.
-        Random seed. If None, will use the seed from the scenario.
+        Number of initial configurations per hyperparameter. For example, if my configuration space covers five
+        hyperparameters and ``n_configs_per_hyperparameter`` is set to 10, then 50 initial configurations will be
+        samples.
+    additional_configs: list[Configuration], defaults to []
+        Adds additional configurations to the initial design.
+    max_ratio: float, defaults to 0.1
+        Use at most ``scenario.n_trials`` * ``max_ratio`` number of configurations in the initial design.
+        Additional configurations are not affected by this parameter.
+    seed : int | None, default to None
     """
 
     def __init__(
         self,
         scenario: Scenario,
-        configs: list[Configuration] | None = None,
         n_configs: int | None = None,
         n_configs_per_hyperparameter: int | None = 10,
-        max_config_ratio: float = 0.25,
+        max_ratio: float = 0.1,
+        additional_configs: list[Configuration] = [],
         seed: int | None = None,
     ):
         self._configspace = scenario.configspace
@@ -68,44 +60,47 @@ class AbstractInitialDesign:
 
         self._seed = seed
         self._rng = np.random.RandomState(seed)
-        self._configs = configs
         self._n_configs_per_hyperparameter = n_configs_per_hyperparameter
+        self._additional_configs = additional_configs
 
         n_params = len(self._configspace.get_hyperparameters())
-        if configs is not None:
-            logger.info("Using `configs` and ignoring `n_configs` and `n_configs_per_hyperparameter`.")
-            self._n_configs = len(configs)
-        elif n_configs is not None:
-            logger.info("Using `n_configs` and ignoring `configs` and `n_configs_per_hyperparameter`.")
+        if n_configs is not None:
+            logger.info("Using `n_configs` and ignoring `n_configs_per_hyperparameter`.")
             self._n_configs = n_configs
         elif n_configs_per_hyperparameter is not None:
-            logger.info("Using `n_configs_per_hyperparameter` and ignoring `configs` and `n_configs`.")
-            self._n_configs = int(
-                max(1, min(n_configs_per_hyperparameter * n_params, (max_config_ratio * scenario.n_trials)))
-            )
+            self._n_configs = n_configs_per_hyperparameter * n_params
         else:
             raise ValueError(
-                "Need to provide either argument `configs`, `n_configs` or "
-                "`n_configs_per_hyperparameter`, but provided none of them."
+                "Need to provide either argument `n_configs` or "
+                "`n_configs_per_hyperparameter` but provided none of them."
             )
 
-        if self._n_configs > scenario.n_trials:
+        # If the number of configurations is too large, we reduce it
+        _n_configs = int(max(1, min(self._n_configs, (max_ratio * scenario.n_trials))))
+        if self._n_configs != _n_configs:
+            logger.info(
+                f"Reducing the number of initial configurations from {self._n_configs} to "
+                f"{_n_configs} (max_ratio == {max_ratio})."
+            )
+            self._n_configs = _n_configs
+
+        # We allow no configs if we have additional configs
+        if n_configs is not None and n_configs == 0 and len(additional_configs) > 0:
+            self._n_configs = 0
+
+        if self._n_configs + len(additional_configs) > scenario.n_trials:
             raise ValueError(
                 f"Initial budget {self._n_configs} cannot be higher than the number of trials {scenario.n_trials}."
             )
 
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
-        configs = None
-        if self._configs is not None:
-            configs = [config.get_dictionary() for config in self._configs]
-
         return {
             "name": self.__class__.__name__,
             "n_configs": self._n_configs,
-            "seed": self._seed,
-            "configs": configs,
             "n_configs_per_hyperparameter": self._n_configs_per_hyperparameter,
+            "additional_configs": [c.get_dictionary() for c in self._additional_configs],
+            "seed": self._seed,
         }
 
     def select_configurations(self) -> list[Configuration]:
@@ -117,23 +112,29 @@ class AbstractInitialDesign:
         configs : list[Configuration]
             Configurations from the child class.
         """
+        configs: list[Configuration] = []
+
         if self._n_configs == 0:
             logger.info("No initial configurations are used.")
-            return []
+        else:
+            configs += self._select_configurations()
 
-        if self._configs is None:
-            self._configs = self._select_configurations()
+        # Adding additional configs
+        configs += self._additional_configs
 
-        for config in self._configs:
+        for config in configs:
             if config.origin is None:
                 config.origin = "Initial design"
 
         # Removing duplicates
         # (Reference: https://stackoverflow.com/questions/7961363/removing-duplicates-in-lists)
-        self._configs = list(OrderedDict.fromkeys(self._configs))
-        logger.info(f"Using {len(self._configs)} initial design configurations.")
+        configs = list(OrderedDict.fromkeys(configs))
+        logger.info(
+            f"Using {len(configs) - len(self._additional_configs)} initial design "
+            f"and {len(self._additional_configs)} additional configurations."
+        )
 
-        return self._configs
+        return configs
 
     @abstractmethod
     def _select_configurations(self) -> list[Configuration]:

@@ -10,6 +10,7 @@ def test_latin_hypercube_design(make_scenario, configspace_large):
     initial_design = LatinHypercubeInitialDesign(
         scenario=scenario,
         n_configs=54,
+        max_ratio=1,
     )
 
     configs = initial_design.select_configurations()

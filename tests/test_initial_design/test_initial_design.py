@@ -29,47 +29,79 @@ def test_multi_config_design(make_scenario, configspace_small):
 
     dc = AbstractInitialDesign(
         scenario=scenario,
-        n_configs=10,  # Will be ignored
-        configs=configs,
+        n_configs=0,
+        additional_configs=configs,
     )
 
     # Selects multiple initial configurations to run.
-    # Since the configs were passed to initial design, it should return the same.
+    # Since the configs were passed to initial design (and n_configs == 0), it should return the same.
     init_configs = dc.select_configurations()
-    assert len(init_configs) == 5
+    assert len(init_configs) == len(configs)
     assert init_configs == configs
 
 
 def test_config_numbers(make_scenario, configspace_small):
+    n_configs = 5
+    n_configs_per_hyperparameter = 10
+
     scenario = make_scenario(configspace_small)
-    configs = configspace_small.sample_configuration(5)
+    configs = configspace_small.sample_configuration(n_configs)
+
+    n_hps = len(configspace_small.get_hyperparameters())
 
     dc = AbstractInitialDesign(
         scenario=scenario,
         n_configs=15,
+        max_ratio=1.0,
     )
 
     assert dc._n_configs == 15
 
     dc = AbstractInitialDesign(
         scenario=scenario,
-        configs=configs,
+        n_configs_per_hyperparameter=n_configs_per_hyperparameter,
+        additional_configs=configs,
+        max_ratio=1.0,
     )
 
-    assert dc._n_configs == 5
+    assert dc._n_configs == n_hps * n_configs_per_hyperparameter
+
+    # If we have max ratio then we expect less
+    dc = AbstractInitialDesign(
+        scenario=scenario,
+        n_configs_per_hyperparameter=1234523,
+        # additional_configs=configs,
+        max_ratio=0.5,
+    )
+
+    assert dc._n_configs == int(scenario.n_trials / 2)
+
+    # If we have max ratio then we expect less
+    dc = AbstractInitialDesign(
+        scenario=scenario,
+        n_configs_per_hyperparameter=1234523,
+        additional_configs=configs,
+        max_ratio=0.5,
+    )
+
+    assert dc._n_configs == int(scenario.n_trials / 2)
 
     dc = AbstractInitialDesign(
         scenario=scenario,
-        n_configs_per_hyperparameter=5,
+        n_configs_per_hyperparameter=n_configs_per_hyperparameter,
+        max_ratio=1.0,
     )
 
-    assert dc._n_configs == len(configspace_small.get_hyperparameters()) * 5
+    assert dc._n_configs == n_hps * n_configs_per_hyperparameter
 
     # We can't have more initial configs than
     with pytest.raises(ValueError):
         dc = AbstractInitialDesign(
             scenario=scenario,
-            n_configs=200,
+            n_configs=32351235,
+            # If we add additional configs then we should get a value although n_configs is cut by max ratio
+            additional_configs=configs,
+            max_ratio=1.0,
         )
 
     # We need to specify at least `n_configs`, `configs` or `n_configs_per_hyperparameter`

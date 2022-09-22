@@ -173,7 +173,7 @@ class BlackBoxFacade(AbstractFacade):
         return EI(xi=xi)
 
     @staticmethod
-    def get_acquisition_optimizer(  # type: ignore
+    def get_acquisition_maximizer(  # type: ignore
         scenario: Scenario,
         *,
         local_search_iterations: int = 10,

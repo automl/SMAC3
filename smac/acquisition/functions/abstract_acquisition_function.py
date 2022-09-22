@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import abstractmethod, ABCMeta
+from abc import abstractmethod
 from typing import Any
 
 import numpy as np
@@ -17,7 +17,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class AbstractAcquisitionFunction(metaclass=ABCMeta):
+class AbstractAcquisitionFunction:
     """Abstract base class for acquisition function."""
 
     def __init__(self) -> None:

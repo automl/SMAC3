@@ -56,7 +56,7 @@ class HyperparameterFacade(AbstractFacade):
         return EI(xi=xi, log=True)
 
     @staticmethod
-    def get_acquisition_optimizer(  # type: ignore
+    def get_acquisition_maximizer(  # type: ignore
         scenario: Scenario,
         *,
         local_search_iterations: int = 10,
@@ -99,18 +99,18 @@ class HyperparameterFacade(AbstractFacade):
     def get_initial_design(  # type: ignore
         scenario: Scenario,
         *,
-        configs: list[Configuration] | None = None,
         n_configs: int | None = None,
         n_configs_per_hyperparamter: int = 10,
-        max_config_ratio: float = 0.25,  # Use at most X*budget in the initial design
+        additional_configs: list[Configuration] = [],
+        max_ratio: float = 0.1,
     ) -> SobolInitialDesign:
         """Returns an Sobol initial design instance. Please check its documentation for details."""
         return SobolInitialDesign(
             scenario=scenario,
-            configs=configs,
             n_configs=n_configs,
             n_configs_per_hyperparameter=n_configs_per_hyperparamter,
-            max_config_ratio=max_config_ratio,
+            additional_configs=additional_configs,
+            max_ratio=max_ratio,
         )
 
     @staticmethod

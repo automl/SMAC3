@@ -66,12 +66,26 @@ def test_facades(rosenbrock):
         # And check components here
         assert isinstance(facade.get_model(scenario), AbstractModel)
         assert isinstance(facade.get_acquisition_function(scenario), AbstractAcquisitionFunction)
-        assert isinstance(facade.get_acquisition_optimizer(scenario), AbstractAcquisitionMaximizer)
+        assert isinstance(facade.get_acquisition_maximizer(scenario), AbstractAcquisitionMaximizer)
         assert isinstance(facade.get_intensifier(scenario), AbstractIntensifier)
         assert isinstance(facade.get_initial_design(scenario), AbstractInitialDesign)
         assert isinstance(facade.get_random_design(scenario), AbstractRandomDesign)
         assert isinstance(facade.get_runhistory_encoder(scenario), AbstractRunHistoryEncoder)
         assert isinstance(facade.get_multi_objective_algorithm(scenario), AbstractMultiObjectiveAlgorithm)
+
+
+def test_random_facade(rosenbrock):
+
+    for facade in [RandomFacade, HyperbandFacade]:
+        facade = RandomFacade
+
+        scenario = Scenario(rosenbrock.configspace, n_trials=200, min_budget=5, max_budget=50)
+        smac = facade(scenario, rosenbrock.train, overwrite=True)
+        smac.optimize()
+
+        configs = smac.runhistory.get_configs()
+        configs[0].origin == "Default"
+        assert all([c.origin == "Random Search" for c in configs[1:]])
 
 
 def test_continue_after_depleted_budget(rosenbrock):

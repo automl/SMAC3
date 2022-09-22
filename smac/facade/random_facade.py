@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from smac.acquisition.functions.expected_improvement import EI
+import numpy as np
 from smac.acquisition.maximizers.random_search import AbstractAcquisitionMaximizer, RandomSearch
+from smac.model.abstract_model import AbstractModel
 from smac.random_design import AbstractRandomDesign, ProbabilityRandomDesign
 from ConfigSpace import Configuration
+from smac.acquisition.functions.abstract_acquisition_function import AbstractAcquisitionFunction
 from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensification.intensification import Intensifier
@@ -19,46 +21,40 @@ __license__ = "3-clause BSD"
 
 class RandomFacade(AbstractFacade):
     """
-    Facade to use ROAR (Random Online Aggressive Racing) mode.
+    Facade to use Random Online Aggressive Racing (ROAR).
 
-    Aggressive Racing
-    -----------------
-    When we have a new configuration θ we want to compare it to the current best
-    configuration, the incumbent θ*.
-    ROAR uses the 'racing' approach, where we run few times for unpromising θ and many
-    times for promising configurations. Once we are confident enough that θ is better
-    than θ*, we update the incumbent θ* ⟵ θ.
-    'Aggressive' means rejecting low-performing configurations very early, often after
-    a single run.
-    This together is called 'aggressive racing'.
+    *Aggressive Racing:*
+    When we have a new configuration θ, we want to compare it to the current best
+    configuration, the incumbent θ*. ROAR uses the 'racing' approach, where we run few times for unpromising θ and many
+    times for promising configurations. Once we are confident enough that θ is better than θ*, we update the
+    incumbent θ* ⟵ θ. `Aggressive` means rejecting low-performing configurations very early, often after a single run.
+    This together is called `aggressive racing`.
 
-    ROAR Loop
-    ---------
+    *ROAR Loop:*
     The main ROAR loop looks as follows:
-        1. Select a configuration θ uniformly at random.
-        2. Compare θ to incumbent θ* online (one θ at a time):
-            - Reject/accept θ with 'aggressive racing'.
 
-    ROAR Setup
-    ----------
-    Use a random model and random search for the optimization of the acquisition function.
+    1. Select a configuration θ uniformly at random.
+    2. Compare θ to incumbent θ* online (one θ at a time):
+        - Reject/accept θ with `aggressive racing`
 
-    Following defaults from :class:
-    `~smac.facade.algorithm_configuration.AlgorithmConfigurationFacade` are used:
-    - get_acquisition_function
-    - get_intensifier
-    - get_initial_design
-    - get_random_design
-    - get_multi_objective_algorithm
+    *Setup:*
+    Uses a random model and random search for the optimization of the acquisition function.
+
+    Note
+    ----
+    The surrogate model and the acquisition function is not used during the optimization and therefore replaced
+    by dummies.
     """
 
     @staticmethod
-    def get_acquisition_function(scenario: Scenario, xi: float = 0.0) -> EI:
-        # TODO: if we use EI, do we still select a configuration with random search?
-        # As far as I understood it, EI won't be used anyway and the acquisition
-        # function optimizer directly samples from the configspace.
+    def get_acquisition_function(scenario: Scenario) -> AbstractAcquisitionFunction:
+        """The random facade is not using an acquisition function. Therefore, we simply return a dummy function."""
 
-        return EI(xi=xi)
+        class DummyAcquisitionFunction(AbstractAcquisitionFunction):
+            def _compute(self, X: np.ndarray) -> np.ndarray:
+                return X
+
+        return DummyAcquisitionFunction()
 
     @staticmethod
     def get_intensifier(
@@ -66,9 +62,15 @@ class RandomFacade(AbstractFacade):
         *,
         min_challenger: int = 1,
         min_config_calls: int = 1,
-        max_config_calls: int = 2000,
+        max_config_calls: int = 3,
         intensify_percentage: float = 0.5,
     ) -> Intensifier:
+        """We use a simple intensifier. Please use ``HyperbandFacade`` if you want to incorporate budgets.
+
+        Note
+        ----
+        If you are in an algorithm configuration setting, consider increasing ``max_config_calls``.
+        """
         intensifier = Intensifier(
             scenario=scenario,
             min_challenger=min_challenger,
@@ -86,45 +88,49 @@ class RandomFacade(AbstractFacade):
         *,
         configs: list[Configuration] | None = None,
     ) -> DefaultInitialDesign:
+        """Before starting the random optimization, we first evaluate the default initial design."""
         return DefaultInitialDesign(
             scenario=scenario,
             configs=configs,
         )
 
     @staticmethod
-    def get_random_design(
-        scenario: Scenario,
-        *,
-        random_probability: float = 0.5,
-    ) -> AbstractRandomDesign:
-        return ProbabilityRandomDesign(probability=random_probability, seed=scenario.seed)
+    def get_random_design(scenario: Scenario) -> AbstractRandomDesign:
+        """Just like the acquisition function, we do not use a random design. Therefore, we return a dummy design."""
+
+        class DummyRandomDesign(AbstractRandomDesign):
+            def check(self, iteration: int) -> bool:
+                return True
+
+        return DummyRandomDesign()
 
     @staticmethod
-    def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
-        return MeanAggregationStrategy(scenario=scenario)
+    def get_model(scenario: Scenario) -> RandomModel:
+        """The model is used in the acquisition function. Since we do not use an acquisition function, we return a
+        dummy model (returning random values in this case).
+        """
 
-    @staticmethod
-    def get_model(
-        scenario: Scenario,
-        *,
-        pca_components: int = 4,
-    ) -> RandomModel:
         return RandomModel(
             configspace=scenario.configspace,
             instance_features=scenario.instance_features,
-            pca_components=pca_components,
             seed=scenario.seed,
         )
 
     @staticmethod
-    def get_acquisition_optimizer(scenario: Scenario) -> AbstractAcquisitionMaximizer:
-        optimizer = RandomSearch(
+    def get_acquisition_maximizer(scenario: Scenario) -> RandomSearch:
+        """We return ``RandomSearch`` as maximizer which samples configurations randomly from the configuration
+        space and therefore neither uses the acquisition function nor the model.
+        """
+
+        return RandomSearch(
             scenario.configspace,
             seed=scenario.seed,
         )
 
-        return optimizer
-
     @staticmethod
     def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:
         return RunHistoryEncoder(scenario)
+
+    @staticmethod
+    def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
+        return MeanAggregationStrategy(scenario=scenario)

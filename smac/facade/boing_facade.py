@@ -110,7 +110,7 @@ class BOinGFacade(HyperparameterFacade):
         return super(BOinGFacade, BOinGFacade).get_random_design(scenario=scenario, probability=probability)
 
     @staticmethod
-    def get_acquisition_optimizer(
+    def get_acquisition_maximizer(
         scenario: Scenario,
         *,
         local_search_iterations: int = 10,

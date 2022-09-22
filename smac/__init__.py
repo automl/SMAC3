@@ -34,6 +34,9 @@ try:
     )
     from smac.runhistory.runhistory import RunHistory
     from smac.scenario import Scenario
+    from smac.utils.logging import setup_logging
+
+    setup_logging(0)
 
     __all__ = [
         "Scenario",

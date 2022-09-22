@@ -12,6 +12,7 @@ def test_sobol_design(make_scenario, configspace_large):
     initial_design = SobolInitialDesign(
         scenario=scenario,
         n_configs=54,
+        max_ratio=1,
     )
 
     configs = initial_design.select_configurations()

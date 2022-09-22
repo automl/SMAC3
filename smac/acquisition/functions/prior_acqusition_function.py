@@ -9,6 +9,7 @@ from smac.acquisition.functions.abstract_acquisition_function import AbstractAcq
 from smac.utils.logging import get_logger
 from ConfigSpace import Configuration
 from smac.model.abstract_model import AbstractModel
+from smac.model.random_forest.abstract_random_forest import AbstractRandomForest
 from smac.acquisition.functions.integrated_acquisition_function import IntegratedAcquisitionFunction
 from smac.acquisition.functions.thompson import TS
 from smac.acquisition.functions.confidence_bound import LCB
@@ -24,16 +25,13 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
     r"""Weights the acquisition function with a user-defined prior over the optimum.
 
     See "piBO: Augmenting Acquisition Functions with User Beliefs for Bayesian Optimization" by Carl
-    Hvarfner et al. [1]_ for further details.
-
-    References
-    ----------
-    .. [1] [piBO, Hvarfner et al., 2022](https://arxiv.org/pdf/2204.11051.pdf)
+    Hvarfner et al. [2]_ for further details.
 
     Parameters
     ----------
     decay_beta: float
-        Decay factor on the user prior.
+        Decay factor on the user prior. A solid default value for decay_beta (empirically founded) is
+        ``scenario.n_trials`` / 10.
     prior_floor : float, defaults to 1e-12
         Lowest possible value of the prior to ensure non-negativity for all values in the search space.
     discretize : bool, defaults to False
@@ -61,10 +59,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         self._decay_beta = decay_beta
         self._prior_floor = prior_floor
         self._discretize = discretize
-
-        self._discrete_bins_factor: float | None = None
-        if discretize:
-            self._discrete_bins_factor = discrete_bins_factor
+        self._discrete_bins_factor = discrete_bins_factor
 
         # check if the acquisition function is LCB or TS - then the acquisition function values
         # need to be rescaled to assure positiveness & correct magnitude
@@ -88,6 +83,11 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
     def model(self, model: AbstractModel) -> None:
         self._model = model
         self._hyperparameters = model._configspace.get_hyperparameters_dict()
+
+        if isinstance(model, AbstractRandomForest):
+            if not self._discretize:
+                logger.warning("Discretizing the prior for random forest models.")
+                self._discretize = True
 
     def get_meta(self) -> dict[str, Any]:
         meta = super().get_meta()

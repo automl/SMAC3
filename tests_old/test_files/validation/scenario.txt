@@ -1,2 +1,0 @@
-param_file = tests/test_files/validation/test_validation_pcs.pcs
-algo = python -u tests/test_files/example_ta.py
