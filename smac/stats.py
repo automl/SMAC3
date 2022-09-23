@@ -140,7 +140,7 @@ class Stats:
         """Check whether the configuration budget for time budget, ta_budget and submitted
         is exhausted."""
         A = self.get_remaing_walltime() < 0 or self.get_remaining_cputime() < 0
-        B = self.get_remaining_trials() <= 0
+        B = self.get_remaining_trials() < 0
 
         return A or B
 

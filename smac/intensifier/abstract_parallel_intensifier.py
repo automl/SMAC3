@@ -6,7 +6,7 @@ import os
 
 from ConfigSpace import Configuration
 
-from smac.intensification.abstract_intensifier import AbstractIntensifier
+from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
@@ -18,7 +18,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class ParallelScheduler(AbstractIntensifier):
+class AbstractParallelIntensifier(AbstractIntensifier):
     """Common Racer class for Intensifiers that will schedule configurations on a parallel fashion.
 
     This class instantiates intensifier objects on a need basis, that is, to
@@ -28,9 +28,6 @@ class ParallelScheduler(AbstractIntensifier):
     scenario : Scenario
     min_challenger : int, optional, defaults to 1
         Minimum number of trials per config (summed over all calls to intensify).
-    intensify_percentage : float, defaults to 0.5
-        How much percentage of the time should configurations be intensified (evaluated on higher budgets or
-        more instances). This parameter is accessed in the SMBO class.
     seed : int | None, defaults to None
     """
 
@@ -38,14 +35,12 @@ class ParallelScheduler(AbstractIntensifier):
         self,
         scenario: Scenario,
         min_challenger: int = 1,
-        intensify_percentage: float = 0.5,
         seed: int | None = None,
     ) -> None:
 
         super().__init__(
             scenario=scenario,
             min_challenger=min_challenger,
-            intensify_percentage=intensify_percentage,
             seed=seed,
         )
 
@@ -113,8 +108,12 @@ class ParallelScheduler(AbstractIntensifier):
         # configurations, but also in the context of multiprocessing, N
         # intensifier instances will also share configurations. The later
         # is not supported
-        if repeat_configs:
-            raise ValueError("repeat_configs is not supported for parallel execution")
+
+        # TODO: I'm a bit confused because successive halving itself is a parallel scheduler but
+        # always repeating configs?
+
+        # if repeat_configs:
+        #    raise ValueError("repeat_configs is not supported for parallel execution")
 
         # First get a config to run from a SH instance
         for i in self._sort_instances_by_stage(self._intensifier_instances):
@@ -191,6 +190,9 @@ class ParallelScheduler(AbstractIntensifier):
         incumbent_costs: float | list[float]
             Empirical cost(s) of the incumbent configuration.
         """
+        if len(self._intensifier_instances) == 0:
+            self._add_new_instance(1)
+
         return self._intensifier_instances[trial_info.source].process_results(
             trial_info=trial_info,
             trial_value=trial_value,
@@ -273,6 +275,7 @@ class ParallelScheduler(AbstractIntensifier):
 
         # First we sort by config/instance/seed as the less important criteria
         preference.sort(key=lambda x: x[2], reverse=True)
+
         # Second by stage. The more advanced the stage is, the more we want
         # this intensifier to finish early
         preference.sort(key=lambda x: x[1], reverse=True)

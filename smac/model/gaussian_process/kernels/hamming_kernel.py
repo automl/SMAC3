@@ -39,10 +39,19 @@ class HammingKernel(
 
     def get_meta(self) -> dict[str, Any]:
         meta = super().get_meta()
+
+        length_scale = self.length_scale
+        if isinstance(length_scale, np.ndarray):
+            length_scale = length_scale.tolist()
+
+        length_scale_bounds = self.length_scale_bounds
+        if isinstance(length_scale_bounds, np.ndarray):
+            length_scale_bounds = length_scale_bounds.tolist()
+
         meta.update(
             {
-                "length_scale": self.length_scale,
-                "lengthscale_bounds": self.length_scale_bounds,
+                "length_scale": length_scale,
+                "lengthscale_bounds": length_scale_bounds,
             }
         )
 

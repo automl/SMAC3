@@ -5,8 +5,8 @@ from typing import Callable, Iterator
 import numpy as np
 from ConfigSpace import Configuration
 
-from smac.intensification.abstract_intensifier import AbstractIntensifier
-from smac.intensification.successive_halving import SuccessiveHalving
+from smac.intensifier.abstract_intensifier import AbstractIntensifier
+from smac.intensifier.successive_halving import SuccessiveHalving
 from smac.runhistory import StatusType, TrialInfo, TrialInfoIntent, TrialValue
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.logging import get_logger
@@ -42,7 +42,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         self,
         successive_halving: SuccessiveHalving,
         identifier: int = 0,
-        _all_budgets: np.ndarray | None = None,
+        _all_budgets: list[float] | None = None,
         _n_configs_in_stage: np.ndarray | None = None,
         _min_budget: float | None = None,
         _max_budget: float | None = None,
@@ -50,7 +50,6 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         super().__init__(
             scenario=successive_halving._scenario,
             min_challenger=successive_halving._min_challenger,
-            intensify_percentage=successive_halving._intensify_percentage,
             seed=successive_halving._seed,
         )
 
@@ -73,12 +72,11 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
             # Max sh iterations and n initial challengers are depending on min and max budget
             # Since min and max budget can be changed by the user, we need to update
             # Pre-computing stuff for SH
-            self._max_sh_iterations = int(np.floor(np.log(self._max_budget / self._min_budget) / np.log(eta)))
-            self._n_initial_challengers = int(eta**self._max_sh_iterations)
-
-            # Budgets to consider in each stage
-            linspace = -np.linspace(self._max_sh_iterations, 0, self._max_sh_iterations + 1)
-            self._all_budgets = self._max_budget * np.power(eta, linspace)
+            (
+                self._max_sh_iterations,
+                self._n_initial_challengers,
+                self._all_budgets,
+            ) = self._successive_halving.calculate_budgets(self._min_budget, self._max_budget)
 
             # Number of challengers to consider in each stage
             linspace = -np.linspace(0, self._max_sh_iterations, self._max_sh_iterations + 1)
@@ -138,6 +136,15 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
     def uses_instances(self) -> bool:
         return self._successive_halving.uses_instances
 
+    def get_target_function_seeds(self) -> list[int]:
+        return self._successive_halving.get_target_function_seeds()
+
+    def get_target_function_budgets(self) -> list[float]:
+        return self._successive_halving.get_target_function_budgets()
+
+    def get_target_function_instances(self) -> list[str]:
+        return self._successive_halving.get_target_function_instances()
+
     def process_results(
         self,
         trial_info: TrialInfo,
@@ -167,7 +174,6 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # if result.status == StatusType.CAPPED and trial_info.config == self._running_challenger:
         #    self._current_instance_indices[trial_info.config] = np.inf
         # else:
-        self._target_function_time = self._target_function_time
         self._target_function_time += trial_value.time
         self._num_trials += 1
 
@@ -194,6 +200,10 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # 3: Then the total number of remaining task before we can conclude this stage
         # is calculated by taking into account point 2 and 3 above
         is_stage_done = all_config_inst_seed_launched and all_config_inst_seeds_processed
+
+        # ADDED IN SMAC 2.0: Makes sure we can call `tell` method without `ask` first
+        if trial_info.config not in self._current_instance_indices:
+            raise RuntimeError("Successive Halving does not work with `tell` method without `ask` first.")
 
         # adding challengers to the list of evaluated challengers
         #  - Stop: CAPPED/CRASHED/TIMEOUT/MEMOUT/DONOTADVANCE (!= SUCCESS)
@@ -229,6 +239,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
                 runhistory=runhistory,
                 log_trajectory=log_trajectory,
             )
+
         if is_stage_done:
             self._logger.info(
                 "Finished Successive Halving iteration-step %d-%d with "
@@ -711,8 +722,8 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
             # list which wrongly trigger the below if
             if set(cur_run_key) != set(run_key):
                 raise ValueError(
-                    "Can not compare configs that were run on different instances-seeds-budgets: %s vs %s"
-                    % (run_key, cur_run_key)
+                    "Can not compare configs that were run on different instances-seeds-budgets: \n"
+                    f"{run_key} and\n{cur_run_key}"
                 )
             config_costs[c] = runhistory.get_cost(c)
 

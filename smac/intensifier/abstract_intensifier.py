@@ -40,9 +40,6 @@ class AbstractIntensifier:
         Maximum number of trials per config (summed over all calls to intensify).
     min_challenger : int, defaults to 1
         Minimal number of challengers to be considered (even if time_bound is exhausted earlier).
-    intensify_percentage : float, defaults to 0.5
-        How much percentage of the time should configurations be intensified (evaluated on higher budgets or
-        more instances). This parameter is accessed in the SMBO class.
     seed : int | None, defaults to none
     """
 
@@ -52,11 +49,8 @@ class AbstractIntensifier:
         min_config_calls: int = 1,
         max_config_calls: int = 2000,
         min_challenger: int = 1,
-        intensify_percentage: float = 0.5,
         seed: int | None = None,
     ):
-        # Intensify percentage must be between 0 and 1
-        assert intensify_percentage >= 0.0 and intensify_percentage <= 1.0
 
         if seed is None:
             seed = scenario.seed
@@ -68,7 +62,6 @@ class AbstractIntensifier:
         self._min_config_calls = min_config_calls
         self._max_config_calls = max_config_calls
         self._min_challenger = min_challenger
-        self._intensify_percentage = intensify_percentage
         self._stats: Stats | None = None
 
         # Set the instances
@@ -87,12 +80,6 @@ class AbstractIntensifier:
         self._repeat_configs = False  # Repeating configurations is discouraged for parallel trials.
         self._iteration_done = False  # Marks the end of an iteration.
         self._target_function_time = 0.0
-
-    @property
-    def intensify_percentage(self) -> float:
-        """How much percentage of the time should configurations be intensified (evaluated on higher budgets or
-        more instances). This parameter is accessed in the SMBO class."""
-        return self._intensify_percentage
 
     @property
     def repeat_configs(self) -> bool:
@@ -127,6 +114,21 @@ class AbstractIntensifier:
         """If the intensifier needs to make use of instances."""
         raise NotImplementedError
 
+    @abstractmethod
+    def get_target_function_seeds(self) -> list[int]:
+        """Which seeds are used to call the target function."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_target_function_budgets(self) -> list[float]:
+        """Which budgets are used to call the target function."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_target_function_instances(self) -> list[str]:
+        """Which instances are used to call the target function."""
+        raise NotImplementedError
+
     def get_meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
@@ -134,7 +136,6 @@ class AbstractIntensifier:
             "min_config_calls": self._min_config_calls,
             "max_config_calls": self._max_config_calls,
             "min_challenger": self._min_challenger,
-            "intensify_percentage": self._intensify_percentage,
             "seed": self._seed,
         }
 
@@ -254,7 +255,7 @@ class AbstractIntensifier:
             if repeat_configs:
                 return challenger
 
-            used_configs = set(runhistory.get_configs())
+            used_configs = runhistory.get_configs()  # set(runhistory.get_configs())
 
             # Otherwise, select only a unique challenger
             if challenger not in used_configs:

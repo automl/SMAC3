@@ -18,7 +18,7 @@ from smac.acquisition.maximizers.abstract_acqusition_maximizer import (
 from smac.callback import Callback
 from smac.initial_design import LatinHypercubeInitialDesign
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
-from smac.intensification.abstract_intensifier import AbstractIntensifier
+from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.model.abstract_model import AbstractModel
 from smac.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
@@ -118,7 +118,9 @@ def test_continue_run(rosenbrock):
     and continue until the budget is actually completed."""
     scenario = Scenario(rosenbrock.configspace, n_trials=7)
     smac = HyperparameterFacade(
-        scenario, rosenbrock.train, initial_design=LatinHypercubeInitialDesign(scenario, n_configs=3)
+        scenario,
+        rosenbrock.train,
+        initial_design=LatinHypercubeInitialDesign(scenario, n_configs=3),
     )
     _ = smac.optimize()
 

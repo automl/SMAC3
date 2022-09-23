@@ -6,15 +6,15 @@ from collections import Counter
 
 from ConfigSpace import Configuration
 
-from smac.constants import MAXINT
-from smac.intensification.abstract_intensifier import AbstractIntensifier
-from smac.intensification.stages import IntensifierStage
+from smac.intensifier.abstract_intensifier import AbstractIntensifier
+from smac.intensifier.stages import IntensifierStage
 from smac.runhistory import (
     InstanceSeedBudgetKey,
     TrialInfo,
     TrialInfoIntent,
     TrialValue,
 )
+from smac.constants import MAXINT
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.logging import format_array, get_logger
@@ -76,11 +76,6 @@ class Intensifier(AbstractIntensifier):
     race_against : Configuration | None, defaults to none
         If incumbent changes, race this configuration always against new incumbent.  Prevents sometimes
         over-tuning.
-    run_limit : int, defaults to MAXINT
-        Maximum number of target function trials per call to intensify.
-    use_target_function_time_bound : bool, defaults to false
-        If true, trust time reported by the target functions instead of measuring the wallclock time for limiting
-        the time of intensification.
     seed : int | None, defaults to none
     """
 
@@ -92,8 +87,6 @@ class Intensifier(AbstractIntensifier):
         min_challenger: int = 2,
         intensify_percentage: float = 0.5,
         race_against: Configuration | None = None,
-        run_limit: int = MAXINT,
-        use_target_function_time_bound: bool = False,
         seed: int | None = None,
     ):
         if scenario.deterministic:
@@ -102,17 +95,18 @@ class Intensifier(AbstractIntensifier):
 
             min_challenger = 1
 
+        # Intensify percentage must be between 0 and 1
+        assert intensify_percentage >= 0.0 and intensify_percentage <= 1.0
+
         super().__init__(
             scenario=scenario,
             min_config_calls=min_config_calls,
             max_config_calls=max_config_calls,
             min_challenger=min_challenger,
-            intensify_percentage=intensify_percentage,
             seed=seed,
         )
 
         # General attributes
-        self._run_limit = run_limit
         self._race_against = race_against
 
         if race_against is not None and race_against.origin is None:
@@ -126,10 +120,6 @@ class Intensifier(AbstractIntensifier):
                 )
                 self._race_against.origin = "Unknown"
 
-        if self._run_limit < 1:
-            raise ValueError("The argument `run_limit` must be greather than 1.")
-
-        self._use_target_function_time_bound = use_target_function_time_bound
         self._elapsed_time = 0.0
 
         # Stage variables
@@ -148,10 +138,21 @@ class Intensifier(AbstractIntensifier):
         self._continue_challenger = False
         self._configs_to_run: Iterator[Optional[Configuration]] = iter([])
         self._update_configs_to_run = True
+        self._intensify_percentage = intensify_percentage
+        self._last_seed_idx = -1
+        self._target_function_seeds = [
+            int(s) for s in self._rng.randint(low=0, high=MAXINT, size=self._max_config_calls)
+        ]
 
         # Racing related variables
         self._to_run: list[InstanceSeedBudgetKey] = []
         self._N = -1
+
+    @property
+    def intensify_percentage(self) -> float:
+        """How much percentage of the time should configurations be intensified (evaluated on higher budgets or
+        more instances). This parameter is accessed in the SMBO class."""
+        return self._intensify_percentage
 
     @property
     def uses_seeds(self) -> bool:
@@ -168,6 +169,26 @@ class Intensifier(AbstractIntensifier):
 
         return True
 
+    def get_target_function_seeds(self) -> list[int]:
+        if self._deterministic:
+            return [0]
+        else:
+            return self._target_function_seeds
+
+    def get_target_function_budgets(self) -> list[float]:
+        return []
+
+    def get_target_function_instances(self) -> list[str]:
+        if self._instances == [None] or None in self._instances:
+            return []
+
+        instances = []
+        for instance in self._instances:
+            if instance is not None:
+                instances.append(instance)
+
+        return instances
+
     def get_meta(self) -> dict[str, Any]:
         race_against: dict | None = None
         if self._race_against is not None:
@@ -176,10 +197,8 @@ class Intensifier(AbstractIntensifier):
         meta = super().get_meta()
         meta.update(
             {
-                "name": self.__class__.__name__,
                 "race_against": race_against,
-                "run_limit": self._run_limit,
-                "use_target_function_time_bound": self._use_target_function_time_bound,
+                "intensify_percentage": self.intensify_percentage,
             }
         )
 
@@ -267,8 +286,7 @@ class Intensifier(AbstractIntensifier):
         if self._stage in [IntensifierStage.RUN_FIRST_CONFIG, IntensifierStage.RUN_INCUMBENT]:
             # Line 3
             # A modified version, that not only checks for max_config_calls
-            # but also makes sure that there are runnable instances,
-            # that is, instances has not been exhausted
+            # but also makes sure that there are runnable instances, that is, instances has not been exhausted
             inc_trials = runhistory.get_trials(incumbent, only_max_observed_budget=True)
 
             # Line 4
@@ -300,18 +318,15 @@ class Intensifier(AbstractIntensifier):
             # it is run again on more instances
             challenger = self._current_challenger
         else:
-            # Get a new challenger if all instance/pairs have
-            # been completed. Else return the currently running
+            # Get a new challenger if all instance/pairs have been completed. Else return the currently running
             # challenger
             challenger, self._new_challenger = self.get_next_challenger(
                 challengers=challengers,
                 get_next_configurations=get_next_configurations,
             )
 
-        # No new challengers are available for this iteration,
-        # Move to the next iteration. This can only happen
-        # when all configurations for this iteration are exhausted
-        # and have been run in all proposed instance/pairs.
+        # No new challengers are available for this iteration, move to the next iteration. This can only happen
+        # when all configurations for this iteration are exhausted and have been run in all proposed instance/pairs.
         if challenger is None:
             return TrialInfoIntent.SKIP, TrialInfo(
                 config=None,
@@ -433,7 +448,6 @@ class Intensifier(AbstractIntensifier):
             IntensifierStage.PROCESS_INCUMBENT_RUN,
             IntensifierStage.PROCESS_FIRST_CONFIG_RUN,
         ]:
-            self._target_function_time += trial_value.time
             self._num_trials += 1
             self._process_incumbent(
                 incumbent=incumbent,
@@ -443,7 +457,6 @@ class Intensifier(AbstractIntensifier):
         else:
             self._num_trials += 1
             self._num_challenger_run += 1
-            self._target_function_time += trial_value.time
             incumbent = self._process_racer_results(
                 challenger=trial_info.config,
                 incumbent=incumbent,
@@ -451,7 +464,8 @@ class Intensifier(AbstractIntensifier):
                 log_trajectory=log_trajectory,
             )
 
-        self._elapsed_time += trial_value.endtime - trial_value.starttime
+        self._elapsed_time += trial_value.time
+
         # check if 1 intensification run is complete - line 18
         # this is different to regular SMAC as it requires at least successful challenger run,
         # which is necessary to work on a fixed grid of configurations.
@@ -460,26 +474,11 @@ class Intensifier(AbstractIntensifier):
             and self._challenger_id >= self._min_challenger
             and self._num_challenger_run > 0
         ):
-            if self._num_trials > self._run_limit:
-                logger.debug("Maximum number of trials for intensification reached.")
-                self._next_iteration()
-
-            if not self._use_target_function_time_bound and self._elapsed_time - time_bound >= 0:
-                logger.debug(
-                    "Wallclock time limit for intensification reached (used: %f sec, available: %f sec)",
-                    self._elapsed_time,
-                    time_bound,
-                )
-
-                self._next_iteration()
-
-            elif self._target_function_time - time_bound >= 0:
-                logger.debug(
-                    "Target function time limit for intensification reached (used: %f sec, available: %f sec)",
-                    self._target_function_time,
-                    time_bound,
-                )
-
+            # if self._num_trials > self._run_limit:
+            #    logger.debug("Maximum number of trials for intensification reached.")
+            #    self._next_iteration()
+            if self._elapsed_time - time_bound >= 0:
+                logger.debug(f"Wallclock time limit for intensification reached ({self._elapsed_time}/{time_bound})")
                 self._next_iteration()
 
         inc_perf = runhistory.get_cost(incumbent)
@@ -497,9 +496,10 @@ class Intensifier(AbstractIntensifier):
 
         # Line 6
         if self._deterministic:
-            next_seed = 0
+            next_seed = self.get_target_function_seeds()[0]
         else:
-            next_seed = int(self._rng.randint(low=0, high=MAXINT, size=1)[0])
+            self._last_seed_idx += 1
+            next_seed = self.get_target_function_seeds()[self._last_seed_idx]
 
         # Line 7
         logger.debug(f"Add run of incumbent for instance = {next_instance}")
@@ -689,20 +689,12 @@ class Intensifier(AbstractIntensifier):
         inc_inst_seeds = set(runhistory.get_trials(incumbent, only_max_observed_budget=True))
         chall_inst_seeds = set(runhistory.get_trials(challenger, only_max_observed_budget=True))
 
-        activate_sort = True
-        for isbk in list(inc_inst_seeds) + list(chall_inst_seeds):
-            if isbk.budget is None:
-                activate_sort = False
-                break
-
         # Line 10
-        if activate_sort:
-            missing_trials = sorted(inc_inst_seeds - chall_inst_seeds)
-        else:
-            missing_trials = list(inc_inst_seeds - chall_inst_seeds)
+        missing_trials = list(sorted(inc_inst_seeds - chall_inst_seeds))
 
         # Line 11
         self._rng.shuffle(missing_trials)  # type: ignore
+
         if N < 0:
             raise ValueError("Argument N must not be smaller than zero, but is %s." % str(N))
 
@@ -781,11 +773,11 @@ class Intensifier(AbstractIntensifier):
         provided, then optimizer will be used to generate the challenger list."""
         chall_gen: Iterator[Optional[Configuration]]
         if challengers:
-            # iterate over challengers provided
+            # Iterate over challengers provided
             logger.debug("Using provided challengers...")
             chall_gen = iter(challengers)
         elif get_next_configurations:
-            # generating challengers on-the-fly if optimizer is given
+            # Generating challengers on-the-fly if optimizer is given
             logger.debug("Generating new challenger from optimizer...")
             chall_gen = get_next_configurations()
         else:
@@ -797,17 +789,16 @@ class Intensifier(AbstractIntensifier):
         """Updates tracking variables at the end of an intensification run."""
         assert self._stats
 
-        # track iterations
+        # Track iterations
         self._n_iters += 1
         self._iteration_done = True
         self._configs_to_run = iter([])
         self._update_configs_to_run = True
 
-        # reset for a new iteration
+        # Reset for a new iteration
         self._num_trials = 0
         self._num_challenger_run = 0
         self._challenger_id = 0
-        self._elapsed_time = 0
-        self._target_function_time = 0.0
+        self._elapsed_time = 0.0
 
         self._stats.update_average_configs_per_intensify(n_configs=self._challenger_id)

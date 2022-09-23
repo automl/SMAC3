@@ -17,7 +17,7 @@ from smac.acquisition.maximizers.abstract_acqusition_maximizer import (
 )
 from smac.callback import Callback
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
-from smac.intensification.abstract_intensifier import AbstractIntensifier
+from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.main import SMBO
 from smac.model.abstract_model import AbstractModel
 from smac.multi_objective.abstract_multi_objective_algorithm import (
@@ -47,7 +47,7 @@ class AbstractFacade:
     various needs of different hyperparameter optimization pipelines.
 
     With the exception to scenario and target_function, which are expected of the
-    user, the parameters: model, aacquisition_function, acquisition_optimizer,
+    user, the parameters: model, acquisition_function, acquisition_maximizer,
     initial_design, random_design, intensifier, multi_objective_algorithm,
     runhistory and runhistory_encoder can either be explicitly specified in the
     subclasses' get_* methods - defining a specific BO pipeline - or be instantiated
@@ -61,7 +61,7 @@ class AbstractFacade:
 
     model: BaseModel | None
     acquisition_function: AbstractAcquisitionFunction | None
-    acquisition_optimizer: AbstractAcquisitionMaximizer | None
+    acquisition_maximizer: AbstractAcquisitionMaximizer | None
     initial_design: InitialDesign | None
     random_design: RandomDesign | None
     intensifier: AbstractIntensifier | None
@@ -85,7 +85,7 @@ class AbstractFacade:
         *,
         model: AbstractModel | None = None,
         acquisition_function: AbstractAcquisitionFunction | None = None,
-        acquisition_optimizer: AbstractAcquisitionMaximizer | None = None,
+        acquisition_maximizer: AbstractAcquisitionMaximizer | None = None,
         initial_design: AbstractInitialDesign | None = None,
         random_design: AbstractRandomDesign | None = None,
         intensifier: AbstractIntensifier | None = None,
@@ -103,8 +103,8 @@ class AbstractFacade:
         if acquisition_function is None:
             acquisition_function = self.get_acquisition_function(scenario)
 
-        if acquisition_optimizer is None:
-            acquisition_optimizer = self.get_acquisition_maximizer(scenario)
+        if acquisition_maximizer is None:
+            acquisition_maximizer = self.get_acquisition_maximizer(scenario)
 
         if initial_design is None:
             initial_design = self.get_initial_design(scenario)
@@ -132,7 +132,7 @@ class AbstractFacade:
         self._scenario = scenario
         self._model = model
         self._acquisition_function = acquisition_function
-        self._acquisition_optimizer = acquisition_optimizer
+        self._acquisition_maximizer = acquisition_maximizer
         self._initial_design = initial_design
         self._random_design = random_design
         self._intensifier = intensifier
@@ -197,7 +197,7 @@ class AbstractFacade:
             "facade": {"name": self.__class__.__name__},
             "runner": self._runner.get_meta(),
             "model": self._model.get_meta(),
-            "acquisition_optimizer": self._acquisition_optimizer.get_meta(),
+            "acquisition_maximizer": self._acquisition_maximizer.get_meta(),
             "acquisition_function": self._acquisition_function.get_meta(),
             "intensifier": self._intensifier.get_meta(),
             "initial_design": self._initial_design.get_meta(),
@@ -208,6 +208,18 @@ class AbstractFacade:
         }
 
         return meta
+
+    def get_target_function_seeds(self) -> list[int]:
+        """Which seeds are used to call the target function."""
+        return self._intensifier.get_target_function_seeds()
+
+    def get_target_function_budgets(self) -> list[float]:
+        """Which budgets are used to call the target function."""
+        return self._intensifier.get_target_function_budgets()
+
+    def get_target_function_instances(self) -> list[str]:
+        """Which instances are used to call the target function."""
+        return self._intensifier.get_target_function_instances()
 
     def get_next_configurations(self) -> Iterator[Configuration]:
         """Choose next candidate solution with Bayesian optimization. The suggested configurations
@@ -226,7 +238,7 @@ class AbstractFacade:
 
             return info
 
-    def tell(self, info: TrialInfo, value: TrialValue, time_left: float | None = None, save: bool = True) -> None:
+    def tell(self, info: TrialInfo, value: TrialValue, save: bool = True) -> None:
         """Adds the result of a trial to the runhistory and updates the intensifier. Also,
         the stats object is updated.
 
@@ -236,12 +248,10 @@ class AbstractFacade:
             Describes the trial from which to process the results.
         value: TrialValue
             Contains relevant information regarding the execution of a trial.
-        time_left: float | None
-            How much time in seconds is left to perform intensification.
         save : bool, optional to True
             Whether the runhistory should be saved.
         """
-        return self._optimizer.tell(info, value, time_left, save)
+        return self._optimizer.tell(info, value, time_left=None, save=save)
 
     def optimize(self, force_initial_design: bool = False) -> Configuration:
         """
@@ -346,7 +356,7 @@ class AbstractFacade:
             intensifier=self._intensifier,
             model=self._model,
             acquisition_function=self._acquisition_function,
-            acquisition_optimizer=self._acquisition_optimizer,
+            acquisition_maximizer=self._acquisition_maximizer,
             random_design=self._random_design,
             overwrite=self._overwrite,
         )
@@ -359,7 +369,7 @@ class AbstractFacade:
         self._intensifier._stats = self._stats
         self._runhistory_encoder.multi_objective_algorithm = self._multi_objective_algorithm
         self._acquisition_function.model = self._model
-        self._acquisition_optimizer.acquisition_function = self._acquisition_function
+        self._acquisition_maximizer.acquisition_function = self._acquisition_function
         # TODO: self._runhistory_encoder.set_success_states etc. for different intensifier?
 
     def _validate(self) -> None:
@@ -367,7 +377,7 @@ class AbstractFacade:
         assert self._optimizer
 
         # Make sure the same acquisition function is used
-        assert self._acquisition_function == self._acquisition_optimizer._acquisition_function
+        assert self._acquisition_function == self._acquisition_maximizer._acquisition_function
 
     def _get_signature_arguments(self) -> list[str]:
         arguments = []

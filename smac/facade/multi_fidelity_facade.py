@@ -4,7 +4,7 @@ from ConfigSpace import Configuration
 
 from smac.facade.hyperparameter_facade import HyperparameterFacade
 from smac.initial_design.random_design import RandomInitialDesign
-from smac.intensification.hyperband import Hyperband
+from smac.intensifier.hyperband import Hyperband
 from smac.scenario import Scenario
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -49,7 +49,6 @@ class MultiFidelityFacade(HyperparameterFacade):
         *,
         eta: int = 3,
         min_challenger: int = 1,
-        intensify_percentage: float = 0.5,
         n_seeds: int = 1,
     ) -> Hyperband:
         """Returns a Hyperband intensifier instance. Please check its documentation for details."""
@@ -57,7 +56,6 @@ class MultiFidelityFacade(HyperparameterFacade):
             scenario=scenario,
             eta=eta,
             min_challenger=min_challenger,
-            intensify_percentage=intensify_percentage,
             n_seeds=n_seeds,
         )
 

@@ -72,7 +72,7 @@ class SMBO(BaseSMBO):
             X=X_configurations,
         )
 
-        challengers = self._acquisition_optimizer.maximize(
+        challengers = self._acquisition_maximizer.maximize(
             previous_configs,
             n_points=n,
             random_design=self._random_design,
@@ -118,6 +118,9 @@ class SMBO(BaseSMBO):
         time_left: float | None = None,
         save: bool = True,
     ) -> None:
+        if info.config.origin is None:
+            info.config.origin = "Custom"
+
         for callback in self._callbacks:
             response = callback.on_tell_start(self, info, value)
             # If a callback returns False, the optimization loop should be interrupted

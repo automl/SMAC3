@@ -28,7 +28,13 @@ class InstanceSeedBudgetKey:
         if self.budget is not None and other.budget is not None:
             return self.budget < other.budget
 
-        raise RuntimeError("InstanceSeedBudgetKey does not support comparison without budget.")
+        if self.instance is not None and other.instance is not None:
+            return self.instance < other.instance
+
+        if self.seed is not None and other.seed is not None:
+            return self.seed < other.seed
+
+        raise RuntimeError("Could not compare InstanceSeedBudgetKey.")
 
 
 @dataclass(frozen=True)

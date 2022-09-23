@@ -155,74 +155,73 @@ def get_conditional_hyperparameters(X: np.ndarray, Y: np.ndarray | None = None) 
     return active
 
 
-'''
-def check_subspace_points(
-    X: np.ndarray,
-    cont_dims: np.ndarray | list = [],
-    cat_dims: np.ndarray | list = [],
-    bounds_cont: np.ndarray | None = None,
-    bounds_cat: list[tuple] | None = None,
-    expand_bound: bool = False,
-) -> np.ndarray:
-    """Check which points are place inside a given subspace.
-    
-    Parameters
-    ----------
-    X: Optional[np.ndarray(N,D)],
-        points to be checked, where D = D_cont + D_cat
-    cont_dims: Union[np.ndarray(D_cont), List]
-        which dimensions represent continuous hyperparameters
-    cat_dims: Union[np.ndarray(D_cat), List]
-        which dimensions represent categorical hyperparameters
-    bounds_cont: optional[List[Tuple]]
-        subspaces bounds of categorical hyperparameters, its length is the number of continuous hyperparameters
-    bounds_cat: Optional[List[Tuple]]
-        subspaces bounds of continuous hyperparameters, its length is the number of categorical hyperparameters
-    expand_bound: bool
-        if the bound needs to be expanded to contain more points rather than the points inside the subregion
-    Return
-    ----------
-    indices_in_ss:np.ndarray(N)
-        indices of data that included in subspaces
-    """
-    if len(X.shape) == 1:
-        X = X[np.newaxis, :]
-    if len(cont_dims) == 0 and len(cat_dims) == 0:
-        return np.ones(X.shape[0], dtype=bool)
+# def check_subspace_points(
+#     X: np.ndarray,
+#     cont_dims: np.ndarray | list = [],
+#     cat_dims: np.ndarray | list = [],
+#     bounds_cont: np.ndarray | None = None,
+#     bounds_cat: list[tuple] | None = None,
+#     expand_bound: bool = False,
+# ) -> np.ndarray:
+#     """Check which points are place inside a given subspace.
 
-    if len(cont_dims) > 0:
-        if bounds_cont is None:
-            raise ValueError("bounds_cont must be given if cont_dims provided")
+#     Parameters
+#     ----------
+#     X: Optional[np.ndarray(N,D)],
+#         points to be checked, where D = D_cont + D_cat
+#     cont_dims: Union[np.ndarray(D_cont), List]
+#         which dimensions represent continuous hyperparameters
+#     cat_dims: Union[np.ndarray(D_cat), List]
+#         which dimensions represent categorical hyperparameters
+#     bounds_cont: optional[List[Tuple]]
+#         subspaces bounds of categorical hyperparameters, its length is the number of continuous hyperparameters
+#     bounds_cat: Optional[List[Tuple]]
+#         subspaces bounds of continuous hyperparameters, its length is the number of categorical hyperparameters
+#     expand_bound: bool
+#         if the bound needs to be expanded to contain more points rather than the points inside the subregion
+#     Return
+#     ----------
+#     indices_in_ss:np.ndarray(N)
+#         indices of data that included in subspaces
+#     """
+#     if len(X.shape) == 1:
+#         X = X[np.newaxis, :]
+#     if len(cont_dims) == 0 and len(cat_dims) == 0:
+#         return np.ones(X.shape[0], dtype=bool)
 
-        if len(bounds_cont.shape) != 2 or bounds_cont.shape[1] != 2 or bounds_cont.shape[0] != len(cont_dims):
-            raise ValueError(
-                f"bounds_cont (with shape  {bounds_cont.shape}) should be an array with shape of"
-                f"({len(cont_dims)}, 2)"
-            )
+#     if len(cont_dims) > 0:
+#         if bounds_cont is None:
+#             raise ValueError("bounds_cont must be given if cont_dims provided")
 
-        data_in_ss = np.all(X[:, cont_dims] <= bounds_cont[:, 1], axis=1) & np.all(
-            X[:, cont_dims] >= bounds_cont[:, 0], axis=1
-        )
+#         if len(bounds_cont.shape) != 2 or bounds_cont.shape[1] != 2 or bounds_cont.shape[0] != len(cont_dims):
+#             raise ValueError(
+#                 f"bounds_cont (with shape  {bounds_cont.shape}) should be an array with shape of"
+#                 f"({len(cont_dims)}, 2)"
+#             )
 
-        if expand_bound:
-            bound_left = bounds_cont[:, 0] - np.min(X[data_in_ss][:, cont_dims] - bounds_cont[:, 0], axis=0)
-            bound_right = bounds_cont[:, 1] + np.min(bounds_cont[:, 1] - X[data_in_ss][:, cont_dims], axis=0)
-            data_in_ss = np.all(X[:, cont_dims] <= bound_right, axis=1) & np.all(X[:, cont_dims] >= bound_left, axis=1)
-    else:
-        data_in_ss = np.ones(X.shape[0], dtype=bool)
+#         data_in_ss = np.all(X[:, cont_dims] <= bounds_cont[:, 1], axis=1) & np.all(
+#             X[:, cont_dims] >= bounds_cont[:, 0], axis=1
+#         )
 
-    if len(cat_dims) == 0:
-        return data_in_ss
-    if bounds_cat is None:
-        raise ValueError("bounds_cat must be given if cat_dims provided")
+#         if expand_bound:
+#             bound_left = bounds_cont[:, 0] - np.min(X[data_in_ss][:, cont_dims] - bounds_cont[:, 0], axis=0)
+#             bound_right = bounds_cont[:, 1] + np.min(bounds_cont[:, 1] - X[data_in_ss][:, cont_dims], axis=0)
+#             data_in_ss = np.all(X[:, cont_dims] <= bound_right, axis=1) & np.all(X[:, cont_dims] >= bound_left,
+# axis=1)
+#     else:
+#         data_in_ss = np.ones(X.shape[0], dtype=bool)
 
-    if len(bounds_cat) != len(cat_dims):
-        raise ValueError(
-            f"bounds_cat ({len(bounds_cat)}) and cat_dims ({len(cat_dims)}) must have " f"the same number of elements"
-        )
+#     if len(cat_dims) == 0:
+#         return data_in_ss
+#     if bounds_cat is None:
+#         raise ValueError("bounds_cat must be given if cat_dims provided")
 
-    for bound_cat, cat_dim in zip(bounds_cat, cat_dims):
-        data_in_ss &= np.in1d(X[:, cat_dim], bound_cat)
+#     if len(bounds_cat) != len(cat_dims):
+#         raise ValueError(
+#             f"bounds_cat ({len(bounds_cat)}) and cat_dims ({len(cat_dims)}) must have " f"the same number of elements"
+#         )
 
-    return data_in_ss
-'''
+#     for bound_cat, cat_dim in zip(bounds_cat, cat_dims):
+#         data_in_ss &= np.in1d(X[:, cat_dim], bound_cat)
+
+#     return data_in_ss

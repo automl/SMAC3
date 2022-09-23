@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from abc import abstractmethod
 from typing import Iterator
+import numpy as np
 
 import time
 
@@ -16,7 +17,7 @@ from smac.acquisition.maximizers.abstract_acqusition_maximizer import (
 from smac.callback import Callback
 from smac.constants import MAXINT
 from smac.initial_design import AbstractInitialDesign
-from smac.intensification.abstract_intensifier import AbstractIntensifier
+from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.model.abstract_model import AbstractModel
 from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.runhistory import StatusType, TrialInfo, TrialInfoIntent, TrialValue
@@ -56,10 +57,10 @@ class BaseSMBO:
         (probably with some kind of racing on the instances)
     model: BaseEPM
         empirical performance model
-    acquisition_optimizer: AcquisitionFunctionMaximizer
+    acquisition_maximizer: AcquisitionFunctionMaximizer
         Optimizer of acquisition function.
     acquisition_function : AcquisitionFunction
-        Object that implements the AbstractAcquisitionFunction (i.e., infill criterion for acquisition_optimizer)
+        Object that implements the AbstractAcquisitionFunction (i.e., infill criterion for acquisition_maximizer)
     restore_incumbent: Configuration
         incumbent to be used from the start. ONLY used to restore states.
     rng: np.random.RandomState
@@ -105,7 +106,7 @@ class BaseSMBO:
         runhistory_encoder: RunHistoryEncoder,
         intensifier: AbstractIntensifier,
         model: AbstractModel,
-        acquisition_optimizer: AbstractAcquisitionMaximizer,
+        acquisition_maximizer: AbstractAcquisitionMaximizer,
         acquisition_function: AbstractAcquisitionFunction,
         random_design: AbstractRandomDesign,
         overwrite: bool = False,
@@ -118,7 +119,7 @@ class BaseSMBO:
         self._runhistory_encoder = runhistory_encoder
         self._intensifier = intensifier
         self._model = model
-        self._acquisition_optimizer = acquisition_optimizer
+        self._acquisition_maximizer = acquisition_maximizer
         self._acquisition_function = acquisition_function
         self._random_design = random_design
         self._runner = runner
@@ -155,7 +156,7 @@ class BaseSMBO:
         optimizer is updated."""
         self._acquisition_function = acquisition_function
         self._acquisition_function.model = self._model
-        self._acquisition_optimizer.acquisition_function = acquisition_function
+        self._acquisition_maximizer.acquisition_function = acquisition_function
 
     def run(self, force_initial_design: bool = False) -> Configuration:
         """Runs the Bayesian optimization loop.
@@ -198,13 +199,13 @@ class BaseSMBO:
             # Update timebound only if a 'new' configuration is sampled as the challenger
             if self._intensifier.num_trials == 0 or time_left is None:
                 time_spent = time.time() - start_time
-                time_left = self._get_timebound_for_intensification(time_spent, update=False)
-                logger.debug("New intensification time bound: %f", time_left)
+                time_left = self._get_timebound_for_intensification(time_spent)
+                logger.debug(f"New intensification time bound: {time_left}")
             else:
                 old_time_left = time_left
                 time_spent = time_spent + (time.time() - start_time)
-                time_left = self._get_timebound_for_intensification(time_spent, update=True)
-                logger.debug(f"Updated intensification time bound from {old_time_left} to {time_left}")
+                time_left = self._get_timebound_for_intensification(time_spent)
+                logger.debug(f"Updated intensification time bound from {old_time_left} to {time_left}.")
 
             # Skip starting new runs if the budget is now exhausted
             if self._stats.is_budget_exhausted():
@@ -243,7 +244,7 @@ class BaseSMBO:
                 # available
                 self._runner.wait()
             else:
-                raise NotImplementedError("No other RunInfoIntent has been coded!")
+                raise NotImplementedError("No other RunInfoIntent has been coded.")
 
             # Check if there is any result, or else continue
             for trial_info, trial_value in self._runner.iter_results():
@@ -366,6 +367,10 @@ class BaseSMBO:
                 old_scenario = Scenario.load(old_output_directory)
 
                 if self._scenario == old_scenario:
+                    # TODO: We have to do something different here:
+                    # The intensifier needs to know about what happened
+                    # Therefore, we read in the runhistory but use the tell method to add everything
+
                     logger.info("Continuing from previous run.")
 
                     # We update the runhistory and stats in-place.
@@ -418,30 +423,34 @@ class BaseSMBO:
         if len(self._initial_design_configs) == 0:
             raise RuntimeError("SMAC needs initial configurations to work.")
 
-        # Sanity-checking: We expect an empty runhistory if submitted/finished in stats is 0
-        if self.stats.finished == 0 or self.stats.submitted == 0 or self._incumbent is None:
+        # Sanity-checking: We expect an empty runhistory if finished in stats is 0
+        # Note: stats.submitted might not be 0 because the user could have provide information via the tell method only
+        if self.stats.finished == 0 or self._incumbent is None:
             assert self.runhistory.empty()
         else:
-            logger.info(f"State restored! Starting optimization with incumbent {self._incumbent.get_dictionary()}.")
+            # That's the case when the runhistory is not empty
+            assert not self.runhistory.empty()
+
+            logger.info(f"Starting optimization with incumbent {self._incumbent.get_dictionary()}.")
             self.stats.print()
 
-    def _get_timebound_for_intensification(self, time_spent: float, update: bool) -> float:
+    def _get_timebound_for_intensification(self, time_spent: float) -> float:
         """Calculate time left for intensify from the time spent on choosing challengers using the
         fraction of time intended for intensification (which is specified in
-        intensifier.intensification_percentage).
+        ``intensifier.intensification_percentage``).
 
         Parameters
         ----------
         time_spent : float
 
-        update : bool
-            Only used to check in the unit tests how this function was called
-
         Returns
         -------
         time_left : float
         """
-        intensify_percentage = self._intensifier.intensify_percentage
+        if not hasattr(self._intensifier, "intensify_percentage"):
+            return np.inf
+
+        intensify_percentage = self._intensifier.intensify_percentage  # type: ignore
         total_time = time_spent / (1 - intensify_percentage)
         time_left = intensify_percentage * total_time
 
@@ -450,6 +459,7 @@ class BaseSMBO:
             f"\n--- Time spent on choosing next configurations: {round(time_spent, 4)} ({(1 - intensify_percentage)})"
             f"\n--- Time left for intensification: {round(time_left, 4)} ({intensify_percentage})"
         )
+
         return time_left
 
     '''

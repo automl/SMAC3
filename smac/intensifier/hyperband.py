@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from smac.intensification.abstract_intensifier import AbstractIntensifier
-from smac.intensification.successive_halving import SuccessiveHalving
+from smac.intensifier.abstract_intensifier import AbstractIntensifier
+from smac.intensifier.successive_halving import SuccessiveHalving
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -40,16 +40,13 @@ class Hyperband(SuccessiveHalving):
         Minimal number of challengers to be considered (even if time_bound is exhausted earlier).
     eta : float, defaults to 3
         The "halving" factor after each iteration in a Successive Halving run.
-    intensify_percentage : float, defaults to 0.5
-        How much percentage of the time should configurations be intensified (evaluated on higher budgets or
-        more instances). This parameter is accessed in the SMBO class.
     seed : int | None, defaults to None
     n_seeds : int | None, defaults to None
         The number of seeds to use if the target function is non-deterministic.
     """
 
     def _get_intensifier_ranking(self, intensifier: AbstractIntensifier) -> tuple[int, int]:
-        from smac.intensification.hyperband_worker import HyperbandWorker
+        from smac.intensifier.hyperband_worker import HyperbandWorker
 
         assert isinstance(intensifier, HyperbandWorker)
         assert intensifier._sh_intensifier
@@ -61,7 +58,7 @@ class Hyperband(SuccessiveHalving):
         return stage, len(intensifier._sh_intensifier._run_tracker)
 
     def _add_new_instance(self, n_workers: int) -> bool:
-        from smac.intensification.hyperband_worker import HyperbandWorker
+        from smac.intensifier.hyperband_worker import HyperbandWorker
 
         if len(self._intensifier_instances) >= n_workers:
             return False

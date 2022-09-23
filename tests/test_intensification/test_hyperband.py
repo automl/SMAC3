@@ -4,10 +4,10 @@ from unittest import mock
 import numpy as np
 import pytest
 
-from smac.intensification.hyperband import Hyperband
-from smac.intensification.hyperband_worker import HyperbandWorker
-from smac.intensification.successive_halving import SuccessiveHalving
-from smac.intensification.successive_halving_worker import SuccessiveHalvingWorker
+from smac.intensifier.hyperband import Hyperband
+from smac.intensifier.hyperband_worker import HyperbandWorker
+from smac.intensifier.successive_halving import SuccessiveHalving
+from smac.intensifier.successive_halving_worker import SuccessiveHalvingWorker
 from smac.runhistory import RunHistory, TrialInfo, TrialInfoIntent, TrialValue
 from smac.runner.abstract_runner import StatusType
 from smac.runner.target_function_runner import TargetFunctionRunner

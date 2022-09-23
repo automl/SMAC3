@@ -1,6 +1,6 @@
 import pytest
 
-from smac.intensification.abstract_intensifier import AbstractIntensifier
+from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.runner.abstract_runner import StatusType
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

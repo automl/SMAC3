@@ -9,7 +9,7 @@ from smac.acquisition.functions.abstract_acquisition_function import (
 from smac.acquisition.maximizers.random_search import RandomSearch
 from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.default_design import DefaultInitialDesign
-from smac.intensification.intensification import Intensifier
+from smac.intensifier.intensifier import Intensifier
 from smac.model.random_model import RandomModel
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy

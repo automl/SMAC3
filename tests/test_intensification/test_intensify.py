@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
-from smac.intensification.intensification import Intensifier, IntensifierStage
+from smac.intensifier.intensifier import Intensifier, IntensifierStage
 from smac.runhistory import RunHistory, TrialInfo, TrialInfoIntent
 from smac.runner.abstract_runner import StatusType
 from smac.runner.target_function_runner import TargetFunctionRunner

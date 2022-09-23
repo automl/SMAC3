@@ -7,7 +7,7 @@ import smac
 from smac import HyperparameterFacade, Scenario
 from smac.callback import Callback
 from smac.initial_design import DefaultInitialDesign
-from smac.intensification.intensification import Intensifier
+from smac.intensifier.intensifier import Intensifier
 from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
 
 

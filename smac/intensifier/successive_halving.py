@@ -5,8 +5,8 @@ from typing import Any
 import numpy as np
 
 from smac.constants import MAXINT
-from smac.intensification.abstract_intensifier import AbstractIntensifier
-from smac.intensification.parallel_scheduling import ParallelScheduler
+from smac.intensifier.abstract_intensifier import AbstractIntensifier
+from smac.intensifier.abstract_parallel_intensifier import AbstractParallelIntensifier
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
@@ -17,7 +17,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class SuccessiveHalving(ParallelScheduler):
+class SuccessiveHalving(AbstractParallelIntensifier):
     """Races multiple challengers against an incumbent using Successive Halving method.
 
     Implementation following the description in
@@ -63,10 +63,8 @@ class SuccessiveHalving(ParallelScheduler):
         Minimal number of challengers to be considered (even if time_bound is exhausted earlier).
     eta : float, defaults to 3
         The "halving" factor after each iteration in a Successive Halving run.
-    intensify_percentage : float, defaults to 0.5
-        How much percentage of the time should configurations be intensified (evaluated on higher budgets or
-        more instances). This parameter is accessed in the SMBO class.
     seed : int | None, defaults to None
+        This seed is not the seed used for target function evaluation but rather for sampling next candidates.
     n_seeds : int | None, defaults to None
         The number of seeds to use if the target function is non-deterministic.
     """
@@ -80,7 +78,6 @@ class SuccessiveHalving(ParallelScheduler):
         n_initial_challengers: int | None = None,
         min_challenger: int = 1,
         eta: float = 3,
-        intensify_percentage: float = 0.5,
         seed: int | None = None,
         n_seeds: int | None = None,
     ) -> None:
@@ -88,7 +85,6 @@ class SuccessiveHalving(ParallelScheduler):
         super().__init__(
             scenario=scenario,
             min_challenger=min_challenger,
-            intensify_percentage=intensify_percentage,
             seed=seed,
         )
 
@@ -109,7 +105,12 @@ class SuccessiveHalving(ParallelScheduler):
         if self._min_challenger > 1:
             raise ValueError("Successive Halving can not handle argument `min_challenger` > 1.")
 
-        if self._instances is not None and len(self._instances) == 1 and self._n_seeds > 1:
+        if (
+            self._instances is not None
+            and len(self._instances) == 1
+            and self._instances[0] is not None
+            and self._n_seeds > 1
+        ):
             raise NotImplementedError("The case multiple seeds and one instance can not be handled yet!")
 
         if eta <= 1:
@@ -140,8 +141,15 @@ class SuccessiveHalving(ParallelScheduler):
             if self._instance_order == "shuffle_once":
                 # Randomize once
                 self._rng.shuffle(self._instance_seed_pairs)  # type: ignore
+
+            self._target_function_seeds = seeds
         else:
             self._instance_seed_pairs = instance_seed_pairs
+
+            # Get seeds
+            self._target_function_seeds = []
+            for i, seed in instance_seed_pairs:
+                self._target_function_seeds += [seed]
 
         # Budgets
         min_budget = scenario.min_budget
@@ -171,6 +179,7 @@ class SuccessiveHalving(ParallelScheduler):
 
             if self._max_budget > len(self._instance_seed_pairs):
                 raise ValueError("Max budget can not be greater than the number of instance-seed pairs.")
+
             if self._max_budget < len(self._instance_seed_pairs):
                 logger.warning(
                     "Max budget (%d) does not include all instance-seed pairs (%d)."
@@ -209,7 +218,6 @@ class SuccessiveHalving(ParallelScheduler):
             "n_initial_challengers": self._n_initial_challengers,
             "min_challenger": self._min_challenger,
             "eta": self._eta,
-            "intensify_percentage": self._intensify_percentage,
             "seed": self._seed,
             "n_seeds": self._n_seeds,
         }
@@ -222,8 +230,55 @@ class SuccessiveHalving(ParallelScheduler):
     def uses_instances(self) -> bool:
         return self._instance_as_budget
 
+    def get_target_function_seeds(self) -> list[int]:
+        return self._target_function_seeds
+
+    def get_target_function_budgets(self) -> list[float]:
+        _, _, budgets = self.calculate_budgets(self._min_budget, self._max_budget)
+        return budgets
+
+    def get_target_function_instances(self) -> list[str]:
+        if self._instances == [None] or None in self._instances:
+            return []
+
+        instances = []
+        for instance in self._instances:
+            if instance is not None:
+                instances.append(instance)
+
+        return instances
+
+    def calculate_budgets(self, min_budget: float, max_budget: float) -> tuple[int, int, list[float]]:
+        """Calculates the budgets for successive halving.
+
+        Parameters
+        ----------
+        min_budget : float
+            The minimal budget.
+        max_budget : float
+            The maximal budget.
+
+        Returns
+        -------
+        max_iterations : int
+            How many iterations will be performed.
+        n_initial_challengers : int
+            How many challengers will be sampled in the first iteration.
+        budgets : list[float]
+            The budgets for each iteration.
+        """
+        max_iterations = int(np.floor(np.log(max_budget / min_budget) / np.log(self._eta)))
+        n_initial_challengers = int(self._eta**max_iterations)
+
+        # Budgets to consider in each stage
+        linspace = -np.linspace(self._max_sh_iterations, 0, self._max_sh_iterations + 1)
+        _budgets = self._max_budget * np.power(self._eta, linspace)
+        budgets = _budgets.tolist()
+
+        return max_iterations, n_initial_challengers, budgets
+
     def _get_intensifier_ranking(self, intensifier: AbstractIntensifier) -> tuple[int, int]:
-        from smac.intensification.successive_halving_worker import (
+        from smac.intensifier.successive_halving_worker import (
             SuccessiveHalvingWorker,
         )
 
@@ -236,7 +291,7 @@ class SuccessiveHalving(ParallelScheduler):
         return intensifier.stage, len(intensifier._run_tracker)
 
     def _add_new_instance(self, n_workers: int) -> bool:
-        from smac.intensification.successive_halving_worker import (
+        from smac.intensifier.successive_halving_worker import (
             SuccessiveHalvingWorker,
         )
 
