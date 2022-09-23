@@ -42,29 +42,37 @@ the target function now is required to have an instance argument.
  .. code-block:: none
 
     Default cost: 0.14
-    [WARNING][successive_halving.py:127] The target function is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider increasing `n_seeds` from the intensifier.
-    [INFO][successive_halving.py:181] Using successive halving with budget type INSTANCES, min budget 1, max budget 45 and eta 3.
-    [INFO][successive_halving.py:201] The argument `incumbent_selection` is ignored because instances are used as budget type.
+    [WARNING][successive_halving.py:128] The target function is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider increasing `n_seeds` from the intensifier.
+    [INFO][successive_halving.py:190] Using successive halving with budget type INSTANCES, min budget 1, max budget 45 and eta 3.
+    [INFO][successive_halving.py:210] The argument `incumbent_selection` is ignored because instances are used as budget type.
     [INFO][abstract_initial_design.py:132] Using 40 initial design and 0 additional configurations.
-    [WARNING][parallel_scheduling.py:103] Hyperband is executed with 1 worker(s) only. However, your system supports up to 2 workers. Consider increasing the workers in the scenario.
+    [WARNING][abstract_parallel_intensifier.py:98] Hyperband is executed with 1 worker(s) only. However, your system supports up to 2 workers. Consider increasing the workers in the scenario.
     [INFO][hyperband_worker.py:164] Finished Hyperband iteration-step 1-1 with initial budget 1.
-    [INFO][successive_halving_worker.py:384] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-    [INFO][abstract_intensifier.py:335] Challenger (0.0137) is better than incumbent (0.0164) on 1 trials.
-    [INFO][abstract_intensifier.py:359] Changes in incumbent:
-    [INFO][abstract_intensifier.py:362] --- alpha: 0.5488135039273248 -> 0.11827442586893322
-    [INFO][abstract_intensifier.py:362] --- eta0: 0.0006273927602293597 -> 9.614170248896958e-05
-    [INFO][abstract_intensifier.py:362] --- l1_ratio: 0.317983179393976 -> 0.24875314351995803
-    [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [1.67 / 45] and 27 evaluated challenger(s).
-    [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-2 with budget [5.00 / 45] and 9 evaluated challenger(s).
-    [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-3 with budget [15.00 / 45] and 3 evaluated challenger(s).
-    [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-4 with budget [45.00 / 45] and 1 evaluated challenger(s).
+    [INFO][successive_halving_worker.py:395] First run and no incumbent provided. Challenger is assumed to be the incumbent.
+    [INFO][abstract_intensifier.py:336] Challenger (0.0137) is better than incumbent (0.0164) on 1 trials.
+    [INFO][abstract_intensifier.py:360] Changes in incumbent:
+    [INFO][abstract_intensifier.py:363] --- alpha: 0.5488135039273248 -> 0.11827442586893322
+    [INFO][abstract_intensifier.py:363] --- eta0: 0.0006273927602293597 -> 9.614170248896958e-05
+    [INFO][abstract_intensifier.py:363] --- l1_ratio: 0.317983179393976 -> 0.24875314351995803
+    [INFO][successive_halving_worker.py:244] Finished Successive Halving iteration-step 1-1 with budget [1.67 / 45] and 27 evaluated challenger(s).
+    [INFO][successive_halving_worker.py:244] Finished Successive Halving iteration-step 1-2 with budget [5.00 / 45] and 9 evaluated challenger(s).
+    [INFO][successive_halving_worker.py:244] Finished Successive Halving iteration-step 1-3 with budget [15.00 / 45] and 3 evaluated challenger(s).
+    [INFO][successive_halving_worker.py:244] Finished Successive Halving iteration-step 1-4 with budget [45.00 / 45] and 1 evaluated challenger(s).
     [INFO][hyperband_worker.py:164] Finished Hyperband iteration-step 1-2 with initial budget 5.
-    [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-1 with budget [5.00 / 45] and 9 evaluated challenger(s).
-    [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-2 with budget [15.00 / 45] and 3 evaluated challenger(s).
-    [INFO][successive_halving_worker.py:233] Finished Successive Halving iteration-step 1-3 with budget [45.00 / 45] and 1 evaluated challenger(s).
+    [INFO][successive_halving_worker.py:244] Finished Successive Halving iteration-step 1-1 with budget [5.00 / 45] and 9 evaluated challenger(s).
+    [INFO][successive_halving_worker.py:244] Finished Successive Halving iteration-step 1-2 with budget [15.00 / 45] and 3 evaluated challenger(s).
+    [INFO][successive_halving_worker.py:244] Finished Successive Halving iteration-step 1-3 with budget [45.00 / 45] and 1 evaluated challenger(s).
     [INFO][hyperband_worker.py:164] Finished Hyperband iteration-step 1-3 with initial budget 15.
-    [INFO][abstract_facade.py:270] Final Incumbent: {'alpha': 0.11827442586893322, 'eta0': 9.614170248896958e-05, 'l1_ratio': 0.24875314351995803, 'learning_rate': 'adaptive'}
-    [INFO][abstract_facade.py:271] Estimated cost: 0.008231389269086701
+    [INFO][successive_halving_worker.py:244] Finished Successive Halving iteration-step 1-1 with budget [15.00 / 45] and 6 evaluated challenger(s).
+    [INFO][abstract_intensifier.py:336] Challenger (0.0061) is better than incumbent (0.0082) on 45 trials.
+    [INFO][abstract_intensifier.py:360] Changes in incumbent:
+    [INFO][abstract_intensifier.py:363] --- alpha: 0.11827442586893322 -> 0.12435576832412187
+    [INFO][abstract_intensifier.py:363] --- eta0: 9.614170248896958e-05 -> 0.08244597846698355
+    [INFO][abstract_intensifier.py:363] --- l1_ratio: 0.24875314351995803 -> 0.26756551376906273
+    [INFO][successive_halving_worker.py:244] Finished Successive Halving iteration-step 1-2 with budget [45.00 / 45] and 2 evaluated challenger(s).
+    [INFO][hyperband_worker.py:164] Finished Hyperband iteration-step 1-4 with initial budget 45.
+    [INFO][abstract_facade.py:280] Final Incumbent: {'alpha': 0.12435576832412187, 'eta0': 0.08244597846698355, 'l1_ratio': 0.26756551376906273, 'learning_rate': 'adaptive'}
+    [INFO][abstract_facade.py:281] Estimated cost: 0.006063174109298513
     Incumbent cost: 0.01
 
 
@@ -216,7 +224,7 @@ the target function now is required to have an instance argument.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  45.033 seconds)
+   **Total running time of the script:** ( 0 minutes  52.452 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_2_sgd_datasets.py:

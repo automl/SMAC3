@@ -41,39 +41,27 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
     Default value: 0.04
     [WARNING][prior_acqusition_function.py:92] Discretizing the prior for random forest models.
     [INFO][abstract_initial_design.py:132] Using 4 initial design and 1 additional configurations.
-    [INFO][intensification.py:254] No incumbent provided in the first run. Sampling a new challenger...
-    [INFO][intensification.py:429] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-    [INFO][intensification.py:564] Updated estimated cost of incumbent on 1 trials: 0.8987
-    [INFO][abstract_intensifier.py:335] Challenger (0.039) is better than incumbent (0.8987) on 1 trials.
-    [INFO][abstract_intensifier.py:359] Changes in incumbent:
-    [INFO][abstract_intensifier.py:362] --- activation: 'logistic' -> 'relu'
-    [INFO][abstract_intensifier.py:362] --- batch_size: 324 -> 128
-    [INFO][abstract_intensifier.py:362] --- learning_rate_init: 1.1134996369914405 -> 0.0010000000000000002
-    [INFO][abstract_intensifier.py:362] --- n_layer: 2 -> 3
-    [INFO][abstract_intensifier.py:362] --- n_neurons: 157 -> 108
-    [INFO][abstract_intensifier.py:362] --- optimizer: 'sgd' -> 'adam'
-    [INFO][abstract_intensifier.py:335] Challenger (0.0389) is better than incumbent (0.039) on 1 trials.
-    [INFO][abstract_intensifier.py:359] Changes in incumbent:
-    [INFO][abstract_intensifier.py:362] --- batch_size: 128 -> 22
-    [INFO][abstract_intensifier.py:362] --- learning_rate_init: 0.0010000000000000002 -> 0.0009276911872670801
-    [INFO][abstract_intensifier.py:335] Challenger (0.0378) is better than incumbent (0.0389) on 1 trials.
-    [INFO][abstract_intensifier.py:359] Changes in incumbent:
-    [INFO][abstract_intensifier.py:362] --- batch_size: 22 -> 118
-    [INFO][abstract_intensifier.py:362] --- learning_rate_init: 0.0009276911872670801 -> 0.0008727032445149441
-    [INFO][abstract_intensifier.py:362] --- n_layer: 3 -> 5
-    [INFO][abstract_intensifier.py:335] Challenger (0.0323) is better than incumbent (0.0378) on 1 trials.
-    [INFO][abstract_intensifier.py:359] Changes in incumbent:
-    [INFO][abstract_intensifier.py:362] --- batch_size: 118 -> 85
-    [INFO][abstract_intensifier.py:335] Challenger (0.0301) is better than incumbent (0.0323) on 1 trials.
-    [INFO][abstract_intensifier.py:359] Changes in incumbent:
-    [INFO][abstract_intensifier.py:362] --- batch_size: 85 -> 83
-    [INFO][abstract_intensifier.py:362] --- learning_rate_init: 0.0008727032445149441 -> 0.0009409147904300142
-    [INFO][abstract_intensifier.py:335] Challenger (0.0273) is better than incumbent (0.0301) on 1 trials.
-    [INFO][abstract_intensifier.py:359] Changes in incumbent:
-    [INFO][abstract_intensifier.py:362] --- batch_size: 83 -> 82
-    [INFO][abstract_facade.py:270] Final Incumbent: {'activation': 'relu', 'batch_size': 82, 'learning_rate_init': 0.0009409147904300142, 'n_layer': 5, 'n_neurons': 108, 'optimizer': 'adam'}
-    [INFO][abstract_facade.py:271] Estimated cost: 0.027273290003095085
-    Incumbent value: 0.04
+    [INFO][intensifier.py:273] No incumbent provided in the first run. Sampling a new challenger...
+    [INFO][intensifier.py:444] First run and no incumbent provided. Challenger is assumed to be the incumbent.
+    [INFO][intensifier.py:564] Updated estimated cost of incumbent on 1 trials: 0.8987
+    [INFO][abstract_intensifier.py:336] Challenger (0.039) is better than incumbent (0.8987) on 1 trials.
+    [INFO][abstract_intensifier.py:360] Changes in incumbent:
+    [INFO][abstract_intensifier.py:363] --- activation: 'logistic' -> 'relu'
+    [INFO][abstract_intensifier.py:363] --- batch_size: 324 -> 128
+    [INFO][abstract_intensifier.py:363] --- learning_rate_init: 1.1134996369914405 -> 0.0010000000000000002
+    [INFO][abstract_intensifier.py:363] --- n_layer: 2 -> 3
+    [INFO][abstract_intensifier.py:363] --- n_neurons: 157 -> 108
+    [INFO][abstract_intensifier.py:363] --- optimizer: 'sgd' -> 'adam'
+    [INFO][abstract_intensifier.py:336] Challenger (0.0267) is better than incumbent (0.039) on 1 trials.
+    [INFO][abstract_intensifier.py:360] Changes in incumbent:
+    [INFO][abstract_intensifier.py:363] --- batch_size: 128 -> 83
+    [INFO][abstract_intensifier.py:363] --- learning_rate_init: 0.0010000000000000002 -> 0.001682337847169736
+    [INFO][abstract_intensifier.py:336] Challenger (0.0245) is better than incumbent (0.0267) on 1 trials.
+    [INFO][abstract_intensifier.py:360] Changes in incumbent:
+    [INFO][abstract_intensifier.py:363] --- batch_size: 83 -> 63
+    [INFO][abstract_facade.py:280] Final Incumbent: {'activation': 'relu', 'batch_size': 63, 'learning_rate_init': 0.001682337847169736, 'n_layer': 3, 'n_neurons': 108, 'optimizer': 'adam'}
+    [INFO][abstract_facade.py:281] Estimated cost: 0.024487774682760866
+    Incumbent value: 0.03
 
 
 
@@ -247,7 +235,7 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  17.302 seconds)
+   **Total running time of the script:** ( 0 minutes  40.973 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_4_priors.py:
