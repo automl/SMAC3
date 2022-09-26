@@ -120,12 +120,12 @@ class AbstractIntensifier:
         raise NotImplementedError
 
     @abstractmethod
-    def get_target_function_budgets(self) -> list[float]:
+    def get_target_function_budgets(self) -> list[float | None]:
         """Which budgets are used to call the target function."""
         raise NotImplementedError
 
     @abstractmethod
-    def get_target_function_instances(self) -> list[str]:
+    def get_target_function_instances(self) -> list[str | None]:
         """Which instances are used to call the target function."""
         raise NotImplementedError
 
@@ -246,7 +246,7 @@ class AbstractIntensifier:
         else:
             raise ValueError("No configurations/ask function provided. Can not generate challenger!")
 
-        logger.debug("Time to select next challenger: %.4f" % (time.time() - start_time))
+        logger.debug("Time spend to select next challenger: %.4f" % (time.time() - start_time))
 
         # Select challenger from the generators
         assert chall_gen is not None

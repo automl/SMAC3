@@ -70,7 +70,7 @@ class Stats:
         self._ema_n_configs_per_intensifiy = 0.0
         self._EMA_ALPHA = 0.2
 
-        self._start_time = np.NaN
+        self._start_time = 0.0
 
     def add_incumbent(
         self,
@@ -139,10 +139,11 @@ class Stats:
     def is_budget_exhausted(self) -> bool:
         """Check whether the configuration budget for time budget, ta_budget and submitted
         is exhausted."""
-        A = self.get_remaing_walltime() < 0 or self.get_remaining_cputime() < 0
-        B = self.get_remaining_trials() < 0
+        A = self.get_remaing_walltime() < 0
+        B = self.get_remaining_cputime() < 0
+        C = self.get_remaining_trials() < 0
 
-        return A or B
+        return A or B or C
 
     def update_average_configs_per_intensify(self, n_configs: int) -> None:
         """Updates statistics how many configurations on average per used in intensify.

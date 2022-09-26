@@ -175,14 +175,14 @@ class Intensifier(AbstractIntensifier):
         else:
             return self._target_function_seeds
 
-    def get_target_function_budgets(self) -> list[float]:
-        return []
+    def get_target_function_budgets(self) -> list[float | None]:
+        return [None]
 
-    def get_target_function_instances(self) -> list[str]:
+    def get_target_function_instances(self) -> list[str | None]:
         if self._instances == [None] or None in self._instances:
-            return []
+            return [None]
 
-        instances = []
+        instances: list[str | None] = []
         for instance in self._instances:
             if instance is not None:
                 instances.append(instance)
@@ -635,7 +635,7 @@ class Intensifier(AbstractIntensifier):
                 self._stage = IntensifierStage.RUN_INCUMBENT
                 self._continue_challenger = False
                 logger.debug(
-                    "Estimated cost of challenger on %d trials: %.4f, but worse than incumbent",
+                    "Estimated cost of challenger on %d trials: %.4f, but worse than incumbent.",
                     len(chal_trials),
                     chal_perf,
                 )

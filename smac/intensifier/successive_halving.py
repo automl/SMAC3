@@ -94,8 +94,8 @@ class SuccessiveHalving(AbstractParallelIntensifier):
         self._n_initial_challengers = n_initial_challengers
         self._n_seeds = n_seeds if n_seeds else 1
         self._eta = eta
-        self._min_budget: float | int
-        self._max_budget: float | int
+        self._min_budget: float
+        self._max_budget: float
         self._instance_as_budget = False
 
         available_incumbent_selections = ["highest_executed_budget", "highest_budget", "any_budget"]
@@ -105,13 +105,8 @@ class SuccessiveHalving(AbstractParallelIntensifier):
         if self._min_challenger > 1:
             raise ValueError("Successive Halving can not handle argument `min_challenger` > 1.")
 
-        if (
-            self._instances is not None
-            and len(self._instances) == 1
-            and self._instances[0] is not None
-            and self._n_seeds > 1
-        ):
-            raise NotImplementedError("The case multiple seeds and one instance can not be handled yet!")
+        if self._instances[0] is None and self._n_seeds > 1:
+            raise NotImplementedError("The case multiple seeds without using instances can not be handled yet!")
 
         if eta <= 1:
             raise ValueError("The parameter `eta` must be greater than 1.")
@@ -146,10 +141,15 @@ class SuccessiveHalving(AbstractParallelIntensifier):
         else:
             self._instance_seed_pairs = instance_seed_pairs
 
-            # Get seeds
-            self._target_function_seeds = []
-            for i, seed in instance_seed_pairs:
+        # Get seeds and check whether instances are involved
+        self._target_function_seeds = []
+        self._instance_as_budget = False
+        for instance, seed in self._instance_seed_pairs:
+            if seed not in self._target_function_seeds:
                 self._target_function_seeds += [seed]
+
+            if instance is not None:
+                self._instance_as_budget = True
 
         # Budgets
         min_budget = scenario.min_budget
@@ -158,9 +158,8 @@ class SuccessiveHalving(AbstractParallelIntensifier):
         if max_budget is not None and min_budget is not None and max_budget < min_budget:
             raise ValueError("Max budget has to be larger than min budget.")
 
-        # If only 1 instance was provided & quality objective, then use algorithm_walltime_limit as budget
-        # else, use instances as budget
-        if self._instance_seed_pairs is None or len(self._instance_seed_pairs) <= 1:
+        # If only 1 instance was provided
+        if not self._instance_as_budget:
             # budget with algorithm_walltime_limit
             if min_budget is None or max_budget is None:
                 raise ValueError(
@@ -168,23 +167,31 @@ class SuccessiveHalving(AbstractParallelIntensifier):
                     "requires parameters `min_budget` and `max_budget` for intensification!"
                 )
 
+            assert len(self._instance_seed_pairs) == 1
             self._min_budget = min_budget
             self._max_budget = max_budget
-            self._instance_as_budget = False
         else:
+            if isinstance(min_budget, float) or isinstance(max_budget, float):
+                raise ValueError("Successive Halving requires integer budgets when using instances.")
+
             # Budget with instances
-            self._min_budget = int(min_budget) if min_budget else 1
-            self._max_budget = int(max_budget) if max_budget else len(self._instance_seed_pairs)
-            self._instance_as_budget = True
+            self._min_budget = min_budget if min_budget else 1
+            self._max_budget = max_budget if max_budget else len(self._instance_seed_pairs)
 
             if self._max_budget > len(self._instance_seed_pairs):
-                raise ValueError("Max budget can not be greater than the number of instance-seed pairs.")
+                raise ValueError(
+                    f"Max budget ({self._max_budget}) can not be greater than the number of "
+                    f"instance-seed pairs ({len(self._instance_seed_pairs)})."
+                )
 
             if self._max_budget < len(self._instance_seed_pairs):
                 logger.warning(
                     "Max budget (%d) does not include all instance-seed pairs (%d)."
                     % (self._max_budget, len(self._instance_seed_pairs))
                 )
+
+        if self._min_budget <= 0:
+            raise ValueError("Minimum budget must be greater than 0.")
 
         budget_type = "INSTANCES" if self._instance_as_budget else "BUDGETS"
         logger.info(
@@ -233,15 +240,19 @@ class SuccessiveHalving(AbstractParallelIntensifier):
     def get_target_function_seeds(self) -> list[int]:
         return self._target_function_seeds
 
-    def get_target_function_budgets(self) -> list[float]:
+    def get_target_function_budgets(self) -> list[float | None]:
+        # If we use instance as budget, then we always use None for the budget
+        if self._instance_as_budget:
+            return [None]
+
         _, _, budgets = self.calculate_budgets(self._min_budget, self._max_budget)
-        return budgets
+        return budgets  # type: ignore
 
-    def get_target_function_instances(self) -> list[str]:
+    def get_target_function_instances(self) -> list[str | None]:
         if self._instances == [None] or None in self._instances:
-            return []
+            return [None]
 
-        instances = []
+        instances: list[str | None] = []
         for instance in self._instances:
             if instance is not None:
                 instances.append(instance)

@@ -87,18 +87,18 @@ def test_callback(rosenbrock):
     assert callback.end_counter == 1
 
     # Those functions are called N_TRIALS
-    assert callback.ask_start_counter == N_TRIALS
-    assert callback.ask_end_counter == N_TRIALS
+    assert callback.ask_start_counter == N_TRIALS + 1
+    assert callback.ask_end_counter == N_TRIALS + 1
 
     # Those functions are called N_TRIALS - 1 times
-    assert callback.tell_start_counter == N_TRIALS - 1
-    assert callback.tell_end_counter == N_TRIALS - 1
+    assert callback.tell_start_counter == N_TRIALS
+    assert callback.tell_end_counter == N_TRIALS
 
     # We try one more round
-    assert callback.iteration_start_counter == N_TRIALS
+    assert callback.iteration_start_counter == N_TRIALS + 1
     # but we stop because we already evaluated N_TRIALS
-    assert callback.iteration_end_counter == N_TRIALS - 1
+    assert callback.iteration_end_counter == N_TRIALS
 
     # This is depending on the number of challengers/intensify percentage
-    assert callback.next_configurations_start_counter == 3
-    assert callback.next_configurations_end_counter == 3
+    assert callback.next_configurations_start_counter > 0
+    assert callback.next_configurations_end_counter > 0

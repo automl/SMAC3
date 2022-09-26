@@ -139,10 +139,10 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
     def get_target_function_seeds(self) -> list[int]:
         return self._successive_halving.get_target_function_seeds()
 
-    def get_target_function_budgets(self) -> list[float]:
+    def get_target_function_budgets(self) -> list[float | None]:
         return self._successive_halving.get_target_function_budgets()
 
-    def get_target_function_instances(self) -> list[str]:
+    def get_target_function_instances(self) -> list[str | None]:
         return self._successive_halving.get_target_function_instances()
 
     def process_results(
@@ -201,9 +201,9 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # is calculated by taking into account point 2 and 3 above
         is_stage_done = all_config_inst_seed_launched and all_config_inst_seeds_processed
 
-        # ADDED IN SMAC 2.0: Makes sure we can call `tell` method without `ask` first
+        # ADDED IN SMAC 2.0: Makes sure we can not call `tell` method without `ask` first
         if trial_info.config not in self._current_instance_indices:
-            raise RuntimeError("Successive Halving does not work with `tell` method without `ask` first.")
+            raise RuntimeError("Successive Halving does not support calling `tell` method without calling `ask` first.")
 
         # adding challengers to the list of evaluated challengers
         #  - Stop: CAPPED/CRASHED/TIMEOUT/MEMOUT/DONOTADVANCE (!= SUCCESS)
@@ -402,7 +402,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         else:
             current_instances = sh._instance_seed_pairs
 
-        self._logger.debug("Running challenger - %s" % str(challenger))
+        self._logger.debug(f"Running challenger: {challenger}")
 
         # run the next instance-seed pair for the given configuration
         instance, seed = current_instances[self._current_instance_indices[challenger]]  # type: ignore[index]
@@ -757,7 +757,11 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # 1: First we count the number of configurations that have been launched
         # We only submit a new configuration M if all instance-seed pairs of (M - 1)
         # have been proposed
-        configurations_by_this_intensifier = [c for c, i, s, b in self._run_tracker]
+        configurations_by_this_intensifier = [
+            c
+            for c, i, s, b in self._run_tracker
+            # if b == self._all_budgets[self.stage]  # Bugfix closes #880
+        ]
         running_configs = set()
         for k, v in runhistory.items():
             if runhistory.ids_config[k.config_id] in configurations_by_this_intensifier:
