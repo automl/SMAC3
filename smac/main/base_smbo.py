@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Iterator
+from itertools import product
+from typing import Any, Iterator
 import numpy as np
 
 import time
@@ -126,7 +127,10 @@ class BaseSMBO:
         self._overwrite = overwrite
 
         # Those are the configs sampled from the passed initial design
-        self._initial_design_configs: list[Configuration] = []
+        # Selecting configurations from initial design
+        self._initial_design_configs = self._initial_design.select_configurations()
+        if len(self._initial_design_configs) == 0:
+            raise RuntimeError("SMAC needs initial configurations to work.")
 
         # Internal variables
         self._finished = False
@@ -138,6 +142,10 @@ class BaseSMBO:
         # the stats object when the run is started.
         self._incumbent = None
 
+        # We initialize the state based on previous data.
+        # If no previous data is found then we take care of the initial design.
+        self._initialize_state()
+
     @property
     def runhistory(self) -> RunHistory:
         return self._runhistory
@@ -145,6 +153,10 @@ class BaseSMBO:
     @property
     def stats(self) -> Stats:
         return self._stats
+
+    @property
+    def incumbent(self) -> Configuration | None:
+        return self._incumbent
 
     def update_model(self, model: AbstractModel) -> None:
         """Updates the model and updates the acquisition function."""
@@ -158,7 +170,7 @@ class BaseSMBO:
         self._acquisition_function.model = self._model
         self._acquisition_maximizer.acquisition_function = acquisition_function
 
-    def run(self, force_initial_design: bool = False) -> Configuration:
+    def run(self) -> Configuration:
         """Runs the Bayesian optimization loop.
 
         Returns
@@ -175,10 +187,6 @@ class BaseSMBO:
         self._stats.start_timing()
         time_left = None
 
-        # We initialize the state based on previous data.
-        # If no previous data is found then we take care of the initial design.
-        self._initialize_state(force_initial_design=force_initial_design)
-
         for callback in self._callbacks:
             callback.on_start(self)
 
@@ -192,9 +200,6 @@ class BaseSMBO:
             # Sample next configuration for intensification.
             # Initial design runs are also included in the BO loop now.
             intent, trial_info = self.ask()
-
-            # Remove config from initial design challengers to not repeat it again
-            self._initial_design_configs = [c for c in self._initial_design_configs if c != trial_info.config]
 
             # Update timebound only if a 'new' configuration is sampled as the challenger
             if self._intensifier.num_trials == 0 or time_left is None:
@@ -253,12 +258,9 @@ class BaseSMBO:
                 self.tell(trial_info, trial_value, time_left)
 
             logger.debug(
-                "Remaining budget: %f (wallclock time), %f (target function time), %f (target function runs)"
-                % (
-                    self._stats.get_remaing_walltime(),
-                    self._stats.get_remaining_cputime(),
-                    self._stats.get_remaining_trials(),
-                )
+                f"Remaining wallclock time: {self._stats.get_remaing_walltime()}; "
+                f"Remaining cpu time: {self._stats.get_remaining_cputime()}; "
+                f"Remaining trials: {self._stats.get_remaining_trials()}"
             )
 
             if self._stats.is_budget_exhausted() or self._stop:
@@ -347,9 +349,8 @@ class BaseSMBO:
     def _register_callback(self, callback: Callback) -> None:
         self._callbacks += [callback]
 
-    def _initialize_state(self, force_initial_design: bool = False) -> None:
-        """Starts the Bayesian Optimization loop and detects whether the optimization is restored
-        from a previous state."""
+    def _initialize_state(self) -> None:
+        """Detects whether the optimization is restored from a previous state."""
 
         # Here we actually check whether the run should be continued or not.
         # More precisely, we update our stats and runhistory object if all component arguments
@@ -418,11 +419,6 @@ class BaseSMBO:
         # Make sure we use the current incumbent
         self._incumbent = self.stats.get_incumbent()
 
-        # Selecting configurations from initial design
-        self._initial_design_configs = self._initial_design.select_configurations()
-        if len(self._initial_design_configs) == 0:
-            raise RuntimeError("SMAC needs initial configurations to work.")
-
         # Sanity-checking: We expect an empty runhistory if finished in stats is 0
         # Note: stats.submitted might not be 0 because the user could have provide information via the tell method only
         if self.stats.finished == 0 or self._incumbent is None:
@@ -462,78 +458,65 @@ class BaseSMBO:
 
         return time_left
 
-    '''
-    # TODO: Is this still needed?
-    # I think it is important when using instances
     def validate(
         self,
-        config_mode: Union[str, List[Configuration]] = "inc",
-        instance_mode: Union[str, List[str]] = "train+test",
-        repetitions: int = 1,
-        use_epm: bool = False,
-        n_jobs: int = -1,
-        backend: str = "threading",
-    ) -> RunHistory:
-        """Create validator-object and run validation, using config- information, runhistory from
-        smbo and runner from intensify.
+        config: Configuration,
+        *,
+        instances: list[str] | None = None,
+        seed: int | None = None,
+    ) -> float | list[float]:
+        """Validates a configuration with different seeds than in the optimization process and on the highest
+        budget (if budget type is real-valued).
 
         Parameters
         ----------
-        config_mode: str or list<Configuration>
-            string or directly a list of Configuration
-            str from [def, inc, def+inc, wallclock_time, cpu_time, all]
-            time evaluates at cpu- or wallclock-timesteps of:
-            [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]
-            with max_time being the highest recorded time
-        instance_mode: string
-            what instances to use for validation, from [train, test, train+test]
-        repetitions: int
-            number of repetitions in nondeterministic algorithms (in
-            deterministic will be fixed to 1)
-        use_epm: bool
-            whether to use an EPM instead of evaluating all runs with the TAE
-        n_jobs: int
-            number of parallel processes used by joblib
+        config : Configuration
+            Configuration to validate
+        instances : list[str] | None, defaults to None
+            Which instances to validate. If None, all instances specified in the scenario are used.
+            In case that the budget type is real-valued budget, this argument is ignored.
+        seed : int | None, defaults to None
+            If None, the seed from the scenario is used.
 
         Returns
         -------
-        runhistory: RunHistory
-            runhistory containing all specified runs
+        cost : float | list[float]
+            The averaged cost of the configuration. In case of multi-fidelity, the cost of each objective is
+            averaged.
         """
-        if isinstance(config_mode, str):
-            assert self._config.output_directory is not None  # Please mypy
-            traj_fn = os.path.join(self._config.output_directory, "traj_aclib2.json")
-            trajectory = TrajLogger.read_traj_aclib_format(
-                fn=traj_fn, cs=self._configspace
-            )  # type: Optional[List[Dict[str, Union[float, int, Configuration]]]]
-        else:
-            trajectory = None
-        if self._config.output_directory:
-            new_rh_path = os.path.join(
-                self._config.output_directory, "validated_runhistory.json"
-            )  # type: Optional[str] # noqa E501
-        else:
-            new_rh_path = None
+        if seed is None:
+            seed = self._scenario.seed
 
-        validator = Validator(self._config, trajectory, self._rng)
-        if use_epm:
-            new_rh = validator.validate_epm(
-                config_mode=config_mode,
-                instance_mode=instance_mode,
-                repetitions=repetitions,
-                runhistory=self._runhistory,
-                output_fn=new_rh_path,
-            )
-        else:
-            new_rh = validator.validate(
-                config_mode,
-                instance_mode,
-                repetitions,
-                n_jobs,
-                backend,
-                self._runhistory,
-                self._runner,
-                output_fn=new_rh_path,
-            )
-        return new_rh
-    '''
+        rng = np.random.default_rng(seed)
+
+        seeds = []
+        for _ in range(len(self._intensifier.get_target_function_seeds())):
+            seed = int(rng.integers(low=0, high=MAXINT, size=1)[0])
+            seeds += [seed]
+
+        used_budgets: list[float | None] = [None]
+        if self._intensifier.uses_budgets:
+            # Select last budget
+            used_budgets = [self._intensifier.get_target_function_budgets()[-1]]
+
+        used_instances: list[str | None] = [None]
+        if self._intensifier.uses_instances:
+            if instances is None:
+                assert self._scenario.instances is not None
+                used_instances = self._scenario.instances  # type: ignore
+
+        costs = []
+        for s, b, i in product(seeds, used_budgets, used_instances):
+            kwargs: dict[str, Any] = {}
+            if s is not None:
+                kwargs["seed"] = s
+            if b is not None:
+                kwargs["budget"] = b
+            if i is not None:
+                kwargs["instance"] = i
+
+            _, cost, _, _ = self._runner.run(config, **kwargs)
+            costs += [cost]
+
+        np_costs = np.array(costs)
+        return np.mean(np_costs, axis=0)
