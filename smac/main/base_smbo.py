@@ -371,6 +371,7 @@ class BaseSMBO:
                     # TODO: We have to do something different here:
                     # The intensifier needs to know about what happened
                     # Therefore, we read in the runhistory but use the tell method to add everything
+                    # Update: Not working yet. Therefore, we just throw an error.
 
                     logger.info("Continuing from previous run.")
 
@@ -385,24 +386,37 @@ class BaseSMBO:
                         logger.info("Since the previous run was not successful, SMAC will start from scratch again.")
                         self._runhistory.reset()
                         self._stats.reset()
+                    else:
+                        raise NotImplementedError("Unfortunately, previous runs can not be continued yet. 😞")
                 else:
                     diff = recursively_compare_dicts(self._scenario.__dict__, old_scenario.__dict__, level="scenario")
                     logger.info(
-                        f"Found old run in `{self._scenario.output_directory}` but it is not the same as the current"
+                        f"Found old run in `{self._scenario.output_directory}` but it is not the same as the current "
                         f"one:\n{diff}"
                     )
 
                     feedback = input(
                         "\nPress one of the following numbers to continue or any other key to abort:\n"
-                        "(1) Overwrite old run completely.\n"
-                        "(2) Overwrite old run and re-use previous runhistory data. The configuration space "
-                        "has to be the same for this option.\n"
+                        "(1) Overwrite old run completely and start a new run.\n"
+                        "(2) Rename the old run (append an '-old') and start a new run.\n"
+                        "(3) Overwrite old run and re-use previous runhistory data. The configuration space "
+                        "has to be the same for this option. This option is not tested yet.\n"
                     )
 
                     if feedback == "1":
                         # We don't have to do anything here, since we work with a clean runhistory and stats object
                         pass
                     elif feedback == "2":
+                        # Rename old run
+                        new_dir = str(old_scenario.output_directory.parent)
+                        while True:
+                            new_dir += "-old"
+                            try:
+                                old_scenario.output_directory.parent.rename(new_dir)
+                                break
+                            except OSError:
+                                pass
+                    elif feedback == "3":
                         # We overwrite runhistory and stats.
                         # However, we should ensure that we use the same configspace.
                         assert self._scenario.configspace == old_scenario.configspace

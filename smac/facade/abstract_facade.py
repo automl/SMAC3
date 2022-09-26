@@ -72,9 +72,9 @@ class AbstractFacade:
     logging_level: int | Path | None
          Level of logging; if path passed: yaml file expected; if none: use default logging from logging.yml
     callbacks: list[Callback] = [],
-    overwrite: bool defaults to False
-        When True, overwrites the results (Runhistory & Stats) if a previous run is found that is
-        inconsistent in the meta data with the current setup. In that case, the user is prompted
+    overwrite: bool, defaults to False
+        When True, overwrites the results (runhistory and stats) if a previous run is found that is
+        inconsistent in the meta data with the current setup. If ``overwrite`` is set to False, the user is asked
         for the exact behaviour.
     """
 

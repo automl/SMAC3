@@ -4,7 +4,6 @@ import dataclasses
 import json
 import time
 
-import numpy as np
 from ConfigSpace.configuration_space import Configuration
 
 from smac.runhistory.dataclasses import TrajectoryItem
