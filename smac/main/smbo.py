@@ -98,13 +98,15 @@ class SMBO(BaseSMBO):
         )
 
         if intent == TrialInfoIntent.RUN:
-            # There are 2 criteria that the stats object uses to know
-            # if the budged was exhausted.
+            # There are 2 criteria that the stats object uses to know if the budged was exhausted.
             # The budget time, which can only be known when the run finishes,
             # And the number of ta executions. Because we submit the job at this point,
             # we count this submission as a run. This prevent for using more
-            # runner runs than what the config allows
+            # runner runs than what the config allows.
             self._stats._submitted += 1
+
+        # Remove config from initial design challengers to not repeat it again
+        self._initial_design_configs = [c for c in self._initial_design_configs if c != trial_info.config]
 
         for callback in self._callbacks:
             callback.on_ask_end(self, intent, trial_info)
@@ -118,6 +120,18 @@ class SMBO(BaseSMBO):
         time_left: float | None = None,
         save: bool = True,
     ) -> None:
+        # We first check if budget/instance/seed is supported by the intensifier
+        if info.seed not in (seeds := self._intensifier.get_target_function_seeds()):
+            raise ValueError(f"Seed {info.seed} is not supported by the intensifier. Consider using one of {seeds}.")
+        elif info.budget not in (budgets := self._intensifier.get_target_function_budgets()):
+            raise ValueError(
+                f"Budget {info.budget} is not supported by the intensifier. Consider using one of {budgets}."
+            )
+        elif info.instance not in (instances := self._intensifier.get_target_function_instances()):
+            raise ValueError(
+                f"Instance {info.instance} is not supported by the intensifier. Consider using one of {instances}."
+            )
+
         if info.config.origin is None:
             info.config.origin = "Custom"
 

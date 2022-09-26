@@ -162,11 +162,6 @@ class AbstractFacade:
 
         # Set the runner to access it globally
         self._runner = runner
-        self._optimizer = self._get_optimizer()
-
-        # Register callbacks here
-        for callback in callbacks:
-            self._optimizer._register_callback(callback)
 
         # Adding dependencies of the components
         self._update_dependencies()
@@ -177,6 +172,14 @@ class AbstractFacade:
         # We have to validate if the object compositions are correct and actually make sense
         self._validate()
 
+        # Finally we configure our optimizer
+        self._optimizer = self._get_optimizer()
+        assert self._optimizer
+
+        # Register callbacks here
+        for callback in callbacks:
+            self._optimizer._register_callback(callback)
+
     @property
     def runhistory(self) -> RunHistory:
         return self._optimizer._runhistory
@@ -184,6 +187,10 @@ class AbstractFacade:
     @property
     def stats(self) -> Stats:
         return self._optimizer._stats
+
+    @property
+    def incumbent(self) -> Configuration | None:
+        return self._optimizer._incumbent
 
     def get_meta(self) -> dict[str, Any]:
         """Generates a hash based on all components of the facade. This is used for the run name or to determine
@@ -213,11 +220,11 @@ class AbstractFacade:
         """Which seeds are used to call the target function."""
         return self._intensifier.get_target_function_seeds()
 
-    def get_target_function_budgets(self) -> list[float]:
+    def get_target_function_budgets(self) -> list[float | None]:
         """Which budgets are used to call the target function."""
         return self._intensifier.get_target_function_budgets()
 
-    def get_target_function_instances(self) -> list[str]:
+    def get_target_function_instances(self) -> list[str | None]:
         """Which instances are used to call the target function."""
         return self._intensifier.get_target_function_instances()
 
@@ -230,12 +237,19 @@ class AbstractFacade:
     def ask(self) -> TrialInfo:
         """Asks the intensifier for the next trial. This method returns only trials with the intend
         to run."""
+        counter = 0
         while True:
+            if counter > 10:
+                logger.warning("It seems like SMAC only finds trials with the intent to skip/wait.")
+                counter = 0
+
             intend, info = self._optimizer.ask()
             # We only accept trials which are intented to run
             if intend != TrialInfoIntent.RUN:
+                counter += 1
                 continue
 
+            counter = 0
             return info
 
     def tell(self, info: TrialInfo, value: TrialValue, save: bool = True) -> None:
@@ -253,15 +267,9 @@ class AbstractFacade:
         """
         return self._optimizer.tell(info, value, time_left=None, save=save)
 
-    def optimize(self, force_initial_design: bool = False) -> Configuration:
+    def optimize(self) -> Configuration:
         """
         Optimizes the algorithm.
-
-        Parameters
-        ----------
-        force_initial_design: bool
-            The initial design is only performed if the runhistory is empty. If this flag is set to True,
-            the initial design is performed regardless of the runhistory.
 
         Returns
         -------
@@ -270,7 +278,7 @@ class AbstractFacade:
         """
         incumbent = None
         try:
-            incumbent = self._optimizer.run(force_initial_design=force_initial_design)
+            incumbent = self._optimizer.run()
         finally:
             self._optimizer.save()
             self._stats.print()
@@ -281,6 +289,34 @@ class AbstractFacade:
                 logger.info(f"Estimated cost: {cost}")
 
         return incumbent
+
+    def validate(
+        self,
+        config: Configuration,
+        *,
+        instances: list[str] | None = None,
+        seed: int | None = None,
+    ) -> float | list[float]:
+        """Validates a configuration with different seeds than in the optimization process and on the highest
+        budget (if budget type is real-valued).
+
+        Parameters
+        ----------
+        config : Configuration
+            Configuration to validate
+        instances : list[str] | None, defaults to None
+            Which instances to validate. If None, all instances specified in the scenario are used.
+            In case that the budget type is real-valued budget, this argument is ignored.
+        seed : int | None, defaults to None
+            If None, the seed from the scenario is used.
+
+        Returns
+        -------
+        cost : float | list[float]
+            The averaged cost of the configuration. In case of multi-fidelity, the cost of each objective is
+            averaged.
+        """
+        return self._optimizer.validate(config, instances=instances, seed=seed)
 
     @staticmethod
     @abstractmethod
@@ -374,8 +410,6 @@ class AbstractFacade:
 
     def _validate(self) -> None:
         """Checks if the composition is correct if there are dependencies, not necessarily"""
-        assert self._optimizer
-
         # Make sure the same acquisition function is used
         assert self._acquisition_function == self._acquisition_maximizer._acquisition_function
 
