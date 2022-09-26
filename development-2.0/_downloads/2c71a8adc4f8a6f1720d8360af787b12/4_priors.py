@@ -7,7 +7,7 @@ hyperparameters. These priors are derived from user knowledge (from previous run
 tasks, common knowledge or intuition gained from manual tuning). To create the priors, we make
 use of the Normal and Beta Hyperparameters, as well as the "weights" property of the
 ``CategoricalHyperparameter``. This can be integrated into the optimiztion for any SMAC facade,
-but we stick with the hyperparameter optimization facade here. To incorporate user priors into the 
+but we stick with the hyperparameter optimization facade here. To incorporate user priors into the
 optimization, you have to change the acquisition function to ``PriorAcquisitionFunction``.
 """
 
@@ -130,10 +130,6 @@ if __name__ == "__main__":
     mlp = MLP()
     default_config = mlp.configspace.get_default_configuration()
 
-    # Example call of the target function (for debugging)
-    default_value = mlp.train(default_config, seed=209652396)
-    print(f"Default value: {round(default_value, 2)}")
-
     # Define our environment variables
     scenario = Scenario(mlp.configspace, n_trials=40)
 
@@ -146,7 +142,7 @@ if __name__ == "__main__":
     # We define the prior acquisition function, which conduct the optimization using priors over the optimum
     acquisition_function = PriorAcquisitionFunction(
         acquisition_function=HyperparameterFacade.get_acquisition_function(scenario),
-        decay_beta=scenario.n_trials / 10,  # Solid value
+        decay_beta=scenario.n_trials / 10,  # Proven solid value
     )
 
     # We only want one config call (use only one seed in this example)
@@ -167,5 +163,10 @@ if __name__ == "__main__":
 
     incumbent = smac.optimize()
 
-    incumbent_value = mlp.train(incumbent)
-    print(f"Incumbent value: {round(incumbent_value, 2)}")
+    # Get cost of default configuration
+    default_cost = smac.validate(default_config)
+    print(f"Default cost: {default_cost}")
+
+    # Let's calculate the cost of the incumbent
+    incumbent_cost = smac.validate(incumbent)
+    print(f"Default cost: {incumbent_cost}")

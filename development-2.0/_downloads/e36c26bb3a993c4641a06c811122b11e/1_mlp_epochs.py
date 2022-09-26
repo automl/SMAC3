@@ -117,11 +117,6 @@ class MLP:
 
 if __name__ == "__main__":
     mlp = MLP()
-    default_config = mlp.configspace.get_default_configuration()
-
-    # Example call of the target function (for debugging)
-    default_value = mlp.train(default_config)
-    print(f"Default value: {round(default_value, 2)}")
 
     # Define our environment variables
     scenario = Scenario(
@@ -143,7 +138,14 @@ if __name__ == "__main__":
         initial_design=initial_design,
         overwrite=True,
     )
+
+    # Let's optimize
     incumbent = smac.optimize()
 
-    incumbent_value = mlp.train(incumbent)
-    print(f"Incumbent value: {round(incumbent_value, 2)}")
+    # Get cost of default configuration
+    default_cost = smac.validate(mlp.configspace.get_default_configuration())
+    print(f"Default cost: {default_cost}")
+
+    # Let's calculate the cost of the incumbent
+    incumbent_cost = smac.validate(incumbent)
+    print(f"Default cost: {incumbent_cost}")

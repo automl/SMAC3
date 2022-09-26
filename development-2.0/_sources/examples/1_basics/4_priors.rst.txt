@@ -26,10 +26,10 @@ hyperparameters. These priors are derived from user knowledge (from previous run
 tasks, common knowledge or intuition gained from manual tuning). To create the priors, we make
 use of the Normal and Beta Hyperparameters, as well as the "weights" property of the
 ``CategoricalHyperparameter``. This can be integrated into the optimiztion for any SMAC facade,
-but we stick with the hyperparameter optimization facade here. To incorporate user priors into the 
+but we stick with the hyperparameter optimization facade here. To incorporate user priors into the
 optimization, you have to change the acquisition function to ``PriorAcquisitionFunction``.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-172
+.. GENERATED FROM PYTHON SOURCE LINES 13-173
 
 
 
@@ -38,7 +38,6 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
 
  .. code-block:: none
 
-    Default value: 0.04
     [WARNING][prior_acqusition_function.py:92] Discretizing the prior for random forest models.
     [INFO][abstract_initial_design.py:132] Using 4 initial design and 1 additional configurations.
     [INFO][intensifier.py:273] No incumbent provided in the first run. Sampling a new challenger...
@@ -59,9 +58,10 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
     [INFO][abstract_intensifier.py:336] Challenger (0.0245) is better than incumbent (0.0267) on 1 trials.
     [INFO][abstract_intensifier.py:360] Changes in incumbent:
     [INFO][abstract_intensifier.py:363] --- batch_size: 83 -> 63
-    [INFO][abstract_facade.py:280] Final Incumbent: {'activation': 'relu', 'batch_size': 63, 'learning_rate_init': 0.001682337847169736, 'n_layer': 3, 'n_neurons': 108, 'optimizer': 'adam'}
-    [INFO][abstract_facade.py:281] Estimated cost: 0.024487774682760866
-    Incumbent value: 0.03
+    [INFO][abstract_facade.py:288] Final Incumbent: {'activation': 'relu', 'batch_size': 63, 'learning_rate_init': 0.001682337847169736, 'n_layer': 3, 'n_neurons': 108, 'optimizer': 'adam'}
+    [INFO][abstract_facade.py:289] Estimated cost: 0.024487774682760866
+    Default cost: 0.05787991333952347
+    Default cost: 0.03506344784896309
 
 
 
@@ -192,10 +192,6 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
         mlp = MLP()
         default_config = mlp.configspace.get_default_configuration()
 
-        # Example call of the target function (for debugging)
-        default_value = mlp.train(default_config, seed=209652396)
-        print(f"Default value: {round(default_value, 2)}")
-
         # Define our environment variables
         scenario = Scenario(mlp.configspace, n_trials=40)
 
@@ -208,7 +204,7 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
         # We define the prior acquisition function, which conduct the optimization using priors over the optimum
         acquisition_function = PriorAcquisitionFunction(
             acquisition_function=HyperparameterFacade.get_acquisition_function(scenario),
-            decay_beta=scenario.n_trials / 10,  # Solid value
+            decay_beta=scenario.n_trials / 10,  # Proven solid value
         )
 
         # We only want one config call (use only one seed in this example)
@@ -229,13 +225,18 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
 
         incumbent = smac.optimize()
 
-        incumbent_value = mlp.train(incumbent)
-        print(f"Incumbent value: {round(incumbent_value, 2)}")
+        # Get cost of default configuration
+        default_cost = smac.validate(default_config)
+        print(f"Default cost: {default_cost}")
+
+        # Let's calculate the cost of the incumbent
+        incumbent_cost = smac.validate(incumbent)
+        print(f"Default cost: {incumbent_cost}")
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  40.973 seconds)
+   **Total running time of the script:** ( 0 minutes  36.043 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_4_priors.py:

@@ -38,7 +38,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     This example uses the ``MultiFidelityFacade`` facade, which is the closest implementation to
     `BOHB <https://github.com/automl/HpBandSter>`_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-150
+.. GENERATED FROM PYTHON SOURCE LINES 22-152
 
 
 
@@ -47,9 +47,8 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
  .. code-block:: none
 
-    Default value: 0.38
-    [WARNING][successive_halving.py:128] The target function is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider increasing `n_seeds` from the intensifier.
-    [INFO][successive_halving.py:190] Using successive halving with budget type BUDGETS, min budget 5, max budget 25 and eta 3.
+    [WARNING][successive_halving.py:123] The target function is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider increasing `n_seeds` from the intensifier.
+    [INFO][successive_halving.py:197] Using successive halving with budget type BUDGETS, min budget 5, max budget 25 and eta 3.
     [INFO][abstract_initial_design.py:132] Using 5 initial design and 0 additional configurations.
     [WARNING][abstract_parallel_intensifier.py:98] Hyperband is executed with 1 worker(s) only. However, your system supports up to 2 workers. Consider increasing the workers in the scenario.
     [INFO][hyperband_worker.py:164] Finished Hyperband iteration-step 1-1 with initial budget 8.
@@ -87,9 +86,10 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     [INFO][abstract_intensifier.py:363] --- n_neurons: 52 -> 183
     [INFO][successive_halving_worker.py:244] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
     [INFO][hyperband_worker.py:164] Finished Hyperband iteration-step 3-2 with initial budget 25.
-    [INFO][abstract_facade.py:280] Final Incumbent: {'activation': 'relu', 'n_layer': 5, 'n_neurons': 183, 'solver': 'sgd', 'batch_size': 91, 'learning_rate': 'adaptive', 'learning_rate_init': 0.006390670908394775}
-    [INFO][abstract_facade.py:281] Estimated cost: 0.01892138656762621
-    Incumbent value: 0.03
+    [INFO][abstract_facade.py:288] Final Incumbent: {'activation': 'relu', 'n_layer': 5, 'n_neurons': 183, 'solver': 'sgd', 'batch_size': 91, 'learning_rate': 'adaptive', 'learning_rate_init': 0.006390670908394775}
+    [INFO][abstract_facade.py:289] Estimated cost: 0.01892138656762621
+    Default cost: 0.4307319715258433
+    Default cost: 0.025047972763850068
 
 
 
@@ -198,11 +198,6 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
     if __name__ == "__main__":
         mlp = MLP()
-        default_config = mlp.configspace.get_default_configuration()
-
-        # Example call of the target function (for debugging)
-        default_value = mlp.train(default_config)
-        print(f"Default value: {round(default_value, 2)}")
 
         # Define our environment variables
         scenario = Scenario(
@@ -224,15 +219,22 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
             initial_design=initial_design,
             overwrite=True,
         )
+
+        # Let's optimize
         incumbent = smac.optimize()
 
-        incumbent_value = mlp.train(incumbent)
-        print(f"Incumbent value: {round(incumbent_value, 2)}")
+        # Get cost of default configuration
+        default_cost = smac.validate(mlp.configspace.get_default_configuration())
+        print(f"Default cost: {default_cost}")
+
+        # Let's calculate the cost of the incumbent
+        incumbent_cost = smac.validate(incumbent)
+        print(f"Default cost: {incumbent_cost}")
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  56.979 seconds)
+   **Total running time of the script:** ( 0 minutes  50.293 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_1_mlp_epochs.py:

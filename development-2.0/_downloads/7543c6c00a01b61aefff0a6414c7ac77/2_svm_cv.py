@@ -69,17 +69,11 @@ class SVM:
 
 if __name__ == "__main__":
     classifier = SVM()
-    configspace = classifier.configspace
-    default_config = configspace.get_default_configuration()
-
-    # Example call of the target function
-    default_value = classifier.train(default_config)
-    print(f"Default value: {round(default_value, 2)}")
 
     # Next, we create an object, holding general information about the run
     scenario = Scenario(
-        configspace,
-        n_trials=100,  # We want to run max 50 trials (combination of config and seed)
+        classifier.configspace,
+        n_trials=50,  # We want to run max 50 trials (combination of config and seed)
     )
 
     # We want to run the facade's default initial design, but we want to alter the number
@@ -99,5 +93,11 @@ if __name__ == "__main__":
     )
 
     incumbent = smac.optimize()
-    incumbent_value = classifier.train(incumbent)
-    print(f"Incumbent value: {round(incumbent_value, 2)}")
+
+    # Get cost of default configuration
+    default_cost = smac.validate(classifier.configspace.get_default_configuration())
+    print(f"Default cost: {default_cost}")
+
+    # Let's calculate the cost of the incumbent
+    incumbent_cost = smac.validate(incumbent)
+    print(f"Default cost: {incumbent_cost}")

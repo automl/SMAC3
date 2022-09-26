@@ -35,8 +35,7 @@ types as well as conditional hyperparameters.
 
  .. code-block:: none
 
-    Default value: 0.03
-    [INFO][abstract_initial_design.py:132] Using 10 initial design and 0 additional configurations.
+    [INFO][abstract_initial_design.py:132] Using 5 initial design and 0 additional configurations.
     [INFO][intensifier.py:273] No incumbent provided in the first run. Sampling a new challenger...
     [INFO][intensifier.py:444] First run and no incumbent provided. Challenger is assumed to be the incumbent.
     [INFO][intensifier.py:564] Updated estimated cost of incumbent on 1 trials: 0.0667
@@ -47,9 +46,10 @@ types as well as conditional hyperparameters.
     [INFO][abstract_intensifier.py:363] --- kernel: 'rbf' -> 'linear'
     [INFO][abstract_intensifier.py:363] --- shrinking: True -> False
     [INFO][intensifier.py:564] Updated estimated cost of incumbent on 3 trials: 0.0133
-    [INFO][abstract_facade.py:280] Final Incumbent: {'C': 1.2760639488343621, 'kernel': 'linear', 'shrinking': False}
-    [INFO][abstract_facade.py:281] Estimated cost: 0.013333333333333308
-    Incumbent value: 0.01
+    [INFO][abstract_facade.py:288] Final Incumbent: {'C': 1.2760639488343621, 'kernel': 'linear', 'shrinking': False}
+    [INFO][abstract_facade.py:289] Estimated cost: 0.013333333333333308
+    Default cost: 0.03333333333333344
+    Default cost: 0.013333333333333308
 
 
 
@@ -122,17 +122,11 @@ types as well as conditional hyperparameters.
 
     if __name__ == "__main__":
         classifier = SVM()
-        configspace = classifier.configspace
-        default_config = configspace.get_default_configuration()
-
-        # Example call of the target function
-        default_value = classifier.train(default_config)
-        print(f"Default value: {round(default_value, 2)}")
 
         # Next, we create an object, holding general information about the run
         scenario = Scenario(
-            configspace,
-            n_trials=100,  # We want to run max 50 trials (combination of config and seed)
+            classifier.configspace,
+            n_trials=50,  # We want to run max 50 trials (combination of config and seed)
         )
 
         # We want to run the facade's default initial design, but we want to alter the number
@@ -152,13 +146,19 @@ types as well as conditional hyperparameters.
         )
 
         incumbent = smac.optimize()
-        incumbent_value = classifier.train(incumbent)
-        print(f"Incumbent value: {round(incumbent_value, 2)}")
+
+        # Get cost of default configuration
+        default_cost = smac.validate(classifier.configspace.get_default_configuration())
+        print(f"Default cost: {default_cost}")
+
+        # Let's calculate the cost of the incumbent
+        incumbent_cost = smac.validate(incumbent)
+        print(f"Default cost: {incumbent_cost}")
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.721 seconds)
+   **Total running time of the script:** ( 0 minutes  0.984 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_2_svm_cv.py:

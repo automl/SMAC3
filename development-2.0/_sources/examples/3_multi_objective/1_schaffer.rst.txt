@@ -23,7 +23,7 @@
 
 A simple example on how to use multi-objective optimization is shown. The `schaffer` function is used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 7-79
+.. GENERATED FROM PYTHON SOURCE LINES 7-85
 
 
 
@@ -109,8 +109,10 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
     [INFO][abstract_intensifier.py:336] Challenger (0.2527) is better than incumbent (0.2558) on 3 trials.
     [INFO][abstract_intensifier.py:360] Changes in incumbent:
     [INFO][abstract_intensifier.py:363] --- x: 0.8557358664458059 -> 1.0849066921609452
-    [INFO][abstract_facade.py:280] Final Incumbent: {'x': 1.0849066921609452}
-    [INFO][abstract_facade.py:281] Estimated cost: 0.25271859054525136
+    [INFO][abstract_facade.py:288] Final Incumbent: {'x': 1.0849066921609452}
+    [INFO][abstract_facade.py:289] Estimated cost: 0.25271859054525136
+    Default costs: [0. 4.]
+    Incumbent costs: [1.17702253 0.83739576]
 
 
 
@@ -191,13 +193,19 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
         )
         incumbent = smac.optimize()
 
+        default_cost = smac.validate(cs.get_default_configuration())
+        print(f"Default costs: {default_cost}")
+
+        incumbent_cost = smac.validate(incumbent)
+        print(f"Incumbent costs: {incumbent_cost}")
+
         # Plot the evaluated points
         plot_from_smac(smac)
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.921 seconds)
+   **Total running time of the script:** ( 0 minutes  1.616 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_1_schaffer.py:

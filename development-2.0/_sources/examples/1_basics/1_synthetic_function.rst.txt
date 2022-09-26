@@ -28,7 +28,7 @@ The black-box facade uses a :term:`Gaussian Process<GP>` as its surrogate model.
 The facade works best on a numerical hyperparameter configuration space and should not
 be applied to problems with large evaluation budgets (up to 1000 evaluations).
 
-.. GENERATED FROM PYTHON SOURCE LINES 12-66
+.. GENERATED FROM PYTHON SOURCE LINES 12-68
 
 
 
@@ -37,7 +37,6 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
 
  .. code-block:: none
 
-    Default value: 16916.0
     [INFO][abstract_initial_design.py:132] Using 20 initial design and 0 additional configurations.
     [INFO][intensifier.py:273] No incumbent provided in the first run. Sampling a new challenger...
     [INFO][intensifier.py:444] First run and no incumbent provided. Challenger is assumed to be the incumbent.
@@ -60,9 +59,10 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
     [INFO][abstract_intensifier.py:360] Changes in incumbent:
     [INFO][abstract_intensifier.py:363] --- x0: -0.47602048278586295 -> 1.7031544591929872
     [INFO][abstract_intensifier.py:363] --- x1: 0.13155812805683098 -> 2.842364243857716
-    [INFO][abstract_facade.py:280] Final Incumbent: {'x0': 1.7031544591929872, 'x1': 2.842364243857716}
-    [INFO][abstract_facade.py:281] Estimated cost: 0.8351420167215506
-    Incumbent value: 0.84
+    [INFO][abstract_facade.py:288] Final Incumbent: {'x0': 1.7031544591929872, 'x1': 2.842364243857716}
+    [INFO][abstract_facade.py:289] Estimated cost: 0.8351420167215506
+    Default cost: 16916.0
+    Default cost: 0.8351420167215506
 
 
 
@@ -113,25 +113,27 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
         # Scenario object specifying the optimization "environment"
         scenario = Scenario(model.configspace, n_trials=300)
 
-        # Example call of the target function (for debugging)
-        default_value = model.train(model.configspace.get_default_configuration())
-        print(f"Default value: {round(default_value, 2)}")
-
         # Now we use SMAC to find the best hyperparameters
         smac = BlackBoxFacade(
             scenario,
             model.train,  # We pass the target function here
             overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data.
         )
+
         incumbent = smac.optimize()
 
-        incumbent_value = model.train(incumbent)
-        print(f"Incumbent value: {round(incumbent_value, 2)}")
+        # Get cost of default configuration
+        default_cost = smac.validate(model.configspace.get_default_configuration())
+        print(f"Default cost: {default_cost}")
+
+        # Let's calculate the cost of the incumbent
+        incumbent_cost = smac.validate(incumbent)
+        print(f"Default cost: {incumbent_cost}")
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.463 seconds)
+   **Total running time of the script:** ( 0 minutes  3.008 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_1_synthetic_function.py:

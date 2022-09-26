@@ -1,0 +1,37 @@
+smac.intensifier.successive\_halving\_worker
+============================================
+
+.. automodule:: smac.intensifier.successive_halving_worker
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      SuccessiveHalvingWorker
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
