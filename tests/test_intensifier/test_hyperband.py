@@ -468,9 +468,7 @@ def test_update_stage(make_hb_worker):
     test initialization of all parameters and tracking variables
     """
 
-    intensifier: HyperbandWorker = make_hb_worker(
-        deterministic=True, n_instances=1, min_budget=0.1, max_budget=1, eta=2
-    )
+    intensifier: HyperbandWorker = make_hb_worker(deterministic=True, n_instances=9, min_budget=1, max_budget=9, eta=2)
 
     # intensifier._update_stage()
 
@@ -478,7 +476,7 @@ def test_update_stage(make_hb_worker):
     assert intensifier._s_max == 3
     assert intensifier._hb_iters == 0
     assert isinstance(intensifier._sh_intensifier, SuccessiveHalvingWorker)
-    assert intensifier._sh_intensifier._min_budget == 0.125
+    assert intensifier._sh_intensifier._min_budget == 1.125
     assert intensifier._sh_intensifier._n_configs_in_stage == [8.0, 4.0, 2.0, 1.0]
 
     # next HB stage
@@ -486,7 +484,7 @@ def test_update_stage(make_hb_worker):
 
     assert intensifier._s == 2
     assert intensifier._hb_iters == 0
-    assert intensifier._sh_intensifier._min_budget == 0.25
+    assert intensifier._sh_intensifier._min_budget == 2.25
     assert intensifier._sh_intensifier._n_configs_in_stage == [4.0, 2.0, 1.0]
 
     intensifier._update_stage()  # s = 1
@@ -496,7 +494,7 @@ def test_update_stage(make_hb_worker):
 
     assert intensifier._s == intensifier._s_max
     assert intensifier._hb_iters == 1
-    assert intensifier._sh_intensifier._min_budget == 0.125
+    assert intensifier._sh_intensifier._min_budget == 1.125
     assert intensifier._sh_intensifier._n_configs_in_stage == [8.0, 4.0, 2.0, 1.0]
 
 
@@ -591,7 +589,7 @@ def test_budget_initialization(make_hb_worker):
         deterministic=True,
     )
 
-    assert [1, 3, 9, 27, 81] == intensifier._all_budgets.tolist()
+    assert [1, 3, 9, 27, 81] == intensifier._all_budgets
     assert [81, 27, 9, 3, 1] == intensifier._n_configs_in_stage
 
     to_check = [
@@ -629,7 +627,6 @@ def test_budget_initialization(make_hb_worker):
     ]
 
     for minb, maxb, eta, n_configs_in_stage, all_budgets in to_check:
-
         intensifier = make_hb_worker(
             min_budget=minb,
             max_budget=maxb,
@@ -639,7 +636,7 @@ def test_budget_initialization(make_hb_worker):
         )
 
         for i in range(len(all_budgets) + 10):
-            comp_budgets = intensifier._sh_intensifier._all_budgets.tolist()
+            comp_budgets = intensifier._sh_intensifier._all_budgets
             comp_configs = intensifier._sh_intensifier._n_configs_in_stage
 
             assert isinstance(comp_configs, list)

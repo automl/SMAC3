@@ -119,7 +119,7 @@ def test_multi_objective(runhistory, make_scenario, configspace_small, configs):
         encoder = RunHistoryEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
         _, Y = encoder.transform(runhistory)
 
-    encoder._set_multi_objective_algorithm(MeanAggregationStrategy(scenario))
+    encoder.multi_objective_algorithm = MeanAggregationStrategy(scenario)
     _, Y = encoder.transform(runhistory)
 
     # We expect the result to be 1 because no normalization could be done yet

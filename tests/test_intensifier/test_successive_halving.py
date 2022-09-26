@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 import time
 from unittest import mock
 
@@ -441,9 +442,7 @@ def test_parallel_same_as_serial_SH(SH, _SH, configs):
 
 
 def test_init_1(make_sh_worker):
-    """
-    Test parameter initializations for successive halving - instance as budget.
-    """
+    """Test parameter initializations for successive halving - instance as budget."""
     _SH = make_sh_worker(deterministic=False, min_budget=None, max_budget=None, n_seeds=2)
 
     assert len(_SH._successive_halving._instance_seed_pairs) == 6  # since instance-seed pairs
@@ -456,31 +455,35 @@ def test_init_1(make_sh_worker):
 
 
 def test_init_2(make_sh_worker):
-    """
-    Test parameter initialiations for successive halving - real-valued budget
-    """
-    _SH = make_sh_worker(deterministic=False, min_budget=1, max_budget=10, n_instances=1, n_seeds=1)
+    """Test parameter initialiations for successive halving - real-valued budget."""
+    _SH = make_sh_worker(deterministic=False, min_budget=1, max_budget=10, n_instances=1, n_seeds=10)
 
-    assert len(_SH._successive_halving._instance_seed_pairs) == 1  # since instance-seed pairs
+    assert len(_SH._successive_halving._instance_seed_pairs) == 10  # since instance-seed pairs
     assert _SH._successive_halving._min_budget == 1
     assert _SH._successive_halving._max_budget == 10
     assert _SH._n_configs_in_stage == [8.0, 4.0, 2.0, 1.0]
     assert list(_SH._all_budgets) == [1.25, 2.5, 5.0, 10.0]
-    assert not _SH._successive_halving._instance_as_budget
-    assert not _SH._successive_halving._repeat_configs
+    assert _SH._successive_halving._instance_as_budget
+    assert _SH._successive_halving._repeat_configs
+
+    # Max budget > instance seed pairs
+    with pytest.raises(ValueError):
+        _SH = make_sh_worker(deterministic=False, min_budget=1, max_budget=10, n_instances=1, n_seeds=1)
 
 
 def test_init_3(make_sh_worker):
-    """
-    Test parameter initialiations for successive halving - real-valued budget, high initial budget
-    """
-    _SH = make_sh_worker(deterministic=True, min_budget=9, max_budget=10, n_instances=1, n_seeds=1)
-    assert len(_SH._successive_halving._instance_seed_pairs) == 1  # since instance-seed pairs
+    """Test parameter initialiations for successive halving - real-valued budget, high initial budget."""
+    # In case of deterministic, only one seed is used
+    with pytest.raises(ValueError):
+        _SH = make_sh_worker(deterministic=True, min_budget=9, max_budget=10, n_instances=1, n_seeds=10)
+
+    _SH = make_sh_worker(deterministic=True, min_budget=9, max_budget=10, n_instances=10, n_seeds=1)
+    assert len(_SH._successive_halving._instance_seed_pairs) == 10  # since instance-seed pairs
     assert _SH._successive_halving._min_budget == 9
     assert _SH._successive_halving._max_budget == 10
     assert _SH._n_configs_in_stage == [1.0]
     assert list(_SH._all_budgets) == [10.0]
-    assert not _SH._successive_halving._instance_as_budget
+    assert _SH._successive_halving._instance_as_budget
     assert not _SH._successive_halving._repeat_configs
 
 
@@ -488,22 +491,13 @@ def test_init_4(make_sh_worker):
     """
     Test wrong parameter initializations for successive halving
     """
-    with pytest.raises(
-        ValueError,
-        match="requires parameters `min_budget` and `max_budget` for intensification!",
-    ):
-        make_sh_worker(deterministic=True, min_budget=None, max_budget=None, n_instances=1, n_seeds=1)
-
     # eta < 1
     with pytest.raises(ValueError, match="The parameter `eta` must be greater than 1."):
         make_sh_worker(deterministic=True, min_budget=None, max_budget=None, n_instances=1, n_seeds=1, eta=0)
 
     # max budget > instance-seed pairs
-    with pytest.raises(
-        ValueError,
-        match="Max budget can not be greater than the number of instance-seed pairs.",
-    ):
-        make_sh_worker(deterministic=True, min_budget=1, max_budget=5, n_instances=3, n_seeds=1)
+    with pytest.raises(ValueError, match="Max budget.*"):
+        make_sh_worker(deterministic=False, min_budget=1, max_budget=5, n_instances=3, n_seeds=1)
 
 
 def test_top_k_1(make_sh_worker, runhistory, configs):
@@ -634,7 +628,7 @@ def test_top_k_2(make_sh_worker, runhistory, configs):
 
 def test_top_k_3(make_sh_worker, runhistory, configs):
     """Test _top_k() for not enough configs to generate for the next budget"""
-    intensifier = make_sh_worker(n_instances=1, min_budget=1, max_budget=4, n_seeds=1)
+    intensifier = make_sh_worker(n_instances=1, min_budget=1, max_budget=4, n_seeds=4)
     config1 = configs[0]
     config2 = configs[1]
 
@@ -664,7 +658,7 @@ def test_top_k_3(make_sh_worker, runhistory, configs):
 
 def test_top_k_4(make_sh_worker, runhistory, configs):
     """Test _top_k() for not enough configs to generate for the next budget"""
-    intensifier = make_sh_worker(n_instances=1, min_budget=1, max_budget=10, n_seeds=1, eta=2, min_challenger=1)
+    intensifier = make_sh_worker(n_instances=1, min_budget=1, max_budget=10, n_seeds=10, eta=2, min_challenger=1)
     config1 = configs[0]
     config2 = configs[1]
     config3 = configs[2]
@@ -822,7 +816,7 @@ def test_get_next_run_2(make_sh_worker, configs, runhistory):
     """
     test get_next_run for higher stages of SH iteration
     """
-    intensifier = make_sh_worker(deterministic=True, n_instances=1, min_budget=1, max_budget=2, n_seeds=1, eta=2)
+    intensifier = make_sh_worker(deterministic=True, n_instances=2, min_budget=1, max_budget=2, n_seeds=1, eta=2)
     config1 = configs[0]
 
     intensifier._update_stage(runhistory=None)
@@ -843,7 +837,7 @@ def test_get_next_run_2(make_sh_worker, configs, runhistory):
 
 def test_update_stage(make_sh_worker, runhistory, configs):
     """Test update_stage - initializations for all tracking variables."""
-    intensifier = make_sh_worker(deterministic=True, n_instances=1, min_budget=1, max_budget=2, n_seeds=1, eta=2)
+    intensifier = make_sh_worker(deterministic=True, n_instances=2, min_budget=1, max_budget=2, n_seeds=1, eta=2)
     config1 = configs[0]
     config2 = configs[1]
 
@@ -1012,7 +1006,7 @@ def test_incumbent_selection_default(make_sh_worker, make_target_function, runhi
     config4 = configs[3]
 
     # instances = [None]???
-    intensifier = make_sh_worker(deterministic=True, n_instances=1, min_budget=1, max_budget=2, eta=2)
+    intensifier = make_sh_worker(deterministic=True, n_instances=2, min_budget=1, max_budget=2, eta=2)
     intensifier._stage = 0
     # intensifier._update_stage(runhistory=None)
     # SH considers challenger as incumbent in first run in evaluate_challenger
@@ -1098,7 +1092,7 @@ def test_incumbent_selection_default(make_sh_worker, make_target_function, runhi
     inc = intensifier._compare_configs(challenger=config3, incumbent=inc, runhistory=runhistory, log_trajectory=False)
     assert inc == config3
 
-    intensifier = make_sh_worker(deterministic=True, n_instances=1, min_budget=1, eta=2)
+    intensifier = make_sh_worker(deterministic=True, n_instances=5, min_budget=1, eta=2)
     intensifier._stage = 0
 
     # Adding a better configuration, but the incumbent will only be changed on budget=2
@@ -1139,7 +1133,7 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_function, runhi
     # instances = [None]???
     intensifier = make_sh_worker(
         deterministic=True,
-        n_instances=1,
+        n_instances=2,
         min_budget=1,
         max_budget=2,
         eta=2,
@@ -1151,17 +1145,17 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_function, runhi
         config=config1,
         instance="i1",
         seed=0,
-        budget=1,
-        cost=0.5,
+        budget=None,
+        cost=10,
         time=1,
         status=StatusType.SUCCESS,
         additional_info=None,
     )
     runhistory.add(
         config=config1,
-        instance="i1",
+        instance="i2",
         seed=0,
-        budget=2,
+        budget=None,
         cost=10,
         time=1,
         status=StatusType.SUCCESS,
@@ -1171,21 +1165,21 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_function, runhi
         config=config2,
         instance="i1",
         seed=0,
-        budget=2,
+        budget=None,
         cost=5,
         time=1,
         status=StatusType.SUCCESS,
         additional_info=None,
     )
 
-    # incumbent should be config1, since it has the best performance in one of the budgets
+    # incumbent should be config2, since it has the best performance in one of the budgets
     inc = intensifier._compare_configs(
         incumbent=config2,
         challenger=config1,
         runhistory=runhistory,
         log_trajectory=False,
     )
-    assert config1 == inc
+    assert config2 == inc
 
     # if config1 is incumbent already, it shouldn't change
     inc = intensifier._compare_configs(
@@ -1199,7 +1193,7 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_function, runhi
     # select best on highest budget only
     intensifier = make_sh_worker(
         deterministic=True,
-        n_instances=1,
+        n_instances=4,
         min_budget=1,
         max_budget=4,
         eta=2,
@@ -1213,7 +1207,7 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_function, runhi
         config=config3,
         instance="i1",
         seed=0,
-        budget=2,
+        budget=None,
         cost=0.5,
         time=1,
         status=StatusType.SUCCESS,
@@ -1223,7 +1217,7 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_function, runhi
         config=config4,
         instance="i1",
         seed=0,
-        budget=1,
+        budget=None,
         cost=5,
         time=1,
         status=StatusType.SUCCESS,
@@ -1235,7 +1229,7 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_function, runhi
         runhistory=runhistory,
         log_trajectory=False,
     )
-    assert config4 == inc
+    assert config3 == inc
     assert intensifier._stats.incumbent_changed == 0
 
     # incumbent changes to config3 since that is run on the highest budget
@@ -1243,7 +1237,7 @@ def test_incumbent_selection_designs(make_sh_worker, make_target_function, runhi
         config=config3,
         instance="i1",
         seed=0,
-        budget=4,
+        budget=None,
         cost=10,
         time=1,
         status=StatusType.SUCCESS,
@@ -1513,7 +1507,7 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
     # instances = [None]???
     intensifier = make_sh_worker(
         deterministic=True,
-        n_instances=1,
+        n_instances=5,
         min_budget=2,
         max_budget=5,
         eta=2,
@@ -1528,8 +1522,7 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
     )
     target_function.runhistory = runhistory
 
-    # we do not want to test instance as budget
-    assert not intensifier._successive_halving._instance_as_budget
+    assert intensifier._successive_halving._instance_as_budget
 
     # Run until there are no more configurations to be proposed
     # Skip running some configurations to emulate the fact that runs finish on different time
@@ -1551,7 +1544,7 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
     assert configurations == {1, 2}
     # There is only one instance always -- so we only have 2 configs for 1 instances each
     config_inst_seed = set([k for k, v in runhistory._data.items()])
-    assert len(config_inst_seed) == 2
+    assert len(config_inst_seed) == 4
 
     # Go to the last stage. Notice that iteration should not be done
     # as we are in stage 1 out of 2
@@ -1583,22 +1576,17 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
     # The next configuration per stage is just one (n_configs_in_stage=[2.0, 1.0])
     # We ran previously 2 configs and with this new, we should have 3 total
     config_inst_seed = [k for k, v in runhistory._data.items()]
-    assert len(config_inst_seed) == 3
+    assert len(config_inst_seed) == 7
 
     # Because it is only 1 config, the iteration is completed
-    assert intensifier._iteration_done
-
-    # We make sure the proper budget got allocated on the whole run:
-    # all_budgets=[2.5 5. ]
-    # We ran 2 configs in small budget and 1 in full budget
-    assert [k.budget for k in runhistory._data.keys()] == [2.5, 2.5, 5]
+    assert not intensifier._iteration_done
 
 
 def test_budget_initialization(make_sh_worker, make_target_function, runhistory, configs):
     """Check computing budgets (only for non-instance cases)."""
     intensifier = make_sh_worker(deterministic=True, n_instances=0, min_budget=1, max_budget=81, eta=3)
 
-    assert [1, 3, 9, 27, 81] == intensifier._all_budgets.tolist()
+    assert [1, 3, 9, 27, 81] == intensifier._all_budgets
     assert [81, 27, 9, 3, 1] == intensifier._n_configs_in_stage
 
     to_check = [

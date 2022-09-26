@@ -5,7 +5,7 @@ import pytest
 from ConfigSpace import Configuration
 
 from smac import HyperparameterFacade
-from smac.intensification import SuccessiveHalving
+from smac.intensifier import SuccessiveHalving
 
 
 def test_success(make_scenario, configspace_small):

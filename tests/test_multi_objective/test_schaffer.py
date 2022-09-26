@@ -88,7 +88,6 @@ def test_parego(make_scenario, configspace):
 
         f1_inc, f2_inc = schaffer(incumbent["x"])
         f1_opt, f2_opt = get_optimum()
-        print(f1_opt, f2_opt)
         inc = f1_inc + f2_inc
         opt = f1_opt + f2_opt
         diff = abs(inc - opt)

@@ -412,7 +412,6 @@ def test_normalization():
     mu_hat_prime, var_hat_prime = gp_norm.predict(X_test)
 
     np.testing.assert_array_almost_equal(mu_hat, mu_hat_prime, decimal=4)
-    print(var_hat, var_hat_prime)
     np.testing.assert_array_almost_equal(var_hat, var_hat_prime, decimal=4)
 
     func = gp.sample_functions(X_test=X_test, n_funcs=2)

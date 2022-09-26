@@ -70,7 +70,7 @@ def test_process_results(make_scenario, make_stats, configspace_small, runhistor
     based on the source id"""
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=3, deterministic=True)
     stats = make_stats(scenario)
-    scheduler = ParallelScheduler(scenario=scenario)
+    scheduler = AbstractParallelIntensifier(scenario=scenario)
     scheduler._stats = stats
 
     scheduler._intensifier_instances = {
@@ -103,7 +103,7 @@ def test_get_next_run_wait(make_scenario, make_stats, configspace_small, runhist
     """
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=3, deterministic=True)
     stats = make_stats(scenario)
-    scheduler = ParallelScheduler(scenario=scenario)
+    scheduler = AbstractParallelIntensifier(scenario=scenario)
     scheduler._stats = stats
 
     scheduler._get_intensifier_ranking = mock_ranker
@@ -113,7 +113,7 @@ def test_get_next_run_wait(make_scenario, make_stats, configspace_small, runhist
     scheduler._intensifier_instances[0].run_tracker = ()
 
     with unittest.mock.patch(
-        "smac.intensifier.parallel_scheduling.ParallelScheduler._add_new_instance"
+        "smac.intensifier.abstract_parallel_intensifier.AbstractParallelIntensifier._add_new_instance"
     ) as add_new_instance:
         add_new_instance.return_value = False
         intent, trial_info = scheduler.get_next_run(
@@ -135,9 +135,9 @@ def test_get_next_run_add_instance(make_scenario, make_stats, configspace_small,
     stats = make_stats(scenario)
 
     with unittest.mock.patch(
-        "smac.intensifier.parallel_scheduling.ParallelScheduler._add_new_instance"
+        "smac.intensifier.abstract_parallel_intensifier.AbstractParallelIntensifier._add_new_instance"
     ) as add_new_instance:
-        scheduler = ParallelScheduler(scenario=scenario)
+        scheduler = AbstractParallelIntensifier(scenario=scenario)
         scheduler._stats = stats
 
         def instance_added(args):

@@ -255,10 +255,9 @@ def test_add_incumbent(make_scenario, make_stats, configspace_small, runhistory)
     intensifier._stats = stats
     target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(3)
-
-    instance, seed = intensifier._get_next_instance(
-        pending_instances=intensifier._get_pending_instances(incumbent=configs[0], runhistory=runhistory)
-    )
+    pending_instances = intensifier._get_pending_instances(incumbent=configs[0], runhistory=runhistory)
+    assert len(pending_instances) == 3
+    instance, seed = intensifier._get_next_instance(pending_instances=pending_instances)
 
     trial_info = TrialInfo(config=configs[0], instance=instance, seed=seed, budget=0.0)
     trial_value = evaluate_challenger(trial_info, target_function, stats, runhistory)
@@ -281,7 +280,7 @@ def test_add_incumbent(make_scenario, make_stats, configspace_small, runhistory)
     pending_instances = intensifier._get_pending_instances(incumbent=configs[0], runhistory=runhistory)
     # Make sure that the list is empty (or the first instance removed), and hence no new call
     # of incumbent will be triggered
-    assert pending_instances == ["i2", "i3"]
+    assert len(pending_instances) == 2
 
     # The following two tests evaluate to zero because _next_iteration is triggered by _add_inc_run
     # as it is the first evaluation of this intensifier
@@ -343,11 +342,14 @@ def test_add_incumbent_non_deterministic(make_scenario, make_stats, configspace_
     runs = runhistory.get_trials(config=configs[0], only_max_observed_budget=True)
 
     # Exactly one run on each instance
-    assert "i1" in [runs[0].instance, runs[1].instance]
+    assert "i2" in [runs[0].instance, runs[1].instance]
     assert "i3" in [runs[0].instance, runs[1].instance]
 
     instance, seed = intensifier._get_next_instance(
-        pending_instances=intensifier._get_pending_instances(incumbent=configs[0], runhistory=runhistory)
+        pending_instances=intensifier._get_pending_instances(
+            incumbent=configs[0],
+            runhistory=runhistory,
+        )
     )
     trial_info = TrialInfo(config=configs[0], instance=instance, seed=seed, budget=0.0)
     trial_value = evaluate_challenger(trial_info, target_function, stats, runhistory)
@@ -442,7 +444,7 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
 
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=1, deterministic=False)
     stats = make_stats(scenario)
-    intensifier = Intensifier(scenario=scenario, race_against=None, run_limit=1, min_challenger=2)
+    intensifier = Intensifier(scenario=scenario, race_against=None, min_challenger=2)
     intensifier._stats = stats
     target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(20)
@@ -588,7 +590,7 @@ def test_evaluate_challenger_2(make_scenario, make_stats, configspace_small, run
 
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=1, deterministic=True)
     stats = make_stats(scenario)
-    intensifier = Intensifier(scenario=scenario, race_against=None, run_limit=1)
+    intensifier = Intensifier(scenario=scenario, race_against=None)
     intensifier._stats = stats
     target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(20)
@@ -640,7 +642,7 @@ def test_no_new_intensification_wo_challenger_run(make_scenario, make_stats, con
 
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=1, deterministic=True)
     stats = make_stats(scenario)
-    intensifier = Intensifier(scenario=scenario, race_against=None, run_limit=1, min_challenger=1)
+    intensifier = Intensifier(scenario=scenario, race_against=None, min_challenger=1)
     intensifier._stats = stats
     target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(20)
