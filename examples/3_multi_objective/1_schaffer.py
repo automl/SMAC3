@@ -74,5 +74,11 @@ if __name__ == "__main__":
     )
     incumbent = smac.optimize()
 
+    default_cost = smac.validate(cs.get_default_configuration())
+    print(f"Default costs: {default_cost}")
+
+    incumbent_cost = smac.validate(incumbent)
+    print(f"Incumbent costs: {incumbent_cost}")
+
     # Plot the evaluated points
     plot_from_smac(smac)

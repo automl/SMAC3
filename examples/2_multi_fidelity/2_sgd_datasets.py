@@ -114,23 +114,13 @@ if __name__ == "__main__":
 
     scenario = Scenario(
         model.configspace,
-        walltime_limit=40,  # We want to optimize for 40 seconds
-        n_trials=5000,  # We want to try max 5000 different configurations
+        walltime_limit=30,  # We want to optimize for 30 seconds
+        n_trials=5000,  # We want to try max 5000 different trials
         min_budget=1,  # Use min one instance
-        max_budget=45,  # Use max 45 instances (if we have a lot of instances we could constraint it)
+        max_budget=45,  # Use max 45 instances (if we have a lot of instances we could constraint it here)
         instances=dataset.get_instances(),
         instance_features=dataset.get_instance_features(),
     )
-
-    # Calculate the mean cost of all instances for the default configuration
-    default_costs = []
-    for instance in dataset.get_instances():
-        cost = model.train(
-            config=model.configspace.get_default_configuration(),
-            instance=instance,
-        )
-        default_costs += [cost]
-    print(f"Default cost: {round(np.mean(default_costs), 2)}")
 
     # Create our SMAC object and pass the scenario and the train method
     smac = MultiFidelityFacade(
@@ -138,14 +128,12 @@ if __name__ == "__main__":
         model.train,
         overwrite=True,
     )
+
+    # Now we start the optimization process
     incumbent = smac.optimize()
 
-    # Calculate the mean cost of all instances for the incumbent
-    incumbent_costs = []
-    for instance in dataset.get_instances():
-        cost = model.train(
-            config=incumbent,
-            instance=instance,
-        )
-        incumbent_costs += [cost]
-    print(f"Incumbent cost: {round(np.mean(incumbent_costs), 2)}")
+    default_cost = smac.validate(model.configspace.get_default_configuration())
+    print(f"Default cost: {default_cost}")
+
+    incumbent_cost = smac.validate(incumbent)
+    print(f"Incumbent cost: {incumbent_cost}")

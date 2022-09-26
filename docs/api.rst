@@ -10,7 +10,7 @@ API References
    smac.main
    smac.model
    smac.acquisition
-   smac.intensification
+   smac.intensifier
    smac.initial_design
    smac.random_design
    smac.runner
