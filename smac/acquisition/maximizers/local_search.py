@@ -310,12 +310,14 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                                     is_valid = True
                                 except (ValueError, ForbiddenValueError) as e:
                                     logger.debug("Local search %d: %s", i, e)
+
                                 if is_valid:
-                                    logger.debug(
-                                        "Local search %d: Switch to one of the neighbors (after %d configurations).",
-                                        i,
-                                        neighbors_looked_at[i],
-                                    )
+                                    # We comment this as it just spams the log
+                                    # logger.debug(
+                                    #     "Local search %d: Switch to one of the neighbors (after %d configurations).",
+                                    #     i,
+                                    #     neighbors_looked_at[i],
+                                    # )
                                     candidates[i] = neighbors[acq_index]
                                     acq_val_candidates[i] = acq_val[acq_index]
                                     new_neighborhood[i] = True
