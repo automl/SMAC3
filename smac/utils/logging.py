@@ -16,7 +16,13 @@ __license__ = "3-clause BSD"
 
 
 def setup_logging(level: int | Path | None = None) -> None:
-    """Setup logging, defaults to our own config else a user provided one"""
+    """Sets up the logging configuration for all modules.
+
+    Parameters
+    ----------
+    level : int | Path | None, defaults to None
+        An integer representing the logging level. An own logging configuration can be used when passing a path.
+    """
     if isinstance(level, Path):
         log_filename = level
     else:

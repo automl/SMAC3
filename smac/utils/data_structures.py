@@ -12,6 +12,24 @@ def recursively_compare_dicts(
     level: str = "root",
     diff: list[str] | None = None,
 ) -> list[str]:
+    """Compares dictionaries recursively. Returns a list of differences in string format.
+
+    Parameters
+    ----------
+    d1 : dict
+        First dictionary.
+    d2 : dict
+        Second dictionary.
+    level : str, defaults to "root"
+        How the first level is called.
+    diff : list[str] | None, defaults to None
+        Used for recursion.
+
+    Returns
+    -------
+    list[str]
+        List of differences in string format.
+    """
     if diff is None:
         diff = []
 

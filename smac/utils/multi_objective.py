@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 
-def normalize_costs(values: list[float], bounds: list[tuple[float, float]] | None = None) -> list[float]:
+def normalize_costs(
+    values: list[float],
+    bounds: list[tuple[float, float]] | None = None,
+) -> list[float]:
     """
     Normalizes a list of floats with corresponding bounds.
 

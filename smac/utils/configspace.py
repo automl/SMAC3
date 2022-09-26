@@ -27,8 +27,6 @@ get_one_exchange_neighbourhood = partial(get_one_exchange_neighbourhood, stdev=0
 def convert_configurations_to_array(configs: list[Configuration]) -> np.ndarray:
     """Impute inactive hyperparameters in configurations with their default.
 
-    Necessary to apply an EPM to the data.
-
     Parameters
     ----------
     configs : List[Configuration]
@@ -50,7 +48,7 @@ def get_types(
 
     Warning
     -------
-    The bounds for the instance features are *NOT* added in this function.
+    The bounds for the instance features are *not* added in this function.
     """
 
     # Extract types vector for rf from config space and the bounds
