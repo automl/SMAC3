@@ -1016,7 +1016,7 @@ Default cost: 0.8351420167215506
     <span class="n">model</span> <span class="o">=</span> <span class="n">Rosenbrock2D</span><span class="p">()</span>
 
     <span class="c1"># Scenario object specifying the optimization &quot;environment&quot;</span>
-    <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+    <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;synthetic_function&quot;</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
 
     <span class="c1"># Now we use SMAC to find the best hyperparameters</span>
     <span class="n">smac</span> <span class="o">=</span> <span class="n">BlackBoxFacade</span><span class="p">(</span>
@@ -1036,7 +1036,7 @@ Default cost: 0.8351420167215506
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.008 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.114 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-1-synthetic-function-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/222fbc0704729080b4cf7f98b0522bbc/1_synthetic_function.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_synthetic_function.py</span></code></a></p>

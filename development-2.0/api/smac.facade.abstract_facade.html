@@ -1161,8 +1161,8 @@ them to the facade. For an example of the latter see the svm_cv.py.</p>
 <li><p><strong>runhistory_encoder</strong> (<a class="reference internal" href="smac.runhistory.encoder.html#smac.runhistory.encoder.RunHistoryEncoder" title="smac.runhistory.encoder.RunHistoryEncoder"><em>RunHistoryEncoder</em></a><em> | </em><em>None</em>) – </p></li>
 <li><p><strong>logging_level</strong> (<em>int</em><em> | </em><em>Path</em><em> | </em><em>None</em>) – Level of logging; if path passed: yaml file expected; if none: use default logging from logging.yml</p></li>
 <li><p><strong>callbacks</strong> (<em>list</em><em>[</em><a class="reference internal" href="smac.callback.html#smac.callback.Callback" title="smac.callback.Callback"><em>Callback</em></a><em>] </em><em>=</em><em> [</em><em>]</em><em>,</em>) – </p></li>
-<li><p><strong>overwrite</strong> (<em>bool defaults to False</em>) – When True, overwrites the results (Runhistory &amp; Stats) if a previous run is found that is
-inconsistent in the meta data with the current setup. In that case, the user is prompted
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>defaults to False</em>) – When True, overwrites the results (runhistory and stats) if a previous run is found that is
+inconsistent in the meta data with the current setup. If <code class="docutils literal notranslate"><span class="pre">overwrite</span></code> is set to False, the user is asked
 for the exact behaviour.</p></li>
 </ul>
 </dd>

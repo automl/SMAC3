@@ -1293,6 +1293,7 @@ style="width: 100%;">
                     <span class="c1"># TODO: We have to do something different here:</span>
                     <span class="c1"># The intensifier needs to know about what happened</span>
                     <span class="c1"># Therefore, we read in the runhistory but use the tell method to add everything</span>
+                    <span class="c1"># Update: Not working yet. Therefore, we just throw an error.</span>
 
                     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Continuing from previous run.&quot;</span><span class="p">)</span>
 
@@ -1307,24 +1308,37 @@ style="width: 100%;">
                         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Since the previous run was not successful, SMAC will start from scratch again.&quot;</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_stats</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Unfortunately, previous runs can not be continued yet. 😞&quot;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">diff</span> <span class="o">=</span> <span class="n">recursively_compare_dicts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span> <span class="n">old_scenario</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;scenario&quot;</span><span class="p">)</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;Found old run in `</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">output_directory</span><span class="si">}</span><span class="s2">` but it is not the same as the current&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Found old run in `</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">output_directory</span><span class="si">}</span><span class="s2">` but it is not the same as the current &quot;</span>
                         <span class="sa">f</span><span class="s2">&quot;one:</span><span class="se">\n</span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s2">&quot;</span>
                     <span class="p">)</span>
 
                     <span class="n">feedback</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span>
                         <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Press one of the following numbers to continue or any other key to abort:</span><span class="se">\n</span><span class="s2">&quot;</span>
-                        <span class="s2">&quot;(1) Overwrite old run completely.</span><span class="se">\n</span><span class="s2">&quot;</span>
-                        <span class="s2">&quot;(2) Overwrite old run and re-use previous runhistory data. The configuration space &quot;</span>
-                        <span class="s2">&quot;has to be the same for this option.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;(1) Overwrite old run completely and start a new run.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;(2) Rename the old run (append an &#39;-old&#39;) and start a new run.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;(3) Overwrite old run and re-use previous runhistory data. The configuration space &quot;</span>
+                        <span class="s2">&quot;has to be the same for this option. This option is not tested yet.</span><span class="se">\n</span><span class="s2">&quot;</span>
                     <span class="p">)</span>
 
                     <span class="k">if</span> <span class="n">feedback</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
                         <span class="c1"># We don&#39;t have to do anything here, since we work with a clean runhistory and stats object</span>
                         <span class="k">pass</span>
                     <span class="k">elif</span> <span class="n">feedback</span> <span class="o">==</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span>
+                        <span class="c1"># Rename old run</span>
+                        <span class="n">new_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">old_scenario</span><span class="o">.</span><span class="n">output_directory</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+                        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                            <span class="n">new_dir</span> <span class="o">+=</span> <span class="s2">&quot;-old&quot;</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">old_scenario</span><span class="o">.</span><span class="n">output_directory</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">new_dir</span><span class="p">)</span>
+                                <span class="k">break</span>
+                            <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                                <span class="k">pass</span>
+                    <span class="k">elif</span> <span class="n">feedback</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span>
                         <span class="c1"># We overwrite runhistory and stats.</span>
                         <span class="c1"># However, we should ensure that we use the same configspace.</span>
                         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">configspace</span> <span class="o">==</span> <span class="n">old_scenario</span><span class="o">.</span><span class="n">configspace</span>

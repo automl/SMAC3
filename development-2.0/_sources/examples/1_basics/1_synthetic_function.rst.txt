@@ -111,7 +111,7 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
         model = Rosenbrock2D()
 
         # Scenario object specifying the optimization "environment"
-        scenario = Scenario(model.configspace, n_trials=300)
+        scenario = Scenario(model.configspace, name="synthetic_function", n_trials=300)
 
         # Now we use SMAC to find the best hyperparameters
         smac = BlackBoxFacade(
@@ -133,7 +133,7 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.008 seconds)
+   **Total running time of the script:** ( 0 minutes  3.114 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_1_synthetic_function.py:

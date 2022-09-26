@@ -5,8 +5,8 @@
 
 Computation times
 =================
-**00:01.616** total execution time for **examples_3_multi_objective** files:
+**00:01.671** total execution time for **examples_3_multi_objective** files:
 
 +------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_3_multi_objective_1_schaffer.py` (``1_schaffer.py``) | 00:01.616 | 0.0 MB |
+| :ref:`sphx_glr_examples_3_multi_objective_1_schaffer.py` (``1_schaffer.py``) | 00:01.671 | 0.0 MB |
 +------------------------------------------------------------------------------+-----------+--------+

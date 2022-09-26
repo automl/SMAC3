@@ -994,9 +994,9 @@ style="width: 100%;">
 <span class="sd">    logging_level: int | Path | None</span>
 <span class="sd">         Level of logging; if path passed: yaml file expected; if none: use default logging from logging.yml</span>
 <span class="sd">    callbacks: list[Callback] = [],</span>
-<span class="sd">    overwrite: bool defaults to False</span>
-<span class="sd">        When True, overwrites the results (Runhistory &amp; Stats) if a previous run is found that is</span>
-<span class="sd">        inconsistent in the meta data with the current setup. In that case, the user is prompted</span>
+<span class="sd">    overwrite: bool, defaults to False</span>
+<span class="sd">        When True, overwrites the results (runhistory and stats) if a previous run is found that is</span>
+<span class="sd">        inconsistent in the meta data with the current setup. If ``overwrite`` is set to False, the user is asked</span>
 <span class="sd">        for the exact behaviour.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
