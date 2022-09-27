@@ -1,5 +1,5 @@
-Resumption
-==========
+Continue a Run
+==============
 
 SMAC automatically resumes where it left off if it was interrupted. To do so, it reads in files
 (derivided from scenario's name, output_directory and seed) and sets the internal states.

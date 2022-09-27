@@ -9,7 +9,7 @@ which is further used to determine whether the next iteration should start (``in
 
 .. warning ::
  
-    The intensifier ``Intensifier`` (used by HyperparameterFacade) is *not* reproducable!
+    The intensifier ``Intensifier`` (used by HPOFacade) is *not* reproducable!
 
 
 However, since ``time_bound`` is only used in ``Intensifier``, all other intensifiers guarantee reproducability.

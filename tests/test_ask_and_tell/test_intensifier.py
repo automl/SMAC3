@@ -4,15 +4,15 @@ import pytest
 
 from smac.runhistory.dataclasses import TrialInfo, TrialValue
 
-from smac import HyperparameterFacade, Scenario
+from smac import HPOFacade, Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
 @pytest.fixture
-def make_facade(digits_dataset, make_sgd) -> HyperparameterFacade:
-    def create(deterministic=True, use_instances=False) -> HyperparameterFacade:
+def make_facade(digits_dataset, make_sgd) -> HPOFacade:
+    def create(deterministic=True, use_instances=False) -> HPOFacade:
         model = make_sgd(digits_dataset)
 
         instances_kwargs = {}
@@ -32,11 +32,11 @@ def make_facade(digits_dataset, make_sgd) -> HyperparameterFacade:
         )
 
         # Create our SMAC object and pass the scenario and the train method
-        smac = HyperparameterFacade(
+        smac = HPOFacade(
             scenario,
             model.train,
-            initial_design=HyperparameterFacade.get_initial_design(scenario, n_configs=2, max_ratio=1),
-            intensifier=HyperparameterFacade.get_intensifier(scenario, max_config_calls=5, intensify_percentage=0.0),
+            initial_design=HPOFacade.get_initial_design(scenario, n_configs=2, max_ratio=1),
+            intensifier=HPOFacade.get_intensifier(scenario, max_config_calls=5, intensify_percentage=0.0),
             logging_level=0,
             overwrite=True,
         )

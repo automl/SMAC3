@@ -28,7 +28,7 @@ try:
         AlgorithmConfigurationFacade,
         BlackBoxFacade,
         HyperbandFacade,
-        HyperparameterFacade,
+        HPOFacade,
         MultiFidelityFacade,
         RandomFacade,
     )
@@ -42,7 +42,7 @@ try:
         "Scenario",
         "RunHistory",
         "BlackBoxFacade",
-        "HyperparameterFacade",
+        "HPOFacade",
         "MultiFidelityFacade",
         "AlgorithmConfigurationFacade",
         "RandomFacade",

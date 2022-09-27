@@ -7,19 +7,13 @@ This chapter gives more details of single components of SMAC.
     :maxdepth: 2
     :hidden:
 
-    .. facades
-    resumption
-    callbacks
-    .. facades
-    .. target_function_evaluator
-    .. scenario
-    .. arguments
-    .. multi_objective
-    .. run_history
-    .. budgets_instances
-    .. validation
-    .. callbacks
-    .. parallelism
-    .. cuda
-    .. restoring
+    1_facades
+    2_components
+    3_multi_objective
+    4_instances
+    5_stopping_criteria
+    6_ask_and_tell
+    7_continue
+    8_reproducability
+    9_parallelism
 

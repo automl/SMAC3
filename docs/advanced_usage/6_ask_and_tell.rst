@@ -1,5 +1,5 @@
 Ask-and-Tell Interface
-----------------------
+======================
 
 
 .. note ::
@@ -20,7 +20,7 @@ Ask-and-Tell Interface
 
 
 Calling Tell without Ask
-^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------
 
 Does only work with the intensifier.
 It does not make sense to tell SMAC trials in advance when using SH. Reason: It's heavily depending on a budget+instance combination and even if the user provides it, SMAC have to wait till the other trials have been finished too.

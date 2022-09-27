@@ -41,7 +41,7 @@
 
 #     Parameters
 #     ----------
-#     model_local: Type[BaseModel],
+#     model_local: Type[AbstractModel],
 #         local empirical performance model, used in subspace. Since the subspace might have different amount of
 #         hyperparameters compared to the search space. We only instantiate them under the subspace.
 #     model_local_kwargs: Optional[Dict] = None,

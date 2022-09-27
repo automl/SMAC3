@@ -4,7 +4,7 @@ import warnings
 import pytest
 from ConfigSpace import Configuration
 
-from smac import HyperparameterFacade
+from smac import HPOFacade
 from smac.intensifier import SuccessiveHalving
 
 
@@ -18,7 +18,7 @@ def test_success(make_scenario, configspace_small):
         return 0
 
     with pytest.raises(RuntimeError, match="Target function needs .* seed"):
-        HyperparameterFacade(scenario, tf)
+        HPOFacade(scenario, tf)
 
     # ---------------------------------------------------------------------------------
     # That should work now
@@ -26,7 +26,7 @@ def test_success(make_scenario, configspace_small):
     def tf(config: Configuration, seed: int) -> float:
         return 0
 
-    HyperparameterFacade(scenario, tf)
+    HPOFacade(scenario, tf)
 
     # ---------------------------------------------------------------------------------
     # Now we need budget too
@@ -37,7 +37,7 @@ def test_success(make_scenario, configspace_small):
     # Change intensifier
     intensifier = SuccessiveHalving(scenario)
     with pytest.raises(RuntimeError, match="Target function needs .* budget"):
-        HyperparameterFacade(scenario, tf, intensifier=intensifier)
+        HPOFacade(scenario, tf, intensifier=intensifier)
 
     # ---------------------------------------------------------------------------------
     # Add budget
@@ -47,7 +47,7 @@ def test_success(make_scenario, configspace_small):
 
     # Change intensifier
     intensifier = SuccessiveHalving(scenario)
-    HyperparameterFacade(scenario, tf, intensifier=intensifier)
+    HPOFacade(scenario, tf, intensifier=intensifier)
 
     # ---------------------------------------------------------------------------------
     # Now we use instances (we only can have budget or instance).
@@ -60,7 +60,7 @@ def test_success(make_scenario, configspace_small):
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=100)
     intensifier = SuccessiveHalving(scenario)
     with pytest.raises(RuntimeError, match="Target function needs .* instance"):
-        HyperparameterFacade(scenario, tf, intensifier=intensifier)
+        HPOFacade(scenario, tf, intensifier=intensifier)
 
     # ---------------------------------------------------------------------------------
     # Add instance as argument (we only can have budget or instance)
@@ -71,4 +71,4 @@ def test_success(make_scenario, configspace_small):
     # Change intensifier
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=100)
     intensifier = SuccessiveHalving(scenario)
-    HyperparameterFacade(scenario, tf, intensifier=intensifier)
+    HPOFacade(scenario, tf, intensifier=intensifier)

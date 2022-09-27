@@ -85,7 +85,7 @@ Facade
 * :ref:`BlackBoxFacade<smac.facade.blackbox_facade.BlackBoxFacade>`: Random Search
 * :ref:`HyperbandFacade<smac.facade.hyperband_facade.HyperbandFacade>`: Random Search when using multiple budgets (like epochs or subset sizes).
 * :ref:`BlackBoxFacade<smac.facade.blackbox_facade.BlackBoxFacade>`: Black-box optimization
-* :ref:`HyperparameterFacade<smac.facade.hyperparameter_facade.HyperparameterFacade>`: Hyperparameter optimization
+* :ref:`HPOFacade<smac.facade.hpo_facade.HPOFacade>`: Hyperparameter optimization
 * :ref:`MultiFidelityFacade<smac.facade.multi_fidelity_facade.MultiFidelityFacade>`: Multi-Fidelity optimization when using multiple budgets (like epochs or subset sizes).
 * :ref:`AlgorithmConfigurationFacade<smac.facade.algorithm_configuration_facade.AlgorithmConfigurationFacade>`: Algorithm Configuration to optimize across different instances.
 

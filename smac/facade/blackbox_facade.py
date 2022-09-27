@@ -44,11 +44,7 @@ class BlackBoxFacade(AbstractFacade):
             raise NotImplementedError("The Black-Box GP cannot handle instances.")
 
         if not isinstance(self._model, AbstractGaussianProcess):
-            raise ValueError(
-                "The Black-Box facade only works with Gaussian Process-"
-                "like surrogate models (inheriting from smac.model.gaussian_process.BaseModel, "
-                f"got type {type(self._model)}."
-            )
+            raise ValueError("The Black-Box facade only works with Gaussian Processes")
 
     @staticmethod
     def get_model(

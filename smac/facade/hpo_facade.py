@@ -19,7 +19,7 @@ __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class HyperparameterFacade(AbstractFacade):
+class HPOFacade(AbstractFacade):
     @staticmethod
     def get_model(  # type: ignore
         scenario: Scenario,
@@ -93,7 +93,7 @@ class HyperparameterFacade(AbstractFacade):
 
         Parameters
         ----------
-        challengers : int, defaults to 1000
+        challengers : int, defaults to 10000
             Number of challengers.
         local_search_iterations: int, defauts to 10
             Number of local search iterations.

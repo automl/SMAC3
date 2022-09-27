@@ -14,7 +14,7 @@ from ConfigSpace.conditions import InCondition
 from sklearn import datasets, svm
 from sklearn.model_selection import cross_val_score
 
-from smac import HyperparameterFacade, Scenario
+from smac import HPOFacade, Scenario
 from smac.initial_design import SobolInitialDesign
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -78,14 +78,14 @@ if __name__ == "__main__":
 
     # We want to run the facade's default initial design, but we want to alter the number
     # of initial configs to be 5.
-    initial_design = HyperparameterFacade.get_initial_design(scenario, n_configs=10)
+    initial_design = HPOFacade.get_initial_design(scenario, n_configs=10)
 
     # You can also override the initial design completely, by providing another
     # initial design class.
     initial_design = SobolInitialDesign(scenario, n_configs=10)
 
     # Now we use SMAC to find the best hyperparameters
-    smac = HyperparameterFacade(
+    smac = HPOFacade(
         scenario,
         classifier.train,
         initial_design=initial_design,

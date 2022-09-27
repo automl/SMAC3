@@ -58,7 +58,7 @@ class AbstractFacade:
         The scenario object, holding all environmental information.
     target_function : AbstractRunner | Callable
         This function is called internally to judge a trial's performance.
-    model : BaseModel | None, defaults to None
+    model : AbstractModel | None, defaults to None
         The surrogate model.
     acquisition_function : AbstractAcquisitionFunction | None, defaults to None
         The acquisition function.

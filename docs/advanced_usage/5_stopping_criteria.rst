@@ -1,4 +1,5 @@
-
+Stopping Criteria
+=================
 
 Termination Cost Threshold
 

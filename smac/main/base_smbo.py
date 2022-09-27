@@ -59,7 +59,7 @@ class BaseSMBO:
     intensifier : AbstractIntensifier
         The intensifier decides which trial (combination of configuration, seed, budget and instance) should be run
         next.
-    model : BaseModel
+    model : AbstractModel
         The surrogate model.
     acquisition_maximizer : AbstractAcquisitionMaximizer
         The acquisition maximizer, deciding which configuration is most promising based on the surrogate model and

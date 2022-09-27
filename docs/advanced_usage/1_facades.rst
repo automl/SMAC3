@@ -1,11 +1,15 @@
 Facades
--------
+=======
 
 SMAC of course itself offers a lot of design choices, some of which are crucial to achieve peak performance.
 Luckily, often it is sufficient to distinguish between a few problem classes.
 To make the usage of SMAC as easy as possible, we provide several facades designed for these different use cases.
 Here we give some general recommendations on when to use which facade.
 These recommendations are based on our experience and technical limitations and is by far not intended to be complete:
+
+
+Implementation Details
+----------------------
 
 .. csv-table::
     :header: "", "SMAC4BB", "SMAC4HPO", "SMAC4MF", "SMAC4AC"
@@ -29,7 +33,7 @@ These recommendations are based on our experience and technical limitations and 
 
 
 Inheritance
-~~~~~~~~~~~
+-----------
 
 Here we show the class inheritance of the different facades.
 Because SMAC4AC is the facade every other facade is inherited from, we recommend using SMAC4AC if a lot of flexibility is needed. 

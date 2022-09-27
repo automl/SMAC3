@@ -1,7 +1,7 @@
 import shutil
 import pytest
 from io import StringIO
-from smac import BlackBoxFacade, HyperparameterFacade, Scenario
+from smac import BlackBoxFacade, HPOFacade, Scenario
 import os
 
 
@@ -35,7 +35,7 @@ def test_continue_same_scenario(rosenbrock):
 
 
 def test_continue_different_scenario(rosenbrock, monkeypatch):
-    for facade in [BlackBoxFacade, HyperparameterFacade]:
+    for facade in [BlackBoxFacade, HPOFacade]:
         # Overwrite completely
         number_inputs = StringIO("1\n")
         monkeypatch.setattr("sys.stdin", number_inputs)

@@ -26,7 +26,8 @@ such that all SMAC runs are better informed and can work together.
 
 
 Commandline 
-~~~~~~~~~~~
+-----------
+
 To use pSMAC via the commandline interface, please specify the following two arguments:
 
 .. code-block:: bash
@@ -57,7 +58,7 @@ please set the ``verbose`` level to DEBUG and grep in the following way:
     We recommend that each pSMAC uses a different random seed.
 
 Usage in Python
-~~~~~~~~~~~~~~~
+---------------
 
 The same arguments used on the commandline can also be passed to the *Scenario* constructor.
 See above for a detailed description.

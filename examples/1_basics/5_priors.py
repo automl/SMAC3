@@ -27,7 +27,7 @@ from sklearn.exceptions import ConvergenceWarning
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.neural_network import MLPClassifier
 
-from smac import HyperparameterFacade, Scenario
+from smac import HPOFacade, Scenario
 from smac.acquisition.functions import PriorAcquisitionFunction
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -134,25 +134,25 @@ if __name__ == "__main__":
     scenario = Scenario(mlp.configspace, n_trials=40)
 
     # We also want to include our default configuration in the initial design
-    initial_design = HyperparameterFacade.get_initial_design(
+    initial_design = HPOFacade.get_initial_design(
         scenario,
         additional_configs=[default_config],
     )
 
     # We define the prior acquisition function, which conduct the optimization using priors over the optimum
     acquisition_function = PriorAcquisitionFunction(
-        acquisition_function=HyperparameterFacade.get_acquisition_function(scenario),
+        acquisition_function=HPOFacade.get_acquisition_function(scenario),
         decay_beta=scenario.n_trials / 10,  # Proven solid value
     )
 
     # We only want one config call (use only one seed in this example)
-    intensifier = HyperparameterFacade.get_intensifier(
+    intensifier = HPOFacade.get_intensifier(
         scenario,
         max_config_calls=1,
     )
 
     # Create our SMAC object and pass the scenario and the train method
-    smac = HyperparameterFacade(
+    smac = HPOFacade(
         scenario,
         mlp.train,
         initial_design=initial_design,

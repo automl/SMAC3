@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from ConfigSpace import Configuration
 
-from smac.facade.hyperparameter_facade import HyperparameterFacade
+from smac.facade.hpo_facade import HPOFacade
 from smac.initial_design.random_design import RandomInitialDesign
 from smac.intensifier.hyperband import Hyperband
 from smac.scenario import Scenario
@@ -11,7 +11,7 @@ __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class MultiFidelityFacade(HyperparameterFacade):
+class MultiFidelityFacade(HPOFacade):
     """
     This facade configures SMAC in a multi-fidelity setting.
     The way this facade combines the components is the following and exploits
