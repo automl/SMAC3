@@ -292,7 +292,7 @@ class AbstractIntensifier:
         chall_trials = runhistory.get_trials(challenger, only_max_observed_budget=True)
         to_compare_trials = set(inc_trials).intersection(chall_trials)
 
-        # performance on challenger trials, the challenger only becomes incumbent
+        # Performance on challenger trials, the challenger only becomes incumbent
         # if it dominates the incumbent
         chal_perf = runhistory.average_cost(challenger, to_compare_trials, normalize=True)
         inc_perf = runhistory.average_cost(incumbent, to_compare_trials, normalize=True)
@@ -304,16 +304,19 @@ class AbstractIntensifier:
         if np.any(chal_perf > inc_perf) and len(chall_trials) >= self._min_config_calls:
             chal_perf_format = format_array(chal_perf)
             inc_perf_format = format_array(inc_perf)
+
             # Incumbent beats challenger
             logger.debug(
                 f"Incumbent ({inc_perf_format}) is better than challenger "
                 f"({chal_perf_format}) on {len(chall_trials)} trials."
             )
+
             return incumbent
 
         # Line 16
+        # This statement is true if both incumbent trials and challenger trials are the same
         if not set(inc_trials) - set(chall_trials):
-            # no plateau walks
+            # No plateau walks
             if np.any(chal_perf >= inc_perf):
                 chal_perf_format = format_array(chal_perf)
                 inc_perf_format = format_array(inc_perf)
@@ -329,7 +332,7 @@ class AbstractIntensifier:
                 return incumbent
 
             # Challenger is better than incumbent and has at least the same trials as incumbent.
-            # -> change incumbent
+            # -> Change incumbent
             n_samples = len(chall_trials)
             chal_perf_format = format_array(chal_perf)
             inc_perf_format = format_array(inc_perf)

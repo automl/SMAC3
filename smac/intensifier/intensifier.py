@@ -630,7 +630,7 @@ class Intensifier(AbstractIntensifier):
                 log_trajectory=log_trajectory,
             )
 
-            # update intensification stage
+            # Update intensification stage
             if new_incumbent == incumbent:
                 # move on to the next iteration
                 self._stage = IntensifierStage.RUN_INCUMBENT
@@ -640,7 +640,6 @@ class Intensifier(AbstractIntensifier):
                     len(chal_trials),
                     chal_perf,
                 )
-
             elif new_incumbent == challenger:
                 # New incumbent found
                 incumbent = challenger
@@ -657,7 +656,7 @@ class Intensifier(AbstractIntensifier):
                 )
 
             else:  # Line 17
-                # challenger is not worse, continue
+                # Challenger is not worse, continue
                 self._N = 2 * self._N
                 self._continue_challenger = True
                 logger.debug(

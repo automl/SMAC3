@@ -26,7 +26,7 @@ class Rosenbrock2D:
 
         return cs
 
-    def train(self, config: Configuration, seed: int = 0) -> float:
+    def train(self, config: Configuration, seed: int = 0, budget: float = None, instance: str = None) -> float:
         """The 2-dimensional Rosenbrock function as a toy model.
         The Rosenbrock function is well-known in the optimization community and
         often serves as a toy problem. It can be defined for arbitrary
@@ -96,7 +96,7 @@ class SGD:
 
 
 @pytest.fixture
-def make_sgd() -> SGD:
+def make_sgd():
     def create(dataset: Dataset) -> SGD:
         return SGD(dataset)
 

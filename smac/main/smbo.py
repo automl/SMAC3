@@ -196,22 +196,26 @@ class SMBO(BaseSMBO):
 
         # Gracefully end optimization if termination cost is reached
         if self._scenario.termination_cost_threshold != np.inf:
-            if not isinstance(value.cost, list):
-                cost = [value.cost]
-            else:
-                cost = value.cost
+            # If we support fidelities, only check on highest fidelity
+            uses_budgets = self._intensifier.uses_budgets
+            highest_tf_budget = self._intensifier.get_target_function_budgets()[-1]
+            if (uses_budgets and highest_tf_budget == info.budget) or not uses_budgets:
+                if not isinstance(value.cost, list):
+                    cost = [value.cost]
+                else:
+                    cost = value.cost
 
-            if not isinstance(self._scenario.termination_cost_threshold, list):
-                cost_threshold = [self._scenario.termination_cost_threshold]
-            else:
-                cost_threshold = self._scenario.termination_cost_threshold
+                if not isinstance(self._scenario.termination_cost_threshold, list):
+                    cost_threshold = [self._scenario.termination_cost_threshold]
+                else:
+                    cost_threshold = self._scenario.termination_cost_threshold
 
-            if len(cost) != len(cost_threshold):
-                raise RuntimeError("You must specify a termination cost threshold for each objective.")
+                if len(cost) != len(cost_threshold):
+                    raise RuntimeError("You must specify a termination cost threshold for each objective.")
 
-            if all(cost[i] < cost_threshold[i] for i in range(len(cost))):
-                logger.debug("Cost threshold was reached. Abort is requested.")
-                self._stop = True
+                if all(cost[i] < cost_threshold[i] for i in range(len(cost))):
+                    logger.info("Cost threshold was reached. Abort is requested.")
+                    self._stop = True
 
         for callback in self._callbacks:
             response = callback.on_tell_end(self, info, value)

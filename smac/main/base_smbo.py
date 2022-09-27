@@ -269,9 +269,9 @@ class BaseSMBO:
 
             if self._stats.is_budget_exhausted() or self._stop:
                 if self._stats.is_budget_exhausted():
-                    logger.debug("Configuration budget is exhausted.")
+                    logger.info("Configuration budget is exhausted.")
                 else:
-                    logger.debug("Shutting down because a configuration or callback returned status STOP.")
+                    logger.info("Shutting down because the stop flag was set.")
 
                 # The budget can be exhausted  for 2 reasons: number of ta runs or
                 # time. If the number of ta runs is reached, but there is still budget,

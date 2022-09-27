@@ -503,6 +503,10 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         # Convert to instance-seed-budget key
         return [InstanceSeedBudgetKey(k.instance, k.seed, budget) for k, v in trials.items() for budget in v]
 
+    def get_config(self, config_id: int) -> Configuration:
+        """Returns the configuration from the configuration id."""
+        return self._ids_config[config_id]
+
     def get_configs(self) -> list[Configuration]:
         """Return all configurations in this RunHistory object.
 

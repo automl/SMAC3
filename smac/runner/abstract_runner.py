@@ -86,6 +86,7 @@ class AbstractRunner(ABC):
 
         # Signatures here
         signature = inspect.signature(self._target_function).parameters
+        print(signature)
         for argument in required_arguments:
             if argument not in signature.keys():
                 raise RuntimeError(
