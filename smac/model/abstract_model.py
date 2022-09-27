@@ -82,7 +82,8 @@ class AbstractModel:
         # Initial types array which is used to reset the type array at every call to `self.train()`
         self._initial_types = copy.deepcopy(self._types)
 
-    def get_meta(self) -> dict[str, Any]:
+    @property
+    def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,

@@ -48,14 +48,18 @@ class CosineAnnealingRandomDesign(AbstractRandomDesign):
         self._iteration = 0
         self._probability = max_probability
 
-    def get_meta(self) -> dict[str, Any]:
-        return {
-            "name": self.__class__.__name__,
-            "seed": self._seed,
-            "max_probability": self._max_probability,
-            "min_probability": self._min_probability,
-            "restart_iteration": self._restart_iteration,
-        }
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
+        meta.update(
+            {
+                "max_probability": self._max_probability,
+                "min_probability": self._min_probability,
+                "restart_iteration": self._restart_iteration,
+            }
+        )
+
+        return meta
 
     def next_iteration(self) -> None:
         """Moves to the next iteration and set `self._probability`"""

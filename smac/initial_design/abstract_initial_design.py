@@ -93,7 +93,8 @@ class AbstractInitialDesign:
                 f"Initial budget {self._n_configs} cannot be higher than the number of trials {scenario.n_trials}."
             )
 
-    def get_meta(self) -> dict[str, Any]:
+    @property
+    def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,

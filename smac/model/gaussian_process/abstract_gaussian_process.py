@@ -51,14 +51,10 @@ class AbstractGaussianProcess(AbstractModel):
         self._kernel = kernel
         self._gp = self._get_gaussian_process()
 
-    def get_meta(self) -> dict[str, Any]:
-        meta = super().get_meta()
-        meta.update(
-            {
-                "name": self.__class__.__name__,
-                "kernel": self._kernel.get_meta(),
-            }
-        )
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
+        meta.update({"kernel": self._kernel.meta})
 
         return meta
 

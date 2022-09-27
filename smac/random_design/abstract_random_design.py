@@ -26,7 +26,8 @@ class AbstractRandomDesign:
         self._seed = seed
         self._rng = np.random.RandomState(seed=seed)
 
-    def get_meta(self) -> dict[str, Any]:
+    @property
+    def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,

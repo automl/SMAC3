@@ -37,8 +37,9 @@ class HammingKernel(
             prior=prior,
         )
 
-    def get_meta(self) -> dict[str, Any]:
-        meta = super().get_meta()
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
 
         length_scale = self.length_scale
         if isinstance(length_scale, np.ndarray):

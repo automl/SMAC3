@@ -129,7 +129,8 @@ class AbstractIntensifier:
         """Which instances are used to call the target function."""
         raise NotImplementedError
 
-    def get_meta(self) -> dict[str, Any]:
+    @property
+    def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
@@ -244,7 +245,7 @@ class AbstractIntensifier:
             logger.debug("Generating new challenger from optimizer.")
             chall_gen = get_next_configurations()
         else:
-            raise ValueError("No configurations/ask function provided. Can not generate challenger!")
+            raise ValueError("No configurations (function) provided. Can not generate challenger!")
 
         logger.debug("Time spend to select next challenger: %.4f" % (time.time() - start_time))
 

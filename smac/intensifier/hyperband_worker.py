@@ -154,6 +154,7 @@ class HyperbandWorker(SuccessiveHalvingWorker):
 
         # Compute min budget for new SH run
         sh_min_budget = eta**-self._s * max_budget
+
         # Sample challengers for next iteration (based on HpBandster package)
         n_challengers = int(np.floor((self._s_max + 1) / (self._s + 1)) * eta**self._s)
 

@@ -189,12 +189,13 @@ class Intensifier(AbstractIntensifier):
 
         return instances
 
-    def get_meta(self) -> dict[str, Any]:
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
         race_against: dict | None = None
         if self._race_against is not None:
             race_against = self._race_against.get_dictionary()
 
-        meta = super().get_meta()
+        meta = super().meta
         meta.update(
             {
                 "race_against": race_against,

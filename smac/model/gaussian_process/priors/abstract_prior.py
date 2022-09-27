@@ -31,10 +31,13 @@ class AbstractPrior:
         self._seed = seed
         self._rng = np.random.RandomState(seed)
 
-    @abstractmethod
-    def get_meta(self) -> dict[str, Any]:
+    @property
+    def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
-        raise NotImplementedError()
+        return {
+            "name": self.__class__.__name__,
+            "seed": self._seed,
+        }
 
     def get_log_probability(self, theta: float) -> float:
         """Returns the log probability of theta. This method exponentiates theta and calls `self._get_log_probability`.

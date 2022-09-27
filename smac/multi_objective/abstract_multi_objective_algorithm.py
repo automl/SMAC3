@@ -36,7 +36,8 @@ class AbstractMultiObjectiveAlgorithm(ABC):
         """Update the internal state on start of each SMBO iteration."""
         pass
 
-    def get_meta(self) -> dict[str, Any]:
+    @property
+    def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,

@@ -165,7 +165,8 @@ class AbstractRunner(ABC):
         )
         return trial_info, trial_value
 
-    def get_meta(self) -> dict[str, Any]:
+    @property
+    def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,

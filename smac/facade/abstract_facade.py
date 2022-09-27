@@ -167,7 +167,7 @@ class AbstractFacade:
         self._update_dependencies()
 
         # We have to update our meta data (basically arguments of the components)
-        self._scenario._set_meta(self.get_meta())
+        self._scenario._set_meta(self.meta)
 
         # We have to validate if the object compositions are correct and actually make sense
         self._validate()
@@ -192,24 +192,25 @@ class AbstractFacade:
     def incumbent(self) -> Configuration | None:
         return self._optimizer._incumbent
 
-    def get_meta(self) -> dict[str, Any]:
+    @property
+    def meta(self) -> dict[str, Any]:
         """Generates a hash based on all components of the facade. This is used for the run name or to determine
         whether a run should be continued or not."""
 
         multi_objective_algorithm_meta = None
         if self._multi_objective_algorithm is not None:
-            multi_objective_algorithm_meta = self._multi_objective_algorithm.get_meta()
+            multi_objective_algorithm_meta = self._multi_objective_algorithm.meta
 
         meta = {
             "facade": {"name": self.__class__.__name__},
-            "runner": self._runner.get_meta(),
-            "model": self._model.get_meta(),
-            "acquisition_maximizer": self._acquisition_maximizer.get_meta(),
-            "acquisition_function": self._acquisition_function.get_meta(),
-            "intensifier": self._intensifier.get_meta(),
-            "initial_design": self._initial_design.get_meta(),
-            "random_design": self._random_design.get_meta(),
-            "runhistory_encoder": self._runhistory_encoder.get_meta(),
+            "runner": self._runner.meta,
+            "model": self._model.meta,
+            "acquisition_maximizer": self._acquisition_maximizer.meta,
+            "acquisition_function": self._acquisition_function.meta,
+            "intensifier": self._intensifier.meta,
+            "initial_design": self._initial_design.meta,
+            "random_design": self._random_design.meta,
+            "runhistory_encoder": self._runhistory_encoder.meta,
             "multi_objective_algorithm": multi_objective_algorithm_meta,
             "version": smac.version,
         }

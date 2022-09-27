@@ -26,12 +26,12 @@ class ProbabilityRandomDesign(AbstractRandomDesign):
         assert 0 <= probability <= 1
         self._probability = probability
 
-    def get_meta(self) -> dict[str, Any]:
-        return {
-            "name": self.__class__.__name__,
-            "probability": self._probability,
-            "seed": self._seed,
-        }
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
+        meta.update({"probability": self._probability})
+
+        return meta
 
     def check(self, iteration: int) -> bool:
         assert iteration >= 0
@@ -68,14 +68,12 @@ class DynamicProbabilityRandomDesign(AbstractRandomDesign):
         self._probability = probability
         self._factor = factor
 
-    def get_meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
-        return {
-            "name": self.__class__.__name__,
-            "probability": self._probability,
-            "factor": self._factor,
-            "seed": self._seed,
-        }
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
+        meta.update({"probability": self._probability, "factor": self._factor})
+
+        return meta
 
     def next_iteration(self) -> None:
         """Sets the probability to the current value multiplied by `factor`."""

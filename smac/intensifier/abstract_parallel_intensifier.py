@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Iterator
+from typing import Callable, Iterator
 
 import os
 
@@ -51,11 +51,6 @@ class AbstractParallelIntensifier(AbstractIntensifier):
     @property
     def uses_seeds(self) -> bool:
         return True
-
-    def get_meta(self) -> dict[str, Any]:
-        return {
-            "name": self.__class__.__name__,
-        }
 
     def get_next_run(
         self,

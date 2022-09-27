@@ -70,9 +70,9 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         self._vectorization_min_obtain = vectorization_min_obtain
         self._vectorization_max_obtain = vectorization_max_obtain
 
-    def get_meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
-        meta = super().get_meta()
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
         meta.update(
             {
                 "max_steps": self._max_steps,

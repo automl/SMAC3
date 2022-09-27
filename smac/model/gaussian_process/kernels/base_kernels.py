@@ -65,6 +65,27 @@ class AbstractKernel:
         self._len_active: int | None
 
     @property
+    def meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object. This method calls the `get_params` method to collect the
+        parameters of the kernel."""
+        meta: dict[str, Any] = {"name": self.__class__.__name__}
+        meta.update(self.get_params(deep=False))
+
+        # We have to handle some special cases to make the meta data serializable
+        for k in meta:
+            v = meta[k]
+            if isinstance(v, AbstractKernel):
+                meta[k] = v.meta
+
+            if isinstance(v, AbstractPrior):
+                meta[k] = v.meta
+
+            if isinstance(v, np.ndarray):
+                meta[k] = v.tolist()
+
+        return meta
+
+    @property
     def hyperparameters(self) -> list[kernels.Hyperparameter]:
         """Returns a list of all hyperparameter specifications."""
         return self._hyperparameters
@@ -104,26 +125,6 @@ class AbstractKernel:
             params[arg] = getattr(self, arg, None)
 
         return params
-
-    def get_meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object. This method calls the `get_params` method to collect the
-        parameters of the kernel."""
-        meta: dict[str, Any] = {"name": self.__class__.__name__}
-        meta.update(self.get_params(deep=False))
-
-        # We have to handle some special cases to make the meta data serializable
-        for k in meta:
-            v = meta[k]
-            if isinstance(v, AbstractKernel):
-                meta[k] = v.get_meta()
-
-            if isinstance(v, AbstractPrior):
-                meta[k] = v.get_meta()
-
-            if isinstance(v, np.ndarray):
-                meta[k] = v.tolist()
-
-        return meta
 
     def __call__(
         self,

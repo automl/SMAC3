@@ -80,15 +80,10 @@ class GaussianProcess(AbstractGaussianProcess):
 
         self._set_has_conditions()
 
-    def get_meta(self) -> dict[str, Any]:
-        meta = super().get_meta()
-        meta.update(
-            {
-                "name": self.__class__.__name__,
-                "n_restarts": self._n_restarts,
-                "normalize_y": self._normalize_y,
-            }
-        )
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
+        meta.update({"n_restarts": self._n_restarts, "normalize_y": self._normalize_y})
 
         return meta
 

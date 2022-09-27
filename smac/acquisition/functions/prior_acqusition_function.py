@@ -92,11 +92,12 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
                 logger.warning("Discretizing the prior for random forest models.")
                 self._discretize = True
 
-    def get_meta(self) -> dict[str, Any]:
-        meta = super().get_meta()
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
         meta.update(
             {
-                "acquisition_function": self._acquisition_function.get_meta(),
+                "acquisition_function": self._acquisition_function.meta,
                 "decay_beta": self._decay_beta,
                 "prior_floor": self._prior_floor,
                 "discretize": self._discretize,

@@ -32,12 +32,12 @@ class ParEGO(AbstractMultiObjectiveAlgorithm):
         self._theta = self._rng.rand(self._n_objectives)
         self.update_on_iteration_start()
 
-    def get_meta(self) -> dict[str, Any]:
-        return {
-            "name": self.__class__.__name__,
-            "rho": self._rho,
-            "seed": self._seed,
-        }
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
+        meta.update({"rho": self._rho})
+
+        return meta
 
     def update_on_iteration_start(self) -> None:
         self._theta = self._rng.rand(self._n_objectives)

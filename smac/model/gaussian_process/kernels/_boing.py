@@ -39,12 +39,6 @@
 #         self.cont_kernel = cont_kernel
 #         self.cat_kernel = cat_kernel
 
-#     def get_meta(self) -> dict[str, Any]:
-#         """Returns the meta data of the created object."""
-#         return {
-#             "name": self.__class__.__name__,
-#         }
-
 #     def forward(
 #         self, x1: torch.Tensor, x2: torch.Tensor, diag: bool = False, cont_only: bool = False, **params: Any
 #     ) -> gpytorch.lazy.LazyTensor:

@@ -129,11 +129,11 @@
 #         self._property_dict: OrderedDict = OrderedDict()
 #         self._is_trained = False
 
-#     def get_meta(self) -> dict[str, Any]:
-#         meta = super().get_meta()
+#     @property
+#     def meta(self) -> dict[str, Any]:  # noqa: D102
+#         meta = super().meta
 #         meta.update(
 #             {
-#                 "name": self.__class__.__name__,
 #                 "n_restarts": self._n_restarts,
 #                 "normalize_y": self._normalize_y,
 #                 "likelihood": self._likelihood.__data__,

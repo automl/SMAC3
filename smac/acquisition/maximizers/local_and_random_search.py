@@ -83,13 +83,13 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         self._random_search._acquisition_function = acquisition_function
         self._local_search._acquisition_function = acquisition_function
 
-    def get_meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
-        meta = super().get_meta()
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
         meta.update(
             {
-                "random_search": self._random_search.get_meta(),
-                "local_search": self._local_search.get_meta(),
+                "random_search": self._random_search.meta,
+                "local_search": self._local_search.meta,
             }
         )
 

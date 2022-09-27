@@ -113,11 +113,11 @@ class RandomForest(AbstractRandomForest):
         #    self._seed,
         # ]
 
-    def get_meta(self) -> dict[str, Any]:
-        meta = super().get_meta()
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
         meta.update(
             {
-                "name": self.__class__.__name__,
                 "n_trees": self._n_trees,
                 "n_points_per_tree": self._n_points_per_tree,
                 "ratio_features": self._ratio_features,
@@ -128,7 +128,6 @@ class RandomForest(AbstractRandomForest):
                 "max_nodes": self._max_nodes,
                 "bootstrapping": self._bootstrapping,
                 "pca_components": self._pca_components,
-                "seed": self._seed,
             }
         )
 

@@ -758,9 +758,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # We only submit a new configuration M if all instance-seed pairs of (M - 1)
         # have been proposed
         configurations_by_this_intensifier = [
-            c
-            for c, i, s, b in self._run_tracker
-            # if b == self._all_budgets[self.stage]  # Bugfix closes #880
+            c for c, i, s, b in self._run_tracker  # if b == self._all_budgets[self.stage]  # Bugfix closes #880
         ]
         running_configs = set()
         for k, v in runhistory.items():

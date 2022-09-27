@@ -14,6 +14,10 @@ Ask-and-Tell Interface
     - skipped trials are handled differently
     - 
 
+.. warning :: 
+
+    Calling multiple asks in a row is not yet supported.
+
 
 Calling Tell without Ask
 ^^^^^^^^^^^^^^^^^^^^^^^^

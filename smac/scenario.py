@@ -138,23 +138,8 @@ class Scenario:
 
         raise RuntimeError("Can only compare scenario objects.")
 
-    def _change_output_directory(self) -> None:
-        # Create output directory
-        if self.name is not None:
-            new = Path(self.name) / str(self.seed)
-            if not str(self.output_directory).endswith(str(new)):
-                object.__setattr__(self, "output_directory", self.output_directory / new)
-
-    def _set_meta(self, meta: dict[str, dict[str, Any]]) -> None:
-        object.__setattr__(self, "_meta", meta)
-
-        # We overwrite name with the hash of the meta (if no name is passed)
-        if self.name is None:
-            hash = hashlib.md5(str(self.__dict__).encode("utf-8")).hexdigest()
-            object.__setattr__(self, "name", hash)
-            self._change_output_directory()
-
-    def get_meta(self) -> dict[str, str]:
+    @property
+    def meta(self) -> dict[str, Any]:
         """Returns the meta data of the SMAC run.
 
         Note
@@ -189,7 +174,7 @@ class Scenario:
 
     def save(self) -> None:
         """Saves internal variables and the configuration space to a file."""
-        if self.get_meta() == {}:
+        if self.meta == {}:
             logger.warning("Scenario will saved without meta data. Please call the facade first to set meta data.")
 
         if self.name is None:
@@ -243,3 +228,23 @@ class Scenario:
         scenario._set_meta(meta)
 
         return scenario
+
+    def _change_output_directory(self) -> None:
+        # Create output directory
+        if self.name is not None:
+            new = Path(self.name) / str(self.seed)
+            if not str(self.output_directory).endswith(str(new)):
+                object.__setattr__(self, "output_directory", self.output_directory / new)
+
+    def _set_meta(self, meta: dict[str, Any]) -> None:
+        """Sets the meta data of the SMAC run."""
+        if self.meta != {}:
+            raise RuntimeError("Meta data can only be set once.")
+
+        object.__setattr__(self, "_meta", meta)
+
+        # We overwrite name with the hash of the meta (if no name is passed)
+        if self.name is None:
+            hash = hashlib.md5(str(self.__dict__).encode("utf-8")).hexdigest()
+            object.__setattr__(self, "name", hash)
+            self._change_output_directory()

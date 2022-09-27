@@ -40,13 +40,12 @@ class LogNormalPrior(AbstractPrior):
         self._mean = mean
         self._sqrt_2_pi = np.sqrt(2 * np.pi)
 
-    def get_meta(self) -> dict[str, Any]:
-        return {
-            "name": self.__class__.__name__,
-            "sigma": self._sigma,
-            "mean": self._mean,
-            "seed": self._seed,
-        }
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
+        meta.update({"sigma": self._sigma, "mean": self._mean})
+
+        return meta
 
     def _get_log_probability(self, theta: float) -> float:
         if theta <= self._mean:

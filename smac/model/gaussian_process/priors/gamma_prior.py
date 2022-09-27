@@ -42,14 +42,18 @@ class GammaPrior(AbstractPrior):
         self._loc = loc
         self._scale = scale
 
-    def get_meta(self) -> dict[str, Any]:
-        return {
-            "name": self.__class__.__name__,
-            "a": self._a,
-            "loc": self._loc,
-            "scale": self._scale,
-            "seed": self._seed,
-        }
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
+        meta.update(
+            {
+                "a": self._a,
+                "loc": self._loc,
+                "scale": self._scale,
+            }
+        )
+
+        return meta
 
     def _get_log_probability(self, theta: float) -> float:
         """Returns the log pdf of theta."""

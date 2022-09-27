@@ -39,13 +39,12 @@ class TophatPrior(AbstractPrior):
         if not (self._max > self._min):
             raise Exception("Upper bound of Tophat prior must be greater than the lower bound.")
 
-    def get_meta(self) -> dict[str, Any]:
-        return {
-            "name": self.__class__.__name__,
-            "lower_bound": self._min,
-            "upper_bound": self._max,
-            "seed": self._seed,
-        }
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
+        meta.update({"lower_bound": self._min, "upper_bound": self._max})
+
+        return meta
 
     def _get_log_probability(self, theta: float) -> float:
         if theta < self._min or theta > self._max:
@@ -118,14 +117,12 @@ class SoftTopHatPrior(AbstractPrior):
 
         self._exponent = exponent
 
-    def get_meta(self) -> dict[str, Any]:
-        return {
-            "name": self.__class__.__name__,
-            "lower_bound": self._lower_bound,
-            "upper_bound": self._upper_bound,
-            "exponent": self._exponent,
-            "seed": self._seed,
-        }
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
+        meta.update({"lower_bound": self._lower_bound, "upper_bound": self._upper_bound, "exponent": self._exponent})
+
+        return meta
 
     def _get_log_probability(self, theta: float) -> float:
         return 0

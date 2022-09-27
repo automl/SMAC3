@@ -134,6 +134,7 @@ class BaseSMBO:
 
         # Internal variables
         self._finished = False
+        self._allow_optimization = True
         self._stop = False  # Gracefully stop SMAC
         self._min_time = 10**-5
         self._callbacks: list[Callback] = []
@@ -178,6 +179,9 @@ class BaseSMBO:
         incumbent: np.array(1, H)
             The best found configuration.
         """
+        if not self._allow_optimization:
+            raise NotImplementedError("Unfortunately, previous runs can not be continued yet. 😞")
+
         # We return the incumbent if we already finished the optimization process (we don't want to allow to call
         # optimize more than once).
         if self._finished:
@@ -369,9 +373,9 @@ class BaseSMBO:
 
                 if self._scenario == old_scenario:
                     # TODO: We have to do something different here:
-                    # The intensifier needs to know about what happened
-                    # Therefore, we read in the runhistory but use the tell method to add everything
-                    # Update: Not working yet. Therefore, we just throw an error.
+                    # The intensifier needs to know about what happened.
+                    # Therefore, we read in the runhistory but use the tell method to add everything.
+                    # Update: Not working yet as it's much more complicated. Therefore, we just throw an error.
 
                     logger.info("Continuing from previous run.")
 
@@ -381,13 +385,17 @@ class BaseSMBO:
                     self._runhistory.load_json(str(old_runhistory_filename), configspace=self._scenario.configspace)
                     self._stats.load()
 
-                    # Reset runhistory and stats if first run was not successful
                     if self._stats.submitted == 1 and self._stats.finished == 0:
+                        # Reset runhistory and stats if first run was not successful
                         logger.info("Since the previous run was not successful, SMAC will start from scratch again.")
                         self._runhistory.reset()
                         self._stats.reset()
+                    elif self._stats.submitted == 0 and self._stats.finished == 0:
+                        # If the other run did not start, we can just continue
+                        self._runhistory.reset()
+                        self._stats.reset()
                     else:
-                        raise NotImplementedError("Unfortunately, previous runs can not be continued yet. 😞")
+                        self._allow_optimization = False
                 else:
                     diff = recursively_compare_dicts(self._scenario.__dict__, old_scenario.__dict__, level="scenario")
                     logger.info(
@@ -426,9 +434,9 @@ class BaseSMBO:
                     else:
                         raise RuntimeError("SMAC run was stopped by the user.")
 
-        # And now we save our scenario object.
-        # Runhistory and stats are saved later on as they change over time.
+        # And now we save everything
         self._scenario.save()
+        self.save()
 
         # Make sure we use the current incumbent
         self._incumbent = self.stats.get_incumbent()

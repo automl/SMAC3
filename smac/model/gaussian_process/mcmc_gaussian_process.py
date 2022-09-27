@@ -103,15 +103,10 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
         self._samples: Any = None  # TODO: What type does this variable hold?
 
     @property
-    def models(self) -> list[GaussianProcess]:
-        """Returns the internally used gaussian processes."""
-        return self._models
-
-    def get_meta(self) -> dict[str, Any]:
-        meta = super().get_meta()
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
         meta.update(
             {
-                "name": self.__class__.__name__,
                 "n_mcmc_walkers": self._n_mcmc_walkers,
                 "chain_length": self._chain_length,
                 "burning_steps": self._burning_steps,
@@ -122,6 +117,11 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
         )
 
         return meta
+
+    @property
+    def models(self) -> list[GaussianProcess]:
+        """Returns the internally used gaussian processes."""
+        return self._models
 
     def _train(
         self: Self,

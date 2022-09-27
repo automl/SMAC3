@@ -216,7 +216,8 @@ class SuccessiveHalving(AbstractParallelIntensifier):
         if self._instance_as_budget:
             logger.info("The argument `incumbent_selection` is ignored because instances are used as budget type.")
 
-    def get_meta(self) -> dict[str, Any]:
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
         return {
             "name": self.__class__.__name__,
             "instance_seed_pairs": self._instance_seed_pairs,

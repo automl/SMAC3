@@ -25,21 +25,25 @@ class AbstractAcquisitionFunction:
 
     @property
     def name(self) -> str:
+        """Returns the full name of the acquisition function."""
         raise NotImplementedError
 
     @property
-    def model(self) -> AbstractModel | None:
-        return self._model
-
-    @model.setter
-    def model(self, model: AbstractModel) -> None:
-        self._model = model
-
-    def get_meta(self) -> dict[str, Any]:
+    def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
         }
+
+    @property
+    def model(self) -> AbstractModel | None:
+        """Returns the used surrogate model in the acquisition function."""
+        return self._model
+
+    @model.setter
+    def model(self, model: AbstractModel) -> None:
+        """Updates the surrogate model."""
+        self._model = model
 
     def update(self, model: AbstractModel, **kwargs: Any) -> None:
         """Updates the acquisition function attributes required for calculation.

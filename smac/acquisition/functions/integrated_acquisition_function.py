@@ -41,9 +41,10 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
     def name(self) -> str:
         return f"Integrated Acquisition Function ({self._acquisition_function.__class__.__name__})"
 
-    def get_meta(self) -> dict[str, Any]:
-        meta = super().get_meta()
-        meta.update({"acquisition_function": self._acquisition_function.get_meta()})
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
+        meta.update({"acquisition_function": self._acquisition_function.meta})
 
         return meta
 

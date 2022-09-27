@@ -33,12 +33,12 @@ class ModulusRandomDesign(AbstractRandomDesign):
 
         self._modulus = modulus
 
-    def get_meta(self) -> dict[str, Any]:
-        return {
-            "name": self.__class__.__name__,
-            "modulus": self._modulus,
-            "seed": self._seed,
-        }
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
+        meta.update({"modulus": self._modulus})
+
+        return meta
 
     def check(self, iteration: int) -> bool:
         assert iteration >= 0
@@ -84,14 +84,18 @@ class DynamicModulusRandomDesign(AbstractRandomDesign):
         self._modulus_increment = modulus_increment
         self._end_modulus = end_modulus
 
-    def get_meta(self) -> dict[str, Any]:
-        return {
-            "name": self.__class__.__name__,
-            "start_modulus": self._start_modulus,
-            "end_modulus": self._end_modulus,
-            "modulus_increment": self._modulus_increment,
-            "seed": self._seed,
-        }
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
+        meta.update(
+            {
+                "start_modulus": self._start_modulus,
+                "end_modulus": self._end_modulus,
+                "modulus_increment": self._modulus_increment,
+            }
+        )
+
+        return meta
 
     def next_iteration(self) -> None:
         self._modulus += self._modulus_increment

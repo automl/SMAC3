@@ -52,11 +52,12 @@ class AbstractAcquisitionMaximizer:
     def acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
         self._acquisition_function = acquisition_function
 
-    def get_meta(self) -> dict[str, Any]:
+    @property
+    def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         acquisition_function_meta = None
         if self._acquisition_function is not None:
-            acquisition_function_meta = self._acquisition_function.get_meta()
+            acquisition_function_meta = self._acquisition_function.meta
 
         return {
             "name": self.__class__.__name__,
