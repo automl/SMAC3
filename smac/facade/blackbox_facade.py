@@ -271,7 +271,6 @@ class BlackBoxFacade(AbstractFacade):
             Additional configurations are not affected by this parameter.
         additional_configs: list[Configuration], defaults to []
             Adds additional configurations to the initial design.
-        seed : int | None, default to None
         """
         return SobolInitialDesign(
             scenario=scenario,

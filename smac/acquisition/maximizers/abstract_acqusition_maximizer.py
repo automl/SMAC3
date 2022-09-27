@@ -82,7 +82,7 @@ class AbstractAcquisitionMaximizer:
             Number of points to be sampled. If `n_points` is not specified, `self._challengers` is used.
         random_design: AbstractRandomDesign, defaults to None
             Part of the returned ChallengerList such that we can interleave random configurations by a scheme defined by
-            the random_design. The method `random_design.next_iteration()` is called at the end of this function.
+            the random design. The method `random_design.next_iteration()` is called at the end of this function.
 
         Returns
         -------

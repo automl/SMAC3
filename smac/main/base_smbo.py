@@ -38,63 +38,45 @@ logger = get_logger(__name__)
 
 
 class BaseSMBO:
-    """Interface that contains the main Bayesian optimization loop.
+    """Implementation that contains the main Bayesian optimization loop.
 
     Parameters
     ----------
-    scenario: smac.config.config.config
-        scenario object
-    stats: Stats
-        statistics object with configuration budgets
-    initial_design: InitialDesign
-        initial sampling design
-    runhistory: RunHistory
-        runhistory with all runs so far
-    runhistory_encoder : Abstractrunhistory_encoder
-        Object that implements the Abstractrunhistory_encoder to convert runhistory
-        data into EPM data
-    intensifier: Intensifier
-        intensification of new challengers against incumbent configuration
-        (probably with some kind of racing on the instances)
-    model: BaseEPM
-        empirical performance model
-    acquisition_maximizer: AcquisitionFunctionMaximizer
-        Optimizer of acquisition function.
-    acquisition_function : AcquisitionFunction
-        Object that implements the AbstractAcquisitionFunction (i.e., infill criterion for acquisition_maximizer)
-    restore_incumbent: Configuration
-        incumbent to be used from the start. ONLY used to restore states.
-    rng: np.random.RandomState
-        Random number generator
+    scenario : Scenario
+        The scenario object, holding all environmental information.
+    stats : Stats
+        Stats object to collect statistics about SMAC.
     runner : AbstractRunner
-        target function run executor
-    random_design
-        Chooser for random configuration -- one of
-        * ChooserNoCoolDown(modulus)
-        * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)
-    predict_x_best: bool
-        Choose x_best for computing the acquisition function via the model instead of via the observations.
-    min_samples_model: int
-        Minimum number of samples to build a model.
-    configuration_chooser_kwargs: typing.Optional[typing.Dict]
-        Additional arguments passed to epmchooser
+        The runner (containing the target function) is called internally to judge a trial's performance.
+    initial_design : InitialDesign
+        The sampled configurations from the initial design are evaluated before the Bayesian optimization loop starts.
+    runhistory : Runhistory
+        The runhistory stores all trials.
+    runhistory_encoder : RunHistoryEncoder
+        Based on the runhistory, the surrogate model is trained. However, the data first needs to be encoded, which
+        is done by the runhistory encoder. For example, inactive hyperparameters need to be encoded or cost values
+        can be log transformed.
+    intensifier : AbstractIntensifier
+        The intensifier decides which trial (combination of configuration, seed, budget and instance) should be run
+        next.
+    model : BaseModel
+        The surrogate model.
+    acquisition_maximizer : AbstractAcquisitionMaximizer
+        The acquisition maximizer, deciding which configuration is most promising based on the surrogate model and
+        acquisition function.
+    acquisition_function : AbstractAcquisitionFunction
+        The acquisition function.
+    random_design : RandomDesign
+        The random design is used in the acquisition maximier, deciding whether the next configuration should be drawn
+        from the acquisition function or randomly.
+    overwrite: bool, defaults to False
+        When True, overwrites the run results if a previous run is found that is
+        inconsistent in the meta data with the current setup. If ``overwrite`` is set to False, the user is asked
+        for the exact behaviour (overwrite completely, save old run, or use old results).
 
     Warning
     -------
     This model should only be initialized by a facade.
-
-    Attributes
-    ----------
-    incumbent
-    config
-    config_space
-    stats
-    initial_design
-    runhistory
-    intensifier
-    rng
-    initial_design_configs
-    runner
     """
 
     def __init__(
@@ -149,14 +131,18 @@ class BaseSMBO:
 
     @property
     def runhistory(self) -> RunHistory:
+        """The run history, which is filled with all information during the optimization process."""
         return self._runhistory
 
     @property
     def stats(self) -> Stats:
+        """The stats object, which is updated during the optimization and shows relevant information, e.g., how many
+        trials have been finished and how the trajectory looks like."""
         return self._stats
 
     @property
     def incumbent(self) -> Configuration | None:
+        """The best configuration so far."""
         return self._incumbent
 
     def update_model(self, model: AbstractModel) -> None:
@@ -176,7 +162,7 @@ class BaseSMBO:
 
         Returns
         -------
-        incumbent: np.array(1, H)
+        incumbent : Configuration
             The best found configuration.
         """
         if not self._allow_optimization:
@@ -302,7 +288,7 @@ class BaseSMBO:
 
     @abstractmethod
     def get_next_configurations(self, n: int | None = None) -> Iterator[Configuration]:
-        """Choose next candidate solution with Bayesian optimization. The suggested configurations
+        """Chooses next candidate solution with Bayesian optimization. The suggested configurations
         depend on the surrogate model acquisition optimizer/function. This method is used by
         the intensifier.
 
@@ -321,7 +307,15 @@ class BaseSMBO:
 
     @abstractmethod
     def ask(self) -> tuple[TrialInfoIntent, TrialInfo]:
-        """Asks the intensifier for the next trial."""
+        """Asks the intensifier for the next trial.
+
+        Returns
+        -------
+        intent : TrialInfoIntent
+            Intent of the trials (wait/skip/run).
+        info : TrialInfo
+            Information about the trial (config, instance, seed, budget).
+        """
         raise NotImplementedError
 
     @abstractmethod
@@ -331,11 +325,11 @@ class BaseSMBO:
 
         Parameters
         ----------
-        info: TrialInfo
+        info : TrialInfo
             Describes the trial from which to process the results.
-        value: TrialValue
+        value : TrialValue
             Contains relevant information regarding the execution of a trial.
-        time_left: float | None
+        time_left : float | None, defaults to None
             How much time in seconds is left to perform intensification.
         save : bool, optional to True
             Whether the runhistory should be saved.
@@ -351,6 +345,7 @@ class BaseSMBO:
             self._runhistory.save_json(str(path / "runhistory.json"))
 
     def _register_callback(self, callback: Callback) -> None:
+        """Registers a callback to be called before, in between, and after the Bayesian optimization loop."""
         self._callbacks += [callback]
 
     def _initialize_state(self) -> None:

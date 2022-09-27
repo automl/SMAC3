@@ -75,8 +75,7 @@ class AlgorithmConfigurationFacade(AbstractFacade):
         *,
         xi: float = 0.0,
     ) -> EI:
-        """
-        Returns an Expected Improvement acquisition function.
+        """Returns an Expected Improvement acquisition function.
 
         Parameters
         ----------
@@ -162,7 +161,7 @@ class AlgorithmConfigurationFacade(AbstractFacade):
 
         Parameters
         ----------
-        probability : float
+        probability : float, defaults to 0.5
             Probability that a configuration will be drawn at random.
         """
         return ProbabilityRandomDesign(probability=probability, seed=scenario.seed)

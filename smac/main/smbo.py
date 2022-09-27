@@ -25,7 +25,7 @@ logger = get_logger(__name__)
 
 
 class SMBO(BaseSMBO):
-    """Interface to train the EPM and generate/choose next configurations."""
+    """Implements ``get_next_configurations``, ``ask``, and ``tell``."""
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
@@ -34,7 +34,7 @@ class SMBO(BaseSMBO):
         self._min_samples_model = 1
         self._considered_budgets: list[float | None] = [None]
 
-    def get_next_configurations(self, n: int | None = None) -> Iterator[Configuration]:
+    def get_next_configurations(self, n: int | None = None) -> Iterator[Configuration]:  # noqa: D102
         for callback in self._callbacks:
             callback.on_next_configurations_start(self)
 
@@ -84,7 +84,7 @@ class SMBO(BaseSMBO):
 
         return challengers
 
-    def ask(self) -> tuple[TrialInfoIntent, TrialInfo]:
+    def ask(self) -> tuple[TrialInfoIntent, TrialInfo]:  # noqa: D102
         for callback in self._callbacks:
             callback.on_ask_start(self)
 
@@ -119,7 +119,7 @@ class SMBO(BaseSMBO):
         value: TrialValue,
         time_left: float | None = None,
         save: bool = True,
-    ) -> None:
+    ) -> None:  # noqa: D102
         # We first check if budget/instance/seed is supported by the intensifier
         if info.seed not in (seeds := self._intensifier.get_target_function_seeds()):
             raise ValueError(f"Seed {info.seed} is not supported by the intensifier. Consider using one of {seeds}.")
@@ -229,11 +229,10 @@ class SMBO(BaseSMBO):
             self.save()
 
     def _collect_data(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-        """
-        Collect the data from the runhistory to train the epm model.
-        The data collection strategy if budgets are used is as follows:
-        Looking from highest to lowest budget, return those observations
-        that support at least self._min_samples_model points.
+        """Collects the data from the runhistory to train the surrogate model. The data collection strategy if budgets
+        are used is as follows: Looking from highest to lowest budget, return those observations
+        that support at least ``self._min_samples_model`` points.
+
         If no budgets are used, this is equivalent to returning all observations.
         """
         # if we use a float value as a budget, we want to train the model only on the highest budget
@@ -270,9 +269,9 @@ class SMBO(BaseSMBO):
         return self._runhistory.get_configs_per_budget(budget_subset=self._considered_budgets)
 
     def _get_x_best(self, predict: bool, X: np.ndarray) -> tuple[np.ndarray, float]:
-        """Get value, configuration, and array representation of the "best" configuration.
+        """Get value, configuration, and array representation of the *best* configuration.
 
-        The definition of best varies depending on the argument ``predict``. If set to ``True``,
+        The definition of best varies depending on the argument ``predict``. If set to `True`,
         this function will return the stats of the best configuration as predicted by the model,
         otherwise it will return the stats for the best observed configuration.
 
