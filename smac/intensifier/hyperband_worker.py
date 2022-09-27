@@ -101,7 +101,7 @@ class HyperbandWorker(SuccessiveHalvingWorker):
 
         return incumbent, inc_perf
 
-    def get_next_run(
+    def get_next_trial(
         self,
         challengers: list[Configuration] | None,
         incumbent: Configuration,
@@ -113,14 +113,14 @@ class HyperbandWorker(SuccessiveHalvingWorker):
         if n_workers > 1:
             raise ValueError(
                 "HyperBand does not support more than 1 worker, yet "
-                "the argument n_workers to get_next_run is {}".format(n_workers)
+                "the argument n_workers to get_next_trial is {}".format(n_workers)
             )
 
         # Sampling from next challenger marks the beginning of a new iteration
         self._iteration_done = False
 
         assert self._sh_intensifier
-        intent, trial_info = self._sh_intensifier.get_next_run(
+        intent, trial_info = self._sh_intensifier.get_next_trial(
             challengers=challengers,
             incumbent=incumbent,
             get_next_configurations=get_next_configurations,

@@ -205,7 +205,7 @@ class Intensifier(AbstractIntensifier):
 
         return meta
 
-    def get_next_run(
+    def get_next_trial(
         self,
         challengers: list[Configuration] | None,
         incumbent: Configuration,

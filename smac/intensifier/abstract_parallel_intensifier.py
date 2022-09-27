@@ -52,7 +52,7 @@ class AbstractParallelIntensifier(AbstractIntensifier):
     def uses_seeds(self) -> bool:
         return True
 
-    def get_next_run(
+    def get_next_trial(
         self,
         challengers: list[Configuration] | None,
         incumbent: Configuration,
@@ -112,7 +112,7 @@ class AbstractParallelIntensifier(AbstractIntensifier):
 
         # First get a config to run from a SH instance
         for i in self._sort_instances_by_stage(self._intensifier_instances):
-            intent, trial_info = self._intensifier_instances[i].get_next_run(
+            intent, trial_info = self._intensifier_instances[i].get_next_trial(
                 challengers=challengers,
                 incumbent=incumbent,
                 get_next_configurations=get_next_configurations,
@@ -130,7 +130,7 @@ class AbstractParallelIntensifier(AbstractIntensifier):
         # If gotten to this point, we might look into adding a new
         # intensifier
         if self._add_new_instance(n_workers):
-            return self._intensifier_instances[len(self._intensifier_instances) - 1].get_next_run(
+            return self._intensifier_instances[len(self._intensifier_instances) - 1].get_next_trial(
                 challengers=challengers,
                 incumbent=incumbent,
                 get_next_configurations=get_next_configurations,

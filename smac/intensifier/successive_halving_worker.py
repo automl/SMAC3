@@ -193,7 +193,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
             activate_configuration_being_intensified=self._running_challenger,
         )
 
-        # 2: Then we get the already submitted tasks (that is, proposed by get_next_runs),
+        # 2: Then we get the already submitted tasks (that is, proposed by get_next_trials),
         # that have not yet been processed process_results
         all_config_inst_seeds_processed = len([v for v in self._run_tracker.values() if not v]) <= 0
 
@@ -224,7 +224,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         # We need to update the incumbent if this config we are processing
         # completes all scheduled instance-seed pairs.
         # Here, a config/seed/instance is going to be processed for the first time
-        # (it has been previously scheduled by get_next_run and marked False, indicating
+        # (it has been previously scheduled by get_next_trial and marked False, indicating
         # that it has not been processed yet. Entering process_results() this config/seed/instance
         # is marked as TRUE as an indication that it has finished and should be processed)
         # so if all configurations runs are marked as TRUE it means that this new config
@@ -260,7 +260,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
 
         return incumbent, inc_perf
 
-    def get_next_run(
+    def get_next_trial(
         self,
         challengers: list[Configuration] | None,
         incumbent: Configuration,
@@ -305,7 +305,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         sh = self._successive_halving
 
         # In the case of multiprocessing, we have runs in Running stage, which have not
-        # been processed via process_results(). get_next_run() is called agnostically by
+        # been processed via process_results(). get_next_trial() is called agnostically by
         # smbo. To prevent launching more configs, than the ones needed, we query if
         # there is room for more configurations, else we wait for process_results()
         # to trigger a new stage
@@ -805,10 +805,10 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
             # remaining
             pending_instances_to_launch = len(current_instances)
         else:
-            # self._current_instance_indices - 1 is the last proposed instance/seed pair from get_next_run
+            # self._current_instance_indices - 1 is the last proposed instance/seed pair from get_next_trial
             # But it is zero indexed, so (self._current_instance_indices - 1) + 1 is the number of
             # configurations that we have proposed to run in total for the running
-            # configuration via get_next_run
+            # configuration via get_next_trial
             pending_instances_to_launch = max(
                 len(current_instances) - self._current_instance_indices[activate_configuration_being_intensified], 0
             )  # type: ignore

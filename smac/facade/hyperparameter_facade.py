@@ -25,14 +25,29 @@ class HyperparameterFacade(AbstractFacade):
         scenario: Scenario,
         *,
         n_trees: int = 10,
-        bootstrapping: bool = True,
         ratio_features: float = 1.0,
         min_samples_split: int = 2,
         min_samples_leaf: int = 1,
         max_depth: int = 2**20,
+        bootstrapping: bool = True,
     ) -> RandomForest:
-        """Returns a RandomForestWithInstances surrogate model. Please check the
-        its documentation for details."""
+        """Returns a random forest as surrogate model.
+
+        Parameters
+        ----------
+        n_trees : int, defaults to 10
+            The number of trees in the random forest.
+        ratio_features : float, defaults to 5.0 / 6.0
+            The ratio of features that are considered for splitting.
+        min_samples_split : int, defaults to 3
+            The minimum number of data points to perform a split.
+        min_samples_leaf : int, defaults to 3
+            The minimum number of data points in a leaf.
+        max_depth : int, defaults to 20
+            The maximum depth of a single tree.
+        bootstrapping : bool, defaults to True
+            Enables bootstrapping.
+        """
         return RandomForest(
             log_y=True,
             n_trees=n_trees,
@@ -52,23 +67,42 @@ class HyperparameterFacade(AbstractFacade):
         *,
         xi: float = 0.0,
     ) -> EI:
-        """Returns an Expected Improvement acquisition function. Please check its documentation
-        for details."""
+        """Returns an Expected Improvement acquisition function.
+
+        Parameters
+        ----------
+        scenario : Scenario
+        xi : float, defaults to 0.0
+            Controls the balance between exploration and exploitation of the
+            acquisition function.
+        """
         return EI(xi=xi, log=True)
 
     @staticmethod
     def get_acquisition_maximizer(  # type: ignore
         scenario: Scenario,
         *,
-        local_search_iterations: int = 10,
         challengers: int = 10000,
+        local_search_iterations: int = 10,
     ) -> LocalAndSortedRandomSearch:
-        """Local and sorted random search acquisition optimizer. Defines the optimization
-        strategy for the acquisition function. Please check its documentation."""
+        """Returns local and sorted random search as acquisition maximizer.
+
+        Warning
+        -------
+        If you experience RAM issues, try to reduce the number of challengers.
+
+        Parameters
+        ----------
+        challengers : int, defaults to 1000
+            Number of challengers.
+        local_search_iterations: int, defauts to 10
+            Number of local search iterations.
+        """
+
         optimizer = LocalAndSortedRandomSearch(
             scenario.configspace,
-            local_search_iterations=local_search_iterations,
             challengers=challengers,
+            local_search_iterations=local_search_iterations,
             seed=scenario.seed,
         )
 
@@ -83,8 +117,21 @@ class HyperparameterFacade(AbstractFacade):
         max_config_calls: int = 3,
         intensify_percentage: float = 0.5,
     ) -> Intensifier:
-        """Returns an intensifier instance. Defining how to challenge the incumbent on multiple
-        problem instances. Please check its documentation for details."""
+        """Returns ``Intensifier`` as intensifier. Uses the default configuration for ``race_against``.
+
+        Parameters
+        ----------
+        scenario : Scenario
+        min_config_calls : int, defaults to 1
+            Minimum number of trials per config (summed over all calls to intensify).
+        max_config_calls : int, defaults to 1
+            Maximum number of trials per config (summed over all calls to intensify).
+        min_challenger : int, defaults to 3
+            Minimal number of challengers to be considered (even if time_bound is exhausted earlier).
+        intensify_percentage : float, defaults to 0.5
+            How much percentage of the time should configurations be intensified (evaluated on higher budgets or
+            more instances). This parameter is accessed in the SMBO class.
+        """
         intensifier = Intensifier(
             scenario=scenario,
             min_challenger=min_challenger,
@@ -105,7 +152,23 @@ class HyperparameterFacade(AbstractFacade):
         max_ratio: float = 0.1,
         additional_configs: list[Configuration] = [],
     ) -> SobolInitialDesign:
-        """Returns an Sobol initial design instance. Please check its documentation for details."""
+        """Returns a Sobol design instance.
+
+        Parameters
+        ----------
+        scenario : Scenario
+        n_configs : int | None, defaults to None
+            Number of initial configurations (disables the arguments ``n_configs_per_hyperparameter``).
+        n_configs_per_hyperparameter: int, defaults to 10
+            Number of initial configurations per hyperparameter. For example, if my configuration space covers five
+            hyperparameters and ``n_configs_per_hyperparameter`` is set to 10, then 50 initial configurations will be
+            samples.
+        max_ratio: float, defaults to 0.1
+            Use at most ``scenario.n_trials`` * ``max_ratio`` number of configurations in the initial design.
+            Additional configurations are not affected by this parameter.
+        additional_configs: list[Configuration], defaults to []
+            Adds additional configurations to the initial design.
+        """
         return SobolInitialDesign(
             scenario=scenario,
             n_configs=n_configs,
@@ -120,19 +183,26 @@ class HyperparameterFacade(AbstractFacade):
         *,
         probability: float = 0.2,
     ) -> ProbabilityRandomDesign:
-        """Returns a ProbabilityRandomDesign instance for interleaving BO derived configurations
-        with random ones. Please check its documentation for details."""
+        """Returns ``ProbabilityRandomDesign`` for interleaving configurations.
+
+        Parameters
+        ----------
+        probability : float, defaults to 0.2
+            Probability that a configuration will be drawn at random.
+        """
         return ProbabilityRandomDesign(probability=probability)
 
     @staticmethod
     def get_multi_objective_algorithm(  # type: ignore
         scenario: Scenario,
     ) -> MeanAggregationStrategy:
-        """Returns a multi-objective algorithm instance. Please check its documentation for details."""
+        """Returns the mean aggregation strategy for the multi objective algorithm."""
         return MeanAggregationStrategy(scenario=scenario)
 
     @staticmethod
     def get_runhistory_encoder(  # type: ignore
         scenario: Scenario,
     ) -> RunHistoryLogScaledEncoder:
+        """Returns a log scaled runhistory encoder. That means that costs are log scaled before
+        training the surrogate model."""
         return RunHistoryLogScaledEncoder(scenario)

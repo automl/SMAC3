@@ -230,12 +230,12 @@ def test_process_results_via_sourceid(runhistory, HB: Hyperband, configs):
         assert result not in all_other_results
 
 
-def test_get_next_run_single_HB_instance(runhistory, HB: Hyperband, configs):
+def test_get_next_trial_single_HB_instance(runhistory, HB: Hyperband, configs):
     """Makes sure that a single_HB instance returns a valid config"""
 
     challengers = configs[:4]
     for i in range(30):
-        intent, trial_info = HB.get_next_run(
+        intent, trial_info = HB.get_next_trial(
             challengers=challengers,
             incumbent=None,
             get_next_configurations=None,
@@ -285,7 +285,7 @@ def test_get_next_run_single_HB_instance(runhistory, HB: Hyperband, configs):
     assert len(HB._intensifier_instances[0]._sh_intensifier._n_configs_in_stage) == 2
 
 
-def test_get_next_run_multiple_HB_instances(runhistory, HB: Hyperband, configs):
+def test_get_next_trial_multiple_HB_instances(runhistory, HB: Hyperband, configs):
     """Makes sure that two _HB instance can properly coexist and tag
     trial_info properly"""
 
@@ -294,7 +294,7 @@ def test_get_next_run_multiple_HB_instances(runhistory, HB: Hyperband, configs):
     challengers = configs[:4]
     trial_infos = []
     for i in range(30):
-        intent, trial_info = HB.get_next_run(
+        intent, trial_info = HB.get_next_trial(
             challengers=challengers,
             incumbent=None,
             get_next_configurations=None,
@@ -345,7 +345,7 @@ def test_get_next_run_multiple_HB_instances(runhistory, HB: Hyperband, configs):
 
     # Adding a new worker is not possible as we already have 2 intensifier_instances
     # and n_workers==2
-    intent, trial_info = HB.get_next_run(
+    intent, trial_info = HB.get_next_trial(
         challengers=challengers,
         incumbent=None,
         get_next_configurations=None,
@@ -389,7 +389,7 @@ def _exhaust_run_and_get_incumbent(runhistory, sh: SuccessiveHalving, configs, n
     incumbent = None
     for i in range(100):
         try:
-            intent, trial_info = sh.get_next_run(
+            intent, trial_info = sh.get_next_trial(
                 challengers=challengers,
                 incumbent=None,
                 get_next_configurations=None,
@@ -500,7 +500,7 @@ def test_update_stage(make_hb_worker):
 
 def test_eval_challenger(runhistory, make_target_function, make_hb_worker, configs):
     """
-    since hyperband uses eval_challenger and get_next_run of the internal successive halving,
+    since hyperband uses eval_challenger and get_next_trial of the internal successive halving,
     we don't test these method extensively
     """
 
@@ -523,8 +523,8 @@ def test_eval_challenger(runhistory, make_target_function, make_hb_worker, confi
         intensifier._scenario, intensifier._stats, target, required_arguments=["seed", "budget"]
     )
 
-    # Testing get_next_run - get next configuration
-    intent, trial_info = intensifier.get_next_run(
+    # Testing get_next_trial - get next configuration
+    intent, trial_info = intensifier.get_next_trial(
         challengers=[config2, config3],
         get_next_configurations=None,
         incumbent=None,
@@ -550,7 +550,7 @@ def test_eval_challenger(runhistory, make_target_function, make_hb_worker, confi
 
     intensifier._sh_intensifier._success_challengers = {config2, config3}
     intensifier._sh_intensifier._update_stage(runhistory)
-    intent, trial_info = intensifier.get_next_run(
+    intent, trial_info = intensifier.get_next_trial(
         challengers=[config2, config3],
         get_next_configurations=None,
         incumbent=None,

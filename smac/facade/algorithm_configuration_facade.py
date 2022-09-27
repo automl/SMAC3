@@ -29,23 +29,41 @@ class AlgorithmConfigurationFacade(AbstractFacade):
         scenario: Scenario,
         *,
         n_trees: int = 10,
-        bootstrapping: bool = True,
         ratio_features: float = 5.0 / 6.0,
         min_samples_split: int = 3,
         min_samples_leaf: int = 3,
         max_depth: int = 20,
+        bootstrapping: bool = True,
         pca_components: int = 4,
     ) -> RandomForest:
-        """Returns a RandomForestWithInstances surrogate model. Please check its documentation."""
+        """Returns a random forest as surrogate model.
+
+        Parameters
+        ----------
+        n_trees : int, defaults to 10
+            The number of trees in the random forest.
+        ratio_features : float, defaults to 5.0 / 6.0
+            The ratio of features that are considered for splitting.
+        min_samples_split : int, defaults to 3
+            The minimum number of data points to perform a split.
+        min_samples_leaf : int, defaults to 3
+            The minimum number of data points in a leaf.
+        max_depth : int, defaults to 20
+            The maximum depth of a single tree.
+        bootstrapping : bool, defaults to True
+            Enables bootstrapping.
+        pca_components : float, defaults to 4
+            Number of components to keep when using PCA to reduce dimensionality of instance features.
+        """
         return RandomForest(
-            log_y=False,
+            configspace=scenario.configspace,
             n_trees=n_trees,
-            bootstrapping=bootstrapping,
             ratio_features=ratio_features,
             min_samples_split=min_samples_split,
             min_samples_leaf=min_samples_leaf,
             max_depth=max_depth,
-            configspace=scenario.configspace,
+            bootstrapping=bootstrapping,
+            log_y=False,
             instance_features=scenario.instance_features,
             pca_components=pca_components,
             seed=scenario.seed,
@@ -54,15 +72,26 @@ class AlgorithmConfigurationFacade(AbstractFacade):
     @staticmethod
     def get_acquisition_function(  # type: ignore
         scenario: Scenario,
+        *,
         xi: float = 0.0,
     ) -> EI:
-        """Returns an Expected Improvement acquisition function. Please check its documentation."""
+        """
+        Returns an Expected Improvement acquisition function.
+
+        Parameters
+        ----------
+        scenario : Scenario
+        xi : float, defaults to 0.0
+            Controls the balance between exploration and exploitation of the
+            acquisition function.
+        """
         return EI(xi=xi)
 
     @staticmethod
     def get_acquisition_maximizer(  # type: ignore
         scenario: Scenario,
     ) -> LocalAndSortedRandomSearch:
+        """Returns local and sorted random search as acquisition maximizer."""
         optimizer = LocalAndSortedRandomSearch(
             scenario.configspace,
             seed=scenario.seed,
@@ -74,12 +103,26 @@ class AlgorithmConfigurationFacade(AbstractFacade):
     def get_intensifier(  # type: ignore
         scenario: Scenario,
         *,
-        min_challenger=1,
         min_config_calls=1,
         max_config_calls=2000,
+        min_challenger=1,
         intensify_percentage: float = 0.5,
     ) -> Intensifier:
-        """Returns an Intensifier. Please check its documentation."""
+        """Returns ``Intensifier`` as intensifier. Uses the default configuration for ``race_against``.
+
+        Parameters
+        ----------
+        scenario : Scenario
+        min_config_calls : int, defaults to 1
+            Minimum number of trials per config (summed over all calls to intensify).
+        max_config_calls : int, defaults to 2000
+            Maximum number of trials per config (summed over all calls to intensify).
+        min_challenger : int, defaults to 2
+            Minimal number of challengers to be considered (even if time_bound is exhausted earlier).
+        intensify_percentage : float, defaults to 0.5
+            How much percentage of the time should configurations be intensified (evaluated on higher budgets or
+            more instances). This parameter is accessed in the SMBO class.
+        """
         intensifier = Intensifier(
             scenario=scenario,
             min_challenger=min_challenger,
@@ -97,8 +140,13 @@ class AlgorithmConfigurationFacade(AbstractFacade):
         *,
         additional_configs: list[Configuration] = [],
     ) -> DefaultInitialDesign:
-        """Returns an DefaultInitialDesign, evaluating only the default configuration. Please check
-        its documentation."""
+        """Returns an initial design, which returns the default configuration.
+
+        Parameters
+        ----------
+        additional_configs: list[Configuration], defaults to []
+            Adds additional configurations to the initial design.
+        """
         return DefaultInitialDesign(
             scenario=scenario,
             additional_configs=additional_configs,
@@ -108,20 +156,25 @@ class AlgorithmConfigurationFacade(AbstractFacade):
     def get_random_design(  # type: ignore
         scenario: Scenario,
         *,
-        random_probability: float = 0.5,
+        probability: float = 0.5,
     ) -> ProbabilityRandomDesign:
-        """Returns a ProbabilityRandomDesign for interleaving configurations selected from BO
-        with those of a RandomDesign. Please check its documentation."""
-        return ProbabilityRandomDesign(probability=random_probability, seed=scenario.seed)
+        """Returns ``ProbabilityRandomDesign`` for interleaving configurations.
+
+        Parameters
+        ----------
+        probability : float
+            Probability that a configuration will be drawn at random.
+        """
+        return ProbabilityRandomDesign(probability=probability, seed=scenario.seed)
 
     @staticmethod
     def get_multi_objective_algorithm(  # type: ignore
         scenario: Scenario,
     ) -> MeanAggregationStrategy:
-        """Returns a MultiObjectiveAlgorithm (MeanAggregationStrategy). Please check its
-        documentation."""
+        """Returns the mean aggregation strategy for the multi objective algorithm."""
         return MeanAggregationStrategy(scenario=scenario)
 
     @staticmethod
     def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:
+        """Returns the default runhistory encoder."""
         return RunHistoryEncoder(scenario)

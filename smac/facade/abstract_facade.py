@@ -42,40 +42,53 @@ __license__ = "3-clause BSD"
 
 
 class AbstractFacade:
-    """Facade is an abstraction on top of the SMBO backend to organize the components
-    of a Bayesian Optimization loop in a configurable & separable manner to suit the
-    various needs of different hyperparameter optimization pipelines.
+    """Facade is an abstraction on top of the SMBO backend to organize the components of a Bayesian Optimization loop
+    in a configurable and separable manner to suit the various needs of different (hyperparameter) optimization
+    pipelines.
 
-    With the exception to scenario and target_function, which are expected of the
-    user, the parameters: model, acquisition_function, acquisition_maximizer,
-    initial_design, random_design, intensifier, multi_objective_algorithm,
-    runhistory and runhistory_encoder can either be explicitly specified in the
-    subclasses' get_* methods - defining a specific BO pipeline - or be instantiated
-    by the user to overwrite a pipelines components explicitly, before passing
-    them to the facade. For an example of the latter see the svm_cv.py.
+    With the exception to scenario and ``target_function``, which are expected of the user, the parameters ``model``,
+    ``acquisition_function``, ``acquisition_maximizer``, ``initial_design``, ``random_design``, ``intensifier``,
+    ``multi_objective_algorithm``, ``runhistory_encoder`` can either be explicitly specified in the subclasses'
+    ``get_*`` methods (defining a specific BO pipeline) or be instantiated by the user to overwrite a pipelines
+    components explicitly.
 
     Parameters
     ----------
-    scenario: Scenario,
-    target_function: AbstractRunner | Callable
-
-    model: BaseModel | None
-    acquisition_function: AbstractAcquisitionFunction | None
-    acquisition_maximizer: AbstractAcquisitionMaximizer | None
-    initial_design: InitialDesign | None
-    random_design: RandomDesign | None
-    intensifier: AbstractIntensifier | None
-    multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None
-    runhistory: RunHistory | None
-    runhistory_encoder: RunHistoryEncoder | None
-
+    scenario : Scenario
+        The scenario object, holding all environmental information.
+    target_function : AbstractRunner | Callable
+        This function is called internally to judge a trial's performance.
+    model : BaseModel | None, defaults to None
+        The surrogate model.
+    acquisition_function : AbstractAcquisitionFunction | None, defaults to None
+        The acquisition function.
+    acquisition_maximizer : AbstractAcquisitionMaximizer | None, defaults to None
+        The acquisition maximizer, deciding which configuration is most promising based on the surrogate model and
+        acquisition function.
+    initial_design : InitialDesign | None, defaults to None
+        The sampled configurations from the initial design are evaluated before the Bayesian optimization loop starts.
+    random_design : RandomDesign | None, defaults to None
+        The random design is used in the acquisition maximier, deciding whether the next configuration should be drawn
+        from the acquisition function or randomly.
+    intensifier : AbstractIntensifier | None, defaults to None
+        The intensifier decides which trial (combination of configuration, seed, budget and instance) should be run
+        next.
+    multi_objective_algorithm : AbstractMultiObjectiveAlgorithm | None, defaults to None
+        In case of multiple objectives, the objectives need to be interpreted so that an optimization is possible.
+        The multi objective algorithm takes care of that.
+    runhistory_encoder : RunHistoryEncoder | None, defaults to None
+        Based on the runhistory, the surrogate model is trained. However, the data first needs to be encoded, which
+        is done by the runhistory encoder. For example, inactive hyperparameters need to be encoded or cost values
+        can be log transformed.
     logging_level: int | Path | None
-         Level of logging; if path passed: yaml file expected; if none: use default logging from logging.yml
-    callbacks: list[Callback] = [],
+        The level of logging (the lowest level 0 indicates the debug level). If a path is passed, a yaml file is
+        expected with the logging configuration. If nothing is passed, the default logging.yml from SMAC is used.
+    callbacks: list[Callback], defaults to []
+        Callbacks, which are incorporated into the optimization loop.
     overwrite: bool, defaults to False
-        When True, overwrites the results (runhistory and stats) if a previous run is found that is
+        When True, overwrites the run results if a previous run is found that is
         inconsistent in the meta data with the current setup. If ``overwrite`` is set to False, the user is asked
-        for the exact behaviour.
+        for the exact behaviour (overwrite completely, save old run, or use old results).
     """
 
     def __init__(
@@ -182,21 +195,24 @@ class AbstractFacade:
 
     @property
     def runhistory(self) -> RunHistory:
+        """The run history, which is filled with all information during the optimization process."""
         return self._optimizer._runhistory
 
     @property
     def stats(self) -> Stats:
+        """The stats object, which is updated during the optimization and shows relevant information, e.g., how many
+        trials have been finished and how the trajectory looks like."""
         return self._optimizer._stats
 
     @property
     def incumbent(self) -> Configuration | None:
+        """The best configuration so far."""
         return self._optimizer._incumbent
 
     @property
     def meta(self) -> dict[str, Any]:
         """Generates a hash based on all components of the facade. This is used for the run name or to determine
         whether a run should be continued or not."""
-
         multi_objective_algorithm_meta = None
         if self._multi_objective_algorithm is not None:
             multi_objective_algorithm_meta = self._multi_objective_algorithm.meta
@@ -279,7 +295,7 @@ class AbstractFacade:
         """
         incumbent = None
         try:
-            incumbent = self._optimizer.run()
+            incumbent = self._optimizer.optimize()
         finally:
             self._optimizer.save()
             self._stats.print()
@@ -375,14 +391,7 @@ class AbstractFacade:
         raise NotImplementedError
 
     def _get_optimizer(self) -> SMBO:
-        """
-        Filling the SMBO with all the pre-initialized components.
-
-        Attributes
-        ----------
-        optimizer: SMBO
-            A fully configured SMBO object
-        """
+        """Fills the SMBO with all the pre-initialized components."""
         return SMBO(
             scenario=self._scenario,
             stats=self._stats,
@@ -407,7 +416,6 @@ class AbstractFacade:
         self._runhistory_encoder.multi_objective_algorithm = self._multi_objective_algorithm
         self._acquisition_function.model = self._model
         self._acquisition_maximizer.acquisition_function = self._acquisition_function
-        # TODO: self._runhistory_encoder.set_success_states etc. for different intensifier?
 
     def _validate(self) -> None:
         """Checks if the composition is correct if there are dependencies, not necessarily"""
@@ -415,6 +423,7 @@ class AbstractFacade:
         assert self._acquisition_function == self._acquisition_maximizer._acquisition_function
 
     def _get_signature_arguments(self) -> list[str]:
+        """Returns signature arguments, which are required by the intensifier."""
         arguments = []
 
         if self._intensifier.uses_seeds:

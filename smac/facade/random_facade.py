@@ -37,7 +37,7 @@ class RandomFacade(AbstractFacade):
 
     1. Select a configuration θ uniformly at random.
     2. Compare θ to incumbent θ* online (one θ at a time):
-        - Reject/accept θ with `aggressive racing`
+      - Reject/accept θ with `aggressive racing`
 
     *Setup:*
     Uses a random model and random search for the optimization of the acquisition function.
@@ -67,10 +67,14 @@ class RandomFacade(AbstractFacade):
         max_config_calls: int = 3,
         intensify_percentage: float = 0.5,
     ) -> Intensifier:
-        """We use a simple intensifier. Please use ``HyperbandFacade`` if you want to incorporate budgets.
+        """Returns ``Intensifier`` as intensifier. Uses the default configuration for ``race_against``.
 
         Note
         ----
+        Please use ``HyperbandFacade`` if you want to incorporate budgets.
+
+        Warning
+        -------
         If you are in an algorithm configuration setting, consider increasing ``max_config_calls``.
         """
         intensifier = Intensifier(
@@ -90,7 +94,13 @@ class RandomFacade(AbstractFacade):
         *,
         additional_configs: list[Configuration] = [],
     ) -> DefaultInitialDesign:
-        """Before starting the random optimization, we first evaluate the default initial design."""
+        """Returns an initial design, which returns the default configuration.
+
+        Parameters
+        ----------
+        additional_configs: list[Configuration], defaults to []
+            Adds additional configurations to the initial design.
+        """
         return DefaultInitialDesign(
             scenario=scenario,
             additional_configs=additional_configs,
@@ -130,9 +140,11 @@ class RandomFacade(AbstractFacade):
         )
 
     @staticmethod
-    def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:
-        return RunHistoryEncoder(scenario)
+    def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
+        """Returns the mean aggregation strategy for the multi objective algorithm."""
+        return MeanAggregationStrategy(scenario=scenario)
 
     @staticmethod
-    def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
-        return MeanAggregationStrategy(scenario=scenario)
+    def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:
+        """Returns the default runhistory encoder."""
+        return RunHistoryEncoder(scenario)

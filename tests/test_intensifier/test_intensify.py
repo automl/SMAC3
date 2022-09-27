@@ -458,7 +458,7 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
 
     # intensification iteration #1
     # run first config as incumbent if incumbent is None
-    intent, trial_info = intensifier.get_next_run(
+    intent, trial_info = intensifier.get_next_trial(
         challengers=[config2],
         incumbent=None,
         runhistory=runhistory,
@@ -485,7 +485,7 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
     # Normally a challenger will be given, which in this case is the incumbent
     # But no more instances are available. So to prevent cicles
     # where No iteration happens, provide the challengers
-    intent, trial_info = intensifier.get_next_run(
+    intent, trial_info = intensifier.get_next_trial(
         challengers=[
             config1,
             config0,
@@ -549,7 +549,7 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
     )
 
     # run challenger
-    intent, trial_info = intensifier.get_next_run(
+    intent, trial_info = intensifier.get_next_trial(
         challengers=None,  # don't need a new list here as old one is cont'd
         incumbent=inc,
         runhistory=runhistory,
@@ -613,7 +613,7 @@ def test_evaluate_challenger_2(make_scenario, make_stats, configspace_small, run
     )
 
     # intensification - incumbent will be run, but not as RUN_FIRST_CONFIG stage
-    intent_, trial_info = intensifier.get_next_run(
+    intent_, trial_info = intensifier.get_next_trial(
         challengers=[config1],
         incumbent=config0,
         runhistory=runhistory,
@@ -654,7 +654,7 @@ def test_no_new_intensification_wo_challenger_run(make_scenario, make_stats, con
     assert intensifier._n_iters == 0
     assert intensifier._stage == IntensifierStage.RUN_FIRST_CONFIG
 
-    intent, trial_info = intensifier.get_next_run(
+    intent, trial_info = intensifier.get_next_trial(
         challengers=[config2],
         incumbent=None,
         runhistory=runhistory,
@@ -684,7 +684,7 @@ def test_no_new_intensification_wo_challenger_run(make_scenario, make_stats, con
     # Challenger was the same as the current incumbent; Skipping challenger
     # Then, we try to get more challengers, but below all challengers
     # Provided are config3, the incumbent which means nothing more to run
-    intent, trial_info = intensifier.get_next_run(
+    intent, trial_info = intensifier.get_next_trial(
         challengers=[config2],  # since incumbent is run, no configs required
         incumbent=inc,
         runhistory=runhistory,
@@ -715,8 +715,8 @@ def test_no_new_intensification_wo_challenger_run(make_scenario, make_stats, con
     # there are no further instances for this configuration available.
     # In this scenario, the intensifier produces a SKIP intent as an indication
     # that a new iteration must be initiated, and for code simplicity,
-    # relies on a new call to get_next_run to yield more configurations
-    intent, trial_info = intensifier.get_next_run(
+    # relies on a new call to get_next_trial to yield more configurations
+    intent, trial_info = intensifier.get_next_trial(
         challengers=[config0], incumbent=inc, runhistory=runhistory, get_next_configurations=None
     )
     assert intent == TrialInfoIntent.SKIP
@@ -726,7 +726,7 @@ def test_no_new_intensification_wo_challenger_run(make_scenario, make_stats, con
     config, _ = intensifier.get_next_challenger(challengers=None, get_next_configurations=None)
     assert config is None
     # This finally gives a runable configuration
-    intent, trial_info = intensifier.get_next_run(
+    intent, trial_info = intensifier.get_next_trial(
         challengers=[config1], incumbent=inc, runhistory=runhistory, get_next_configurations=None
     )
     trial_value = evaluate_challenger(trial_info, target_function, stats, runhistory)

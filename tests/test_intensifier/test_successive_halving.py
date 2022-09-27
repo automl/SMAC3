@@ -226,12 +226,12 @@ def test_process_results_via_sourceid(SH, runhistory, configs):
         assert trial_value not in all_other_results
 
 
-def test_get_next_run_single_SH(SH, runhistory, configs):
+def test_get_next_trial_single_SH(SH, runhistory, configs):
     """Makes sure that a single _SH returns a valid config"""
 
     challengers = configs[:4]
     for i in range(30):
-        intent, trial_info = SH.get_next_run(
+        intent, trial_info = SH.get_next_trial(
             challengers=challengers,
             incumbent=None,
             get_next_configurations=None,
@@ -267,14 +267,14 @@ def test_get_next_run_single_SH(SH, runhistory, configs):
     assert i == 4
 
 
-def test_get_next_run_dual_SH(SH, runhistory, configs):
+def test_get_next_trial_dual_SH(SH, runhistory, configs):
     """Makes sure that two  _SH can properly coexist and tag
     trial_info properly"""
 
     # Everything here will be tested with a single _SH
     challengers = configs[:4]
     for i in range(30):
-        intent, trial_info = SH.get_next_run(
+        intent, trial_info = SH.get_next_trial(
             challengers=challengers,
             incumbent=None,
             get_next_configurations=None,
@@ -346,7 +346,7 @@ def _exhaust_run_and_get_incumbent(SH, runhistory, configs, n_workers=2):
     inc_perf = None
     for i in range(100):
         try:
-            intent, trial_info = SH.get_next_run(
+            intent, trial_info = SH.get_next_trial(
                 challengers=challengers,
                 incumbent=None,
                 get_next_configurations=None,
@@ -730,9 +730,9 @@ def test_top_k_4(make_sh_worker, runhistory, configs):
     assert intensifier._stage == 0  # Going back, since there are not enough to advance
 
 
-def test_get_next_run_1(make_sh_worker, runhistory, configs):
+def test_get_next_trial_1(make_sh_worker, runhistory, configs):
     """
-    test get_next_run for a presently running configuration
+    test get_next_trial for a presently running configuration
     """
 
     def target(x):
@@ -744,7 +744,7 @@ def test_get_next_run_1(make_sh_worker, runhistory, configs):
     config2 = configs[1]
 
     # next challenger from a list
-    intent, trial_info = intensifier.get_next_run(
+    intent, trial_info = intensifier.get_next_trial(
         challengers=[config1],
         get_next_configurations=None,
         runhistory=runhistory,
@@ -768,7 +768,7 @@ def test_get_next_run_1(make_sh_worker, runhistory, configs):
     # stage. That is, for this example we will have n_configs_in_stage=[2, 1]
     # with all_budgets=[1. 2.]. In other words, in this stage we
     # will have 2 configs each with 1 instance.
-    intent, trial_info_new = intensifier.get_next_run(
+    intent, trial_info_new = intensifier.get_next_trial(
         challengers=[config2],
         get_next_configurations=None,
         runhistory=runhistory,
@@ -803,7 +803,7 @@ def test_get_next_run_1(make_sh_worker, runhistory, configs):
     # We already launched trial_info_new. We expect 2 configs each with 1 seed/instance
     # 1 has finished and already processed. We have not even run trial_info_new
     # So we cannot advance to a new stage
-    intent, trial_info = intensifier.get_next_run(
+    intent, trial_info = intensifier.get_next_trial(
         challengers=[config2], get_next_configurations=None, incumbent=inc, runhistory=runhistory
     )
     assert trial_info.config is None
@@ -812,9 +812,9 @@ def test_get_next_run_1(make_sh_worker, runhistory, configs):
     assert intensifier._new_challenger
 
 
-def test_get_next_run_2(make_sh_worker, configs, runhistory):
+def test_get_next_trial_2(make_sh_worker, configs, runhistory):
     """
-    test get_next_run for higher stages of SH iteration
+    test get_next_trial for higher stages of SH iteration
     """
     intensifier = make_sh_worker(deterministic=True, n_instances=2, min_budget=1, max_budget=2, n_seeds=1, eta=2)
     config1 = configs[0]
@@ -824,7 +824,7 @@ def test_get_next_run_2(make_sh_worker, configs, runhistory):
     intensifier._configs_to_run = [config1]
 
     # next challenger should come from configs to run
-    intent, trial_info = intensifier.get_next_run(
+    intent, trial_info = intensifier.get_next_trial(
         challengers=None,
         get_next_configurations=None,
         runhistory=runhistory,
@@ -976,7 +976,7 @@ def test_evaluate_challenger_1(make_sh_worker, make_target_function, runhistory,
     intensifier._success_challengers = {config2, config3}
     intensifier._update_stage(runhistory=runhistory)
 
-    intent, trial_info = intensifier.get_next_run(
+    intent, trial_info = intensifier.get_next_trial(
         challengers=[config1],
         get_next_configurations=None,
         incumbent=config1,
@@ -1277,7 +1277,7 @@ def test_launched_all_configs_for_current_stage(make_sh_worker, make_target_func
     run_tracker = {}
     challengers = configs[:4]
     for i in range(total_configs_in_stage * instances_per_stage):
-        intent, trial_info = intensifier.get_next_run(
+        intent, trial_info = intensifier.get_next_trial(
             challengers=challengers,
             get_next_configurations=None,
             runhistory=runhistory,
@@ -1302,7 +1302,7 @@ def test_launched_all_configs_for_current_stage(make_sh_worker, make_target_func
         )
 
     # This will get us the second instance of config 1
-    intent, trial_info = intensifier.get_next_run(
+    intent, trial_info = intensifier.get_next_trial(
         challengers=[config2, config3, config4],
         get_next_configurations=None,
         runhistory=runhistory,
@@ -1345,7 +1345,7 @@ def _exhaust_stage_execution(intensifier, target_function, runhistory, challenge
         toggle = [False, True, False, True]
 
     while True:
-        intent, trial_info = intensifier.get_next_run(
+        intent, trial_info = intensifier.get_next_trial(
             challengers=challengers,
             get_next_configurations=None,
             runhistory=runhistory,

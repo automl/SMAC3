@@ -37,9 +37,7 @@ class BlackBoxFacade(AbstractFacade):
     def _validate(self) -> None:
         """Ensure that the SMBO configuration with all its (updated) dependencies is valid."""
         super()._validate()
-        # TODO what about these? vvv
-        # self.solver.scenario.acq_opt_challengers = 1000  # type: ignore[attr-defined] # noqa F821
-        # # activate predict incumbent
+        # Activate predict incumbent
         # self.solver.epm_chooser.predict_x_best = True
 
         if self._scenario.instance_features is not None and len(self._scenario.instance_features) > 0:
@@ -71,7 +69,7 @@ class BlackBoxFacade(AbstractFacade):
 
         Returns
         -------
-        model : AbstractGaussianProcess
+        model : GaussianProcess | MCMCGaussianProcess
             The instantiated gaussian process.
         """
         available_model_types = [None, "vanilla", "mcmc"]
@@ -109,8 +107,10 @@ class BlackBoxFacade(AbstractFacade):
     @staticmethod
     def get_kernel(scenario: Scenario) -> kernels.Kernel:
         """Returns a kernel for the Gaussian Process surrogate model.
+
         The kernel is a composite of kernels depending on the type of hyperparameters:
-        categorical (HammingKernel), continuous (Matern), and noise kernels (White)."""
+        categorical (HammingKernel), continuous (Matern), and noise kernels (White).
+        """
         types, _ = get_types(scenario.configspace, instance_features=None)
         cont_dims = np.where(np.array(types) == 0)[0]
         cat_dims = np.where(np.array(types) != 0)[0]
@@ -176,27 +176,42 @@ class BlackBoxFacade(AbstractFacade):
     @staticmethod
     def get_acquisition_function(  # type: ignore
         scenario: Scenario,
+        *,
         xi: float = 0.0,
     ) -> EI:
-        """Returns the acquisition function instance (EI: Expected Improvement) for the Black-Box facade."""
+        """Returns an Expected Improvement acquisition function.
+
+        Parameters
+        ----------
+        scenario : Scenario
+        xi : float, defaults to 0.0
+            Controls the balance between exploration and exploitation of the
+            acquisition function.
+        """
         return EI(xi=xi)
 
     @staticmethod
     def get_acquisition_maximizer(  # type: ignore
         scenario: Scenario,
         *,
-        local_search_iterations: int = 10,
         challengers: int = 1000,
+        local_search_iterations: int = 10,
     ) -> LocalAndSortedRandomSearch:
-        """Returns the acquisition optimizer instance (LocalAndSOrtedRandomSearch) for the
-        Black-Box facade. Please check its documentation for detials."""
-        optimizer = LocalAndSortedRandomSearch(
+        """Returns local and sorted random search as acquisition maximizer.
+
+        Parameters
+        ----------
+        challengers : int, defaults to 1000
+            Number of challengers.
+        local_search_iterations: int, defauts to 10
+            Number of local search iterations.
+        """
+        return LocalAndSortedRandomSearch(
             configspace=scenario.configspace,
-            local_search_iterations=local_search_iterations,
             challengers=challengers,
+            local_search_iterations=local_search_iterations,
             seed=scenario.seed,
         )
-        return optimizer
 
     @staticmethod
     def get_intensifier(  # type: ignore
@@ -207,9 +222,22 @@ class BlackBoxFacade(AbstractFacade):
         max_config_calls: int = 3,
         intensify_percentage: float = 0.5,
     ) -> Intensifier:
-        """Returns the Intensifier instance  for the Black-Box facade. Please check its
-        documentation for details."""
-        intensifier = Intensifier(
+        """Returns ``Intensifier`` as intensifier. Uses the default configuration for ``race_against``.
+
+        Parameters
+        ----------
+        scenario : Scenario
+        min_config_calls : int, defaults to 1
+            Minimum number of trials per config (summed over all calls to intensify).
+        max_config_calls : int, defaults to 1
+            Maximum number of trials per config (summed over all calls to intensify).
+        min_challenger : int, defaults to 3
+            Minimal number of challengers to be considered (even if time_bound is exhausted earlier).
+        intensify_percentage : float, defaults to 0.5
+            How much percentage of the time should configurations be intensified (evaluated on higher budgets or
+            more instances). This parameter is accessed in the SMBO class.
+        """
+        return Intensifier(
             scenario=scenario,
             min_challenger=min_challenger,
             race_against=scenario.configspace.get_default_configuration(),
@@ -217,8 +245,6 @@ class BlackBoxFacade(AbstractFacade):
             max_config_calls=max_config_calls,
             intensify_percentage=intensify_percentage,
         )
-
-        return intensifier
 
     @staticmethod
     def get_initial_design(  # type: ignore
@@ -229,37 +255,58 @@ class BlackBoxFacade(AbstractFacade):
         max_ratio: float = 0.1,
         additional_configs: list[Configuration] = [],
     ) -> SobolInitialDesign:
-        """Returns a Sobol design instance for the Black-Box facade.
-        Please check its documentation."""
+        """Returns a Sobol design instance.
+
+        Parameters
+        ----------
+        scenario : Scenario
+        n_configs : int | None, defaults to None
+            Number of initial configurations (disables the arguments ``n_configs_per_hyperparameter``).
+        n_configs_per_hyperparameter: int, defaults to 10
+            Number of initial configurations per hyperparameter. For example, if my configuration space covers five
+            hyperparameters and ``n_configs_per_hyperparameter`` is set to 10, then 50 initial configurations will be
+            samples.
+        max_ratio: float, defaults to 0.1
+            Use at most ``scenario.n_trials`` * ``max_ratio`` number of configurations in the initial design.
+            Additional configurations are not affected by this parameter.
+        additional_configs: list[Configuration], defaults to []
+            Adds additional configurations to the initial design.
+        seed : int | None, default to None
+        """
         return SobolInitialDesign(
             scenario=scenario,
             n_configs=n_configs,
             n_configs_per_hyperparameter=n_configs_per_hyperparamter,
             max_ratio=max_ratio,
             additional_configs=additional_configs,
+            seed=scenario.seed,
         )
 
     @staticmethod
     def get_random_design(  # type: ignore
         scenario: Scenario,
         *,
-        random_probability: float = 0.08447232371720552,
+        probability: float = 0.08447232371720552,
     ) -> ProbabilityRandomDesign:
-        """Returns a random design instance (ProbabilityRandomDesign) for the Black-Box facade,
-        detailing the interleaving of configurations derived from BO's acquisition with those
-        from random search. Please check its documentation."""
-        return ProbabilityRandomDesign(seed=scenario.seed, probability=random_probability)
+        """Returns ``ProbabilityRandomDesign`` for interleaving configurations.
+
+        Parameters
+        ----------
+        probability : float, defaults to 0.08447232371720552
+            Probability that a configuration will be drawn at random.
+        """
+        return ProbabilityRandomDesign(seed=scenario.seed, probability=probability)
 
     @staticmethod
     def get_multi_objective_algorithm(  # type: ignore
         scenario: Scenario,
     ) -> MeanAggregationStrategy:
-        """Returns the multi-objective algorithm instance (MeanAggregationStrategy) for the
-        Black-Box facade."""
+        """Returns the mean aggregation strategy for the multi objective algorithm."""
         return MeanAggregationStrategy(scenario=scenario)
 
     @staticmethod
     def get_runhistory_encoder(
         scenario: Scenario,
     ) -> RunHistoryEncoder:
+        """Returns the default runhistory encoder."""
         return RunHistoryEncoder(scenario)

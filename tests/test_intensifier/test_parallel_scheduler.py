@@ -97,7 +97,7 @@ def test_process_results(make_scenario, make_stats, configspace_small, runhistor
     assert scheduler._intensifier_instances[2].process_results.call_args[1]["trial_info"] == trial_info
 
 
-def test_get_next_run_wait(make_scenario, make_stats, configspace_small, runhistory):
+def test_get_next_trial_wait(make_scenario, make_stats, configspace_small, runhistory):
     """Makes sure we wait if all intensifiers are busy, and no new instance got added.
     This test the case that number of workers are equal to number of instances
     """
@@ -108,7 +108,7 @@ def test_get_next_run_wait(make_scenario, make_stats, configspace_small, runhist
 
     scheduler._get_intensifier_ranking = mock_ranker
     scheduler._intensifier_instances = {0: mock.Mock()}
-    scheduler._intensifier_instances[0].get_next_run.return_value = (TrialInfoIntent.WAIT, None)
+    scheduler._intensifier_instances[0].get_next_trial.return_value = (TrialInfoIntent.WAIT, None)
     scheduler._intensifier_instances[0]._stage = 0
     scheduler._intensifier_instances[0].run_tracker = ()
 
@@ -116,7 +116,7 @@ def test_get_next_run_wait(make_scenario, make_stats, configspace_small, runhist
         "smac.intensifier.abstract_parallel_intensifier.AbstractParallelIntensifier._add_new_instance"
     ) as add_new_instance:
         add_new_instance.return_value = False
-        intent, trial_info = scheduler.get_next_run(
+        intent, trial_info = scheduler.get_next_trial(
             challengers=None,
             incumbent=None,
             get_next_configurations=None,
@@ -127,7 +127,7 @@ def test_get_next_run_wait(make_scenario, make_stats, configspace_small, runhist
         assert intent == TrialInfoIntent.WAIT
 
 
-def test_get_next_run_add_instance(make_scenario, make_stats, configspace_small, runhistory):
+def test_get_next_trial_add_instance(make_scenario, make_stats, configspace_small, runhistory):
     """Makes sure we add an instance only when all other instances are waiting,
     This happens when n_workers greater than the number of instances
     """
@@ -143,7 +143,7 @@ def test_get_next_run_add_instance(make_scenario, make_stats, configspace_small,
         def instance_added(args):
             source = len(scheduler._intensifier_instances)
             scheduler._intensifier_instances[source] = mock.Mock()
-            scheduler._intensifier_instances[source].get_next_run.return_value = (
+            scheduler._intensifier_instances[source].get_next_trial.return_value = (
                 TrialInfoIntent.RUN,
                 None,
             )
@@ -152,14 +152,14 @@ def test_get_next_run_add_instance(make_scenario, make_stats, configspace_small,
         add_new_instance.side_effect = instance_added
         scheduler._get_intensifier_ranking = mock_ranker
         scheduler._intensifier_instances = {0: mock.Mock()}
-        scheduler._intensifier_instances[0].get_next_run.return_value = (
+        scheduler._intensifier_instances[0].get_next_trial.return_value = (
             TrialInfoIntent.WAIT,
             None,
         )
         scheduler._intensifier_instances[0]._stage = 0
         scheduler._intensifier_instances[0].run_tracker = ()
 
-        intent, trial_info = scheduler.get_next_run(
+        intent, trial_info = scheduler.get_next_trial(
             challengers=None,
             incumbent=None,
             get_next_configurations=None,

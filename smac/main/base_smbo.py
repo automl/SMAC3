@@ -171,7 +171,7 @@ class BaseSMBO:
         self._acquisition_function.model = self._model
         self._acquisition_maximizer.acquisition_function = acquisition_function
 
-    def run(self) -> Configuration:
+    def optimize(self) -> Configuration:
         """Runs the Bayesian optimization loop.
 
         Returns

@@ -32,10 +32,6 @@ class AbstractMultiObjectiveAlgorithm(ABC):
         self._seed = seed
         self._rng = np.random.RandomState(seed)
 
-    def update_on_iteration_start(self) -> None:
-        """Update the internal state on start of each SMBO iteration."""
-        pass
-
     @property
     def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
@@ -43,6 +39,10 @@ class AbstractMultiObjectiveAlgorithm(ABC):
             "name": self.__class__.__name__,
             "seed": self._seed,
         }
+
+    def update_on_iteration_start(self) -> None:
+        """Update the internal state on start of each SMBO iteration."""
+        pass
 
     @abstractmethod
     def __call__(self, values: list[float]) -> float:

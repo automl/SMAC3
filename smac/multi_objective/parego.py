@@ -39,7 +39,7 @@ class ParEGO(AbstractMultiObjectiveAlgorithm):
 
         return meta
 
-    def update_on_iteration_start(self) -> None:
+    def update_on_iteration_start(self) -> None:  # noqa: D102
         self._theta = self._rng.rand(self._n_objectives)
 
         # Normalize so that all theta values sum up to 1

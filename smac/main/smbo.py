@@ -88,7 +88,7 @@ class SMBO(BaseSMBO):
         for callback in self._callbacks:
             callback.on_ask_start(self)
 
-        intent, trial_info = self._intensifier.get_next_run(
+        intent, trial_info = self._intensifier.get_next_trial(
             challengers=self._initial_design_configs,
             incumbent=self._incumbent,
             get_next_configurations=self.get_next_configurations,
