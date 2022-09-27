@@ -127,14 +127,7 @@ class Scenario:
             # When using __dict__, we make sure to include the meta data.
             # However, tuples are saved as lists in json. Therefore, we compare the json string
             # to make sure we have the same conversion.
-            a = copy.deepcopy(self.__dict__)
-            b = copy.deepcopy(other.__dict__)
-            del a["configspace"]
-            del b["configspace"]
-            a["output_directory"] = str(a["output_directory"])
-            b["output_directory"] = str(b["output_directory"])
-
-            return json.dumps(a) == json.dumps(b)
+            return Scenario.make_serializable(self) == Scenario.make_serializable(other)
 
         raise RuntimeError("Can only compare scenario objects.")
 
@@ -228,6 +221,15 @@ class Scenario:
         scenario._set_meta(meta)
 
         return scenario
+
+    @staticmethod
+    def make_serializable(scenario: Scenario) -> dict[str, Any]:
+        """Makes the scenario serializable."""
+        s = copy.deepcopy(scenario.__dict__)
+        del s["configspace"]
+        s["output_directory"] = str(s["output_directory"])
+
+        return json.loads(json.dumps(s))
 
     def _change_output_directory(self) -> None:
         # Create output directory

@@ -397,7 +397,11 @@ class BaseSMBO:
                     else:
                         self._allow_optimization = False
                 else:
-                    diff = recursively_compare_dicts(self._scenario.__dict__, old_scenario.__dict__, level="scenario")
+                    diff = recursively_compare_dicts(
+                        Scenario.make_serializable(self._scenario),
+                        Scenario.make_serializable(old_scenario),
+                        level="scenario",
+                    )
                     logger.info(
                         f"Found old run in `{self._scenario.output_directory}` but it is not the same as the current "
                         f"one:\n{diff}"

@@ -6,10 +6,11 @@ import os
 
 
 def test_continue_same_scenario(rosenbrock):
-    for facade in [BlackBoxFacade, HyperparameterFacade]:
+    for facade in [BlackBoxFacade]:
         # That should work: We did not optimize in the first run
         scenario = Scenario(rosenbrock.configspace, n_trials=10)
         smac = facade(scenario, rosenbrock.train, overwrite=True)
+
         scenario = Scenario(rosenbrock.configspace, n_trials=10)
         smac = facade(scenario, rosenbrock.train)
         smac.optimize()
