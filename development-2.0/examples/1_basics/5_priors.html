@@ -40,8 +40,8 @@
     <script src="../../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Full Customization" href="6_full_customization.html" />
-    <link rel="prev" title="Callback" href="4_callback.html" />
+    <link rel="next" title="Multi-Fidelity and Multi-Instances" href="../2_multi_fidelity/index.html" />
+    <link rel="prev" title="Custom Callback" href="4_callback.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -176,17 +176,12 @@ style="width: 100%;">
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="4_callback.html">
-       Callback
+       Custom Callback
       </a>
      </li>
      <li class="toctree-l3 current active">
       <a class="current reference internal" href="#">
        User Priors over the Optimum
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="6_full_customization.html">
-       Full Customization
       </a>
      </li>
     </ul>
@@ -230,15 +225,10 @@ style="width: 100%;">
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../3_multi_objective/2_parego.html">
-       ParEGO
+       ParEGO with Objective Weights
       </a>
      </li>
     </ul>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../5_commandline/index.html">
-     Commandline
-    </a>
    </li>
   </ul>
  </li>
@@ -998,18 +988,30 @@ optimization, you have to change the acquisition function to <code class="docuti
 [INFO][abstract_intensifier.py:367] --- n_layer: 2 -&gt; 3
 [INFO][abstract_intensifier.py:367] --- n_neurons: 157 -&gt; 108
 [INFO][abstract_intensifier.py:367] --- optimizer: &#39;sgd&#39; -&gt; &#39;adam&#39;
-[INFO][abstract_intensifier.py:340] Challenger (0.0267) is better than incumbent (0.039) on 1 trials.
+[INFO][abstract_intensifier.py:340] Challenger (0.0389) is better than incumbent (0.039) on 1 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- batch_size: 128 -&gt; 83
-[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0010000000000000002 -&gt; 0.001682337847169736
-[INFO][abstract_intensifier.py:340] Challenger (0.0245) is better than incumbent (0.0267) on 1 trials.
+[INFO][abstract_intensifier.py:367] --- batch_size: 128 -&gt; 22
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0010000000000000002 -&gt; 0.0009276911872670801
+[INFO][abstract_intensifier.py:340] Challenger (0.0378) is better than incumbent (0.0389) on 1 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- batch_size: 83 -&gt; 63
+[INFO][abstract_intensifier.py:367] --- batch_size: 22 -&gt; 118
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0009276911872670801 -&gt; 0.0008727032445149441
+[INFO][abstract_intensifier.py:367] --- n_layer: 3 -&gt; 5
+[INFO][abstract_intensifier.py:340] Challenger (0.0323) is better than incumbent (0.0378) on 1 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- batch_size: 118 -&gt; 85
+[INFO][abstract_intensifier.py:340] Challenger (0.0301) is better than incumbent (0.0323) on 1 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- batch_size: 85 -&gt; 83
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0008727032445149441 -&gt; 0.0009409147904300142
+[INFO][abstract_intensifier.py:340] Challenger (0.0273) is better than incumbent (0.0301) on 1 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- batch_size: 83 -&gt; 82
 [INFO][base_smbo.py:260] Configuration budget is exhausted.
-[INFO][abstract_facade.py:314] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;batch_size&#39;: 63, &#39;learning_rate_init&#39;: 0.001682337847169736, &#39;n_layer&#39;: 3, &#39;n_neurons&#39;: 108, &#39;optimizer&#39;: &#39;adam&#39;}
-[INFO][abstract_facade.py:315] Estimated cost: 0.024487774682760866
+[INFO][abstract_facade.py:314] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;batch_size&#39;: 82, &#39;learning_rate_init&#39;: 0.0009409147904300142, &#39;n_layer&#39;: 5, &#39;n_neurons&#39;: 108, &#39;optimizer&#39;: &#39;adam&#39;}
+[INFO][abstract_facade.py:315] Estimated cost: 0.027273290003095085
 Default cost: 0.05787991333952347
-Default cost: 0.03506344784896309
+Default cost: 0.036188486536675946
 </pre></div>
 </div>
 <div class="line-block">
@@ -1176,7 +1178,7 @@ Default cost: 0.03506344784896309
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  35.043 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  13.352 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-5-priors-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0f7950173da77ea98f5474f656060016/5_priors.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">5_priors.py</span></code></a></p>
@@ -1197,13 +1199,13 @@ Default cost: 0.03506344784896309
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Callback</p>
+            <p class="prev-next-title">Custom Callback</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="6_full_customization.html" title="next page">
+    <a class='right-next' id="next-link" href="../2_multi_fidelity/index.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Full Customization</p>
+        <p class="prev-next-title">Multi-Fidelity and Multi-Instances</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

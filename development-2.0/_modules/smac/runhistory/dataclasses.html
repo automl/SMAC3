@@ -173,17 +173,12 @@ style="width: 100%;">
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../../examples/1_basics/4_callback.html">
-       Callback
+       Custom Callback
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../../examples/1_basics/5_priors.html">
        User Priors over the Optimum
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/6_full_customization.html">
-       Full Customization
       </a>
      </li>
     </ul>
@@ -227,15 +222,10 @@ style="width: 100%;">
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../../examples/3_multi_objective/2_parego.html">
-       ParEGO
+       ParEGO with Objective Weights
       </a>
      </li>
     </ul>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/5_commandline/index.html">
-     Commandline
-    </a>
    </li>
   </ul>
  </li>
@@ -971,12 +961,29 @@ style="width: 100%;">
 
 <div class="viewcode-block" id="InstanceSeedKey"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.InstanceSeedKey">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">InstanceSeedKey</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Key for instance and seed.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    instance : str | None, defaults to None</span>
+<span class="sd">    seed : int | None, defaults to None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="InstanceSeedBudgetKey"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.InstanceSeedBudgetKey">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">InstanceSeedBudgetKey</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Key for instance, seed and budget.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    instance : str | None, defaults to None</span>
+<span class="sd">    seed : int | None, defaults to None</span>
+<span class="sd">    budget : float | None, defaults to None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -996,6 +1003,16 @@ style="width: 100%;">
 
 <div class="viewcode-block" id="TrialKey"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.TrialKey">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">TrialKey</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Key of a trial.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config_id : int</span>
+<span class="sd">    instance : str | None, defaults to None</span>
+<span class="sd">    seed : int | None, defaults to None</span>
+<span class="sd">    budget : float | None, defaults to None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">config_id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1004,6 +1021,18 @@ style="width: 100%;">
 
 <div class="viewcode-block" id="TrialValue"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.TrialValue">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">TrialValue</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Values of a trial.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cost : float | list[float]</span>
+<span class="sd">    time : float, defaults to 0.0</span>
+<span class="sd">    status : StatusType, defaults to StatusType.SUCCESS</span>
+<span class="sd">    starttime : float, defaults to 0.0</span>
+<span class="sd">    endtime : float, defaults to 0.0</span>
+<span class="sd">    additional_info : dict[str, Any], defaults to {}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">cost</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
     <span class="n">time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">status</span><span class="p">:</span> <span class="n">StatusType</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span>
@@ -1014,6 +1043,18 @@ style="width: 100%;">
 
 <div class="viewcode-block" id="TrialInfo"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.TrialInfo">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">TrialInfo</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Information about a trial.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : Configuration</span>
+<span class="sd">    instance : str | None, defaults to None</span>
+<span class="sd">    seed : int | None, defaults to None</span>
+<span class="sd">    budget : float | None, defaults to None</span>
+<span class="sd">    source : int | None, defaults to 0</span>
+<span class="sd">        Source is used in the intensifier to indicate from which worker the trial was coming from.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span>
     <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1023,7 +1064,7 @@ style="width: 100%;">
 
 <div class="viewcode-block" id="TrajectoryItem"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.TrajectoryItem">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">TrajectoryItem</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Replaces `TrajEntry` from the original code.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Item of a trajectory.&quot;&quot;&quot;</span>
 
     <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
     <span class="n">cost</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>

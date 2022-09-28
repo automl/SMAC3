@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>ParEGO &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>ParEGO with Objective Weights &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -40,7 +40,7 @@
     <script src="../../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Commandline" href="../5_commandline/index.html" />
+    <link rel="next" title="Advanced Usage" href="../../advanced_usage/index.html" />
     <link rel="prev" title="2D Schaffer Function" href="1_schaffer.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
@@ -176,17 +176,12 @@ style="width: 100%;">
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../1_basics/4_callback.html">
-       Callback
+       Custom Callback
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../1_basics/5_priors.html">
        User Priors over the Optimum
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../1_basics/6_full_customization.html">
-       Full Customization
       </a>
      </li>
     </ul>
@@ -230,15 +225,10 @@ style="width: 100%;">
      </li>
      <li class="toctree-l3 current active">
       <a class="current reference internal" href="#">
-       ParEGO
+       ParEGO with Objective Weights
       </a>
      </li>
     </ul>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../5_commandline/index.html">
-     Commandline
-    </a>
    </li>
   </ul>
  </li>
@@ -976,20 +966,21 @@ style="width: 100%;">
 <p>Click <a class="reference internal" href="#sphx-glr-download-examples-3-multi-objective-2-parego-py"><span class="std std-ref">here</span></a>
 to download the full example code</p>
 </div>
-<section class="sphx-glr-example-title" id="parego">
-<span id="sphx-glr-examples-3-multi-objective-2-parego-py"></span><h1>ParEGO<a class="headerlink" href="#parego" title="Permalink to this heading">¶</a></h1>
-<p>An example of how to use multi-objective optimization with ParEGO. Both accuracy and runtime are going to be
+<section class="sphx-glr-example-title" id="parego-with-objective-weights">
+<span id="sphx-glr-examples-3-multi-objective-2-parego-py"></span><h1>ParEGO with Objective Weights<a class="headerlink" href="#parego-with-objective-weights" title="Permalink to this heading">¶</a></h1>
+<p>An example of how to use multi-objective optimization with ParEGO. Both accuracy and run time are going to be
 optimized, and the configurations are shown in a plot, highlighting the best ones in a Pareto front. The red cross
 indicates the best configuration selected by SMAC.</p>
 <p>In the optimization, SMAC evaluates the configurations on three different seeds. Therefore, the plot shows the
-mean accuracy and runtime of each configuration.</p>
+mean accuracy and runtime of each configuration. Since this example uses <code class="docutils literal notranslate"><span class="pre">objective_weights</span></code>, the accuracy is three
+times more important than the run time.</p>
 <img src="../../_images/sphx_glr_2_parego_001.png" srcset="../../_images/sphx_glr_2_parego_001.png" alt="Pareto-Front" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[WARNING][abstract_runner.py:106] The argument budget is not set by SMAC. Consider removing it.
 [INFO][abstract_initial_design.py:133] Using 5 initial design and 0 additional configurations.
 [INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
 [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
 [INFO][intensifier.py:567] Updated estimated cost of incumbent on 1 trials: 1.0
 [INFO][intensifier.py:567] Updated estimated cost of incumbent on 2 trials: 0.5
-[INFO][abstract_intensifier.py:340] Challenger (0.2515) is better than incumbent (0.7533) on 2 trials.
+[INFO][abstract_intensifier.py:340] Challenger (0.2427) is better than incumbent (0.7495) on 2 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
 [INFO][abstract_intensifier.py:367] --- activation: &#39;logistic&#39; -&gt; &#39;tanh&#39;
 [INFO][abstract_intensifier.py:367] --- batch_size: None -&gt; 77
@@ -997,18 +988,30 @@ mean accuracy and runtime of each configuration.</p>
 [INFO][abstract_intensifier.py:367] --- n_layer: 4 -&gt; 1
 [INFO][abstract_intensifier.py:367] --- n_neurons: 11 -&gt; 146
 [INFO][abstract_intensifier.py:367] --- solver: &#39;lbfgs&#39; -&gt; &#39;adam&#39;
-[INFO][intensifier.py:567] Updated estimated cost of incumbent on 3 trials: 0.251
-[INFO][abstract_intensifier.py:340] Challenger (0.0593) is better than incumbent (0.0633) on 3 trials.
+[INFO][intensifier.py:567] Updated estimated cost of incumbent on 3 trials: 0.2424
+[INFO][abstract_intensifier.py:340] Challenger (0.1637) is better than incumbent (0.2535) on 3 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
 [INFO][abstract_intensifier.py:367] --- activation: &#39;tanh&#39; -&gt; &#39;logistic&#39;
-[INFO][abstract_intensifier.py:367] --- batch_size: 77 -&gt; 66
-[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.000534923804864797 -&gt; 0.0032548296377712667
-[INFO][abstract_intensifier.py:367] --- n_neurons: 146 -&gt; 152
+[INFO][abstract_intensifier.py:367] --- batch_size: 77 -&gt; 175
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.000534923804864797 -&gt; 0.004156370184967407
+[INFO][abstract_intensifier.py:367] --- n_layer: 1 -&gt; 2
+[INFO][abstract_intensifier.py:367] --- n_neurons: 146 -&gt; 90
+[INFO][abstract_intensifier.py:340] Challenger (0.0314) is better than incumbent (0.0618) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- batch_size: 175 -&gt; 158
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.004156370184967407 -&gt; 0.013273166334146476
+[INFO][abstract_intensifier.py:367] --- n_layer: 2 -&gt; 1
+[INFO][abstract_intensifier.py:367] --- n_neurons: 90 -&gt; 107
+[INFO][abstract_intensifier.py:340] Challenger (0.0273) is better than incumbent (0.0314) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- batch_size: 158 -&gt; 227
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.013273166334146476 -&gt; 0.013072831984637353
+[INFO][abstract_intensifier.py:367] --- n_neurons: 107 -&gt; 109
 [INFO][base_smbo.py:260] Configuration budget is exhausted.
-[INFO][abstract_facade.py:314] Final Incumbent: {&#39;activation&#39;: &#39;logistic&#39;, &#39;n_layer&#39;: 1, &#39;n_neurons&#39;: 152, &#39;solver&#39;: &#39;adam&#39;, &#39;batch_size&#39;: 66, &#39;learning_rate_init&#39;: 0.0032548296377712667}
-[INFO][abstract_facade.py:315] Estimated cost: 0.028509751331900132
-Default costs: [0.62956618 0.13269758]
-Incumbent costs: [0.0257851  0.55951246]
+[INFO][abstract_facade.py:314] Final Incumbent: {&#39;activation&#39;: &#39;logistic&#39;, &#39;n_layer&#39;: 1, &#39;n_neurons&#39;: 109, &#39;solver&#39;: &#39;adam&#39;, &#39;batch_size&#39;: 227, &#39;learning_rate_init&#39;: 0.013072831984637353}
+[INFO][abstract_facade.py:315] Estimated cost: 0.027347777123075574
+Default costs: [0.62956618 0.2402463 ]
+Incumbent costs: [0.02708243 0.49497048]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1195,7 +1198,7 @@ Incumbent costs: [0.0257851  0.55951246]
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  43.001 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  42.379 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0422a2b52bca2c17c0ab975a6ae7e8db/2_parego.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_parego.py</span></code></a></p>
@@ -1219,10 +1222,10 @@ Incumbent costs: [0.0257851  0.55951246]
             <p class="prev-next-title">2D Schaffer Function</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="../5_commandline/index.html" title="next page">
+    <a class='right-next' id="next-link" href="../../advanced_usage/index.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Commandline</p>
+        <p class="prev-next-title">Advanced Usage</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

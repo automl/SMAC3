@@ -173,17 +173,12 @@ style="width: 100%;">
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../examples/1_basics/4_callback.html">
-       Callback
+       Custom Callback
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../examples/1_basics/5_priors.html">
        User Priors over the Optimum
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../examples/1_basics/6_full_customization.html">
-       Full Customization
       </a>
      </li>
     </ul>
@@ -227,15 +222,10 @@ style="width: 100%;">
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../examples/3_multi_objective/2_parego.html">
-       ParEGO
+       ParEGO with Objective Weights
       </a>
      </li>
     </ul>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../examples/5_commandline/index.html">
-     Commandline
-    </a>
    </li>
   </ul>
  </li>
@@ -957,8 +947,6 @@ style="width: 100%;">
   <h1>Source code for smac.callback</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
-
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 
 <span class="kn">import</span> <span class="nn">smac</span>
@@ -974,59 +962,49 @@ style="width: 100%;">
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">pass</span>
 
-<div class="viewcode-block" id="Callback.on_start"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_start">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Callback.on_start"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_start">[docs]</a>    <span class="k">def</span> <span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Called before the optimization starts.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Callback.on_end"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_end">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">on_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Callback.on_end"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Called after the optimization finished.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Callback.on_iteration_start"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_iteration_start">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">on_iteration_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Callback.on_iteration_start"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_iteration_start">[docs]</a>    <span class="k">def</span> <span class="nf">on_iteration_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Called before the next run is sampled.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Callback.on_iteration_end"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_iteration_end">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">on_iteration_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Callback.on_iteration_end"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_iteration_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_iteration_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Called after an iteration ended.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Callback.on_next_configurations_start"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_next_configurations_start">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">on_next_configurations_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Callback.on_next_configurations_start"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_next_configurations_start">[docs]</a>    <span class="k">def</span> <span class="nf">on_next_configurations_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Called before the intensification asks for new configurations. Essentially, this callback is called</span>
 <span class="sd">        before the surrogate model is trained and before the acquisition function is called.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Callback.on_next_configurations_end"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_next_configurations_end">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">on_next_configurations_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">,</span> <span class="n">configurations</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Callback.on_next_configurations_end"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_next_configurations_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_next_configurations_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">,</span> <span class="n">configurations</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Called after the intensification asks for new configurations. Essentially, this callback is called</span>
 <span class="sd">        before the surrogate model is trained and before the acquisition function is called.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Callback.on_ask_start"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_ask_start">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">on_ask_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Callback.on_ask_start"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_ask_start">[docs]</a>    <span class="k">def</span> <span class="nf">on_ask_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Called before the intensifier is asked for the next trial.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Callback.on_ask_end"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_ask_end">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">on_ask_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">,</span> <span class="n">intent</span><span class="p">:</span> <span class="n">TrialInfoIntent</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Callback.on_ask_end"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_ask_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_ask_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">,</span> <span class="n">intent</span><span class="p">:</span> <span class="n">TrialInfoIntent</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Called after the intensifier is asked for the next trial.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Callback.on_tell_start"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_tell_start">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">on_tell_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">TrialValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Callback.on_tell_start"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_tell_start">[docs]</a>    <span class="k">def</span> <span class="nf">on_tell_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">TrialValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Called before the stats are updated and the trial is added to the runhistory. Optionally, returns false</span>
 <span class="sd">        to gracefully stop the optimization.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Callback.on_tell_end"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_tell_end">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">on_tell_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">TrialValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Callback.on_tell_end"><a class="viewcode-back" href="../../api/smac.callback.html#smac.callback.Callback.on_tell_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_tell_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">TrialValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Called after the stats are updated and the trial is added to the runhistory. Optionally, returns false</span>
 <span class="sd">        to gracefully stop the optimization.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

@@ -23,7 +23,7 @@
 
 A simple example on how to use multi-objective optimization is shown. The `schaffer` function is used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 7-88
+.. GENERATED FROM PYTHON SOURCE LINES 7-83
 
 
 
@@ -135,7 +135,6 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
 
     from smac import HyperparameterOptimizationFacade, Scenario
     from smac.facade import AbstractFacade
-    from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 
     __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
     __license__ = "3-clause BSD"
@@ -189,10 +188,6 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
         smac = HyperparameterOptimizationFacade(
             scenario=scenario,
             target_function=target_function,
-            multi_objective_algorithm=MeanAggregationStrategy(
-                scenario,
-                # weights=[1, 2]  # Weights objective 2 twice as much as objective 1
-            ),
             overwrite=True,
         )
         incumbent = smac.optimize()
@@ -209,7 +204,7 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.604 seconds)
+   **Total running time of the script:** ( 0 minutes  2.354 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_1_schaffer.py:

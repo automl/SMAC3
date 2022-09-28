@@ -176,17 +176,12 @@ style="width: 100%;">
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/1_basics/4_callback.html">
-       Callback
+       Custom Callback
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/1_basics/5_priors.html">
        User Priors over the Optimum
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/6_full_customization.html">
-       Full Customization
       </a>
      </li>
     </ul>
@@ -230,15 +225,10 @@ style="width: 100%;">
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/3_multi_objective/2_parego.html">
-       ParEGO
+       ParEGO with Objective Weights
       </a>
      </li>
     </ul>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../examples/5_commandline/index.html">
-     Commandline
-    </a>
    </li>
   </ul>
  </li>
@@ -1366,12 +1356,31 @@ saved to disk and only used for EPM building.</p>
 <dt class="sig sig-object py" id="smac.runhistory.InstanceSeedBudgetKey">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.</span></span><span class="sig-name descname"><span class="pre">InstanceSeedBudgetKey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/dataclasses.html#InstanceSeedBudgetKey"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.InstanceSeedBudgetKey" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Key for instance, seed and budget.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – </p></li>
+<li><p><strong>seed</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – </p></li>
+<li><p><strong>budget</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runhistory.InstanceSeedKey">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.</span></span><span class="sig-name descname"><span class="pre">InstanceSeedKey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/dataclasses.html#InstanceSeedKey"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.InstanceSeedKey" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Key for instance and seed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – </p></li>
+<li><p><strong>seed</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
@@ -1877,6 +1886,18 @@ and <cite>self._num_trials_per_config</cite> accordingly.</p>
 <dt class="sig sig-object py" id="smac.runhistory.TrialInfo">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.</span></span><span class="sig-name descname"><span class="pre">TrialInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/dataclasses.html#TrialInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.TrialInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Information about a trial.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>Configuration</em>) – </p></li>
+<li><p><strong>instance</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – </p></li>
+<li><p><strong>seed</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – </p></li>
+<li><p><strong>budget</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – </p></li>
+<li><p><strong>source</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to 0</em>) – Source is used in the intensifier to indicate from which worker the trial was coming from.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
@@ -1892,12 +1913,36 @@ SMBO should simple run a generated run_info.</p>
 <dt class="sig sig-object py" id="smac.runhistory.TrialKey">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.</span></span><span class="sig-name descname"><span class="pre">TrialKey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/dataclasses.html#TrialKey"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.TrialKey" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Key of a trial.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_id</strong> (<em>int</em>) – </p></li>
+<li><p><strong>instance</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – </p></li>
+<li><p><strong>seed</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – </p></li>
+<li><p><strong>budget</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runhistory.TrialValue">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.</span></span><span class="sig-name descname"><span class="pre">TrialValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cost</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status=StatusType.SUCCESS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starttime=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endtime=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_info=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/dataclasses.html#TrialValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.TrialValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Values of a trial.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cost</strong> (<em>float</em><em> | </em><em>list</em><em>[</em><em>float</em><em>]</em>) – </p></li>
+<li><p><strong>time</strong> (<em>float</em><em>, </em><em>defaults to 0.0</em>) – </p></li>
+<li><p><strong>status</strong> (<a class="reference internal" href="#smac.runhistory.StatusType" title="smac.runhistory.StatusType"><em>StatusType</em></a><em>, </em><em>defaults to StatusType.SUCCESS</em>) – </p></li>
+<li><p><strong>starttime</strong> (<em>float</em><em>, </em><em>defaults to 0.0</em>) – </p></li>
+<li><p><strong>endtime</strong> (<em>float</em><em>, </em><em>defaults to 0.0</em>) – </p></li>
+<li><p><strong>additional_info</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>, </em><em>defaults to {}</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

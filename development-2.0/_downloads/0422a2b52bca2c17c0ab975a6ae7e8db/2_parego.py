@@ -1,13 +1,14 @@
 """
-ParEGO
-^^^^^^
+ParEGO with Objective Weights
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-An example of how to use multi-objective optimization with ParEGO. Both accuracy and runtime are going to be
+An example of how to use multi-objective optimization with ParEGO. Both accuracy and run time are going to be
 optimized, and the configurations are shown in a plot, highlighting the best ones in a Pareto front. The red cross
 indicates the best configuration selected by SMAC.
 
 In the optimization, SMAC evaluates the configurations on three different seeds. Therefore, the plot shows the
-mean accuracy and runtime of each configuration.
+mean accuracy and runtime of each configuration. Since this example uses ``objective_weights``, the accuracy is three
+times more important than the run time.
 """
 from __future__ import annotations
 

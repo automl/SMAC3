@@ -64,18 +64,18 @@ Basics
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Callback">
+    <div class="sphx-glr-thumbcontainer" tooltip="Using callbacks is the easieast way to integrate custom code inside the Bayesian optimization l...">
 
 .. only:: html
 
   .. image:: /examples/1_basics/images/thumb/sphx_glr_4_callback_thumb.png
-    :alt: Callback
+    :alt: Custom Callback
 
   :ref:`sphx_glr_examples_1_basics_4_callback.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Callback</div>
+      <div class="sphx-glr-thumbnail-title">Custom Callback</div>
     </div>
 
 
@@ -98,23 +98,6 @@ Basics
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Full Customization">
-
-.. only:: html
-
-  .. image:: /examples/1_basics/images/thumb/sphx_glr_6_full_customization_thumb.png
-    :alt: Full Customization
-
-  :ref:`sphx_glr_examples_1_basics_6_full_customization.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Full Customization</div>
-    </div>
-
-
-.. raw:: html
-
     </div>
 
 
@@ -126,5 +109,4 @@ Basics
    /examples/1_basics/3_ask_and_tell
    /examples/1_basics/4_callback
    /examples/1_basics/5_priors
-   /examples/1_basics/6_full_customization
 

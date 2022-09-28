@@ -78,18 +78,18 @@ Basics
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Callback">
+    <div class="sphx-glr-thumbcontainer" tooltip="Using callbacks is the easieast way to integrate custom code inside the Bayesian optimization l...">
 
 .. only:: html
 
   .. image:: /examples/1_basics/images/thumb/sphx_glr_4_callback_thumb.png
-    :alt: Callback
+    :alt: Custom Callback
 
   :ref:`sphx_glr_examples_1_basics_4_callback.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Callback</div>
+      <div class="sphx-glr-thumbnail-title">Custom Callback</div>
     </div>
 
 
@@ -107,23 +107,6 @@ Basics
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">User Priors over the Optimum</div>
-    </div>
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Full Customization">
-
-.. only:: html
-
-  .. image:: /examples/1_basics/images/thumb/sphx_glr_6_full_customization_thumb.png
-    :alt: Full Customization
-
-  :ref:`sphx_glr_examples_1_basics_6_full_customization.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Full Customization</div>
     </div>
 
 
@@ -210,34 +193,19 @@ Multi-Objective
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="An example of how to use multi-objective optimization with ParEGO. Both accuracy and runtime ar...">
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of how to use multi-objective optimization with ParEGO. Both accuracy and run time a...">
 
 .. only:: html
 
   .. image:: /examples/3_multi_objective/images/thumb/sphx_glr_2_parego_thumb.png
-    :alt: ParEGO
+    :alt: ParEGO with Objective Weights
 
   :ref:`sphx_glr_examples_3_multi_objective_2_parego.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">ParEGO</div>
+      <div class="sphx-glr-thumbnail-title">ParEGO with Objective Weights</div>
     </div>
-
-
-.. raw:: html
-
-    </div>
-
-Commandline
------------
-
-
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbnails">
 
 
 .. raw:: html
@@ -252,7 +220,6 @@ Commandline
    /examples/1_basics/index.rst
    /examples/2_multi_fidelity/index.rst
    /examples/3_multi_objective/index.rst
-   /examples/5_commandline/index.rst
 
 
 .. only:: html

@@ -176,17 +176,12 @@ style="width: 100%;">
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/1_basics/4_callback.html">
-       Callback
+       Custom Callback
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/1_basics/5_priors.html">
        User Priors over the Optimum
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/6_full_customization.html">
-       Full Customization
       </a>
      </li>
     </ul>
@@ -230,15 +225,10 @@ style="width: 100%;">
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/3_multi_objective/2_parego.html">
-       ParEGO
+       ParEGO with Objective Weights
       </a>
      </li>
     </ul>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../examples/5_commandline/index.html">
-     Commandline
-    </a>
    </li>
   </ul>
  </li>
@@ -1184,15 +1174,11 @@ dummy model (returning random values in this case).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.random_facade.RandomFacade.get_multi_objective_algorithm">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_multi_objective_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/random_facade.html#RandomFacade.get_multi_objective_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.random_facade.RandomFacade.get_multi_objective_algorithm" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_multi_objective_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/random_facade.html#RandomFacade.get_multi_objective_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.random_facade.RandomFacade.get_multi_objective_algorithm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the mean aggregation strategy for the multi objective algorithm.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>weights</strong> (<em>list</em><em>[</em><em>float</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Weights for an weighted aggregation strategy of the objectives. Must be of the same length as the number of
-objectives.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="smac.multi_objective.aggregation_strategy.html#smac.multi_objective.aggregation_strategy.MeanAggregationStrategy" title="smac.multi_objective.aggregation_strategy.MeanAggregationStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">MeanAggregationStrategy</span></code></a></p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.multi_objective.aggregation_strategy.html#smac.multi_objective.aggregation_strategy.MeanAggregationStrategy" title="smac.multi_objective.aggregation_strategy.MeanAggregationStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">MeanAggregationStrategy</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
