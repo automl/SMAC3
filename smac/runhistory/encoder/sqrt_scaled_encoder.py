@@ -22,8 +22,9 @@ class RunHistorySqrtScaledEncoder(RunHistoryEncoder):
             raise NotImplementedError("Handling more than one instance is not supported for sqrt scaled cost.")
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform the response values by linearly scaling them between zero and one and then using the square
-        root."""
+        """Transform the response values by linearly scaling them between zero and one and then using the
+        square root.
+        """
         min_y = self._min_y - (
             self._percentile - self._min_y
         )  # Subtract the difference between the percentile and the minimum

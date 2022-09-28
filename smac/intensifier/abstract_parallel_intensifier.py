@@ -49,7 +49,7 @@ class AbstractParallelIntensifier(AbstractIntensifier):
         self._print_worker_warning = True
 
     @property
-    def uses_seeds(self) -> bool:
+    def uses_seeds(self) -> bool:  # noqa: D102
         return True
 
     def get_next_trial(

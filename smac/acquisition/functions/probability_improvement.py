@@ -34,7 +34,7 @@ class PI(AbstractAcquisitionFunction):
         self._eta: float | None = None
 
     @property
-    def name(self) -> str:
+    def name(self) -> str:  # noqa: D102
         return "Probability of Improvement"
 
     @property

@@ -160,7 +160,6 @@ class AbstractInitialDesign:
         configs : list[Configuration]
             Continuous transformed configs.
         """
-
         params = configspace.get_hyperparameters()
         for idx, param in enumerate(params):
             if isinstance(param, NumericalHyperparameter):

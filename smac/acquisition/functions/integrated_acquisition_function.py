@@ -38,7 +38,7 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
         self._eta: float | None = None
 
     @property
-    def name(self) -> str:
+    def name(self) -> str:  # noqa: D102
         return f"Integrated Acquisition Function ({self._acquisition_function.__class__.__name__})"
 
     @property

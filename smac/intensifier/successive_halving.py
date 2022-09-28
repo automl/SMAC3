@@ -231,17 +231,17 @@ class SuccessiveHalving(AbstractParallelIntensifier):
         }
 
     @property
-    def uses_budgets(self) -> bool:
+    def uses_budgets(self) -> bool:  # noqa: D102
         return not self._instance_as_budget
 
     @property
-    def uses_instances(self) -> bool:
+    def uses_instances(self) -> bool:  # noqa: D102
         return self._instance_as_budget
 
-    def get_target_function_seeds(self) -> list[int]:
+    def get_target_function_seeds(self) -> list[int]:  # noqa: D102
         return self._target_function_seeds
 
-    def get_target_function_budgets(self) -> list[float | None]:
+    def get_target_function_budgets(self) -> list[float | None]:  # noqa: D102
         # If we use instance as budget, then we always use None for the budget
         if self._instance_as_budget:
             return [None]
@@ -249,7 +249,7 @@ class SuccessiveHalving(AbstractParallelIntensifier):
         _, _, budgets = self.calculate_budgets(self._min_budget, self._max_budget)
         return budgets  # type: ignore
 
-    def get_target_function_instances(self) -> list[str | None]:
+    def get_target_function_instances(self) -> list[str | None]:  # noqa: D102
         if self._instances == [None] or None in self._instances:
             return [None]
 
@@ -290,9 +290,7 @@ class SuccessiveHalving(AbstractParallelIntensifier):
         return max_iterations, n_initial_challengers, budgets
 
     def _get_intensifier_ranking(self, intensifier: AbstractIntensifier) -> tuple[int, int]:
-        from smac.intensifier.successive_halving_worker import (
-            SuccessiveHalvingWorker,
-        )
+        from smac.intensifier.successive_halving_worker import SuccessiveHalvingWorker
 
         assert isinstance(intensifier, SuccessiveHalvingWorker)
 
@@ -303,9 +301,7 @@ class SuccessiveHalving(AbstractParallelIntensifier):
         return intensifier.stage, len(intensifier._run_tracker)
 
     def _add_new_instance(self, n_workers: int) -> bool:
-        from smac.intensifier.successive_halving_worker import (
-            SuccessiveHalvingWorker,
-        )
+        from smac.intensifier.successive_halving_worker import SuccessiveHalvingWorker
 
         if len(self._intensifier_instances) >= n_workers:
             return False

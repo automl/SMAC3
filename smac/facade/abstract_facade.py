@@ -201,7 +201,8 @@ class AbstractFacade:
     @property
     def stats(self) -> Stats:
         """The stats object, which is updated during the optimization and shows relevant information, e.g., how many
-        trials have been finished and how the trajectory looks like."""
+        trials have been finished and how the trajectory looks like.
+        """
         return self._optimizer._stats
 
     @property
@@ -212,7 +213,8 @@ class AbstractFacade:
     @property
     def meta(self) -> dict[str, Any]:
         """Generates a hash based on all components of the facade. This is used for the run name or to determine
-        whether a run should be continued or not."""
+        whether a run should be continued or not.
+        """
         multi_objective_algorithm_meta = None
         if self._multi_objective_algorithm is not None:
             multi_objective_algorithm_meta = self._multi_objective_algorithm.meta
@@ -248,12 +250,14 @@ class AbstractFacade:
     def get_next_configurations(self) -> Iterator[Configuration]:
         """Choose next candidate solution with Bayesian optimization. The suggested configurations
         depend on the surrogate model acquisition optimizer/function. This method is used by
-        the intensifier."""
+        the intensifier.
+        """
         return self._optimizer.get_next_configurations()
 
     def ask(self) -> TrialInfo:
         """Asks the intensifier for the next trial. This method returns only trials with the intend
-        to run."""
+        to run.
+        """
         counter = 0
         while True:
             if counter > 10:
@@ -345,49 +349,56 @@ class AbstractFacade:
     @abstractmethod
     def get_acquisition_function(scenario: Scenario) -> AbstractAcquisitionFunction:
         """Returns the acquisition function instance used in the BO loop,
-        defining the exploration/exploitation trade-off."""
+        defining the exploration/exploitation trade-off.
+        """
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def get_acquisition_maximizer(scenario: Scenario) -> AbstractAcquisitionMaximizer:
         """Returns the acquisition optimizer instance to be used in the BO loop,
-        specifying how the acquisition function instance is optimized."""
+        specifying how the acquisition function instance is optimized.
+        """
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def get_intensifier(scenario: Scenario) -> AbstractIntensifier:
         """Returns the intensifier instance to be used in the BO loop,
-        specifying how to challenge the incumbent configuration on other problem instances."""
+        specifying how to challenge the incumbent configuration on other problem instances.
+        """
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def get_initial_design(scenario: Scenario) -> AbstractInitialDesign:
         """Returns an instance of the initial design class to be used in the BO loop,
-        specifying how the configurations the BO loop is 'warm-started' with are selected."""
+        specifying how the configurations the BO loop is 'warm-started' with are selected.
+        """
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def get_random_design(scenario: Scenario) -> AbstractRandomDesign:
         """Returns an instance of the random design class to be used in the BO loop,
-        specifying how to interleave the BO iterations with randomly selected configurations."""
+        specifying how to interleave the BO iterations with randomly selected configurations.
+        """
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def get_runhistory_encoder(scenario: Scenario) -> AbstractRunHistoryEncoder:
         """Returns an instance of the runhistory encoder class to be used in the BO loop,
-        specifying how the runhistory is to be prepared for the next surrogate model."""
+        specifying how the runhistory is to be prepared for the next surrogate model.
+        """
         raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
         """Returns the multi-objective algorithm instance to be used in the BO loop,
-        specifying the scalarization strategy for multiple objectives' costs"""
+        specifying the scalarization strategy for multiple objectives' costs
+        """
         raise NotImplementedError
 
     def _get_optimizer(self) -> SMBO:
@@ -418,7 +429,7 @@ class AbstractFacade:
         self._acquisition_maximizer.acquisition_function = self._acquisition_function
 
     def _validate(self) -> None:
-        """Checks if the composition is correct if there are dependencies, not necessarily"""
+        """Checks if the composition is correct if there are dependencies, not necessarily."""
         # Make sure the same acquisition function is used
         assert self._acquisition_function == self._acquisition_maximizer._acquisition_function
 

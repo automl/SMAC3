@@ -61,8 +61,8 @@ class CosineAnnealingRandomDesign(AbstractRandomDesign):
 
         return meta
 
-    def next_iteration(self) -> None:
-        """Moves to the next iteration and set `self._probability`"""
+    def next_iteration(self) -> None:  # noqa: D102
+        """Moves to the next iteration and set ``self._probability``."""
         self._iteration += 1
         if self._iteration > self._restart_iteration:
             self._iteration = 0
@@ -75,7 +75,7 @@ class CosineAnnealingRandomDesign(AbstractRandomDesign):
         )
         logger.debug(f"Probability for random configs: {self._probability}")
 
-    def check(self, iteration: int) -> bool:
+    def check(self, iteration: int) -> bool:  # noqa: D102
         assert iteration >= 0
 
         if self._rng.rand() <= self._probability:

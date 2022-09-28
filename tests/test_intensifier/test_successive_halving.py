@@ -1,5 +1,5 @@
-from multiprocessing.sharedctypes import Value
 import time
+from multiprocessing.sharedctypes import Value
 from unittest import mock
 
 import numpy as np

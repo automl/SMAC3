@@ -46,6 +46,7 @@ class AbstractAcquisitionMaximizer:
 
     @property
     def acquisition_function(self) -> AbstractAcquisitionFunction | None:
+        """The acquisition function used for maximization."""
         return self._acquisition_function
 
     @acquisition_function.setter

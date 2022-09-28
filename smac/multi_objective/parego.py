@@ -45,7 +45,7 @@ class ParEGO(AbstractMultiObjectiveAlgorithm):
         # Normalize so that all theta values sum up to 1
         self._theta = self._theta / (np.sum(self._theta) + 1e-10)
 
-    def __call__(self, values: list[float]) -> float:
+    def __call__(self, values: list[float]) -> float:  # noqa: D102
         # Weight the values
         theta_f = self._theta * values
         return np.max(theta_f, axis=0) + self._rho * np.sum(theta_f, axis=0)

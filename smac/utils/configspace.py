@@ -50,7 +50,6 @@ def get_types(
     -------
     The bounds for the instance features are *not* added in this function.
     """
-
     # Extract types vector for rf from config space and the bounds
     types = [0] * len(configspace.get_hyperparameters())
     bounds = [(np.nan, np.nan)] * len(types)
@@ -140,7 +139,8 @@ def get_types(
 
 def get_conditional_hyperparameters(X: np.ndarray, Y: np.ndarray | None = None) -> np.ndarray:
     """Returns conditional hyperparameters if values with -1 or smaller are observed. X is used
-    if Y is not specified."""
+    if Y is not specified.
+    """
     # Taking care of conditional hyperparameters according to Levesque et al.
     X_cond = X <= -1
 

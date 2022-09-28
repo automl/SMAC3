@@ -58,6 +58,17 @@ class MultiObjectiveModel(AbstractModel):
         """The internally used surrogate models."""
         return self._models
 
+    def predict_marginalized(self, X: np.ndarray) -> tuple[np.ndarray, np.ndarray]:  # noqa: D102
+        mean = np.zeros((X.shape[0], self._n_objectives))
+        var = np.zeros((X.shape[0], self._n_objectives))
+
+        for i, estimator in enumerate(self._models):
+            m, v = estimator.predict_marginalized(X)
+            mean[:, i] = m.flatten()
+            var[:, i] = v.flatten()
+
+        return mean, var
+
     def _train(self: Self, X: np.ndarray, Y: np.ndarray) -> Self:
         if len(self._models) == 0:
             raise ValueError("The list of surrogate models is empty.")
@@ -81,17 +92,6 @@ class MultiObjectiveModel(AbstractModel):
         for i, estimator in enumerate(self._models):
             m, v = estimator.predict(X)
             assert v is not None
-            mean[:, i] = m.flatten()
-            var[:, i] = v.flatten()
-
-        return mean, var
-
-    def predict_marginalized(self, X: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-        mean = np.zeros((X.shape[0], self._n_objectives))
-        var = np.zeros((X.shape[0], self._n_objectives))
-
-        for i, estimator in enumerate(self._models):
-            m, v = estimator.predict_marginalized(X)
             mean[:, i] = m.flatten()
             var[:, i] = v.flatten()
 

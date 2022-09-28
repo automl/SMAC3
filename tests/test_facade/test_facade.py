@@ -3,8 +3,8 @@ import pytest
 from smac import (
     AlgorithmConfigurationFacade,
     BlackBoxFacade,
-    HyperbandFacade,
     HPOFacade,
+    HyperbandFacade,
     MultiFidelityFacade,
     RandomFacade,
     Scenario,

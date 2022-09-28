@@ -98,7 +98,6 @@ class HPOFacade(AbstractFacade):
         local_search_iterations: int, defauts to 10
             Number of local search iterations.
         """
-
         optimizer = LocalAndSortedRandomSearch(
             scenario.configspace,
             challengers=challengers,
@@ -204,5 +203,6 @@ class HPOFacade(AbstractFacade):
         scenario: Scenario,
     ) -> RunHistoryLogScaledEncoder:
         """Returns a log scaled runhistory encoder. That means that costs are log scaled before
-        training the surrogate model."""
+        training the surrogate model.
+        """
         return RunHistoryLogScaledEncoder(scenario)

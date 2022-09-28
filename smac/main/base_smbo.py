@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from itertools import product
 from typing import Any, Iterator
-import numpy as np
 
 import time
+from itertools import product
 
+import numpy as np
 from ConfigSpace import Configuration
 
 from smac.acquisition.functions.abstract_acquisition_function import (
@@ -137,7 +137,8 @@ class BaseSMBO:
     @property
     def stats(self) -> Stats:
         """The stats object, which is updated during the optimization and shows relevant information, e.g., how many
-        trials have been finished and how the trajectory looks like."""
+        trials have been finished and how the trajectory looks like.
+        """
         return self._stats
 
     @property
@@ -152,7 +153,8 @@ class BaseSMBO:
 
     def update_acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
         """Updates acquisition function and assosiates the current model. Also, the acquisition
-        optimizer is updated."""
+        optimizer is updated.
+        """
         self._acquisition_function = acquisition_function
         self._acquisition_function.model = self._model
         self._acquisition_maximizer.acquisition_function = acquisition_function
@@ -350,7 +352,6 @@ class BaseSMBO:
 
     def _initialize_state(self) -> None:
         """Detects whether the optimization is restored from a previous state."""
-
         # Here we actually check whether the run should be continued or not.
         # More precisely, we update our stats and runhistory object if all component arguments
         # and scenario/stats object are the same. For doing so, we create a specific hash.

@@ -136,8 +136,7 @@ class Stats:
         return self._scenario.n_trials - self._submitted
 
     def is_budget_exhausted(self) -> bool:
-        """Check whether the configuration budget for time budget, ta_budget and submitted
-        is exhausted."""
+        """Check whether the the remaining walltime, cputime or trials was exceeded."""
         A = self.get_remaing_walltime() < 0
         B = self.get_remaining_cputime() < 0
         C = self.get_remaining_trials() < 0

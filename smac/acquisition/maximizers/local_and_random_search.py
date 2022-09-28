@@ -74,7 +74,8 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         self._local_search_iterations = local_search_iterations
 
     @property
-    def acquisition_function(self) -> AbstractAcquisitionFunction | None:
+    def acquisition_function(self) -> AbstractAcquisitionFunction | None:  # noqa: D102
+        """Returns the used acquisition function."""
         return self._acquisition_function
 
     @acquisition_function.setter

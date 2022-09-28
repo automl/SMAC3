@@ -122,27 +122,28 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
 
     @property
     def stage(self) -> int:
+        """The current stage of the worker."""
         return self._stage
 
     @property
-    def uses_seeds(self) -> bool:
+    def uses_seeds(self) -> bool:  # noqa: D102
         return self._successive_halving.uses_seeds
 
     @property
-    def uses_budgets(self) -> bool:
+    def uses_budgets(self) -> bool:  # noqa: D102
         return self._successive_halving.uses_budgets
 
     @property
-    def uses_instances(self) -> bool:
+    def uses_instances(self) -> bool:  # noqa: D102
         return self._successive_halving.uses_instances
 
-    def get_target_function_seeds(self) -> list[int]:
+    def get_target_function_seeds(self) -> list[int]:  # noqa: D102
         return self._successive_halving.get_target_function_seeds()
 
-    def get_target_function_budgets(self) -> list[float | None]:
+    def get_target_function_budgets(self) -> list[float | None]:  # noqa: D102
         return self._successive_halving.get_target_function_budgets()
 
-    def get_target_function_instances(self) -> list[str | None]:
+    def get_target_function_instances(self) -> list[str | None]:  # noqa: D102
         return self._successive_halving.get_target_function_instances()
 
     def process_results(
@@ -153,7 +154,7 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         runhistory: RunHistory,
         time_bound: float,
         log_trajectory: bool = True,
-    ) -> tuple[Configuration, float]:
+    ) -> tuple[Configuration, float]:  # noqa: D102
         # Mark the fact that we processed this configuration
         self._run_tracker[(trial_info.config, trial_info.instance, trial_info.seed, trial_info.budget)] = True
 
@@ -431,9 +432,10 @@ class SuccessiveHalvingWorker(AbstractIntensifier):
         )
 
     def _update_stage(self, runhistory: RunHistory) -> None:
-        """Update tracking information for a new stage/iteration and update statistics. This method
+        """Updates tracking information for a new stage/iteration and update statistics. This method
         is called to initialize stage variables and after all configurations of a Successive Halving
-        stage are completed."""
+        stage are completed.
+        """
         self._stage += 1
 
         # Only uncapped challengers are considered valid for the next iteration

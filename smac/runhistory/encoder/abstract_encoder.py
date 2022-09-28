@@ -99,10 +99,12 @@ class AbstractRunHistoryEncoder:
 
     @property
     def multi_objective_algorithm(self) -> AbstractMultiObjectiveAlgorithm | None:
+        """The multi objecctive algorithm used to transform the data."""
         return self._multi_objective_algorithm
 
     @multi_objective_algorithm.setter
     def multi_objective_algorithm(self, algorithm: AbstractMultiObjectiveAlgorithm) -> None:
+        """Sets the multi objective algorithm."""
         self._multi_objective_algorithm = algorithm
 
     @abstractmethod

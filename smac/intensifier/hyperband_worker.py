@@ -62,15 +62,15 @@ class HyperbandWorker(SuccessiveHalvingWorker):
         self._update_worker()
 
     @property
-    def uses_seeds(self) -> bool:
+    def uses_seeds(self) -> bool:  # noqa: D102
         return self._hyperband.uses_seeds
 
     @property
-    def uses_budgets(self) -> bool:
+    def uses_budgets(self) -> bool:  # noqa: D102
         return self._hyperband.uses_budgets
 
     @property
-    def uses_instances(self) -> bool:
+    def uses_instances(self) -> bool:  # noqa: D102
         return self._hyperband.uses_instances
 
     def process_results(
@@ -81,7 +81,7 @@ class HyperbandWorker(SuccessiveHalvingWorker):
         runhistory: RunHistory,
         time_bound: float,
         log_trajectory: bool = True,
-    ) -> tuple[Configuration, float]:
+    ) -> tuple[Configuration, float]:  # noqa: D102
         assert self._sh_intensifier
 
         # run 1 iteration of successive halving
@@ -109,7 +109,7 @@ class HyperbandWorker(SuccessiveHalvingWorker):
         runhistory: RunHistory,
         repeat_configs: bool = True,
         n_workers: int = 1,
-    ) -> tuple[TrialInfoIntent, TrialInfo]:
+    ) -> tuple[TrialInfoIntent, TrialInfo]:  # noqa: D102
         if n_workers > 1:
             raise ValueError(
                 "HyperBand does not support more than 1 worker, yet "

@@ -75,22 +75,8 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         self._iteration_number = 0
 
     @property
-    def name(self) -> str:
+    def name(self) -> str:  # noqa: D102
         return f"Prior Acquisition Function ({self._acquisition_function.__class__.__name__})"
-
-    @property
-    def model(self) -> AbstractModel | None:
-        return self._model
-
-    @model.setter
-    def model(self, model: AbstractModel) -> None:
-        self._model = model
-        self._hyperparameters = model._configspace.get_hyperparameters_dict()
-
-        if isinstance(model, AbstractRandomForest):
-            if not self._discretize:
-                logger.warning("Discretizing the prior for random forest models.")
-                self._discretize = True
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
@@ -106,6 +92,20 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         )
 
         return meta
+
+    @property
+    def model(self) -> AbstractModel | None:  # noqa: D102
+        return self._model
+
+    @model.setter
+    def model(self, model: AbstractModel) -> None:
+        self._model = model
+        self._hyperparameters = model._configspace.get_hyperparameters_dict()
+
+        if isinstance(model, AbstractRandomForest):
+            if not self._discretize:
+                logger.warning("Discretizing the prior for random forest models.")
+                self._discretize = True
 
     def _update(self, **kwargs: Any) -> None:
         """Update the acquisition function attributes required for calculation.

@@ -46,6 +46,9 @@ class LogNormalPrior(AbstractPrior):
         meta.update({"sigma": self._sigma, "mean": self._mean})
 
         return meta
+    
+    def _sample_from_prior(self, n_samples: int) -> np.ndarray:
+        return self._rng.lognormal(mean=self._mean, sigma=self._sigma, size=n_samples)
 
     def _get_log_probability(self, theta: float) -> float:
         if theta <= self._mean:
@@ -55,9 +58,6 @@ class LogNormalPrior(AbstractPrior):
                 self._sqrt_2_pi * self._sigma * theta
             )
             return rval
-
-    def _sample_from_prior(self, n_samples: int) -> np.ndarray:
-        return self._rng.lognormal(mean=self._mean, sigma=self._sigma, size=n_samples)
 
     def _get_gradient(self, theta: float) -> float:
         if theta <= 0:

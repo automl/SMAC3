@@ -39,80 +39,6 @@ class AbstractPrior:
             "seed": self._seed,
         }
 
-    def get_log_probability(self, theta: float) -> float:
-        """Returns the log probability of theta. This method exponentiates theta and calls `self._get_log_probability`.
-
-        Warning
-        -------
-        Theta must be on a log scale!
-
-        Parameters
-        ----------
-        theta : float
-            Hyperparameter configuration in log space.
-
-        Returns
-        -------
-        float
-            The log probability of theta
-        """
-        return self._get_log_probability(np.exp(theta))
-
-    @abstractmethod
-    def _get_log_probability(self, theta: float) -> float:
-        """Return the log probability of theta.
-
-        Warning
-        -------
-        Theta must be on the original scale.
-
-        Parameters
-        ----------
-        theta : float
-            Hyperparameter configuration on the original scale.
-
-        Returns
-        -------
-        float
-            The log probability of theta
-        """
-        raise NotImplementedError()
-
-    def get_gradient(self, theta: float) -> float:
-        """Computes the gradient of the prior with respect to theta. Internally, his method calls `self._get_gradient`.
-
-        Warning
-        -------
-        Theta must be on the original scale.
-
-        Parameters
-        ----------
-        theta : float
-            Hyperparameter configuration in log space
-
-        Returns
-        -------
-        gradient : float
-            The gradient of the prior at theta.
-        """
-        return self._get_gradient(np.exp(theta))
-
-    @abstractmethod
-    def _get_gradient(self, theta: float) -> float:
-        """Computes the gradient of the prior with respect to theta.
-
-        Parameters
-        ----------
-        theta : float
-            Hyperparameter configuration in the original space space
-
-        Returns
-        -------
-        gradient : float
-            The gradient of the prior at theta.
-        """
-        raise NotImplementedError()
-
     def sample_from_prior(self, n_samples: int) -> np.ndarray:
         """Returns `n_samples` from the prior. All samples are on a log scale. This method calls
         `self._sample_from_prior` and applies a log transformation to the obtained values.
@@ -138,6 +64,80 @@ class AbstractPrior:
             raise ValueError("Sample %s from prior %s contains infinite values!" % (sample, self))
 
         return sample
+
+    def get_log_probability(self, theta: float) -> float:
+        """Returns the log probability of theta. This method exponentiates theta and calls `self._get_log_probability`.
+
+        Warning
+        -------
+        Theta must be on a log scale!
+
+        Parameters
+        ----------
+        theta : float
+            Hyperparameter configuration in log space.
+
+        Returns
+        -------
+        float
+            The log probability of theta
+        """
+        return self._get_log_probability(np.exp(theta))
+
+    def get_gradient(self, theta: float) -> float:
+        """Computes the gradient of the prior with respect to theta. Internally, his method calls `self._get_gradient`.
+
+        Warning
+        -------
+        Theta must be on the original scale.
+
+        Parameters
+        ----------
+        theta : float
+            Hyperparameter configuration in log space
+
+        Returns
+        -------
+        gradient : float
+            The gradient of the prior at theta.
+        """
+        return self._get_gradient(np.exp(theta))
+
+    @abstractmethod
+    def _get_log_probability(self, theta: float) -> float:
+        """Return the log probability of theta.
+
+        Warning
+        -------
+        Theta must be on the original scale.
+
+        Parameters
+        ----------
+        theta : float
+            Hyperparameter configuration on the original scale.
+
+        Returns
+        -------
+        float
+            The log probability of theta
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    def _get_gradient(self, theta: float) -> float:
+        """Computes the gradient of the prior with respect to theta.
+
+        Parameters
+        ----------
+        theta : float
+            Hyperparameter configuration in the original space space
+
+        Returns
+        -------
+        gradient : float
+            The gradient of the prior at theta.
+        """
+        raise NotImplementedError()
 
     @abstractmethod
     def _sample_from_prior(self, n_samples: int) -> np.ndarray:

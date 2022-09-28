@@ -66,7 +66,7 @@ class TophatPrior(AbstractPrior):
     def _get_gradient(self, theta: float) -> float:
         return 0
 
-    def get_gradient(self, theta: float) -> float:
+    def get_gradient(self, theta: float) -> float:  # noqa: D102
         return 0
 
 
@@ -116,6 +116,12 @@ class SoftTopHatPrior(AbstractPrior):
             raise ValueError("Exponent cannot be less or equal than zero (but is %f)" % exponent)
 
         self._exponent = exponent
+        
+    def __repr__(self) -> str:
+        return "SoftTopHatPrior(lower_bound=%f, upper_bound=%f)" % (
+            self._lower_bound,
+            self._upper_bound,
+        )
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
@@ -124,10 +130,7 @@ class SoftTopHatPrior(AbstractPrior):
 
         return meta
 
-    def _get_log_probability(self, theta: float) -> float:
-        return 0
-
-    def get_log_probability(self, theta: float) -> float:
+    def get_log_probability(self, theta: float) -> float:  # noqa: D102
         # We need to use lnprob here instead of _lnprob to have the squared function work
         # in the logarithmic space, too.
         if np.ndim(theta) == 0:
@@ -140,13 +143,7 @@ class SoftTopHatPrior(AbstractPrior):
         else:
             raise NotImplementedError()
 
-    def _sample_from_prior(self, n_samples: int) -> np.ndarray:
-        return np.exp(self._rng.uniform(self._log_lower_bound, self._log_upper_bound, size=(n_samples,)))
-
-    def _get_gradient(self, theta: float) -> float:
-        return 0
-
-    def get_gradient(self, theta: float) -> float:
+    def get_gradient(self, theta: float) -> float:  # noqa: D102
         if np.ndim(theta) == 0:
             if theta < self._log_lower_bound:
                 return -self._exponent * (theta - self._log_lower_bound)
@@ -156,9 +153,14 @@ class SoftTopHatPrior(AbstractPrior):
                 return 0
         else:
             raise NotImplementedError()
+    
+    def _get_log_probability(self, theta: float) -> float:
+        return 0
 
-    def __repr__(self) -> str:
-        return "SoftTopHatPrior(lower_bound=%f, upper_bound=%f)" % (
-            self._lower_bound,
-            self._upper_bound,
-        )
+    def _get_gradient(self, theta: float) -> float:
+        return 0
+    
+    def _sample_from_prior(self, n_samples: int) -> np.ndarray:
+        return np.exp(self._rng.uniform(self._log_lower_bound, self._log_upper_bound, size=(n_samples,)))
+
+

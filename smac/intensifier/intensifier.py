@@ -6,6 +6,7 @@ from collections import Counter
 
 from ConfigSpace import Configuration
 
+from smac.constants import MAXINT
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.intensifier.stages import IntensifierStage
 from smac.runhistory import (
@@ -14,7 +15,6 @@ from smac.runhistory import (
     TrialInfoIntent,
     TrialValue,
 )
-from smac.constants import MAXINT
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.logging import format_array, get_logger
@@ -26,7 +26,7 @@ logger = get_logger(__name__)
 
 
 class Intensifier(AbstractIntensifier):
-    """Races challengers against an incumbent.
+    r"""Races challengers against an incumbent.
 
     SMAC's intensification procedure, in detail:
     Intensify(Θ_new, θ_inc, M, R, t_intensify, Π, c_hat) c_hat(θ, Π') denotes the empirical cost of θ on
@@ -151,34 +151,35 @@ class Intensifier(AbstractIntensifier):
     @property
     def intensify_percentage(self) -> float:
         """How much percentage of the time should configurations be intensified (evaluated on higher budgets or
-        more instances). This parameter is accessed in the SMBO class."""
+        more instances). This parameter is accessed in the SMBO class.
+        """
         return self._intensify_percentage
 
     @property
-    def uses_seeds(self) -> bool:
+    def uses_seeds(self) -> bool:  # noqa: D102
         return True
 
     @property
-    def uses_budgets(self) -> bool:
+    def uses_budgets(self) -> bool:  # noqa: D102
         return False
 
     @property
-    def uses_instances(self) -> bool:
+    def uses_instances(self) -> bool:  # noqa: D102
         if self._instances == [None]:
             return False
 
         return True
 
-    def get_target_function_seeds(self) -> list[int]:
+    def get_target_function_seeds(self) -> list[int]:  # noqa: D102
         if self._deterministic:
             return [0]
         else:
             return self._target_function_seeds
 
-    def get_target_function_budgets(self) -> list[float | None]:
+    def get_target_function_budgets(self) -> list[float | None]:  # noqa: D102
         return [None]
 
-    def get_target_function_instances(self) -> list[str | None]:
+    def get_target_function_instances(self) -> list[str | None]:  # noqa: D102
         if self._instances == [None] or None in self._instances:
             return [None]
 
@@ -517,7 +518,8 @@ class Intensifier(AbstractIntensifier):
         runhistory: RunHistory,
     ) -> list[str | None]:
         """Implementation of line 4 of Intensification. This method queries the incumbent trials in the runhistory and
-        return the pending instances if any is available."""
+        return the pending instances if any is available.
+        """
         # Line 4
         # Find all instances that have the most trials on the inc
         inc_trials = runhistory.get_trials(incumbent, only_max_observed_budget=True)
@@ -592,7 +594,8 @@ class Intensifier(AbstractIntensifier):
     ) -> tuple[Configuration, str | None, int | None]:
         """Method to return the next config setting to aggressively race challenger against
         incumbent. Returns either the challenger or incumbent as new incumbent alongside with the
-        instance and seed."""
+        instance and seed.
+        """
         # By the time this function is called, the run history might
         # have shifted. Re-populate the list if necessary
         if not self._to_run:
@@ -617,7 +620,8 @@ class Intensifier(AbstractIntensifier):
         log_trajectory: bool = True,
     ) -> Configuration | None:
         """Process the result of a racing configuration against the current incumbent. Might propose
-        a new incumbent."""
+        a new incumbent.
+        """
         chal_trials = runhistory.get_trials(challenger, only_max_observed_budget=True)
         chal_perf = runhistory.get_cost(challenger)
 
@@ -683,7 +687,8 @@ class Intensifier(AbstractIntensifier):
         runhistory: RunHistory,
     ) -> list[InstanceSeedBudgetKey]:
         """Returns the minimum list of <instance, seed> pairs to run the challenger on before
-        comparing it with the incumbent."""
+        comparing it with the incumbent.
+        """
         # Get next instances left for the challenger
         # Line 8
         inc_inst_seeds = set(runhistory.get_trials(incumbent, only_max_observed_budget=True))
@@ -770,7 +775,8 @@ class Intensifier(AbstractIntensifier):
         get_next_configurations: Callable[[], Iterator[Configuration]] | None,
     ) -> Iterator[Optional[Configuration]]:
         """Retuns a sequence of challengers to use in intensification. If challengers are not
-        provided, then optimizer will be used to generate the challenger list."""
+        provided, then optimizer will be used to generate the challenger list.
+        """
         chall_gen: Iterator[Optional[Configuration]]
         if challengers:
             # Iterate over challengers provided

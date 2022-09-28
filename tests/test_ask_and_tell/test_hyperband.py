@@ -2,9 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from smac.runhistory.dataclasses import TrialInfo, TrialValue
-
 from smac import MultiFidelityFacade, Scenario
+from smac.runhistory.dataclasses import TrialInfo, TrialValue
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

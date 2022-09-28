@@ -64,11 +64,13 @@ class Callback:
     @abstractmethod
     def on_tell_start(self, smbo: smac.main.BaseSMBO, info: TrialInfo, value: TrialValue) -> bool | None:
         """Called before the stats are updated and the trial is added to the runhistory. Optionally, returns false
-        to gracefully stop the optimization."""
+        to gracefully stop the optimization.
+        """
         pass
 
     @abstractmethod
     def on_tell_end(self, smbo: smac.main.BaseSMBO, info: TrialInfo, value: TrialValue) -> bool | None:
         """Called after the stats are updated and the trial is added to the runhistory. Optionally, returns false
-        to gracefully stop the optimization."""
+        to gracefully stop the optimization.
+        """
         pass

@@ -40,7 +40,7 @@ class ModulusRandomDesign(AbstractRandomDesign):
 
         return meta
 
-    def check(self, iteration: int) -> bool:
+    def check(self, iteration: int) -> bool:  # noqa: D102
         assert iteration >= 0
         return iteration % self._modulus < 1
 
@@ -97,11 +97,11 @@ class DynamicModulusRandomDesign(AbstractRandomDesign):
 
         return meta
 
-    def next_iteration(self) -> None:
+    def next_iteration(self) -> None:  # noqa: D102
         self._modulus += self._modulus_increment
         self._modulus = min(self._modulus, self._end_modulus)
 
-    def check(self, iteration: int) -> bool:
+    def check(self, iteration: int) -> bool:  # noqa: D102
         assert iteration >= 0
 
         if iteration % self._modulus < 1:

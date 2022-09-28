@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-
 from smac.facade.random_facade import RandomFacade
 from smac.intensifier.hyperband import Hyperband
 from smac.scenario import Scenario

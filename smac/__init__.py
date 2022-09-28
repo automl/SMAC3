@@ -27,8 +27,8 @@ try:
     from smac.facade import (
         AlgorithmConfigurationFacade,
         BlackBoxFacade,
-        HyperbandFacade,
         HPOFacade,
+        HyperbandFacade,
         MultiFidelityFacade,
         RandomFacade,
     )

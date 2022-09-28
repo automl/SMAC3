@@ -231,7 +231,7 @@ class AbstractRunner(ABC):
     def iter_results(self) -> Iterator[tuple[TrialInfo, TrialValue]]:
         """This method returns any finished configuration, and returns a list with the
         results of exercising the configurations. This class keeps populating results
-        to `self._results_queue` until a call to `get_finished` runs is done. In this case,
+        to ``self._results_queue`` until a call to ``get_finished`` trials is done. In this case,
         the `self._results_queue` list is emptied and all trial values produced by running
         `run` are returned.
 

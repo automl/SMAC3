@@ -1,5 +1,6 @@
 import pytest
-from smac import HPOFacade, Scenario, MultiFidelityFacade
+
+from smac import HPOFacade, MultiFidelityFacade, Scenario
 
 
 def test_termination_cost_threshold(rosenbrock):

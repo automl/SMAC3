@@ -121,7 +121,6 @@ class RandomFacade(AbstractFacade):
         """The model is used in the acquisition function. Since we do not use an acquisition function, we return a
         dummy model (returning random values in this case).
         """
-
         return RandomModel(
             configspace=scenario.configspace,
             instance_features=scenario.instance_features,
@@ -133,7 +132,6 @@ class RandomFacade(AbstractFacade):
         """We return ``RandomSearch`` as maximizer which samples configurations randomly from the configuration
         space and therefore neither uses the acquisition function nor the model.
         """
-
         return RandomSearch(
             scenario.configspace,
             seed=scenario.seed,

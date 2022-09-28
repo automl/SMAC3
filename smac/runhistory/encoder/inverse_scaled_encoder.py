@@ -23,7 +23,8 @@ class RunHistoryInverseScaledEncoder(RunHistoryEncoder):
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
         """Transform the response values by linearly scaling
-        them between zero and one and then using inverse scaling."""
+        them between zero and one and then using inverse scaling.
+        """
         min_y = self._min_y - (
             self._percentile - self._min_y
         )  # Subtract the difference between the percentile and the minimum

@@ -132,18 +132,16 @@ class DaskParallelRunner(AbstractRunner):
         run = self._client.submit(self._single_worker.run_wrapper, trial_info=trial_info)
         self._pending_trials.append(run)
 
-    def iter_results(self) -> Iterator[tuple[TrialInfo, TrialValue]]:
+    def iter_results(self) -> Iterator[tuple[TrialInfo, TrialValue]]:  # noqa: D102
         self._process_pending_trials()
         while self._results_queue:
             yield self._results_queue.pop(0)
 
-    def wait(self) -> None:
-        """The SMBO/intensifier might need to wait for runs to finish before making a decision. This class
-        waits until one run has finished."""
+    def wait(self) -> None:  # noqa: D102
         if self.is_running():
             wait(self._pending_trials, return_when="FIRST_COMPLETED")
 
-    def is_running(self) -> bool:
+    def is_running(self) -> bool:  # noqa: D102
         return len(self._pending_trials) > 0
 
     def run(
@@ -152,7 +150,7 @@ class DaskParallelRunner(AbstractRunner):
         instance: str | None = None,
         budget: float | None = None,
         seed: int | None = None,
-    ) -> tuple[StatusType, float | list[float], float, dict]:
+    ) -> tuple[StatusType, float | list[float], float, dict]:  # noqa: D102
         return self._single_worker.run(config=config, instance=instance, seed=seed, budget=budget)
 
     def count_available_workers(self) -> int:
@@ -165,8 +163,9 @@ class DaskParallelRunner(AbstractRunner):
             self._client.close()
 
     def _process_pending_trials(self) -> None:
-        """The completed trials are moved from `self._pending_trials` to `self._reseults_queue`. We make sure pending
-        trials never exceed the capacity of the scheduler."""
+        """The completed trials are moved from ``self._pending_trials`` to ``self._reseults_queue``. We make sure
+        pending trials never exceed the capacity of the scheduler.
+        """
         # In code check to make sure we don;t exceed resource allocation
         if self.count_available_workers() < 0:
             logger.warning(
@@ -184,6 +183,7 @@ class DaskParallelRunner(AbstractRunner):
 
     def __del__(self) -> None:
         """Makes sure that when this object gets deleted, the client is terminated. This
-        is only done if the client was created by the dask runner."""
+        is only done if the client was created by the dask runner.
+        """
         if self._close_client_at_del:
             self.close()

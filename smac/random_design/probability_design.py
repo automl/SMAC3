@@ -33,7 +33,7 @@ class ProbabilityRandomDesign(AbstractRandomDesign):
 
         return meta
 
-    def check(self, iteration: int) -> bool:
+    def check(self, iteration: int) -> bool:  # noqa: D102
         assert iteration >= 0
 
         if self._rng.rand() < self._probability:
@@ -76,10 +76,10 @@ class DynamicProbabilityRandomDesign(AbstractRandomDesign):
         return meta
 
     def next_iteration(self) -> None:
-        """Sets the probability to the current value multiplied by `factor`."""
+        """Sets the probability to the current value multiplied by ``factor``."""
         self._probability *= self._factor
 
-    def check(self, iteration: int) -> bool:
+    def check(self, iteration: int) -> bool:  # noqa: D102
         assert iteration >= 0
 
         if self._rng.rand() <= self._probability:

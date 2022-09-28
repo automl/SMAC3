@@ -35,6 +35,12 @@ class HorseshoePrior(AbstractPrior):
 
         return meta
 
+    def _sample_from_prior(self, n_samples: int) -> np.ndarray:
+        # This is copied from RoBO - scale is most likely the tau parameter
+        lamda = np.abs(self._rng.standard_cauchy(size=n_samples))
+        p0 = np.abs(self._rng.randn() * lamda * self._scale)
+        return p0
+
     def _get_log_probability(self, theta: float) -> float:
         # We computed it exactly as in the original spearmint code, they basically say that there's no analytical form
         # of the horseshoe prior, but that the multiplier is bounded between 2 and 4 and that they used the middle
@@ -48,12 +54,6 @@ class HorseshoePrior(AbstractPrior):
         else:
             a = math.log(1 + 3.0 * (self._scale_square / theta**2))
             return math.log(a + VERY_SMALL_NUMBER)
-
-    def _sample_from_prior(self, n_samples: int) -> np.ndarray:
-        # This is copied from RoBO - scale is most likely the tau parameter
-        lamda = np.abs(self._rng.standard_cauchy(size=n_samples))
-        p0 = np.abs(self._rng.randn() * lamda * self._scale)
-        return p0
 
     def _get_gradient(self, theta: float) -> float:
         if theta == 0:

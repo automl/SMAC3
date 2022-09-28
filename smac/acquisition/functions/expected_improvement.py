@@ -44,7 +44,7 @@ class EI(AbstractAcquisitionFunction):
         self._eta: float | None = None
 
     @property
-    def name(self) -> str:
+    def name(self) -> str:  # noqa: D102
         return "Expected Improvement"
 
     @property
@@ -151,7 +151,7 @@ class EIPS(EI):
         super(EIPS, self).__init__(xi=xi)
 
     @property
-    def name(self) -> str:
+    def name(self) -> str:  # noqa: D102
         return "Expected Improvement per Second"
 
     def _compute(self, X: np.ndarray) -> np.ndarray:

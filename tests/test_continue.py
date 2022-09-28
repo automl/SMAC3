@@ -1,8 +1,10 @@
-import shutil
-import pytest
-from io import StringIO
-from smac import BlackBoxFacade, HPOFacade, Scenario
 import os
+import shutil
+from io import StringIO
+
+import pytest
+
+from smac import BlackBoxFacade, HPOFacade, Scenario
 
 
 def test_continue_same_scenario(rosenbrock):

@@ -54,6 +54,9 @@ class GammaPrior(AbstractPrior):
         )
 
         return meta
+    
+    def _sample_from_prior(self, n_samples: int) -> np.ndarray:
+        return self._rng.gamma(shape=self._a, scale=self._scale, size=n_samples)
 
     def _get_log_probability(self, theta: float) -> float:
         """Returns the log pdf of theta."""
@@ -61,9 +64,6 @@ class GammaPrior(AbstractPrior):
             raise NotImplementedError()
 
         return sps.gamma.logpdf(theta, a=self._a, scale=self._scale, loc=self._loc)
-
-    def _sample_from_prior(self, n_samples: int) -> np.ndarray:
-        return self._rng.gamma(shape=self._a, scale=self._scale, size=n_samples)
 
     def _get_gradient(self, theta: float) -> float:
         """Get gradient as computed by Wolfram Alpha."""

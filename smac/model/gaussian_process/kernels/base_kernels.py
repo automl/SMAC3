@@ -67,7 +67,8 @@ class AbstractKernel:
     @property
     def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object. This method calls the `get_params` method to collect the
-        parameters of the kernel."""
+        parameters of the kernel.
+        """
         meta: dict[str, Any] = {"name": self.__class__.__name__}
         meta.update(self.get_params(deep=False))
 

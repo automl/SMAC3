@@ -49,7 +49,7 @@ class LCB(AbstractAcquisitionFunction):
         self._num_data: int | None = None
 
     @property
-    def name(self) -> str:
+    def name(self) -> str:  # noqa: D102
         return "Lower Confidence Bound"
 
     @property

@@ -28,11 +28,10 @@ class TS(AbstractAcquisitionFunction):
     ----------
     xi : float, defaults to 0.0
         TS does not require xi here, we only wants to make it consistent with other acquisition functions.
-
     """
 
     @property
-    def name(self) -> str:
+    def name(self) -> str:  # noqa: D102
         return "Thompson Sampling"
 
     def _compute(self, X: np.ndarray) -> np.ndarray:

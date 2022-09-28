@@ -1,16 +1,14 @@
 from __future__ import annotations
 
-
 import warnings
 
-import pytest
 import numpy as np
+import pytest
 from ConfigSpace import Categorical, Configuration, ConfigurationSpace, Float
-
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import StratifiedKFold, cross_val_score
-from tests.fixtures.datasets import Dataset
 
+from tests.fixtures.datasets import Dataset
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

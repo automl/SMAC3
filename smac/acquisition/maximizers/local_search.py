@@ -91,8 +91,8 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         additional_start_points: list[tuple[float, Configuration]] | None = None,
     ) -> list[tuple[float, Configuration]]:
         """Starts a local search from the given startpoint and quits if either the max number of
-        steps is reached or no neighbor with an higher improvement was found."""
-
+        steps is reached or no neighbor with an higher improvement was found.
+        """
         init_points = self._get_initial_points(previous_configs, n_points, additional_start_points)
         configs_acq = self._search(init_points)
 
