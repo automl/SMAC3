@@ -7,7 +7,6 @@ This chapter gives more details of single components of SMAC.
     :maxdepth: 2
     :hidden:
 
-    1_facades
     2_components
     3_multi_objective
     4_instances

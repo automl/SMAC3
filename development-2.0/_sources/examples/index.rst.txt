@@ -4,7 +4,7 @@ Examples
 ========
 
 We provide several examples of how to use SMAC with Python. Practical use-cases were chosen to show the
-variety of SMAC. We refer to the documentation to use SMAC with the command line.
+variety of SMAC.
 
 
 .. raw:: html
@@ -205,6 +205,23 @@ Multi-Objective
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">2D Schaffer Function</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of how to use multi-objective optimization with ParEGO. Both accuracy and runtime ar...">
+
+.. only:: html
+
+  .. image:: /examples/3_multi_objective/images/thumb/sphx_glr_2_parego_thumb.png
+    :alt: ParEGO
+
+  :ref:`sphx_glr_examples_3_multi_objective_2_parego.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">ParEGO</div>
     </div>
 
 

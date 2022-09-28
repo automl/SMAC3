@@ -120,22 +120,22 @@ style="width: 100%;">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="../../installation.html">
+  <a class="reference internal" href="../../1_installation.html">
    Installation
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../package_overview.html">
+  <a class="reference internal" href="../../2_package_overview.html">
    Package Overview
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../getting_started.html">
+  <a class="reference internal" href="../../3_getting_started.html">
    Getting Started
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../minimal_example.html">
+  <a class="reference internal" href="../../4_minimal_example.html">
    Minimal Example
   </a>
  </li>
@@ -228,6 +228,11 @@ style="width: 100%;">
        2D Schaffer Function
       </a>
      </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../3_multi_objective/2_parego.html">
+       ParEGO
+      </a>
+     </li>
     </ul>
    </li>
    <li class="toctree-l2">
@@ -247,11 +252,6 @@ style="width: 100%;">
    </i>
   </label>
   <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/1_facades.html">
-     Facades
-    </a>
-   </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../advanced_usage/2_components.html">
      Components
@@ -295,7 +295,7 @@ style="width: 100%;">
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../api.html">
+  <a class="reference internal" href="../../5_api.html">
    API References
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
@@ -335,13 +335,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.hpo_facade.html">
-       smac.facade.hpo_facade
+      <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="../../api/smac.facade.hyperparameter_optimization_facade.html">
+       smac.facade.hyperparameter_optimization_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -909,11 +909,6 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../api/smac.constants.html">
-     smac.constants
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="../../api/smac.callback.html">
      smac.callback
     </a>
@@ -921,22 +916,22 @@ style="width: 100%;">
   </ul>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../references.html">
+  <a class="reference internal" href="../../6_references.html">
    References
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../glossary.html">
+  <a class="reference internal" href="../../7_glossary.html">
    Glossary
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../faq.html">
+  <a class="reference internal" href="../../8_faq.html">
    F.A.Q.
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../license.html">
+  <a class="reference internal" href="../../9_license.html">
    License
   </a>
  </li>
@@ -985,7 +980,6 @@ to download the full example code</p>
 <span id="sphx-glr-examples-1-basics-3-ask-and-tell-py"></span><h1>Ask-and-Tell Interface<a class="headerlink" href="#ask-and-tell-interface" title="Permalink to this heading">¶</a></h1>
 <p>This examples show how to use the Ask-and-Tell interface.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:81] Reducing the number of initial configurations from 20 to 10 (max_ratio == 0.1).
-OrderedDict([(&#39;config&#39;, &lt;Parameter &quot;config: ConfigSpace.configuration_space.Configuration&quot;&gt;), (&#39;seed&#39;, &lt;Parameter &quot;seed: int = 0&quot;&gt;)])
 [INFO][abstract_initial_design.py:133] Using 10 initial design and 0 additional configurations.
 [INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
 [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
@@ -1019,8 +1013,8 @@ OrderedDict([(&#39;config&#39;, &lt;Parameter &quot;config: ConfigSpace.configur
 [INFO][abstract_intensifier.py:367] --- x0: -0.5669451075267817 -&gt; 0.7153215381459042
 [INFO][abstract_intensifier.py:367] --- x1: 2.6615730174631764 -&gt; 1.3605748848483428
 [INFO][base_smbo.py:260] Configuration budget is exhausted.
-[INFO][abstract_facade.py:309] Final Incumbent: {&#39;x0&#39;: 0.7153215381459042, &#39;x1&#39;: 1.3605748848483428}
-[INFO][abstract_facade.py:310] Estimated cost: 72.14246196585546
+[INFO][abstract_facade.py:314] Final Incumbent: {&#39;x0&#39;: 0.7153215381459042, &#39;x1&#39;: 1.3605748848483428}
+[INFO][abstract_facade.py:315] Estimated cost: 72.14246196585546
 Default cost: 16916.0
 Default cost: 72.14246196585546
 </pre></div>
@@ -1030,7 +1024,7 @@ Default cost: 72.14246196585546
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ConfigurationSpace</span><span class="p">,</span> <span class="n">Float</span>
 
-<span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">HPOFacade</span><span class="p">,</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">HyperparameterOptimizationFacade</span><span class="p">,</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.dataclasses</span> <span class="kn">import</span> <span class="n">TrialValue</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2021, AutoML.org Freiburg-Hannover&quot;</span>
@@ -1068,13 +1062,13 @@ Default cost: 72.14246196585546
     <span class="c1"># Scenario object</span>
     <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span> <span class="n">deterministic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 
-    <span class="n">intensifier</span> <span class="o">=</span> <span class="n">HPOFacade</span><span class="o">.</span><span class="n">get_intensifier</span><span class="p">(</span>
+    <span class="n">intensifier</span> <span class="o">=</span> <span class="n">HyperparameterOptimizationFacade</span><span class="o">.</span><span class="n">get_intensifier</span><span class="p">(</span>
         <span class="n">scenario</span><span class="p">,</span>
         <span class="n">max_config_calls</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># We basically use one seed only</span>
     <span class="p">)</span>
 
     <span class="c1"># Now we use SMAC to find the best hyperparameters</span>
-    <span class="n">smac</span> <span class="o">=</span> <span class="n">HPOFacade</span><span class="p">(</span>
+    <span class="n">smac</span> <span class="o">=</span> <span class="n">HyperparameterOptimizationFacade</span><span class="p">(</span>
         <span class="n">scenario</span><span class="p">,</span>
         <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">,</span>
         <span class="n">intensifier</span><span class="o">=</span><span class="n">intensifier</span><span class="p">,</span>
@@ -1104,7 +1098,7 @@ Default cost: 72.14246196585546
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.693 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.703 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-3-ask-and-tell-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/a1828630146a41acf93ee176b4deac58/3_ask_and_tell.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">3_ask_and_tell.py</span></code></a></p>

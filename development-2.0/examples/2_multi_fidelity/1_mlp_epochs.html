@@ -120,22 +120,22 @@ style="width: 100%;">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="../../installation.html">
+  <a class="reference internal" href="../../1_installation.html">
    Installation
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../package_overview.html">
+  <a class="reference internal" href="../../2_package_overview.html">
    Package Overview
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../getting_started.html">
+  <a class="reference internal" href="../../3_getting_started.html">
    Getting Started
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../minimal_example.html">
+  <a class="reference internal" href="../../4_minimal_example.html">
    Minimal Example
   </a>
  </li>
@@ -228,6 +228,11 @@ style="width: 100%;">
        2D Schaffer Function
       </a>
      </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../3_multi_objective/2_parego.html">
+       ParEGO
+      </a>
+     </li>
     </ul>
    </li>
    <li class="toctree-l2">
@@ -247,11 +252,6 @@ style="width: 100%;">
    </i>
   </label>
   <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/1_facades.html">
-     Facades
-    </a>
-   </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../advanced_usage/2_components.html">
      Components
@@ -295,7 +295,7 @@ style="width: 100%;">
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../api.html">
+  <a class="reference internal" href="../../5_api.html">
    API References
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
@@ -335,13 +335,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.hpo_facade.html">
-       smac.facade.hpo_facade
+      <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="../../api/smac.facade.hyperparameter_optimization_facade.html">
+       smac.facade.hyperparameter_optimization_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -909,11 +909,6 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../api/smac.constants.html">
-     smac.constants
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="../../api/smac.callback.html">
      smac.callback
     </a>
@@ -921,22 +916,22 @@ style="width: 100%;">
   </ul>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../references.html">
+  <a class="reference internal" href="../../6_references.html">
    References
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../glossary.html">
+  <a class="reference internal" href="../../7_glossary.html">
    Glossary
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../faq.html">
+  <a class="reference internal" href="../../8_faq.html">
    F.A.Q.
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../license.html">
+  <a class="reference internal" href="../../9_license.html">
    License
   </a>
  </li>
@@ -1000,7 +995,6 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[WARNING][successive_halving.py:123] The target function is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider increasing `n_seeds` from the intensifier.
 [INFO][successive_halving.py:197] Using successive halving with budget type BUDGETS, min budget 5, max budget 25 and eta 3.
-OrderedDict([(&#39;config&#39;, &lt;Parameter &quot;config: ConfigSpace.configuration_space.Configuration&quot;&gt;), (&#39;seed&#39;, &lt;Parameter &quot;seed: int = 0&quot;&gt;), (&#39;budget&#39;, &lt;Parameter &quot;budget: int = 25&quot;&gt;)])
 [INFO][abstract_initial_design.py:133] Using 5 initial design and 0 additional configurations.
 [WARNING][abstract_parallel_intensifier.py:93] Hyperband is executed with 1 worker(s) only. However, your system supports up to 2 workers. Consider increasing the workers in the scenario.
 [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 1-1 with initial budget 8.
@@ -1039,10 +1033,10 @@ OrderedDict([(&#39;config&#39;, &lt;Parameter &quot;config: ConfigSpace.configur
 [INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
 [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 3-2 with initial budget 25.
 [INFO][base_smbo.py:260] Configuration budget is exhausted.
-[INFO][abstract_facade.py:309] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 5, &#39;n_neurons&#39;: 183, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 91, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.006390670908394775}
-[INFO][abstract_facade.py:310] Estimated cost: 0.01892138656762621
+[INFO][abstract_facade.py:314] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 5, &#39;n_neurons&#39;: 183, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 91, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.006390670908394775}
+[INFO][abstract_facade.py:315] Estimated cost: 0.01892138656762621
 Default cost: 0.4307319715258433
-Default cost: 0.025047972763850068
+Incumbent cost: 0.025047972763850068
 </pre></div>
 </div>
 <div class="line-block">
@@ -1089,17 +1083,7 @@ Default cost: 0.025047972763850068
         <span class="n">learning_rate_init</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="s2">&quot;learning_rate_init&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Add all hyperparameters at once:</span>
-        <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">(</span>
-            <span class="p">[</span>
-                <span class="n">n_layer</span><span class="p">,</span>
-                <span class="n">n_neurons</span><span class="p">,</span>
-                <span class="n">activation</span><span class="p">,</span>
-                <span class="n">solver</span><span class="p">,</span>
-                <span class="n">batch_size</span><span class="p">,</span>
-                <span class="n">learning_rate</span><span class="p">,</span>
-                <span class="n">learning_rate_init</span><span class="p">,</span>
-            <span class="p">]</span>
-        <span class="p">)</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">n_layer</span><span class="p">,</span> <span class="n">n_neurons</span><span class="p">,</span> <span class="n">activation</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="n">learning_rate_init</span><span class="p">])</span>
 
         <span class="c1"># Adding conditions to restrict the hyperparameter space...</span>
         <span class="c1"># ... since learning rate is used when solver is &#39;sgd&#39;.</span>
@@ -1176,10 +1160,10 @@ Default cost: 0.025047972763850068
 
     <span class="c1"># Let&#39;s calculate the cost of the incumbent</span>
     <span class="n">incumbent_cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  48.823 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  48.407 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e36c26bb3a993c4641a06c811122b11e/1_mlp_epochs.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_mlp_epochs.py</span></code></a></p>

@@ -117,22 +117,22 @@ style="width: 100%;">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="../../../installation.html">
+  <a class="reference internal" href="../../../1_installation.html">
    Installation
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../../package_overview.html">
+  <a class="reference internal" href="../../../2_package_overview.html">
    Package Overview
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../../getting_started.html">
+  <a class="reference internal" href="../../../3_getting_started.html">
    Getting Started
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../../minimal_example.html">
+  <a class="reference internal" href="../../../4_minimal_example.html">
    Minimal Example
   </a>
  </li>
@@ -225,6 +225,11 @@ style="width: 100%;">
        2D Schaffer Function
       </a>
      </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../examples/3_multi_objective/2_parego.html">
+       ParEGO
+      </a>
+     </li>
     </ul>
    </li>
    <li class="toctree-l2">
@@ -244,11 +249,6 @@ style="width: 100%;">
    </i>
   </label>
   <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/1_facades.html">
-     Facades
-    </a>
-   </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../advanced_usage/2_components.html">
      Components
@@ -292,7 +292,7 @@ style="width: 100%;">
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../api.html">
+  <a class="reference internal" href="../../../5_api.html">
    API References
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
@@ -332,13 +332,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.hpo_facade.html">
-       smac.facade.hpo_facade
+      <a class="reference internal" href="../../../api/smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="../../../api/smac.facade.hyperparameter_optimization_facade.html">
+       smac.facade.hyperparameter_optimization_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -906,11 +906,6 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../api/smac.constants.html">
-     smac.constants
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="../../../api/smac.callback.html">
      smac.callback
     </a>
@@ -918,22 +913,22 @@ style="width: 100%;">
   </ul>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../../references.html">
+  <a class="reference internal" href="../../../6_references.html">
    References
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../../glossary.html">
+  <a class="reference internal" href="../../../7_glossary.html">
    Glossary
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../../faq.html">
+  <a class="reference internal" href="../../../8_faq.html">
    F.A.Q.
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../../license.html">
+  <a class="reference internal" href="../../../9_license.html">
    License
   </a>
  </li>
@@ -1005,11 +1000,15 @@ style="width: 100%;">
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    objective_weights : list[float] | None, defaults to None</span>
+<span class="sd">        Weights for an weighted average to judge configurations. Must be of the same length as the number of</span>
+<span class="sd">        objectives.</span>
 <span class="sd">    overwrite_existing_trials : bool, defaults to false</span>
 <span class="sd">        Overwrites a trial (combination of configuration, instance, budget and seed) if it already exists.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">overwrite_existing_trials</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objective_weights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">overwrite_existing_trials</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span> <span class="o">=</span> <span class="n">objective_weights</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_overwrite_existing_trials</span> <span class="o">=</span> <span class="n">overwrite_existing_trials</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
@@ -1022,6 +1021,11 @@ style="width: 100%;">
     <span class="k">def</span> <span class="nf">config_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Mapping from configuration to config id.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_ids</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">objective_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Weights for an weighted average to judge configurations.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">objective_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
@@ -1147,7 +1151,13 @@ style="width: 100%;">
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span> <span class="o">!=</span> <span class="n">n_objectives</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Cost is not of the same length (</span><span class="si">{</span><span class="n">n_objectives</span><span class="si">}</span><span class="s2">) as the number of &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot; objectives (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span><span class="si">}</span><span class="s2">)&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;objectives (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span><span class="si">}</span><span class="s2">).&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Cost is not of the same length (</span><span class="si">{</span><span class="n">n_objectives</span><span class="si">}</span><span class="s2">) as the number of &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;objective weights (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span><span class="p">)</span><span class="si">}</span><span class="s2">).&quot;</span>
             <span class="p">)</span>
 
         <span class="c1"># Let&#39;s always work with floats; Makes it easier to deal with later on</span>
@@ -1268,7 +1278,9 @@ style="width: 100%;">
 
             <span class="c1"># We have to normalize the costs here</span>
             <span class="n">costs</span> <span class="o">=</span> <span class="n">normalize_costs</span><span class="p">(</span><span class="n">cost</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective_bounds</span><span class="p">)</span>
-            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">costs</span><span class="p">))</span>
+
+            <span class="c1"># After normalization, we get the weighted average</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span><span class="p">))</span>
 
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cost</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span></div>
@@ -1296,7 +1308,7 @@ style="width: 100%;">
             <span class="n">costs</span> <span class="o">=</span> <span class="n">normalize_costs</span><span class="p">(</span><span class="n">cost</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective_bounds</span><span class="p">)</span>
 
             <span class="c1"># Note: We have to mean here because we already got the min cost</span>
-            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">costs</span><span class="p">))</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span><span class="p">))</span>
 
         <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span> <span class="o">==</span> <span class="nb">float</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span></div>
@@ -1320,7 +1332,7 @@ style="width: 100%;">
 <span class="sd">        normalize : bool, optional (default=False)</span>
 <span class="sd">            Normalizes the costs wrt objective bounds in the multi-objective setting.</span>
 <span class="sd">            Only a float is returned if normalize is True. Warning: The value can change</span>
-<span class="sd">            over time because the objective bounds are changing.</span>
+<span class="sd">            over time because the objective bounds are changing. Also, the objective weights are incorporated.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1336,7 +1348,7 @@ style="width: 100%;">
 
                 <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
                     <span class="n">normalized_costs</span> <span class="o">=</span> <span class="n">normalize_costs</span><span class="p">(</span><span class="n">averaged_costs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective_bounds</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">normalized_costs</span><span class="p">))</span>
+                    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">normalized_costs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">averaged_costs</span>
 
@@ -1363,7 +1375,7 @@ style="width: 100%;">
 <span class="sd">        normalize : bool, optional (default=False)</span>
 <span class="sd">            Normalizes the costs wrt objective bounds in the multi-objective setting.</span>
 <span class="sd">            Only a float is returned if normalize is True. Warning: The value can change</span>
-<span class="sd">            over time because the objective bounds are changing.</span>
+<span class="sd">            over time because the objective bounds are changing. Also, the objective weights are incorporated.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1380,7 +1392,7 @@ style="width: 100%;">
 
                 <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
                     <span class="n">normalized_costs</span> <span class="o">=</span> <span class="n">normalize_costs</span><span class="p">(</span><span class="n">summed_costs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective_bounds</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">normalized_costs</span><span class="p">))</span>
+                    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">normalized_costs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">summed_costs</span>
 
@@ -1392,9 +1404,7 @@ style="width: 100%;">
         <span class="n">instance_seed_budget_keys</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Return the minimum cost of a configuration.</span>
-
-<span class="sd">        This is the minimum cost of all instance-seed pairs.</span>
+        <span class="sd">&quot;&quot;&quot;Return the minimum cost of a configuration. This is the minimum cost of all instance-seed pairs.</span>
 
 <span class="sd">        Warning</span>
 <span class="sd">        -------</span>
@@ -1407,6 +1417,10 @@ style="width: 100%;">
 <span class="sd">        instance_seed_budget_keys : list, optional (default=None)</span>
 <span class="sd">            List of tuples of instance-seeds-budget keys. If None, the runhistory is</span>
 <span class="sd">            queried for all trials of the given configuration.</span>
+<span class="sd">        normalize : bool, optional (default=False)</span>
+<span class="sd">            Normalizes the costs wrt objective bounds in the multi-objective setting.</span>
+<span class="sd">            Only a float is returned if normalize is True. Warning: The value can change</span>
+<span class="sd">            over time because the objective bounds are changing. Also, the objective weights are incorporated.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1423,7 +1437,7 @@ style="width: 100%;">
 
                 <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
                     <span class="n">normalized_costs</span> <span class="o">=</span> <span class="n">normalize_costs</span><span class="p">(</span><span class="n">min_costs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective_bounds</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">normalized_costs</span><span class="p">))</span>
+                    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">normalized_costs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">min_costs</span>
 

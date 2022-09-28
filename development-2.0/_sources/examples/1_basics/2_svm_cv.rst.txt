@@ -35,7 +35,6 @@ types as well as conditional hyperparameters.
 
  .. code-block:: none
 
-    OrderedDict([('config', <Parameter "config: ConfigSpace.configuration_space.Configuration">), ('seed', <Parameter "seed: int = 0">)])
     [INFO][abstract_initial_design.py:133] Using 5 initial design and 0 additional configurations.
     [INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
     [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
@@ -48,8 +47,8 @@ types as well as conditional hyperparameters.
     [INFO][abstract_intensifier.py:367] --- shrinking: True -> False
     [INFO][intensifier.py:567] Updated estimated cost of incumbent on 3 trials: 0.0133
     [INFO][base_smbo.py:260] Configuration budget is exhausted.
-    [INFO][abstract_facade.py:309] Final Incumbent: {'C': 1.2760639488343621, 'kernel': 'linear', 'shrinking': False}
-    [INFO][abstract_facade.py:310] Estimated cost: 0.013333333333333308
+    [INFO][abstract_facade.py:314] Final Incumbent: {'C': 1.2760639488343621, 'kernel': 'linear', 'shrinking': False}
+    [INFO][abstract_facade.py:315] Estimated cost: 0.013333333333333308
     Default cost: 0.03333333333333344
     Default cost: 0.013333333333333308
 
@@ -69,7 +68,7 @@ types as well as conditional hyperparameters.
     from sklearn import datasets, svm
     from sklearn.model_selection import cross_val_score
 
-    from smac import HPOFacade, Scenario
+    from smac import HyperparameterOptimizationFacade, Scenario
     from smac.initial_design import SobolInitialDesign
 
     __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -133,14 +132,14 @@ types as well as conditional hyperparameters.
 
         # We want to run the facade's default initial design, but we want to alter the number
         # of initial configs to be 5.
-        initial_design = HPOFacade.get_initial_design(scenario, n_configs=10)
+        initial_design = HyperparameterOptimizationFacade.get_initial_design(scenario, n_configs=10)
 
         # You can also override the initial design completely, by providing another
         # initial design class.
         initial_design = SobolInitialDesign(scenario, n_configs=10)
 
         # Now we use SMAC to find the best hyperparameters
-        smac = HPOFacade(
+        smac = HyperparameterOptimizationFacade(
             scenario,
             classifier.train,
             initial_design=initial_design,
@@ -160,7 +159,7 @@ types as well as conditional hyperparameters.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.978 seconds)
+   **Total running time of the script:** ( 0 minutes  0.979 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_2_svm_cv.py:

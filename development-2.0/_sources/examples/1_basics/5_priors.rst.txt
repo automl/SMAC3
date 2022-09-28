@@ -38,7 +38,6 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
 
  .. code-block:: none
 
-    OrderedDict([('config', <Parameter "config: ConfigSpace.configuration_space.Configuration">), ('seed', <Parameter "seed: int = 0">)])
     [WARNING][prior_acqusition_function.py:107] Discretizing the prior for random forest models.
     [INFO][abstract_initial_design.py:133] Using 4 initial design and 1 additional configurations.
     [INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
@@ -56,11 +55,14 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
     [INFO][abstract_intensifier.py:367] --- batch_size: 128 -> 83
     [INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0010000000000000002 -> 0.001682337847169736
+    [INFO][abstract_intensifier.py:340] Challenger (0.0245) is better than incumbent (0.0267) on 1 trials.
+    [INFO][abstract_intensifier.py:364] Changes in incumbent:
+    [INFO][abstract_intensifier.py:367] --- batch_size: 83 -> 63
     [INFO][base_smbo.py:260] Configuration budget is exhausted.
-    [INFO][abstract_facade.py:309] Final Incumbent: {'activation': 'relu', 'batch_size': 83, 'learning_rate_init': 0.001682337847169736, 'n_layer': 3, 'n_neurons': 108, 'optimizer': 'adam'}
-    [INFO][abstract_facade.py:310] Estimated cost: 0.026709996904983102
+    [INFO][abstract_facade.py:314] Final Incumbent: {'activation': 'relu', 'batch_size': 63, 'learning_rate_init': 0.001682337847169736, 'n_layer': 3, 'n_neurons': 108, 'optimizer': 'adam'}
+    [INFO][abstract_facade.py:315] Estimated cost: 0.024487774682760866
     Default cost: 0.05787991333952347
-    Default cost: 0.04062674094707519
+    Default cost: 0.03506344784896309
 
 
 
@@ -88,7 +90,7 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
     from sklearn.model_selection import StratifiedKFold, cross_val_score
     from sklearn.neural_network import MLPClassifier
 
-    from smac import HPOFacade, Scenario
+    from smac import HyperparameterOptimizationFacade, Scenario
     from smac.acquisition.functions import PriorAcquisitionFunction
 
     __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -195,25 +197,25 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
         scenario = Scenario(mlp.configspace, n_trials=40)
 
         # We also want to include our default configuration in the initial design
-        initial_design = HPOFacade.get_initial_design(
+        initial_design = HyperparameterOptimizationFacade.get_initial_design(
             scenario,
             additional_configs=[default_config],
         )
 
         # We define the prior acquisition function, which conduct the optimization using priors over the optimum
         acquisition_function = PriorAcquisitionFunction(
-            acquisition_function=HPOFacade.get_acquisition_function(scenario),
+            acquisition_function=HyperparameterOptimizationFacade.get_acquisition_function(scenario),
             decay_beta=scenario.n_trials / 10,  # Proven solid value
         )
 
         # We only want one config call (use only one seed in this example)
-        intensifier = HPOFacade.get_intensifier(
+        intensifier = HyperparameterOptimizationFacade.get_intensifier(
             scenario,
             max_config_calls=1,
         )
 
         # Create our SMAC object and pass the scenario and the train method
-        smac = HPOFacade(
+        smac = HyperparameterOptimizationFacade(
             scenario,
             mlp.train,
             initial_design=initial_design,
@@ -235,7 +237,7 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  39.792 seconds)
+   **Total running time of the script:** ( 0 minutes  35.043 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_5_priors.py:

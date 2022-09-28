@@ -23,7 +23,7 @@
 
 A simple example on how to use multi-objective optimization is shown. The `schaffer` function is used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 7-85
+.. GENERATED FROM PYTHON SOURCE LINES 7-88
 
 
 
@@ -37,7 +37,6 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
 
  .. code-block:: none
 
-    OrderedDict([('config', <Parameter "config: 'Configuration'">), ('seed', <Parameter "seed: 'int' = 0">)])
     [INFO][abstract_initial_design.py:133] Using 10 initial design and 0 additional configurations.
     [INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
     [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
@@ -111,8 +110,8 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
     [INFO][abstract_intensifier.py:367] --- x: 0.8557358664458059 -> 1.0849066921609452
     [INFO][base_smbo.py:260] Configuration budget is exhausted.
-    [INFO][abstract_facade.py:309] Final Incumbent: {'x': 1.0849066921609452}
-    [INFO][abstract_facade.py:310] Estimated cost: 0.25271859054525136
+    [INFO][abstract_facade.py:314] Final Incumbent: {'x': 1.0849066921609452}
+    [INFO][abstract_facade.py:315] Estimated cost: 0.25271859054525136
     Default costs: [0. 4.]
     Incumbent costs: [1.17702253 0.83739576]
 
@@ -134,7 +133,7 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
     from ConfigSpace import Configuration, ConfigurationSpace
     from matplotlib import pyplot as plt
 
-    from smac import HPOFacade, Scenario
+    from smac import HyperparameterOptimizationFacade, Scenario
     from smac.facade import AbstractFacade
     from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 
@@ -187,10 +186,13 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
             objectives=["metric1", "metric2"],
         )
 
-        smac = HPOFacade(
+        smac = HyperparameterOptimizationFacade(
             scenario=scenario,
             target_function=target_function,
-            multi_objective_algorithm=MeanAggregationStrategy(scenario),
+            multi_objective_algorithm=MeanAggregationStrategy(
+                scenario,
+                # weights=[1, 2]  # Weights objective 2 twice as much as objective 1
+            ),
             overwrite=True,
         )
         incumbent = smac.optimize()
@@ -207,7 +209,7 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.589 seconds)
+   **Total running time of the script:** ( 0 minutes  1.604 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_1_schaffer.py:

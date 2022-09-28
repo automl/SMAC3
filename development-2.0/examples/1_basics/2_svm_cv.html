@@ -120,22 +120,22 @@ style="width: 100%;">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="../../installation.html">
+  <a class="reference internal" href="../../1_installation.html">
    Installation
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../package_overview.html">
+  <a class="reference internal" href="../../2_package_overview.html">
    Package Overview
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../getting_started.html">
+  <a class="reference internal" href="../../3_getting_started.html">
    Getting Started
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../minimal_example.html">
+  <a class="reference internal" href="../../4_minimal_example.html">
    Minimal Example
   </a>
  </li>
@@ -228,6 +228,11 @@ style="width: 100%;">
        2D Schaffer Function
       </a>
      </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../3_multi_objective/2_parego.html">
+       ParEGO
+      </a>
+     </li>
     </ul>
    </li>
    <li class="toctree-l2">
@@ -247,11 +252,6 @@ style="width: 100%;">
    </i>
   </label>
   <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/1_facades.html">
-     Facades
-    </a>
-   </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../advanced_usage/2_components.html">
      Components
@@ -295,7 +295,7 @@ style="width: 100%;">
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../api.html">
+  <a class="reference internal" href="../../5_api.html">
    API References
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
@@ -335,13 +335,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.hpo_facade.html">
-       smac.facade.hpo_facade
+      <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="../../api/smac.facade.hyperparameter_optimization_facade.html">
+       smac.facade.hyperparameter_optimization_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -909,11 +909,6 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../api/smac.constants.html">
-     smac.constants
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="../../api/smac.callback.html">
      smac.callback
     </a>
@@ -921,22 +916,22 @@ style="width: 100%;">
   </ul>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../references.html">
+  <a class="reference internal" href="../../6_references.html">
    References
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../glossary.html">
+  <a class="reference internal" href="../../7_glossary.html">
    Glossary
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../faq.html">
+  <a class="reference internal" href="../../8_faq.html">
    F.A.Q.
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../license.html">
+  <a class="reference internal" href="../../9_license.html">
    License
   </a>
  </li>
@@ -987,8 +982,7 @@ to download the full example code</p>
 hyperparameter optimization facade, which uses a random forest as its surrogate model. It is able to
 scale to higher evaluation budgets and a higher number of dimensions. Also, you can use mixed data
 types as well as conditional hyperparameters.</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>OrderedDict([(&#39;config&#39;, &lt;Parameter &quot;config: ConfigSpace.configuration_space.Configuration&quot;&gt;), (&#39;seed&#39;, &lt;Parameter &quot;seed: int = 0&quot;&gt;)])
-[INFO][abstract_initial_design.py:133] Using 5 initial design and 0 additional configurations.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:133] Using 5 initial design and 0 additional configurations.
 [INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
 [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
 [INFO][intensifier.py:567] Updated estimated cost of incumbent on 1 trials: 0.0667
@@ -1000,8 +994,8 @@ types as well as conditional hyperparameters.</p>
 [INFO][abstract_intensifier.py:367] --- shrinking: True -&gt; False
 [INFO][intensifier.py:567] Updated estimated cost of incumbent on 3 trials: 0.0133
 [INFO][base_smbo.py:260] Configuration budget is exhausted.
-[INFO][abstract_facade.py:309] Final Incumbent: {&#39;C&#39;: 1.2760639488343621, &#39;kernel&#39;: &#39;linear&#39;, &#39;shrinking&#39;: False}
-[INFO][abstract_facade.py:310] Estimated cost: 0.013333333333333308
+[INFO][abstract_facade.py:314] Final Incumbent: {&#39;C&#39;: 1.2760639488343621, &#39;kernel&#39;: &#39;linear&#39;, &#39;shrinking&#39;: False}
+[INFO][abstract_facade.py:315] Estimated cost: 0.013333333333333308
 Default cost: 0.03333333333333344
 Default cost: 0.013333333333333308
 </pre></div>
@@ -1015,7 +1009,7 @@ Default cost: 0.013333333333333308
 <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">svm</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
 
-<span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">HPOFacade</span><span class="p">,</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">HyperparameterOptimizationFacade</span><span class="p">,</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design</span> <span class="kn">import</span> <span class="n">SobolInitialDesign</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2021, AutoML.org Freiburg-Hannover&quot;</span>
@@ -1079,14 +1073,14 @@ Default cost: 0.013333333333333308
 
     <span class="c1"># We want to run the facade&#39;s default initial design, but we want to alter the number</span>
     <span class="c1"># of initial configs to be 5.</span>
-    <span class="n">initial_design</span> <span class="o">=</span> <span class="n">HPOFacade</span><span class="o">.</span><span class="n">get_initial_design</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">n_configs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">initial_design</span> <span class="o">=</span> <span class="n">HyperparameterOptimizationFacade</span><span class="o">.</span><span class="n">get_initial_design</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">n_configs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
     <span class="c1"># You can also override the initial design completely, by providing another</span>
     <span class="c1"># initial design class.</span>
     <span class="n">initial_design</span> <span class="o">=</span> <span class="n">SobolInitialDesign</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">n_configs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
     <span class="c1"># Now we use SMAC to find the best hyperparameters</span>
-    <span class="n">smac</span> <span class="o">=</span> <span class="n">HPOFacade</span><span class="p">(</span>
+    <span class="n">smac</span> <span class="o">=</span> <span class="n">HyperparameterOptimizationFacade</span><span class="p">(</span>
         <span class="n">scenario</span><span class="p">,</span>
         <span class="n">classifier</span><span class="o">.</span><span class="n">train</span><span class="p">,</span>
         <span class="n">initial_design</span><span class="o">=</span><span class="n">initial_design</span><span class="p">,</span>
@@ -1104,7 +1098,7 @@ Default cost: 0.013333333333333308
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.978 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.979 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-2-svm-cv-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/7543c6c00a01b61aefff0a6414c7ac77/2_svm_cv.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_svm_cv.py</span></code></a></p>

@@ -61,17 +61,7 @@ class MLP:
         learning_rate_init = Float("learning_rate_init", (0.0001, 1.0), default=0.001, log=True)
 
         # Add all hyperparameters at once:
-        cs.add_hyperparameters(
-            [
-                n_layer,
-                n_neurons,
-                activation,
-                solver,
-                batch_size,
-                learning_rate,
-                learning_rate_init,
-            ]
-        )
+        cs.add_hyperparameters([n_layer, n_neurons, activation, solver, batch_size, learning_rate, learning_rate_init])
 
         # Adding conditions to restrict the hyperparameter space...
         # ... since learning rate is used when solver is 'sgd'.
@@ -148,4 +138,4 @@ if __name__ == "__main__":
 
     # Let's calculate the cost of the incumbent
     incumbent_cost = smac.validate(incumbent)
-    print(f"Default cost: {incumbent_cost}")
+    print(f"Incumbent cost: {incumbent_cost}")

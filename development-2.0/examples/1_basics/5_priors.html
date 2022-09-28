@@ -120,22 +120,22 @@ style="width: 100%;">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="../../installation.html">
+  <a class="reference internal" href="../../1_installation.html">
    Installation
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../package_overview.html">
+  <a class="reference internal" href="../../2_package_overview.html">
    Package Overview
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../getting_started.html">
+  <a class="reference internal" href="../../3_getting_started.html">
    Getting Started
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../minimal_example.html">
+  <a class="reference internal" href="../../4_minimal_example.html">
    Minimal Example
   </a>
  </li>
@@ -228,6 +228,11 @@ style="width: 100%;">
        2D Schaffer Function
       </a>
      </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../3_multi_objective/2_parego.html">
+       ParEGO
+      </a>
+     </li>
     </ul>
    </li>
    <li class="toctree-l2">
@@ -247,11 +252,6 @@ style="width: 100%;">
    </i>
   </label>
   <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/1_facades.html">
-     Facades
-    </a>
-   </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../advanced_usage/2_components.html">
      Components
@@ -295,7 +295,7 @@ style="width: 100%;">
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../api.html">
+  <a class="reference internal" href="../../5_api.html">
    API References
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
@@ -335,13 +335,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.hpo_facade.html">
-       smac.facade.hpo_facade
+      <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="../../api/smac.facade.hyperparameter_optimization_facade.html">
+       smac.facade.hyperparameter_optimization_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -909,11 +909,6 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../api/smac.constants.html">
-     smac.constants
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="../../api/smac.callback.html">
      smac.callback
     </a>
@@ -921,22 +916,22 @@ style="width: 100%;">
   </ul>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../references.html">
+  <a class="reference internal" href="../../6_references.html">
    References
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../glossary.html">
+  <a class="reference internal" href="../../7_glossary.html">
    Glossary
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../faq.html">
+  <a class="reference internal" href="../../8_faq.html">
    F.A.Q.
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../license.html">
+  <a class="reference internal" href="../../9_license.html">
    License
   </a>
  </li>
@@ -990,8 +985,7 @@ use of the Normal and Beta Hyperparameters, as well as the “weights” propert
 <code class="docutils literal notranslate"><span class="pre">CategoricalHyperparameter</span></code>. This can be integrated into the optimiztion for any SMAC facade,
 but we stick with the hyperparameter optimization facade here. To incorporate user priors into the
 optimization, you have to change the acquisition function to <code class="docutils literal notranslate"><span class="pre">PriorAcquisitionFunction</span></code>.</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>OrderedDict([(&#39;config&#39;, &lt;Parameter &quot;config: ConfigSpace.configuration_space.Configuration&quot;&gt;), (&#39;seed&#39;, &lt;Parameter &quot;seed: int = 0&quot;&gt;)])
-[WARNING][prior_acqusition_function.py:107] Discretizing the prior for random forest models.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[WARNING][prior_acqusition_function.py:107] Discretizing the prior for random forest models.
 [INFO][abstract_initial_design.py:133] Using 4 initial design and 1 additional configurations.
 [INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
 [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
@@ -1008,11 +1002,14 @@ optimization, you have to change the acquisition function to <code class="docuti
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
 [INFO][abstract_intensifier.py:367] --- batch_size: 128 -&gt; 83
 [INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0010000000000000002 -&gt; 0.001682337847169736
+[INFO][abstract_intensifier.py:340] Challenger (0.0245) is better than incumbent (0.0267) on 1 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- batch_size: 83 -&gt; 63
 [INFO][base_smbo.py:260] Configuration budget is exhausted.
-[INFO][abstract_facade.py:309] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;batch_size&#39;: 83, &#39;learning_rate_init&#39;: 0.001682337847169736, &#39;n_layer&#39;: 3, &#39;n_neurons&#39;: 108, &#39;optimizer&#39;: &#39;adam&#39;}
-[INFO][abstract_facade.py:310] Estimated cost: 0.026709996904983102
+[INFO][abstract_facade.py:314] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;batch_size&#39;: 63, &#39;learning_rate_init&#39;: 0.001682337847169736, &#39;n_layer&#39;: 3, &#39;n_neurons&#39;: 108, &#39;optimizer&#39;: &#39;adam&#39;}
+[INFO][abstract_facade.py:315] Estimated cost: 0.024487774682760866
 Default cost: 0.05787991333952347
-Default cost: 0.04062674094707519
+Default cost: 0.03506344784896309
 </pre></div>
 </div>
 <div class="line-block">
@@ -1034,7 +1031,7 @@ Default cost: 0.04062674094707519
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">cross_val_score</span>
 <span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPClassifier</span>
 
-<span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">HPOFacade</span><span class="p">,</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">HyperparameterOptimizationFacade</span><span class="p">,</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.acquisition.functions</span> <span class="kn">import</span> <span class="n">PriorAcquisitionFunction</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2021, AutoML.org Freiburg-Hannover&quot;</span>
@@ -1141,25 +1138,25 @@ Default cost: 0.04062674094707519
     <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">mlp</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
 
     <span class="c1"># We also want to include our default configuration in the initial design</span>
-    <span class="n">initial_design</span> <span class="o">=</span> <span class="n">HPOFacade</span><span class="o">.</span><span class="n">get_initial_design</span><span class="p">(</span>
+    <span class="n">initial_design</span> <span class="o">=</span> <span class="n">HyperparameterOptimizationFacade</span><span class="o">.</span><span class="n">get_initial_design</span><span class="p">(</span>
         <span class="n">scenario</span><span class="p">,</span>
         <span class="n">additional_configs</span><span class="o">=</span><span class="p">[</span><span class="n">default_config</span><span class="p">],</span>
     <span class="p">)</span>
 
     <span class="c1"># We define the prior acquisition function, which conduct the optimization using priors over the optimum</span>
     <span class="n">acquisition_function</span> <span class="o">=</span> <span class="n">PriorAcquisitionFunction</span><span class="p">(</span>
-        <span class="n">acquisition_function</span><span class="o">=</span><span class="n">HPOFacade</span><span class="o">.</span><span class="n">get_acquisition_function</span><span class="p">(</span><span class="n">scenario</span><span class="p">),</span>
+        <span class="n">acquisition_function</span><span class="o">=</span><span class="n">HyperparameterOptimizationFacade</span><span class="o">.</span><span class="n">get_acquisition_function</span><span class="p">(</span><span class="n">scenario</span><span class="p">),</span>
         <span class="n">decay_beta</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">n_trials</span> <span class="o">/</span> <span class="mi">10</span><span class="p">,</span>  <span class="c1"># Proven solid value</span>
     <span class="p">)</span>
 
     <span class="c1"># We only want one config call (use only one seed in this example)</span>
-    <span class="n">intensifier</span> <span class="o">=</span> <span class="n">HPOFacade</span><span class="o">.</span><span class="n">get_intensifier</span><span class="p">(</span>
+    <span class="n">intensifier</span> <span class="o">=</span> <span class="n">HyperparameterOptimizationFacade</span><span class="o">.</span><span class="n">get_intensifier</span><span class="p">(</span>
         <span class="n">scenario</span><span class="p">,</span>
         <span class="n">max_config_calls</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># Create our SMAC object and pass the scenario and the train method</span>
-    <span class="n">smac</span> <span class="o">=</span> <span class="n">HPOFacade</span><span class="p">(</span>
+    <span class="n">smac</span> <span class="o">=</span> <span class="n">HyperparameterOptimizationFacade</span><span class="p">(</span>
         <span class="n">scenario</span><span class="p">,</span>
         <span class="n">mlp</span><span class="o">.</span><span class="n">train</span><span class="p">,</span>
         <span class="n">initial_design</span><span class="o">=</span><span class="n">initial_design</span><span class="p">,</span>
@@ -1179,7 +1176,7 @@ Default cost: 0.04062674094707519
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  39.792 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  35.043 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-5-priors-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0f7950173da77ea98f5474f656060016/5_priors.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">5_priors.py</span></code></a></p>

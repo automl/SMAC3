@@ -169,6 +169,17 @@ span.highlighted {
 }
 
 
+/* TABLE */
+
+
+/* Make it scrollable */
+table.table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+
 /* API DOC */
 
 p.rubric {

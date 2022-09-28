@@ -33,7 +33,6 @@ This examples show how to use the Ask-and-Tell interface.
  .. code-block:: none
 
     [INFO][abstract_initial_design.py:81] Reducing the number of initial configurations from 20 to 10 (max_ratio == 0.1).
-    OrderedDict([('config', <Parameter "config: ConfigSpace.configuration_space.Configuration">), ('seed', <Parameter "seed: int = 0">)])
     [INFO][abstract_initial_design.py:133] Using 10 initial design and 0 additional configurations.
     [INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
     [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
@@ -67,8 +66,8 @@ This examples show how to use the Ask-and-Tell interface.
     [INFO][abstract_intensifier.py:367] --- x0: -0.5669451075267817 -> 0.7153215381459042
     [INFO][abstract_intensifier.py:367] --- x1: 2.6615730174631764 -> 1.3605748848483428
     [INFO][base_smbo.py:260] Configuration budget is exhausted.
-    [INFO][abstract_facade.py:309] Final Incumbent: {'x0': 0.7153215381459042, 'x1': 1.3605748848483428}
-    [INFO][abstract_facade.py:310] Estimated cost: 72.14246196585546
+    [INFO][abstract_facade.py:314] Final Incumbent: {'x0': 0.7153215381459042, 'x1': 1.3605748848483428}
+    [INFO][abstract_facade.py:315] Estimated cost: 72.14246196585546
     Default cost: 16916.0
     Default cost: 72.14246196585546
 
@@ -84,7 +83,7 @@ This examples show how to use the Ask-and-Tell interface.
 
     from ConfigSpace import Configuration, ConfigurationSpace, Float
 
-    from smac import HPOFacade, Scenario
+    from smac import HyperparameterOptimizationFacade, Scenario
     from smac.runhistory.dataclasses import TrialValue
 
     __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -122,13 +121,13 @@ This examples show how to use the Ask-and-Tell interface.
         # Scenario object
         scenario = Scenario(model.configspace, deterministic=False, n_trials=100)
 
-        intensifier = HPOFacade.get_intensifier(
+        intensifier = HyperparameterOptimizationFacade.get_intensifier(
             scenario,
             max_config_calls=1,  # We basically use one seed only
         )
 
         # Now we use SMAC to find the best hyperparameters
-        smac = HPOFacade(
+        smac = HyperparameterOptimizationFacade(
             scenario,
             model.train,
             intensifier=intensifier,
@@ -160,7 +159,7 @@ This examples show how to use the Ask-and-Tell interface.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.693 seconds)
+   **Total running time of the script:** ( 0 minutes  0.703 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_3_ask_and_tell.py:

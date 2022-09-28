@@ -37,7 +37,6 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
 
  .. code-block:: none
 
-    OrderedDict([('config', <Parameter "config: ConfigSpace.configuration_space.Configuration">), ('seed', <Parameter "seed: int = 0">)])
     [INFO][abstract_initial_design.py:133] Using 20 initial design and 0 additional configurations.
     [INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
     [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
@@ -61,8 +60,8 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
     [INFO][abstract_intensifier.py:367] --- x0: -0.47602048278586295 -> 1.7031544591929872
     [INFO][abstract_intensifier.py:367] --- x1: 0.13155812805683098 -> 2.842364243857716
     [INFO][base_smbo.py:260] Configuration budget is exhausted.
-    [INFO][abstract_facade.py:309] Final Incumbent: {'x0': 1.7031544591929872, 'x1': 2.842364243857716}
-    [INFO][abstract_facade.py:310] Estimated cost: 0.8351420167215506
+    [INFO][abstract_facade.py:314] Final Incumbent: {'x0': 1.7031544591929872, 'x1': 2.842364243857716}
+    [INFO][abstract_facade.py:315] Estimated cost: 0.8351420167215506
     Default cost: 16916.0
     Default cost: 0.8351420167215506
 
@@ -135,7 +134,7 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.951 seconds)
+   **Total running time of the script:** ( 0 minutes  2.994 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_1_synthetic_function.py:
