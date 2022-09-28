@@ -14,12 +14,29 @@ __license__ = "3-clause BSD"
 
 @dataclass(frozen=True)
 class InstanceSeedKey:
+    """Key for instance and seed.
+
+    Parameters
+    ----------
+    instance : str | None, defaults to None
+    seed : int | None, defaults to None
+    """
+
     instance: str | None = None
     seed: int | None = None
 
 
 @dataclass(frozen=True)
 class InstanceSeedBudgetKey:
+    """Key for instance, seed and budget.
+
+    Parameters
+    ----------
+    instance : str | None, defaults to None
+    seed : int | None, defaults to None
+    budget : float | None, defaults to None
+    """
+
     instance: str | None = None
     seed: int | None = None
     budget: float | None = None
@@ -39,6 +56,16 @@ class InstanceSeedBudgetKey:
 
 @dataclass(frozen=True)
 class TrialKey:
+    """Key of a trial.
+
+    Parameters
+    ----------
+    config_id : int
+    instance : str | None, defaults to None
+    seed : int | None, defaults to None
+    budget : float | None, defaults to None
+    """
+
     config_id: int
     instance: str | None = None
     seed: int | None = None
@@ -47,6 +74,18 @@ class TrialKey:
 
 @dataclass(frozen=True)
 class TrialValue:
+    """Values of a trial.
+
+    Parameters
+    ----------
+    cost : float | list[float]
+    time : float, defaults to 0.0
+    status : StatusType, defaults to StatusType.SUCCESS
+    starttime : float, defaults to 0.0
+    endtime : float, defaults to 0.0
+    additional_info : dict[str, Any], defaults to {}
+    """
+
     cost: float | list[float]
     time: float = 0.0
     status: StatusType = StatusType.SUCCESS
@@ -57,6 +96,18 @@ class TrialValue:
 
 @dataclass(frozen=True)
 class TrialInfo:
+    """Information about a trial.
+
+    Parameters
+    ----------
+    config : Configuration
+    instance : str | None, defaults to None
+    seed : int | None, defaults to None
+    budget : float | None, defaults to None
+    source : int | None, defaults to 0
+        Source is used in the intensifier to indicate from which worker the trial was coming from.
+    """
+
     config: Configuration
     instance: str | None = None
     seed: int | None = None
@@ -66,7 +117,7 @@ class TrialInfo:
 
 @dataclass
 class TrajectoryItem:
-    """Replaces `TrajEntry` from the original code."""
+    """Item of a trajectory."""
 
     incumbent: Configuration | dict[str, Any]
     cost: float | list[float]

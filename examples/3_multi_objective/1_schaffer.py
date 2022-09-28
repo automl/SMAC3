@@ -15,7 +15,6 @@ from matplotlib import pyplot as plt
 
 from smac import HyperparameterOptimizationFacade, Scenario
 from smac.facade import AbstractFacade
-from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -69,10 +68,6 @@ if __name__ == "__main__":
     smac = HyperparameterOptimizationFacade(
         scenario=scenario,
         target_function=target_function,
-        multi_objective_algorithm=MeanAggregationStrategy(
-            scenario,
-            # weights=[1, 2]  # Weights objective 2 twice as much as objective 1
-        ),
         overwrite=True,
     )
     incumbent = smac.optimize()
