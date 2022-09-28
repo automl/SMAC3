@@ -27,7 +27,7 @@ try:
     from smac.facade import (
         AlgorithmConfigurationFacade,
         BlackBoxFacade,
-        HPOFacade,
+        HyperparameterOptimizationFacade,
         HyperbandFacade,
         MultiFidelityFacade,
         RandomFacade,
@@ -42,7 +42,7 @@ try:
         "Scenario",
         "RunHistory",
         "BlackBoxFacade",
-        "HPOFacade",
+        "HyperparameterOptimizationFacade",
         "MultiFidelityFacade",
         "AlgorithmConfigurationFacade",
         "RandomFacade",

@@ -4,7 +4,7 @@ from io import StringIO
 
 import pytest
 
-from smac import BlackBoxFacade, HPOFacade, Scenario
+from smac import BlackBoxFacade, HyperparameterOptimizationFacade, Scenario
 
 
 def test_continue_same_scenario(rosenbrock):
@@ -16,13 +16,6 @@ def test_continue_same_scenario(rosenbrock):
         scenario = Scenario(rosenbrock.configspace, n_trials=10)
         smac = facade(scenario, rosenbrock.train)
         smac.optimize()
-
-        # Should not work: We only allow to set meta data once (no changes anymore)
-        scenario = Scenario(rosenbrock.configspace, n_trials=10)
-        smac = facade(scenario, rosenbrock.train, overwrite=True)
-        with pytest.raises(RuntimeError, match="Meta data can only be set once.*"):
-            smac = facade(scenario, rosenbrock.train)
-            smac.optimize()
 
         # Should not work: After optimization, we can not continue (yet)
         # However, we can load the results
@@ -37,7 +30,7 @@ def test_continue_same_scenario(rosenbrock):
 
 
 def test_continue_different_scenario(rosenbrock, monkeypatch):
-    for facade in [BlackBoxFacade, HPOFacade]:
+    for facade in [BlackBoxFacade, HyperparameterOptimizationFacade]:
         # Overwrite completely
         number_inputs = StringIO("1\n")
         monkeypatch.setattr("sys.stdin", number_inputs)

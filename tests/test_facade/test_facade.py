@@ -3,7 +3,7 @@ import pytest
 from smac import (
     AlgorithmConfigurationFacade,
     BlackBoxFacade,
-    HPOFacade,
+    HyperparameterOptimizationFacade,
     HyperbandFacade,
     MultiFidelityFacade,
     RandomFacade,
@@ -40,7 +40,7 @@ def test_facades(rosenbrock):
     for facade in [
         BlackBoxFacade,
         AlgorithmConfigurationFacade,
-        HPOFacade,
+        HyperparameterOptimizationFacade,
         RandomFacade,
         MultiFidelityFacade,
         HyperbandFacade,
@@ -117,7 +117,7 @@ def test_continue_run(rosenbrock):
     """Run facade. terminate using end of iteration callback prematurely. Instantiate facade
     and continue until the budget is actually completed."""
     scenario = Scenario(rosenbrock.configspace, n_trials=7)
-    smac = HPOFacade(
+    smac = HyperparameterOptimizationFacade(
         scenario,
         rosenbrock.train,
         initial_design=LatinHypercubeInitialDesign(scenario, n_configs=3),
@@ -125,7 +125,7 @@ def test_continue_run(rosenbrock):
     _ = smac.optimize()
 
     scenario = Scenario(rosenbrock.configspace, n_trials=8)
-    smac1 = HPOFacade(
+    smac1 = HyperparameterOptimizationFacade(
         scenario=scenario,
         target_function=rosenbrock.train,
         initial_design=LatinHypercubeInitialDesign(scenario, n_configs=3),

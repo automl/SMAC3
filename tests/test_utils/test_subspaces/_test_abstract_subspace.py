@@ -156,7 +156,7 @@ def test_cs_subspace_2():
     hps_global = cs.get_hyperparameters()
     hps_local = subspace.cs_local.get_hyperparameters()
     for dim_idx, act_dim in enumerate(activ_dims):
-        assert (hps_local[dim_idx].__class__ == hps_global[act_dim].__class__)
+        assert hps_local[dim_idx].__class__ == hps_global[act_dim].__class__
 
 
 @unittest.mock.patch.multiple(LocalSubspace, __abstractmethods__=set())
@@ -369,6 +369,7 @@ def test_challenger_list_local_full():
 
     assert next(cl).origin == "test"
 
+
 @unittest.mock.patch.multiple(LocalSubspace, __abstractmethods__=set())
 def test_challenger_list_local_reduced():
     # check act_dims
@@ -409,9 +410,7 @@ def test_challenger_list_local_reduced():
     challengers = cs_local.sample_configuration(num_data)
     challengers = [(rs.rand(), challenger) for challenger in challengers]
 
-    cl = ChallengerListLocal(
-        cs_local, cs_global, challengers, config_origin="test", incumbent_array=incumbent_array
-    )
+    cl = ChallengerListLocal(cs_local, cs_global, challengers, config_origin="test", incumbent_array=incumbent_array)
 
     new_challenger = next(cl)
 
@@ -435,8 +434,10 @@ def test_exception():
     challengers = [(0.0, challenger) for challenger in challengers]
     with pytest.raises(ValueError) as excinfo:
         ChallengerListLocal(cs_local, cs_global, challengers, "test")
-        assert excinfo == "Incumbent array must be provided if the global configuration space has more " \
-                          "hyperparameters then the local configuration space"
+        assert (
+            excinfo == "Incumbent array must be provided if the global configuration space has more "
+            "hyperparameters then the local configuration space"
+        )
 
 
 def test_add_forbidden_ss():

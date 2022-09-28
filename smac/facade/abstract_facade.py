@@ -135,7 +135,7 @@ class AbstractFacade:
             runhistory_encoder = self.get_runhistory_encoder(scenario)
 
         # Initialize empty stats and runhistory object
-        runhistory = RunHistory()
+        runhistory = RunHistory(objective_weights=scenario.objective_weights)
         stats = Stats(scenario)
 
         # Set the seed for configuration space
@@ -192,6 +192,11 @@ class AbstractFacade:
         # Register callbacks here
         for callback in callbacks:
             self._optimizer._register_callback(callback)
+
+    @property
+    def scenario(self) -> Scenario:
+        """The scenario object."""
+        return self._scenario
 
     @property
     def runhistory(self) -> RunHistory:
@@ -388,7 +393,7 @@ class AbstractFacade:
     @staticmethod
     @abstractmethod
     def get_runhistory_encoder(scenario: Scenario) -> AbstractRunHistoryEncoder:
-        """Returns an instance of the runhistory encoder class to be used in the BO loop,
+        """Returns an instance of the runhistory encoder class to be used in the Bayesian optimization loop,
         specifying how the runhistory is to be prepared for the next surrogate model.
         """
         raise NotImplementedError
@@ -396,7 +401,7 @@ class AbstractFacade:
     @staticmethod
     @abstractmethod
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
-        """Returns the multi-objective algorithm instance to be used in the BO loop,
+        """Returns the multi-objective algorithm instance to be used in the Bayesian optimization loop,
         specifying the scalarization strategy for multiple objectives' costs
         """
         raise NotImplementedError

@@ -13,7 +13,7 @@
 # from smac.acquisition.functions import EI, AbstractAcquisitionFunction
 # from smac.main.boing import BOinGSMBO
 # from smac.random_design.probability_design import ProbabilityRandomDesign
-# from smac.facade.hpo_facade import HPOFacade
+# from smac.facade.hyperparameter_optimization_facade import HyperparameterOptimizationFacade
 # from smac.model.abstract_model import AbstractModel
 # from smac.model.gaussian_process.gpytorch_gaussian_process import (
 #     GloballyAugmentedLocalGaussianProcess,
@@ -27,7 +27,7 @@
 # from smac.scenario import Scenario
 
 
-# class BOinGFacade(HPOFacade):
+# class BOinGFacade(HyperparameterOptimizationFacade):
 #     """
 #     SMAC wrapper for BO inside Grove(BOinG):
 #         Deng and Lindauer, Searching in the Forest for Local Bayesian Optimization

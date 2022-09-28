@@ -51,7 +51,7 @@ class AbstractMultiObjectiveAlgorithm(ABC):
         Parameters
         ----------
         values : list[float]
-            Normalized values.
+            Normalized values which might be weighted as well.
 
         Returns
         -------

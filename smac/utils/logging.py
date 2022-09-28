@@ -30,7 +30,7 @@ def setup_logging(level: int | Path | None = None) -> None:
         log_filename = path.parent / "logging.yml"
 
     with (log_filename).open("r") as stream:
-        config = yaml.load(stream, Loader=yaml.FullLoader)
+        config = yaml.safe_load(stream)
 
     if isinstance(level, int):
         config["root"]["level"] = level

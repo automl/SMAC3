@@ -78,6 +78,12 @@ class AbstractRunner(ABC):
         self._objectives = objectives
         self._n_objectives = scenario.count_objectives()
 
+        # We need to exapdn crash cost if the user did not do it
+        if self._n_objectives > 1:
+            if not isinstance(scenario.crash_cost, list):
+                assert isinstance(scenario.crash_cost, float)
+                self._crash_cost = [scenario.crash_cost for _ in range(self._n_objectives)]
+
         # Check if target function is callable
         if not callable(self._target_function):
             raise TypeError(
@@ -86,7 +92,6 @@ class AbstractRunner(ABC):
 
         # Signatures here
         signature = inspect.signature(self._target_function).parameters
-        print(signature)
         for argument in required_arguments:
             if argument not in signature.keys():
                 raise RuntimeError(
@@ -151,6 +156,10 @@ class AbstractRunner(ABC):
                 "Target function returned infinity or nothing at all. Result is treated as CRASHED"
                 f" and cost is set to {self._crash_cost}."
             )
+
+            if "traceback" in additional_info:
+                logger.warning(f"Traceback: {additional_info['traceback']}\n")
+
             status = StatusType.CRASHED
 
         if status == StatusType.CRASHED:

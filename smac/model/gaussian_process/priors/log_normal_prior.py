@@ -46,7 +46,7 @@ class LogNormalPrior(AbstractPrior):
         meta.update({"sigma": self._sigma, "mean": self._mean})
 
         return meta
-    
+
     def _sample_from_prior(self, n_samples: int) -> np.ndarray:
         return self._rng.lognormal(mean=self._mean, sigma=self._sigma, size=n_samples)
 

@@ -116,7 +116,7 @@ class SoftTopHatPrior(AbstractPrior):
             raise ValueError("Exponent cannot be less or equal than zero (but is %f)" % exponent)
 
         self._exponent = exponent
-        
+
     def __repr__(self) -> str:
         return "SoftTopHatPrior(lower_bound=%f, upper_bound=%f)" % (
             self._lower_bound,
@@ -153,14 +153,12 @@ class SoftTopHatPrior(AbstractPrior):
                 return 0
         else:
             raise NotImplementedError()
-    
+
     def _get_log_probability(self, theta: float) -> float:
         return 0
 
     def _get_gradient(self, theta: float) -> float:
         return 0
-    
+
     def _sample_from_prior(self, n_samples: int) -> np.ndarray:
         return np.exp(self._rng.uniform(self._log_lower_bound, self._log_upper_bound, size=(n_samples,)))
-
-

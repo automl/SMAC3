@@ -54,7 +54,7 @@ class GammaPrior(AbstractPrior):
         )
 
         return meta
-    
+
     def _sample_from_prior(self, n_samples: int) -> np.ndarray:
         return self._rng.gamma(shape=self._a, scale=self._scale, size=n_samples)
 

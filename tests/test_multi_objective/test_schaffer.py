@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from ConfigSpace import ConfigurationSpace, Float
 
-from smac import AlgorithmConfigurationFacade, BlackBoxFacade, HPOFacade, RandomFacade
+from smac import AlgorithmConfigurationFacade, BlackBoxFacade, HyperparameterOptimizationFacade, RandomFacade
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.multi_objective.parego import ParEGO
 
@@ -47,7 +47,9 @@ def configspace():
     return cs
 
 
-@pytest.mark.parametrize("facade", [BlackBoxFacade, HPOFacade, AlgorithmConfigurationFacade, RandomFacade])
+@pytest.mark.parametrize(
+    "facade", [BlackBoxFacade, HyperparameterOptimizationFacade, AlgorithmConfigurationFacade, RandomFacade]
+)
 def test_mean_aggregation(facade, make_scenario, configspace):
     scenario = make_scenario(configspace, use_multi_objective=True)
 
@@ -72,7 +74,7 @@ def test_mean_aggregation(facade, make_scenario, configspace):
 def test_parego(make_scenario, configspace):
     scenario = make_scenario(configspace, use_multi_objective=True)
 
-    for facade in [BlackBoxFacade, HPOFacade, AlgorithmConfigurationFacade, RandomFacade]:
+    for facade in [BlackBoxFacade, HyperparameterOptimizationFacade, AlgorithmConfigurationFacade, RandomFacade]:
         smac = facade(
             scenario=scenario,
             target_function=tae,

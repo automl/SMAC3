@@ -11,7 +11,7 @@ from ConfigSpace import (
 import smac
 from smac.facade.blackbox_facade import BlackBoxFacade
 from smac.facade.boing_facade import BOinGFacade
-from smac.facade.hpo_facade import HPOFacade
+from smac.facade.hyperparameter_optimization_facade import HyperparameterOptimizationFacade
 from smac.main.boing import subspace_extraction
 from smac.model.random_forest.random_forest import RandomForest
 from smac.model.utils import check_subspace_points, get_types
@@ -33,7 +33,7 @@ def test_init(make_scenario):
         BOinGFacade(
             scenario=scenario,
             target_function=tae,
-            runhistory_encoder=HPOFacade.get_runhistory_encoder(scenario),
+            runhistory_encoder=HyperparameterOptimizationFacade.get_runhistory_encoder(scenario),
         )
         assert excinfo.values == "BOinG only supports RunHistory2EPM4CostWithRaw as its rh transformer"
 

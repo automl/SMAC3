@@ -1,15 +1,15 @@
 import pytest
 
-from smac import HPOFacade, MultiFidelityFacade, Scenario
+from smac import HyperparameterOptimizationFacade, MultiFidelityFacade, Scenario
 
 
 def test_termination_cost_threshold(rosenbrock):
     termination_cost_threshold = 100
     scenario = Scenario(rosenbrock.configspace, n_trials=200, termination_cost_threshold=termination_cost_threshold)
-    smac = HPOFacade(
+    smac = HyperparameterOptimizationFacade(
         scenario,
         rosenbrock.train,
-        intensifier=HPOFacade.get_intensifier(scenario, max_config_calls=1),
+        intensifier=HyperparameterOptimizationFacade.get_intensifier(scenario, max_config_calls=1),
         overwrite=True,
     )
     i = smac.optimize()

@@ -4,7 +4,7 @@ import pytest
 from ConfigSpace import Categorical, Configuration, ConfigurationSpace, Float, Integer
 
 import smac
-from smac import HPOFacade, Scenario
+from smac import HyperparameterOptimizationFacade, Scenario
 from smac.callback import Callback
 from smac.initial_design import DefaultInitialDesign
 from smac.intensifier.intensifier import Intensifier
@@ -72,7 +72,7 @@ def test_callback(rosenbrock):
     intensifier = Intensifier(scenario, max_config_calls=1, intensify_percentage=0.1)
     initial_design = DefaultInitialDesign(scenario)
 
-    smac = HPOFacade(
+    smac = HyperparameterOptimizationFacade(
         scenario,
         rosenbrock.train,
         intensifier=intensifier,

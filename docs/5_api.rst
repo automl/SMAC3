@@ -18,5 +18,4 @@ API References
    smac.multi_objective
    smac.utils
    smac.scenario
-   smac.constants
    smac.callback

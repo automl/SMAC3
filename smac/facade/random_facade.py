@@ -11,7 +11,6 @@ from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensifier.intensifier import Intensifier
 from smac.model.random_model import RandomModel
-from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.random_design import AbstractRandomDesign
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
@@ -138,9 +137,20 @@ class RandomFacade(AbstractFacade):
         )
 
     @staticmethod
-    def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
-        """Returns the mean aggregation strategy for the multi objective algorithm."""
-        return MeanAggregationStrategy(scenario=scenario)
+    def get_multi_objective_algorithm(  # type: ignore
+        scenario: Scenario,
+        *,
+        weights: list[float] | None = None,
+    ) -> MeanAggregationStrategy:
+        """Returns the mean aggregation strategy for the multi objective algorithm.
+
+        Parameters
+        ----------
+        weights : list[float] | None, defaults to None
+            Weights for an weighted aggregation strategy of the objectives. Must be of the same length as the number of
+            objectives.
+        """
+        return MeanAggregationStrategy(scenario=scenario, weights=weights)
 
     @staticmethod
     def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:

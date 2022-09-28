@@ -7,7 +7,7 @@ This examples show how to use the Ask-and-Tell interface.
 
 from ConfigSpace import Configuration, ConfigurationSpace, Float
 
-from smac import HPOFacade, Scenario
+from smac import HyperparameterOptimizationFacade, Scenario
 from smac.runhistory.dataclasses import TrialValue
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -45,13 +45,13 @@ if __name__ == "__main__":
     # Scenario object
     scenario = Scenario(model.configspace, deterministic=False, n_trials=100)
 
-    intensifier = HPOFacade.get_intensifier(
+    intensifier = HyperparameterOptimizationFacade.get_intensifier(
         scenario,
         max_config_calls=1,  # We basically use one seed only
     )
 
     # Now we use SMAC to find the best hyperparameters
-    smac = HPOFacade(
+    smac = HyperparameterOptimizationFacade(
         scenario,
         model.train,
         intensifier=intensifier,
