@@ -175,12 +175,17 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/4_priors.html">
+      <a class="reference internal" href="../examples/1_basics/4_callback.html">
+       Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/5_priors.html">
        User Priors over the Optimum
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/5_full_customization.html">
+      <a class="reference internal" href="../examples/1_basics/6_full_customization.html">
        Full Customization
       </a>
      </li>
@@ -243,13 +248,48 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/resumption.html">
-     Resumption
+    <a class="reference internal" href="../advanced_usage/1_facades.html">
+     Facades
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/callbacks.html">
-     Callbacks
+    <a class="reference internal" href="../advanced_usage/2_components.html">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/4_instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/5_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/6_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/7_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/8_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/9_parallelism.html">
+     Parallelism
     </a>
    </li>
   </ul>
@@ -295,13 +335,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="smac.facade.hpo_facade.html">
+       smac.facade.hpo_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.hyperparameter_facade.html">
-       smac.facade.hyperparameter_facade
+      <a class="reference internal" href="smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -967,19 +1007,28 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.scenario.Scenario.get_meta">
+      <a class="reference internal nav-link" href="#smac.scenario.Scenario.load">
        <code class="docutils literal notranslate">
         <span class="pre">
-         Scenario.get_meta()
+         Scenario.load()
         </span>
        </code>
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.scenario.Scenario.load">
+      <a class="reference internal nav-link" href="#smac.scenario.Scenario.make_serializable">
        <code class="docutils literal notranslate">
         <span class="pre">
-         Scenario.load()
+         Scenario.make_serializable()
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.scenario.Scenario.meta">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         Scenario.meta
         </span>
        </code>
       </a>
@@ -1110,8 +1159,30 @@ Dask to parallelize the optimization.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.scenario.Scenario.get_meta">
-<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/scenario.html#Scenario.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.scenario.Scenario.get_meta" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.scenario.Scenario.load">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/scenario.html#Scenario.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.scenario.Scenario.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a scenario and the configuration space from a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#smac.scenario.Scenario" title="smac.scenario.Scenario"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scenario</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.scenario.Scenario.make_serializable">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">make_serializable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/scenario.html#Scenario.make_serializable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.scenario.Scenario.make_serializable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the scenario serializable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="smac.scenario.Scenario.meta">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.scenario.Scenario.meta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the meta data of the SMAC run.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -1119,18 +1190,7 @@ Dask to parallelize the optimization.</p></li>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.scenario.Scenario.load">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/scenario.html#Scenario.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.scenario.Scenario.load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loads a scenario and the configuration space from a file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#smac.scenario.Scenario" title="smac.scenario.Scenario"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scenario</span></code></a></p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1196,7 +1256,7 @@ Dask to parallelize the optimization.</p></li>
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.1. Template is modified version of <a
+5.2.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

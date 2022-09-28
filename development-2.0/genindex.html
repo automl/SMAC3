@@ -172,12 +172,17 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="examples/1_basics/4_priors.html">
+      <a class="reference internal" href="examples/1_basics/4_callback.html">
+       Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="examples/1_basics/5_priors.html">
        User Priors over the Optimum
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="examples/1_basics/5_full_customization.html">
+      <a class="reference internal" href="examples/1_basics/6_full_customization.html">
        Full Customization
       </a>
      </li>
@@ -240,13 +245,48 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/resumption.html">
-     Resumption
+    <a class="reference internal" href="advanced_usage/1_facades.html">
+     Facades
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/callbacks.html">
-     Callbacks
+    <a class="reference internal" href="advanced_usage/2_components.html">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/4_instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/5_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/6_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/7_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/8_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/9_parallelism.html">
+     Parallelism
     </a>
    </li>
   </ul>
@@ -292,13 +332,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="api/smac.facade.hpo_facade.html">
+       smac.facade.hpo_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.facade.hyperparameter_facade.html">
-       smac.facade.hyperparameter_facade
+      <a class="reference internal" href="api/smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1093,8 +1133,6 @@ style="width: 100%;">
         <li><a href="api/smac.intensifier.abstract_parallel_intensifier.html#smac.intensifier.abstract_parallel_intensifier.AbstractParallelIntensifier">(class in smac.intensifier.abstract_parallel_intensifier)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.model.gaussian_process.priors.abstract_prior.html#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior">AbstractPrior (class in smac.model.gaussian_process.priors.abstract_prior)</a>
 </li>
       <li><a href="api/smac.random_design.html#smac.random_design.AbstractRandomDesign">AbstractRandomDesign (class in smac.random_design)</a>
@@ -1103,6 +1141,8 @@ style="width: 100%;">
         <li><a href="api/smac.random_design.abstract_random_design.html#smac.random_design.abstract_random_design.AbstractRandomDesign">(class in smac.random_design.abstract_random_design)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.model.random_forest.html#smac.model.random_forest.AbstractRandomForest">AbstractRandomForest (class in smac.model.random_forest)</a>
 
       <ul>
@@ -1119,6 +1159,16 @@ style="width: 100%;">
 
       <ul>
         <li><a href="api/smac.runner.abstract_runner.html#smac.runner.abstract_runner.AbstractRunner">(class in smac.runner.abstract_runner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/smac.acquisition.maximizers.abstract_acqusition_maximizer.html#smac.acquisition.maximizers.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer.acquisition_function">acquisition_function (smac.acquisition.maximizers.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer property)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.maximizers.html#smac.acquisition.maximizers.AbstractAcquisitionMaximizer.acquisition_function">(smac.acquisition.maximizers.AbstractAcquisitionMaximizer property)</a>
+</li>
+        <li><a href="api/smac.acquisition.maximizers.local_and_random_search.html#smac.acquisition.maximizers.local_and_random_search.LocalAndSortedRandomSearch.acquisition_function">(smac.acquisition.maximizers.local_and_random_search.LocalAndSortedRandomSearch property)</a>
+</li>
+        <li><a href="api/smac.acquisition.maximizers.html#smac.acquisition.maximizers.LocalAndSortedRandomSearch.acquisition_function">(smac.acquisition.maximizers.LocalAndSortedRandomSearch property)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.add">add() (smac.runhistory.RunHistory method)</a>
@@ -1225,30 +1275,18 @@ style="width: 100%;">
       </ul></li>
       <li><a href="glossary.html#term-CLI"><strong>CLI</strong></a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.runner.dask_runner.html#smac.runner.dask_runner.DaskParallelRunner.close">close() (smac.runner.dask_runner.DaskParallelRunner method)</a>
 
       <ul>
         <li><a href="api/smac.runner.html#smac.runner.DaskParallelRunner.close">(smac.runner.DaskParallelRunner method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/smac.main.base_smbo.html#smac.main.base_smbo.BaseSMBO.config">config (smac.main.base_smbo.BaseSMBO attribute)</a>
-
-      <ul>
-        <li><a href="api/smac.main.html#smac.main.BaseSMBO.config">(smac.main.BaseSMBO attribute)</a>
-</li>
-      </ul></li>
       <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.config_ids">config_ids (smac.runhistory.RunHistory property)</a>
 
       <ul>
         <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.config_ids">(smac.runhistory.runhistory.RunHistory property)</a>
-</li>
-      </ul></li>
-      <li><a href="api/smac.main.base_smbo.html#smac.main.base_smbo.BaseSMBO.config_space">config_space (smac.main.base_smbo.BaseSMBO attribute)</a>
-
-      <ul>
-        <li><a href="api/smac.main.html#smac.main.BaseSMBO.config_space">(smac.main.BaseSMBO attribute)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.model.gaussian_process.kernels.html#smac.model.gaussian_process.kernels.ConstantKernel">ConstantKernel (class in smac.model.gaussian_process.kernels)</a>
@@ -1406,9 +1444,9 @@ style="width: 100%;">
 </li>
         <li><a href="api/smac.facade.html#smac.facade.BlackBoxFacade.get_acquisition_function">(smac.facade.BlackBoxFacade static method)</a>
 </li>
-        <li><a href="api/smac.facade.hyperparameter_facade.html#smac.facade.hyperparameter_facade.HyperparameterFacade.get_acquisition_function">(smac.facade.hyperparameter_facade.HyperparameterFacade static method)</a>
+        <li><a href="api/smac.facade.hpo_facade.html#smac.facade.hpo_facade.HPOFacade.get_acquisition_function">(smac.facade.hpo_facade.HPOFacade static method)</a>
 </li>
-        <li><a href="api/smac.facade.html#smac.facade.HyperparameterFacade.get_acquisition_function">(smac.facade.HyperparameterFacade static method)</a>
+        <li><a href="api/smac.facade.html#smac.facade.HPOFacade.get_acquisition_function">(smac.facade.HPOFacade static method)</a>
 </li>
         <li><a href="api/smac.facade.random_facade.html#smac.facade.random_facade.RandomFacade.get_acquisition_function">(smac.facade.random_facade.RandomFacade static method)</a>
 </li>
@@ -1428,9 +1466,9 @@ style="width: 100%;">
 </li>
         <li><a href="api/smac.facade.html#smac.facade.BlackBoxFacade.get_acquisition_maximizer">(smac.facade.BlackBoxFacade static method)</a>
 </li>
-        <li><a href="api/smac.facade.hyperparameter_facade.html#smac.facade.hyperparameter_facade.HyperparameterFacade.get_acquisition_maximizer">(smac.facade.hyperparameter_facade.HyperparameterFacade static method)</a>
+        <li><a href="api/smac.facade.hpo_facade.html#smac.facade.hpo_facade.HPOFacade.get_acquisition_maximizer">(smac.facade.hpo_facade.HPOFacade static method)</a>
 </li>
-        <li><a href="api/smac.facade.html#smac.facade.HyperparameterFacade.get_acquisition_maximizer">(smac.facade.HyperparameterFacade static method)</a>
+        <li><a href="api/smac.facade.html#smac.facade.HPOFacade.get_acquisition_maximizer">(smac.facade.HPOFacade static method)</a>
 </li>
         <li><a href="api/smac.facade.random_facade.html#smac.facade.random_facade.RandomFacade.get_acquisition_maximizer">(smac.facade.random_facade.RandomFacade static method)</a>
 </li>
@@ -1439,6 +1477,12 @@ style="width: 100%;">
       </ul></li>
       <li><a href="api/smac.utils.configspace.html#smac.utils.configspace.get_conditional_hyperparameters">get_conditional_hyperparameters() (in module smac.utils.configspace)</a>
 </li>
+      <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.get_config">get_config() (smac.runhistory.RunHistory method)</a>
+
+      <ul>
+        <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_config">(smac.runhistory.runhistory.RunHistory method)</a>
+</li>
+      </ul></li>
       <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.get_configs">get_configs() (smac.runhistory.RunHistory method)</a>
 
       <ul>
@@ -1494,9 +1538,9 @@ style="width: 100%;">
 </li>
         <li><a href="api/smac.facade.html#smac.facade.BlackBoxFacade.get_initial_design">(smac.facade.BlackBoxFacade static method)</a>
 </li>
-        <li><a href="api/smac.facade.hyperparameter_facade.html#smac.facade.hyperparameter_facade.HyperparameterFacade.get_initial_design">(smac.facade.hyperparameter_facade.HyperparameterFacade static method)</a>
+        <li><a href="api/smac.facade.hpo_facade.html#smac.facade.hpo_facade.HPOFacade.get_initial_design">(smac.facade.hpo_facade.HPOFacade static method)</a>
 </li>
-        <li><a href="api/smac.facade.html#smac.facade.HyperparameterFacade.get_initial_design">(smac.facade.HyperparameterFacade static method)</a>
+        <li><a href="api/smac.facade.html#smac.facade.HPOFacade.get_initial_design">(smac.facade.HPOFacade static method)</a>
 </li>
         <li><a href="api/smac.facade.multi_fidelity_facade.html#smac.facade.multi_fidelity_facade.MultiFidelityFacade.get_initial_design">(smac.facade.multi_fidelity_facade.MultiFidelityFacade static method)</a>
 </li>
@@ -1520,13 +1564,13 @@ style="width: 100%;">
 </li>
         <li><a href="api/smac.facade.html#smac.facade.BlackBoxFacade.get_intensifier">(smac.facade.BlackBoxFacade static method)</a>
 </li>
+        <li><a href="api/smac.facade.hpo_facade.html#smac.facade.hpo_facade.HPOFacade.get_intensifier">(smac.facade.hpo_facade.HPOFacade static method)</a>
+</li>
+        <li><a href="api/smac.facade.html#smac.facade.HPOFacade.get_intensifier">(smac.facade.HPOFacade static method)</a>
+</li>
         <li><a href="api/smac.facade.hyperband_facade.html#smac.facade.hyperband_facade.HyperbandFacade.get_intensifier">(smac.facade.hyperband_facade.HyperbandFacade static method)</a>
 </li>
         <li><a href="api/smac.facade.html#smac.facade.HyperbandFacade.get_intensifier">(smac.facade.HyperbandFacade static method)</a>
-</li>
-        <li><a href="api/smac.facade.hyperparameter_facade.html#smac.facade.hyperparameter_facade.HyperparameterFacade.get_intensifier">(smac.facade.hyperparameter_facade.HyperparameterFacade static method)</a>
-</li>
-        <li><a href="api/smac.facade.html#smac.facade.HyperparameterFacade.get_intensifier">(smac.facade.HyperparameterFacade static method)</a>
 </li>
         <li><a href="api/smac.facade.multi_fidelity_facade.html#smac.facade.multi_fidelity_facade.MultiFidelityFacade.get_intensifier">(smac.facade.multi_fidelity_facade.MultiFidelityFacade static method)</a>
 </li>
@@ -1553,162 +1597,6 @@ style="width: 100%;">
       </ul></li>
       <li><a href="api/smac.utils.logging.html#smac.utils.logging.get_logger">get_logger() (in module smac.utils.logging)</a>
 </li>
-      <li><a href="api/smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction.get_meta">get_meta() (smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction method)</a>
-
-      <ul>
-        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction.get_meta">(smac.acquisition.functions.AbstractAcquisitionFunction method)</a>
-</li>
-        <li><a href="api/smac.acquisition.functions.confidence_bound.html#smac.acquisition.functions.confidence_bound.LCB.get_meta">(smac.acquisition.functions.confidence_bound.LCB method)</a>
-</li>
-        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.EI.get_meta">(smac.acquisition.functions.EI method)</a>
-</li>
-        <li><a href="api/smac.acquisition.functions.expected_improvement.html#smac.acquisition.functions.expected_improvement.EI.get_meta">(smac.acquisition.functions.expected_improvement.EI method)</a>
-</li>
-        <li><a href="api/smac.acquisition.functions.integrated_acquisition_function.html#smac.acquisition.functions.integrated_acquisition_function.IntegratedAcquisitionFunction.get_meta">(smac.acquisition.functions.integrated_acquisition_function.IntegratedAcquisitionFunction method)</a>
-</li>
-        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.IntegratedAcquisitionFunction.get_meta">(smac.acquisition.functions.IntegratedAcquisitionFunction method)</a>
-</li>
-        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.LCB.get_meta">(smac.acquisition.functions.LCB method)</a>
-</li>
-        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.PI.get_meta">(smac.acquisition.functions.PI method)</a>
-</li>
-        <li><a href="api/smac.acquisition.functions.prior_acqusition_function.html#smac.acquisition.functions.prior_acqusition_function.PriorAcquisitionFunction.get_meta">(smac.acquisition.functions.prior_acqusition_function.PriorAcquisitionFunction method)</a>
-</li>
-        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.PriorAcquisitionFunction.get_meta">(smac.acquisition.functions.PriorAcquisitionFunction method)</a>
-</li>
-        <li><a href="api/smac.acquisition.functions.probability_improvement.html#smac.acquisition.functions.probability_improvement.PI.get_meta">(smac.acquisition.functions.probability_improvement.PI method)</a>
-</li>
-        <li><a href="api/smac.acquisition.maximizers.abstract_acqusition_maximizer.html#smac.acquisition.maximizers.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer.get_meta">(smac.acquisition.maximizers.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer method)</a>
-</li>
-        <li><a href="api/smac.acquisition.maximizers.html#smac.acquisition.maximizers.AbstractAcquisitionMaximizer.get_meta">(smac.acquisition.maximizers.AbstractAcquisitionMaximizer method)</a>
-</li>
-        <li><a href="api/smac.acquisition.maximizers.local_and_random_search.html#smac.acquisition.maximizers.local_and_random_search.LocalAndSortedRandomSearch.get_meta">(smac.acquisition.maximizers.local_and_random_search.LocalAndSortedRandomSearch method)</a>
-</li>
-        <li><a href="api/smac.acquisition.maximizers.local_search.html#smac.acquisition.maximizers.local_search.LocalSearch.get_meta">(smac.acquisition.maximizers.local_search.LocalSearch method)</a>
-</li>
-        <li><a href="api/smac.acquisition.maximizers.html#smac.acquisition.maximizers.LocalAndSortedRandomSearch.get_meta">(smac.acquisition.maximizers.LocalAndSortedRandomSearch method)</a>
-</li>
-        <li><a href="api/smac.acquisition.maximizers.html#smac.acquisition.maximizers.LocalSearch.get_meta">(smac.acquisition.maximizers.LocalSearch method)</a>
-</li>
-        <li><a href="api/smac.facade.abstract_facade.html#smac.facade.abstract_facade.AbstractFacade.get_meta">(smac.facade.abstract_facade.AbstractFacade method)</a>
-</li>
-        <li><a href="api/smac.facade.html#smac.facade.AbstractFacade.get_meta">(smac.facade.AbstractFacade method)</a>
-</li>
-        <li><a href="api/smac.initial_design.abstract_initial_design.html#smac.initial_design.abstract_initial_design.AbstractInitialDesign.get_meta">(smac.initial_design.abstract_initial_design.AbstractInitialDesign method)</a>
-</li>
-        <li><a href="api/smac.initial_design.html#smac.initial_design.AbstractInitialDesign.get_meta">(smac.initial_design.AbstractInitialDesign method)</a>
-</li>
-        <li><a href="api/smac.intensifier.abstract_intensifier.html#smac.intensifier.abstract_intensifier.AbstractIntensifier.get_meta">(smac.intensifier.abstract_intensifier.AbstractIntensifier method)</a>
-</li>
-        <li><a href="api/smac.intensifier.abstract_parallel_intensifier.html#smac.intensifier.abstract_parallel_intensifier.AbstractParallelIntensifier.get_meta">(smac.intensifier.abstract_parallel_intensifier.AbstractParallelIntensifier method)</a>
-</li>
-        <li><a href="api/smac.intensifier.html#smac.intensifier.AbstractIntensifier.get_meta">(smac.intensifier.AbstractIntensifier method)</a>
-</li>
-        <li><a href="api/smac.intensifier.html#smac.intensifier.AbstractParallelIntensifier.get_meta">(smac.intensifier.AbstractParallelIntensifier method)</a>
-</li>
-        <li><a href="api/smac.intensifier.html#smac.intensifier.Intensifier.get_meta">(smac.intensifier.Intensifier method)</a>
-</li>
-        <li><a href="api/smac.intensifier.intensifier.html#smac.intensifier.intensifier.Intensifier.get_meta">(smac.intensifier.intensifier.Intensifier method)</a>
-</li>
-        <li><a href="api/smac.intensifier.successive_halving.html#smac.intensifier.successive_halving.SuccessiveHalving.get_meta">(smac.intensifier.successive_halving.SuccessiveHalving method)</a>
-</li>
-        <li><a href="api/smac.intensifier.html#smac.intensifier.SuccessiveHalving.get_meta">(smac.intensifier.SuccessiveHalving method)</a>
-</li>
-        <li><a href="api/smac.model.abstract_model.html#smac.model.abstract_model.AbstractModel.get_meta">(smac.model.abstract_model.AbstractModel method)</a>
-</li>
-        <li><a href="api/smac.model.html#smac.model.AbstractModel.get_meta">(smac.model.AbstractModel method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.abstract_gaussian_process.html#smac.model.gaussian_process.abstract_gaussian_process.AbstractGaussianProcess.get_meta">(smac.model.gaussian_process.abstract_gaussian_process.AbstractGaussianProcess method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.html#smac.model.gaussian_process.AbstractGaussianProcess.get_meta">(smac.model.gaussian_process.AbstractGaussianProcess method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.gaussian_process.html#smac.model.gaussian_process.gaussian_process.GaussianProcess.get_meta">(smac.model.gaussian_process.gaussian_process.GaussianProcess method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.html#smac.model.gaussian_process.GaussianProcess.get_meta">(smac.model.gaussian_process.GaussianProcess method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.kernels.html#smac.model.gaussian_process.kernels.AbstractKernel.get_meta">(smac.model.gaussian_process.kernels.AbstractKernel method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.get_meta">(smac.model.gaussian_process.kernels.base_kernels.AbstractKernel method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.kernels.hamming_kernel.html#smac.model.gaussian_process.kernels.hamming_kernel.HammingKernel.get_meta">(smac.model.gaussian_process.kernels.hamming_kernel.HammingKernel method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.kernels.html#smac.model.gaussian_process.kernels.HammingKernel.get_meta">(smac.model.gaussian_process.kernels.HammingKernel method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.mcmc_gaussian_process.html#smac.model.gaussian_process.mcmc_gaussian_process.MCMCGaussianProcess.get_meta">(smac.model.gaussian_process.mcmc_gaussian_process.MCMCGaussianProcess method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.html#smac.model.gaussian_process.MCMCGaussianProcess.get_meta">(smac.model.gaussian_process.MCMCGaussianProcess method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.priors.abstract_prior.html#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior.get_meta">(smac.model.gaussian_process.priors.abstract_prior.AbstractPrior method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.priors.gamma_prior.html#smac.model.gaussian_process.priors.gamma_prior.GammaPrior.get_meta">(smac.model.gaussian_process.priors.gamma_prior.GammaPrior method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.priors.html#smac.model.gaussian_process.priors.GammaPrior.get_meta">(smac.model.gaussian_process.priors.GammaPrior method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.priors.horseshoe_prior.html#smac.model.gaussian_process.priors.horseshoe_prior.HorseshoePrior.get_meta">(smac.model.gaussian_process.priors.horseshoe_prior.HorseshoePrior method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.priors.html#smac.model.gaussian_process.priors.HorseshoePrior.get_meta">(smac.model.gaussian_process.priors.HorseshoePrior method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.priors.log_normal_prior.html#smac.model.gaussian_process.priors.log_normal_prior.LogNormalPrior.get_meta">(smac.model.gaussian_process.priors.log_normal_prior.LogNormalPrior method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.priors.html#smac.model.gaussian_process.priors.LogNormalPrior.get_meta">(smac.model.gaussian_process.priors.LogNormalPrior method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.priors.html#smac.model.gaussian_process.priors.SoftTopHatPrior.get_meta">(smac.model.gaussian_process.priors.SoftTopHatPrior method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.priors.tophat_prior.html#smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior.get_meta">(smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.priors.tophat_prior.html#smac.model.gaussian_process.priors.tophat_prior.TophatPrior.get_meta">(smac.model.gaussian_process.priors.tophat_prior.TophatPrior method)</a>
-</li>
-        <li><a href="api/smac.model.gaussian_process.priors.html#smac.model.gaussian_process.priors.TophatPrior.get_meta">(smac.model.gaussian_process.priors.TophatPrior method)</a>
-</li>
-        <li><a href="api/smac.model.random_forest.random_forest.html#smac.model.random_forest.random_forest.RandomForest.get_meta">(smac.model.random_forest.random_forest.RandomForest method)</a>
-</li>
-        <li><a href="api/smac.model.random_forest.html#smac.model.random_forest.RandomForest.get_meta">(smac.model.random_forest.RandomForest method)</a>
-</li>
-        <li><a href="api/smac.multi_objective.abstract_multi_objective_algorithm.html#smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm.get_meta">(smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm method)</a>
-</li>
-        <li><a href="api/smac.multi_objective.html#smac.multi_objective.AbstractMultiObjectiveAlgorithm.get_meta">(smac.multi_objective.AbstractMultiObjectiveAlgorithm method)</a>
-</li>
-        <li><a href="api/smac.multi_objective.html#smac.multi_objective.ParEGO.get_meta">(smac.multi_objective.ParEGO method)</a>
-</li>
-        <li><a href="api/smac.multi_objective.parego.html#smac.multi_objective.parego.ParEGO.get_meta">(smac.multi_objective.parego.ParEGO method)</a>
-</li>
-        <li><a href="api/smac.random_design.abstract_random_design.html#smac.random_design.abstract_random_design.AbstractRandomDesign.get_meta">(smac.random_design.abstract_random_design.AbstractRandomDesign method)</a>
-</li>
-        <li><a href="api/smac.random_design.html#smac.random_design.AbstractRandomDesign.get_meta">(smac.random_design.AbstractRandomDesign method)</a>
-</li>
-        <li><a href="api/smac.random_design.annealing_design.html#smac.random_design.annealing_design.CosineAnnealingRandomDesign.get_meta">(smac.random_design.annealing_design.CosineAnnealingRandomDesign method)</a>
-</li>
-        <li><a href="api/smac.random_design.html#smac.random_design.CosineAnnealingRandomDesign.get_meta">(smac.random_design.CosineAnnealingRandomDesign method)</a>
-</li>
-        <li><a href="api/smac.random_design.html#smac.random_design.DynamicModulusRandomDesign.get_meta">(smac.random_design.DynamicModulusRandomDesign method)</a>
-</li>
-        <li><a href="api/smac.random_design.html#smac.random_design.DynamicProbabilityRandomDesign.get_meta">(smac.random_design.DynamicProbabilityRandomDesign method)</a>
-</li>
-        <li><a href="api/smac.random_design.modulus_design.html#smac.random_design.modulus_design.DynamicModulusRandomDesign.get_meta">(smac.random_design.modulus_design.DynamicModulusRandomDesign method)</a>
-</li>
-        <li><a href="api/smac.random_design.modulus_design.html#smac.random_design.modulus_design.ModulusRandomDesign.get_meta">(smac.random_design.modulus_design.ModulusRandomDesign method)</a>
-</li>
-        <li><a href="api/smac.random_design.html#smac.random_design.ModulusRandomDesign.get_meta">(smac.random_design.ModulusRandomDesign method)</a>
-</li>
-        <li><a href="api/smac.random_design.probability_design.html#smac.random_design.probability_design.DynamicProbabilityRandomDesign.get_meta">(smac.random_design.probability_design.DynamicProbabilityRandomDesign method)</a>
-</li>
-        <li><a href="api/smac.random_design.probability_design.html#smac.random_design.probability_design.ProbabilityRandomDesign.get_meta">(smac.random_design.probability_design.ProbabilityRandomDesign method)</a>
-</li>
-        <li><a href="api/smac.random_design.html#smac.random_design.ProbabilityRandomDesign.get_meta">(smac.random_design.ProbabilityRandomDesign method)</a>
-</li>
-        <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.get_meta">(smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder method)</a>
-</li>
-        <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.get_meta">(smac.runhistory.encoder.AbstractRunHistoryEncoder method)</a>
-</li>
-        <li><a href="api/smac.runner.abstract_runner.html#smac.runner.abstract_runner.AbstractRunner.get_meta">(smac.runner.abstract_runner.AbstractRunner method)</a>
-</li>
-        <li><a href="api/smac.runner.html#smac.runner.AbstractRunner.get_meta">(smac.runner.AbstractRunner method)</a>
-</li>
-        <li><a href="api/smac.scenario.html#smac.scenario.Scenario.get_meta">(smac.scenario.Scenario method)</a>
-</li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.get_min_cost">get_min_cost() (smac.runhistory.RunHistory method)</a>
 
       <ul>
@@ -1728,15 +1616,17 @@ style="width: 100%;">
 </li>
         <li><a href="api/smac.facade.html#smac.facade.BlackBoxFacade.get_model">(smac.facade.BlackBoxFacade static method)</a>
 </li>
-        <li><a href="api/smac.facade.hyperparameter_facade.html#smac.facade.hyperparameter_facade.HyperparameterFacade.get_model">(smac.facade.hyperparameter_facade.HyperparameterFacade static method)</a>
+        <li><a href="api/smac.facade.hpo_facade.html#smac.facade.hpo_facade.HPOFacade.get_model">(smac.facade.hpo_facade.HPOFacade static method)</a>
 </li>
-        <li><a href="api/smac.facade.html#smac.facade.HyperparameterFacade.get_model">(smac.facade.HyperparameterFacade static method)</a>
+        <li><a href="api/smac.facade.html#smac.facade.HPOFacade.get_model">(smac.facade.HPOFacade static method)</a>
 </li>
         <li><a href="api/smac.facade.random_facade.html#smac.facade.random_facade.RandomFacade.get_model">(smac.facade.random_facade.RandomFacade static method)</a>
 </li>
         <li><a href="api/smac.facade.html#smac.facade.RandomFacade.get_model">(smac.facade.RandomFacade static method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.facade.abstract_facade.html#smac.facade.abstract_facade.AbstractFacade.get_multi_objective_algorithm">get_multi_objective_algorithm() (smac.facade.abstract_facade.AbstractFacade static method)</a>
 
       <ul>
@@ -1750,9 +1640,9 @@ style="width: 100%;">
 </li>
         <li><a href="api/smac.facade.html#smac.facade.BlackBoxFacade.get_multi_objective_algorithm">(smac.facade.BlackBoxFacade static method)</a>
 </li>
-        <li><a href="api/smac.facade.hyperparameter_facade.html#smac.facade.hyperparameter_facade.HyperparameterFacade.get_multi_objective_algorithm">(smac.facade.hyperparameter_facade.HyperparameterFacade static method)</a>
+        <li><a href="api/smac.facade.hpo_facade.html#smac.facade.hpo_facade.HPOFacade.get_multi_objective_algorithm">(smac.facade.hpo_facade.HPOFacade static method)</a>
 </li>
-        <li><a href="api/smac.facade.html#smac.facade.HyperparameterFacade.get_multi_objective_algorithm">(smac.facade.HyperparameterFacade static method)</a>
+        <li><a href="api/smac.facade.html#smac.facade.HPOFacade.get_multi_objective_algorithm">(smac.facade.HPOFacade static method)</a>
 </li>
         <li><a href="api/smac.facade.random_facade.html#smac.facade.random_facade.RandomFacade.get_multi_objective_algorithm">(smac.facade.random_facade.RandomFacade static method)</a>
 </li>
@@ -1779,22 +1669,22 @@ style="width: 100%;">
         <li><a href="api/smac.main.smbo.html#smac.main.smbo.SMBO.get_next_configurations">(smac.main.smbo.SMBO method)</a>
 </li>
       </ul></li>
-      <li><a href="api/smac.intensifier.abstract_intensifier.html#smac.intensifier.abstract_intensifier.AbstractIntensifier.get_next_run">get_next_run() (smac.intensifier.abstract_intensifier.AbstractIntensifier method)</a>
+      <li><a href="api/smac.intensifier.abstract_intensifier.html#smac.intensifier.abstract_intensifier.AbstractIntensifier.get_next_trial">get_next_trial() (smac.intensifier.abstract_intensifier.AbstractIntensifier method)</a>
 
       <ul>
-        <li><a href="api/smac.intensifier.abstract_parallel_intensifier.html#smac.intensifier.abstract_parallel_intensifier.AbstractParallelIntensifier.get_next_run">(smac.intensifier.abstract_parallel_intensifier.AbstractParallelIntensifier method)</a>
+        <li><a href="api/smac.intensifier.abstract_parallel_intensifier.html#smac.intensifier.abstract_parallel_intensifier.AbstractParallelIntensifier.get_next_trial">(smac.intensifier.abstract_parallel_intensifier.AbstractParallelIntensifier method)</a>
 </li>
-        <li><a href="api/smac.intensifier.html#smac.intensifier.AbstractIntensifier.get_next_run">(smac.intensifier.AbstractIntensifier method)</a>
+        <li><a href="api/smac.intensifier.html#smac.intensifier.AbstractIntensifier.get_next_trial">(smac.intensifier.AbstractIntensifier method)</a>
 </li>
-        <li><a href="api/smac.intensifier.html#smac.intensifier.AbstractParallelIntensifier.get_next_run">(smac.intensifier.AbstractParallelIntensifier method)</a>
+        <li><a href="api/smac.intensifier.html#smac.intensifier.AbstractParallelIntensifier.get_next_trial">(smac.intensifier.AbstractParallelIntensifier method)</a>
 </li>
-        <li><a href="api/smac.intensifier.hyperband_worker.html#smac.intensifier.hyperband_worker.HyperbandWorker.get_next_run">(smac.intensifier.hyperband_worker.HyperbandWorker method)</a>
+        <li><a href="api/smac.intensifier.hyperband_worker.html#smac.intensifier.hyperband_worker.HyperbandWorker.get_next_trial">(smac.intensifier.hyperband_worker.HyperbandWorker method)</a>
 </li>
-        <li><a href="api/smac.intensifier.html#smac.intensifier.Intensifier.get_next_run">(smac.intensifier.Intensifier method)</a>
+        <li><a href="api/smac.intensifier.html#smac.intensifier.Intensifier.get_next_trial">(smac.intensifier.Intensifier method)</a>
 </li>
-        <li><a href="api/smac.intensifier.intensifier.html#smac.intensifier.intensifier.Intensifier.get_next_run">(smac.intensifier.intensifier.Intensifier method)</a>
+        <li><a href="api/smac.intensifier.intensifier.html#smac.intensifier.intensifier.Intensifier.get_next_trial">(smac.intensifier.intensifier.Intensifier method)</a>
 </li>
-        <li><a href="api/smac.intensifier.successive_halving_worker.html#smac.intensifier.successive_halving_worker.SuccessiveHalvingWorker.get_next_run">(smac.intensifier.successive_halving_worker.SuccessiveHalvingWorker method)</a>
+        <li><a href="api/smac.intensifier.successive_halving_worker.html#smac.intensifier.successive_halving_worker.SuccessiveHalvingWorker.get_next_trial">(smac.intensifier.successive_halving_worker.SuccessiveHalvingWorker method)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.model.gaussian_process.kernels.html#smac.model.gaussian_process.kernels.AbstractKernel.get_params">get_params() (smac.model.gaussian_process.kernels.AbstractKernel method)</a>
@@ -1816,9 +1706,9 @@ style="width: 100%;">
 </li>
         <li><a href="api/smac.facade.html#smac.facade.BlackBoxFacade.get_random_design">(smac.facade.BlackBoxFacade static method)</a>
 </li>
-        <li><a href="api/smac.facade.hyperparameter_facade.html#smac.facade.hyperparameter_facade.HyperparameterFacade.get_random_design">(smac.facade.hyperparameter_facade.HyperparameterFacade static method)</a>
+        <li><a href="api/smac.facade.hpo_facade.html#smac.facade.hpo_facade.HPOFacade.get_random_design">(smac.facade.hpo_facade.HPOFacade static method)</a>
 </li>
-        <li><a href="api/smac.facade.html#smac.facade.HyperparameterFacade.get_random_design">(smac.facade.HyperparameterFacade static method)</a>
+        <li><a href="api/smac.facade.html#smac.facade.HPOFacade.get_random_design">(smac.facade.HPOFacade static method)</a>
 </li>
         <li><a href="api/smac.facade.random_facade.html#smac.facade.random_facade.RandomFacade.get_random_design">(smac.facade.random_facade.RandomFacade static method)</a>
 </li>
@@ -1838,9 +1728,9 @@ style="width: 100%;">
 </li>
         <li><a href="api/smac.facade.html#smac.facade.BlackBoxFacade.get_runhistory_encoder">(smac.facade.BlackBoxFacade static method)</a>
 </li>
-        <li><a href="api/smac.facade.hyperparameter_facade.html#smac.facade.hyperparameter_facade.HyperparameterFacade.get_runhistory_encoder">(smac.facade.hyperparameter_facade.HyperparameterFacade static method)</a>
+        <li><a href="api/smac.facade.hpo_facade.html#smac.facade.hpo_facade.HPOFacade.get_runhistory_encoder">(smac.facade.hpo_facade.HPOFacade static method)</a>
 </li>
-        <li><a href="api/smac.facade.html#smac.facade.HyperparameterFacade.get_runhistory_encoder">(smac.facade.HyperparameterFacade static method)</a>
+        <li><a href="api/smac.facade.html#smac.facade.HPOFacade.get_runhistory_encoder">(smac.facade.HPOFacade static method)</a>
 </li>
         <li><a href="api/smac.facade.random_facade.html#smac.facade.random_facade.RandomFacade.get_runhistory_encoder">(smac.facade.random_facade.RandomFacade static method)</a>
 </li>
@@ -1945,14 +1835,20 @@ style="width: 100%;">
         <li><a href="api/smac.model.gaussian_process.priors.horseshoe_prior.html#smac.model.gaussian_process.priors.horseshoe_prior.HorseshoePrior">(class in smac.model.gaussian_process.priors.horseshoe_prior)</a>
 </li>
       </ul></li>
+      <li><a href="api/smac.facade.html#smac.facade.HPOFacade">HPOFacade (class in smac.facade)</a>
+
+      <ul>
+        <li><a href="api/smac.facade.hpo_facade.html#smac.facade.hpo_facade.HPOFacade">(class in smac.facade.hpo_facade)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.intensifier.html#smac.intensifier.Hyperband">Hyperband (class in smac.intensifier)</a>
 
       <ul>
         <li><a href="api/smac.intensifier.hyperband.html#smac.intensifier.hyperband.Hyperband">(class in smac.intensifier.hyperband)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.facade.html#smac.facade.HyperbandFacade">HyperbandFacade (class in smac.facade)</a>
 
       <ul>
@@ -1965,12 +1861,6 @@ style="width: 100%;">
 
       <ul>
         <li><a href="api/smac.model.gaussian_process.kernels.html#smac.model.gaussian_process.kernels.HammingKernel.hyperparameter_length_scale">(smac.model.gaussian_process.kernels.HammingKernel property)</a>
-</li>
-      </ul></li>
-      <li><a href="api/smac.facade.html#smac.facade.HyperparameterFacade">HyperparameterFacade (class in smac.facade)</a>
-
-      <ul>
-        <li><a href="api/smac.facade.hyperparameter_facade.html#smac.facade.hyperparameter_facade.HyperparameterFacade">(class in smac.facade.hyperparameter_facade)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.model.gaussian_process.kernels.html#smac.model.gaussian_process.kernels.AbstractKernel.hyperparameters">hyperparameters (smac.model.gaussian_process.kernels.AbstractKernel property)</a>
@@ -1997,22 +1887,14 @@ style="width: 100%;">
         <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.incremental_update_cost">(smac.runhistory.runhistory.RunHistory method)</a>
 </li>
       </ul></li>
-      <li><a href="api/smac.main.base_smbo.html#smac.main.base_smbo.BaseSMBO.incumbent">incumbent (smac.main.base_smbo.BaseSMBO attribute)</a>
+      <li><a href="api/smac.facade.abstract_facade.html#smac.facade.abstract_facade.AbstractFacade.incumbent">incumbent (smac.facade.abstract_facade.AbstractFacade property)</a>
 
       <ul>
-        <li><a href="api/smac.main.html#smac.main.BaseSMBO.incumbent">(smac.main.BaseSMBO attribute)</a>
+        <li><a href="api/smac.facade.html#smac.facade.AbstractFacade.incumbent">(smac.facade.AbstractFacade property)</a>
 </li>
-      </ul></li>
-      <li><a href="api/smac.main.base_smbo.html#smac.main.base_smbo.BaseSMBO.initial_design">initial_design (smac.main.base_smbo.BaseSMBO attribute)</a>
-
-      <ul>
-        <li><a href="api/smac.main.html#smac.main.BaseSMBO.initial_design">(smac.main.BaseSMBO attribute)</a>
+        <li><a href="api/smac.main.base_smbo.html#smac.main.base_smbo.BaseSMBO.incumbent">(smac.main.base_smbo.BaseSMBO property)</a>
 </li>
-      </ul></li>
-      <li><a href="api/smac.main.base_smbo.html#smac.main.base_smbo.BaseSMBO.initial_design_configs">initial_design_configs (smac.main.base_smbo.BaseSMBO attribute)</a>
-
-      <ul>
-        <li><a href="api/smac.main.html#smac.main.BaseSMBO.initial_design_configs">(smac.main.BaseSMBO attribute)</a>
+        <li><a href="api/smac.main.html#smac.main.BaseSMBO.incumbent">(smac.main.BaseSMBO property)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.runhistory.html#smac.runhistory.InstanceSeedBudgetKey">InstanceSeedBudgetKey (class in smac.runhistory)</a>
@@ -2043,12 +1925,6 @@ style="width: 100%;">
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/smac.main.base_smbo.html#smac.main.base_smbo.BaseSMBO.intensifier">intensifier (smac.main.base_smbo.BaseSMBO attribute)</a>
-
-      <ul>
-        <li><a href="api/smac.main.html#smac.main.BaseSMBO.intensifier">(smac.main.BaseSMBO attribute)</a>
-</li>
-      </ul></li>
       <li><a href="api/smac.intensifier.stages.html#smac.intensifier.stages.IntensifierStage">IntensifierStage (class in smac.intensifier.stages)</a>
 </li>
       <li><a href="api/smac.intensifier.html#smac.intensifier.Intensifier.intensify_percentage">intensify_percentage (smac.intensifier.Intensifier property)</a>
@@ -2149,6 +2025,8 @@ style="width: 100%;">
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/smac.scenario.html#smac.scenario.Scenario.make_serializable">make_serializable() (smac.scenario.Scenario static method)</a>
+</li>
       <li><a href="api/smac.model.gaussian_process.kernels.html#smac.model.gaussian_process.kernels.MaternKernel">MaternKernel (class in smac.model.gaussian_process.kernels)</a>
 
       <ul>
@@ -2173,12 +2051,172 @@ style="width: 100%;">
         <li><a href="api/smac.multi_objective.aggregation_strategy.html#smac.multi_objective.aggregation_strategy.MeanAggregationStrategy">(class in smac.multi_objective.aggregation_strategy)</a>
 </li>
       </ul></li>
+      <li><a href="api/smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction.meta">meta (smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction property)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction.meta">(smac.acquisition.functions.AbstractAcquisitionFunction property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.confidence_bound.html#smac.acquisition.functions.confidence_bound.LCB.meta">(smac.acquisition.functions.confidence_bound.LCB property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.EI.meta">(smac.acquisition.functions.EI property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.expected_improvement.html#smac.acquisition.functions.expected_improvement.EI.meta">(smac.acquisition.functions.expected_improvement.EI property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.integrated_acquisition_function.html#smac.acquisition.functions.integrated_acquisition_function.IntegratedAcquisitionFunction.meta">(smac.acquisition.functions.integrated_acquisition_function.IntegratedAcquisitionFunction property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.IntegratedAcquisitionFunction.meta">(smac.acquisition.functions.IntegratedAcquisitionFunction property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.LCB.meta">(smac.acquisition.functions.LCB property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.PI.meta">(smac.acquisition.functions.PI property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.prior_acqusition_function.html#smac.acquisition.functions.prior_acqusition_function.PriorAcquisitionFunction.meta">(smac.acquisition.functions.prior_acqusition_function.PriorAcquisitionFunction property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.PriorAcquisitionFunction.meta">(smac.acquisition.functions.PriorAcquisitionFunction property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.probability_improvement.html#smac.acquisition.functions.probability_improvement.PI.meta">(smac.acquisition.functions.probability_improvement.PI property)</a>
+</li>
+        <li><a href="api/smac.acquisition.maximizers.abstract_acqusition_maximizer.html#smac.acquisition.maximizers.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer.meta">(smac.acquisition.maximizers.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer property)</a>
+</li>
+        <li><a href="api/smac.acquisition.maximizers.html#smac.acquisition.maximizers.AbstractAcquisitionMaximizer.meta">(smac.acquisition.maximizers.AbstractAcquisitionMaximizer property)</a>
+</li>
+        <li><a href="api/smac.acquisition.maximizers.local_and_random_search.html#smac.acquisition.maximizers.local_and_random_search.LocalAndSortedRandomSearch.meta">(smac.acquisition.maximizers.local_and_random_search.LocalAndSortedRandomSearch property)</a>
+</li>
+        <li><a href="api/smac.acquisition.maximizers.local_search.html#smac.acquisition.maximizers.local_search.LocalSearch.meta">(smac.acquisition.maximizers.local_search.LocalSearch property)</a>
+</li>
+        <li><a href="api/smac.acquisition.maximizers.html#smac.acquisition.maximizers.LocalAndSortedRandomSearch.meta">(smac.acquisition.maximizers.LocalAndSortedRandomSearch property)</a>
+</li>
+        <li><a href="api/smac.acquisition.maximizers.html#smac.acquisition.maximizers.LocalSearch.meta">(smac.acquisition.maximizers.LocalSearch property)</a>
+</li>
+        <li><a href="api/smac.facade.abstract_facade.html#smac.facade.abstract_facade.AbstractFacade.meta">(smac.facade.abstract_facade.AbstractFacade property)</a>
+</li>
+        <li><a href="api/smac.facade.html#smac.facade.AbstractFacade.meta">(smac.facade.AbstractFacade property)</a>
+</li>
+        <li><a href="api/smac.initial_design.abstract_initial_design.html#smac.initial_design.abstract_initial_design.AbstractInitialDesign.meta">(smac.initial_design.abstract_initial_design.AbstractInitialDesign property)</a>
+</li>
+        <li><a href="api/smac.initial_design.html#smac.initial_design.AbstractInitialDesign.meta">(smac.initial_design.AbstractInitialDesign property)</a>
+</li>
+        <li><a href="api/smac.intensifier.abstract_intensifier.html#smac.intensifier.abstract_intensifier.AbstractIntensifier.meta">(smac.intensifier.abstract_intensifier.AbstractIntensifier property)</a>
+</li>
+        <li><a href="api/smac.intensifier.html#smac.intensifier.AbstractIntensifier.meta">(smac.intensifier.AbstractIntensifier property)</a>
+</li>
+        <li><a href="api/smac.intensifier.html#smac.intensifier.Intensifier.meta">(smac.intensifier.Intensifier property)</a>
+</li>
+        <li><a href="api/smac.intensifier.intensifier.html#smac.intensifier.intensifier.Intensifier.meta">(smac.intensifier.intensifier.Intensifier property)</a>
+</li>
+        <li><a href="api/smac.intensifier.successive_halving.html#smac.intensifier.successive_halving.SuccessiveHalving.meta">(smac.intensifier.successive_halving.SuccessiveHalving property)</a>
+</li>
+        <li><a href="api/smac.intensifier.html#smac.intensifier.SuccessiveHalving.meta">(smac.intensifier.SuccessiveHalving property)</a>
+</li>
+        <li><a href="api/smac.model.abstract_model.html#smac.model.abstract_model.AbstractModel.meta">(smac.model.abstract_model.AbstractModel property)</a>
+</li>
+        <li><a href="api/smac.model.html#smac.model.AbstractModel.meta">(smac.model.AbstractModel property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.abstract_gaussian_process.html#smac.model.gaussian_process.abstract_gaussian_process.AbstractGaussianProcess.meta">(smac.model.gaussian_process.abstract_gaussian_process.AbstractGaussianProcess property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.html#smac.model.gaussian_process.AbstractGaussianProcess.meta">(smac.model.gaussian_process.AbstractGaussianProcess property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.gaussian_process.html#smac.model.gaussian_process.gaussian_process.GaussianProcess.meta">(smac.model.gaussian_process.gaussian_process.GaussianProcess property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.html#smac.model.gaussian_process.GaussianProcess.meta">(smac.model.gaussian_process.GaussianProcess property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.kernels.html#smac.model.gaussian_process.kernels.AbstractKernel.meta">(smac.model.gaussian_process.kernels.AbstractKernel property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.meta">(smac.model.gaussian_process.kernels.base_kernels.AbstractKernel property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.kernels.hamming_kernel.html#smac.model.gaussian_process.kernels.hamming_kernel.HammingKernel.meta">(smac.model.gaussian_process.kernels.hamming_kernel.HammingKernel property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.kernels.html#smac.model.gaussian_process.kernels.HammingKernel.meta">(smac.model.gaussian_process.kernels.HammingKernel property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.mcmc_gaussian_process.html#smac.model.gaussian_process.mcmc_gaussian_process.MCMCGaussianProcess.meta">(smac.model.gaussian_process.mcmc_gaussian_process.MCMCGaussianProcess property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.html#smac.model.gaussian_process.MCMCGaussianProcess.meta">(smac.model.gaussian_process.MCMCGaussianProcess property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.priors.abstract_prior.html#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior.meta">(smac.model.gaussian_process.priors.abstract_prior.AbstractPrior property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.priors.gamma_prior.html#smac.model.gaussian_process.priors.gamma_prior.GammaPrior.meta">(smac.model.gaussian_process.priors.gamma_prior.GammaPrior property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.priors.html#smac.model.gaussian_process.priors.GammaPrior.meta">(smac.model.gaussian_process.priors.GammaPrior property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.priors.horseshoe_prior.html#smac.model.gaussian_process.priors.horseshoe_prior.HorseshoePrior.meta">(smac.model.gaussian_process.priors.horseshoe_prior.HorseshoePrior property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.priors.html#smac.model.gaussian_process.priors.HorseshoePrior.meta">(smac.model.gaussian_process.priors.HorseshoePrior property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.priors.log_normal_prior.html#smac.model.gaussian_process.priors.log_normal_prior.LogNormalPrior.meta">(smac.model.gaussian_process.priors.log_normal_prior.LogNormalPrior property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.priors.html#smac.model.gaussian_process.priors.LogNormalPrior.meta">(smac.model.gaussian_process.priors.LogNormalPrior property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.priors.html#smac.model.gaussian_process.priors.SoftTopHatPrior.meta">(smac.model.gaussian_process.priors.SoftTopHatPrior property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.priors.tophat_prior.html#smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior.meta">(smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.priors.tophat_prior.html#smac.model.gaussian_process.priors.tophat_prior.TophatPrior.meta">(smac.model.gaussian_process.priors.tophat_prior.TophatPrior property)</a>
+</li>
+        <li><a href="api/smac.model.gaussian_process.priors.html#smac.model.gaussian_process.priors.TophatPrior.meta">(smac.model.gaussian_process.priors.TophatPrior property)</a>
+</li>
+        <li><a href="api/smac.model.random_forest.random_forest.html#smac.model.random_forest.random_forest.RandomForest.meta">(smac.model.random_forest.random_forest.RandomForest property)</a>
+</li>
+        <li><a href="api/smac.model.random_forest.html#smac.model.random_forest.RandomForest.meta">(smac.model.random_forest.RandomForest property)</a>
+</li>
+        <li><a href="api/smac.multi_objective.abstract_multi_objective_algorithm.html#smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm.meta">(smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm property)</a>
+</li>
+        <li><a href="api/smac.multi_objective.html#smac.multi_objective.AbstractMultiObjectiveAlgorithm.meta">(smac.multi_objective.AbstractMultiObjectiveAlgorithm property)</a>
+</li>
+        <li><a href="api/smac.multi_objective.html#smac.multi_objective.ParEGO.meta">(smac.multi_objective.ParEGO property)</a>
+</li>
+        <li><a href="api/smac.multi_objective.parego.html#smac.multi_objective.parego.ParEGO.meta">(smac.multi_objective.parego.ParEGO property)</a>
+</li>
+        <li><a href="api/smac.random_design.abstract_random_design.html#smac.random_design.abstract_random_design.AbstractRandomDesign.meta">(smac.random_design.abstract_random_design.AbstractRandomDesign property)</a>
+</li>
+        <li><a href="api/smac.random_design.html#smac.random_design.AbstractRandomDesign.meta">(smac.random_design.AbstractRandomDesign property)</a>
+</li>
+        <li><a href="api/smac.random_design.annealing_design.html#smac.random_design.annealing_design.CosineAnnealingRandomDesign.meta">(smac.random_design.annealing_design.CosineAnnealingRandomDesign property)</a>
+</li>
+        <li><a href="api/smac.random_design.html#smac.random_design.CosineAnnealingRandomDesign.meta">(smac.random_design.CosineAnnealingRandomDesign property)</a>
+</li>
+        <li><a href="api/smac.random_design.html#smac.random_design.DynamicModulusRandomDesign.meta">(smac.random_design.DynamicModulusRandomDesign property)</a>
+</li>
+        <li><a href="api/smac.random_design.html#smac.random_design.DynamicProbabilityRandomDesign.meta">(smac.random_design.DynamicProbabilityRandomDesign property)</a>
+</li>
+        <li><a href="api/smac.random_design.modulus_design.html#smac.random_design.modulus_design.DynamicModulusRandomDesign.meta">(smac.random_design.modulus_design.DynamicModulusRandomDesign property)</a>
+</li>
+        <li><a href="api/smac.random_design.modulus_design.html#smac.random_design.modulus_design.ModulusRandomDesign.meta">(smac.random_design.modulus_design.ModulusRandomDesign property)</a>
+</li>
+        <li><a href="api/smac.random_design.html#smac.random_design.ModulusRandomDesign.meta">(smac.random_design.ModulusRandomDesign property)</a>
+</li>
+        <li><a href="api/smac.random_design.probability_design.html#smac.random_design.probability_design.DynamicProbabilityRandomDesign.meta">(smac.random_design.probability_design.DynamicProbabilityRandomDesign property)</a>
+</li>
+        <li><a href="api/smac.random_design.probability_design.html#smac.random_design.probability_design.ProbabilityRandomDesign.meta">(smac.random_design.probability_design.ProbabilityRandomDesign property)</a>
+</li>
+        <li><a href="api/smac.random_design.html#smac.random_design.ProbabilityRandomDesign.meta">(smac.random_design.ProbabilityRandomDesign property)</a>
+</li>
+        <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.meta">(smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder property)</a>
+</li>
+        <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.meta">(smac.runhistory.encoder.AbstractRunHistoryEncoder property)</a>
+</li>
+        <li><a href="api/smac.runner.abstract_runner.html#smac.runner.abstract_runner.AbstractRunner.meta">(smac.runner.abstract_runner.AbstractRunner property)</a>
+</li>
+        <li><a href="api/smac.runner.html#smac.runner.AbstractRunner.meta">(smac.runner.AbstractRunner property)</a>
+</li>
+        <li><a href="api/smac.scenario.html#smac.scenario.Scenario.meta">(smac.scenario.Scenario property)</a>
+</li>
+      </ul></li>
       <li><a href="glossary.html#term-MF"><strong>MF</strong></a>
 </li>
       <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.min_cost">min_cost() (smac.runhistory.RunHistory method)</a>
 
       <ul>
         <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.min_cost">(smac.runhistory.runhistory.RunHistory method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction.model">model (smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction property)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction.model">(smac.acquisition.functions.AbstractAcquisitionFunction property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.prior_acqusition_function.html#smac.acquisition.functions.prior_acqusition_function.PriorAcquisitionFunction.model">(smac.acquisition.functions.prior_acqusition_function.PriorAcquisitionFunction property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.PriorAcquisitionFunction.model">(smac.acquisition.functions.PriorAcquisitionFunction property)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.model.gaussian_process.mcmc_gaussian_process.html#smac.model.gaussian_process.mcmc_gaussian_process.MCMCGaussianProcess.models">models (smac.model.gaussian_process.mcmc_gaussian_process.MCMCGaussianProcess property)</a>
@@ -2241,9 +2279,9 @@ style="width: 100%;">
 </li>
         <li><a href="api/smac.facade.boing_facade.html#module-smac.facade.boing_facade">smac.facade.boing_facade</a>
 </li>
-        <li><a href="api/smac.facade.hyperband_facade.html#module-smac.facade.hyperband_facade">smac.facade.hyperband_facade</a>
+        <li><a href="api/smac.facade.hpo_facade.html#module-smac.facade.hpo_facade">smac.facade.hpo_facade</a>
 </li>
-        <li><a href="api/smac.facade.hyperparameter_facade.html#module-smac.facade.hyperparameter_facade">smac.facade.hyperparameter_facade</a>
+        <li><a href="api/smac.facade.hyperband_facade.html#module-smac.facade.hyperband_facade">smac.facade.hyperband_facade</a>
 </li>
         <li><a href="api/smac.facade.multi_fidelity_facade.html#module-smac.facade.multi_fidelity_facade">smac.facade.multi_fidelity_facade</a>
 </li>
@@ -2422,6 +2460,12 @@ style="width: 100%;">
         <li><a href="api/smac.random_design.modulus_design.html#smac.random_design.modulus_design.ModulusRandomDesign">(class in smac.random_design.modulus_design)</a>
 </li>
       </ul></li>
+      <li><a href="api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder.multi_objective_algorithm">multi_objective_algorithm (smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder property)</a>
+
+      <ul>
+        <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.multi_objective_algorithm">(smac.runhistory.encoder.AbstractRunHistoryEncoder property)</a>
+</li>
+      </ul></li>
       <li><a href="api/smac.facade.html#smac.facade.MultiFidelityFacade">MultiFidelityFacade (class in smac.facade)</a>
 
       <ul>
@@ -2446,6 +2490,42 @@ style="width: 100%;">
         <li><a href="api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.n_dims">(smac.model.gaussian_process.kernels.base_kernels.AbstractKernel property)</a>
 </li>
       </ul></li>
+      <li><a href="api/smac.acquisition.functions.abstract_acquisition_function.html#smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction.name">name (smac.acquisition.functions.abstract_acquisition_function.AbstractAcquisitionFunction property)</a>
+
+      <ul>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction.name">(smac.acquisition.functions.AbstractAcquisitionFunction property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.confidence_bound.html#smac.acquisition.functions.confidence_bound.LCB.name">(smac.acquisition.functions.confidence_bound.LCB property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.EI.name">(smac.acquisition.functions.EI property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.EIPS.name">(smac.acquisition.functions.EIPS property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.expected_improvement.html#smac.acquisition.functions.expected_improvement.EI.name">(smac.acquisition.functions.expected_improvement.EI property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.expected_improvement.html#smac.acquisition.functions.expected_improvement.EIPS.name">(smac.acquisition.functions.expected_improvement.EIPS property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.integrated_acquisition_function.html#smac.acquisition.functions.integrated_acquisition_function.IntegratedAcquisitionFunction.name">(smac.acquisition.functions.integrated_acquisition_function.IntegratedAcquisitionFunction property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.IntegratedAcquisitionFunction.name">(smac.acquisition.functions.IntegratedAcquisitionFunction property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.LCB.name">(smac.acquisition.functions.LCB property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.PI.name">(smac.acquisition.functions.PI property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.prior_acqusition_function.html#smac.acquisition.functions.prior_acqusition_function.PriorAcquisitionFunction.name">(smac.acquisition.functions.prior_acqusition_function.PriorAcquisitionFunction property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.PriorAcquisitionFunction.name">(smac.acquisition.functions.PriorAcquisitionFunction property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.probability_improvement.html#smac.acquisition.functions.probability_improvement.PI.name">(smac.acquisition.functions.probability_improvement.PI property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.thompson.html#smac.acquisition.functions.thompson.TS.name">(smac.acquisition.functions.thompson.TS property)</a>
+</li>
+        <li><a href="api/smac.acquisition.functions.html#smac.acquisition.functions.TS.name">(smac.acquisition.functions.TS property)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.random_design.abstract_random_design.html#smac.random_design.abstract_random_design.AbstractRandomDesign.next_iteration">next_iteration() (smac.random_design.abstract_random_design.AbstractRandomDesign method)</a>
 
       <ul>
@@ -2464,8 +2544,6 @@ style="width: 100%;">
         <li><a href="api/smac.random_design.probability_design.html#smac.random_design.probability_design.DynamicProbabilityRandomDesign.next_iteration">(smac.random_design.probability_design.DynamicProbabilityRandomDesign method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.utils.multi_objective.html#smac.utils.multi_objective.normalize_costs">normalize_costs() (in module smac.utils.multi_objective)</a>
 </li>
       <li><a href="api/smac.intensifier.abstract_intensifier.html#smac.intensifier.abstract_intensifier.AbstractIntensifier.num_trials">num_trials (smac.intensifier.abstract_intensifier.AbstractIntensifier property)</a>
@@ -2498,10 +2576,10 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_iteration_start">on_iteration_start() (smac.callback.Callback method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_next_configurations_end">on_next_configurations_end() (smac.callback.Callback method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_next_configurations_start">on_next_configurations_start() (smac.callback.Callback method)</a>
 </li>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_start">on_start() (smac.callback.Callback method)</a>
@@ -2520,6 +2598,10 @@ style="width: 100%;">
 
       <ul>
         <li><a href="api/smac.facade.html#smac.facade.AbstractFacade.optimize">(smac.facade.AbstractFacade method)</a>
+</li>
+        <li><a href="api/smac.main.base_smbo.html#smac.main.base_smbo.BaseSMBO.optimize">(smac.main.base_smbo.BaseSMBO method)</a>
+</li>
+        <li><a href="api/smac.main.html#smac.main.BaseSMBO.optimize">(smac.main.BaseSMBO method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -2664,21 +2746,11 @@ style="width: 100%;">
       </ul></li>
       <li><a href="glossary.html#term-RF"><strong>RF</strong></a>
 </li>
-      <li><a href="api/smac.main.base_smbo.html#smac.main.base_smbo.BaseSMBO.rng">rng (smac.main.base_smbo.BaseSMBO attribute)</a>
-
-      <ul>
-        <li><a href="api/smac.main.html#smac.main.BaseSMBO.rng">(smac.main.BaseSMBO attribute)</a>
-</li>
-      </ul></li>
       <li><a href="glossary.html#term-ROAR"><strong>ROAR</strong></a>
 </li>
-      <li><a href="api/smac.main.base_smbo.html#smac.main.base_smbo.BaseSMBO.run">run() (smac.main.base_smbo.BaseSMBO method)</a>
+      <li><a href="api/smac.runner.abstract_runner.html#smac.runner.abstract_runner.AbstractRunner.run">run() (smac.runner.abstract_runner.AbstractRunner method)</a>
 
       <ul>
-        <li><a href="api/smac.main.html#smac.main.BaseSMBO.run">(smac.main.BaseSMBO method)</a>
-</li>
-        <li><a href="api/smac.runner.abstract_runner.html#smac.runner.abstract_runner.AbstractRunner.run">(smac.runner.abstract_runner.AbstractRunner method)</a>
-</li>
         <li><a href="api/smac.runner.html#smac.runner.AbstractRunner.run">(smac.runner.AbstractRunner method)</a>
 </li>
         <li><a href="api/smac.runner.dask_runner.html#smac.runner.dask_runner.DaskParallelRunner.run">(smac.runner.dask_runner.DaskParallelRunner method)</a>
@@ -2704,10 +2776,14 @@ style="width: 100%;">
         <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory">(class in smac.runhistory.runhistory)</a>
 </li>
       </ul></li>
-      <li><a href="api/smac.main.base_smbo.html#smac.main.base_smbo.BaseSMBO.runhistory">runhistory (smac.main.base_smbo.BaseSMBO attribute)</a>
+      <li><a href="api/smac.facade.abstract_facade.html#smac.facade.abstract_facade.AbstractFacade.runhistory">runhistory (smac.facade.abstract_facade.AbstractFacade property)</a>
 
       <ul>
-        <li><a href="api/smac.main.html#smac.main.BaseSMBO.runhistory">(smac.main.BaseSMBO attribute)</a>
+        <li><a href="api/smac.facade.html#smac.facade.AbstractFacade.runhistory">(smac.facade.AbstractFacade property)</a>
+</li>
+        <li><a href="api/smac.main.base_smbo.html#smac.main.base_smbo.BaseSMBO.runhistory">(smac.main.base_smbo.BaseSMBO property)</a>
+</li>
+        <li><a href="api/smac.main.html#smac.main.BaseSMBO.runhistory">(smac.main.BaseSMBO property)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.RunHistoryEIPSEncoder">RunHistoryEIPSEncoder (class in smac.runhistory.encoder)</a>
@@ -2762,12 +2838,6 @@ style="width: 100%;">
 
       <ul>
         <li><a href="api/smac.runhistory.encoder.sqrt_scaled_encoder.html#smac.runhistory.encoder.sqrt_scaled_encoder.RunHistorySqrtScaledEncoder">(class in smac.runhistory.encoder.sqrt_scaled_encoder)</a>
-</li>
-      </ul></li>
-      <li><a href="api/smac.main.base_smbo.html#smac.main.base_smbo.BaseSMBO.runner">runner (smac.main.base_smbo.BaseSMBO attribute)</a>
-
-      <ul>
-        <li><a href="api/smac.main.html#smac.main.BaseSMBO.runner">(smac.main.BaseSMBO attribute)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -2972,17 +3042,17 @@ style="width: 100%;">
 </li>
       </ul></li>
       <li>
+    smac.facade.hpo_facade
+
+      <ul>
+        <li><a href="api/smac.facade.hpo_facade.html#module-smac.facade.hpo_facade">module</a>
+</li>
+      </ul></li>
+      <li>
     smac.facade.hyperband_facade
 
       <ul>
         <li><a href="api/smac.facade.hyperband_facade.html#module-smac.facade.hyperband_facade">module</a>
-</li>
-      </ul></li>
-      <li>
-    smac.facade.hyperparameter_facade
-
-      <ul>
-        <li><a href="api/smac.facade.hyperparameter_facade.html#module-smac.facade.hyperparameter_facade">module</a>
 </li>
       </ul></li>
       <li>
@@ -3209,8 +3279,6 @@ style="width: 100%;">
         <li><a href="api/smac.model.gaussian_process.kernels.hamming_kernel.html#module-smac.model.gaussian_process.kernels.hamming_kernel">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.model.gaussian_process.kernels.matern_kernel
 
@@ -3218,6 +3286,8 @@ style="width: 100%;">
         <li><a href="api/smac.model.gaussian_process.kernels.matern_kernel.html#module-smac.model.gaussian_process.kernels.matern_kernel">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.model.gaussian_process.kernels.rbf_kernel
 
@@ -3593,10 +3663,16 @@ style="width: 100%;">
         <li><a href="api/smac.model.gaussian_process.priors.tophat_prior.html#smac.model.gaussian_process.priors.tophat_prior.SoftTopHatPrior">(class in smac.model.gaussian_process.priors.tophat_prior)</a>
 </li>
       </ul></li>
-      <li><a href="api/smac.main.base_smbo.html#smac.main.base_smbo.BaseSMBO.stats">stats (smac.main.base_smbo.BaseSMBO attribute)</a>
+      <li><a href="api/smac.intensifier.successive_halving_worker.html#smac.intensifier.successive_halving_worker.SuccessiveHalvingWorker.stage">stage (smac.intensifier.successive_halving_worker.SuccessiveHalvingWorker property)</a>
+</li>
+      <li><a href="api/smac.facade.abstract_facade.html#smac.facade.abstract_facade.AbstractFacade.stats">stats (smac.facade.abstract_facade.AbstractFacade property)</a>
 
       <ul>
-        <li><a href="api/smac.main.html#smac.main.BaseSMBO.stats">(smac.main.BaseSMBO attribute)</a>
+        <li><a href="api/smac.facade.html#smac.facade.AbstractFacade.stats">(smac.facade.AbstractFacade property)</a>
+</li>
+        <li><a href="api/smac.main.base_smbo.html#smac.main.base_smbo.BaseSMBO.stats">(smac.main.base_smbo.BaseSMBO property)</a>
+</li>
+        <li><a href="api/smac.main.html#smac.main.BaseSMBO.stats">(smac.main.BaseSMBO property)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.runhistory.html#smac.runhistory.StatusType">StatusType (class in smac.runhistory)</a>
@@ -3968,7 +4044,7 @@ style="width: 100%;">
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.1. Template is modified version of <a
+5.2.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

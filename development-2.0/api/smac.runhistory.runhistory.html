@@ -175,12 +175,17 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/4_priors.html">
+      <a class="reference internal" href="../examples/1_basics/4_callback.html">
+       Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/5_priors.html">
        User Priors over the Optimum
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/5_full_customization.html">
+      <a class="reference internal" href="../examples/1_basics/6_full_customization.html">
        Full Customization
       </a>
      </li>
@@ -243,13 +248,48 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/resumption.html">
-     Resumption
+    <a class="reference internal" href="../advanced_usage/1_facades.html">
+     Facades
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/callbacks.html">
-     Callbacks
+    <a class="reference internal" href="../advanced_usage/2_components.html">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/4_instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/5_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/6_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/7_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/8_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/9_parallelism.html">
+     Parallelism
     </a>
    </li>
   </ul>
@@ -295,13 +335,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="smac.facade.hpo_facade.html">
+       smac.facade.hpo_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.hyperparameter_facade.html">
-       smac.facade.hyperparameter_facade
+      <a class="reference internal" href="smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1021,6 +1061,15 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.runhistory.runhistory.RunHistory.get_config">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         RunHistory.get_config()
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#smac.runhistory.runhistory.RunHistory.get_configs">
        <code class="docutils literal notranslate">
         <span class="pre">
@@ -1372,6 +1421,17 @@ over time because the objective bounds are changing.</p></li>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the configuration from the configuration id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1733,7 +1793,7 @@ and <cite>self._num_trials_per_config</cite> accordingly.</p>
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.1. Template is modified version of <a
+5.2.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

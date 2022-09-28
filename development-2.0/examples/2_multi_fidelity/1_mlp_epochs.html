@@ -175,12 +175,17 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../1_basics/4_priors.html">
+      <a class="reference internal" href="../1_basics/4_callback.html">
+       Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../1_basics/5_priors.html">
        User Priors over the Optimum
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../1_basics/5_full_customization.html">
+      <a class="reference internal" href="../1_basics/6_full_customization.html">
        Full Customization
       </a>
      </li>
@@ -243,13 +248,48 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/resumption.html">
-     Resumption
+    <a class="reference internal" href="../../advanced_usage/1_facades.html">
+     Facades
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/callbacks.html">
-     Callbacks
+    <a class="reference internal" href="../../advanced_usage/2_components.html">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/4_instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/5_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/6_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/7_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/8_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/9_parallelism.html">
+     Parallelism
     </a>
    </li>
   </ul>
@@ -295,13 +335,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="../../api/smac.facade.hpo_facade.html">
+       smac.facade.hpo_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.hyperparameter_facade.html">
-       smac.facade.hyperparameter_facade
+      <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -960,45 +1000,47 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[WARNING][successive_halving.py:123] The target function is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider increasing `n_seeds` from the intensifier.
 [INFO][successive_halving.py:197] Using successive halving with budget type BUDGETS, min budget 5, max budget 25 and eta 3.
-[INFO][abstract_initial_design.py:132] Using 5 initial design and 0 additional configurations.
-[WARNING][abstract_parallel_intensifier.py:98] Hyperband is executed with 1 worker(s) only. However, your system supports up to 2 workers. Consider increasing the workers in the scenario.
-[INFO][hyperband_worker.py:164] Finished Hyperband iteration-step 1-1 with initial budget 8.
-[INFO][successive_halving_worker.py:395] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-[INFO][successive_halving_worker.py:611] Challenger (0.0495) is better than incumbent (0.0568) on budget 8.3333.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- batch_size: None -&gt; 155
-[INFO][abstract_intensifier.py:363] --- learning_rate_init: None -&gt; 0.006677306766018313
-[INFO][abstract_intensifier.py:363] --- n_layer: 4 -&gt; 5
-[INFO][abstract_intensifier.py:363] --- n_neurons: 123 -&gt; 56
-[INFO][abstract_intensifier.py:363] --- solver: &#39;lbfgs&#39; -&gt; &#39;adam&#39;
-[INFO][successive_halving_worker.py:244] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
-[INFO][successive_halving_worker.py:244] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
-[INFO][hyperband_worker.py:164] Finished Hyperband iteration-step 1-2 with initial budget 25.
-[INFO][successive_halving_worker.py:244] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
-[INFO][hyperband_worker.py:164] Finished Hyperband iteration-step 2-1 with initial budget 8.
-[INFO][successive_halving_worker.py:244] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
-[INFO][successive_halving_worker.py:611] Challenger (0.0345) is better than incumbent (0.0406) on budget 25.0000.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- activation: &#39;tanh&#39; -&gt; &#39;relu&#39;
-[INFO][abstract_intensifier.py:363] --- batch_size: 155 -&gt; 117
-[INFO][abstract_intensifier.py:363] --- learning_rate: None -&gt; &#39;adaptive&#39;
-[INFO][abstract_intensifier.py:363] --- learning_rate_init: 0.006677306766018313 -&gt; 0.008282754423021153
-[INFO][abstract_intensifier.py:363] --- n_neurons: 56 -&gt; 52
-[INFO][abstract_intensifier.py:363] --- solver: &#39;adam&#39; -&gt; &#39;sgd&#39;
-[INFO][successive_halving_worker.py:244] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
-[INFO][hyperband_worker.py:164] Finished Hyperband iteration-step 2-2 with initial budget 25.
-[INFO][successive_halving_worker.py:244] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
-[INFO][hyperband_worker.py:164] Finished Hyperband iteration-step 3-1 with initial budget 8.
-[INFO][successive_halving_worker.py:244] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
-[INFO][successive_halving_worker.py:611] Challenger (0.0189) is better than incumbent (0.0345) on budget 25.0000.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- batch_size: 117 -&gt; 91
-[INFO][abstract_intensifier.py:363] --- learning_rate_init: 0.008282754423021153 -&gt; 0.006390670908394775
-[INFO][abstract_intensifier.py:363] --- n_neurons: 52 -&gt; 183
-[INFO][successive_halving_worker.py:244] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
-[INFO][hyperband_worker.py:164] Finished Hyperband iteration-step 3-2 with initial budget 25.
-[INFO][abstract_facade.py:288] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 5, &#39;n_neurons&#39;: 183, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 91, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.006390670908394775}
-[INFO][abstract_facade.py:289] Estimated cost: 0.01892138656762621
+OrderedDict([(&#39;config&#39;, &lt;Parameter &quot;config: ConfigSpace.configuration_space.Configuration&quot;&gt;), (&#39;seed&#39;, &lt;Parameter &quot;seed: int = 0&quot;&gt;), (&#39;budget&#39;, &lt;Parameter &quot;budget: int = 25&quot;&gt;)])
+[INFO][abstract_initial_design.py:133] Using 5 initial design and 0 additional configurations.
+[WARNING][abstract_parallel_intensifier.py:93] Hyperband is executed with 1 worker(s) only. However, your system supports up to 2 workers. Consider increasing the workers in the scenario.
+[INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 1-1 with initial budget 8.
+[INFO][successive_halving_worker.py:396] First run and no incumbent provided. Challenger is assumed to be the incumbent.
+[INFO][successive_halving_worker.py:613] Challenger (0.0495) is better than incumbent (0.0568) on budget 8.3333.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- batch_size: None -&gt; 155
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: None -&gt; 0.006677306766018313
+[INFO][abstract_intensifier.py:367] --- n_layer: 4 -&gt; 5
+[INFO][abstract_intensifier.py:367] --- n_neurons: 123 -&gt; 56
+[INFO][abstract_intensifier.py:367] --- solver: &#39;lbfgs&#39; -&gt; &#39;adam&#39;
+[INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+[INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+[INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 1-2 with initial budget 25.
+[INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
+[INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 2-1 with initial budget 8.
+[INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+[INFO][successive_halving_worker.py:613] Challenger (0.0345) is better than incumbent (0.0406) on budget 25.0000.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- activation: &#39;tanh&#39; -&gt; &#39;relu&#39;
+[INFO][abstract_intensifier.py:367] --- batch_size: 155 -&gt; 117
+[INFO][abstract_intensifier.py:367] --- learning_rate: None -&gt; &#39;adaptive&#39;
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.006677306766018313 -&gt; 0.008282754423021153
+[INFO][abstract_intensifier.py:367] --- n_neurons: 56 -&gt; 52
+[INFO][abstract_intensifier.py:367] --- solver: &#39;adam&#39; -&gt; &#39;sgd&#39;
+[INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+[INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 2-2 with initial budget 25.
+[INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
+[INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 3-1 with initial budget 8.
+[INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+[INFO][successive_halving_worker.py:613] Challenger (0.0189) is better than incumbent (0.0345) on budget 25.0000.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- batch_size: 117 -&gt; 91
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.008282754423021153 -&gt; 0.006390670908394775
+[INFO][abstract_intensifier.py:367] --- n_neurons: 52 -&gt; 183
+[INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+[INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 3-2 with initial budget 25.
+[INFO][base_smbo.py:260] Configuration budget is exhausted.
+[INFO][abstract_facade.py:309] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 5, &#39;n_neurons&#39;: 183, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 91, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.006390670908394775}
+[INFO][abstract_facade.py:310] Estimated cost: 0.01892138656762621
 Default cost: 0.4307319715258433
 Default cost: 0.025047972763850068
 </pre></div>
@@ -1137,7 +1179,7 @@ Default cost: 0.025047972763850068
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  48.223 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  48.823 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e36c26bb3a993c4641a06c811122b11e/1_mlp_epochs.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_mlp_epochs.py</span></code></a></p>
@@ -1193,7 +1235,7 @@ Default cost: 0.025047972763850068
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.1. Template is modified version of <a
+5.2.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

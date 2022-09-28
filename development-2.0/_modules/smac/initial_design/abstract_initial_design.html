@@ -172,12 +172,17 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/4_priors.html">
+      <a class="reference internal" href="../../../examples/1_basics/4_callback.html">
+       Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../examples/1_basics/5_priors.html">
        User Priors over the Optimum
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/5_full_customization.html">
+      <a class="reference internal" href="../../../examples/1_basics/6_full_customization.html">
        Full Customization
       </a>
      </li>
@@ -240,13 +245,48 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/resumption.html">
-     Resumption
+    <a class="reference internal" href="../../../advanced_usage/1_facades.html">
+     Facades
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/callbacks.html">
-     Callbacks
+    <a class="reference internal" href="../../../advanced_usage/2_components.html">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/4_instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/5_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/6_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/7_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/8_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/9_parallelism.html">
+     Parallelism
     </a>
    </li>
   </ul>
@@ -292,13 +332,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="../../../api/smac.facade.hpo_facade.html">
+       smac.facade.hpo_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.hyperparameter_facade.html">
-       smac.facade.hyperparameter_facade
+      <a class="reference internal" href="../../../api/smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -958,11 +998,11 @@ style="width: 100%;">
 <span class="sd">        Number of initial configurations per hyperparameter. For example, if my configuration space covers five</span>
 <span class="sd">        hyperparameters and ``n_configs_per_hyperparameter`` is set to 10, then 50 initial configurations will be</span>
 <span class="sd">        samples.</span>
-<span class="sd">    additional_configs: list[Configuration], defaults to []</span>
-<span class="sd">        Adds additional configurations to the initial design.</span>
 <span class="sd">    max_ratio: float, defaults to 0.1</span>
 <span class="sd">        Use at most ``scenario.n_trials`` * ``max_ratio`` number of configurations in the initial design.</span>
 <span class="sd">        Additional configurations are not affected by this parameter.</span>
+<span class="sd">    additional_configs: list[Configuration], defaults to []</span>
+<span class="sd">        Adds additional configurations to the initial design.</span>
 <span class="sd">    seed : int | None, default to None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1015,7 +1055,8 @@ style="width: 100%;">
                 <span class="sa">f</span><span class="s2">&quot;Initial budget </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_configs</span><span class="si">}</span><span class="s2"> cannot be higher than the number of trials </span><span class="si">{</span><span class="n">scenario</span><span class="o">.</span><span class="n">n_trials</span><span class="si">}</span><span class="s2">.&quot;</span>
             <span class="p">)</span>
 
-<div class="viewcode-block" id="AbstractInitialDesign.get_meta"><a class="viewcode-back" href="../../../api/smac.initial_design.abstract_initial_design.html#smac.initial_design.AbstractInitialDesign.get_meta">[docs]</a>    <span class="k">def</span> <span class="nf">get_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
@@ -1023,7 +1064,7 @@ style="width: 100%;">
             <span class="s2">&quot;n_configs_per_hyperparameter&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_configs_per_hyperparameter</span><span class="p">,</span>
             <span class="s2">&quot;additional_configs&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">get_dictionary</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_additional_configs</span><span class="p">],</span>
             <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed</span><span class="p">,</span>
-        <span class="p">}</span></div>
+        <span class="p">}</span>
 
 <div class="viewcode-block" id="AbstractInitialDesign.select_configurations"><a class="viewcode-back" href="../../../api/smac.initial_design.abstract_initial_design.html#smac.initial_design.AbstractInitialDesign.select_configurations">[docs]</a>    <span class="k">def</span> <span class="nf">select_configurations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Selects the initial configurations. Internally, `_select_configurations` is called,</span>
@@ -1081,7 +1122,6 @@ style="width: 100%;">
 <span class="sd">        configs : list[Configuration]</span>
 <span class="sd">            Continuous transformed configs.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">params</span> <span class="o">=</span> <span class="n">configspace</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">NumericalHyperparameter</span><span class="p">):</span>
@@ -1149,7 +1189,7 @@ style="width: 100%;">
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.1. Template is modified version of <a
+5.2.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

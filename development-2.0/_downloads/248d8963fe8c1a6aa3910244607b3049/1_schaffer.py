@@ -13,7 +13,7 @@ import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from matplotlib import pyplot as plt
 
-from smac import HyperparameterFacade, Scenario
+from smac import HPOFacade, Scenario
 from smac.facade import AbstractFacade
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 
@@ -66,7 +66,7 @@ if __name__ == "__main__":
         objectives=["metric1", "metric2"],
     )
 
-    smac = HyperparameterFacade(
+    smac = HPOFacade(
         scenario=scenario,
         target_function=target_function,
         multi_objective_algorithm=MeanAggregationStrategy(scenario),

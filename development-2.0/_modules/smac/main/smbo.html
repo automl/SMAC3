@@ -172,12 +172,17 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/4_priors.html">
+      <a class="reference internal" href="../../../examples/1_basics/4_callback.html">
+       Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../examples/1_basics/5_priors.html">
        User Priors over the Optimum
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/5_full_customization.html">
+      <a class="reference internal" href="../../../examples/1_basics/6_full_customization.html">
        Full Customization
       </a>
      </li>
@@ -240,13 +245,48 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/resumption.html">
-     Resumption
+    <a class="reference internal" href="../../../advanced_usage/1_facades.html">
+     Facades
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/callbacks.html">
-     Callbacks
+    <a class="reference internal" href="../../../advanced_usage/2_components.html">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/4_instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/5_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/6_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/7_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/8_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/9_parallelism.html">
+     Parallelism
     </a>
    </li>
   </ul>
@@ -292,13 +332,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="../../../api/smac.facade.hpo_facade.html">
+       smac.facade.hpo_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.hyperparameter_facade.html">
-       smac.facade.hyperparameter_facade
+      <a class="reference internal" href="../../../api/smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -947,7 +987,7 @@ style="width: 100%;">
 
 
 <div class="viewcode-block" id="SMBO"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.SMBO">[docs]</a><span class="k">class</span> <span class="nc">SMBO</span><span class="p">(</span><span class="n">BaseSMBO</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Interface to train the EPM and generate/choose next configurations.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Implements ``get_next_configurations``, ``ask``, and ``tell``.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -956,7 +996,7 @@ style="width: 100%;">
         <span class="bp">self</span><span class="o">.</span><span class="n">_min_samples_model</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_considered_budgets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
 
-<div class="viewcode-block" id="SMBO.get_next_configurations"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.SMBO.get_next_configurations">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_configurations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+<div class="viewcode-block" id="SMBO.get_next_configurations"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.SMBO.get_next_configurations">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_configurations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
         <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>
             <span class="n">callback</span><span class="o">.</span><span class="n">on_next_configurations_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
@@ -1006,11 +1046,11 @@ style="width: 100%;">
 
         <span class="k">return</span> <span class="n">challengers</span></div>
 
-<div class="viewcode-block" id="SMBO.ask"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.SMBO.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">TrialInfoIntent</span><span class="p">,</span> <span class="n">TrialInfo</span><span class="p">]:</span>
+<div class="viewcode-block" id="SMBO.ask"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.SMBO.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">TrialInfoIntent</span><span class="p">,</span> <span class="n">TrialInfo</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
         <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>
             <span class="n">callback</span><span class="o">.</span><span class="n">on_ask_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-        <span class="n">intent</span><span class="p">,</span> <span class="n">trial_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">get_next_run</span><span class="p">(</span>
+        <span class="n">intent</span><span class="p">,</span> <span class="n">trial_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">get_next_trial</span><span class="p">(</span>
             <span class="n">challengers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_design_configs</span><span class="p">,</span>
             <span class="n">incumbent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_incumbent</span><span class="p">,</span>
             <span class="n">get_next_configurations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_next_configurations</span><span class="p">,</span>
@@ -1041,7 +1081,7 @@ style="width: 100%;">
         <span class="n">value</span><span class="p">:</span> <span class="n">TrialValue</span><span class="p">,</span>
         <span class="n">time_left</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
         <span class="c1"># We first check if budget/instance/seed is supported by the intensifier</span>
         <span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">seed</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">seeds</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">get_target_function_seeds</span><span class="p">()):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Seed </span><span class="si">{</span><span class="n">info</span><span class="o">.</span><span class="n">seed</span><span class="si">}</span><span class="s2"> is not supported by the intensifier. Consider using one of </span><span class="si">{</span><span class="n">seeds</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
@@ -1118,22 +1158,26 @@ style="width: 100%;">
 
         <span class="c1"># Gracefully end optimization if termination cost is reached</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">termination_cost_threshold</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">cost</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                <span class="n">cost</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">cost</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">cost</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">cost</span>
+            <span class="c1"># If we support fidelities, only check on highest fidelity</span>
+            <span class="n">uses_budgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">uses_budgets</span>
+            <span class="n">highest_tf_budget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">get_target_function_budgets</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">uses_budgets</span> <span class="ow">and</span> <span class="n">highest_tf_budget</span> <span class="o">==</span> <span class="n">info</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">uses_budgets</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">cost</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="n">cost</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">cost</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">cost</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">cost</span>
 
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">termination_cost_threshold</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                <span class="n">cost_threshold</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">termination_cost_threshold</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">cost_threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">termination_cost_threshold</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">termination_cost_threshold</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="n">cost_threshold</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">termination_cost_threshold</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">cost_threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">termination_cost_threshold</span>
 
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cost_threshold</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;You must specify a termination cost threshold for each objective.&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cost_threshold</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;You must specify a termination cost threshold for each objective.&quot;</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">cost_threshold</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cost</span><span class="p">))):</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Cost threshold was reached. Abort is requested.&quot;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">cost_threshold</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cost</span><span class="p">))):</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Cost threshold was reached. Abort is requested.&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="n">callback</span><span class="o">.</span><span class="n">on_tell_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
@@ -1147,11 +1191,10 @@ style="width: 100%;">
             <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
 
     <span class="k">def</span> <span class="nf">_collect_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Collect the data from the runhistory to train the epm model.</span>
-<span class="sd">        The data collection strategy if budgets are used is as follows:</span>
-<span class="sd">        Looking from highest to lowest budget, return those observations</span>
-<span class="sd">        that support at least self._min_samples_model points.</span>
+        <span class="sd">&quot;&quot;&quot;Collects the data from the runhistory to train the surrogate model. The data collection strategy if budgets</span>
+<span class="sd">        are used is as follows: Looking from highest to lowest budget, return those observations</span>
+<span class="sd">        that support at least ``self._min_samples_model`` points.</span>
+
 <span class="sd">        If no budgets are used, this is equivalent to returning all observations.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># if we use a float value as a budget, we want to train the model only on the highest budget</span>
@@ -1188,9 +1231,9 @@ style="width: 100%;">
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="o">.</span><span class="n">get_configs_per_budget</span><span class="p">(</span><span class="n">budget_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_considered_budgets</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_x_best</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predict</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Get value, configuration, and array representation of the &quot;best&quot; configuration.</span>
+        <span class="sd">&quot;&quot;&quot;Get value, configuration, and array representation of the *best* configuration.</span>
 
-<span class="sd">        The definition of best varies depending on the argument ``predict``. If set to ``True``,</span>
+<span class="sd">        The definition of best varies depending on the argument ``predict``. If set to `True`,</span>
 <span class="sd">        this function will return the stats of the best configuration as predicted by the model,</span>
 <span class="sd">        otherwise it will return the stats for the best observed configuration.</span>
 
@@ -1265,7 +1308,7 @@ style="width: 100%;">
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.1. Template is modified version of <a
+5.2.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

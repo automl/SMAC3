@@ -172,12 +172,17 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/4_priors.html">
+      <a class="reference internal" href="../../../examples/1_basics/4_callback.html">
+       Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../examples/1_basics/5_priors.html">
        User Priors over the Optimum
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/5_full_customization.html">
+      <a class="reference internal" href="../../../examples/1_basics/6_full_customization.html">
        Full Customization
       </a>
      </li>
@@ -240,13 +245,48 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/resumption.html">
-     Resumption
+    <a class="reference internal" href="../../../advanced_usage/1_facades.html">
+     Facades
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/callbacks.html">
-     Callbacks
+    <a class="reference internal" href="../../../advanced_usage/2_components.html">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/4_instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/5_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/6_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/7_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/8_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/9_parallelism.html">
+     Parallelism
     </a>
    </li>
   </ul>
@@ -292,13 +332,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="../../../api/smac.facade.hpo_facade.html">
+       smac.facade.hpo_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.hyperparameter_facade.html">
-       smac.facade.hyperparameter_facade
+      <a class="reference internal" href="../../../api/smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1044,27 +1084,28 @@ style="width: 100%;">
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">stage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The current stage of the worker.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stage</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">uses_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">uses_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_successive_halving</span><span class="o">.</span><span class="n">uses_seeds</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">uses_budgets</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">uses_budgets</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_successive_halving</span><span class="o">.</span><span class="n">uses_budgets</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">uses_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">uses_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_successive_halving</span><span class="o">.</span><span class="n">uses_instances</span>
 
-<div class="viewcode-block" id="SuccessiveHalvingWorker.get_target_function_seeds"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving_worker.html#smac.intensifier.successive_halving_worker.SuccessiveHalvingWorker.get_target_function_seeds">[docs]</a>    <span class="k">def</span> <span class="nf">get_target_function_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="SuccessiveHalvingWorker.get_target_function_seeds"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving_worker.html#smac.intensifier.successive_halving_worker.SuccessiveHalvingWorker.get_target_function_seeds">[docs]</a>    <span class="k">def</span> <span class="nf">get_target_function_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_successive_halving</span><span class="o">.</span><span class="n">get_target_function_seeds</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="SuccessiveHalvingWorker.get_target_function_budgets"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving_worker.html#smac.intensifier.successive_halving_worker.SuccessiveHalvingWorker.get_target_function_budgets">[docs]</a>    <span class="k">def</span> <span class="nf">get_target_function_budgets</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+<div class="viewcode-block" id="SuccessiveHalvingWorker.get_target_function_budgets"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving_worker.html#smac.intensifier.successive_halving_worker.SuccessiveHalvingWorker.get_target_function_budgets">[docs]</a>    <span class="k">def</span> <span class="nf">get_target_function_budgets</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_successive_halving</span><span class="o">.</span><span class="n">get_target_function_budgets</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="SuccessiveHalvingWorker.get_target_function_instances"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving_worker.html#smac.intensifier.successive_halving_worker.SuccessiveHalvingWorker.get_target_function_instances">[docs]</a>    <span class="k">def</span> <span class="nf">get_target_function_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+<div class="viewcode-block" id="SuccessiveHalvingWorker.get_target_function_instances"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving_worker.html#smac.intensifier.successive_halving_worker.SuccessiveHalvingWorker.get_target_function_instances">[docs]</a>    <span class="k">def</span> <span class="nf">get_target_function_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_successive_halving</span><span class="o">.</span><span class="n">get_target_function_instances</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="SuccessiveHalvingWorker.process_results"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving_worker.html#smac.intensifier.successive_halving_worker.SuccessiveHalvingWorker.process_results">[docs]</a>    <span class="k">def</span> <span class="nf">process_results</span><span class="p">(</span>
@@ -1075,7 +1116,7 @@ style="width: 100%;">
         <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
         <span class="n">time_bound</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">log_trajectory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
         <span class="c1"># Mark the fact that we processed this configuration</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_run_tracker</span><span class="p">[(</span><span class="n">trial_info</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">trial_info</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">trial_info</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="n">trial_info</span><span class="o">.</span><span class="n">budget</span><span class="p">)]</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -1115,7 +1156,7 @@ style="width: 100%;">
             <span class="n">activate_configuration_being_intensified</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_running_challenger</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="c1"># 2: Then we get the already submitted tasks (that is, proposed by get_next_runs),</span>
+        <span class="c1"># 2: Then we get the already submitted tasks (that is, proposed by get_next_trials),</span>
         <span class="c1"># that have not yet been processed process_results</span>
         <span class="n">all_config_inst_seeds_processed</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_tracker</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="mi">0</span>
 
@@ -1146,7 +1187,7 @@ style="width: 100%;">
         <span class="c1"># We need to update the incumbent if this config we are processing</span>
         <span class="c1"># completes all scheduled instance-seed pairs.</span>
         <span class="c1"># Here, a config/seed/instance is going to be processed for the first time</span>
-        <span class="c1"># (it has been previously scheduled by get_next_run and marked False, indicating</span>
+        <span class="c1"># (it has been previously scheduled by get_next_trial and marked False, indicating</span>
         <span class="c1"># that it has not been processed yet. Entering process_results() this config/seed/instance</span>
         <span class="c1"># is marked as TRUE as an indication that it has finished and should be processed)</span>
         <span class="c1"># so if all configurations runs are marked as TRUE it means that this new config</span>
@@ -1182,7 +1223,7 @@ style="width: 100%;">
 
         <span class="k">return</span> <span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span></div>
 
-<div class="viewcode-block" id="SuccessiveHalvingWorker.get_next_run"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving_worker.html#smac.intensifier.successive_halving_worker.SuccessiveHalvingWorker.get_next_run">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_run</span><span class="p">(</span>
+<div class="viewcode-block" id="SuccessiveHalvingWorker.get_next_trial"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving_worker.html#smac.intensifier.successive_halving_worker.SuccessiveHalvingWorker.get_next_trial">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_trial</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">challengers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
@@ -1227,7 +1268,7 @@ style="width: 100%;">
         <span class="n">sh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_successive_halving</span>
 
         <span class="c1"># In the case of multiprocessing, we have runs in Running stage, which have not</span>
-        <span class="c1"># been processed via process_results(). get_next_run() is called agnostically by</span>
+        <span class="c1"># been processed via process_results(). get_next_trial() is called agnostically by</span>
         <span class="c1"># smbo. To prevent launching more configs, than the ones needed, we query if</span>
         <span class="c1"># there is room for more configurations, else we wait for process_results()</span>
         <span class="c1"># to trigger a new stage</span>
@@ -1353,9 +1394,10 @@ style="width: 100%;">
         <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_update_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Update tracking information for a new stage/iteration and update statistics. This method</span>
+        <span class="sd">&quot;&quot;&quot;Updates tracking information for a new stage/iteration and update statistics. This method</span>
 <span class="sd">        is called to initialize stage variables and after all configurations of a Successive Halving</span>
-<span class="sd">        stage are completed.&quot;&quot;&quot;</span>
+<span class="sd">        stage are completed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stage</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="c1"># Only uncapped challengers are considered valid for the next iteration</span>
@@ -1680,9 +1722,7 @@ style="width: 100%;">
         <span class="c1"># We only submit a new configuration M if all instance-seed pairs of (M - 1)</span>
         <span class="c1"># have been proposed</span>
         <span class="n">configurations_by_this_intensifier</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">c</span>
-            <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_tracker</span>
-            <span class="c1"># if b == self._all_budgets[self.stage]  # Bugfix closes #880</span>
+            <span class="n">c</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_tracker</span>  <span class="c1"># if b == self._all_budgets[self.stage]  # Bugfix closes #880</span>
         <span class="p">]</span>
         <span class="n">running_configs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -1729,10 +1769,10 @@ style="width: 100%;">
             <span class="c1"># remaining</span>
             <span class="n">pending_instances_to_launch</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_instances</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># self._current_instance_indices - 1 is the last proposed instance/seed pair from get_next_run</span>
+            <span class="c1"># self._current_instance_indices - 1 is the last proposed instance/seed pair from get_next_trial</span>
             <span class="c1"># But it is zero indexed, so (self._current_instance_indices - 1) + 1 is the number of</span>
             <span class="c1"># configurations that we have proposed to run in total for the running</span>
-            <span class="c1"># configuration via get_next_run</span>
+            <span class="c1"># configuration via get_next_trial</span>
             <span class="n">pending_instances_to_launch</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
                 <span class="nb">len</span><span class="p">(</span><span class="n">current_instances</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_instance_indices</span><span class="p">[</span><span class="n">activate_configuration_being_intensified</span><span class="p">],</span> <span class="mi">0</span>
             <span class="p">)</span>  <span class="c1"># type: ignore</span>
@@ -1772,7 +1812,7 @@ style="width: 100%;">
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.1. Template is modified version of <a
+5.2.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

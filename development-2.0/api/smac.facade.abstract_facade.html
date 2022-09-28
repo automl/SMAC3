@@ -175,12 +175,17 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/4_priors.html">
+      <a class="reference internal" href="../examples/1_basics/4_callback.html">
+       Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/5_priors.html">
        User Priors over the Optimum
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/5_full_customization.html">
+      <a class="reference internal" href="../examples/1_basics/6_full_customization.html">
        Full Customization
       </a>
      </li>
@@ -243,13 +248,48 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/resumption.html">
-     Resumption
+    <a class="reference internal" href="../advanced_usage/1_facades.html">
+     Facades
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/callbacks.html">
-     Callbacks
+    <a class="reference internal" href="../advanced_usage/2_components.html">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/4_instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/5_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/6_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/7_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/8_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/9_parallelism.html">
+     Parallelism
     </a>
    </li>
   </ul>
@@ -295,13 +335,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="smac.facade.hpo_facade.html">
+       smac.facade.hpo_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.hyperparameter_facade.html">
-       smac.facade.hyperparameter_facade
+      <a class="reference internal" href="smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -985,15 +1025,6 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.facade.abstract_facade.AbstractFacade.get_meta">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         AbstractFacade.get_meta()
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#smac.facade.abstract_facade.AbstractFacade.get_model">
        <code class="docutils literal notranslate">
         <span class="pre">
@@ -1066,10 +1097,46 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.facade.abstract_facade.AbstractFacade.incumbent">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         AbstractFacade.incumbent
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.facade.abstract_facade.AbstractFacade.meta">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         AbstractFacade.meta
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#smac.facade.abstract_facade.AbstractFacade.optimize">
        <code class="docutils literal notranslate">
         <span class="pre">
          AbstractFacade.optimize()
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.facade.abstract_facade.AbstractFacade.runhistory">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         AbstractFacade.runhistory
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.facade.abstract_facade.AbstractFacade.stats">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         AbstractFacade.stats
         </span>
        </code>
       </a>
@@ -1124,7 +1191,7 @@ style="width: 100%;">
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.facade.abstract_facade.AbstractFacade" title="smac.facade.abstract_facade.AbstractFacade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractFacade</span></code></a>(scenario, target_function, *)</p></td>
-<td><p>Facade is an abstraction on top of the SMBO backend to organize the components of a Bayesian Optimization loop in a configurable &amp; separable manner to suit the various needs of different hyperparameter optimization pipelines.</p></td>
+<td><p>Facade is an abstraction on top of the SMBO backend to organize the components of a Bayesian Optimization loop in a configurable and separable manner to suit the various needs of different (hyperparameter) optimization pipelines.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1135,35 +1202,39 @@ style="width: 100%;">
 <dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.abstract_facade.</span></span><span class="sig-name descname"><span class="pre">AbstractFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_maximizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Facade is an abstraction on top of the SMBO backend to organize the components
-of a Bayesian Optimization loop in a configurable &amp; separable manner to suit the
-various needs of different hyperparameter optimization pipelines.</p>
-<p>With the exception to scenario and target_function, which are expected of the
-user, the parameters: model, acquisition_function, acquisition_maximizer,
-initial_design, random_design, intensifier, multi_objective_algorithm,
-runhistory and runhistory_encoder can either be explicitly specified in the
-subclasses’ get_* methods - defining a specific BO pipeline - or be instantiated
-by the user to overwrite a pipelines components explicitly, before passing
-them to the facade. For an example of the latter see the svm_cv.py.</p>
+<p>Facade is an abstraction on top of the SMBO backend to organize the components of a Bayesian Optimization loop
+in a configurable and separable manner to suit the various needs of different (hyperparameter) optimization
+pipelines.</p>
+<p>With the exception to scenario and <code class="docutils literal notranslate"><span class="pre">target_function</span></code>, which are expected of the user, the parameters <code class="docutils literal notranslate"><span class="pre">model</span></code>,
+<code class="docutils literal notranslate"><span class="pre">acquisition_function</span></code>, <code class="docutils literal notranslate"><span class="pre">acquisition_maximizer</span></code>, <code class="docutils literal notranslate"><span class="pre">initial_design</span></code>, <code class="docutils literal notranslate"><span class="pre">random_design</span></code>, <code class="docutils literal notranslate"><span class="pre">intensifier</span></code>,
+<code class="docutils literal notranslate"><span class="pre">multi_objective_algorithm</span></code>, <code class="docutils literal notranslate"><span class="pre">runhistory_encoder</span></code> can either be explicitly specified in the subclasses’
+<code class="docutils literal notranslate"><span class="pre">get_*</span></code> methods (defining a specific BO pipeline) or be instantiated by the user to overwrite a pipelines
+components explicitly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a><em>,</em>) – </p></li>
-<li><p><strong>target_function</strong> (<a class="reference internal" href="smac.runner.html#smac.runner.AbstractRunner" title="smac.runner.AbstractRunner"><em>AbstractRunner</em></a><em> | </em><em>Callable</em>) – </p></li>
-<li><p><strong>model</strong> (<em>BaseModel</em><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction" title="smac.acquisition.functions.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>acquisition_maximizer</strong> (<a class="reference internal" href="smac.acquisition.maximizers.html#smac.acquisition.maximizers.AbstractAcquisitionMaximizer" title="smac.acquisition.maximizers.AbstractAcquisitionMaximizer"><em>AbstractAcquisitionMaximizer</em></a><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>initial_design</strong> (<em>InitialDesign</em><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>random_design</strong> (<em>RandomDesign</em><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>intensifier</strong> (<a class="reference internal" href="smac.intensifier.html#smac.intensifier.AbstractIntensifier" title="smac.intensifier.AbstractIntensifier"><em>AbstractIntensifier</em></a><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>multi_objective_algorithm</strong> (<a class="reference internal" href="smac.multi_objective.html#smac.multi_objective.AbstractMultiObjectiveAlgorithm" title="smac.multi_objective.AbstractMultiObjectiveAlgorithm"><em>AbstractMultiObjectiveAlgorithm</em></a><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunHistory" title="smac.runhistory.RunHistory"><em>RunHistory</em></a><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>runhistory_encoder</strong> (<a class="reference internal" href="smac.runhistory.encoder.html#smac.runhistory.encoder.RunHistoryEncoder" title="smac.runhistory.encoder.RunHistoryEncoder"><em>RunHistoryEncoder</em></a><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>logging_level</strong> (<em>int</em><em> | </em><em>Path</em><em> | </em><em>None</em>) – Level of logging; if path passed: yaml file expected; if none: use default logging from logging.yml</p></li>
-<li><p><strong>callbacks</strong> (<em>list</em><em>[</em><a class="reference internal" href="smac.callback.html#smac.callback.Callback" title="smac.callback.Callback"><em>Callback</em></a><em>] </em><em>=</em><em> [</em><em>]</em><em>,</em>) – </p></li>
-<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>defaults to False</em>) – When True, overwrites the results (runhistory and stats) if a previous run is found that is
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – The scenario object, holding all environmental information.</p></li>
+<li><p><strong>target_function</strong> (<a class="reference internal" href="smac.runner.html#smac.runner.AbstractRunner" title="smac.runner.AbstractRunner"><em>AbstractRunner</em></a><em> | </em><em>Callable</em>) – This function is called internally to judge a trial’s performance.</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="smac.model.html#smac.model.AbstractModel" title="smac.model.AbstractModel"><em>AbstractModel</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The surrogate model.</p></li>
+<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.functions.html#smac.acquisition.functions.AbstractAcquisitionFunction" title="smac.acquisition.functions.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The acquisition function.</p></li>
+<li><p><strong>acquisition_maximizer</strong> (<a class="reference internal" href="smac.acquisition.maximizers.html#smac.acquisition.maximizers.AbstractAcquisitionMaximizer" title="smac.acquisition.maximizers.AbstractAcquisitionMaximizer"><em>AbstractAcquisitionMaximizer</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The acquisition maximizer, deciding which configuration is most promising based on the surrogate model and
+acquisition function.</p></li>
+<li><p><strong>initial_design</strong> (<em>InitialDesign</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The sampled configurations from the initial design are evaluated before the Bayesian optimization loop starts.</p></li>
+<li><p><strong>random_design</strong> (<em>RandomDesign</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The random design is used in the acquisition maximier, deciding whether the next configuration should be drawn
+from the acquisition function or randomly.</p></li>
+<li><p><strong>intensifier</strong> (<a class="reference internal" href="smac.intensifier.html#smac.intensifier.AbstractIntensifier" title="smac.intensifier.AbstractIntensifier"><em>AbstractIntensifier</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The intensifier decides which trial (combination of configuration, seed, budget and instance) should be run
+next.</p></li>
+<li><p><strong>multi_objective_algorithm</strong> (<a class="reference internal" href="smac.multi_objective.html#smac.multi_objective.AbstractMultiObjectiveAlgorithm" title="smac.multi_objective.AbstractMultiObjectiveAlgorithm"><em>AbstractMultiObjectiveAlgorithm</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – In case of multiple objectives, the objectives need to be interpreted so that an optimization is possible.
+The multi objective algorithm takes care of that.</p></li>
+<li><p><strong>runhistory_encoder</strong> (<a class="reference internal" href="smac.runhistory.encoder.html#smac.runhistory.encoder.RunHistoryEncoder" title="smac.runhistory.encoder.RunHistoryEncoder"><em>RunHistoryEncoder</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Based on the runhistory, the surrogate model is trained. However, the data first needs to be encoded, which
+is done by the runhistory encoder. For example, inactive hyperparameters need to be encoded or cost values
+can be log transformed.</p></li>
+<li><p><strong>logging_level</strong> (<em>int</em><em> | </em><em>Path</em><em> | </em><em>None</em>) – The level of logging (the lowest level 0 indicates the debug level). If a path is passed, a yaml file is
+expected with the logging configuration. If nothing is passed, the default logging.yml from SMAC is used.</p></li>
+<li><p><strong>callbacks</strong> (<em>list</em><em>[</em><a class="reference internal" href="smac.callback.html#smac.callback.Callback" title="smac.callback.Callback"><em>Callback</em></a><em>]</em><em>, </em><em>defaults to</em><em> [</em><em>]</em>) – Callbacks, which are incorporated into the optimization loop.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>defaults to False</em>) – When True, overwrites the run results if a previous run is found that is
 inconsistent in the meta data with the current setup. If <code class="docutils literal notranslate"><span class="pre">overwrite</span></code> is set to False, the user is asked
-for the exact behaviour.</p></li>
+for the exact behaviour (overwrite completely, save old run, or use old results).</p></li>
 </ul>
 </dd>
 </dl>
@@ -1223,18 +1294,6 @@ specifying how to challenge the incumbent configuration on other problem instanc
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.intensifier.abstract_intensifier.html#smac.intensifier.abstract_intensifier.AbstractIntensifier" title="smac.intensifier.abstract_intensifier.AbstractIntensifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractIntensifier</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.get_meta">
-<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.get_meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates a hash based on all components of the facade. This is used for the run name or to determine
-whether a run should be continued or not.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1332,6 +1391,29 @@ specifying how the runhistory is to be prepared for the next surrogate model.</p
 </dl>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.incumbent">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">incumbent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConfigSpace.configuration_space.Configuration</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.incumbent" title="Permalink to this definition">¶</a></dt>
+<dd><p>The best configuration so far.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.meta">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a hash based on all components of the facade. This is used for the run name or to determine
+whether a run should be continued or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.optimize">
 <span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.optimize" title="Permalink to this definition">¶</a></dt>
@@ -1342,6 +1424,29 @@ specifying how the runhistory is to be prepared for the next surrogate model.</p
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Configuration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.runhistory">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">runhistory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><span class="pre">RunHistory</span></a></em><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.runhistory" title="Permalink to this definition">¶</a></dt>
+<dd><p>The run history, which is filled with all information during the optimization process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunHistory</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.stats">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stats</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Stats</span></em><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>The stats object, which is updated during the optimization and shows relevant information, e.g., how many
+trials have been finished and how the trajectory looks like.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Stats</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1439,7 +1544,7 @@ averaged.</p>
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.1. Template is modified version of <a
+5.2.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

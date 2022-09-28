@@ -175,12 +175,17 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/4_priors.html">
+      <a class="reference internal" href="../examples/1_basics/4_callback.html">
+       Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/5_priors.html">
        User Priors over the Optimum
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/5_full_customization.html">
+      <a class="reference internal" href="../examples/1_basics/6_full_customization.html">
        Full Customization
       </a>
      </li>
@@ -243,13 +248,48 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/resumption.html">
-     Resumption
+    <a class="reference internal" href="../advanced_usage/1_facades.html">
+     Facades
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/callbacks.html">
-     Callbacks
+    <a class="reference internal" href="../advanced_usage/2_components.html">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/4_instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/5_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/6_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/7_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/8_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/9_parallelism.html">
+     Parallelism
     </a>
    </li>
   </ul>
@@ -295,13 +335,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="smac.facade.hpo_facade.html">
+       smac.facade.hpo_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.hyperparameter_facade.html">
-       smac.facade.hyperparameter_facade
+      <a class="reference internal" href="smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -940,15 +980,6 @@ style="width: 100%;">
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.intensifier.intensifier.Intensifier.get_meta">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         Intensifier.get_meta()
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#smac.intensifier.intensifier.Intensifier.get_next_challenger">
        <code class="docutils literal notranslate">
         <span class="pre">
@@ -958,10 +989,10 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.intensifier.intensifier.Intensifier.get_next_run">
+      <a class="reference internal nav-link" href="#smac.intensifier.intensifier.Intensifier.get_next_trial">
        <code class="docutils literal notranslate">
         <span class="pre">
-         Intensifier.get_next_run()
+         Intensifier.get_next_trial()
         </span>
        </code>
       </a>
@@ -998,6 +1029,15 @@ style="width: 100%;">
        <code class="docutils literal notranslate">
         <span class="pre">
          Intensifier.intensify_percentage
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.intensifier.intensifier.Intensifier.meta">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         Intensifier.meta
         </span>
        </code>
       </a>
@@ -1102,7 +1142,7 @@ the subset of instances Π’ ⊆ Π, based on the trials in R; max_config_calls
 10         S_missing ← {instance, seed} pairs for which θ_inc was run before, but not θ_new
 11         S_torun ← random subset of S_missing of size min(N, size(S_missing))
 12         foreach (π, s) ∈ S_torun do R ← ExecuteRun(R, θ_new, π, s)
-13         S_missing ← S_missing S_torun
+13         S_missing ← S_missing \ S_torun
 14         Π_common ← instances for which we previously ran both θ_inc and θ_new
 15         if c_hat(θ_new, Π_common) &gt; c_hat(θ_inc, Π_common) then break
 16         else if S_missing = ∅ then θ_inc ← θ_new; break
@@ -1124,17 +1164,6 @@ over-tuning.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.intensifier.intensifier.Intensifier.get_meta">
-<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/intensifier.html#Intensifier.get_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.intensifier.Intensifier.get_meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the meta data of the created object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.intensifier.intensifier.Intensifier.get_next_challenger">
 <span class="sig-name descname"><span class="pre">get_next_challenger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">challengers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_next_configurations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/intensifier.html#Intensifier.get_next_challenger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.intensifier.Intensifier.get_next_challenger" title="Permalink to this definition">¶</a></dt>
@@ -1167,8 +1196,8 @@ from epm/initial challengers.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.intensifier.intensifier.Intensifier.get_next_run">
-<span class="sig-name descname"><span class="pre">get_next_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">challengers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_next_configurations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/intensifier.html#Intensifier.get_next_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.intensifier.Intensifier.get_next_run" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.intensifier.intensifier.Intensifier.get_next_trial">
+<span class="sig-name descname"><span class="pre">get_next_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">challengers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_next_configurations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/intensifier.html#Intensifier.get_next_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.intensifier.Intensifier.get_next_trial" title="Permalink to this definition">¶</a></dt>
 <dd><p>This procedure is in charge of generating a TrialInfo object to comply with lines 7 (in
 case stage is stage == RUN_INCUMBENT) or line 12 (In case of stage == RUN_CHALLENGER).</p>
 <p>A TrialInfo object encapsulates the necessary information for a worker to execute the job, nevertheless, a
@@ -1248,6 +1277,17 @@ more instances). This parameter is accessed in the SMBO class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="smac.intensifier.intensifier.Intensifier.meta">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.intensifier.intensifier.Intensifier.meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the meta data of the created object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1371,7 +1411,7 @@ During intensification, the following can happen:</p>
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.1. Template is modified version of <a
+5.2.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

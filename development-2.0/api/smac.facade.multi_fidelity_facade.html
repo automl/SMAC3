@@ -41,7 +41,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.facade.random_facade" href="smac.facade.random_facade.html" />
-    <link rel="prev" title="smac.facade.hyperparameter_facade" href="smac.facade.hyperparameter_facade.html" />
+    <link rel="prev" title="smac.facade.hyperband_facade" href="smac.facade.hyperband_facade.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -175,12 +175,17 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/4_priors.html">
+      <a class="reference internal" href="../examples/1_basics/4_callback.html">
+       Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/5_priors.html">
        User Priors over the Optimum
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/5_full_customization.html">
+      <a class="reference internal" href="../examples/1_basics/6_full_customization.html">
        Full Customization
       </a>
      </li>
@@ -243,13 +248,48 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/resumption.html">
-     Resumption
+    <a class="reference internal" href="../advanced_usage/1_facades.html">
+     Facades
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/callbacks.html">
-     Callbacks
+    <a class="reference internal" href="../advanced_usage/2_components.html">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/4_instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/5_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/6_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/7_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/8_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/9_parallelism.html">
+     Parallelism
     </a>
    </li>
   </ul>
@@ -295,13 +335,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="smac.facade.hpo_facade.html">
+       smac.facade.hpo_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.hyperparameter_facade.html">
-       smac.facade.hyperparameter_facade
+      <a class="reference internal" href="smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3 current active">
@@ -999,7 +1039,7 @@ style="width: 100%;">
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.facade.multi_fidelity_facade.MultiFidelityFacade">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.multi_fidelity_facade.</span></span><span class="sig-name descname"><span class="pre">MultiFidelityFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_maximizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/multi_fidelity_facade.html#MultiFidelityFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.multi_fidelity_facade.MultiFidelityFacade" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.facade.hyperparameter_facade.html#smac.facade.hyperparameter_facade.HyperparameterFacade" title="smac.facade.hyperparameter_facade.HyperparameterFacade"><code class="xref py py-class docutils literal notranslate"><span class="pre">HyperparameterFacade</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="smac.facade.hpo_facade.html#smac.facade.hpo_facade.HPOFacade" title="smac.facade.hpo_facade.HPOFacade"><code class="xref py py-class docutils literal notranslate"><span class="pre">HPOFacade</span></code></a></p>
 <p>This facade configures SMAC in a multi-fidelity setting.
 The way this facade combines the components is the following and exploits
 fidelity information in the following form:</p>
@@ -1008,35 +1048,50 @@ fidelity information in the following form:</p>
 </ol>
 <p>2. The intensification is Hyperband. The configurations from the initial design
 are presented as challengers and executed in the Hyperband fashion.
-3. The model is a RandomForest surrogate model. The data to train it
-is collected by SMBO._collect_data. Notably, the method searches through
-the runhistory and collects the data from the highest fidelity level, that supports at least
-SMBO._min_samples_model number of configurations.
-4. The acquisition function is EI. Presenting the value of a candidate configuration.
-5. The acquisition optimizer is LocalAndSortedRandomSearch. It optimizes the acquisition
-function to present the best configuration as challenger to the intensifier.
-From now on 2. works as follows: the intensifier runs the challenger in a Hyperband fashion
-against the existing configurations and their observed performances
-until the challenger does not survive a fidelity level. The intensifier can inquire about a
-known configuration on a yet unseen fidelity if necessary.</p>
+3. The model is a RandomForest surrogate model. The data to train it is collected by <code class="docutils literal notranslate"><span class="pre">SMBO._collect_data</span></code>.</p>
+<blockquote>
+<div><p>Notably, the method searches through the runhistory and collects the data from the highest fidelity level,
+that supports at least <code class="docutils literal notranslate"><span class="pre">SMBO._min_samples_model</span></code> number of configurations.</p>
+</div></blockquote>
+<ol class="arabic simple" start="4">
+<li><p>The acquisition function is <code class="docutils literal notranslate"><span class="pre">EI</span></code>, presenting the value of a candidate configuration.</p></li>
+<li><p>The acquisition optimizer is <code class="docutils literal notranslate"><span class="pre">LocalAndSortedRandomSearch</span></code>. It optimizes the acquisition</p></li>
+</ol>
+<blockquote>
+<div><p>function to present the best configuration as challenger to the intensifier.
+From now on 2. works as follows: The intensifier runs the challenger in a Hyperband fashion against the existing
+configurations and their observed performances until the challenger does not survive a fidelity level. The
+intensifier can inquire about a known configuration on a yet unseen fidelity if necessary.</p>
+</div></blockquote>
 <p>The loop 2-5 continues until a termination criterion is reached.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Note<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>For intensification the data acquisition and aggregation strategy in step 2 is changed.
 Incumbents are updated by the mean performance over the intersection of instances, that
-the challenger and incumbent have in common (abstract_intensifier._compare_configs).
-The model in step 3 is trained on the all the available instance performance values.
+the challenger and incumbent have in common (<code class="docutils literal notranslate"><span class="pre">abstract_intensifier._compare_configs</span></code>).
+The model in step 3 is trained on all the available instance performance values.
 The datapoints for a hyperparameter configuration are disambiguated by the instance features
 or an index as replacement if no instance features are available.</p>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.multi_fidelity_facade.MultiFidelityFacade.get_initial_design">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_initial_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs_per_hyperparamter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/multi_fidelity_facade.html#MultiFidelityFacade.get_initial_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.multi_fidelity_facade.MultiFidelityFacade.get_initial_design" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a random initial design instance. Please check its documentation for details.</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_initial_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs_per_hyperparamter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/multi_fidelity_facade.html#MultiFidelityFacade.get_initial_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.multi_fidelity_facade.MultiFidelityFacade.get_initial_design" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a random initial design.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.initial_design.random_design.html#smac.initial_design.random_design.RandomInitialDesign" title="smac.initial_design.random_design.RandomInitialDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomInitialDesign</span></code></a></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
+<li><p><strong>n_configs</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Number of initial configurations (disables the arguments <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code>).</p></li>
+<li><p><strong>n_configs_per_hyperparameter</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – Number of initial configurations per hyperparameter. For example, if my configuration space covers five
+hyperparameters and <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code> is set to 10, then 50 initial configurations will be
+samples.</p></li>
+<li><p><strong>max_ratio</strong> (<em>float</em><em>, </em><em>defaults to 0.1</em>) – Use at most <code class="docutils literal notranslate"><span class="pre">scenario.n_trials</span></code> * <code class="docutils literal notranslate"><span class="pre">max_ratio</span></code> number of configurations in the initial design.
+Additional configurations are not affected by this parameter.</p></li>
+<li><p><strong>additional_configs</strong> (<em>list</em><em>[</em><em>Configuration</em><em>]</em><em>, </em><em>defaults to</em><em> [</em><em>]</em>) – Adds additional configurations to the initial design.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="smac.initial_design.random_design.html#smac.initial_design.random_design.RandomInitialDesign" title="smac.initial_design.random_design.RandomInitialDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomInitialDesign</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1044,7 +1099,15 @@ or an index as replacement if no instance features are available.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.multi_fidelity_facade.MultiFidelityFacade.get_intensifier">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_challenger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/multi_fidelity_facade.html#MultiFidelityFacade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.multi_fidelity_facade.MultiFidelityFacade.get_intensifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a Hyperband intensifier instance. Please check its documentation for details.</p>
+<dd><p>Returns a Hyperband intensifier instance. That means that budgets are supported.</p>
+<dl class="simple">
+<dt>min_challenger<span class="classifier">int, defaults to 1</span></dt><dd><p>Minimal number of challengers to be considered (even if time_bound is exhausted earlier).</p>
+</dd>
+<dt>eta<span class="classifier">float, defaults to 3</span></dt><dd><p>The “halving” factor after each iteration in a Successive Halving run.</p>
+</dd>
+<dt>n_seeds<span class="classifier">int | None, defaults to None</span></dt><dd><p>The number of seeds to use if the target function is non-deterministic.</p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.intensifier.hyperband.html#smac.intensifier.hyperband.Hyperband" title="smac.intensifier.hyperband.Hyperband"><code class="xref py py-class docutils literal notranslate"><span class="pre">Hyperband</span></code></a></p>
@@ -1063,11 +1126,11 @@ or an index as replacement if no instance features are available.</p>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.facade.hyperparameter_facade.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.facade.hyperband_facade.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.facade.hyperparameter_facade</p>
+            <p class="prev-next-title">smac.facade.hyperband_facade</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="smac.facade.random_facade.html" title="next page">
@@ -1102,7 +1165,7 @@ or an index as replacement if no instance features are available.</p>
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.1. Template is modified version of <a
+5.2.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

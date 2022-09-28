@@ -172,12 +172,17 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/4_priors.html">
+      <a class="reference internal" href="../../../examples/1_basics/4_callback.html">
+       Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../examples/1_basics/5_priors.html">
        User Priors over the Optimum
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/5_full_customization.html">
+      <a class="reference internal" href="../../../examples/1_basics/6_full_customization.html">
        Full Customization
       </a>
      </li>
@@ -240,13 +245,48 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/resumption.html">
-     Resumption
+    <a class="reference internal" href="../../../advanced_usage/1_facades.html">
+     Facades
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/callbacks.html">
-     Callbacks
+    <a class="reference internal" href="../../../advanced_usage/2_components.html">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/4_instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/5_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/6_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/7_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/8_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/9_parallelism.html">
+     Parallelism
     </a>
    </li>
   </ul>
@@ -292,13 +332,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="../../../api/smac.facade.hpo_facade.html">
+       smac.facade.hpo_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.hyperparameter_facade.html">
-       smac.facade.hyperparameter_facade
+      <a class="reference internal" href="../../../api/smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -959,7 +999,7 @@ style="width: 100%;">
 
 <span class="sd">    1. Select a configuration θ uniformly at random.</span>
 <span class="sd">    2. Compare θ to incumbent θ* online (one θ at a time):</span>
-<span class="sd">        - Reject/accept θ with `aggressive racing`</span>
+<span class="sd">      - Reject/accept θ with `aggressive racing`</span>
 
 <span class="sd">    *Setup:*</span>
 <span class="sd">    Uses a random model and random search for the optimization of the acquisition function.</span>
@@ -989,10 +1029,14 @@ style="width: 100%;">
         <span class="n">max_config_calls</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
         <span class="n">intensify_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Intensifier</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;We use a simple intensifier. Please use ``HyperbandFacade`` if you want to incorporate budgets.</span>
+        <span class="sd">&quot;&quot;&quot;Returns ``Intensifier`` as intensifier. Uses the default configuration for ``race_against``.</span>
 
 <span class="sd">        Note</span>
 <span class="sd">        ----</span>
+<span class="sd">        Please use ``HyperbandFacade`` if you want to incorporate budgets.</span>
+
+<span class="sd">        Warning</span>
+<span class="sd">        -------</span>
 <span class="sd">        If you are in an algorithm configuration setting, consider increasing ``max_config_calls``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">intensifier</span> <span class="o">=</span> <span class="n">Intensifier</span><span class="p">(</span>
@@ -1012,7 +1056,13 @@ style="width: 100%;">
         <span class="o">*</span><span class="p">,</span>
         <span class="n">additional_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefaultInitialDesign</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Before starting the random optimization, we first evaluate the default initial design.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns an initial design, which returns the default configuration.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        additional_configs: list[Configuration], defaults to []</span>
+<span class="sd">            Adds additional configurations to the initial design.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">DefaultInitialDesign</span><span class="p">(</span>
             <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
             <span class="n">additional_configs</span><span class="o">=</span><span class="n">additional_configs</span><span class="p">,</span>
@@ -1033,7 +1083,6 @@ style="width: 100%;">
         <span class="sd">&quot;&quot;&quot;The model is used in the acquisition function. Since we do not use an acquisition function, we return a</span>
 <span class="sd">        dummy model (returning random values in this case).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">return</span> <span class="n">RandomModel</span><span class="p">(</span>
             <span class="n">configspace</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span>
             <span class="n">instance_features</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">instance_features</span><span class="p">,</span>
@@ -1045,19 +1094,20 @@ style="width: 100%;">
         <span class="sd">&quot;&quot;&quot;We return ``RandomSearch`` as maximizer which samples configurations randomly from the configuration</span>
 <span class="sd">        space and therefore neither uses the acquisition function nor the model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">return</span> <span class="n">RandomSearch</span><span class="p">(</span>
             <span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span>
             <span class="n">seed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RandomFacade.get_runhistory_encoder"><a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade.get_runhistory_encoder">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_runhistory_encoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistoryEncoder</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">RunHistoryEncoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">)</span></div>
-
 <div class="viewcode-block" id="RandomFacade.get_multi_objective_algorithm"><a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade.get_multi_objective_algorithm">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_multi_objective_algorithm</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractMultiObjectiveAlgorithm</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">MeanAggregationStrategy</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">)</span></div></div>
+        <span class="sd">&quot;&quot;&quot;Returns the mean aggregation strategy for the multi objective algorithm.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">MeanAggregationStrategy</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RandomFacade.get_runhistory_encoder"><a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade.get_runhistory_encoder">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_runhistory_encoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistoryEncoder</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the default runhistory encoder.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">RunHistoryEncoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">)</span></div></div>
 </pre></div>
 
               </div>
@@ -1090,7 +1140,7 @@ style="width: 100%;">
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.1. Template is modified version of <a
+5.2.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

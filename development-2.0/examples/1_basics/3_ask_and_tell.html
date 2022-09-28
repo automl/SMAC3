@@ -40,7 +40,7 @@
     <script src="../../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="User Priors over the Optimum" href="4_priors.html" />
+    <link rel="next" title="Callback" href="4_callback.html" />
     <link rel="prev" title="Support Vector Machine with Cross-Validation" href="2_svm_cv.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
@@ -175,12 +175,17 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="4_priors.html">
+      <a class="reference internal" href="4_callback.html">
+       Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="5_priors.html">
        User Priors over the Optimum
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="5_full_customization.html">
+      <a class="reference internal" href="6_full_customization.html">
        Full Customization
       </a>
      </li>
@@ -243,13 +248,48 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/resumption.html">
-     Resumption
+    <a class="reference internal" href="../../advanced_usage/1_facades.html">
+     Facades
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/callbacks.html">
-     Callbacks
+    <a class="reference internal" href="../../advanced_usage/2_components.html">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/4_instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/5_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/6_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/7_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/8_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/9_parallelism.html">
+     Parallelism
     </a>
    </li>
   </ul>
@@ -295,13 +335,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="../../api/smac.facade.hpo_facade.html">
+       smac.facade.hpo_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.hyperparameter_facade.html">
-       smac.facade.hyperparameter_facade
+      <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -945,40 +985,42 @@ to download the full example code</p>
 <span id="sphx-glr-examples-1-basics-3-ask-and-tell-py"></span><h1>Ask-and-Tell Interface<a class="headerlink" href="#ask-and-tell-interface" title="Permalink to this heading">¶</a></h1>
 <p>This examples show how to use the Ask-and-Tell interface.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:81] Reducing the number of initial configurations from 20 to 10 (max_ratio == 0.1).
-[INFO][abstract_initial_design.py:132] Using 10 initial design and 0 additional configurations.
-[INFO][intensifier.py:273] No incumbent provided in the first run. Sampling a new challenger...
-[INFO][intensifier.py:444] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-[INFO][intensifier.py:564] Updated estimated cost of incumbent on 1 trials: 1102.7878
-[INFO][abstract_intensifier.py:336] Challenger (700.6438) is better than incumbent (1102.7878) on 1 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x0: -0.9968221839517355 -&gt; -0.0801787059894652
-[INFO][abstract_intensifier.py:363] --- x1: 4.30847043171525 -&gt; 2.6511913893559456
-[INFO][abstract_intensifier.py:336] Challenger (692.266) is better than incumbent (700.6438) on 1 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x0: -0.0801787059894652 -&gt; -0.11841909303497555
-[INFO][abstract_intensifier.py:363] --- x1: 2.6511913893559456 -&gt; 2.642739687876742
-[INFO][abstract_intensifier.py:336] Challenger (664.4209) is better than incumbent (692.266) on 1 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x0: -0.11841909303497555 -&gt; -0.23190729051219083
-[INFO][abstract_intensifier.py:363] --- x1: 2.642739687876742 -&gt; 2.6284718736435133
-[INFO][abstract_intensifier.py:336] Challenger (631.3981) is better than incumbent (664.4209) on 1 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x0: -0.23190729051219083 -&gt; -0.42553725563416656
-[INFO][abstract_intensifier.py:363] --- x1: 2.6284718736435133 -&gt; 2.68979871241151
-[INFO][abstract_intensifier.py:336] Challenger (556.8875) is better than incumbent (631.3981) on 1 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x0: -0.42553725563416656 -&gt; -0.5047246675538846
-[INFO][abstract_intensifier.py:363] --- x1: 2.68979871241151 -&gt; 2.60979112499804
-[INFO][abstract_intensifier.py:336] Challenger (550.0838) is better than incumbent (556.8875) on 1 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x0: -0.5047246675538846 -&gt; -0.5669451075267817
-[INFO][abstract_intensifier.py:363] --- x1: 2.60979112499804 -&gt; 2.6615730174631764
-[INFO][abstract_intensifier.py:336] Challenger (72.1425) is better than incumbent (550.0838) on 1 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x0: -0.5669451075267817 -&gt; 0.7153215381459042
-[INFO][abstract_intensifier.py:363] --- x1: 2.6615730174631764 -&gt; 1.3605748848483428
-[INFO][abstract_facade.py:288] Final Incumbent: {&#39;x0&#39;: 0.7153215381459042, &#39;x1&#39;: 1.3605748848483428}
-[INFO][abstract_facade.py:289] Estimated cost: 72.14246196585546
+OrderedDict([(&#39;config&#39;, &lt;Parameter &quot;config: ConfigSpace.configuration_space.Configuration&quot;&gt;), (&#39;seed&#39;, &lt;Parameter &quot;seed: int = 0&quot;&gt;)])
+[INFO][abstract_initial_design.py:133] Using 10 initial design and 0 additional configurations.
+[INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
+[INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
+[INFO][intensifier.py:567] Updated estimated cost of incumbent on 1 trials: 1102.7878
+[INFO][abstract_intensifier.py:340] Challenger (700.6438) is better than incumbent (1102.7878) on 1 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x0: -0.9968221839517355 -&gt; -0.0801787059894652
+[INFO][abstract_intensifier.py:367] --- x1: 4.30847043171525 -&gt; 2.6511913893559456
+[INFO][abstract_intensifier.py:340] Challenger (692.266) is better than incumbent (700.6438) on 1 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x0: -0.0801787059894652 -&gt; -0.11841909303497555
+[INFO][abstract_intensifier.py:367] --- x1: 2.6511913893559456 -&gt; 2.642739687876742
+[INFO][abstract_intensifier.py:340] Challenger (664.4209) is better than incumbent (692.266) on 1 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x0: -0.11841909303497555 -&gt; -0.23190729051219083
+[INFO][abstract_intensifier.py:367] --- x1: 2.642739687876742 -&gt; 2.6284718736435133
+[INFO][abstract_intensifier.py:340] Challenger (631.3981) is better than incumbent (664.4209) on 1 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x0: -0.23190729051219083 -&gt; -0.42553725563416656
+[INFO][abstract_intensifier.py:367] --- x1: 2.6284718736435133 -&gt; 2.68979871241151
+[INFO][abstract_intensifier.py:340] Challenger (556.8875) is better than incumbent (631.3981) on 1 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x0: -0.42553725563416656 -&gt; -0.5047246675538846
+[INFO][abstract_intensifier.py:367] --- x1: 2.68979871241151 -&gt; 2.60979112499804
+[INFO][abstract_intensifier.py:340] Challenger (550.0838) is better than incumbent (556.8875) on 1 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x0: -0.5047246675538846 -&gt; -0.5669451075267817
+[INFO][abstract_intensifier.py:367] --- x1: 2.60979112499804 -&gt; 2.6615730174631764
+[INFO][abstract_intensifier.py:340] Challenger (72.1425) is better than incumbent (550.0838) on 1 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x0: -0.5669451075267817 -&gt; 0.7153215381459042
+[INFO][abstract_intensifier.py:367] --- x1: 2.6615730174631764 -&gt; 1.3605748848483428
+[INFO][base_smbo.py:260] Configuration budget is exhausted.
+[INFO][abstract_facade.py:309] Final Incumbent: {&#39;x0&#39;: 0.7153215381459042, &#39;x1&#39;: 1.3605748848483428}
+[INFO][abstract_facade.py:310] Estimated cost: 72.14246196585546
 Default cost: 16916.0
 Default cost: 72.14246196585546
 </pre></div>
@@ -988,7 +1030,7 @@ Default cost: 72.14246196585546
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ConfigurationSpace</span><span class="p">,</span> <span class="n">Float</span>
 
-<span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">HyperparameterFacade</span><span class="p">,</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">HPOFacade</span><span class="p">,</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.dataclasses</span> <span class="kn">import</span> <span class="n">TrialValue</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2021, AutoML.org Freiburg-Hannover&quot;</span>
@@ -1026,13 +1068,13 @@ Default cost: 72.14246196585546
     <span class="c1"># Scenario object</span>
     <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span> <span class="n">deterministic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 
-    <span class="n">intensifier</span> <span class="o">=</span> <span class="n">HyperparameterFacade</span><span class="o">.</span><span class="n">get_intensifier</span><span class="p">(</span>
+    <span class="n">intensifier</span> <span class="o">=</span> <span class="n">HPOFacade</span><span class="o">.</span><span class="n">get_intensifier</span><span class="p">(</span>
         <span class="n">scenario</span><span class="p">,</span>
         <span class="n">max_config_calls</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># We basically use one seed only</span>
     <span class="p">)</span>
 
     <span class="c1"># Now we use SMAC to find the best hyperparameters</span>
-    <span class="n">smac</span> <span class="o">=</span> <span class="n">HyperparameterFacade</span><span class="p">(</span>
+    <span class="n">smac</span> <span class="o">=</span> <span class="n">HPOFacade</span><span class="p">(</span>
         <span class="n">scenario</span><span class="p">,</span>
         <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">,</span>
         <span class="n">intensifier</span><span class="o">=</span><span class="n">intensifier</span><span class="p">,</span>
@@ -1062,7 +1104,7 @@ Default cost: 72.14246196585546
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.734 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.693 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-3-ask-and-tell-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/a1828630146a41acf93ee176b4deac58/3_ask_and_tell.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">3_ask_and_tell.py</span></code></a></p>
@@ -1086,10 +1128,10 @@ Default cost: 72.14246196585546
             <p class="prev-next-title">Support Vector Machine with Cross-Validation</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="4_priors.html" title="next page">
+    <a class='right-next' id="next-link" href="4_callback.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">User Priors over the Optimum</p>
+        <p class="prev-next-title">Callback</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
@@ -1118,7 +1160,7 @@ Default cost: 72.14246196585546
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.1. Template is modified version of <a
+5.2.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

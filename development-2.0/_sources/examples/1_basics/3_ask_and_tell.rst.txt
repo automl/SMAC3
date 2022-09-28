@@ -19,7 +19,7 @@
 
 
 Ask-and-Tell Interface
-^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^
 
 This examples show how to use the Ask-and-Tell interface.
 
@@ -33,40 +33,42 @@ This examples show how to use the Ask-and-Tell interface.
  .. code-block:: none
 
     [INFO][abstract_initial_design.py:81] Reducing the number of initial configurations from 20 to 10 (max_ratio == 0.1).
-    [INFO][abstract_initial_design.py:132] Using 10 initial design and 0 additional configurations.
-    [INFO][intensifier.py:273] No incumbent provided in the first run. Sampling a new challenger...
-    [INFO][intensifier.py:444] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-    [INFO][intensifier.py:564] Updated estimated cost of incumbent on 1 trials: 1102.7878
-    [INFO][abstract_intensifier.py:336] Challenger (700.6438) is better than incumbent (1102.7878) on 1 trials.
-    [INFO][abstract_intensifier.py:360] Changes in incumbent:
-    [INFO][abstract_intensifier.py:363] --- x0: -0.9968221839517355 -> -0.0801787059894652
-    [INFO][abstract_intensifier.py:363] --- x1: 4.30847043171525 -> 2.6511913893559456
-    [INFO][abstract_intensifier.py:336] Challenger (692.266) is better than incumbent (700.6438) on 1 trials.
-    [INFO][abstract_intensifier.py:360] Changes in incumbent:
-    [INFO][abstract_intensifier.py:363] --- x0: -0.0801787059894652 -> -0.11841909303497555
-    [INFO][abstract_intensifier.py:363] --- x1: 2.6511913893559456 -> 2.642739687876742
-    [INFO][abstract_intensifier.py:336] Challenger (664.4209) is better than incumbent (692.266) on 1 trials.
-    [INFO][abstract_intensifier.py:360] Changes in incumbent:
-    [INFO][abstract_intensifier.py:363] --- x0: -0.11841909303497555 -> -0.23190729051219083
-    [INFO][abstract_intensifier.py:363] --- x1: 2.642739687876742 -> 2.6284718736435133
-    [INFO][abstract_intensifier.py:336] Challenger (631.3981) is better than incumbent (664.4209) on 1 trials.
-    [INFO][abstract_intensifier.py:360] Changes in incumbent:
-    [INFO][abstract_intensifier.py:363] --- x0: -0.23190729051219083 -> -0.42553725563416656
-    [INFO][abstract_intensifier.py:363] --- x1: 2.6284718736435133 -> 2.68979871241151
-    [INFO][abstract_intensifier.py:336] Challenger (556.8875) is better than incumbent (631.3981) on 1 trials.
-    [INFO][abstract_intensifier.py:360] Changes in incumbent:
-    [INFO][abstract_intensifier.py:363] --- x0: -0.42553725563416656 -> -0.5047246675538846
-    [INFO][abstract_intensifier.py:363] --- x1: 2.68979871241151 -> 2.60979112499804
-    [INFO][abstract_intensifier.py:336] Challenger (550.0838) is better than incumbent (556.8875) on 1 trials.
-    [INFO][abstract_intensifier.py:360] Changes in incumbent:
-    [INFO][abstract_intensifier.py:363] --- x0: -0.5047246675538846 -> -0.5669451075267817
-    [INFO][abstract_intensifier.py:363] --- x1: 2.60979112499804 -> 2.6615730174631764
-    [INFO][abstract_intensifier.py:336] Challenger (72.1425) is better than incumbent (550.0838) on 1 trials.
-    [INFO][abstract_intensifier.py:360] Changes in incumbent:
-    [INFO][abstract_intensifier.py:363] --- x0: -0.5669451075267817 -> 0.7153215381459042
-    [INFO][abstract_intensifier.py:363] --- x1: 2.6615730174631764 -> 1.3605748848483428
-    [INFO][abstract_facade.py:288] Final Incumbent: {'x0': 0.7153215381459042, 'x1': 1.3605748848483428}
-    [INFO][abstract_facade.py:289] Estimated cost: 72.14246196585546
+    OrderedDict([('config', <Parameter "config: ConfigSpace.configuration_space.Configuration">), ('seed', <Parameter "seed: int = 0">)])
+    [INFO][abstract_initial_design.py:133] Using 10 initial design and 0 additional configurations.
+    [INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
+    [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
+    [INFO][intensifier.py:567] Updated estimated cost of incumbent on 1 trials: 1102.7878
+    [INFO][abstract_intensifier.py:340] Challenger (700.6438) is better than incumbent (1102.7878) on 1 trials.
+    [INFO][abstract_intensifier.py:364] Changes in incumbent:
+    [INFO][abstract_intensifier.py:367] --- x0: -0.9968221839517355 -> -0.0801787059894652
+    [INFO][abstract_intensifier.py:367] --- x1: 4.30847043171525 -> 2.6511913893559456
+    [INFO][abstract_intensifier.py:340] Challenger (692.266) is better than incumbent (700.6438) on 1 trials.
+    [INFO][abstract_intensifier.py:364] Changes in incumbent:
+    [INFO][abstract_intensifier.py:367] --- x0: -0.0801787059894652 -> -0.11841909303497555
+    [INFO][abstract_intensifier.py:367] --- x1: 2.6511913893559456 -> 2.642739687876742
+    [INFO][abstract_intensifier.py:340] Challenger (664.4209) is better than incumbent (692.266) on 1 trials.
+    [INFO][abstract_intensifier.py:364] Changes in incumbent:
+    [INFO][abstract_intensifier.py:367] --- x0: -0.11841909303497555 -> -0.23190729051219083
+    [INFO][abstract_intensifier.py:367] --- x1: 2.642739687876742 -> 2.6284718736435133
+    [INFO][abstract_intensifier.py:340] Challenger (631.3981) is better than incumbent (664.4209) on 1 trials.
+    [INFO][abstract_intensifier.py:364] Changes in incumbent:
+    [INFO][abstract_intensifier.py:367] --- x0: -0.23190729051219083 -> -0.42553725563416656
+    [INFO][abstract_intensifier.py:367] --- x1: 2.6284718736435133 -> 2.68979871241151
+    [INFO][abstract_intensifier.py:340] Challenger (556.8875) is better than incumbent (631.3981) on 1 trials.
+    [INFO][abstract_intensifier.py:364] Changes in incumbent:
+    [INFO][abstract_intensifier.py:367] --- x0: -0.42553725563416656 -> -0.5047246675538846
+    [INFO][abstract_intensifier.py:367] --- x1: 2.68979871241151 -> 2.60979112499804
+    [INFO][abstract_intensifier.py:340] Challenger (550.0838) is better than incumbent (556.8875) on 1 trials.
+    [INFO][abstract_intensifier.py:364] Changes in incumbent:
+    [INFO][abstract_intensifier.py:367] --- x0: -0.5047246675538846 -> -0.5669451075267817
+    [INFO][abstract_intensifier.py:367] --- x1: 2.60979112499804 -> 2.6615730174631764
+    [INFO][abstract_intensifier.py:340] Challenger (72.1425) is better than incumbent (550.0838) on 1 trials.
+    [INFO][abstract_intensifier.py:364] Changes in incumbent:
+    [INFO][abstract_intensifier.py:367] --- x0: -0.5669451075267817 -> 0.7153215381459042
+    [INFO][abstract_intensifier.py:367] --- x1: 2.6615730174631764 -> 1.3605748848483428
+    [INFO][base_smbo.py:260] Configuration budget is exhausted.
+    [INFO][abstract_facade.py:309] Final Incumbent: {'x0': 0.7153215381459042, 'x1': 1.3605748848483428}
+    [INFO][abstract_facade.py:310] Estimated cost: 72.14246196585546
     Default cost: 16916.0
     Default cost: 72.14246196585546
 
@@ -82,7 +84,7 @@ This examples show how to use the Ask-and-Tell interface.
 
     from ConfigSpace import Configuration, ConfigurationSpace, Float
 
-    from smac import HyperparameterFacade, Scenario
+    from smac import HPOFacade, Scenario
     from smac.runhistory.dataclasses import TrialValue
 
     __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -120,13 +122,13 @@ This examples show how to use the Ask-and-Tell interface.
         # Scenario object
         scenario = Scenario(model.configspace, deterministic=False, n_trials=100)
 
-        intensifier = HyperparameterFacade.get_intensifier(
+        intensifier = HPOFacade.get_intensifier(
             scenario,
             max_config_calls=1,  # We basically use one seed only
         )
 
         # Now we use SMAC to find the best hyperparameters
-        smac = HyperparameterFacade(
+        smac = HPOFacade(
             scenario,
             model.train,
             intensifier=intensifier,
@@ -158,7 +160,7 @@ This examples show how to use the Ask-and-Tell interface.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.734 seconds)
+   **Total running time of the script:** ( 0 minutes  0.693 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_3_ask_and_tell.py:

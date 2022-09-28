@@ -78,14 +78,31 @@ Basics
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Callback">
+
+.. only:: html
+
+  .. image:: /examples/1_basics/images/thumb/sphx_glr_4_callback_thumb.png
+    :alt: Callback
+
+  :ref:`sphx_glr_examples_1_basics_4_callback.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Callback</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Example for optimizing a Multi-Layer Perceptron (MLP) setting priors over the optimum on the hy...">
 
 .. only:: html
 
-  .. image:: /examples/1_basics/images/thumb/sphx_glr_4_priors_thumb.png
+  .. image:: /examples/1_basics/images/thumb/sphx_glr_5_priors_thumb.png
     :alt: User Priors over the Optimum
 
-  :ref:`sphx_glr_examples_1_basics_4_priors.py`
+  :ref:`sphx_glr_examples_1_basics_5_priors.py`
 
 .. raw:: html
 
@@ -99,10 +116,10 @@ Basics
 
 .. only:: html
 
-  .. image:: /examples/1_basics/images/thumb/sphx_glr_5_full_customization_thumb.png
+  .. image:: /examples/1_basics/images/thumb/sphx_glr_6_full_customization_thumb.png
     :alt: Full Customization
 
-  :ref:`sphx_glr_examples_1_basics_5_full_customization.py`
+  :ref:`sphx_glr_examples_1_basics_6_full_customization.py`
 
 .. raw:: html
 

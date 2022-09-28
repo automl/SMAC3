@@ -175,12 +175,17 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../1_basics/4_priors.html">
+      <a class="reference internal" href="../1_basics/4_callback.html">
+       Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../1_basics/5_priors.html">
        User Priors over the Optimum
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../1_basics/5_full_customization.html">
+      <a class="reference internal" href="../1_basics/6_full_customization.html">
        Full Customization
       </a>
      </li>
@@ -243,13 +248,48 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/resumption.html">
-     Resumption
+    <a class="reference internal" href="../../advanced_usage/1_facades.html">
+     Facades
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/callbacks.html">
-     Callbacks
+    <a class="reference internal" href="../../advanced_usage/2_components.html">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/4_instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/5_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/6_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/7_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/8_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/9_parallelism.html">
+     Parallelism
     </a>
    </li>
   </ul>
@@ -295,13 +335,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="../../api/smac.facade.hpo_facade.html">
+       smac.facade.hpo_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.hyperparameter_facade.html">
-       smac.facade.hyperparameter_facade
+      <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -944,80 +984,82 @@ to download the full example code</p>
 <section class="sphx-glr-example-title" id="d-schaffer-function">
 <span id="sphx-glr-examples-3-multi-objective-1-schaffer-py"></span><h1>2D Schaffer Function<a class="headerlink" href="#d-schaffer-function" title="Permalink to this heading">¶</a></h1>
 <p>A simple example on how to use multi-objective optimization is shown. The <cite>schaffer</cite> function is used.</p>
-<img src="../../_images/sphx_glr_1_schaffer_001.png" srcset="../../_images/sphx_glr_1_schaffer_001.png" alt="1 schaffer" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:132] Using 10 initial design and 0 additional configurations.
-[INFO][intensifier.py:273] No incumbent provided in the first run. Sampling a new challenger...
-[INFO][intensifier.py:444] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-[INFO][intensifier.py:564] Updated estimated cost of incumbent on 1 trials: 1.0
-[INFO][intensifier.py:564] Updated estimated cost of incumbent on 2 trials: 1.0
-[INFO][intensifier.py:564] Updated estimated cost of incumbent on 3 trials: 0.5
-[INFO][abstract_intensifier.py:336] Challenger (0.3059) is better than incumbent (0.3062) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: -0.9324859157204628 -&gt; 0.8640956835343081
-[INFO][abstract_intensifier.py:336] Challenger (0.2866) is better than incumbent (0.2866) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.8640956835343081 -&gt; 0.8640174051851504
-[INFO][abstract_intensifier.py:336] Challenger (0.2866) is better than incumbent (0.2866) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.8640174051851504 -&gt; 0.8639784171134841
-[INFO][abstract_intensifier.py:336] Challenger (0.2866) is better than incumbent (0.2866) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.8639784171134841 -&gt; 0.8621703607018727
-[INFO][abstract_intensifier.py:336] Challenger (0.2865) is better than incumbent (0.2866) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.8621703607018727 -&gt; 0.8613802024158463
-[INFO][abstract_intensifier.py:336] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.8613802024158463 -&gt; 0.8607574654896779
-[INFO][abstract_intensifier.py:336] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.8607574654896779 -&gt; 0.86057300810144
-[INFO][abstract_intensifier.py:336] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.86057300810144 -&gt; 0.8602103898606681
-[INFO][abstract_intensifier.py:336] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.8602103898606681 -&gt; 0.859905318504627
-[INFO][abstract_intensifier.py:336] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.859905318504627 -&gt; 0.8598739916684282
-[INFO][abstract_intensifier.py:336] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.8598739916684282 -&gt; 0.8597295956781026
-[INFO][abstract_intensifier.py:336] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.8597295956781026 -&gt; 0.859520085979836
-[INFO][abstract_intensifier.py:336] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.859520085979836 -&gt; 0.8593199836090943
-[INFO][abstract_intensifier.py:336] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.8593199836090943 -&gt; 0.8587705866744733
-[INFO][abstract_intensifier.py:336] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.8587705866744733 -&gt; 0.8574074961764109
-[INFO][abstract_intensifier.py:336] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.8574074961764109 -&gt; 0.8571993851749746
-[INFO][abstract_intensifier.py:336] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.8571993851749746 -&gt; 0.8569651981964457
-[INFO][abstract_intensifier.py:336] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.8569651981964457 -&gt; 0.856959899407526
-[INFO][abstract_intensifier.py:336] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.856959899407526 -&gt; 0.8567608637383648
-[INFO][abstract_intensifier.py:336] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.8567608637383648 -&gt; 0.8562151402955451
-[INFO][abstract_intensifier.py:336] Challenger (0.2864) is better than incumbent (0.2865) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.8562151402955451 -&gt; 0.8557358664458059
-[INFO][abstract_intensifier.py:336] Challenger (0.2527) is better than incumbent (0.2558) on 3 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- x: 0.8557358664458059 -&gt; 1.0849066921609452
-[INFO][abstract_facade.py:288] Final Incumbent: {&#39;x&#39;: 1.0849066921609452}
-[INFO][abstract_facade.py:289] Estimated cost: 0.25271859054525136
+<img src="../../_images/sphx_glr_1_schaffer_001.png" srcset="../../_images/sphx_glr_1_schaffer_001.png" alt="1 schaffer" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>OrderedDict([(&#39;config&#39;, &lt;Parameter &quot;config: &#39;Configuration&#39;&quot;&gt;), (&#39;seed&#39;, &lt;Parameter &quot;seed: &#39;int&#39; = 0&quot;&gt;)])
+[INFO][abstract_initial_design.py:133] Using 10 initial design and 0 additional configurations.
+[INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
+[INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
+[INFO][intensifier.py:567] Updated estimated cost of incumbent on 1 trials: 1.0
+[INFO][intensifier.py:567] Updated estimated cost of incumbent on 2 trials: 1.0
+[INFO][intensifier.py:567] Updated estimated cost of incumbent on 3 trials: 0.5
+[INFO][abstract_intensifier.py:340] Challenger (0.3059) is better than incumbent (0.3062) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: -0.9324859157204628 -&gt; 0.8640956835343081
+[INFO][abstract_intensifier.py:340] Challenger (0.2866) is better than incumbent (0.2866) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.8640956835343081 -&gt; 0.8640174051851504
+[INFO][abstract_intensifier.py:340] Challenger (0.2866) is better than incumbent (0.2866) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.8640174051851504 -&gt; 0.8639784171134841
+[INFO][abstract_intensifier.py:340] Challenger (0.2866) is better than incumbent (0.2866) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.8639784171134841 -&gt; 0.8621703607018727
+[INFO][abstract_intensifier.py:340] Challenger (0.2865) is better than incumbent (0.2866) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.8621703607018727 -&gt; 0.8613802024158463
+[INFO][abstract_intensifier.py:340] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.8613802024158463 -&gt; 0.8607574654896779
+[INFO][abstract_intensifier.py:340] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.8607574654896779 -&gt; 0.86057300810144
+[INFO][abstract_intensifier.py:340] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.86057300810144 -&gt; 0.8602103898606681
+[INFO][abstract_intensifier.py:340] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.8602103898606681 -&gt; 0.859905318504627
+[INFO][abstract_intensifier.py:340] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.859905318504627 -&gt; 0.8598739916684282
+[INFO][abstract_intensifier.py:340] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.8598739916684282 -&gt; 0.8597295956781026
+[INFO][abstract_intensifier.py:340] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.8597295956781026 -&gt; 0.859520085979836
+[INFO][abstract_intensifier.py:340] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.859520085979836 -&gt; 0.8593199836090943
+[INFO][abstract_intensifier.py:340] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.8593199836090943 -&gt; 0.8587705866744733
+[INFO][abstract_intensifier.py:340] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.8587705866744733 -&gt; 0.8574074961764109
+[INFO][abstract_intensifier.py:340] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.8574074961764109 -&gt; 0.8571993851749746
+[INFO][abstract_intensifier.py:340] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.8571993851749746 -&gt; 0.8569651981964457
+[INFO][abstract_intensifier.py:340] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.8569651981964457 -&gt; 0.856959899407526
+[INFO][abstract_intensifier.py:340] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.856959899407526 -&gt; 0.8567608637383648
+[INFO][abstract_intensifier.py:340] Challenger (0.2865) is better than incumbent (0.2865) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.8567608637383648 -&gt; 0.8562151402955451
+[INFO][abstract_intensifier.py:340] Challenger (0.2864) is better than incumbent (0.2865) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.8562151402955451 -&gt; 0.8557358664458059
+[INFO][abstract_intensifier.py:340] Challenger (0.2527) is better than incumbent (0.2558) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- x: 0.8557358664458059 -&gt; 1.0849066921609452
+[INFO][base_smbo.py:260] Configuration budget is exhausted.
+[INFO][abstract_facade.py:309] Final Incumbent: {&#39;x&#39;: 1.0849066921609452}
+[INFO][abstract_facade.py:310] Estimated cost: 0.25271859054525136
 Default costs: [0. 4.]
 Incumbent costs: [1.17702253 0.83739576]
 </pre></div>
@@ -1033,7 +1075,7 @@ Incumbent costs: [1.17702253 0.83739576]
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ConfigurationSpace</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
-<span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">HyperparameterFacade</span><span class="p">,</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">HPOFacade</span><span class="p">,</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.facade</span> <span class="kn">import</span> <span class="n">AbstractFacade</span>
 <span class="kn">from</span> <span class="nn">smac.multi_objective.aggregation_strategy</span> <span class="kn">import</span> <span class="n">MeanAggregationStrategy</span>
 
@@ -1086,7 +1128,7 @@ Incumbent costs: [1.17702253 0.83739576]
         <span class="n">objectives</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;metric1&quot;</span><span class="p">,</span> <span class="s2">&quot;metric2&quot;</span><span class="p">],</span>
     <span class="p">)</span>
 
-    <span class="n">smac</span> <span class="o">=</span> <span class="n">HyperparameterFacade</span><span class="p">(</span>
+    <span class="n">smac</span> <span class="o">=</span> <span class="n">HPOFacade</span><span class="p">(</span>
         <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
         <span class="n">target_function</span><span class="o">=</span><span class="n">target_function</span><span class="p">,</span>
         <span class="n">multi_objective_algorithm</span><span class="o">=</span><span class="n">MeanAggregationStrategy</span><span class="p">(</span><span class="n">scenario</span><span class="p">),</span>
@@ -1104,7 +1146,7 @@ Incumbent costs: [1.17702253 0.83739576]
     <span class="n">plot_from_smac</span><span class="p">(</span><span class="n">smac</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.671 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.589 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-1-schaffer-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/248d8963fe8c1a6aa3910244607b3049/1_schaffer.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_schaffer.py</span></code></a></p>
@@ -1160,7 +1202,7 @@ Incumbent costs: [1.17702253 0.83739576]
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.1. Template is modified version of <a
+5.2.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

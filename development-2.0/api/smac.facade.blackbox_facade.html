@@ -175,12 +175,17 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/4_priors.html">
+      <a class="reference internal" href="../examples/1_basics/4_callback.html">
+       Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/5_priors.html">
        User Priors over the Optimum
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/5_full_customization.html">
+      <a class="reference internal" href="../examples/1_basics/6_full_customization.html">
        Full Customization
       </a>
      </li>
@@ -243,13 +248,48 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/resumption.html">
-     Resumption
+    <a class="reference internal" href="../advanced_usage/1_facades.html">
+     Facades
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/callbacks.html">
-     Callbacks
+    <a class="reference internal" href="../advanced_usage/2_components.html">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/4_instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/5_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/6_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/7_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/8_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/9_parallelism.html">
+     Parallelism
     </a>
    </li>
   </ul>
@@ -295,13 +335,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="smac.facade.hpo_facade.html">
+       smac.facade.hpo_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.hyperparameter_facade.html">
-       smac.facade.hyperparameter_facade
+      <a class="reference internal" href="smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1065,23 +1105,35 @@ style="width: 100%;">
 <dd><p>Bases: <a class="reference internal" href="smac.facade.abstract_facade.html#smac.facade.abstract_facade.AbstractFacade" title="smac.facade.abstract_facade.AbstractFacade"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractFacade</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.blackbox_facade.BlackBoxFacade.get_acquisition_function">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_acquisition_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_acquisition_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.blackbox_facade.BlackBoxFacade.get_acquisition_function" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the acquisition function instance (EI: Expected Improvement) for the Black-Box facade.</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_acquisition_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_acquisition_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.blackbox_facade.BlackBoxFacade.get_acquisition_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an Expected Improvement acquisition function.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.functions.expected_improvement.html#smac.acquisition.functions.expected_improvement.EI" title="smac.acquisition.functions.expected_improvement.EI"><code class="xref py py-class docutils literal notranslate"><span class="pre">EI</span></code></a></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
+<li><p><strong>xi</strong> (<em>float</em><em>, </em><em>defaults to 0.0</em>) – Controls the balance between exploration and exploitation of the
+acquisition function.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="smac.acquisition.functions.expected_improvement.html#smac.acquisition.functions.expected_improvement.EI" title="smac.acquisition.functions.expected_improvement.EI"><code class="xref py py-class docutils literal notranslate"><span class="pre">EI</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.blackbox_facade.BlackBoxFacade.get_acquisition_maximizer">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_acquisition_maximizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_search_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">challengers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_acquisition_maximizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.blackbox_facade.BlackBoxFacade.get_acquisition_maximizer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the acquisition optimizer instance (LocalAndSOrtedRandomSearch) for the
-Black-Box facade. Please check its documentation for detials.</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_acquisition_maximizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">challengers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_search_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_acquisition_maximizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.blackbox_facade.BlackBoxFacade.get_acquisition_maximizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns local and sorted random search as acquisition maximizer.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.maximizers.local_and_random_search.html#smac.acquisition.maximizers.local_and_random_search.LocalAndSortedRandomSearch" title="smac.acquisition.maximizers.local_and_random_search.LocalAndSortedRandomSearch"><code class="xref py py-class docutils literal notranslate"><span class="pre">LocalAndSortedRandomSearch</span></code></a></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>challengers</strong> (<em>int</em><em>, </em><em>defaults to 1000</em>) – Number of challengers.</p></li>
+<li><p><strong>local_search_iterations</strong> (<em>int</em><em>, </em><em>defauts to 10</em>) – Number of local search iterations.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="smac.acquisition.maximizers.local_and_random_search.html#smac.acquisition.maximizers.local_and_random_search.LocalAndSortedRandomSearch" title="smac.acquisition.maximizers.local_and_random_search.LocalAndSortedRandomSearch"><code class="xref py py-class docutils literal notranslate"><span class="pre">LocalAndSortedRandomSearch</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1089,11 +1141,22 @@ Black-Box facade. Please check its documentation for detials.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.blackbox_facade.BlackBoxFacade.get_initial_design">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_initial_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs_per_hyperparamter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_initial_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.blackbox_facade.BlackBoxFacade.get_initial_design" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a Sobol design instance for the Black-Box facade.
-Please check its documentation.</p>
+<dd><p>Returns a Sobol design instance.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.initial_design.sobol_design.html#smac.initial_design.sobol_design.SobolInitialDesign" title="smac.initial_design.sobol_design.SobolInitialDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">SobolInitialDesign</span></code></a></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
+<li><p><strong>n_configs</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Number of initial configurations (disables the arguments <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code>).</p></li>
+<li><p><strong>n_configs_per_hyperparameter</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – Number of initial configurations per hyperparameter. For example, if my configuration space covers five
+hyperparameters and <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code> is set to 10, then 50 initial configurations will be
+samples.</p></li>
+<li><p><strong>max_ratio</strong> (<em>float</em><em>, </em><em>defaults to 0.1</em>) – Use at most <code class="docutils literal notranslate"><span class="pre">scenario.n_trials</span></code> * <code class="docutils literal notranslate"><span class="pre">max_ratio</span></code> number of configurations in the initial design.
+Additional configurations are not affected by this parameter.</p></li>
+<li><p><strong>additional_configs</strong> (<em>list</em><em>[</em><em>Configuration</em><em>]</em><em>, </em><em>defaults to</em><em> [</em><em>]</em>) – Adds additional configurations to the initial design.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="smac.initial_design.sobol_design.html#smac.initial_design.sobol_design.SobolInitialDesign" title="smac.initial_design.sobol_design.SobolInitialDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">SobolInitialDesign</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1101,11 +1164,20 @@ Please check its documentation.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.blackbox_facade.BlackBoxFacade.get_intensifier">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_challenger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensify_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.blackbox_facade.BlackBoxFacade.get_intensifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the Intensifier instance  for the Black-Box facade. Please check its
-documentation for details.</p>
+<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">Intensifier</span></code> as intensifier. Uses the default configuration for <code class="docutils literal notranslate"><span class="pre">race_against</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.intensifier.intensifier.html#smac.intensifier.intensifier.Intensifier" title="smac.intensifier.intensifier.Intensifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Intensifier</span></code></a></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
+<li><p><strong>min_config_calls</strong> (<em>int</em><em>, </em><em>defaults to 1</em>) – Minimum number of trials per config (summed over all calls to intensify).</p></li>
+<li><p><strong>max_config_calls</strong> (<em>int</em><em>, </em><em>defaults to 1</em>) – Maximum number of trials per config (summed over all calls to intensify).</p></li>
+<li><p><strong>min_challenger</strong> (<em>int</em><em>, </em><em>defaults to 3</em>) – Minimal number of challengers to be considered (even if time_bound is exhausted earlier).</p></li>
+<li><p><strong>intensify_percentage</strong> (<em>float</em><em>, </em><em>defaults to 0.5</em>) – How much percentage of the time should configurations be intensified (evaluated on higher budgets or
+more instances). This parameter is accessed in the SMBO class.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="smac.intensifier.intensifier.html#smac.intensifier.intensifier.Intensifier" title="smac.intensifier.intensifier.Intensifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Intensifier</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1113,8 +1185,8 @@ documentation for details.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.blackbox_facade.BlackBoxFacade.get_kernel">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_kernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_kernel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.blackbox_facade.BlackBoxFacade.get_kernel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a kernel for the Gaussian Process surrogate model.
-The kernel is a composite of kernels depending on the type of hyperparameters:
+<dd><p>Returns a kernel for the Gaussian Process surrogate model.</p>
+<p>The kernel is a composite of kernels depending on the type of hyperparameters:
 categorical (HammingKernel), continuous (Matern), and noise kernels (White).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1139,7 +1211,7 @@ categorical (HammingKernel), continuous (Matern), and noise kernels (White).</p>
 <dd class="field-even"><p><strong>model</strong> – The instantiated gaussian process.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.model.gaussian_process.html#smac.model.gaussian_process.AbstractGaussianProcess" title="smac.model.gaussian_process.AbstractGaussianProcess">AbstractGaussianProcess</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="smac.model.gaussian_process.html#smac.model.gaussian_process.GaussianProcess" title="smac.model.gaussian_process.GaussianProcess">GaussianProcess</a> | <a class="reference internal" href="smac.model.gaussian_process.html#smac.model.gaussian_process.MCMCGaussianProcess" title="smac.model.gaussian_process.MCMCGaussianProcess">MCMCGaussianProcess</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1147,8 +1219,7 @@ categorical (HammingKernel), continuous (Matern), and noise kernels (White).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.blackbox_facade.BlackBoxFacade.get_multi_objective_algorithm">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_multi_objective_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_multi_objective_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.blackbox_facade.BlackBoxFacade.get_multi_objective_algorithm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the multi-objective algorithm instance (MeanAggregationStrategy) for the
-Black-Box facade.</p>
+<dd><p>Returns the mean aggregation strategy for the multi objective algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.multi_objective.aggregation_strategy.html#smac.multi_objective.aggregation_strategy.MeanAggregationStrategy" title="smac.multi_objective.aggregation_strategy.MeanAggregationStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">MeanAggregationStrategy</span></code></a></p>
@@ -1158,13 +1229,14 @@ Black-Box facade.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.blackbox_facade.BlackBoxFacade.get_random_design">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_random_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_probability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.08447232371720552</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_random_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.blackbox_facade.BlackBoxFacade.get_random_design" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a random design instance (ProbabilityRandomDesign) for the Black-Box facade,
-detailing the interleaving of configurations derived from BO’s acquisition with those
-from random search. Please check its documentation.</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_random_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.08447232371720552</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_random_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.blackbox_facade.BlackBoxFacade.get_random_design" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">ProbabilityRandomDesign</span></code> for interleaving configurations.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.random_design.probability_design.html#smac.random_design.probability_design.ProbabilityRandomDesign" title="smac.random_design.probability_design.ProbabilityRandomDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProbabilityRandomDesign</span></code></a></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>probability</strong> (<em>float</em><em>, </em><em>defaults to 0.08447232371720552</em>) – Probability that a configuration will be drawn at random.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="smac.random_design.probability_design.html#smac.random_design.probability_design.ProbabilityRandomDesign" title="smac.random_design.probability_design.ProbabilityRandomDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProbabilityRandomDesign</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1172,8 +1244,7 @@ from random search. Please check its documentation.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.blackbox_facade.BlackBoxFacade.get_runhistory_encoder">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_runhistory_encoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_runhistory_encoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.blackbox_facade.BlackBoxFacade.get_runhistory_encoder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an instance of the runhistory encoder class to be used in the BO loop,
-specifying how the runhistory is to be prepared for the next surrogate model.</p>
+<dd><p>Returns the default runhistory encoder.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.encoder.encoder.html#smac.runhistory.encoder.encoder.RunHistoryEncoder" title="smac.runhistory.encoder.encoder.RunHistoryEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunHistoryEncoder</span></code></a></p>
@@ -1231,7 +1302,7 @@ specifying how the runhistory is to be prepared for the next surrogate model.</p
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.1. Template is modified version of <a
+5.2.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

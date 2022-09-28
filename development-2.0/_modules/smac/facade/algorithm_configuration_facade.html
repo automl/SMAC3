@@ -172,12 +172,17 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/4_priors.html">
+      <a class="reference internal" href="../../../examples/1_basics/4_callback.html">
+       Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../examples/1_basics/5_priors.html">
        User Priors over the Optimum
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/5_full_customization.html">
+      <a class="reference internal" href="../../../examples/1_basics/6_full_customization.html">
        Full Customization
       </a>
      </li>
@@ -240,13 +245,48 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/resumption.html">
-     Resumption
+    <a class="reference internal" href="../../../advanced_usage/1_facades.html">
+     Facades
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/callbacks.html">
-     Callbacks
+    <a class="reference internal" href="../../../advanced_usage/2_components.html">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/4_instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/5_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/6_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/7_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/8_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/9_parallelism.html">
+     Parallelism
     </a>
    </li>
   </ul>
@@ -292,13 +332,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="../../../api/smac.facade.hpo_facade.html">
+       smac.facade.hpo_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.hyperparameter_facade.html">
-       smac.facade.hyperparameter_facade
+      <a class="reference internal" href="../../../api/smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -951,23 +991,41 @@ style="width: 100%;">
         <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">n_trees</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-        <span class="n">bootstrapping</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">ratio_features</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="o">/</span> <span class="mf">6.0</span><span class="p">,</span>
         <span class="n">min_samples_split</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
         <span class="n">min_samples_leaf</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
         <span class="n">max_depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="n">bootstrapping</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">pca_components</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RandomForest</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns a RandomForestWithInstances surrogate model. Please check its documentation.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns a random forest as surrogate model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n_trees : int, defaults to 10</span>
+<span class="sd">            The number of trees in the random forest.</span>
+<span class="sd">        ratio_features : float, defaults to 5.0 / 6.0</span>
+<span class="sd">            The ratio of features that are considered for splitting.</span>
+<span class="sd">        min_samples_split : int, defaults to 3</span>
+<span class="sd">            The minimum number of data points to perform a split.</span>
+<span class="sd">        min_samples_leaf : int, defaults to 3</span>
+<span class="sd">            The minimum number of data points in a leaf.</span>
+<span class="sd">        max_depth : int, defaults to 20</span>
+<span class="sd">            The maximum depth of a single tree.</span>
+<span class="sd">        bootstrapping : bool, defaults to True</span>
+<span class="sd">            Enables bootstrapping.</span>
+<span class="sd">        pca_components : float, defaults to 4</span>
+<span class="sd">            Number of components to keep when using PCA to reduce dimensionality of instance features.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">RandomForest</span><span class="p">(</span>
-            <span class="n">log_y</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">configspace</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span>
             <span class="n">n_trees</span><span class="o">=</span><span class="n">n_trees</span><span class="p">,</span>
-            <span class="n">bootstrapping</span><span class="o">=</span><span class="n">bootstrapping</span><span class="p">,</span>
             <span class="n">ratio_features</span><span class="o">=</span><span class="n">ratio_features</span><span class="p">,</span>
             <span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split</span><span class="p">,</span>
             <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf</span><span class="p">,</span>
             <span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth</span><span class="p">,</span>
-            <span class="n">configspace</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span>
+            <span class="n">bootstrapping</span><span class="o">=</span><span class="n">bootstrapping</span><span class="p">,</span>
+            <span class="n">log_y</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">instance_features</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">instance_features</span><span class="p">,</span>
             <span class="n">pca_components</span><span class="o">=</span><span class="n">pca_components</span><span class="p">,</span>
             <span class="n">seed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
@@ -976,15 +1034,25 @@ style="width: 100%;">
 <div class="viewcode-block" id="AlgorithmConfigurationFacade.get_acquisition_function"><a class="viewcode-back" href="../../../api/smac.facade.algorithm_configuration_facade.html#smac.facade.AlgorithmConfigurationFacade.get_acquisition_function">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_acquisition_function</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
         <span class="n">xi</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EI</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns an Expected Improvement acquisition function. Please check its documentation.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns an Expected Improvement acquisition function.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        scenario : Scenario</span>
+<span class="sd">        xi : float, defaults to 0.0</span>
+<span class="sd">            Controls the balance between exploration and exploitation of the</span>
+<span class="sd">            acquisition function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">EI</span><span class="p">(</span><span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AlgorithmConfigurationFacade.get_acquisition_maximizer"><a class="viewcode-back" href="../../../api/smac.facade.algorithm_configuration_facade.html#smac.facade.AlgorithmConfigurationFacade.get_acquisition_maximizer">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_acquisition_maximizer</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LocalAndSortedRandomSearch</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns local and sorted random search as acquisition maximizer.&quot;&quot;&quot;</span>
         <span class="n">optimizer</span> <span class="o">=</span> <span class="n">LocalAndSortedRandomSearch</span><span class="p">(</span>
             <span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span>
             <span class="n">seed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
@@ -996,12 +1064,26 @@ style="width: 100%;">
     <span class="k">def</span> <span class="nf">get_intensifier</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">min_challenger</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">min_config_calls</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">max_config_calls</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+        <span class="n">min_challenger</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">intensify_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Intensifier</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns an Intensifier. Please check its documentation.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns ``Intensifier`` as intensifier. Uses the default configuration for ``race_against``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        scenario : Scenario</span>
+<span class="sd">        min_config_calls : int, defaults to 1</span>
+<span class="sd">            Minimum number of trials per config (summed over all calls to intensify).</span>
+<span class="sd">        max_config_calls : int, defaults to 2000</span>
+<span class="sd">            Maximum number of trials per config (summed over all calls to intensify).</span>
+<span class="sd">        min_challenger : int, defaults to 2</span>
+<span class="sd">            Minimal number of challengers to be considered (even if time_bound is exhausted earlier).</span>
+<span class="sd">        intensify_percentage : float, defaults to 0.5</span>
+<span class="sd">            How much percentage of the time should configurations be intensified (evaluated on higher budgets or</span>
+<span class="sd">            more instances). This parameter is accessed in the SMBO class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">intensifier</span> <span class="o">=</span> <span class="n">Intensifier</span><span class="p">(</span>
             <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
             <span class="n">min_challenger</span><span class="o">=</span><span class="n">min_challenger</span><span class="p">,</span>
@@ -1019,8 +1101,13 @@ style="width: 100%;">
         <span class="o">*</span><span class="p">,</span>
         <span class="n">additional_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefaultInitialDesign</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns an DefaultInitialDesign, evaluating only the default configuration. Please check</span>
-<span class="sd">        its documentation.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns an initial design, which returns the default configuration.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        additional_configs: list[Configuration], defaults to []</span>
+<span class="sd">            Adds additional configurations to the initial design.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">DefaultInitialDesign</span><span class="p">(</span>
             <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
             <span class="n">additional_configs</span><span class="o">=</span><span class="n">additional_configs</span><span class="p">,</span>
@@ -1030,22 +1117,27 @@ style="width: 100%;">
     <span class="k">def</span> <span class="nf">get_random_design</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">random_probability</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">probability</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProbabilityRandomDesign</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns a ProbabilityRandomDesign for interleaving configurations selected from BO</span>
-<span class="sd">        with those of a RandomDesign. Please check its documentation.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ProbabilityRandomDesign</span><span class="p">(</span><span class="n">probability</span><span class="o">=</span><span class="n">random_probability</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span></div>
+        <span class="sd">&quot;&quot;&quot;Returns ``ProbabilityRandomDesign`` for interleaving configurations.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        probability : float, defaults to 0.5</span>
+<span class="sd">            Probability that a configuration will be drawn at random.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ProbabilityRandomDesign</span><span class="p">(</span><span class="n">probability</span><span class="o">=</span><span class="n">probability</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AlgorithmConfigurationFacade.get_multi_objective_algorithm"><a class="viewcode-back" href="../../../api/smac.facade.algorithm_configuration_facade.html#smac.facade.AlgorithmConfigurationFacade.get_multi_objective_algorithm">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_multi_objective_algorithm</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MeanAggregationStrategy</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns a MultiObjectiveAlgorithm (MeanAggregationStrategy). Please check its</span>
-<span class="sd">        documentation.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns the mean aggregation strategy for the multi objective algorithm.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">MeanAggregationStrategy</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AlgorithmConfigurationFacade.get_runhistory_encoder"><a class="viewcode-back" href="../../../api/smac.facade.algorithm_configuration_facade.html#smac.facade.AlgorithmConfigurationFacade.get_runhistory_encoder">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_runhistory_encoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistoryEncoder</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the default runhistory encoder.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">RunHistoryEncoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">)</span></div></div>
 </pre></div>
 
@@ -1079,7 +1171,7 @@ style="width: 100%;">
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.1. Template is modified version of <a
+5.2.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

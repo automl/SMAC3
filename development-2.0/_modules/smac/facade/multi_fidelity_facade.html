@@ -172,12 +172,17 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/4_priors.html">
+      <a class="reference internal" href="../../../examples/1_basics/4_callback.html">
+       Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../examples/1_basics/5_priors.html">
        User Priors over the Optimum
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/5_full_customization.html">
+      <a class="reference internal" href="../../../examples/1_basics/6_full_customization.html">
        Full Customization
       </a>
      </li>
@@ -240,13 +245,48 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/resumption.html">
-     Resumption
+    <a class="reference internal" href="../../../advanced_usage/1_facades.html">
+     Facades
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/callbacks.html">
-     Callbacks
+    <a class="reference internal" href="../../../advanced_usage/2_components.html">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/4_instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/5_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/6_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/7_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/8_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/9_parallelism.html">
+     Parallelism
     </a>
    </li>
   </ul>
@@ -292,13 +332,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="../../../api/smac.facade.hpo_facade.html">
+       smac.facade.hpo_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.hyperparameter_facade.html">
-       smac.facade.hyperparameter_facade
+      <a class="reference internal" href="../../../api/smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -924,7 +964,7 @@ style="width: 100%;">
 
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 
-<span class="kn">from</span> <span class="nn">smac.facade.hyperparameter_facade</span> <span class="kn">import</span> <span class="n">HyperparameterFacade</span>
+<span class="kn">from</span> <span class="nn">smac.facade.hpo_facade</span> <span class="kn">import</span> <span class="n">HPOFacade</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.random_design</span> <span class="kn">import</span> <span class="n">RandomInitialDesign</span>
 <span class="kn">from</span> <span class="nn">smac.intensifier.hyperband</span> <span class="kn">import</span> <span class="n">Hyperband</span>
 <span class="kn">from</span> <span class="nn">smac.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
@@ -933,7 +973,7 @@ style="width: 100%;">
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<div class="viewcode-block" id="MultiFidelityFacade"><a class="viewcode-back" href="../../../api/smac.facade.multi_fidelity_facade.html#smac.facade.MultiFidelityFacade">[docs]</a><span class="k">class</span> <span class="nc">MultiFidelityFacade</span><span class="p">(</span><span class="n">HyperparameterFacade</span><span class="p">):</span>
+<div class="viewcode-block" id="MultiFidelityFacade"><a class="viewcode-back" href="../../../api/smac.facade.multi_fidelity_facade.html#smac.facade.MultiFidelityFacade">[docs]</a><span class="k">class</span> <span class="nc">MultiFidelityFacade</span><span class="p">(</span><span class="n">HPOFacade</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This facade configures SMAC in a multi-fidelity setting.</span>
 <span class="sd">    The way this facade combines the components is the following and exploits</span>
@@ -942,25 +982,24 @@ style="width: 100%;">
 <span class="sd">    1. The initial design is a RandomInitialDesign.</span>
 <span class="sd">    2. The intensification is Hyperband. The configurations from the initial design</span>
 <span class="sd">    are presented as challengers and executed in the Hyperband fashion.</span>
-<span class="sd">    3. The model is a RandomForest surrogate model. The data to train it</span>
-<span class="sd">    is collected by SMBO._collect_data. Notably, the method searches through</span>
-<span class="sd">    the runhistory and collects the data from the highest fidelity level, that supports at least</span>
-<span class="sd">    SMBO._min_samples_model number of configurations.</span>
-<span class="sd">    4. The acquisition function is EI. Presenting the value of a candidate configuration.</span>
-<span class="sd">    5. The acquisition optimizer is LocalAndSortedRandomSearch. It optimizes the acquisition</span>
-<span class="sd">    function to present the best configuration as challenger to the intensifier.</span>
-<span class="sd">    From now on 2. works as follows: the intensifier runs the challenger in a Hyperband fashion</span>
-<span class="sd">    against the existing configurations and their observed performances</span>
-<span class="sd">    until the challenger does not survive a fidelity level. The intensifier can inquire about a</span>
-<span class="sd">    known configuration on a yet unseen fidelity if necessary.</span>
+<span class="sd">    3. The model is a RandomForest surrogate model. The data to train it is collected by ``SMBO._collect_data``.</span>
+<span class="sd">      Notably, the method searches through the runhistory and collects the data from the highest fidelity level,</span>
+<span class="sd">      that supports at least ``SMBO._min_samples_model`` number of configurations.</span>
+<span class="sd">    4. The acquisition function is ``EI``, presenting the value of a candidate configuration.</span>
+<span class="sd">    5. The acquisition optimizer is ``LocalAndSortedRandomSearch``. It optimizes the acquisition</span>
+<span class="sd">      function to present the best configuration as challenger to the intensifier.</span>
+<span class="sd">      From now on 2. works as follows: The intensifier runs the challenger in a Hyperband fashion against the existing</span>
+<span class="sd">      configurations and their observed performances until the challenger does not survive a fidelity level. The</span>
+<span class="sd">      intensifier can inquire about a known configuration on a yet unseen fidelity if necessary.</span>
 
 <span class="sd">    The loop 2-5 continues until a termination criterion is reached.</span>
 
-<span class="sd">    :Note:</span>
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
 <span class="sd">    For intensification the data acquisition and aggregation strategy in step 2 is changed.</span>
 <span class="sd">    Incumbents are updated by the mean performance over the intersection of instances, that</span>
-<span class="sd">    the challenger and incumbent have in common (abstract_intensifier._compare_configs).</span>
-<span class="sd">    The model in step 3 is trained on the all the available instance performance values.</span>
+<span class="sd">    the challenger and incumbent have in common (``abstract_intensifier._compare_configs``).</span>
+<span class="sd">    The model in step 3 is trained on all the available instance performance values.</span>
 <span class="sd">    The datapoints for a hyperparameter configuration are disambiguated by the instance features</span>
 <span class="sd">    or an index as replacement if no instance features are available.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -973,7 +1012,15 @@ style="width: 100%;">
         <span class="n">min_challenger</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">n_seeds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Hyperband</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns a Hyperband intensifier instance. Please check its documentation for details.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns a Hyperband intensifier instance. That means that budgets are supported.</span>
+
+<span class="sd">        min_challenger : int, defaults to 1</span>
+<span class="sd">            Minimal number of challengers to be considered (even if time_bound is exhausted earlier).</span>
+<span class="sd">        eta : float, defaults to 3</span>
+<span class="sd">            The &quot;halving&quot; factor after each iteration in a Successive Halving run.</span>
+<span class="sd">        n_seeds : int | None, defaults to None</span>
+<span class="sd">            The number of seeds to use if the target function is non-deterministic.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Hyperband</span><span class="p">(</span>
             <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
             <span class="n">eta</span><span class="o">=</span><span class="n">eta</span><span class="p">,</span>
@@ -987,10 +1034,26 @@ style="width: 100%;">
         <span class="o">*</span><span class="p">,</span>
         <span class="n">n_configs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">n_configs_per_hyperparamter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-        <span class="n">max_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.25</span><span class="p">,</span>
+        <span class="n">max_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
         <span class="n">additional_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RandomInitialDesign</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns a random initial design instance. Please check its documentation for details.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns a random initial design.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        scenario : Scenario</span>
+<span class="sd">        n_configs : int | None, defaults to None</span>
+<span class="sd">            Number of initial configurations (disables the arguments ``n_configs_per_hyperparameter``).</span>
+<span class="sd">        n_configs_per_hyperparameter: int, defaults to 10</span>
+<span class="sd">            Number of initial configurations per hyperparameter. For example, if my configuration space covers five</span>
+<span class="sd">            hyperparameters and ``n_configs_per_hyperparameter`` is set to 10, then 50 initial configurations will be</span>
+<span class="sd">            samples.</span>
+<span class="sd">        max_ratio: float, defaults to 0.1</span>
+<span class="sd">            Use at most ``scenario.n_trials`` * ``max_ratio`` number of configurations in the initial design.</span>
+<span class="sd">            Additional configurations are not affected by this parameter.</span>
+<span class="sd">        additional_configs: list[Configuration], defaults to []</span>
+<span class="sd">            Adds additional configurations to the initial design.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">RandomInitialDesign</span><span class="p">(</span>
             <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
             <span class="n">n_configs</span><span class="o">=</span><span class="n">n_configs</span><span class="p">,</span>
@@ -1030,7 +1093,7 @@ style="width: 100%;">
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.1. Template is modified version of <a
+5.2.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

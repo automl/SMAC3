@@ -175,12 +175,17 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="examples/1_basics/4_priors.html">
+      <a class="reference internal" href="examples/1_basics/4_callback.html">
+       Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="examples/1_basics/5_priors.html">
        User Priors over the Optimum
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="examples/1_basics/5_full_customization.html">
+      <a class="reference internal" href="examples/1_basics/6_full_customization.html">
        Full Customization
       </a>
      </li>
@@ -243,13 +248,48 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/resumption.html">
-     Resumption
+    <a class="reference internal" href="advanced_usage/1_facades.html">
+     Facades
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/callbacks.html">
-     Callbacks
+    <a class="reference internal" href="advanced_usage/2_components.html">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/4_instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/5_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/6_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/7_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/8_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/9_parallelism.html">
+     Parallelism
     </a>
    </li>
   </ul>
@@ -295,13 +335,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="api/smac.facade.hpo_facade.html">
+       smac.facade.hpo_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.facade.hyperparameter_facade.html">
-       smac.facade.hyperparameter_facade
+      <a class="reference internal" href="api/smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -960,8 +1000,8 @@ style="width: 100%;">
 <h1>Package Overview<a class="headerlink" href="#package-overview" title="Permalink to this heading">¶</a></h1>
 <p>SMAC supports you in determining well-performing hyperparameter configurations for your algorithms.
 By being a robust and flexible framework for <a class="reference internal" href="glossary.html#term-BO"><span class="xref std std-term">BO</span></a>, SMAC can improve performance within few function evaluations.
-It offers several <a class="reference internal" href="advanced_usage/facades.html#facades"><span class="std std-ref">Facades</span></a> and pre-sets for typical use cases, such as optimizing
-hyperparameters, solving low dimensional continuous (artificial) global optimization problems and configuring algorithms to perform well across multiple problem <a class="reference internal" href="advanced_usage/instances.html#instances-and-features"><span class="std std-ref">Instances</span></a>.</p>
+It offers several <a class="reference internal" href="advanced_usage/1_facades.html#facades"><span class="std std-ref">Facades</span></a> and pre-sets for typical use cases, such as optimizing
+hyperparameters, solving low dimensional continuous (artificial) global optimization problems and configuring algorithms to perform well across multiple problem <a class="reference internal" href="advanced_usage/4_instances.html#instances-and-features"><span class="std std-ref">Instances</span></a>.</p>
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this heading">¶</a></h2>
 <p>SMAC has following characteristics and capabilities:</p>
@@ -977,12 +1017,12 @@ hyperparameters efficiently.</p>
 </dd>
 <dt>Any objectives</dt><dd><p>Optimization with any <a class="reference internal" href="glossary.html#term-Objective"><span class="xref std std-term">objective</span></a> (e.g., quality or runtime) is possible.</p>
 </dd>
-<dt><a class="reference internal" href="advanced_usage/multi_objective.html#multi-objective-optimization"><span class="std std-ref">Multi-Objective</span></a></dt><dd><p>Optimize any number of objectives using scalarized multi-ojective algorithms.</p>
+<dt><a class="reference internal" href="advanced_usage/3_multi_objective.html#multi-objective-optimization"><span class="std std-ref">Multi-Objective</span></a></dt><dd><p>Optimize any number of objectives using scalarized multi-ojective algorithms.</p>
 </dd>
 <dt><a class="reference internal" href="glossary.html#term-MF"><span class="xref std std-term">Multi-Fidelity</span></a> Optimization</dt><dd><p>Judge configurations on multiple <a class="reference internal" href="glossary.html#term-Budget"><span class="xref std std-term">budgets</span></a> to discard unsuitable configurations
 early on. This will result in a massive speed-up, depending on the budgets.</p>
 </dd>
-<dt><a class="reference internal" href="advanced_usage/instances.html#instances-and-features"><span class="std std-ref">Instances</span></a></dt><dd><p>Find well-performing hyperparameter configurations not only for one instance (e.g. dataset) of
+<dt><a class="reference internal" href="advanced_usage/4_instances.html#instances-and-features"><span class="std std-ref">Instances</span></a></dt><dd><p>Find well-performing hyperparameter configurations not only for one instance (e.g. dataset) of
 an algorithm, but for many.</p>
 </dd>
 <dt>Commandline (<a class="reference internal" href="glossary.html#term-CLI"><span class="xref std std-term">CLI</span></a>)</dt><dd><p>SMAC can not only be executed within a python file but also from the commandline. Consequently,
@@ -1035,7 +1075,7 @@ not only algorithms in python can be optimized but in other languages as well.</
 <th class="head"><p>Complex Hyperparameter Spaces</p></th>
 <th class="head"><p>Multi-<a class="reference internal" href="glossary.html#term-Objective"><span class="xref std std-term">Objective</span></a></p></th>
 <th class="head"><p><a class="reference internal" href="glossary.html#term-MF"><span class="xref std std-term">Multi-Fidelity</span></a></p></th>
-<th class="head"><p><a class="reference internal" href="advanced_usage/instances.html#instances-and-features"><span class="std std-ref">Instances</span></a></p></th>
+<th class="head"><p><a class="reference internal" href="advanced_usage/4_instances.html#instances-and-features"><span class="std std-ref">Instances</span></a></p></th>
 <th class="head"><p><a class="reference internal" href="glossary.html#term-CLI"><span class="xref std std-term">CLI</span></a></p></th>
 <th class="head"><p>Parallelism</p></th>
 </tr>
@@ -1147,7 +1187,7 @@ not only algorithms in python can be optimized but in other languages as well.</
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.1. Template is modified version of <a
+5.2.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

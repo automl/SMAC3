@@ -35,19 +35,21 @@ types as well as conditional hyperparameters.
 
  .. code-block:: none
 
-    [INFO][abstract_initial_design.py:132] Using 5 initial design and 0 additional configurations.
-    [INFO][intensifier.py:273] No incumbent provided in the first run. Sampling a new challenger...
-    [INFO][intensifier.py:444] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-    [INFO][intensifier.py:564] Updated estimated cost of incumbent on 1 trials: 0.0667
-    [INFO][intensifier.py:564] Updated estimated cost of incumbent on 2 trials: 0.0667
-    [INFO][abstract_intensifier.py:336] Challenger (0.0133) is better than incumbent (0.0667) on 2 trials.
-    [INFO][abstract_intensifier.py:360] Changes in incumbent:
-    [INFO][abstract_intensifier.py:363] --- C: 0.03992740880515713 -> 1.2760639488343621
-    [INFO][abstract_intensifier.py:363] --- kernel: 'rbf' -> 'linear'
-    [INFO][abstract_intensifier.py:363] --- shrinking: True -> False
-    [INFO][intensifier.py:564] Updated estimated cost of incumbent on 3 trials: 0.0133
-    [INFO][abstract_facade.py:288] Final Incumbent: {'C': 1.2760639488343621, 'kernel': 'linear', 'shrinking': False}
-    [INFO][abstract_facade.py:289] Estimated cost: 0.013333333333333308
+    OrderedDict([('config', <Parameter "config: ConfigSpace.configuration_space.Configuration">), ('seed', <Parameter "seed: int = 0">)])
+    [INFO][abstract_initial_design.py:133] Using 5 initial design and 0 additional configurations.
+    [INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
+    [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
+    [INFO][intensifier.py:567] Updated estimated cost of incumbent on 1 trials: 0.0667
+    [INFO][intensifier.py:567] Updated estimated cost of incumbent on 2 trials: 0.0667
+    [INFO][abstract_intensifier.py:340] Challenger (0.0133) is better than incumbent (0.0667) on 2 trials.
+    [INFO][abstract_intensifier.py:364] Changes in incumbent:
+    [INFO][abstract_intensifier.py:367] --- C: 0.03992740880515713 -> 1.2760639488343621
+    [INFO][abstract_intensifier.py:367] --- kernel: 'rbf' -> 'linear'
+    [INFO][abstract_intensifier.py:367] --- shrinking: True -> False
+    [INFO][intensifier.py:567] Updated estimated cost of incumbent on 3 trials: 0.0133
+    [INFO][base_smbo.py:260] Configuration budget is exhausted.
+    [INFO][abstract_facade.py:309] Final Incumbent: {'C': 1.2760639488343621, 'kernel': 'linear', 'shrinking': False}
+    [INFO][abstract_facade.py:310] Estimated cost: 0.013333333333333308
     Default cost: 0.03333333333333344
     Default cost: 0.013333333333333308
 
@@ -67,7 +69,7 @@ types as well as conditional hyperparameters.
     from sklearn import datasets, svm
     from sklearn.model_selection import cross_val_score
 
-    from smac import HyperparameterFacade, Scenario
+    from smac import HPOFacade, Scenario
     from smac.initial_design import SobolInitialDesign
 
     __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -131,14 +133,14 @@ types as well as conditional hyperparameters.
 
         # We want to run the facade's default initial design, but we want to alter the number
         # of initial configs to be 5.
-        initial_design = HyperparameterFacade.get_initial_design(scenario, n_configs=10)
+        initial_design = HPOFacade.get_initial_design(scenario, n_configs=10)
 
         # You can also override the initial design completely, by providing another
         # initial design class.
         initial_design = SobolInitialDesign(scenario, n_configs=10)
 
         # Now we use SMAC to find the best hyperparameters
-        smac = HyperparameterFacade(
+        smac = HPOFacade(
             scenario,
             classifier.train,
             initial_design=initial_design,
@@ -158,7 +160,7 @@ types as well as conditional hyperparameters.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.996 seconds)
+   **Total running time of the script:** ( 0 minutes  0.978 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_2_svm_cv.py:

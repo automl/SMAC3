@@ -175,12 +175,17 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="4_priors.html">
+      <a class="reference internal" href="4_callback.html">
+       Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="5_priors.html">
        User Priors over the Optimum
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="5_full_customization.html">
+      <a class="reference internal" href="6_full_customization.html">
        Full Customization
       </a>
      </li>
@@ -243,13 +248,48 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/resumption.html">
-     Resumption
+    <a class="reference internal" href="../../advanced_usage/1_facades.html">
+     Facades
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/callbacks.html">
-     Callbacks
+    <a class="reference internal" href="../../advanced_usage/2_components.html">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/4_instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/5_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/6_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/7_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/8_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/9_parallelism.html">
+     Parallelism
     </a>
    </li>
   </ul>
@@ -295,13 +335,13 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
-       smac.facade.hyperband_facade
+      <a class="reference internal" href="../../api/smac.facade.hpo_facade.html">
+       smac.facade.hpo_facade
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.hyperparameter_facade.html">
-       smac.facade.hyperparameter_facade
+      <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -947,19 +987,21 @@ to download the full example code</p>
 hyperparameter optimization facade, which uses a random forest as its surrogate model. It is able to
 scale to higher evaluation budgets and a higher number of dimensions. Also, you can use mixed data
 types as well as conditional hyperparameters.</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:132] Using 5 initial design and 0 additional configurations.
-[INFO][intensifier.py:273] No incumbent provided in the first run. Sampling a new challenger...
-[INFO][intensifier.py:444] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-[INFO][intensifier.py:564] Updated estimated cost of incumbent on 1 trials: 0.0667
-[INFO][intensifier.py:564] Updated estimated cost of incumbent on 2 trials: 0.0667
-[INFO][abstract_intensifier.py:336] Challenger (0.0133) is better than incumbent (0.0667) on 2 trials.
-[INFO][abstract_intensifier.py:360] Changes in incumbent:
-[INFO][abstract_intensifier.py:363] --- C: 0.03992740880515713 -&gt; 1.2760639488343621
-[INFO][abstract_intensifier.py:363] --- kernel: &#39;rbf&#39; -&gt; &#39;linear&#39;
-[INFO][abstract_intensifier.py:363] --- shrinking: True -&gt; False
-[INFO][intensifier.py:564] Updated estimated cost of incumbent on 3 trials: 0.0133
-[INFO][abstract_facade.py:288] Final Incumbent: {&#39;C&#39;: 1.2760639488343621, &#39;kernel&#39;: &#39;linear&#39;, &#39;shrinking&#39;: False}
-[INFO][abstract_facade.py:289] Estimated cost: 0.013333333333333308
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>OrderedDict([(&#39;config&#39;, &lt;Parameter &quot;config: ConfigSpace.configuration_space.Configuration&quot;&gt;), (&#39;seed&#39;, &lt;Parameter &quot;seed: int = 0&quot;&gt;)])
+[INFO][abstract_initial_design.py:133] Using 5 initial design and 0 additional configurations.
+[INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
+[INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
+[INFO][intensifier.py:567] Updated estimated cost of incumbent on 1 trials: 0.0667
+[INFO][intensifier.py:567] Updated estimated cost of incumbent on 2 trials: 0.0667
+[INFO][abstract_intensifier.py:340] Challenger (0.0133) is better than incumbent (0.0667) on 2 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- C: 0.03992740880515713 -&gt; 1.2760639488343621
+[INFO][abstract_intensifier.py:367] --- kernel: &#39;rbf&#39; -&gt; &#39;linear&#39;
+[INFO][abstract_intensifier.py:367] --- shrinking: True -&gt; False
+[INFO][intensifier.py:567] Updated estimated cost of incumbent on 3 trials: 0.0133
+[INFO][base_smbo.py:260] Configuration budget is exhausted.
+[INFO][abstract_facade.py:309] Final Incumbent: {&#39;C&#39;: 1.2760639488343621, &#39;kernel&#39;: &#39;linear&#39;, &#39;shrinking&#39;: False}
+[INFO][abstract_facade.py:310] Estimated cost: 0.013333333333333308
 Default cost: 0.03333333333333344
 Default cost: 0.013333333333333308
 </pre></div>
@@ -973,7 +1015,7 @@ Default cost: 0.013333333333333308
 <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">svm</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
 
-<span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">HyperparameterFacade</span><span class="p">,</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">HPOFacade</span><span class="p">,</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design</span> <span class="kn">import</span> <span class="n">SobolInitialDesign</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2021, AutoML.org Freiburg-Hannover&quot;</span>
@@ -1037,14 +1079,14 @@ Default cost: 0.013333333333333308
 
     <span class="c1"># We want to run the facade&#39;s default initial design, but we want to alter the number</span>
     <span class="c1"># of initial configs to be 5.</span>
-    <span class="n">initial_design</span> <span class="o">=</span> <span class="n">HyperparameterFacade</span><span class="o">.</span><span class="n">get_initial_design</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">n_configs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">initial_design</span> <span class="o">=</span> <span class="n">HPOFacade</span><span class="o">.</span><span class="n">get_initial_design</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">n_configs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
     <span class="c1"># You can also override the initial design completely, by providing another</span>
     <span class="c1"># initial design class.</span>
     <span class="n">initial_design</span> <span class="o">=</span> <span class="n">SobolInitialDesign</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">n_configs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
     <span class="c1"># Now we use SMAC to find the best hyperparameters</span>
-    <span class="n">smac</span> <span class="o">=</span> <span class="n">HyperparameterFacade</span><span class="p">(</span>
+    <span class="n">smac</span> <span class="o">=</span> <span class="n">HPOFacade</span><span class="p">(</span>
         <span class="n">scenario</span><span class="p">,</span>
         <span class="n">classifier</span><span class="o">.</span><span class="n">train</span><span class="p">,</span>
         <span class="n">initial_design</span><span class="o">=</span><span class="n">initial_design</span><span class="p">,</span>
@@ -1062,7 +1104,7 @@ Default cost: 0.013333333333333308
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.996 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.978 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-2-svm-cv-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/7543c6c00a01b61aefff0a6414c7ac77/2_svm_cv.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_svm_cv.py</span></code></a></p>
@@ -1118,7 +1160,7 @@ Default cost: 0.013333333333333308
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.1. Template is modified version of <a
+5.2.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>
