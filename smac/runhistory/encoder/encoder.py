@@ -56,6 +56,12 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
                 # Let's normalize y here
                 # We use the objective_bounds calculated by the runhistory
                 y_ = normalize_costs(run.cost, runhistory.objective_bounds)
+
+                # We have to apply the objective weights here too
+                # Otherwise, the surrogate model and the acquisition maximizer won't integrate the weights from the user
+                if (weights := runhistory.objective_weights) is not None:
+                    y_ = [weight * c for weight, c in zip(weights, y_)]
+
                 y_agg = self._multi_objective_algorithm(y_)
                 y[row] = y_agg
             else:

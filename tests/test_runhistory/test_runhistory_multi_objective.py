@@ -552,3 +552,29 @@ def test_budgets(runhistory, config1, config2):
 
     assert runhistory.get_cost(config2) == 0.5
     assert runhistory.average_cost(config2) == [0, 150]
+
+
+def test_objective_weights(runhistory, config1, config2):
+    runhistory.add(
+        config=config1,
+        cost=[0, 10],
+        time=5,
+        status=StatusType.SUCCESS,
+    )
+
+    runhistory.add(
+        config=config2,
+        cost=[100, 0],
+        time=15,
+        status=StatusType.SUCCESS,
+    )
+
+    assert runhistory._objective_bounds[0] == (0, 100)
+    assert runhistory._objective_bounds[1] == (0, 10)
+
+    # Average cost returns us 0.5
+    assert runhistory.get_cost(config1) == 0.5
+
+    # If we change the weights now, we expect a higher value in the second cost
+    runhistory._objective_weights = [1, 2]
+    assert round(runhistory.get_cost(config1), 2) == 0.67

@@ -43,11 +43,15 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
     Parameters
     ----------
+    objective_weights : list[float] | None, defaults to None
+        Weights for an weighted average to judge configurations. Must be of the same length as the number of
+        objectives.
     overwrite_existing_trials : bool, defaults to false
         Overwrites a trial (combination of configuration, instance, budget and seed) if it already exists.
     """
 
-    def __init__(self, overwrite_existing_trials: bool = False) -> None:
+    def __init__(self, objective_weights: list[float] | None = None, overwrite_existing_trials: bool = False) -> None:
+        self._objective_weights = objective_weights
         self._overwrite_existing_trials = overwrite_existing_trials
         self.reset()
 
@@ -60,6 +64,11 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
     def config_ids(self) -> dict[Configuration, int]:
         """Mapping from configuration to config id."""
         return self._config_ids
+
+    @property
+    def objective_weights(self) -> list[float] | None:
+        """Weights for an weighted average to judge configurations."""
+        return self._objective_weights
 
     @property
     def objective_bounds(self) -> list[tuple[float, float]]:
@@ -185,7 +194,13 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         elif self._n_objectives != n_objectives:
             raise ValueError(
                 f"Cost is not of the same length ({n_objectives}) as the number of "
-                f" objectives ({self._n_objectives})"
+                f"objectives ({self._n_objectives})."
+            )
+
+        if self._objective_weights is not None and self._n_objectives != len(self._objective_weights):
+            raise ValueError(
+                f"Cost is not of the same length ({n_objectives}) as the number of "
+                f"objective weights ({len(self._objective_weights)})."
             )
 
         # Let's always work with floats; Makes it easier to deal with later on
@@ -306,7 +321,9 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
             # We have to normalize the costs here
             costs = normalize_costs(cost, self._objective_bounds)
-            return float(np.mean(costs))
+
+            # After normalization, we get the weighted average
+            return float(np.average(costs, axis=0, weights=self._objective_weights))
 
         assert isinstance(cost, float)
         return float(cost)
@@ -334,7 +351,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             costs = normalize_costs(cost, self._objective_bounds)
 
             # Note: We have to mean here because we already got the min cost
-            return float(np.mean(costs))
+            return float(np.average(costs, axis=0, weights=self._objective_weights))
 
         assert type(cost) == float
         return float(cost)
@@ -358,7 +375,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         normalize : bool, optional (default=False)
             Normalizes the costs wrt objective bounds in the multi-objective setting.
             Only a float is returned if normalize is True. Warning: The value can change
-            over time because the objective bounds are changing.
+            over time because the objective bounds are changing. Also, the objective weights are incorporated.
 
         Returns
         -------
@@ -374,7 +391,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
                 if normalize:
                     normalized_costs = normalize_costs(averaged_costs, self._objective_bounds)
-                    return float(np.mean(normalized_costs))
+                    return float(np.average(normalized_costs, axis=0, weights=self._objective_weights))
                 else:
                     return averaged_costs
 
@@ -401,7 +418,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         normalize : bool, optional (default=False)
             Normalizes the costs wrt objective bounds in the multi-objective setting.
             Only a float is returned if normalize is True. Warning: The value can change
-            over time because the objective bounds are changing.
+            over time because the objective bounds are changing. Also, the objective weights are incorporated.
 
         Returns
         -------
@@ -418,7 +435,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
                 if normalize:
                     normalized_costs = normalize_costs(summed_costs, self._objective_bounds)
-                    return float(np.mean(normalized_costs))
+                    return float(np.average(normalized_costs, axis=0, weights=self._objective_weights))
                 else:
                     return summed_costs
 
@@ -430,9 +447,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         instance_seed_budget_keys: Iterable[InstanceSeedBudgetKey] | None = None,
         normalize: bool = False,
     ) -> float | list[float]:
-        """Return the minimum cost of a configuration.
-
-        This is the minimum cost of all instance-seed pairs.
+        """Return the minimum cost of a configuration. This is the minimum cost of all instance-seed pairs.
 
         Warning
         -------
@@ -445,6 +460,10 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         instance_seed_budget_keys : list, optional (default=None)
             List of tuples of instance-seeds-budget keys. If None, the runhistory is
             queried for all trials of the given configuration.
+        normalize : bool, optional (default=False)
+            Normalizes the costs wrt objective bounds in the multi-objective setting.
+            Only a float is returned if normalize is True. Warning: The value can change
+            over time because the objective bounds are changing. Also, the objective weights are incorporated.
 
         Returns
         -------
@@ -461,7 +480,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
                 if normalize:
                     normalized_costs = normalize_costs(min_costs, self._objective_bounds)
-                    return float(np.mean(normalized_costs))
+                    return float(np.average(normalized_costs, axis=0, weights=self._objective_weights))
                 else:
                     return min_costs
 
