@@ -2,7 +2,11 @@ import numpy as np
 import pytest
 from ConfigSpace import ConfigurationSpace, Float
 
-from smac import AlgorithmConfigurationFacade, BlackBoxFacade, HyperparameterOptimizationFacade
+from smac import (
+    AlgorithmConfigurationFacade,
+    BlackBoxFacade,
+    HyperparameterOptimizationFacade,
+)
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.multi_objective.parego import ParEGO
 

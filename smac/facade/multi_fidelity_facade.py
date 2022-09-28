@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from ConfigSpace import Configuration
 
-from smac.facade.hyperparameter_optimization_facade import HyperparameterOptimizationFacade
+from smac.facade.hyperparameter_optimization_facade import (
+    HyperparameterOptimizationFacade,
+)
 from smac.initial_design.random_design import RandomInitialDesign
 from smac.intensifier.hyperband import Hyperband
 from smac.scenario import Scenario

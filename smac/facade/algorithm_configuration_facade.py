@@ -173,7 +173,7 @@ class AlgorithmConfigurationFacade(AbstractFacade):
         weights: list[float] | None = None,
     ) -> MeanAggregationStrategy:
         """Returns the mean aggregation strategy for the multi objective algorithm.
-        
+
         Parameters
         ----------
         weights : list[float] | None, defaults to None

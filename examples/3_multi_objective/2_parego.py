@@ -11,10 +11,10 @@ mean accuracy and runtime of each configuration.
 """
 from __future__ import annotations
 
-import matplotlib.pyplot as plt
 import time
 import warnings
 
+import matplotlib.pyplot as plt
 import numpy as np
 from ConfigSpace import (
     Categorical,
