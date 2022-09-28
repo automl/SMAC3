@@ -12,9 +12,10 @@ from __future__ import annotations
 from ConfigSpace import Configuration, ConfigurationSpace, Float
 
 import smac
-from smac.runhistory import TrialInfo, TrialValue
+from smac import Callback
 from smac import HyperparameterOptimizationFacade as HPOFacade
-from smac import Scenario, Callback
+from smac import Scenario
+from smac.runhistory import TrialInfo, TrialValue
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -50,7 +51,7 @@ class CustomCallback(Callback):
         self.trials_counter += 1
         if self.trials_counter % 10 == 0:
             print(f"Evaluated {self.trials_counter} trials so far.")
-            
+
             incumbent = smbo.incumbent
             assert incumbent is not None
             print(f"Current incumbent: {incumbent.get_dictionary()}")

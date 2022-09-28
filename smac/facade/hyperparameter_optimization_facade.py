@@ -194,18 +194,9 @@ class HyperparameterOptimizationFacade(AbstractFacade):
     @staticmethod
     def get_multi_objective_algorithm(  # type: ignore
         scenario: Scenario,
-        *,
-        weights: list[float] | None = None,
     ) -> MeanAggregationStrategy:
-        """Returns the mean aggregation strategy for the multi objective algorithm.
-
-        Parameters
-        ----------
-        weights : list[float] | None, defaults to None
-            Weights for an weighted aggregation strategy of the objectives. Must be of the same length as the number of
-            objectives.
-        """
-        return MeanAggregationStrategy(scenario=scenario, weights=weights)
+        """Returns the mean aggregation strategy for the multi objective algorithm."""
+        return MeanAggregationStrategy(scenario=scenario)
 
     @staticmethod
     def get_runhistory_encoder(  # type: ignore

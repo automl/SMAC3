@@ -24,6 +24,7 @@ version = "2.0.0"
 
 
 try:
+    from smac.callback import Callback
     from smac.facade import (
         AlgorithmConfigurationFacade,
         BlackBoxFacade,
@@ -34,7 +35,6 @@ try:
     )
     from smac.runhistory.runhistory import RunHistory
     from smac.scenario import Scenario
-    from smac.callback import Callback
     from smac.utils.logging import setup_logging
 
     setup_logging(0)
@@ -48,7 +48,7 @@ try:
         "AlgorithmConfigurationFacade",
         "RandomFacade",
         "HyperbandFacade",
-        "Callback"
+        "Callback",
     ]
 except ModuleNotFoundError as e:
     print(e)
