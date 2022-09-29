@@ -1,7 +1,15 @@
 Stopping Criteria
 =================
 
+
+
+
+
 Termination Cost Threshold
+--------------------------
+
+SMAC stops the 
+
 
 stops if cost was reached
 remember: costs are always minimized

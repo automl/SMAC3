@@ -1,5 +1,5 @@
-Instances and Features
-======================
+Optimization across Instances
+=============================
 
 Often you want to optimize the cost across different datasets, subsets, or even different
 transformations. For this purpose, you can use instances. A randomly selected instance is passed to

@@ -1,18 +1,25 @@
 Advanced Usage
 ==============
 
-This chapter gives more details of single components of SMAC.
+In this chapter, we will discuss some more advanced usage of the library. If you want to customize 
+SMAC to your needs, we strongly recommend reading all pages. Since SMAC holds a lot of complex dependencies,
+we can not guarantee that your customization will work. However, we can give you some hints on how SMAC
+reacts to certain things.
+
+
+Navigation
+----------
 
 .. toctree::
     :maxdepth: 2
-    :hidden:
 
-    2_components
+    1_components
+    2_multi_fidelity
     3_multi_objective
     4_instances
-    5_stopping_criteria
-    6_ask_and_tell
-    7_continue
-    8_reproducability
-    9_parallelism
+    5_ask_and_tell
+    6_parallelism
+    7_stopping_criteria
+    8_continue
+    9_reproducability
 

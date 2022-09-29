@@ -1,78 +1,61 @@
 Package Overview 
 ================
 
-SMAC supports you in determining well-performing hyperparameter configurations for your algorithms.
-By being a robust and flexible framework for :term:`BO`, SMAC can improve performance within few function evaluations.
-It offers several :ref:`Facades` and pre-sets for typical use cases, such as optimizing
-hyperparameters, solving low dimensional continuous (artificial) global optimization problems and configuring algorithms to perform well across multiple problem :ref:`Instances<Instances and Features>`.
+SMAC supports you in determining well-performing hyperparameter configurations for your algorithms. By being a robust 
+and flexible framework for :term:`Bayesian Optimization<BO>`, SMAC can improve performance within few function 
+evaluations. It offers several entry points and pre-sets for typical use cases, such as optimizing
+hyperparameters, solving low dimensional continuous (artificial) global optimization problems and configuring algorithms 
+to perform well across multiple problem :term:`instances<Instances>`.
 
 
 Features
-~~~~~~~~~
+--------
 
 SMAC has following characteristics and capabilities:
 
-Global optimizer
-    :term:`Bayesian Optimization<BO>` is used for sample-efficient optimization.
+Global Optimizer
+    :term:`Bayesian Optimization` is used for sample-efficient optimization.
 
-Optimize :term:`Black-Box<BB>` functions
+Optimize :term:`Black-Box` Functions
     Optimization is only aware of input and output. It is agnostic to internals of the function.
 
-Flexible hyperparameters
-    Use categorical, continuous or hierarchical (conditional) hyperparameters with the well-integrated
-    `ConfigurationSpace <https://automl.github.io/ConfigSpace>`_. SMAC can
-    optimize up to 100
-    hyperparameters efficiently.
+Flexible Hyperparameters
+    Use categorical, continuous, hierarchical and/or conditional hyperparameters with the well-integrated
+    `ConfigurationSpace <https://automl.github.io/ConfigSpace>`_. SMAC can optimize *up to 100 hyperparameters*
+    efficiently.
 
-Any objectives
-    Optimization with any :term:`objective<Objective>` (e.g., quality or runtime) is possible.
+Any Objectives
+    Optimization with any :term:`objective<Objective>` (e.g., accuracy, runtime, cross-validation, ...) is possible.
 
 :ref:`Multi-Objective<Multi-Objective Optimization>`
-    Optimize any number of objectives using scalarized multi-ojective algorithms.
+    Optimize arbitrary number of objectives using scalarized multi-ojective algorithms. Both ParEGO [Know06]_ and 
+    mean aggregation strategies are supported.
 
-:term:`Multi-Fidelity<MF>` Optimization
+:term:`Multi-Fidelity<Multi-Fidelity Optimization>` Optimization
     Judge configurations on multiple :term:`budgets<Budget>` to discard unsuitable configurations
     early on. This will result in a massive speed-up, depending on the budgets.
     
-:ref:`Instances<Instances and Features>`
+:ref:`Instances<Optimization across Instances>`
     Find well-performing hyperparameter configurations not only for one instance (e.g. dataset) of
     an algorithm, but for many.
     
-Commandline (:term:`CLI`)
+Command-Line Interface
     SMAC can not only be executed within a python file but also from the commandline. Consequently,
     not only algorithms in python can be optimized but in other languages as well.
 
+    .. note ::
 
-Components
-~~~~~~~~~~
-
-Surrogate Models
-    - Gaussian Process
-    - Random Forest (with instances and without)
-
-Acquisition Functions
-    - Probability of Improvement (PI)
-    - Expected Improvement (EI)
-    - Lower Confidence Bound (LCB)
-    - Thompson Sampling (TS)
-
-Intensification
-    - Aggressive Racing
-    - Successive Halving
-    - Hyperband
-
-Please see the following figure for a more detailed overview.
-
-.. figure:: ../images/components.png
+        Command-line interface has been temporarely disabled in v2.0. Please fall back to v1.4 if you need it.
 
 
 Comparison
-~~~~~~~~~~
+----------
+
 The following table provides an overview of SMAC's capabilities in comparison with other optimization tools.
 
 .. csv-table::
-    :header: "Package", "Complex Hyperparameter Spaces", "Multi-:term:`Objective` ", ":term:`Multi-Fidelity<MF>`", ":ref:`Instances<Instances and Features>`", ":term:`CLI`", "Parallelism"
-    :widths: 14, 14, 14, 14, 14, 14, 14
+    :header: "Package", "Complex Hyperparameter Space", ":term:`Multi-Objective` ", ":term:`Multi-Fidelity`", ":term:`Instances`", "Command-Line Interface", "Parallelism"
+    :widths: 10, 10, 10, 10, 10, 10, 10
 
     HyperMapper, ✅, ✅, ❌, ❌, ❌, ❌
     Optuna, ✅, ✅, ❌, ❌, ✅, ✅

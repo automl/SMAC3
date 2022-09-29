@@ -138,7 +138,7 @@ def plot_pareto(smac: AbstractFacade) -> None:
 
     x_front, y_front = front[:, 0], front[:, 1]
 
-    plt.scatter(cost1, cost2)
+    plt.scatter(cost1, cost2, marker="x")
     plt.step(x_front, y_front, where="post", linestyle=":")
 
     # Highlight the incumbent

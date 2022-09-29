@@ -38,8 +38,8 @@ def plot(all_x: list[float]) -> None:
         f1, f2 = schaffer(x)
         plt.scatter(f1, f2, c="blue", alpha=0.1, zorder=3000)
 
-    plt.vlines([1], 0, 4, linestyles="dashed", colors=["red"])
-    plt.hlines([1], 0, 4, linestyles="dashed", colors=["red"])
+    # plt.vlines([1], 0, 4, linestyles="dashed", colors=["red"])
+    # plt.hlines([1], 0, 4, linestyles="dashed", colors=["red"])
 
     plt.show()
 
@@ -61,6 +61,7 @@ if __name__ == "__main__":
     # Scenario object
     scenario = Scenario(
         configspace=cs,
+        deterministic=True,  # Only one seed
         n_trials=150,
         objectives=["metric1", "metric2"],
     )
