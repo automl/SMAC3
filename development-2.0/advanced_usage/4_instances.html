@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Instances and Features &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>Optimization across Instances &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -40,7 +40,7 @@
     <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Stopping Criteria" href="5_stopping_criteria.html" />
+    <link rel="next" title="Ask-and-Tell Interface" href="5_ask_and_tell.html" />
     <link rel="prev" title="Multi-Objective Optimization" href="3_multi_objective.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
@@ -171,7 +171,7 @@ style="width: 100%;">
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/1_basics/3_ask_and_tell.html">
-       Ask-and-Tell Interface
+       Ask-and-Tell
       </a>
      </li>
      <li class="toctree-l3">
@@ -243,8 +243,13 @@ style="width: 100%;">
   </label>
   <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="2_components.html">
+    <a class="reference internal" href="1_components.html">
      Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="2_multi_fidelity.html">
+     Multi-Fidelity Optimization
     </a>
    </li>
    <li class="toctree-l2">
@@ -254,32 +259,32 @@ style="width: 100%;">
    </li>
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
-     Instances and Features
+     Optimization across Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="5_stopping_criteria.html">
-     Stopping Criteria
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="6_ask_and_tell.html">
+    <a class="reference internal" href="5_ask_and_tell.html">
      Ask-and-Tell Interface
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="7_continue.html">
+    <a class="reference internal" href="6_parallelism.html">
+     Parallelism
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="7_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="8_continue.html">
      Continue a Run
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="8_reproducability.html">
+    <a class="reference internal" href="9_reproducability.html">
      Reproducability
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="9_parallelism.html">
-     Parallelism
     </a>
    </li>
   </ul>
@@ -480,8 +485,8 @@ style="width: 100%;">
     </label>
     <ul>
      <li class="toctree-l3 has-children">
-      <a class="reference internal" href="../api/smac.acquisition.functions.html">
-       smac.acquisition.functions
+      <a class="reference internal" href="../api/smac.acquisition.function.html">
+       smac.acquisition.function
       </a>
       <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
       <label for="toctree-checkbox-13">
@@ -490,45 +495,45 @@ style="width: 100%;">
       </label>
       <ul>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.functions.abstract_acquisition_function.html">
-         smac.acquisition.functions.abstract_acquisition_function
+        <a class="reference internal" href="../api/smac.acquisition.function.abstract_acquisition_function.html">
+         smac.acquisition.function.abstract_acquisition_function
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.functions.confidence_bound.html">
-         smac.acquisition.functions.confidence_bound
+        <a class="reference internal" href="../api/smac.acquisition.function.confidence_bound.html">
+         smac.acquisition.function.confidence_bound
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.functions.expected_improvement.html">
-         smac.acquisition.functions.expected_improvement
+        <a class="reference internal" href="../api/smac.acquisition.function.expected_improvement.html">
+         smac.acquisition.function.expected_improvement
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.functions.integrated_acquisition_function.html">
-         smac.acquisition.functions.integrated_acquisition_function
+        <a class="reference internal" href="../api/smac.acquisition.function.integrated_acquisition_function.html">
+         smac.acquisition.function.integrated_acquisition_function
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.functions.prior_acqusition_function.html">
-         smac.acquisition.functions.prior_acqusition_function
+        <a class="reference internal" href="../api/smac.acquisition.function.prior_acqusition_function.html">
+         smac.acquisition.function.prior_acqusition_function
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.functions.probability_improvement.html">
-         smac.acquisition.functions.probability_improvement
+        <a class="reference internal" href="../api/smac.acquisition.function.probability_improvement.html">
+         smac.acquisition.function.probability_improvement
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.functions.thompson.html">
-         smac.acquisition.functions.thompson
+        <a class="reference internal" href="../api/smac.acquisition.function.thompson.html">
+         smac.acquisition.function.thompson
         </a>
        </li>
       </ul>
      </li>
      <li class="toctree-l3 has-children">
-      <a class="reference internal" href="../api/smac.acquisition.maximizers.html">
-       smac.acquisition.maximizers
+      <a class="reference internal" href="../api/smac.acquisition.maximizer.html">
+       smac.acquisition.maximizer
       </a>
       <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
       <label for="toctree-checkbox-14">
@@ -537,33 +542,33 @@ style="width: 100%;">
       </label>
       <ul>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.maximizers.abstract_acqusition_maximizer.html">
-         smac.acquisition.maximizers.abstract_acqusition_maximizer
+        <a class="reference internal" href="../api/smac.acquisition.maximizer.abstract_acqusition_maximizer.html">
+         smac.acquisition.maximizer.abstract_acqusition_maximizer
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.maximizers.differential_evolution.html">
-         smac.acquisition.maximizers.differential_evolution
+        <a class="reference internal" href="../api/smac.acquisition.maximizer.differential_evolution.html">
+         smac.acquisition.maximizer.differential_evolution
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.maximizers.helpers.html">
-         smac.acquisition.maximizers.helpers
+        <a class="reference internal" href="../api/smac.acquisition.maximizer.helpers.html">
+         smac.acquisition.maximizer.helpers
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.maximizers.local_and_random_search.html">
-         smac.acquisition.maximizers.local_and_random_search
+        <a class="reference internal" href="../api/smac.acquisition.maximizer.local_and_random_search.html">
+         smac.acquisition.maximizer.local_and_random_search
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.maximizers.local_search.html">
-         smac.acquisition.maximizers.local_search
+        <a class="reference internal" href="../api/smac.acquisition.maximizer.local_search.html">
+         smac.acquisition.maximizer.local_search
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.maximizers.random_search.html">
-         smac.acquisition.maximizers.random_search
+        <a class="reference internal" href="../api/smac.acquisition.maximizer.random_search.html">
+         smac.acquisition.maximizer.random_search
         </a>
        </li>
       </ul>
@@ -961,43 +966,43 @@ style="width: 100%;">
               
               <div>
                 
-  <section id="instances-and-features">
-<h1>Instances and Features<a class="headerlink" href="#instances-and-features" title="Permalink to this heading">¶</a></h1>
+  <section id="optimization-across-instances">
+<h1>Optimization across Instances<a class="headerlink" href="#optimization-across-instances" title="Permalink to this heading">¶</a></h1>
 <p>Often you want to optimize the cost across different datasets, subsets, or even different
-transformations. For this purpose, you can use instances. A randomly selected instance is passed to
-the target function evaluator, in which you can access it.</p>
-<p>To work with instances, you need to add your predefined instances (list) to the scenario object. The
-items of the instances can be chosen individually. In the following example,
-I want to use five different subsets, identified by its id:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">instances</span> <span class="o">=</span> <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span>, <span class="m">4</span><span class="o">]</span>
-<span class="nv">scenario</span> <span class="o">=</span> Scenario<span class="o">({</span>
-  ...
-  <span class="s1">&#39;instances&#39;</span>: instances,
-  ...
-<span class="o">})</span>
+augmentations. For this purpose, you can use instances.</p>
+<p>To work with instances, you need to add your pre-defined instance names to the scenario object.
+In the following example, we want to use five different subsets, identified by its id:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instances</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;d0&quot;</span><span class="p">,</span> <span class="s2">&quot;d1&quot;</span><span class="p">,</span> <span class="s2">&quot;d2&quot;</span><span class="p">,</span> <span class="s2">&quot;d3&quot;</span><span class="p">,</span> <span class="s2">&quot;d4&quot;</span><span class="p">]</span>
+<span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span>
+  <span class="o">...</span>
+  <span class="s2">&quot;instances&quot;</span><span class="p">:</span> <span class="n">instances</span><span class="p">,</span>
+  <span class="o">...</span>
+<span class="p">)</span>
 </pre></div>
 </div>
-<p>Alternatively, you can also pass <code class="docutils literal notranslate"><span class="pre">instance_file</span></code> to the scenario object.
-Additionally to the instances, there is the option to define <code class="docutils literal notranslate"><span class="pre">features</span></code>. Those instance features are
-used to expand the internal X matrix and thus play a role in training the underlying optimizer.
-See <a class="reference external" href="https://github.com/automl/SMAC3/blob/master/smac/runhistory/runhistory2epm.py#L423">here</a> for
-the exact implementation.</p>
-<p>For example, if I want to add the number of samples and the mean of each subset, I can do as
-follows:</p>
+<p>Additionally to the instances, there is the option to define <code class="docutils literal notranslate"><span class="pre">instance_features</span></code>. Those instance features are
+used to expand the internal X matrix and thus play a role in training the underlying surrogate model. For example, if I
+want to add the number of samples and the mean of each subset, I can do as follows:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">instance_features</span> <span class="o">=</span> <span class="o">{</span>
-  <span class="m">0</span>: <span class="o">[</span><span class="m">121</span>, <span class="m">0</span>.6<span class="o">]</span>,
-  <span class="m">1</span>: <span class="o">[</span><span class="m">140</span>, <span class="m">0</span>.65<span class="o">]</span>,
-  <span class="m">2</span>: <span class="o">[</span><span class="m">99</span>, <span class="m">0</span>.45<span class="o">]</span>,
-  <span class="m">3</span>: <span class="o">[</span><span class="m">102</span>, <span class="m">0</span>.59<span class="o">]</span>,
-  <span class="m">4</span>: <span class="o">[</span><span class="m">132</span>, <span class="m">0</span>.48<span class="o">]</span>,
+  <span class="s2">&quot;d0&quot;</span>: <span class="o">[</span><span class="m">121</span>, <span class="m">0</span>.6<span class="o">]</span>,
+  <span class="s2">&quot;d1&quot;</span>: <span class="o">[</span><span class="m">140</span>, <span class="m">0</span>.65<span class="o">]</span>,
+  <span class="s2">&quot;d2&quot;</span>: <span class="o">[</span><span class="m">99</span>, <span class="m">0</span>.45<span class="o">]</span>,
+  <span class="s2">&quot;d3&quot;</span>: <span class="o">[</span><span class="m">102</span>, <span class="m">0</span>.59<span class="o">]</span>,
+  <span class="s2">&quot;d4&quot;</span>: <span class="o">[</span><span class="m">132</span>, <span class="m">0</span>.48<span class="o">]</span>,
 <span class="o">}</span>
-<span class="nv">scenario</span> <span class="o">=</span> Scenario<span class="o">({</span>
+
+<span class="nv">scenario</span> <span class="o">=</span> Scenario<span class="o">(</span>
   ...
-  <span class="s1">&#39;instances&#39;</span>: instances,
-  <span class="s1">&#39;features&#39;</span>: instance_features
+  <span class="s2">&quot;instances&quot;</span>: instances,
+  <span class="s2">&quot;instance_features&quot;</span>: instance_features
   ...
-<span class="o">})</span>
+<span class="o">)</span>
 </pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you use the multi-fidelity facade, instances are used as budget type. Therefore, the target function is
+called with an instance instead of a budget.</p>
 </div>
 </section>
 
@@ -1014,10 +1019,10 @@ follows:</p>
             <p class="prev-next-title">Multi-Objective Optimization</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="5_stopping_criteria.html" title="next page">
+    <a class='right-next' id="next-link" href="5_ask_and_tell.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Stopping Criteria</p>
+        <p class="prev-next-title">Ask-and-Tell Interface</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
@@ -1038,8 +1043,7 @@ follows:</p>
     &copy; Copyright 
     Copyright 2022, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
-    and Frank Hutter
-.<br>
+    and Frank Hutter.<br>
 </p>
     </div>
     

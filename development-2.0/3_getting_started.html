@@ -171,7 +171,7 @@ style="width: 100%;">
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="examples/1_basics/3_ask_and_tell.html">
-       Ask-and-Tell Interface
+       Ask-and-Tell
       </a>
      </li>
      <li class="toctree-l3">
@@ -243,8 +243,13 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/2_components.html">
+    <a class="reference internal" href="advanced_usage/1_components.html">
      Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/2_multi_fidelity.html">
+     Multi-Fidelity Optimization
     </a>
    </li>
    <li class="toctree-l2">
@@ -254,32 +259,32 @@ style="width: 100%;">
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="advanced_usage/4_instances.html">
-     Instances and Features
+     Optimization across Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/5_stopping_criteria.html">
-     Stopping Criteria
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/6_ask_and_tell.html">
+    <a class="reference internal" href="advanced_usage/5_ask_and_tell.html">
      Ask-and-Tell Interface
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/7_continue.html">
+    <a class="reference internal" href="advanced_usage/6_parallelism.html">
+     Parallelism
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/7_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/8_continue.html">
      Continue a Run
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/8_reproducability.html">
+    <a class="reference internal" href="advanced_usage/9_reproducability.html">
      Reproducability
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/9_parallelism.html">
-     Parallelism
     </a>
    </li>
   </ul>
@@ -480,8 +485,8 @@ style="width: 100%;">
     </label>
     <ul>
      <li class="toctree-l3 has-children">
-      <a class="reference internal" href="api/smac.acquisition.functions.html">
-       smac.acquisition.functions
+      <a class="reference internal" href="api/smac.acquisition.function.html">
+       smac.acquisition.function
       </a>
       <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
       <label for="toctree-checkbox-13">
@@ -490,45 +495,45 @@ style="width: 100%;">
       </label>
       <ul>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.functions.abstract_acquisition_function.html">
-         smac.acquisition.functions.abstract_acquisition_function
+        <a class="reference internal" href="api/smac.acquisition.function.abstract_acquisition_function.html">
+         smac.acquisition.function.abstract_acquisition_function
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.functions.confidence_bound.html">
-         smac.acquisition.functions.confidence_bound
+        <a class="reference internal" href="api/smac.acquisition.function.confidence_bound.html">
+         smac.acquisition.function.confidence_bound
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.functions.expected_improvement.html">
-         smac.acquisition.functions.expected_improvement
+        <a class="reference internal" href="api/smac.acquisition.function.expected_improvement.html">
+         smac.acquisition.function.expected_improvement
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.functions.integrated_acquisition_function.html">
-         smac.acquisition.functions.integrated_acquisition_function
+        <a class="reference internal" href="api/smac.acquisition.function.integrated_acquisition_function.html">
+         smac.acquisition.function.integrated_acquisition_function
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.functions.prior_acqusition_function.html">
-         smac.acquisition.functions.prior_acqusition_function
+        <a class="reference internal" href="api/smac.acquisition.function.prior_acqusition_function.html">
+         smac.acquisition.function.prior_acqusition_function
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.functions.probability_improvement.html">
-         smac.acquisition.functions.probability_improvement
+        <a class="reference internal" href="api/smac.acquisition.function.probability_improvement.html">
+         smac.acquisition.function.probability_improvement
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.functions.thompson.html">
-         smac.acquisition.functions.thompson
+        <a class="reference internal" href="api/smac.acquisition.function.thompson.html">
+         smac.acquisition.function.thompson
         </a>
        </li>
       </ul>
      </li>
      <li class="toctree-l3 has-children">
-      <a class="reference internal" href="api/smac.acquisition.maximizers.html">
-       smac.acquisition.maximizers
+      <a class="reference internal" href="api/smac.acquisition.maximizer.html">
+       smac.acquisition.maximizer
       </a>
       <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
       <label for="toctree-checkbox-14">
@@ -537,33 +542,33 @@ style="width: 100%;">
       </label>
       <ul>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.maximizers.abstract_acqusition_maximizer.html">
-         smac.acquisition.maximizers.abstract_acqusition_maximizer
+        <a class="reference internal" href="api/smac.acquisition.maximizer.abstract_acqusition_maximizer.html">
+         smac.acquisition.maximizer.abstract_acqusition_maximizer
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.maximizers.differential_evolution.html">
-         smac.acquisition.maximizers.differential_evolution
+        <a class="reference internal" href="api/smac.acquisition.maximizer.differential_evolution.html">
+         smac.acquisition.maximizer.differential_evolution
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.maximizers.helpers.html">
-         smac.acquisition.maximizers.helpers
+        <a class="reference internal" href="api/smac.acquisition.maximizer.helpers.html">
+         smac.acquisition.maximizer.helpers
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.maximizers.local_and_random_search.html">
-         smac.acquisition.maximizers.local_and_random_search
+        <a class="reference internal" href="api/smac.acquisition.maximizer.local_and_random_search.html">
+         smac.acquisition.maximizer.local_and_random_search
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.maximizers.local_search.html">
-         smac.acquisition.maximizers.local_search
+        <a class="reference internal" href="api/smac.acquisition.maximizer.local_search.html">
+         smac.acquisition.maximizer.local_search
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.maximizers.random_search.html">
-         smac.acquisition.maximizers.random_search
+        <a class="reference internal" href="api/smac.acquisition.maximizer.random_search.html">
+         smac.acquisition.maximizer.random_search
         </a>
        </li>
       </ul>
@@ -988,19 +993,22 @@ style="width: 100%;">
                 
   <section id="getting-started">
 <h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h1>
-<p>In the core, SMAC needs four components to run an optimization process, all of which are explained on this page.</p>
+<p>In the core, SMAC needs four components (configuration space, target function, scenario and a facade) to run an
+optimization process, all of which are explained on this page.</p>
 <section id="configuration-space">
 <h2>Configuration Space<a class="headerlink" href="#configuration-space" title="Permalink to this heading">¶</a></h2>
 <p>The configuration space defines the search space of the hyperparameters and, therefore, the tunable parameters’ legal
 ranges and default values.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">ConfigSpace</span>
 
-<span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigSpace</span><span class="p">({</span>
-    <span class="s2">&quot;learning_rate&quot;</span> <span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">),</span>
+<span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigurationSpace</span><span class="p">({</span>
+    <span class="s2">&quot;myfloat&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">),</span>                <span class="c1"># Uniform Float</span>
+    <span class="s2">&quot;myint&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>                     <span class="c1"># Uniform Integer</span>
+    <span class="s2">&quot;species&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;mouse&quot;</span><span class="p">,</span> <span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;dog&quot;</span><span class="p">],</span>   <span class="c1"># Categorical</span>
 <span class="p">})</span>
 </pre></div>
 </div>
-<p>Please see the documentation of <code class="docutils literal notranslate"><span class="pre">ConfigSpace</span></code> for more details.</p>
+<p>Please see the documentation of <a class="reference external" href="https://automl.github.io/ConfigSpace/main/">ConfigSpace</a> for more details.</p>
 </section>
 <section id="target-function">
 <h2>Target Function<a class="headerlink" href="#target-function" title="Permalink to this heading">¶</a></h2>
@@ -1016,13 +1024,18 @@ different and potentially improving configurations.</p>
     <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">accuracy</span>  <span class="c1"># SMAC always minimizes (the smaller the better)</span>
 </pre></div>
 </div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>SMAC <em>always</em> minimizes the value returned from the target function.</p>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>In general, the arguments of the target function depend on the intensifier. However,
 in all cases, the first argument must be the configuration (arbitrary argument name is possible here) and a seed.
 If you specified instances in the scenario, SMAC requires <code class="docutils literal notranslate"><span class="pre">instance</span></code> as argument additionally. If you use
 <code class="docutils literal notranslate"><span class="pre">SuccessiveHalving</span></code> or <code class="docutils literal notranslate"><span class="pre">Hyperband</span></code> as intensifier but you did not specify instances, SMAC passes <cite>budget</cite> as
-argument to the target function.</p>
+argument to the target function. But don’t worry: SMAC will tell you if something is missing or if something is not
+used.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -1037,8 +1050,9 @@ you want to limit the optimization process by a time limit or want to specify wh
 
 <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span>
     <span class="n">configspace</span><span class="o">=</span><span class="n">cs</span><span class="p">,</span>
-    <span class="n">output_directory</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;output_directory&quot;</span><span class="p">)</span>
+    <span class="n">output_directory</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;your_output_directory&quot;</span><span class="p">)</span>
     <span class="n">walltime_limit</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span>  <span class="c1"># Limit to two minutes</span>
+    <span class="n">n_trials</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>  <span class="c1"># Evaluated max 500 trials</span>
     <span class="n">n_workers</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>  <span class="c1"># Use eight workers</span>
     <span class="o">...</span>
 <span class="p">)</span>
@@ -1052,7 +1066,7 @@ pipeline for you. SMAC offers various facades, which satisfy many use cases and 
 achieving peak performance. The idea behind the facades is to provide a simple interface to SMAC,
 which is easy to use and understand without diving deep into the material. However, experts are
 invited to change the components as they please to achieve even better performance potentially. The following
-table (horizontal scrollable) shows you what is supported and reveals the default <a class="reference internal" href="advanced_usage/2_components.html#components"><span class="std std-ref">components</span></a>:</p>
+table (horizontal scrollable) shows you what is supported and reveals the default <a class="reference internal" href="advanced_usage/1_components.html#components"><span class="std std-ref">components</span></a>:</p>
 <table class="table">
 <thead>
 <tr class="row-odd"><th class="head"></th>
@@ -1094,39 +1108,39 @@ table (horizontal scrollable) shows you what is supported and reveals the defaul
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>Initial Design</p></td>
-<td><p><span class="xref std std-ref">Sobol</span></p></td>
-<td><p><span class="xref std std-ref">Sobol</span></p></td>
-<td><p><span class="xref std std-ref">Random</span></p></td>
-<td><p><span class="xref std std-ref">Default</span></p></td>
-<td><p><span class="xref std std-ref">Default</span></p></td>
-<td><p><span class="xref std std-ref">Default</span></p></td>
+<td><p><a class="reference internal" href="api/smac.initial_design.sobol_design.html#module-smac.initial_design.sobol_design"><span class="std std-ref">Sobol</span></a></p></td>
+<td><p><a class="reference internal" href="api/smac.initial_design.sobol_design.html#module-smac.initial_design.sobol_design"><span class="std std-ref">Sobol</span></a></p></td>
+<td><p><a class="reference internal" href="api/smac.initial_design.random_design.html#module-smac.initial_design.random_design"><span class="std std-ref">Random</span></a></p></td>
+<td><p><a class="reference internal" href="api/smac.initial_design.default_design.html#module-smac.initial_design.default_design"><span class="std std-ref">Default</span></a></p></td>
+<td><p><a class="reference internal" href="api/smac.initial_design.default_design.html#module-smac.initial_design.default_design"><span class="std std-ref">Default</span></a></p></td>
+<td><p><a class="reference internal" href="api/smac.initial_design.default_design.html#module-smac.initial_design.default_design"><span class="std std-ref">Default</span></a></p></td>
 <td></td>
 </tr>
 <tr class="row-even"><td><p>Surrogate Model</p></td>
-<td><p><span class="xref std std-ref">Gaussian Process</span></p></td>
-<td><p><span class="xref std std-ref">Random Forest</span></p></td>
-<td><p><span class="xref std std-ref">Random Forest</span></p></td>
-<td><p><span class="xref std std-ref">Random Forest</span></p></td>
+<td><p><a class="reference internal" href="api/smac.model.gaussian_process.gaussian_process.html#module-smac.model.gaussian_process.gaussian_process"><span class="std std-ref">Gaussian Process</span></a></p></td>
+<td><p><a class="reference internal" href="api/smac.model.random_forest.random_forest.html#module-smac.model.random_forest.random_forest"><span class="std std-ref">Random Forest</span></a></p></td>
+<td><p><a class="reference internal" href="api/smac.model.random_forest.random_forest.html#module-smac.model.random_forest.random_forest"><span class="std std-ref">Random Forest</span></a></p></td>
+<td><p><a class="reference internal" href="api/smac.model.random_forest.random_forest.html#module-smac.model.random_forest.random_forest"><span class="std std-ref">Random Forest</span></a></p></td>
 <td><p>Not used</p></td>
 <td><p>Not used</p></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>Acquisition Function</p></td>
-<td><p><span class="xref std std-ref">Expected Improvement</span></p></td>
-<td><p><span class="xref std std-ref">Expected Improvement</span></p></td>
-<td><p><span class="xref std std-ref">Expected Improvement</span></p></td>
-<td><p><span class="xref std std-ref">Expected Improvement</span></p></td>
+<td><p><a class="reference internal" href="api/smac.acquisition.function.expected_improvement.html#module-smac.acquisition.function.expected_improvement"><span class="std std-ref">Expected Improvement</span></a></p></td>
+<td><p><a class="reference internal" href="api/smac.acquisition.function.expected_improvement.html#module-smac.acquisition.function.expected_improvement"><span class="std std-ref">Log Expected Improvement</span></a></p></td>
+<td><p><a class="reference internal" href="api/smac.acquisition.function.expected_improvement.html#module-smac.acquisition.function.expected_improvement"><span class="std std-ref">Log Expected Improvement</span></a></p></td>
+<td><p><a class="reference internal" href="api/smac.acquisition.function.expected_improvement.html#module-smac.acquisition.function.expected_improvement"><span class="std std-ref">Expected Improvement</span></a></p></td>
 <td><p>Not used</p></td>
 <td><p>Not used</p></td>
 <td></td>
 </tr>
 <tr class="row-even"><td><p>Acquisition Maximier</p></td>
-<td><p><span class="xref std std-ref">Local and Random Search</span></p></td>
-<td><p><span class="xref std std-ref">Local and Random Search</span></p></td>
-<td><p><span class="xref std std-ref">Local and Random Search</span></p></td>
-<td><p><span class="xref std std-ref">Local and Random Search</span></p></td>
-<td><p><span class="xref std std-ref">Local and Random Search</span></p></td>
-<td><p><span class="xref std std-ref">Local and Random Search</span></p></td>
+<td><p><a class="reference internal" href="api/smac.acquisition.maximizer.local_and_random_search.html#module-smac.acquisition.maximizer.local_and_random_search"><span class="std std-ref">Local and Sorted Random Search</span></a></p></td>
+<td><p><a class="reference internal" href="api/smac.acquisition.maximizer.local_and_random_search.html#module-smac.acquisition.maximizer.local_and_random_search"><span class="std std-ref">Local and Sorted Random Search</span></a></p></td>
+<td><p><a class="reference internal" href="api/smac.acquisition.maximizer.local_and_random_search.html#module-smac.acquisition.maximizer.local_and_random_search"><span class="std std-ref">Local and Sorted Random Search</span></a></p></td>
+<td><p><a class="reference internal" href="api/smac.acquisition.maximizer.local_and_random_search.html#module-smac.acquisition.maximizer.local_and_random_search"><span class="std std-ref">Local and Sorted Random Search</span></a></p></td>
+<td><p><a class="reference internal" href="api/smac.acquisition.maximizer.random_search.html#module-smac.acquisition.maximizer.random_search"><span class="std std-ref">Local and Sorted Random Search</span></a></p></td>
+<td><p><a class="reference internal" href="api/smac.acquisition.maximizer.random_search.html#module-smac.acquisition.maximizer.random_search"><span class="std std-ref">Local and Sorted Random Search</span></a></p></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>Intensifier</p></td>
@@ -1140,8 +1154,8 @@ table (horizontal scrollable) shows you what is supported and reveals the defaul
 </tr>
 <tr class="row-even"><td><p>Runhistory Encoder</p></td>
 <td><p><a class="reference internal" href="api/smac.runhistory.encoder.encoder.html#module-smac.runhistory.encoder.encoder"><span class="std std-ref">Default</span></a></p></td>
-<td><p><span class="xref std std-ref">Log</span></p></td>
-<td><p><span class="xref std std-ref">Log</span></p></td>
+<td><p><a class="reference internal" href="api/smac.runhistory.encoder.log_encoder.html#module-smac.runhistory.encoder.log_encoder"><span class="std std-ref">Log</span></a></p></td>
+<td><p><a class="reference internal" href="api/smac.runhistory.encoder.log_encoder.html#module-smac.runhistory.encoder.log_encoder"><span class="std std-ref">Log</span></a></p></td>
 <td><p><a class="reference internal" href="api/smac.runhistory.encoder.encoder.html#module-smac.runhistory.encoder.encoder"><span class="std std-ref">Default</span></a></p></td>
 <td><p><a class="reference internal" href="api/smac.runhistory.encoder.encoder.html#module-smac.runhistory.encoder.encoder"><span class="std std-ref">Default</span></a></p></td>
 <td><p><a class="reference internal" href="api/smac.runhistory.encoder.encoder.html#module-smac.runhistory.encoder.encoder"><span class="std std-ref">Default</span></a></p></td>
@@ -1165,7 +1179,8 @@ table (horizontal scrollable) shows you what is supported and reveals the defaul
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>We want to emphasize that SMAC is a highly modular optimization framework.
-The facade accepts many arguments to specify components of the pipeline.</p>
+The facade accepts many arguments to specify components of the pipeline. Please also note, that in contrast
+to previous versions, instantiated objects are passed instead of <em>kwargs</em>.</p>
 </div>
 <p>The facades can be imported directely from the <code class="docutils literal notranslate"><span class="pre">smac</span></code> module.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">BlackBoxFacade</span> <span class="k">as</span> <span class="n">BBFacade</span>
@@ -1222,8 +1237,7 @@ The facade accepts many arguments to specify components of the pipeline.</p>
     &copy; Copyright 
     Copyright 2022, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
-    and Frank Hutter
-.<br>
+    and Frank Hutter.<br>
 </p>
     </div>
     

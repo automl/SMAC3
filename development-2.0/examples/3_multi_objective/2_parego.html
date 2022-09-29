@@ -171,7 +171,7 @@ style="width: 100%;">
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../1_basics/3_ask_and_tell.html">
-       Ask-and-Tell Interface
+       Ask-and-Tell
       </a>
      </li>
      <li class="toctree-l3">
@@ -243,8 +243,13 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/2_components.html">
+    <a class="reference internal" href="../../advanced_usage/1_components.html">
      Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/2_multi_fidelity.html">
+     Multi-Fidelity Optimization
     </a>
    </li>
    <li class="toctree-l2">
@@ -254,32 +259,32 @@ style="width: 100%;">
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../advanced_usage/4_instances.html">
-     Instances and Features
+     Optimization across Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/5_stopping_criteria.html">
-     Stopping Criteria
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/6_ask_and_tell.html">
+    <a class="reference internal" href="../../advanced_usage/5_ask_and_tell.html">
      Ask-and-Tell Interface
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/7_continue.html">
+    <a class="reference internal" href="../../advanced_usage/6_parallelism.html">
+     Parallelism
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/7_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/8_continue.html">
      Continue a Run
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/8_reproducability.html">
+    <a class="reference internal" href="../../advanced_usage/9_reproducability.html">
      Reproducability
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/9_parallelism.html">
-     Parallelism
     </a>
    </li>
   </ul>
@@ -480,8 +485,8 @@ style="width: 100%;">
     </label>
     <ul>
      <li class="toctree-l3 has-children">
-      <a class="reference internal" href="../../api/smac.acquisition.functions.html">
-       smac.acquisition.functions
+      <a class="reference internal" href="../../api/smac.acquisition.function.html">
+       smac.acquisition.function
       </a>
       <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
       <label for="toctree-checkbox-13">
@@ -490,45 +495,45 @@ style="width: 100%;">
       </label>
       <ul>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.functions.abstract_acquisition_function.html">
-         smac.acquisition.functions.abstract_acquisition_function
+        <a class="reference internal" href="../../api/smac.acquisition.function.abstract_acquisition_function.html">
+         smac.acquisition.function.abstract_acquisition_function
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.functions.confidence_bound.html">
-         smac.acquisition.functions.confidence_bound
+        <a class="reference internal" href="../../api/smac.acquisition.function.confidence_bound.html">
+         smac.acquisition.function.confidence_bound
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.functions.expected_improvement.html">
-         smac.acquisition.functions.expected_improvement
+        <a class="reference internal" href="../../api/smac.acquisition.function.expected_improvement.html">
+         smac.acquisition.function.expected_improvement
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.functions.integrated_acquisition_function.html">
-         smac.acquisition.functions.integrated_acquisition_function
+        <a class="reference internal" href="../../api/smac.acquisition.function.integrated_acquisition_function.html">
+         smac.acquisition.function.integrated_acquisition_function
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.functions.prior_acqusition_function.html">
-         smac.acquisition.functions.prior_acqusition_function
+        <a class="reference internal" href="../../api/smac.acquisition.function.prior_acqusition_function.html">
+         smac.acquisition.function.prior_acqusition_function
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.functions.probability_improvement.html">
-         smac.acquisition.functions.probability_improvement
+        <a class="reference internal" href="../../api/smac.acquisition.function.probability_improvement.html">
+         smac.acquisition.function.probability_improvement
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.functions.thompson.html">
-         smac.acquisition.functions.thompson
+        <a class="reference internal" href="../../api/smac.acquisition.function.thompson.html">
+         smac.acquisition.function.thompson
         </a>
        </li>
       </ul>
      </li>
      <li class="toctree-l3 has-children">
-      <a class="reference internal" href="../../api/smac.acquisition.maximizers.html">
-       smac.acquisition.maximizers
+      <a class="reference internal" href="../../api/smac.acquisition.maximizer.html">
+       smac.acquisition.maximizer
       </a>
       <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
       <label for="toctree-checkbox-14">
@@ -537,33 +542,33 @@ style="width: 100%;">
       </label>
       <ul>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.maximizers.abstract_acqusition_maximizer.html">
-         smac.acquisition.maximizers.abstract_acqusition_maximizer
+        <a class="reference internal" href="../../api/smac.acquisition.maximizer.abstract_acqusition_maximizer.html">
+         smac.acquisition.maximizer.abstract_acqusition_maximizer
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.maximizers.differential_evolution.html">
-         smac.acquisition.maximizers.differential_evolution
+        <a class="reference internal" href="../../api/smac.acquisition.maximizer.differential_evolution.html">
+         smac.acquisition.maximizer.differential_evolution
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.maximizers.helpers.html">
-         smac.acquisition.maximizers.helpers
+        <a class="reference internal" href="../../api/smac.acquisition.maximizer.helpers.html">
+         smac.acquisition.maximizer.helpers
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.maximizers.local_and_random_search.html">
-         smac.acquisition.maximizers.local_and_random_search
+        <a class="reference internal" href="../../api/smac.acquisition.maximizer.local_and_random_search.html">
+         smac.acquisition.maximizer.local_and_random_search
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.maximizers.local_search.html">
-         smac.acquisition.maximizers.local_search
+        <a class="reference internal" href="../../api/smac.acquisition.maximizer.local_search.html">
+         smac.acquisition.maximizer.local_search
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.maximizers.random_search.html">
-         smac.acquisition.maximizers.random_search
+        <a class="reference internal" href="../../api/smac.acquisition.maximizer.random_search.html">
+         smac.acquisition.maximizer.random_search
         </a>
        </li>
       </ul>
@@ -980,7 +985,7 @@ times more important than the run time.</p>
 [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
 [INFO][intensifier.py:567] Updated estimated cost of incumbent on 1 trials: 1.0
 [INFO][intensifier.py:567] Updated estimated cost of incumbent on 2 trials: 0.5
-[INFO][abstract_intensifier.py:340] Challenger (0.2427) is better than incumbent (0.7495) on 2 trials.
+[INFO][abstract_intensifier.py:340] Challenger (0.2462) is better than incumbent (0.7498) on 2 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
 [INFO][abstract_intensifier.py:367] --- activation: &#39;logistic&#39; -&gt; &#39;tanh&#39;
 [INFO][abstract_intensifier.py:367] --- batch_size: None -&gt; 77
@@ -988,30 +993,27 @@ times more important than the run time.</p>
 [INFO][abstract_intensifier.py:367] --- n_layer: 4 -&gt; 1
 [INFO][abstract_intensifier.py:367] --- n_neurons: 11 -&gt; 146
 [INFO][abstract_intensifier.py:367] --- solver: &#39;lbfgs&#39; -&gt; &#39;adam&#39;
-[INFO][intensifier.py:567] Updated estimated cost of incumbent on 3 trials: 0.2424
-[INFO][abstract_intensifier.py:340] Challenger (0.1637) is better than incumbent (0.2535) on 3 trials.
+[INFO][intensifier.py:567] Updated estimated cost of incumbent on 3 trials: 0.2473
+[INFO][abstract_intensifier.py:340] Challenger (0.1834) is better than incumbent (0.2584) on 3 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
 [INFO][abstract_intensifier.py:367] --- activation: &#39;tanh&#39; -&gt; &#39;logistic&#39;
 [INFO][abstract_intensifier.py:367] --- batch_size: 77 -&gt; 175
 [INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.000534923804864797 -&gt; 0.004156370184967407
 [INFO][abstract_intensifier.py:367] --- n_layer: 1 -&gt; 2
 [INFO][abstract_intensifier.py:367] --- n_neurons: 146 -&gt; 90
-[INFO][abstract_intensifier.py:340] Challenger (0.0314) is better than incumbent (0.0618) on 3 trials.
+[INFO][abstract_intensifier.py:340] Challenger (0.0469) is better than incumbent (0.0538) on 3 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- batch_size: 175 -&gt; 158
-[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.004156370184967407 -&gt; 0.013273166334146476
-[INFO][abstract_intensifier.py:367] --- n_layer: 2 -&gt; 1
-[INFO][abstract_intensifier.py:367] --- n_neurons: 90 -&gt; 107
-[INFO][abstract_intensifier.py:340] Challenger (0.0273) is better than incumbent (0.0314) on 3 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- batch_size: 158 -&gt; 227
-[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.013273166334146476 -&gt; 0.013072831984637353
-[INFO][abstract_intensifier.py:367] --- n_neurons: 107 -&gt; 109
+[INFO][abstract_intensifier.py:367] --- activation: &#39;logistic&#39; -&gt; &#39;relu&#39;
+[INFO][abstract_intensifier.py:367] --- batch_size: 175 -&gt; 165
+[INFO][abstract_intensifier.py:367] --- learning_rate: None -&gt; &#39;adaptive&#39;
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.004156370184967407 -&gt; 0.002800459687107501
+[INFO][abstract_intensifier.py:367] --- n_neurons: 90 -&gt; 99
+[INFO][abstract_intensifier.py:367] --- solver: &#39;adam&#39; -&gt; &#39;sgd&#39;
 [INFO][base_smbo.py:260] Configuration budget is exhausted.
-[INFO][abstract_facade.py:314] Final Incumbent: {&#39;activation&#39;: &#39;logistic&#39;, &#39;n_layer&#39;: 1, &#39;n_neurons&#39;: 109, &#39;solver&#39;: &#39;adam&#39;, &#39;batch_size&#39;: 227, &#39;learning_rate_init&#39;: 0.013072831984637353}
-[INFO][abstract_facade.py:315] Estimated cost: 0.027347777123075574
-Default costs: [0.62956618 0.2402463 ]
-Incumbent costs: [0.02708243 0.49497048]
+[INFO][abstract_facade.py:314] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 2, &#39;n_neurons&#39;: 99, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 165, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.002800459687107501}
+[INFO][abstract_facade.py:315] Estimated cost: 0.04907902647740611
+Default costs: [0.62956618 0.24064207]
+Incumbent costs: [0.04489374 0.69583535]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1145,7 +1147,7 @@ Incumbent costs: [0.02708243 0.49497048]
 
     <span class="n">x_front</span><span class="p">,</span> <span class="n">y_front</span> <span class="o">=</span> <span class="n">front</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">front</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">cost1</span><span class="p">,</span> <span class="n">cost2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">cost1</span><span class="p">,</span> <span class="n">cost2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">x_front</span><span class="p">,</span> <span class="n">y_front</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
 
     <span class="c1"># Highlight the incumbent</span>
@@ -1198,7 +1200,7 @@ Incumbent costs: [0.02708243 0.49497048]
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  42.379 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  42.979 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0422a2b52bca2c17c0ab975a6ae7e8db/2_parego.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_parego.py</span></code></a></p>
@@ -1246,8 +1248,7 @@ Incumbent costs: [0.02708243 0.49497048]
     &copy; Copyright 
     Copyright 2022, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
-    and Frank Hutter
-.<br>
+    and Frank Hutter.<br>
 </p>
     </div>
     

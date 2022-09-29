@@ -171,7 +171,7 @@ style="width: 100%;">
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="examples/1_basics/3_ask_and_tell.html">
-       Ask-and-Tell Interface
+       Ask-and-Tell
       </a>
      </li>
      <li class="toctree-l3">
@@ -243,8 +243,13 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/2_components.html">
+    <a class="reference internal" href="advanced_usage/1_components.html">
      Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/2_multi_fidelity.html">
+     Multi-Fidelity Optimization
     </a>
    </li>
    <li class="toctree-l2">
@@ -254,32 +259,32 @@ style="width: 100%;">
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="advanced_usage/4_instances.html">
-     Instances and Features
+     Optimization across Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/5_stopping_criteria.html">
-     Stopping Criteria
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/6_ask_and_tell.html">
+    <a class="reference internal" href="advanced_usage/5_ask_and_tell.html">
      Ask-and-Tell Interface
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/7_continue.html">
+    <a class="reference internal" href="advanced_usage/6_parallelism.html">
+     Parallelism
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/7_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/8_continue.html">
      Continue a Run
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/8_reproducability.html">
+    <a class="reference internal" href="advanced_usage/9_reproducability.html">
      Reproducability
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/9_parallelism.html">
-     Parallelism
     </a>
    </li>
   </ul>
@@ -480,8 +485,8 @@ style="width: 100%;">
     </label>
     <ul>
      <li class="toctree-l3 has-children">
-      <a class="reference internal" href="api/smac.acquisition.functions.html">
-       smac.acquisition.functions
+      <a class="reference internal" href="api/smac.acquisition.function.html">
+       smac.acquisition.function
       </a>
       <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
       <label for="toctree-checkbox-13">
@@ -490,45 +495,45 @@ style="width: 100%;">
       </label>
       <ul>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.functions.abstract_acquisition_function.html">
-         smac.acquisition.functions.abstract_acquisition_function
+        <a class="reference internal" href="api/smac.acquisition.function.abstract_acquisition_function.html">
+         smac.acquisition.function.abstract_acquisition_function
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.functions.confidence_bound.html">
-         smac.acquisition.functions.confidence_bound
+        <a class="reference internal" href="api/smac.acquisition.function.confidence_bound.html">
+         smac.acquisition.function.confidence_bound
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.functions.expected_improvement.html">
-         smac.acquisition.functions.expected_improvement
+        <a class="reference internal" href="api/smac.acquisition.function.expected_improvement.html">
+         smac.acquisition.function.expected_improvement
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.functions.integrated_acquisition_function.html">
-         smac.acquisition.functions.integrated_acquisition_function
+        <a class="reference internal" href="api/smac.acquisition.function.integrated_acquisition_function.html">
+         smac.acquisition.function.integrated_acquisition_function
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.functions.prior_acqusition_function.html">
-         smac.acquisition.functions.prior_acqusition_function
+        <a class="reference internal" href="api/smac.acquisition.function.prior_acqusition_function.html">
+         smac.acquisition.function.prior_acqusition_function
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.functions.probability_improvement.html">
-         smac.acquisition.functions.probability_improvement
+        <a class="reference internal" href="api/smac.acquisition.function.probability_improvement.html">
+         smac.acquisition.function.probability_improvement
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.functions.thompson.html">
-         smac.acquisition.functions.thompson
+        <a class="reference internal" href="api/smac.acquisition.function.thompson.html">
+         smac.acquisition.function.thompson
         </a>
        </li>
       </ul>
      </li>
      <li class="toctree-l3 has-children">
-      <a class="reference internal" href="api/smac.acquisition.maximizers.html">
-       smac.acquisition.maximizers
+      <a class="reference internal" href="api/smac.acquisition.maximizer.html">
+       smac.acquisition.maximizer
       </a>
       <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
       <label for="toctree-checkbox-14">
@@ -537,33 +542,33 @@ style="width: 100%;">
       </label>
       <ul>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.maximizers.abstract_acqusition_maximizer.html">
-         smac.acquisition.maximizers.abstract_acqusition_maximizer
+        <a class="reference internal" href="api/smac.acquisition.maximizer.abstract_acqusition_maximizer.html">
+         smac.acquisition.maximizer.abstract_acqusition_maximizer
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.maximizers.differential_evolution.html">
-         smac.acquisition.maximizers.differential_evolution
+        <a class="reference internal" href="api/smac.acquisition.maximizer.differential_evolution.html">
+         smac.acquisition.maximizer.differential_evolution
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.maximizers.helpers.html">
-         smac.acquisition.maximizers.helpers
+        <a class="reference internal" href="api/smac.acquisition.maximizer.helpers.html">
+         smac.acquisition.maximizer.helpers
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.maximizers.local_and_random_search.html">
-         smac.acquisition.maximizers.local_and_random_search
+        <a class="reference internal" href="api/smac.acquisition.maximizer.local_and_random_search.html">
+         smac.acquisition.maximizer.local_and_random_search
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.maximizers.local_search.html">
-         smac.acquisition.maximizers.local_search
+        <a class="reference internal" href="api/smac.acquisition.maximizer.local_search.html">
+         smac.acquisition.maximizer.local_search
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="api/smac.acquisition.maximizers.random_search.html">
-         smac.acquisition.maximizers.random_search
+        <a class="reference internal" href="api/smac.acquisition.maximizer.random_search.html">
+         smac.acquisition.maximizer.random_search
         </a>
        </li>
       </ul>
@@ -951,11 +956,6 @@ style="width: 100%;">
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#components">
-   Components
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#comparison">
    Comparison
   </a>
@@ -983,64 +983,42 @@ style="width: 100%;">
                 
   <section id="package-overview">
 <h1>Package Overview<a class="headerlink" href="#package-overview" title="Permalink to this heading">¶</a></h1>
-<p>SMAC supports you in determining well-performing hyperparameter configurations for your algorithms.
-By being a robust and flexible framework for <a class="reference internal" href="7_glossary.html#term-BO"><span class="xref std std-term">BO</span></a>, SMAC can improve performance within few function evaluations.
-It offers several <span class="xref std std-ref">Facades</span> and pre-sets for typical use cases, such as optimizing
-hyperparameters, solving low dimensional continuous (artificial) global optimization problems and configuring algorithms to perform well across multiple problem <a class="reference internal" href="advanced_usage/4_instances.html#instances-and-features"><span class="std std-ref">Instances</span></a>.</p>
+<p>SMAC supports you in determining well-performing hyperparameter configurations for your algorithms. By being a robust
+and flexible framework for <a class="reference internal" href="7_glossary.html#term-BO"><span class="xref std std-term">Bayesian Optimization</span></a>, SMAC can improve performance within few function
+evaluations. It offers several entry points and pre-sets for typical use cases, such as optimizing
+hyperparameters, solving low dimensional continuous (artificial) global optimization problems and configuring algorithms
+to perform well across multiple problem <a class="reference internal" href="7_glossary.html#term-Instances"><span class="xref std std-term">instances</span></a>.</p>
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this heading">¶</a></h2>
 <p>SMAC has following characteristics and capabilities:</p>
-<dl class="simple">
-<dt>Global optimizer</dt><dd><p><a class="reference internal" href="7_glossary.html#term-BO"><span class="xref std std-term">Bayesian Optimization</span></a> is used for sample-efficient optimization.</p>
+<dl>
+<dt>Global Optimizer</dt><dd><p><a class="reference internal" href="7_glossary.html#term-Bayesian-Optimization"><span class="xref std std-term">Bayesian Optimization</span></a> is used for sample-efficient optimization.</p>
 </dd>
-<dt>Optimize <a class="reference internal" href="7_glossary.html#term-BB"><span class="xref std std-term">Black-Box</span></a> functions</dt><dd><p>Optimization is only aware of input and output. It is agnostic to internals of the function.</p>
+<dt>Optimize <a class="reference internal" href="7_glossary.html#term-Black-Box"><span class="xref std std-term">Black-Box</span></a> Functions</dt><dd><p>Optimization is only aware of input and output. It is agnostic to internals of the function.</p>
 </dd>
-<dt>Flexible hyperparameters</dt><dd><p>Use categorical, continuous or hierarchical (conditional) hyperparameters with the well-integrated
-<a class="reference external" href="https://automl.github.io/ConfigSpace">ConfigurationSpace</a>. SMAC can
-optimize up to 100
-hyperparameters efficiently.</p>
+<dt>Flexible Hyperparameters</dt><dd><p>Use categorical, continuous, hierarchical and/or conditional hyperparameters with the well-integrated
+<a class="reference external" href="https://automl.github.io/ConfigSpace">ConfigurationSpace</a>. SMAC can optimize <em>up to 100 hyperparameters</em>
+efficiently.</p>
 </dd>
-<dt>Any objectives</dt><dd><p>Optimization with any <a class="reference internal" href="7_glossary.html#term-Objective"><span class="xref std std-term">objective</span></a> (e.g., quality or runtime) is possible.</p>
+<dt>Any Objectives</dt><dd><p>Optimization with any <a class="reference internal" href="7_glossary.html#term-Objective"><span class="xref std std-term">objective</span></a> (e.g., accuracy, runtime, cross-validation, …) is possible.</p>
 </dd>
-<dt><a class="reference internal" href="advanced_usage/3_multi_objective.html#multi-objective-optimization"><span class="std std-ref">Multi-Objective</span></a></dt><dd><p>Optimize any number of objectives using scalarized multi-ojective algorithms.</p>
+<dt><a class="reference internal" href="advanced_usage/3_multi_objective.html#multi-objective-optimization"><span class="std std-ref">Multi-Objective</span></a></dt><dd><p>Optimize arbitrary number of objectives using scalarized multi-ojective algorithms. Both ParEGO <a class="reference internal" href="6_references.html#know06" id="id1"><span>[Know06]</span></a> and
+mean aggregation strategies are supported.</p>
 </dd>
-<dt><a class="reference internal" href="7_glossary.html#term-MF"><span class="xref std std-term">Multi-Fidelity</span></a> Optimization</dt><dd><p>Judge configurations on multiple <a class="reference internal" href="7_glossary.html#term-Budget"><span class="xref std std-term">budgets</span></a> to discard unsuitable configurations
+<dt><span class="xref std std-term">Multi-Fidelity</span> Optimization</dt><dd><p>Judge configurations on multiple <a class="reference internal" href="7_glossary.html#term-Budget"><span class="xref std std-term">budgets</span></a> to discard unsuitable configurations
 early on. This will result in a massive speed-up, depending on the budgets.</p>
 </dd>
-<dt><a class="reference internal" href="advanced_usage/4_instances.html#instances-and-features"><span class="std std-ref">Instances</span></a></dt><dd><p>Find well-performing hyperparameter configurations not only for one instance (e.g. dataset) of
+<dt><a class="reference internal" href="advanced_usage/4_instances.html#optimization-across-instances"><span class="std std-ref">Instances</span></a></dt><dd><p>Find well-performing hyperparameter configurations not only for one instance (e.g. dataset) of
 an algorithm, but for many.</p>
 </dd>
-<dt>Commandline (<a class="reference internal" href="7_glossary.html#term-CLI"><span class="xref std std-term">CLI</span></a>)</dt><dd><p>SMAC can not only be executed within a python file but also from the commandline. Consequently,
+<dt>Command-Line Interface</dt><dd><p>SMAC can not only be executed within a python file but also from the commandline. Consequently,
 not only algorithms in python can be optimized but in other languages as well.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Command-line interface has been temporarely disabled in v2.0. Please fall back to v1.4 if you need it.</p>
+</div>
 </dd>
 </dl>
-</section>
-<section id="components">
-<h2>Components<a class="headerlink" href="#components" title="Permalink to this heading">¶</a></h2>
-<dl class="simple">
-<dt>Surrogate Models</dt><dd><ul class="simple">
-<li><p>Gaussian Process</p></li>
-<li><p>Random Forest (with instances and without)</p></li>
-</ul>
-</dd>
-<dt>Acquisition Functions</dt><dd><ul class="simple">
-<li><p>Probability of Improvement (PI)</p></li>
-<li><p>Expected Improvement (EI)</p></li>
-<li><p>Lower Confidence Bound (LCB)</p></li>
-<li><p>Thompson Sampling (TS)</p></li>
-</ul>
-</dd>
-<dt>Intensification</dt><dd><ul class="simple">
-<li><p>Aggressive Racing</p></li>
-<li><p>Successive Halving</p></li>
-<li><p>Hyperband</p></li>
-</ul>
-</dd>
-</dl>
-<p>Please see the following figure for a more detailed overview.</p>
-<figure class="align-default">
-<img alt="../images/components.png" src="../images/components.png" />
-</figure>
 </section>
 <section id="comparison">
 <h2>Comparison<a class="headerlink" href="#comparison" title="Permalink to this heading">¶</a></h2>
@@ -1057,11 +1035,11 @@ not only algorithms in python can be optimized but in other languages as well.</
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Package</p></th>
-<th class="head"><p>Complex Hyperparameter Spaces</p></th>
-<th class="head"><p>Multi-<a class="reference internal" href="7_glossary.html#term-Objective"><span class="xref std std-term">Objective</span></a></p></th>
-<th class="head"><p><a class="reference internal" href="7_glossary.html#term-MF"><span class="xref std std-term">Multi-Fidelity</span></a></p></th>
-<th class="head"><p><a class="reference internal" href="advanced_usage/4_instances.html#instances-and-features"><span class="std std-ref">Instances</span></a></p></th>
-<th class="head"><p><a class="reference internal" href="7_glossary.html#term-CLI"><span class="xref std std-term">CLI</span></a></p></th>
+<th class="head"><p>Complex Hyperparameter Space</p></th>
+<th class="head"><p><a class="reference internal" href="7_glossary.html#term-Multi-Objective"><span class="xref std std-term">Multi-Objective</span></a></p></th>
+<th class="head"><p><a class="reference internal" href="7_glossary.html#term-Multi-Fidelity"><span class="xref std std-term">Multi-Fidelity</span></a></p></th>
+<th class="head"><p><a class="reference internal" href="7_glossary.html#term-Instances"><span class="xref std std-term">Instances</span></a></p></th>
+<th class="head"><p>Command-Line Interface</p></th>
 <th class="head"><p>Parallelism</p></th>
 </tr>
 </thead>
@@ -1164,8 +1142,7 @@ not only algorithms in python can be optimized but in other languages as well.</
     &copy; Copyright 
     Copyright 2022, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
-    and Frank Hutter
-.<br>
+    and Frank Hutter.<br>
 </p>
     </div>
     

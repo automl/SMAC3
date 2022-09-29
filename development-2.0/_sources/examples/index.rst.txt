@@ -66,13 +66,13 @@ Basics
 .. only:: html
 
   .. image:: /examples/1_basics/images/thumb/sphx_glr_3_ask_and_tell_thumb.png
-    :alt: Ask-and-Tell Interface
+    :alt: Ask-and-Tell
 
   :ref:`sphx_glr_examples_1_basics_3_ask_and_tell.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Ask-and-Tell Interface</div>
+      <div class="sphx-glr-thumbnail-title">Ask-and-Tell</div>
     </div>
 
 

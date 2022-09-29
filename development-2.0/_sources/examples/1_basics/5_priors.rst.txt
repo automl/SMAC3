@@ -51,30 +51,19 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
     [INFO][abstract_intensifier.py:367] --- n_layer: 2 -> 3
     [INFO][abstract_intensifier.py:367] --- n_neurons: 157 -> 108
     [INFO][abstract_intensifier.py:367] --- optimizer: 'sgd' -> 'adam'
-    [INFO][abstract_intensifier.py:340] Challenger (0.0389) is better than incumbent (0.039) on 1 trials.
+    [INFO][abstract_intensifier.py:340] Challenger (0.0306) is better than incumbent (0.039) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- batch_size: 128 -> 22
-    [INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0010000000000000002 -> 0.0009276911872670801
-    [INFO][abstract_intensifier.py:340] Challenger (0.0378) is better than incumbent (0.0389) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- batch_size: 128 -> 66
+    [INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0010000000000000002 -> 0.0010972380878858119
+    [INFO][abstract_intensifier.py:340] Challenger (0.0262) is better than incumbent (0.0306) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- batch_size: 22 -> 118
-    [INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0009276911872670801 -> 0.0008727032445149441
-    [INFO][abstract_intensifier.py:367] --- n_layer: 3 -> 5
-    [INFO][abstract_intensifier.py:340] Challenger (0.0323) is better than incumbent (0.0378) on 1 trials.
-    [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- batch_size: 118 -> 85
-    [INFO][abstract_intensifier.py:340] Challenger (0.0301) is better than incumbent (0.0323) on 1 trials.
-    [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- batch_size: 85 -> 83
-    [INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0008727032445149441 -> 0.0009409147904300142
-    [INFO][abstract_intensifier.py:340] Challenger (0.0273) is better than incumbent (0.0301) on 1 trials.
-    [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- batch_size: 83 -> 82
+    [INFO][abstract_intensifier.py:367] --- batch_size: 66 -> 65
+    [INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0010972380878858119 -> 0.0011090117979356453
     [INFO][base_smbo.py:260] Configuration budget is exhausted.
-    [INFO][abstract_facade.py:314] Final Incumbent: {'activation': 'relu', 'batch_size': 82, 'learning_rate_init': 0.0009409147904300142, 'n_layer': 5, 'n_neurons': 108, 'optimizer': 'adam'}
-    [INFO][abstract_facade.py:315] Estimated cost: 0.027273290003095085
+    [INFO][abstract_facade.py:314] Final Incumbent: {'activation': 'relu', 'batch_size': 65, 'learning_rate_init': 0.0011090117979356453, 'n_layer': 3, 'n_neurons': 108, 'optimizer': 'adam'}
+    [INFO][abstract_facade.py:315] Estimated cost: 0.026155988857938794
     Default cost: 0.05787991333952347
-    Default cost: 0.036188486536675946
+    Default cost: 0.046196224079232406
 
 
 
@@ -103,7 +92,7 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
     from sklearn.neural_network import MLPClassifier
 
     from smac import HyperparameterOptimizationFacade, Scenario
-    from smac.acquisition.functions import PriorAcquisitionFunction
+    from smac.acquisition.function import PriorAcquisitionFunction
 
     __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
     __license__ = "3-clause BSD"
@@ -249,7 +238,7 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  13.352 seconds)
+   **Total running time of the script:** ( 1 minutes  18.255 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_5_priors.py:

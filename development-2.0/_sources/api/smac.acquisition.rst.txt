@@ -36,6 +36,6 @@ Modules
    :toctree:
    :recursive:
 
-   smac.acquisition.functions
-   smac.acquisition.maximizers
+   smac.acquisition.function
+   smac.acquisition.maximizer
 

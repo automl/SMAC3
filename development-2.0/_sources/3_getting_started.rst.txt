@@ -1,7 +1,9 @@
 Getting Started
 ===============
 
-In the core, SMAC needs four components to run an optimization process, all of which are explained on this page.
+In the core, SMAC needs four components (configuration space, target function, scenario and a facade) to run an 
+optimization process, all of which are explained on this page.
+
 
 
 Configuration Space
@@ -14,11 +16,13 @@ ranges and default values.
     
     from ConfigSpace import ConfigSpace
 
-    cs = ConfigSpace({
-        "learning_rate" (1e-3, 1e-1),
+    cs = ConfigurationSpace({
+        "myfloat": (0.1, 1.5),                # Uniform Float
+        "myint": (2, 10),                     # Uniform Integer
+        "species": ["mouse", "cat", "dog"],   # Categorical
     })
 
-Please see the documentation of ``ConfigSpace`` for more details.
+Please see the documentation of `ConfigSpace <https://automl.github.io/ConfigSpace/main/>`_ for more details.
 
 
 Target Function
@@ -38,13 +42,19 @@ different and potentially improving configurations.
 
         return 1 - accuracy  # SMAC always minimizes (the smaller the better)
 
+.. warning::
+
+    SMAC *always* minimizes the value returned from the target function.
+
+
 .. note::
 
     In general, the arguments of the target function depend on the intensifier. However,
     in all cases, the first argument must be the configuration (arbitrary argument name is possible here) and a seed.
     If you specified instances in the scenario, SMAC requires ``instance`` as argument additionally. If you use
     ``SuccessiveHalving`` or ``Hyperband`` as intensifier but you did not specify instances, SMAC passes `budget` as
-    argument to the target function.
+    argument to the target function. But don't worry: SMAC will tell you if something is missing or if something is not
+    used.
 
 
 .. warning::
@@ -64,8 +74,9 @@ you want to limit the optimization process by a time limit or want to specify wh
 
     scenario = Scenario(
         configspace=cs,
-        output_directory=Path("output_directory")
+        output_directory=Path("your_output_directory")
         walltime_limit=120,  # Limit to two minutes
+        n_trials=500,  # Evaluated max 500 trials
         n_workers=8,  # Use eight workers
         ...
     )
@@ -81,18 +92,19 @@ which is easy to use and understand without diving deep into the material. Howev
 invited to change the components as they please to achieve even better performance potentially. The following 
 table (horizontal scrollable) shows you what is supported and reveals the default :ref:`components<Components>`:
 
+
 .. csv-table::
-    :header: "", ":ref:`Black-Box<smac.facade.blackbox_facade>`", ":ref:`Hyperparameter Optimization<smac.facade.hyperparameter_optimization_facade>`", ":ref:`Multi-Fidelity<smac.facade.multi_fidelity_facade>`", ":ref:`Algorithm Configuration<smac.facade.algorithm_configuration_facade>`", ":ref:`Random<smac.facade.random_facade>`", ":ref:`Hyperband<smac.facade.hyperband_facade>`"
+    :header: "", ":ref:`Black-Box<smac.facade.blackbox\\_facade>`", ":ref:`Hyperparameter Optimization<smac.facade.hyperparameter\\_optimization\\_facade>`", ":ref:`Multi-Fidelity<smac.facade.multi\\_fidelity\\_facade>`", ":ref:`Algorithm Configuration<smac.facade.algorithm\\_configuration\\_facade>`", ":ref:`Random<smac.facade.random\\_facade>`", ":ref:`Hyperband<smac.facade.hyperband\\_facade>`"
 
     "#Parameters", "low", "low/medium/high", "low/medium/high", "low/medium/high", "low/medium/high", "low/medium/high"
     "Supports Instances", "❌", "✅", "✅", "✅", "❌", "✅"
     "Supports Multi-Fidelity", "❌", "❌", "✅", "✅", "❌", "✅"
-    "Initial Design", ":ref:`Sobol<smac.initial_design.sobol_design>`", ":ref:`Sobol<smac.initial_design.sobol_design>`", ":ref:`Random<smac.initial_design.random_design>`", ":ref:`Default<smac.initial_design.default_design>`", ":ref:`Default<smac.initial_design.default_design>`", ":ref:`Default<smac.initial_design.default_design>`"
-    "Surrogate Model", ":ref:`Gaussian Process<smac.model.gaussian_process.gaussian_process>`", ":ref:`Random Forest<smac.model.random_forest.random_forest>`", ":ref:`Random Forest<smac.model.random_forest.random_forest>`", ":ref:`Random Forest<smac.model.random_forest.random_forest>`", "Not used", "Not used"
-    "Acquisition Function", ":ref:`Expected Improvement<smac.acquisition.function.expected_improvement>`", ":ref:`Expected Improvement<smac.acquisition.function.expected_improvement>`", ":ref:`Expected Improvement<smac.acquisition.function.expected_improvement>`", ":ref:`Expected Improvement<smac.acquisition.function.expected_improvement>`", "Not used", "Not used"
-    "Acquisition Maximier", ":ref:`Local and Random Search<smac.acquisition.maximizers.local_and_random_search>`", ":ref:`Local and Random Search<smac.acquisition.maximizers.local_and_random_search>`", ":ref:`Local and Random Search<smac.acquisition.maximizers.local_and_random_search>`", ":ref:`Local and Random Search<smac.acquisition.maximizers.local_and_random_search>`", ":ref:`Local and Random Search<smac.acquisition.maximizers.random_search>`", ":ref:`Local and Random Search<smac.acquisition.maximizers.random_search>`"
+    "Initial Design", ":ref:`Sobol<smac.initial\\_design.sobol\\_design>`", ":ref:`Sobol<smac.initial\\_design.sobol\\_design>`", ":ref:`Random<smac.initial\\_design.random\\_design>`", ":ref:`Default<smac.initial\\_design.default\\_design>`", ":ref:`Default<smac.initial\\_design.default\\_design>`", ":ref:`Default<smac.initial\\_design.default\\_design>`"
+    "Surrogate Model", ":ref:`Gaussian Process<smac.model.gaussian\\_process.gaussian\\_process>`", ":ref:`Random Forest<smac.model.random\\_forest.random\\_forest>`", ":ref:`Random Forest<smac.model.random\\_forest.random\\_forest>`", ":ref:`Random Forest<smac.model.random\\_forest.random\\_forest>`", "Not used", "Not used"
+    "Acquisition Function", ":ref:`Expected Improvement<smac.acquisition.function.expected\\_improvement>`", ":ref:`Log Expected Improvement<smac.acquisition.function.expected\\_improvement>`", ":ref:`Log Expected Improvement<smac.acquisition.function.expected\\_improvement>`", ":ref:`Expected Improvement<smac.acquisition.function.expected\\_improvement>`", "Not used", "Not used"
+    "Acquisition Maximier", ":ref:`Local and Sorted Random Search<smac.acquisition.maximizer.local\\_and\\_random\\_search>`", ":ref:`Local and Sorted Random Search<smac.acquisition.maximizer.local\\_and\\_random\\_search>`", ":ref:`Local and Sorted Random Search<smac.acquisition.maximizer.local\\_and\\_random\\_search>`", ":ref:`Local and Sorted Random Search<smac.acquisition.maximizer.local\\_and\\_random\\_search>`", ":ref:`Local and Sorted Random Search<smac.acquisition.maximizer.random\\_search>`", ":ref:`Local and Sorted Random Search<smac.acquisition.maximizer.random\\_search>`"
     "Intensifier", ":ref:`Default<smac.intensifier.intensifier>`", ":ref:`Default<smac.intensifier.intensifier>`", ":ref:`Hyperband<smac.intensifier.hyperband>`", ":ref:`Hyperband<smac.intensifier.hyperband>`", ":ref:`Default<smac.intensifier.intensifier>`", ":ref:`Hyperband<smac.intensifier.hyperband>`",
-    "Runhistory Encoder", ":ref:`Default<smac.runhistory.encoder.encoder>`", ":ref:`Log<smac.runhistory.encoder.log_encoder>`", ":ref:`Log<smac.runhistory.encoder.log_encoder>`", ":ref:`Default<smac.runhistory.encoder.encoder>`", ":ref:`Default<smac.runhistory.encoder.encoder>`", ":ref:`Default<smac.runhistory.encoder.encoder>`"
+    "Runhistory Encoder", ":ref:`Default<smac.runhistory.encoder.encoder>`", ":ref:`Log<smac.runhistory.encoder.log\\_encoder>`", ":ref:`Log<smac.runhistory.encoder.log\\_encoder>`", ":ref:`Default<smac.runhistory.encoder.encoder>`", ":ref:`Default<smac.runhistory.encoder.encoder>`", ":ref:`Default<smac.runhistory.encoder.encoder>`"
     "Random Design Probability", "8.5%", "20%", "20%", "50%", "Not used", "Not used"
 
 
@@ -104,7 +116,8 @@ table (horizontal scrollable) shows you what is supported and reveals the defaul
 .. note::
 
     We want to emphasize that SMAC is a highly modular optimization framework.
-    The facade accepts many arguments to specify components of the pipeline.
+    The facade accepts many arguments to specify components of the pipeline. Please also note, that in contrast
+    to previous versions, instantiated objects are passed instead of *kwargs*.
 
 
 The facades can be imported directely from the ``smac`` module.

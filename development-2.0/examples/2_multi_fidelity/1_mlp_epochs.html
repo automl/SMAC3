@@ -171,7 +171,7 @@ style="width: 100%;">
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../1_basics/3_ask_and_tell.html">
-       Ask-and-Tell Interface
+       Ask-and-Tell
       </a>
      </li>
      <li class="toctree-l3">
@@ -243,8 +243,13 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/2_components.html">
+    <a class="reference internal" href="../../advanced_usage/1_components.html">
      Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/2_multi_fidelity.html">
+     Multi-Fidelity Optimization
     </a>
    </li>
    <li class="toctree-l2">
@@ -254,32 +259,32 @@ style="width: 100%;">
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../advanced_usage/4_instances.html">
-     Instances and Features
+     Optimization across Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/5_stopping_criteria.html">
-     Stopping Criteria
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/6_ask_and_tell.html">
+    <a class="reference internal" href="../../advanced_usage/5_ask_and_tell.html">
      Ask-and-Tell Interface
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/7_continue.html">
+    <a class="reference internal" href="../../advanced_usage/6_parallelism.html">
+     Parallelism
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/7_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/8_continue.html">
      Continue a Run
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/8_reproducability.html">
+    <a class="reference internal" href="../../advanced_usage/9_reproducability.html">
      Reproducability
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/9_parallelism.html">
-     Parallelism
     </a>
    </li>
   </ul>
@@ -480,8 +485,8 @@ style="width: 100%;">
     </label>
     <ul>
      <li class="toctree-l3 has-children">
-      <a class="reference internal" href="../../api/smac.acquisition.functions.html">
-       smac.acquisition.functions
+      <a class="reference internal" href="../../api/smac.acquisition.function.html">
+       smac.acquisition.function
       </a>
       <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
       <label for="toctree-checkbox-13">
@@ -490,45 +495,45 @@ style="width: 100%;">
       </label>
       <ul>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.functions.abstract_acquisition_function.html">
-         smac.acquisition.functions.abstract_acquisition_function
+        <a class="reference internal" href="../../api/smac.acquisition.function.abstract_acquisition_function.html">
+         smac.acquisition.function.abstract_acquisition_function
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.functions.confidence_bound.html">
-         smac.acquisition.functions.confidence_bound
+        <a class="reference internal" href="../../api/smac.acquisition.function.confidence_bound.html">
+         smac.acquisition.function.confidence_bound
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.functions.expected_improvement.html">
-         smac.acquisition.functions.expected_improvement
+        <a class="reference internal" href="../../api/smac.acquisition.function.expected_improvement.html">
+         smac.acquisition.function.expected_improvement
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.functions.integrated_acquisition_function.html">
-         smac.acquisition.functions.integrated_acquisition_function
+        <a class="reference internal" href="../../api/smac.acquisition.function.integrated_acquisition_function.html">
+         smac.acquisition.function.integrated_acquisition_function
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.functions.prior_acqusition_function.html">
-         smac.acquisition.functions.prior_acqusition_function
+        <a class="reference internal" href="../../api/smac.acquisition.function.prior_acqusition_function.html">
+         smac.acquisition.function.prior_acqusition_function
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.functions.probability_improvement.html">
-         smac.acquisition.functions.probability_improvement
+        <a class="reference internal" href="../../api/smac.acquisition.function.probability_improvement.html">
+         smac.acquisition.function.probability_improvement
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.functions.thompson.html">
-         smac.acquisition.functions.thompson
+        <a class="reference internal" href="../../api/smac.acquisition.function.thompson.html">
+         smac.acquisition.function.thompson
         </a>
        </li>
       </ul>
      </li>
      <li class="toctree-l3 has-children">
-      <a class="reference internal" href="../../api/smac.acquisition.maximizers.html">
-       smac.acquisition.maximizers
+      <a class="reference internal" href="../../api/smac.acquisition.maximizer.html">
+       smac.acquisition.maximizer
       </a>
       <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
       <label for="toctree-checkbox-14">
@@ -537,33 +542,33 @@ style="width: 100%;">
       </label>
       <ul>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.maximizers.abstract_acqusition_maximizer.html">
-         smac.acquisition.maximizers.abstract_acqusition_maximizer
+        <a class="reference internal" href="../../api/smac.acquisition.maximizer.abstract_acqusition_maximizer.html">
+         smac.acquisition.maximizer.abstract_acqusition_maximizer
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.maximizers.differential_evolution.html">
-         smac.acquisition.maximizers.differential_evolution
+        <a class="reference internal" href="../../api/smac.acquisition.maximizer.differential_evolution.html">
+         smac.acquisition.maximizer.differential_evolution
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.maximizers.helpers.html">
-         smac.acquisition.maximizers.helpers
+        <a class="reference internal" href="../../api/smac.acquisition.maximizer.helpers.html">
+         smac.acquisition.maximizer.helpers
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.maximizers.local_and_random_search.html">
-         smac.acquisition.maximizers.local_and_random_search
+        <a class="reference internal" href="../../api/smac.acquisition.maximizer.local_and_random_search.html">
+         smac.acquisition.maximizer.local_and_random_search
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.maximizers.local_search.html">
-         smac.acquisition.maximizers.local_search
+        <a class="reference internal" href="../../api/smac.acquisition.maximizer.local_search.html">
+         smac.acquisition.maximizer.local_search
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../../api/smac.acquisition.maximizers.random_search.html">
-         smac.acquisition.maximizers.random_search
+        <a class="reference internal" href="../../api/smac.acquisition.maximizer.random_search.html">
+         smac.acquisition.maximizer.random_search
         </a>
        </li>
       </ul>
@@ -1015,11 +1020,19 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
 [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 3-1 with initial budget 8.
 [INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+[INFO][successive_halving_worker.py:613] Challenger (0.0228) is better than incumbent (0.0345) on budget 25.0000.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- batch_size: 117 -&gt; 67
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.008282754423021153 -&gt; 0.0070322204321926806
+[INFO][abstract_intensifier.py:367] --- n_layer: 5 -&gt; 1
+[INFO][abstract_intensifier.py:367] --- n_neurons: 52 -&gt; 165
+[INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+[INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 3-2 with initial budget 25.
 [INFO][base_smbo.py:260] Configuration budget is exhausted.
-[INFO][abstract_facade.py:314] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 5, &#39;n_neurons&#39;: 52, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 117, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.008282754423021153}
-[INFO][abstract_facade.py:315] Estimated cost: 0.03450789229340745
+[INFO][abstract_facade.py:314] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 1, &#39;n_neurons&#39;: 165, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 67, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.0070322204321926806}
+[INFO][abstract_facade.py:315] Estimated cost: 0.022819560507582937
 Default cost: 0.4307319715258433
-Incumbent cost: 0.03450789229340767
+Incumbent cost: 0.025598885793871817
 </pre></div>
 </div>
 <div class="line-block">
@@ -1146,7 +1159,7 @@ Incumbent cost: 0.03450789229340767
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  44.026 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  44.239 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e36c26bb3a993c4641a06c811122b11e/1_mlp_epochs.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_mlp_epochs.py</span></code></a></p>
@@ -1194,8 +1207,7 @@ Incumbent cost: 0.03450789229340767
     &copy; Copyright 
     Copyright 2022, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
-    and Frank Hutter
-.<br>
+    and Frank Hutter.<br>
 </p>
     </div>
     

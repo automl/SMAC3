@@ -1,0 +1,1335 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Components &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet">
+  <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Multi-Fidelity Optimization" href="2_multi_fidelity.html" />
+    <link rel="prev" title="Advanced Usage" href="index.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+  <a class="navbar-brand" href="../index.html">
+    <img src="../_static/logo.png" class="logo" alt="logo">
+  </a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org?lang=de" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../search.html" method="get"
+style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../1_installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../2_package_overview.html">
+   Package Overview
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../3_getting_started.html">
+   Getting Started
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../4_minimal_example.html">
+   Minimal Example
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../examples/index.html">
+   Examples
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../examples/1_basics/index.html">
+     Basics
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/1_synthetic_function.html">
+       Synthetic Function
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/2_svm_cv.html">
+       Support Vector Machine with Cross-Validation
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/3_ask_and_tell.html">
+       Ask-and-Tell
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/4_callback.html">
+       Custom Callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/5_priors.html">
+       User Priors over the Optimum
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../examples/2_multi_fidelity/index.html">
+     Multi-Fidelity and Multi-Instances
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/2_multi_fidelity/1_mlp_epochs.html">
+       Multi-Layer Perceptron Using Multiple Epochs
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/2_multi_fidelity/2_sgd_datasets.html">
+       Stochastic Gradient Descent On Multiple Datasets
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../examples/3_multi_objective/index.html">
+     Multi-Objective
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+    <label for="toctree-checkbox-4">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/3_multi_objective/1_schaffer.html">
+       2D Schaffer Function
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/3_multi_objective/2_parego.html">
+       ParEGO with Objective Weights
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="index.html">
+   Advanced Usage
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="2_multi_fidelity.html">
+     Multi-Fidelity Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="3_multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="4_instances.html">
+     Optimization across Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="5_ask_and_tell.html">
+     Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="6_parallelism.html">
+     Parallelism
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="7_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="8_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="9_reproducability.html">
+     Reproducability
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../5_api.html">
+   API References
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../api/smac.facade.html">
+     smac.facade
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+    <label for="toctree-checkbox-7">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.facade.abstract_facade.html">
+       smac.facade.abstract_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.facade.algorithm_configuration_facade.html">
+       smac.facade.algorithm_configuration_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.facade.blackbox_facade.html">
+       smac.facade.blackbox_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.facade.boing_facade.html">
+       smac.facade.boing_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.facade.hyperband_facade.html">
+       smac.facade.hyperband_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.facade.hyperparameter_optimization_facade.html">
+       smac.facade.hyperparameter_optimization_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.facade.multi_fidelity_facade.html">
+       smac.facade.multi_fidelity_facade
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.facade.random_facade.html">
+       smac.facade.random_facade
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../api/smac.main.html">
+     smac.main
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+    <label for="toctree-checkbox-8">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.main.base_smbo.html">
+       smac.main.base_smbo
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.main.boing.html">
+       smac.main.boing
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.main.smbo.html">
+       smac.main.smbo
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.main.turbo.html">
+       smac.main.turbo
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../api/smac.model.html">
+     smac.model
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+    <label for="toctree-checkbox-9">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.model.abstract_model.html">
+       smac.model.abstract_model
+      </a>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../api/smac.model.gaussian_process.html">
+       smac.model.gaussian_process
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+      <label for="toctree-checkbox-10">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.model.gaussian_process.abstract_gaussian_process.html">
+         smac.model.gaussian_process.abstract_gaussian_process
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.model.gaussian_process.gaussian_process.html">
+         smac.model.gaussian_process.gaussian_process
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.model.gaussian_process.gpytorch_gaussian_process.html">
+         smac.model.gaussian_process.gpytorch_gaussian_process
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.model.gaussian_process.kernels.html">
+         smac.model.gaussian_process.kernels
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.model.gaussian_process.mcmc_gaussian_process.html">
+         smac.model.gaussian_process.mcmc_gaussian_process
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.model.gaussian_process.priors.html">
+         smac.model.gaussian_process.priors
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.model.multi_objective_model.html">
+       smac.model.multi_objective_model
+      </a>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../api/smac.model.random_forest.html">
+       smac.model.random_forest
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+      <label for="toctree-checkbox-11">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.model.random_forest.abstract_random_forest.html">
+         smac.model.random_forest.abstract_random_forest
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.model.random_forest.random_forest.html">
+         smac.model.random_forest.random_forest
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.model.random_model.html">
+       smac.model.random_model
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../api/smac.acquisition.html">
+     smac.acquisition
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+    <label for="toctree-checkbox-12">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../api/smac.acquisition.function.html">
+       smac.acquisition.function
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+      <label for="toctree-checkbox-13">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.acquisition.function.abstract_acquisition_function.html">
+         smac.acquisition.function.abstract_acquisition_function
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.acquisition.function.confidence_bound.html">
+         smac.acquisition.function.confidence_bound
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.acquisition.function.expected_improvement.html">
+         smac.acquisition.function.expected_improvement
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.acquisition.function.integrated_acquisition_function.html">
+         smac.acquisition.function.integrated_acquisition_function
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.acquisition.function.prior_acqusition_function.html">
+         smac.acquisition.function.prior_acqusition_function
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.acquisition.function.probability_improvement.html">
+         smac.acquisition.function.probability_improvement
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.acquisition.function.thompson.html">
+         smac.acquisition.function.thompson
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../api/smac.acquisition.maximizer.html">
+       smac.acquisition.maximizer
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+      <label for="toctree-checkbox-14">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.acquisition.maximizer.abstract_acqusition_maximizer.html">
+         smac.acquisition.maximizer.abstract_acqusition_maximizer
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.acquisition.maximizer.differential_evolution.html">
+         smac.acquisition.maximizer.differential_evolution
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.acquisition.maximizer.helpers.html">
+         smac.acquisition.maximizer.helpers
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.acquisition.maximizer.local_and_random_search.html">
+         smac.acquisition.maximizer.local_and_random_search
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.acquisition.maximizer.local_search.html">
+         smac.acquisition.maximizer.local_search
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.acquisition.maximizer.random_search.html">
+         smac.acquisition.maximizer.random_search
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../api/smac.intensifier.html">
+     smac.intensifier
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+    <label for="toctree-checkbox-15">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.intensifier.abstract_intensifier.html">
+       smac.intensifier.abstract_intensifier
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.intensifier.abstract_parallel_intensifier.html">
+       smac.intensifier.abstract_parallel_intensifier
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.intensifier.hyperband.html">
+       smac.intensifier.hyperband
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.intensifier.hyperband_worker.html">
+       smac.intensifier.hyperband_worker
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.intensifier.intensifier.html">
+       smac.intensifier.intensifier
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.intensifier.stages.html">
+       smac.intensifier.stages
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.intensifier.successive_halving.html">
+       smac.intensifier.successive_halving
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.intensifier.successive_halving_worker.html">
+       smac.intensifier.successive_halving_worker
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../api/smac.initial_design.html">
+     smac.initial_design
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+    <label for="toctree-checkbox-16">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.initial_design.abstract_initial_design.html">
+       smac.initial_design.abstract_initial_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.initial_design.default_design.html">
+       smac.initial_design.default_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.initial_design.factorial_design.html">
+       smac.initial_design.factorial_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.initial_design.latin_hypercube_design.html">
+       smac.initial_design.latin_hypercube_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.initial_design.random_design.html">
+       smac.initial_design.random_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.initial_design.sobol_design.html">
+       smac.initial_design.sobol_design
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../api/smac.random_design.html">
+     smac.random_design
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+    <label for="toctree-checkbox-17">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.random_design.abstract_random_design.html">
+       smac.random_design.abstract_random_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.random_design.annealing_design.html">
+       smac.random_design.annealing_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.random_design.modulus_design.html">
+       smac.random_design.modulus_design
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.random_design.probability_design.html">
+       smac.random_design.probability_design
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../api/smac.runner.html">
+     smac.runner
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.runner.abstract_runner.html">
+       smac.runner.abstract_runner
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.runner.dask_runner.html">
+       smac.runner.dask_runner
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.runner.exceptions.html">
+       smac.runner.exceptions
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.runner.target_function_runner.html">
+       smac.runner.target_function_runner
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../api/smac.runhistory.html">
+     smac.runhistory
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+    <label for="toctree-checkbox-19">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.runhistory.dataclasses.html">
+       smac.runhistory.dataclasses
+      </a>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../api/smac.runhistory.encoder.html">
+       smac.runhistory.encoder
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
+      <label for="toctree-checkbox-20">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.runhistory.encoder.abstract_encoder.html">
+         smac.runhistory.encoder.abstract_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.runhistory.encoder.boing_encoder.html">
+         smac.runhistory.encoder.boing_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.runhistory.encoder.eips_encoder.html">
+         smac.runhistory.encoder.eips_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.runhistory.encoder.encoder.html">
+         smac.runhistory.encoder.encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.runhistory.encoder.inverse_scaled_encoder.html">
+         smac.runhistory.encoder.inverse_scaled_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.runhistory.encoder.log_encoder.html">
+         smac.runhistory.encoder.log_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.runhistory.encoder.log_scaled_encoder.html">
+         smac.runhistory.encoder.log_scaled_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.runhistory.encoder.scaled_encoder.html">
+         smac.runhistory.encoder.scaled_encoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.runhistory.encoder.sqrt_scaled_encoder.html">
+         smac.runhistory.encoder.sqrt_scaled_encoder
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.runhistory.enumerations.html">
+       smac.runhistory.enumerations
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.runhistory.runhistory.html">
+       smac.runhistory.runhistory
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../api/smac.multi_objective.html">
+     smac.multi_objective
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/>
+    <label for="toctree-checkbox-21">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.multi_objective.abstract_multi_objective_algorithm.html">
+       smac.multi_objective.abstract_multi_objective_algorithm
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.multi_objective.aggregation_strategy.html">
+       smac.multi_objective.aggregation_strategy
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.multi_objective.parego.html">
+       smac.multi_objective.parego
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../api/smac.utils.html">
+     smac.utils
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" type="checkbox"/>
+    <label for="toctree-checkbox-22">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.utils.configspace.html">
+       smac.utils.configspace
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.utils.data_structures.html">
+       smac.utils.data_structures
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.utils.logging.html">
+       smac.utils.logging
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.utils.multi_objective.html">
+       smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../api/smac.utils.subspaces.html">
+       smac.utils.subspaces
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" type="checkbox"/>
+      <label for="toctree-checkbox-23">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.utils.subspaces.boing_subspace.html">
+         smac.utils.subspaces.boing_subspace
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../api/smac.utils.subspaces.turbo_subspace.html">
+         smac.utils.subspaces.turbo_subspace
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/smac.callback.html">
+     smac.callback
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../6_references.html">
+   References
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../7_glossary.html">
+   Glossary
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../8_faq.html">
+   F.A.Q.
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../9_license.html">
+   License
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#surrogate-model">
+   <span class="xref std std-ref">
+    Surrogate Model
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#acquisition-function">
+   <span class="xref std std-ref">
+    Acquisition Function
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#acquisition-maximier">
+   <span class="xref std std-ref">
+    Acquisition Maximier
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#initial-design">
+   <span class="xref std std-ref">
+    Initial Design
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#random-design">
+   <span class="xref std std-ref">
+    Random Design
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#intensifier">
+   <span class="xref std std-ref">
+    Intensifier
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#multi-objective-algorithm">
+   <span class="xref std std-ref">
+    Multi-Objective Algorithm
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#runhistory">
+   <span class="xref std std-ref">
+    RunHistory
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#runhistory-encoder">
+   <span class="xref std std-ref">
+    RunHistory Encoder
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#callback">
+   <span class="xref std std-ref">
+    Callback
+   </span>
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="components">
+<h1>Components<a class="headerlink" href="#components" title="Permalink to this heading">¶</a></h1>
+<p>Additionally to the basic components mentioned in <a class="reference internal" href="../3_getting_started.html#getting-started"><span class="std std-ref">Getting Started</span></a>, all other components are
+explained in the following to get a better picture of SMAC. These components are all used to guide
+the optimization process and simple changes can influence the results drastically.</p>
+<section id="surrogate-model">
+<h2><a class="reference internal" href="../api/smac.model.abstract_model.html#module-smac.model.abstract_model"><span class="std std-ref">Surrogate Model</span></a><a class="headerlink" href="#surrogate-model" title="Permalink to this heading">¶</a></h2>
+<p>The surrogate model is used to approximate the objective function of configurations. In previous versions, the model was
+referred to Empirical Performance Model (EPM). Mostly, Bayesian optimization is used/associated with Gaussian
+processes. However, SMAC incorporates random forests as surrogate models, which makes it possible to optimize for higher
+dimensional and complex spaces.</p>
+<p>The data used to train the surrogate model is collected by the runhistory encoder from the runhistory. If budgets are
+involved, the highest budget which satisfies <code class="docutils literal notranslate"><span class="pre">self._min_samples</span></code> (defaults to 1) in <a class="reference internal" href="../api/smac.main.smbo.html#module-smac.main.smbo"><span class="std std-ref">smac.main.smbo</span></a> is
+used. If no budgets are used, all observations are used.</p>
+<p>If you are using instances, it is recommended to use instance features. The model is trained on each instance
+associated with its features. Imagine you have two hyperparameters, two instances and no instance features, the model
+would be trained on:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>HP 1</p></th>
+<th class="head"><p>HP 2</p></th>
+<th class="head"><p>Objective Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0.1</p></td>
+<td><p>0.8</p></td>
+<td><p>0.5</p></td>
+</tr>
+<tr class="row-odd"><td><p>0.1</p></td>
+<td><p>0.8</p></td>
+<td><p>0.75</p></td>
+</tr>
+<tr class="row-even"><td><p>505</p></td>
+<td><p>7</p></td>
+<td><p>2.4</p></td>
+</tr>
+<tr class="row-odd"><td><p>505</p></td>
+<td><p>7</p></td>
+<td><p>1.3</p></td>
+</tr>
+</tbody>
+</table>
+<p>You can see that the same inputs lead to different objective values because of two instances. If you associate
+each instance with a feature, you would end-up with the following data points:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>HP 1</p></th>
+<th class="head"><p>HP 2</p></th>
+<th class="head"><p>Instance Feature</p></th>
+<th class="head"><p>Objective Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0.1</p></td>
+<td><p>0.8</p></td>
+<td><p>0</p></td>
+<td><p>0.5</p></td>
+</tr>
+<tr class="row-odd"><td><p>0.1</p></td>
+<td><p>0.8</p></td>
+<td><p>1</p></td>
+<td><p>0.75</p></td>
+</tr>
+<tr class="row-even"><td><p>505</p></td>
+<td><p>7</p></td>
+<td><p>0</p></td>
+<td><p>2.4</p></td>
+</tr>
+<tr class="row-odd"><td><p>505</p></td>
+<td><p>7</p></td>
+<td><p>1</p></td>
+<td><p>1.3</p></td>
+</tr>
+</tbody>
+</table>
+<p>Let me explain how the data are received in detail:</p>
+<ul class="simple">
+<li><p>Intensifier requests new configurations via <code class="docutils literal notranslate"><span class="pre">get_next_configurations</span></code> by <a class="reference internal" href="../api/smac.main.smbo.html#module-smac.main.smbo"><span class="std std-ref">smac.main.smbo</span></a>.</p></li>
+<li><p>SMBO collects the data via the runhistory encoder which iterates over the runhistory trials.</p></li>
+<li><p>The runhistory encoder only collects trials which are in <code class="docutils literal notranslate"><span class="pre">considered_states</span></code> and timeout trials. Also, only the
+highest budget is considered if budgets are used. In this step, multi-objective values are scalarized using the
+<code class="docutils literal notranslate"><span class="pre">normalize_costs</span></code> function (uses <code class="docutils literal notranslate"><span class="pre">objective_bounds</span></code> from the runhistory) and the <code class="docutils literal notranslate"><span class="pre">objective_weights</span></code> provided by
+the user.</p></li>
+<li><p>In the next step, the selected trial objectives are transformed (e.g., log-transformed, depending on the selected
+encoder).</p></li>
+<li><p>The hyperparameters might still have inactive values. The model takes care of that after the collected data
+are passed from the SMBO object to the model.</p></li>
+</ul>
+</section>
+<section id="acquisition-function">
+<h2><a class="reference internal" href="../api/smac.acquisition.function.html#module-smac.acquisition.function"><span class="std std-ref">Acquisition Function</span></a><a class="headerlink" href="#acquisition-function" title="Permalink to this heading">¶</a></h2>
+<p>Acquisition functions are mathematical techniques that guide how the parameter space should be explored during Bayesian
+optimization. They use the predicted mean and predicted variance generated by the surrogate model.</p>
+<p>The acquisition function is used by the acquisition maximier (see next section). Otherwise, SMAC provides
+a bunch of different acquisition functions (Lower Confidence Bound, Expected Improvement, Probability Improvement,
+Thompson, integrated acquisition functions and prior acquisition functions). We refer to literature
+for more information about acquisition functions.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The acquisition function calculates the acquisition value for each configuration. However, the configurations
+are provided by the acquisition maximier. Therefore, the acquisition maximier is responsible for receiving
+the next configurations.</p>
+</div>
+</section>
+<section id="acquisition-maximier">
+<h2><a class="reference internal" href="../api/smac.acquisition.maximizer.html#module-smac.acquisition.maximizer"><span class="std std-ref">Acquisition Maximier</span></a><a class="headerlink" href="#acquisition-maximier" title="Permalink to this heading">¶</a></h2>
+<p>The acquisition maximier is a wrapper upon the acquisition function and returns the next configurations. SMAC
+supports local search, (sorted) random search, local and (sorted) random search, and differential evolution.
+While local search checks neighbours of the best configurations, random search makes sure to explore the configuration
+space. When using sorted random search, random configurations are sorted by the value of the acquisition function.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Pay attention to the number of challengers: If you experience RAM issues or long computational times in the
+acquisition function, you might lower the number of challengers.</p>
+</div>
+<p>The acquisition maximier also incorporates the random design. Please see the
+<a class="reference internal" href="../api/smac.acquisition.maximizer.helpers.html#module-smac.acquisition.maximizer.helpers"><span class="std std-ref">ChallengerList</span></a> for more information.</p>
+</section>
+<section id="initial-design">
+<h2><a class="reference internal" href="../api/smac.initial_design.html#module-smac.initial_design"><span class="std std-ref">Initial Design</span></a><a class="headerlink" href="#initial-design" title="Permalink to this heading">¶</a></h2>
+<p>The surrogate model needs data to be trained. Therefore, the initial design is used to generate the initial data points.
+We provide random, latin hypercube, sobol, factorial and default initial designs. The default initial design uses
+the default configuration from the configuration space and with the factorial initial design, we generate corner
+points of the configuration space. The sobol sequences are an example of quasi-random low-disrepancy sequences and
+the latin hypercube design is a statistical method for generating a near-random sample of parameter values from
+a multidimensional distribution.</p>
+</section>
+<section id="random-design">
+<h2><a class="reference internal" href="../api/smac.random_design.html#module-smac.random_design"><span class="std std-ref">Random Design</span></a><a class="headerlink" href="#random-design" title="Permalink to this heading">¶</a></h2>
+<p>The random design is used in the acquisition maximier to tell whether the next configuration should be
+random or sampled from the acquisition function. For example, if we use a random design with a probability of
+50%, we have a 50% chance to sample a random configuration and a 50% chance to sample a configuration from the
+acquisition function (although the acquisition function includes exploration and exploitation trade-off already).
+This design makes sure that the optimization process is not stuck in a local optimum and we
+are <em>guaranteed</em> to find the best configuration over time.</p>
+<p>In addition to simple probability random design, we also provide annealing and modulus random design.</p>
+</section>
+<section id="intensifier">
+<h2><a class="reference internal" href="../api/smac.intensifier.html#module-smac.intensifier"><span class="std std-ref">Intensifier</span></a><a class="headerlink" href="#intensifier" title="Permalink to this heading">¶</a></h2>
+<p>The intensifier compares different configurations based on evaluated <a class="reference internal" href="../7_glossary.html#term-Trial"><span class="xref std std-term">trial</span></a> so far. It decides
+which configuration should be <cite>intensified`</cite> or in other words if a configuration is worth to spend more time on (e.g.,
+evaluate another seed pair, evaluate on another instance, or evaluate on a higher budget).</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Always pay attention to <code class="docutils literal notranslate"><span class="pre">max_config_calls</span></code>: If this argument is set high, the intensifier might spend a lot of
+time on a single configuration. Also, since the default <code class="docutils literal notranslate"><span class="pre">Intensifier</span></code> is depending on runtime, reproduciability
+is not given unless you set <code class="docutils literal notranslate"><span class="pre">intensify_percentage</span></code> to 0.</p>
+</div>
+<p>Depending on the components and arguments, the intensifier tells you which seeds, budgets, and/or instances
+are used throughout the optimization process. You can use the methods <code class="docutils literal notranslate"><span class="pre">uses_seeds</span></code>, <code class="docutils literal notranslate"><span class="pre">uses_budgets</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">uses_instances</span></code> (directly callable via the facade) to (sanity-)check whether the intensifier uses these arguments.
+If you want to know the exact values, use <code class="docutils literal notranslate"><span class="pre">get_target_function_seeds</span></code>, <code class="docutils literal notranslate"><span class="pre">get_target_function_budgets</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">get_target_function_instances</span></code>.</p>
+</section>
+<section id="multi-objective-algorithm">
+<h2><a class="reference internal" href="../api/smac.multi_objective.html#module-smac.multi_objective"><span class="std std-ref">Multi-Objective Algorithm</span></a><a class="headerlink" href="#multi-objective-algorithm" title="Permalink to this heading">¶</a></h2>
+<p>The multi-objective algorithm is used to scalarize multi-objective values. The multi-objective algorithm
+gets normalized and weighted objective values passed and returns a single value. The resulting value (called by the
+runhistory encoder) is then used to train the surrogate model.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>To judge whether a configuration is better than another (comparison happens in the intensifier), we need to
+scalarize the multi-objective values. This, however, is <em>not</em> done by the multi-objective algorithm but directly in
+the runhistory object using the method <code class="docutils literal notranslate"><span class="pre">average_cost</span></code>. The values are always normalized (based on all costs so
+far) and weighted averaged (based on the objective weights provided by the user).</p>
+</div>
+</section>
+<section id="runhistory">
+<h2><a class="reference internal" href="../api/smac.runhistory.runhistory.html#module-smac.runhistory.runhistory"><span class="std std-ref">RunHistory</span></a><a class="headerlink" href="#runhistory" title="Permalink to this heading">¶</a></h2>
+<p>The runhistory holds all (un-)evaluated trials of the optimization run. You can use the runhistory to
+get configs, the <a class="reference internal" href="../7_glossary.html#term-Incumbent"><span class="xref std std-term">incumbent</span></a>, (min/sum/average) cost of configs, trials of a config, and more.
+The runhistory encoder iterates over the runhistory to receive data for the surrogate model. The following
+code shows how to iterate over the runhistory:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">smac</span> <span class="o">=</span> <span class="n">HPOFacade</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+<span class="c1"># Iterate over all trials</span>
+<span class="k">for</span> <span class="n">trial_info</span><span class="p">,</span> <span class="n">trial_value</span> <span class="ow">in</span> <span class="n">smac</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="c1"># Trial info</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">trial_info</span><span class="o">.</span><span class="n">config</span>
+    <span class="n">instance</span> <span class="o">=</span> <span class="n">trial_info</span><span class="o">.</span><span class="n">instance</span>
+    <span class="n">seed</span> <span class="o">=</span> <span class="n">trial_info</span><span class="o">.</span><span class="n">seed</span>
+
+    <span class="c1"># Trial value</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="n">trial_value</span><span class="o">.</span><span class="n">cost</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="n">trial_value</span><span class="o">.</span><span class="n">time</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">trial_value</span><span class="o">.</span><span class="n">status</span>
+    <span class="n">starttime</span> <span class="o">=</span> <span class="n">trial_value</span><span class="o">.</span><span class="n">starttime</span>
+    <span class="n">endtime</span> <span class="o">=</span> <span class="n">trial_value</span><span class="o">.</span><span class="n">endtime</span>
+    <span class="n">additional_info</span> <span class="o">=</span> <span class="n">trial_value</span><span class="o">.</span><span class="n">additional_info</span>
+
+<span class="c1"># Iterate over all configs</span>
+<span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">smac</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_configs</span><span class="p">():</span>
+    <span class="c1"># Get the cost of all trials of this config</span>
+    <span class="n">average_cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">average_cost</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="runhistory-encoder">
+<h2><a class="reference internal" href="../api/smac.runhistory.encoder.html#module-smac.runhistory.encoder"><span class="std std-ref">RunHistory Encoder</span></a><a class="headerlink" href="#runhistory-encoder" title="Permalink to this heading">¶</a></h2>
+<p>The runhistory encoder is used to encode the runhistory data into a format that can be used by the surrogate model.
+Only trials with the status <code class="docutils literal notranslate"><span class="pre">considered_states</span></code> and timeout trials are considered. Multi-objective values are
+scalarized using the <code class="docutils literal notranslate"><span class="pre">normalize_costs</span></code> function (uses <code class="docutils literal notranslate"><span class="pre">objective_bounds</span></code> from the runhistory) and the
+<code class="docutils literal notranslate"><span class="pre">objective_weights</span></code> (provided by the user). Afterwards, the normalized and weighted value is processed by
+the multi-objective algorithm.</p>
+</section>
+<section id="callback">
+<h2><a class="reference internal" href="../api/smac.callback.html#module-smac.callback"><span class="std std-ref">Callback</span></a><a class="headerlink" href="#callback" title="Permalink to this heading">¶</a></h2>
+<p>Callbacks provide the ability to easily execute code before, inside, and after the Bayesian optimization loop.
+To add a callback, you have to inherit from <code class="docutils literal notranslate"><span class="pre">smac.Callback</span></code> and overwrite the methods (if needed).
+Afterwards, you can pass the callbacks to any facade.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">MultiFidelityFacade</span><span class="p">,</span> <span class="n">Callback</span>
+
+
+<span class="k">class</span> <span class="nc">CustomCallback</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">SMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">on_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">SMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">on_iteration_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">SMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">on_iteration_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">SMBO</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">RunInfo</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">RunValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># We just do a simple printing here</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+
+<span class="n">smac</span> <span class="o">=</span> <span class="n">MultiFidelityFacade</span><span class="p">(</span>
+    <span class="o">...</span>
+    <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">CustomCallback</span><span class="p">()]</span>
+<span class="p">)</span>
+<span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="index.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Advanced Usage</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="2_multi_fidelity.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Multi-Fidelity Optimization</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 
+    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
+    and Frank Hutter.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+5.2.2. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

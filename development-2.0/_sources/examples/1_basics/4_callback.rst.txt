@@ -49,12 +49,12 @@ Furthermore, we print some stages of the optimization process.
     Current incumbent value: 5.465623793958126
 
     Evaluated 40 trials so far.
-    Current incumbent: {'x0': 0.06159009528698345, 'x1': 0.03885047768760952}
-    Current incumbent value: 1.0035134406879336
+    Current incumbent: {'x0': 0.017589003822375382, 'x1': -0.12514870997642102}
+    Current incumbent value: 2.5391044252142363
 
     Evaluated 50 trials so far.
-    Current incumbent: {'x0': 0.06159009528698345, 'x1': 0.03885047768760952}
-    Current incumbent value: 1.0035134406879336
+    Current incumbent: {'x0': -0.26968073660621883, 'x1': 0.07252901158035918}
+    Current incumbent value: 1.6120931206056588
 
     We just triggered to stop the optimization after 50 finished trials.
 
@@ -147,7 +147,7 @@ Furthermore, we print some stages of the optimization process.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.421 seconds)
+   **Total running time of the script:** ( 0 minutes  9.111 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_4_callback.py:

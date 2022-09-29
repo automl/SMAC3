@@ -40,8 +40,8 @@
     <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Instances and Features" href="4_instances.html" />
-    <link rel="prev" title="Components" href="2_components.html" />
+    <link rel="next" title="Optimization across Instances" href="4_instances.html" />
+    <link rel="prev" title="Multi-Fidelity Optimization" href="2_multi_fidelity.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -171,7 +171,7 @@ style="width: 100%;">
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/1_basics/3_ask_and_tell.html">
-       Ask-and-Tell Interface
+       Ask-and-Tell
       </a>
      </li>
      <li class="toctree-l3">
@@ -243,8 +243,13 @@ style="width: 100%;">
   </label>
   <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="2_components.html">
+    <a class="reference internal" href="1_components.html">
      Components
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="2_multi_fidelity.html">
+     Multi-Fidelity Optimization
     </a>
    </li>
    <li class="toctree-l2 current active">
@@ -254,32 +259,32 @@ style="width: 100%;">
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="4_instances.html">
-     Instances and Features
+     Optimization across Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="5_stopping_criteria.html">
-     Stopping Criteria
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="6_ask_and_tell.html">
+    <a class="reference internal" href="5_ask_and_tell.html">
      Ask-and-Tell Interface
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="7_continue.html">
+    <a class="reference internal" href="6_parallelism.html">
+     Parallelism
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="7_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="8_continue.html">
      Continue a Run
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="8_reproducability.html">
+    <a class="reference internal" href="9_reproducability.html">
      Reproducability
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="9_parallelism.html">
-     Parallelism
     </a>
    </li>
   </ul>
@@ -480,8 +485,8 @@ style="width: 100%;">
     </label>
     <ul>
      <li class="toctree-l3 has-children">
-      <a class="reference internal" href="../api/smac.acquisition.functions.html">
-       smac.acquisition.functions
+      <a class="reference internal" href="../api/smac.acquisition.function.html">
+       smac.acquisition.function
       </a>
       <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
       <label for="toctree-checkbox-13">
@@ -490,45 +495,45 @@ style="width: 100%;">
       </label>
       <ul>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.functions.abstract_acquisition_function.html">
-         smac.acquisition.functions.abstract_acquisition_function
+        <a class="reference internal" href="../api/smac.acquisition.function.abstract_acquisition_function.html">
+         smac.acquisition.function.abstract_acquisition_function
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.functions.confidence_bound.html">
-         smac.acquisition.functions.confidence_bound
+        <a class="reference internal" href="../api/smac.acquisition.function.confidence_bound.html">
+         smac.acquisition.function.confidence_bound
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.functions.expected_improvement.html">
-         smac.acquisition.functions.expected_improvement
+        <a class="reference internal" href="../api/smac.acquisition.function.expected_improvement.html">
+         smac.acquisition.function.expected_improvement
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.functions.integrated_acquisition_function.html">
-         smac.acquisition.functions.integrated_acquisition_function
+        <a class="reference internal" href="../api/smac.acquisition.function.integrated_acquisition_function.html">
+         smac.acquisition.function.integrated_acquisition_function
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.functions.prior_acqusition_function.html">
-         smac.acquisition.functions.prior_acqusition_function
+        <a class="reference internal" href="../api/smac.acquisition.function.prior_acqusition_function.html">
+         smac.acquisition.function.prior_acqusition_function
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.functions.probability_improvement.html">
-         smac.acquisition.functions.probability_improvement
+        <a class="reference internal" href="../api/smac.acquisition.function.probability_improvement.html">
+         smac.acquisition.function.probability_improvement
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.functions.thompson.html">
-         smac.acquisition.functions.thompson
+        <a class="reference internal" href="../api/smac.acquisition.function.thompson.html">
+         smac.acquisition.function.thompson
         </a>
        </li>
       </ul>
      </li>
      <li class="toctree-l3 has-children">
-      <a class="reference internal" href="../api/smac.acquisition.maximizers.html">
-       smac.acquisition.maximizers
+      <a class="reference internal" href="../api/smac.acquisition.maximizer.html">
+       smac.acquisition.maximizer
       </a>
       <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
       <label for="toctree-checkbox-14">
@@ -537,33 +542,33 @@ style="width: 100%;">
       </label>
       <ul>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.maximizers.abstract_acqusition_maximizer.html">
-         smac.acquisition.maximizers.abstract_acqusition_maximizer
+        <a class="reference internal" href="../api/smac.acquisition.maximizer.abstract_acqusition_maximizer.html">
+         smac.acquisition.maximizer.abstract_acqusition_maximizer
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.maximizers.differential_evolution.html">
-         smac.acquisition.maximizers.differential_evolution
+        <a class="reference internal" href="../api/smac.acquisition.maximizer.differential_evolution.html">
+         smac.acquisition.maximizer.differential_evolution
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.maximizers.helpers.html">
-         smac.acquisition.maximizers.helpers
+        <a class="reference internal" href="../api/smac.acquisition.maximizer.helpers.html">
+         smac.acquisition.maximizer.helpers
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.maximizers.local_and_random_search.html">
-         smac.acquisition.maximizers.local_and_random_search
+        <a class="reference internal" href="../api/smac.acquisition.maximizer.local_and_random_search.html">
+         smac.acquisition.maximizer.local_and_random_search
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.maximizers.local_search.html">
-         smac.acquisition.maximizers.local_search
+        <a class="reference internal" href="../api/smac.acquisition.maximizer.local_search.html">
+         smac.acquisition.maximizer.local_search
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="../api/smac.acquisition.maximizers.random_search.html">
-         smac.acquisition.maximizers.random_search
+        <a class="reference internal" href="../api/smac.acquisition.maximizer.random_search.html">
+         smac.acquisition.maximizer.random_search
         </a>
        </li>
       </ul>
@@ -963,26 +968,29 @@ style="width: 100%;">
                 
   <section id="multi-objective-optimization">
 <h1>Multi-Objective Optimization<a class="headerlink" href="#multi-objective-optimization" title="Permalink to this heading">¶</a></h1>
-<p>Often we do not only want to optimize just cost or runtime, but both or other objectives instead.
-SMAC offers a multi-objective optimization interface to do exactly that.
-Right now, the algorithm used for this is <a class="reference external" href="https://www.cs.bham.ac.uk/~jdk/UKCI-2015.pdf">ParEgo</a> [Christescu &amp; Knowles, 2015].
-<a class="reference external" href="https://www.cs.bham.ac.uk/~jdk/UKCI-2015.pdf">ParEgo</a> weights and sums the individual objectives so that we can optimize a single scalar.</p>
-<p>The costs returned by your target function are stored as usual in the runhistory object, such that
-you can recover the Pareto front later on.</p>
+<p>Often we do not only want to optimize just a single objective, but multiple instead. SMAC offers a multi-objective
+optimization interface to do exactly that. Right now, the algorithm used for this is a mean aggregation strategy or
+ParEGO <a class="reference internal" href="../6_references.html#know06" id="id1"><span>[Know06]</span></a>. In both cases, multiple objectives are aggregated into a single scalar objective, which is then
+optimized by SMAC. However, the run history still keeps the original objectives.</p>
 <p>The basic recipe is as follows:</p>
 <ol class="arabic simple">
 <li><p>Make sure that your target function returns a cost <em>dictionary</em> containing the objective names as keys
 and the objective values as values, e.g. <code class="docutils literal notranslate"><span class="pre">{'myobj1':</span> <span class="pre">0.3,</span> <span class="pre">'myobj2':</span> <span class="pre">200}</span></code>. Alternatively, you can simply
-return a list, e.g <code class="docutils literal notranslate"><span class="pre">[0.3,</span> <span class="pre">200]</span></code>.</p></li>
-<li><p>When instantiating SMAC pass the names of your objectives to the scenario object via the <code class="docutils literal notranslate"><span class="pre">multi_objectives</span></code>
-argument, e.g. <code class="docutils literal notranslate"><span class="pre">multi_objectives</span> <span class="pre">=</span> <span class="pre">&quot;myobj1,</span> <span class="pre">myobj2&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">multi_objectives</span> <span class="pre">=</span> <span class="pre">[&quot;myobj1&quot;,</span> <span class="pre">&quot;myobj2&quot;]</span></code>.
-Please set <code class="docutils literal notranslate"><span class="pre">run_obj</span> <span class="pre">=</span> <span class="pre">'quality'</span></code>.</p></li>
-<li><p>Now you can optionally pass a custom multi-objective algorithm class or further kwargs to the SMAC
-facade (via <code class="docutils literal notranslate"><span class="pre">multi_objective_algorithm</span></code> and/or <code class="docutils literal notranslate"><span class="pre">multi_objective_kwargs</span></code>).
-Per default, a mean aggregation strategy is used as the multi-objective algorithm.</p></li>
+return a list, e.g, <code class="docutils literal notranslate"><span class="pre">[0.3,</span> <span class="pre">200]</span></code>.</p></li>
+<li><p>When instantiating SMAC pass the names of your objectives to the scenario object via the <code class="docutils literal notranslate"><span class="pre">objectives</span></code>
+argument, e.g., <code class="docutils literal notranslate"><span class="pre">multi_objectives:</span> <span class="pre">[&quot;myobj1&quot;,</span> <span class="pre">&quot;myobj2&quot;]</span></code>.</p></li>
+<li><p>Now you can optionally pass a custom multi-objective algorithm class to the SMAC
+facade (via <code class="docutils literal notranslate"><span class="pre">multi_objective_algorithm</span></code>). In all facades, a mean aggregation strategy is used as the
+multi-objective algorithm default.</p></li>
 </ol>
-<p>We show an example of how to use multi-objective with a nice Pareto front plot in our examples:
-<span class="xref std std-ref">Scalarized Multi-Objective Using ParEGO</span>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>To judge whether a configuration is better than another (comparison happens in the intensifier), we need to
+scalarize the multi-objective values. This, however, is <em>not</em> done by the multi-objective algorithm but directly in
+the runhistory object using the method <code class="docutils literal notranslate"><span class="pre">average_cost</span></code>. The values are always normalized (based on all costs so
+far) and weighted averaged (based on the objective weights provided by the user).</p>
+</div>
+<p>We show an example of how to use multi-objective with plots in our <a class="reference internal" href="../examples/3_multi_objective/index.html#multi-objective"><span class="std std-ref">examples</span></a>.</p>
 </section>
 
 
@@ -991,17 +999,17 @@ Per default, a mean aggregation strategy is used as the multi-objective algorith
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="2_components.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="2_multi_fidelity.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Components</p>
+            <p class="prev-next-title">Multi-Fidelity Optimization</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="4_instances.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Instances and Features</p>
+        <p class="prev-next-title">Optimization across Instances</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
@@ -1022,8 +1030,7 @@ Per default, a mean aggregation strategy is used as the multi-objective algorith
     &copy; Copyright 
     Copyright 2022, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
-    and Frank Hutter
-.<br>
+    and Frank Hutter.<br>
 </p>
     </div>
     

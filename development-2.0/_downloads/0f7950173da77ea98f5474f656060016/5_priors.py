@@ -28,7 +28,7 @@ from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.neural_network import MLPClassifier
 
 from smac import HyperparameterOptimizationFacade, Scenario
-from smac.acquisition.functions import PriorAcquisitionFunction
+from smac.acquisition.function import PriorAcquisitionFunction
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
