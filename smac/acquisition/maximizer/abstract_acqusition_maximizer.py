@@ -6,10 +6,10 @@ from typing import Any, Iterator
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 
-from smac.acquisition.functions.abstract_acquisition_function import (
+from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.acquisition.maximizers.helpers import ChallengerList
+from smac.acquisition.maximizer.helpers import ChallengerList
 from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.utils.logging import get_logger
 

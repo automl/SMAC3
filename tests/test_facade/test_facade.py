@@ -9,10 +9,10 @@ from smac import (
     RandomFacade,
     Scenario,
 )
-from smac.acquisition.functions.abstract_acquisition_function import (
+from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.acquisition.maximizers.abstract_acqusition_maximizer import (
+from smac.acquisition.maximizer.abstract_acqusition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
 from smac.callback import Callback

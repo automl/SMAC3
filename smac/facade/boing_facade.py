@@ -10,7 +10,7 @@
 # from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
 # from smac.acquisition import AbstractAcquisitionMaximizer, LocalAndSortedRandomSearch
-# from smac.acquisition.functions import EI, AbstractAcquisitionFunction
+# from smac.acquisition.function import EI, AbstractAcquisitionFunction
 # from smac.main.boing import BOinGSMBO
 # from smac.random_design.probability_design import ProbabilityRandomDesign
 # from smac.facade.hyperparameter_optimization_facade import HyperparameterOptimizationFacade

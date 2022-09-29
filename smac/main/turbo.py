@@ -2,7 +2,7 @@
 
 # from typing import Iterator
 
-# from smac.acquisition.functions.thompson import TS
+# from smac.acquisition.function.thompson import TS
 # from ConfigSpace import Configuration
 # from smac.main.smbo import SMBO
 # from smac.model.utils import get_types

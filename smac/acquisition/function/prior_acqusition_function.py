@@ -6,14 +6,14 @@ import numpy as np
 from ConfigSpace import Configuration
 from ConfigSpace.hyperparameters import FloatHyperparameter
 
-from smac.acquisition.functions.abstract_acquisition_function import (
+from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.acquisition.functions.confidence_bound import LCB
-from smac.acquisition.functions.integrated_acquisition_function import (
+from smac.acquisition.function.confidence_bound import LCB
+from smac.acquisition.function.integrated_acquisition_function import (
     IntegratedAcquisitionFunction,
 )
-from smac.acquisition.functions.thompson import TS
+from smac.acquisition.function.thompson import TS
 from smac.model.abstract_model import AbstractModel
 from smac.model.random_forest.abstract_random_forest import AbstractRandomForest
 from smac.utils.logging import get_logger
@@ -28,7 +28,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
     r"""Weights the acquisition function with a user-defined prior over the optimum.
 
     See "piBO: Augmenting Acquisition Functions with User Beliefs for Bayesian Optimization" by Carl
-    Hvarfner et al. [2]_ for further details.
+    Hvarfner et al. [HSSL22]_ for further details.
 
     Parameters
     ----------

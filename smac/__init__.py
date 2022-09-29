@@ -18,8 +18,7 @@ project_urls = {
 copyright = f"""
     Copyright {datetime.date.today().strftime('%Y')}, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
-    and Frank Hutter
-"""
+    and Frank Hutter"""
 version = "2.0.0"
 
 

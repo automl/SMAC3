@@ -5,7 +5,7 @@ from typing import Any
 import numpy as np
 from scipy.stats import norm
 
-from smac.acquisition.functions.abstract_acquisition_function import (
+from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
 from smac.utils.logging import get_logger

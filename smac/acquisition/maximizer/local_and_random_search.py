@@ -4,12 +4,12 @@ from typing import Any
 
 from ConfigSpace import Configuration, ConfigurationSpace
 
-from smac.acquisition.functions import AbstractAcquisitionFunction
-from smac.acquisition.maximizers.abstract_acqusition_maximizer import (
+from smac.acquisition.function import AbstractAcquisitionFunction
+from smac.acquisition.maximizer.abstract_acqusition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
-from smac.acquisition.maximizers.local_search import LocalSearch
-from smac.acquisition.maximizers.random_search import RandomSearch
+from smac.acquisition.maximizer.local_search import LocalSearch
+from smac.acquisition.maximizer.random_search import RandomSearch
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from smac.acquisition.functions.abstract_acquisition_function import (
+from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
 from smac.utils.logging import get_logger

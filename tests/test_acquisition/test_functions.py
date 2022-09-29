@@ -3,7 +3,7 @@ from typing import Any
 import numpy as np
 import pytest
 
-from smac.acquisition.functions import (
+from smac.acquisition.function import (
     EI,
     EIPS,
     LCB,

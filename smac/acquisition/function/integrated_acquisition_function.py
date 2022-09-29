@@ -6,7 +6,7 @@ import copy
 
 import numpy as np
 
-from smac.acquisition.functions.abstract_acquisition_function import (
+from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
 from smac.model.abstract_model import AbstractModel

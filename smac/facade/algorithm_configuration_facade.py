@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from ConfigSpace import Configuration
 
-from smac.acquisition.functions.expected_improvement import EI
-from smac.acquisition.maximizers.local_and_random_search import (
+from smac.acquisition.function.expected_improvement import EI
+from smac.acquisition.maximizer.local_and_random_search import (
     LocalAndSortedRandomSearch,
 )
 from smac.facade.abstract_facade import AbstractFacade

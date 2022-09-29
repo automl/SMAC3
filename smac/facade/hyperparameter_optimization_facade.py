@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from ConfigSpace import Configuration
 
-from smac.acquisition.functions.expected_improvement import EI
-from smac.acquisition.maximizers.local_and_random_search import (
+from smac.acquisition.function.expected_improvement import EI
+from smac.acquisition.maximizer.local_and_random_search import (
     LocalAndSortedRandomSearch,
 )
 from smac.facade.abstract_facade import AbstractFacade
@@ -114,7 +114,7 @@ class HyperparameterOptimizationFacade(AbstractFacade):
         min_challenger: int = 1,
         min_config_calls: int = 1,
         max_config_calls: int = 3,
-        intensify_percentage: float = 0.5,
+        intensify_percentage: float = 1e-10,
     ) -> Intensifier:
         """Returns ``Intensifier`` as intensifier. Uses the default configuration for ``race_against``.
 
@@ -127,7 +127,7 @@ class HyperparameterOptimizationFacade(AbstractFacade):
             Maximum number of trials per config (summed over all calls to intensify).
         min_challenger : int, defaults to 3
             Minimal number of challengers to be considered (even if time_bound is exhausted earlier).
-        intensify_percentage : float, defaults to 0.5
+        intensify_percentage : float, defaults to 1e-10
             How much percentage of the time should configurations be intensified (evaluated on higher budgets or
             more instances). This parameter is accessed in the SMBO class.
         """

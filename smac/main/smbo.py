@@ -31,7 +31,7 @@ class SMBO(BaseSMBO):
         super().__init__(*args, **kwargs)
 
         self._predict_x_best = True
-        self._min_samples_model = 1
+        self._min_samples = 1
         self._considered_budgets: list[float | None] = [None]
 
     def get_next_configurations(self, n: int | None = None) -> Iterator[Configuration]:  # noqa: D102
@@ -231,7 +231,7 @@ class SMBO(BaseSMBO):
     def _collect_data(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Collects the data from the runhistory to train the surrogate model. The data collection strategy if budgets
         are used is as follows: Looking from highest to lowest budget, return those observations
-        that support at least ``self._min_samples_model`` points.
+        that support at least ``self._min_samples`` points.
 
         If no budgets are used, this is equivalent to returning all observations.
         """
@@ -247,7 +247,7 @@ class SMBO(BaseSMBO):
         for b in available_budgets:
             X, Y = self._runhistory_encoder.transform(self._runhistory, budget_subset=[b])
 
-            if X.shape[0] >= self._min_samples_model:
+            if X.shape[0] >= self._min_samples:
                 self._considered_budgets = [b]
                 configs_array = self._runhistory_encoder.get_configurations(
                     self._runhistory, budget_subset=self._considered_budgets

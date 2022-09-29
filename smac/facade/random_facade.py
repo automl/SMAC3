@@ -3,10 +3,10 @@ from __future__ import annotations
 import numpy as np
 from ConfigSpace import Configuration
 
-from smac.acquisition.functions.abstract_acquisition_function import (
+from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.acquisition.maximizers.random_search import RandomSearch
+from smac.acquisition.maximizer.random_search import RandomSearch
 from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensifier.intensifier import Intensifier

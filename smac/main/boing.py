@@ -9,9 +9,9 @@
 # from ConfigSpace.hyperparameters import NumericalHyperparameter
 
 # from smac.acquisition import AbstractAcquisitionMaximizer
-# from smac.acquisition.functions import AbstractAcquisitionFunction
-# from smac.acquisition.functions.expected_improvement import EI
-# from smac.acquisition.functions.thompson import TS
+# from smac.acquisition.function import AbstractAcquisitionFunction
+# from smac.acquisition.function.expected_improvement import EI
+# from smac.acquisition.function.thompson import TS
 # from ConfigSpace import Configuration
 # from smac.constants import MAXINT
 # from smac.main.smbo import SMBO

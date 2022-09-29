@@ -27,8 +27,8 @@ from ConfigSpace.hyperparameters import (
 from ConfigSpace.read_and_write import pcs
 from scipy.spatial.distance import euclidean
 
-from smac.acquisition.functions import EI
-from smac.acquisition.maximizers import (
+from smac.acquisition.function import EI
+from smac.acquisition.maximizer import (
     DifferentialEvolution,
     LocalAndSortedPriorRandomSearch,
     LocalAndSortedRandomSearch,
