@@ -1,31 +1,30 @@
 Multi-Objective Optimization
 ============================
 
-Often we do not only want to optimize just cost or runtime, but both or other objectives instead.
-SMAC offers a multi-objective optimization interface to do exactly that.
-Right now, the algorithm used for this is `ParEgo`_ [Christescu & Knowles, 2015].
-`ParEgo`_ weights and sums the individual objectives so that we can optimize a single scalar.
-
-The costs returned by your target function are stored as usual in the runhistory object, such that
-you can recover the Pareto front later on.
+Often we do not only want to optimize just a single objective, but multiple instead. SMAC offers a multi-objective 
+optimization interface to do exactly that. Right now, the algorithm used for this is a mean aggregation strategy or 
+ParEGO [Know06]_. In both cases, multiple objectives are aggregated into a single scalar objective, which is then 
+optimized by SMAC. However, the run history still keeps the original objectives.
 
 
 The basic recipe is as follows:
 
 #. Make sure that your target function returns a cost *dictionary* containing the objective names as keys
    and the objective values as values, e.g. ``{'myobj1': 0.3, 'myobj2': 200}``. Alternatively, you can simply
-   return a list, e.g ``[0.3, 200]``.
-#. When instantiating SMAC pass the names of your objectives to the scenario object via the ``multi_objectives``
-   argument, e.g. ``multi_objectives = "myobj1, myobj2"`` or ``multi_objectives = ["myobj1", "myobj2"]``.
-   Please set ``run_obj = 'quality'``.
-#. Now you can optionally pass a custom multi-objective algorithm class or further kwargs to the SMAC
-   facade (via ``multi_objective_algorithm`` and/or ``multi_objective_kwargs``).
-   Per default, a mean aggregation strategy is used as the multi-objective algorithm.
+   return a list, e.g, ``[0.3, 200]``.
+#. When instantiating SMAC pass the names of your objectives to the scenario object via the ``objectives``
+   argument, e.g., ``multi_objectives: ["myobj1", "myobj2"]``.
+#. Now you can optionally pass a custom multi-objective algorithm class to the SMAC
+   facade (via ``multi_objective_algorithm``). In all facades, a mean aggregation strategy is used as the 
+   multi-objective algorithm default.
 
 
-We show an example of how to use multi-objective with a nice Pareto front plot in our examples:
-:ref:`Scalarized Multi-Objective Using ParEGO`.
+.. warning ::
+
+    To judge whether a configuration is better than another (comparison happens in the intensifier), we need to 
+    scalarize the multi-objective values. This, however, is *not* done by the multi-objective algorithm but directly in 
+    the runhistory object using the method ``average_cost``. The values are always normalized (based on all costs so 
+    far) and weighted averaged (based on the objective weights provided by the user).
 
 
-.. _ParEgo: https://www.cs.bham.ac.uk/~jdk/UKCI-2015.pdf
-.. _example: https://github.com/automl/SMAC3/blob/master/examples/python/scalarized_multi_objective.py
+We show an example of how to use multi-objective with plots in our :ref:`examples<Multi-Objective>`.

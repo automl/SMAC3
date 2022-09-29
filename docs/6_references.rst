@@ -11,4 +11,4 @@ References
 
 .. [Know06] Knowles, J.
     ParEGO: A Hybrid Algorithm with on-Line Landscape Approximation for Expensive Multiobjective Optimization Problems
-    https://www.researchgate.net/publication/3418871_ParEGO_A_Hybrid_Algorithm_With_On-Line_Landscape_Approximation_for_Expension_Multiobjective_Optimization_Problems
+    https://ieeexplore.ieee.org/document/1583627

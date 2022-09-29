@@ -127,8 +127,7 @@ class AbstractParallelIntensifier(AbstractIntensifier):
 
             return intent, trial_info
 
-        # If gotten to this point, we might look into adding a new
-        # intensifier
+        # If gotten to this point, we might look into adding a new intensifier
         if self._add_new_instance(n_workers):
             return self._intensifier_instances[len(self._intensifier_instances) - 1].get_next_trial(
                 challengers=challengers,
