@@ -1,12 +1,13 @@
 from __future__ import annotations
+
 from typing import Any
 
 import numpy as np
-from smac.scenario import Scenario
 
 from smac.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
 )
+from smac.scenario import Scenario
 
 
 class MeanAggregationStrategy(AbstractMultiObjectiveAlgorithm):

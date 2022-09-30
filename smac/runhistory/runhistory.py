@@ -8,8 +8,10 @@ from pathlib import Path
 
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
-from smac.multi_objective.abstract_multi_objective_algorithm import AbstractMultiObjectiveAlgorithm
 
+from smac.multi_objective.abstract_multi_objective_algorithm import (
+    AbstractMultiObjectiveAlgorithm,
+)
 from smac.runhistory.dataclasses import (
     InstanceSeedBudgetKey,
     InstanceSeedKey,

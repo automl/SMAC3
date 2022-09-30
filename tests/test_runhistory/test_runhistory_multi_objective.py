@@ -7,11 +7,18 @@ import pytest
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
+from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.abstract_runner import StatusType
+from smac.scenario import Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
+
+
+@pytest.fixture
+def scenario(configspace_small):
+    return Scenario(configspace_small, objectives=["a", "b"])
 
 
 @pytest.fixture
@@ -32,12 +39,12 @@ def config3(configspace_small):
     return configspace_small.sample_configuration()
 
 
-def test_add_and_pickle(runhistory, config1):
+def test_add_and_pickle(scenario, runhistory, config1):
     """
     Simply adding some rundata to runhistory, then pickle it.
     """
-
     assert runhistory.empty()
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
 
     runhistory.add(
         config=config1,
@@ -88,8 +95,9 @@ def test_add_and_pickle(runhistory, config1):
     assert loaded_runhistory._data == runhistory._data
 
 
-def test_illegal_input(runhistory, config1):
+def test_illegal_input(scenario, runhistory, config1):
     assert runhistory.empty()
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
 
     with pytest.raises(ValueError):
         runhistory.add(
@@ -117,7 +125,8 @@ def test_illegal_input(runhistory, config1):
         )
 
 
-def test_add_multiple_times(runhistory, config1):
+def test_add_multiple_times(scenario, runhistory, config1):
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
 
     for i in range(5):
         runhistory.add(
@@ -138,7 +147,8 @@ def test_add_multiple_times(runhistory, config1):
     assert list(runhistory._data.values())[0].cost == [1.0, 2.0]
 
 
-def test_full(runhistory, config1, config2, config3):
+def test_full(scenario, runhistory, config1, config2, config3):
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
     runhistory.add(
         config=config1,
         cost=[50, 100],
@@ -180,7 +190,8 @@ def test_full(runhistory, config1, config2, config3):
     assert runhistory.get_cost(config3) == 0.25
 
 
-def test_full_update(runhistory, config1, config2):
+def test_full_update(scenario, runhistory, config1, config2):
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
     runhistory.overwrite_existing_runs = True
 
     runhistory.add(
@@ -232,7 +243,8 @@ def test_full_update(runhistory, config1, config2):
     assert updated_cost_config2 == pytest.approx(0.833, 0.001)
 
 
-def test_incremental_update(runhistory, config1):
+def test_incremental_update(scenario, runhistory, config1):
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
 
     runhistory.add(
         config=config1,
@@ -270,7 +282,8 @@ def test_incremental_update(runhistory, config1):
     assert runhistory.get_cost(config1) == pytest.approx(0.583, 0.001)
 
 
-def test_multiple_budgets(runhistory, config1):
+def test_multiple_budgets(scenario, runhistory, config1):
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
 
     runhistory.add(
         config=config1,
@@ -299,7 +312,8 @@ def test_multiple_budgets(runhistory, config1):
     assert runhistory.get_cost(config1) == 0.5
 
 
-def test_get_configs_per_budget(runhistory, config1, config2, config3):
+def test_get_configs_per_budget(scenario, runhistory, config1, config2, config3):
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
     runhistory.add(
         config=config1,
         cost=[10, 20],
@@ -334,7 +348,8 @@ def test_get_configs_per_budget(runhistory, config1, config2, config3):
     assert configs == [config1, config2]
 
 
-def test_objective_bounds(runhistory, config1, config2, config3):
+def test_objective_bounds(scenario, runhistory, config1, config2, config3):
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
 
     runhistory.add(
         config=config1,
@@ -370,7 +385,8 @@ def test_objective_bounds(runhistory, config1, config2, config3):
     assert runhistory._objective_bounds[1] == (50, 150)
 
 
-def test_objective_bounds2(runhistory, config1, config2, config3):
+def test_objective_bounds2(scenario, runhistory, config1, config2, config3):
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
     runhistory.add(
         config=config1,
         cost=10,
@@ -404,7 +420,8 @@ def test_objective_bounds2(runhistory, config1, config2, config3):
     assert runhistory._objective_bounds[0] == (5, 10)
 
 
-def test_bounds_on_crash(runhistory, config1, config2, config3):
+def test_bounds_on_crash(scenario, runhistory, config1, config2, config3):
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
 
     runhistory.add(
         config=config1,
@@ -440,7 +457,8 @@ def test_bounds_on_crash(runhistory, config1, config2, config3):
     assert runhistory._objective_bounds[1] == (50, 150)
 
 
-def test_instances(runhistory, config1, config2):
+def test_instances(scenario, runhistory, config1, config2):
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
 
     runhistory.add(
         config=config1,
@@ -500,7 +518,8 @@ def test_instances(runhistory, config1, config2):
     assert runhistory.get_cost(config2) == 0.75
 
 
-def test_budgets(runhistory, config1, config2):
+def test_budgets(scenario, runhistory, config1, config2):
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
 
     runhistory.add(
         config=config1,
@@ -554,7 +573,8 @@ def test_budgets(runhistory, config1, config2):
     assert runhistory.average_cost(config2) == [0, 150]
 
 
-def test_objective_weights(runhistory, config1, config2):
+def test_objective_weights(scenario, runhistory, config1, config2):
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
     runhistory.add(
         config=config1,
         cost=[0, 10],
@@ -575,6 +595,46 @@ def test_objective_weights(runhistory, config1, config2):
     # Average cost returns us 0.5
     assert runhistory.get_cost(config1) == 0.5
 
-    # If we change the weights now, we expect a higher value in the second cost
-    runhistory._objective_weights = [1, 2]
+    # If we change the weights/mo algorithm now, we expect a higher value in the second cost
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario, objective_weights=[1, 2])
     assert round(runhistory.get_cost(config1), 2) == 0.67
+
+
+def test_pareto_front1(scenario, runhistory, config1, config2):
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
+    runhistory.add(
+        config=config1,
+        cost=[0, 10],
+        time=5,
+        status=StatusType.SUCCESS,
+    )
+
+    runhistory.add(
+        config=config2,
+        cost=[100, 0],
+        time=15,
+        status=StatusType.SUCCESS,
+    )
+
+    incumbents, _ = runhistory.get_pareto_front()
+    assert config1 in incumbents and config2 in incumbents
+
+
+def test_pareto_front2(scenario, runhistory, config1, config2):
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
+    runhistory.add(
+        config=config1,
+        cost=[0, 10],
+        time=5,
+        status=StatusType.SUCCESS,
+    )
+
+    runhistory.add(
+        config=config2,
+        cost=[0, 15],
+        time=15,
+        status=StatusType.SUCCESS,
+    )
+
+    incumbents, _ = runhistory.get_pareto_front()
+    assert config1 in incumbents and config2 not in incumbents

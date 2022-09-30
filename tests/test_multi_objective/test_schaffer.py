@@ -90,11 +90,11 @@ def test_parego(facade, make_scenario, configspace):
     )
     # The incumbent is not ambiguously because we have a Pareto front
     smac.optimize()
-    
+
     # We use the mean aggregation strategy to get the same weights
     multi_objective_algorithm = MeanAggregationStrategy(scenario=scenario)
     smac.runhistory.multi_objective_algorithm = multi_objective_algorithm
-    
+
     incumbent, _ = smac.runhistory.get_incumbent()
 
     f1_inc, f2_inc = schaffer(incumbent["x"])
