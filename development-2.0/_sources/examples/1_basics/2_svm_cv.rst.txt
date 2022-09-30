@@ -38,14 +38,14 @@ types as well as conditional hyperparameters.
     [INFO][abstract_initial_design.py:133] Using 5 initial design and 0 additional configurations.
     [INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
     [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-    [INFO][intensifier.py:567] Updated estimated cost of incumbent on 1 trials: 0.0667
-    [INFO][intensifier.py:567] Updated estimated cost of incumbent on 2 trials: 0.0667
+    [INFO][intensifier.py:566] Updated estimated cost of incumbent on 1 trials: 0.0667
+    [INFO][intensifier.py:566] Updated estimated cost of incumbent on 2 trials: 0.0667
     [INFO][abstract_intensifier.py:340] Challenger (0.0133) is better than incumbent (0.0667) on 2 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
     [INFO][abstract_intensifier.py:367] --- C: 0.03992740880515713 -> 1.2760639488343621
     [INFO][abstract_intensifier.py:367] --- kernel: 'rbf' -> 'linear'
     [INFO][abstract_intensifier.py:367] --- shrinking: True -> False
-    [INFO][intensifier.py:567] Updated estimated cost of incumbent on 3 trials: 0.0133
+    [INFO][intensifier.py:566] Updated estimated cost of incumbent on 3 trials: 0.0133
     [INFO][base_smbo.py:260] Configuration budget is exhausted.
     [INFO][abstract_facade.py:314] Final Incumbent: {'C': 1.2760639488343621, 'kernel': 'linear', 'shrinking': False}
     [INFO][abstract_facade.py:315] Estimated cost: 0.013333333333333308
@@ -159,7 +159,7 @@ types as well as conditional hyperparameters.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  14.676 seconds)
+   **Total running time of the script:** ( 0 minutes  11.825 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_2_svm_cv.py:

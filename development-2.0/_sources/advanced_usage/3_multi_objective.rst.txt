@@ -21,10 +21,25 @@ The basic recipe is as follows:
 
 .. warning ::
 
-    To judge whether a configuration is better than another (comparison happens in the intensifier), we need to 
-    scalarize the multi-objective values. This, however, is *not* done by the multi-objective algorithm but directly in 
-    the runhistory object using the method ``average_cost``. The values are always normalized (based on all costs so 
-    far) and weighted averaged (based on the objective weights provided by the user).
+    Depending on the multi-objective algorithm, the incumbent might be ambiguous because there might be multiple 
+    incumbents on the Pareto front. Let's take ParEGO for example:
+    Everytime a new configuration is sampled, the weights are updated (see runhistory encoder). Therefore, calling
+    the ``get_incumbent`` method in the runhistory might return a different configuration based on the internal state 
+    of the multi-objective algorithm. 
+
+
+You can use ``get_pareto_front`` in the run history to get the configurations on the Pareto front.
+
+
+.. code-block:: python
+
+    smac = ...
+    smac.optimize()
+
+    for incumbent, costs in smac.get_pareto_front():
+        print(incumbent, costs)
+
+
 
 
 We show an example of how to use multi-objective with plots in our :ref:`examples<Multi-Objective>`.

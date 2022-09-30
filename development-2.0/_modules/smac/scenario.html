@@ -217,12 +217,12 @@ style="width: 100%;">
     <ul>
      <li class="toctree-l3">
       <a class="reference internal" href="../../examples/3_multi_objective/1_schaffer.html">
-       2D Schaffer Function
+       2D Schaffer Function with Objective Weights
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../examples/3_multi_objective/2_parego.html">
-       ParEGO with Objective Weights
+       ParEGO
       </a>
      </li>
     </ul>
@@ -990,9 +990,6 @@ style="width: 100%;">
 <span class="sd">        to the target function to ensure generalization.</span>
 <span class="sd">    objective : str | list[str] | None, defaults to &quot;cost&quot;</span>
 <span class="sd">        The objective(s) to optimize. This argument is required for multi-objective optimization.</span>
-<span class="sd">    objective_weights : list[float] | None, defaults to None</span>
-<span class="sd">        Weights for an weighted average to judge configurations. Must be of the same length as the number of</span>
-<span class="sd">        objectives. Mostly used in the run history.</span>
 <span class="sd">    crash_cost : float | list[float], defaults to np.inf</span>
 <span class="sd">        Defines the cost for a failed trial. In case of multi-objective, each objective can be associated with</span>
 <span class="sd">        a different cost.</span>
@@ -1042,7 +1039,6 @@ style="width: 100%;">
 
     <span class="c1"># Objectives</span>
     <span class="n">objectives</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;cost&quot;</span>
-    <span class="n">objective_weights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">crash_cost</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
     <span class="n">termination_cost_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
 

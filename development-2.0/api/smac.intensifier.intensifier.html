@@ -220,12 +220,12 @@ style="width: 100%;">
     <ul>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/3_multi_objective/1_schaffer.html">
-       2D Schaffer Function
+       2D Schaffer Function with Objective Weights
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/3_multi_objective/2_parego.html">
-       ParEGO with Objective Weights
+       ParEGO
       </a>
      </li>
     </ul>
@@ -1119,7 +1119,9 @@ the subset of instances Π’ ⊆ Π, based on the trials in R; max_config_calls
 θ_inc: incumbent parameter setting, incumbent in this class.</p>
 <p>1  for i := 1, … , length(Θ_new) do
 2      θ_new ← Θ_new[i]</p>
-<p>STAGE -&gt; RUN_INCUMBENT</p>
+<blockquote>
+<div><p>STAGE -&gt; RUN_INCUMBENT</p>
+</div></blockquote>
 <p>3      if R contains less than max_config_calls trials with configuration θ_inc then
 4          Π’ ← {π’∈ Π | R contains less than or equal number of trials using θ_inc and π’
 0          than using θ_inc and any other π’’∈ Π}
@@ -1127,7 +1129,9 @@ the subset of instances Π’ ⊆ Π, based on the trials in R; max_config_calls
 6          s ← seed, drawn uniformly at random
 7          R ← ExecuteRun(R, θ_inc, π, s)
 8      N ← 1</p>
-<p>STAGE -&gt; RUN_CHALLENGER</p>
+<blockquote>
+<div><p>STAGE -&gt; RUN_CHALLENGER</p>
+</div></blockquote>
 <p>9      while true do
 10         S_missing ← {instance, seed} pairs for which θ_inc was run before, but not θ_new
 11         S_torun ← random subset of S_missing of size min(N, size(S_missing))

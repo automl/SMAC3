@@ -217,12 +217,12 @@ style="width: 100%;">
     <ul>
      <li class="toctree-l3">
       <a class="reference internal" href="../../../examples/3_multi_objective/1_schaffer.html">
-       2D Schaffer Function
+       2D Schaffer Function with Objective Weights
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../../examples/3_multi_objective/2_parego.html">
-       ParEGO with Objective Weights
+       ParEGO
       </a>
      </li>
     </ul>
@@ -989,7 +989,7 @@ style="width: 100%;">
 <span class="sd">    1  for i := 1, . . . , length(Θ_new) do</span>
 <span class="sd">    2      θ_new ← Θ_new[i]</span>
 
-<span class="sd">    STAGE -&gt; RUN_INCUMBENT</span>
+<span class="sd">           STAGE -&gt; RUN_INCUMBENT</span>
 
 <span class="sd">    3      if R contains less than max_config_calls trials with configuration θ_inc then</span>
 <span class="sd">    4          Π&#39; ← {π&#39;∈ Π | R contains less than or equal number of trials using θ_inc and π&#39;</span>
@@ -999,7 +999,7 @@ style="width: 100%;">
 <span class="sd">    7          R ← ExecuteRun(R, θ_inc, π, s)</span>
 <span class="sd">    8      N ← 1</span>
 
-<span class="sd">    STAGE -&gt; RUN_CHALLENGER</span>
+<span class="sd">           STAGE -&gt; RUN_CHALLENGER</span>
 
 <span class="sd">    9      while true do</span>
 <span class="sd">    10         S_missing ← {instance, seed} pairs for which θ_inc was run before, but not θ_new</span>
@@ -1498,8 +1498,7 @@ style="width: 100%;">
         <span class="k">else</span><span class="p">:</span>
             <span class="n">available_insts</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">available_insts</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 
-        <span class="c1"># If all instances were used n times, we can pick an instances</span>
-        <span class="c1"># from the complete set again</span>
+        <span class="c1"># If all instances were used n times, we can pick an instances from the complete set again</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deterministic</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">available_insts</span><span class="p">:</span>
             <span class="n">available_insts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span>
 

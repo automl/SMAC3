@@ -181,13 +181,13 @@ Multi-Objective
 .. only:: html
 
   .. image:: /examples/3_multi_objective/images/thumb/sphx_glr_1_schaffer_thumb.png
-    :alt: 2D Schaffer Function
+    :alt: 2D Schaffer Function with Objective Weights
 
   :ref:`sphx_glr_examples_3_multi_objective_1_schaffer.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2D Schaffer Function</div>
+      <div class="sphx-glr-thumbnail-title">2D Schaffer Function with Objective Weights</div>
     </div>
 
 
@@ -198,13 +198,13 @@ Multi-Objective
 .. only:: html
 
   .. image:: /examples/3_multi_objective/images/thumb/sphx_glr_2_parego_thumb.png
-    :alt: ParEGO with Objective Weights
+    :alt: ParEGO
 
   :ref:`sphx_glr_examples_3_multi_objective_2_parego.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">ParEGO with Objective Weights</div>
+      <div class="sphx-glr-thumbnail-title">ParEGO</div>
     </div>
 
 

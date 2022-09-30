@@ -1,6 +1,6 @@
 """
-2D Schaffer Function
-^^^^^^^^^^^^^^^^^^^^
+2D Schaffer Function with Objective Weights
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 A simple example on how to use multi-objective optimization is shown. The `schaffer` function is used.
 """
@@ -13,7 +13,8 @@ import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from matplotlib import pyplot as plt
 
-from smac import HyperparameterOptimizationFacade, Scenario
+from smac import HyperparameterOptimizationFacade as HPOFacade
+from smac import Scenario
 from smac.facade import AbstractFacade
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -66,9 +67,13 @@ if __name__ == "__main__":
         objectives=["metric1", "metric2"],
     )
 
-    smac = HyperparameterOptimizationFacade(
+    smac = HPOFacade(
         scenario=scenario,
         target_function=target_function,
+        multi_objective_algorithm=HPOFacade.get_multi_objective_algorithm(
+            scenario,
+            objective_weights=[1, 2],  # Weight metric2 twice as much as metric1
+        ),
         overwrite=True,
     )
     incumbent = smac.optimize()

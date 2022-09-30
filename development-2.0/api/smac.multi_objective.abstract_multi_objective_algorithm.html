@@ -220,12 +220,12 @@ style="width: 100%;">
     <ul>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/3_multi_objective/1_schaffer.html">
-       2D Schaffer Function
+       2D Schaffer Function with Objective Weights
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/3_multi_objective/2_parego.html">
-       ParEGO with Objective Weights
+       ParEGO
       </a>
      </li>
     </ul>
@@ -1027,7 +1027,7 @@ style="width: 100%;">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm" title="smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractMultiObjectiveAlgorithm</span></code></a>(scenario[, seed])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm" title="smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractMultiObjectiveAlgorithm</span></code></a>()</p></td>
 <td><p>A general interface for multi-objective optimizer, depending on different strategies.</p></td>
 </tr>
 </tbody>
@@ -1037,7 +1037,7 @@ style="width: 100%;">
 <h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.multi_objective.abstract_multi_objective_algorithm.</span></span><span class="sig-name descname"><span class="pre">AbstractMultiObjectiveAlgorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/multi_objective/abstract_multi_objective_algorithm.html#AbstractMultiObjectiveAlgorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.multi_objective.abstract_multi_objective_algorithm.</span></span><span class="sig-name descname"><span class="pre">AbstractMultiObjectiveAlgorithm</span></span><a class="reference internal" href="../_modules/smac/multi_objective/abstract_multi_objective_algorithm.html#AbstractMultiObjectiveAlgorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>A general interface for multi-objective optimizer, depending on different strategies.</p>
 <dl class="field-list simple">
@@ -1054,7 +1054,7 @@ style="width: 100%;">
 <dd><p>Transform a multi-objective loss to a single loss.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>values</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – Normalized values which might be weighted as well.</p>
+<dd class="field-odd"><p><strong>values</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – Normalized values in the range [0, 1].</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>cost</strong> – Combined cost.</p>

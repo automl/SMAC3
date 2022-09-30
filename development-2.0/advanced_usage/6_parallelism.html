@@ -220,12 +220,12 @@ style="width: 100%;">
     <ul>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/3_multi_objective/1_schaffer.html">
-       2D Schaffer Function
+       2D Schaffer Function with Objective Weights
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/3_multi_objective/2_parego.html">
-       ParEGO with Objective Weights
+       ParEGO
       </a>
      </li>
     </ul>
@@ -944,24 +944,9 @@ style="width: 100%;">
               
               <div class="toc-item">
                 
-<div class="tocsection onthispage pt-5 pb-3">
-    <i class="fas fa-list"></i> On this page
-</div>
 
 <nav id="bd-toc-nav">
-    <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#commandline">
-   Commandline
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#usage-in-python">
-   Usage in Python
-  </a>
- </li>
-</ul>
-
+    
 </nav>
               </div>
               
@@ -983,64 +968,8 @@ style="width: 100%;">
                 
   <section id="parallelism">
 <h1>Parallelism<a class="headerlink" href="#parallelism" title="Permalink to this heading">¶</a></h1>
-<p>SMAC also provides a parallel mode to use several parallel computational resources (such as CPU cores).
-This variant of SMAC is called pSMAC (parallel SMAC) <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.
-The general idea is that all target function run evaluations are shared between the individual SMAC runs
-such that all SMAC runs are better informed and can work together.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>To use pSMAC, please note that it communicates via the file space,
-i.e., all pSMAC runs write from time to time its runhistory (all target function evaluations)
-to disk and read the runhistories of all other pSMAC runs.
-So, a requirement for pSMAC is that it can write to a shared file space.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>SMAC also supports DASH. The documentation is in progress.</p>
-</div>
-<aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id2" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
-<p>Ramage, S. E. A. (2015). Advances in meta-algorithmic software libraries for
-distributed automated algorithm configuration (T). University of British
-Columbia. Retrieved from
-<a class="reference external" href="https://open.library.ubc.ca/collections/ubctheses/24/items/1.0167184">https://open.library.ubc.ca/collections/ubctheses/24/items/1.0167184</a>.</p>
-</aside>
-</aside>
-<section id="commandline">
-<h2>Commandline<a class="headerlink" href="#commandline" title="Permalink to this heading">¶</a></h2>
-<p>To use pSMAC via the commandline interface, please specify the following two arguments:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>--shared_model True --input_psmac_dirs &lt;output_path&gt;
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">shared_model</span></code> will activate the information sharing between SMAC runs and
-<code class="docutils literal notranslate"><span class="pre">input_psmac_dirs</span></code> specifies the output directories.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>pSMAC has no option to specify the number of parallel runs. You have to start as many pSMAC runs as you want to run.</p>
-</div>
-<p>On the command line an exemplary call could be:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 smac --scenario SCENARIO --seed INT --shared_model True --input_psmac_dirs smac3-output*
-</pre></div>
-</div>
-<p>If you want to verify that all arguments are correct and pSMAC finds all files on the file space,
-please set the <code class="docutils literal notranslate"><span class="pre">verbose</span></code> level to DEBUG and grep in the following way:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 smac --verbose DEBUG <span class="o">[</span>...<span class="o">]</span> <span class="p">|</span> grep -E <span class="s2">&quot;Loaded [0-9]+ new runs&quot;</span>
-</pre></div>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>We recommend that each pSMAC uses a different random seed.</p>
-</div>
-</section>
-<section id="usage-in-python">
-<h2>Usage in Python<a class="headerlink" href="#usage-in-python" title="Permalink to this heading">¶</a></h2>
-<p>The same arguments used on the commandline can also be passed to the <em>Scenario</em> constructor.
-See above for a detailed description.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">({</span><span class="s2">&quot;shared_model&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;input_psmac_dirs&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">output_path</span><span class="o">&gt;</span><span class="p">})</span>
-</pre></div>
-</div>
-</section>
+<p>SMAC supports multiple workers natively. Just specify <code class="docutils literal notranslate"><span class="pre">n_workers</span></code> in the scenario and you are
+good to go.</p>
 </section>
 
 

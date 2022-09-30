@@ -220,12 +220,12 @@ style="width: 100%;">
     <ul>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/3_multi_objective/1_schaffer.html">
-       2D Schaffer Function
+       2D Schaffer Function with Objective Weights
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/3_multi_objective/2_parego.html">
-       ParEGO with Objective Weights
+       ParEGO
       </a>
      </li>
     </ul>
@@ -985,10 +985,19 @@ multi-objective algorithm default.</p></li>
 </ol>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>To judge whether a configuration is better than another (comparison happens in the intensifier), we need to
-scalarize the multi-objective values. This, however, is <em>not</em> done by the multi-objective algorithm but directly in
-the runhistory object using the method <code class="docutils literal notranslate"><span class="pre">average_cost</span></code>. The values are always normalized (based on all costs so
-far) and weighted averaged (based on the objective weights provided by the user).</p>
+<p>Depending on the multi-objective algorithm, the incumbent might be ambiguous because there might be multiple
+incumbents on the Pareto front. Let’s take ParEGO for example:
+Everytime a new configuration is sampled, the weights are updated (see runhistory encoder). Therefore, calling
+the <code class="docutils literal notranslate"><span class="pre">get_incumbent</span></code> method in the runhistory might return a different configuration based on the internal state
+of the multi-objective algorithm.</p>
+</div>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">get_pareto_front</span></code> in the run history to get the configurations on the Pareto front.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">smac</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">incumbent</span><span class="p">,</span> <span class="n">costs</span> <span class="ow">in</span> <span class="n">smac</span><span class="o">.</span><span class="n">get_pareto_front</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">costs</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>We show an example of how to use multi-objective with plots in our <a class="reference internal" href="../examples/3_multi_objective/index.html#multi-objective"><span class="std std-ref">examples</span></a>.</p>
 </section>

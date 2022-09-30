@@ -217,12 +217,12 @@ style="width: 100%;">
     <ul>
      <li class="toctree-l3">
       <a class="reference internal" href="../../../examples/3_multi_objective/1_schaffer.html">
-       2D Schaffer Function
+       2D Schaffer Function with Objective Weights
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../../examples/3_multi_objective/2_parego.html">
-       ParEGO with Objective Weights
+       ParEGO
       </a>
      </li>
     </ul>
@@ -987,7 +987,7 @@ style="width: 100%;">
 <span class="sd">    2. An abstract runner takes this TrialInfo object and launches the task via</span>
 <span class="sd">       `submit_run`. In the case of DaskParallelRunner, `n_workers` receive a pickle-object of</span>
 <span class="sd">       `DaskParallelRunner.single_worker`, each with a `run` method coming from `DaskParallelRunner.single_worker.run()`</span>
-<span class="sd">    3. TrialInfo objects are run in a distributed fashion, an their results are  available locally to each worker.</span>
+<span class="sd">    3. TrialInfo objects are run in a distributed fashion, an their results are available locally to each worker.</span>
 <span class="sd">       Such result is collected by `iter_results` and then passed to SMBO.</span>
 <span class="sd">    4. Exceptions are also locally available to each worker and need to be collected.</span>
 

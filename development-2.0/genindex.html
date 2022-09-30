@@ -217,12 +217,12 @@ style="width: 100%;">
     <ul>
      <li class="toctree-l3">
       <a class="reference internal" href="examples/3_multi_objective/1_schaffer.html">
-       2D Schaffer Function
+       2D Schaffer Function with Objective Weights
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="examples/3_multi_objective/2_parego.html">
-       ParEGO with Objective Weights
+       ParEGO
       </a>
      </li>
     </ul>
@@ -1685,6 +1685,12 @@ style="width: 100%;">
         <li><a href="api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.get_params">(smac.model.gaussian_process.kernels.base_kernels.AbstractKernel method)</a>
 </li>
       </ul></li>
+      <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.get_pareto_front">get_pareto_front() (smac.runhistory.RunHistory method)</a>
+
+      <ul>
+        <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_pareto_front">(smac.runhistory.runhistory.RunHistory method)</a>
+</li>
+      </ul></li>
       <li><a href="api/smac.facade.abstract_facade.html#smac.facade.abstract_facade.AbstractFacade.get_random_design">get_random_design() (smac.facade.abstract_facade.AbstractFacade static method)</a>
 
       <ul>
@@ -2162,6 +2168,10 @@ style="width: 100%;">
 </li>
         <li><a href="api/smac.multi_objective.html#smac.multi_objective.AbstractMultiObjectiveAlgorithm.meta">(smac.multi_objective.AbstractMultiObjectiveAlgorithm property)</a>
 </li>
+        <li><a href="api/smac.multi_objective.aggregation_strategy.html#smac.multi_objective.aggregation_strategy.MeanAggregationStrategy.meta">(smac.multi_objective.aggregation_strategy.MeanAggregationStrategy property)</a>
+</li>
+        <li><a href="api/smac.multi_objective.html#smac.multi_objective.MeanAggregationStrategy.meta">(smac.multi_objective.MeanAggregationStrategy property)</a>
+</li>
         <li><a href="api/smac.multi_objective.html#smac.multi_objective.ParEGO.meta">(smac.multi_objective.ParEGO property)</a>
 </li>
         <li><a href="api/smac.multi_objective.parego.html#smac.multi_objective.parego.ParEGO.meta">(smac.multi_objective.parego.ParEGO property)</a>
@@ -2467,6 +2477,10 @@ style="width: 100%;">
       <ul>
         <li><a href="api/smac.runhistory.encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.multi_objective_algorithm">(smac.runhistory.encoder.AbstractRunHistoryEncoder property)</a>
 </li>
+        <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.multi_objective_algorithm">(smac.runhistory.RunHistory property)</a>
+</li>
+        <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.multi_objective_algorithm">(smac.runhistory.runhistory.RunHistory property)</a>
+</li>
       </ul></li>
       <li><a href="api/smac.facade.html#smac.facade.MultiFidelityFacade">MultiFidelityFacade (class in smac.facade)</a>
 
@@ -2568,12 +2582,6 @@ style="width: 100%;">
         <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.objective_bounds">(smac.runhistory.runhistory.RunHistory property)</a>
 </li>
       </ul></li>
-      <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.objective_weights">objective_weights (smac.runhistory.RunHistory property)</a>
-
-      <ul>
-        <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.objective_weights">(smac.runhistory.runhistory.RunHistory property)</a>
-</li>
-      </ul></li>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_ask_end">on_ask_end() (smac.callback.Callback method)</a>
 </li>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_ask_start">on_ask_start() (smac.callback.Callback method)</a>
@@ -2584,10 +2592,10 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_iteration_start">on_iteration_start() (smac.callback.Callback method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_next_configurations_end">on_next_configurations_end() (smac.callback.Callback method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_next_configurations_start">on_next_configurations_start() (smac.callback.Callback method)</a>
 </li>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_start">on_start() (smac.callback.Callback method)</a>

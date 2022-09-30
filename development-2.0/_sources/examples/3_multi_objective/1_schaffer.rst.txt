@@ -18,12 +18,12 @@
 .. _sphx_glr_examples_3_multi_objective_1_schaffer.py:
 
 
-2D Schaffer Function
-^^^^^^^^^^^^^^^^^^^^
+2D Schaffer Function with Objective Weights
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 A simple example on how to use multi-objective optimization is shown. The `schaffer` function is used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 7-84
+.. GENERATED FROM PYTHON SOURCE LINES 7-89
 
 
 
@@ -40,126 +40,153 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
     [INFO][abstract_initial_design.py:133] Using 10 initial design and 0 additional configurations.
     [INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
     [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-    [INFO][intensifier.py:567] Updated estimated cost of incumbent on 1 trials: 1.0
-    [INFO][abstract_intensifier.py:340] Challenger (0.3057) is better than incumbent (0.3062) on 1 trials.
+    [INFO][intensifier.py:566] Updated estimated cost of incumbent on 1 trials: 1.0
+    [INFO][abstract_intensifier.py:340] Challenger (0.3333) is better than incumbent (0.5888) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: -0.9324859157204628 -> -0.9092802626668277
-    [INFO][abstract_intensifier.py:340] Challenger (0.2867) is better than incumbent (0.2882) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -0.9324859157204628 -> 1.3451112993061543
+    [INFO][abstract_intensifier.py:340] Challenger (0.2725) is better than incumbent (0.2725) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: -0.9092802626668277 -> 0.8689864358066153
-    [INFO][abstract_intensifier.py:340] Challenger (0.2867) is better than incumbent (0.2867) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: 1.3451112993061543 -> 1.3448614852608838
+    [INFO][abstract_intensifier.py:340] Challenger (0.2724) is better than incumbent (0.2725) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8689864358066153 -> 0.8688957626410652
-    [INFO][abstract_intensifier.py:340] Challenger (0.2867) is better than incumbent (0.2867) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: 1.3448614852608838 -> 1.3442250183165956
+    [INFO][abstract_intensifier.py:340] Challenger (0.2724) is better than incumbent (0.2724) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8688957626410652 -> 0.8685997370567731
-    [INFO][abstract_intensifier.py:340] Challenger (0.2867) is better than incumbent (0.2867) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: 1.3442250183165956 -> 1.344081913330525
+    [INFO][abstract_intensifier.py:340] Challenger (0.2724) is better than incumbent (0.2724) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8685997370567731 -> 0.8683467340272628
-    [INFO][abstract_intensifier.py:340] Challenger (0.2867) is better than incumbent (0.2867) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: 1.344081913330525 -> 1.3439457083376847
+    [INFO][abstract_intensifier.py:340] Challenger (0.2723) is better than incumbent (0.2724) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8683467340272628 -> 0.8682645877241124
-    [INFO][abstract_intensifier.py:340] Challenger (0.2867) is better than incumbent (0.2867) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: 1.3439457083376847 -> 1.3436009486299065
+    [INFO][abstract_intensifier.py:340] Challenger (0.2723) is better than incumbent (0.2723) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8682645877241124 -> 0.8682095321986103
-    [INFO][abstract_intensifier.py:340] Challenger (0.2867) is better than incumbent (0.2867) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: 1.3436009486299065 -> 1.343062445203584
+    [INFO][abstract_intensifier.py:340] Challenger (0.2723) is better than incumbent (0.2723) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8682095321986103 -> 0.8668562378148943
-    [INFO][abstract_intensifier.py:340] Challenger (0.2867) is better than incumbent (0.2867) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: 1.343062445203584 -> 1.3430038657074754
+    [INFO][abstract_intensifier.py:340] Challenger (0.2722) is better than incumbent (0.2723) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8668562378148943 -> 0.8666595212876587
-    [INFO][abstract_intensifier.py:340] Challenger (0.2866) is better than incumbent (0.2867) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: 1.3430038657074754 -> 1.3423393633152223
+    [INFO][abstract_intensifier.py:340] Challenger (0.2722) is better than incumbent (0.2722) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8666595212876587 -> 0.8665961008201921
-    [INFO][abstract_intensifier.py:340] Challenger (0.2866) is better than incumbent (0.2866) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: 1.3423393633152223 -> 1.3423268024390436
+    [INFO][abstract_intensifier.py:340] Challenger (0.2721) is better than incumbent (0.2722) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8665961008201921 -> 0.8665608513427423
-    [INFO][abstract_intensifier.py:340] Challenger (0.2866) is better than incumbent (0.2866) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: 1.3423268024390436 -> 1.3411748493907347
+    [INFO][abstract_intensifier.py:340] Challenger (0.2721) is better than incumbent (0.2721) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8665608513427423 -> 0.8657774471445769
-    [INFO][abstract_intensifier.py:340] Challenger (0.2863) is better than incumbent (0.2866) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: 1.3411748493907347 -> 1.3408257098322904
+    [INFO][abstract_intensifier.py:340] Challenger (0.264) is better than incumbent (0.2721) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8657774471445769 -> 0.8139511881236792
-    [INFO][abstract_intensifier.py:340] Challenger (0.2863) is better than incumbent (0.2863) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: 1.3408257098322904 -> -1.154695986884652
+    [INFO][abstract_intensifier.py:340] Challenger (0.264) is better than incumbent (0.264) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8139511881236792 -> 0.8248979822935989
-    [INFO][abstract_intensifier.py:340] Challenger (0.2862) is better than incumbent (0.2863) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.154695986884652 -> -1.1581912672166585
+    [INFO][abstract_intensifier.py:340] Challenger (0.2639) is better than incumbent (0.264) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8248979822935989 -> 0.8266648813312201
-    [INFO][abstract_intensifier.py:340] Challenger (0.2862) is better than incumbent (0.2862) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.1581912672166585 -> -1.1828007982514523
+    [INFO][abstract_intensifier.py:340] Challenger (0.2639) is better than incumbent (0.2639) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8266648813312201 -> 0.8285248722057701
-    [INFO][abstract_intensifier.py:340] Challenger (0.2862) is better than incumbent (0.2862) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.1828007982514523 -> -1.1749832250073124
+    [INFO][abstract_intensifier.py:340] Challenger (0.2639) is better than incumbent (0.2639) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8285248722057701 -> 0.8301628064929449
-    [INFO][abstract_intensifier.py:340] Challenger (0.2862) is better than incumbent (0.2862) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.1749832250073124 -> -1.1748448120914996
+    [INFO][abstract_intensifier.py:340] Challenger (0.2639) is better than incumbent (0.2639) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8301628064929449 -> 0.8302913574977087
-    [INFO][abstract_intensifier.py:340] Challenger (0.2862) is better than incumbent (0.2862) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.1748448120914996 -> -1.1727127330103513
+    [INFO][abstract_intensifier.py:340] Challenger (0.2639) is better than incumbent (0.2639) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8302913574977087 -> 0.8304251996275172
-    [INFO][abstract_intensifier.py:340] Challenger (0.2777) is better than incumbent (0.2783) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.1727127330103513 -> -1.1727241873269154
+    [INFO][abstract_intensifier.py:340] Challenger (0.2639) is better than incumbent (0.2639) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8304251996275172 -> 0.8783438711598479
-    [INFO][abstract_intensifier.py:340] Challenger (0.2777) is better than incumbent (0.2777) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.1727241873269154 -> -1.1730755740919152
+    [INFO][abstract_intensifier.py:340] Challenger (0.2639) is better than incumbent (0.2639) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8783438711598479 -> 0.8762014589762686
-    [INFO][abstract_intensifier.py:340] Challenger (0.2777) is better than incumbent (0.2777) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.1730755740919152 -> -1.1731571705331119
+    [INFO][abstract_intensifier.py:340] Challenger (0.2639) is better than incumbent (0.2639) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8762014589762686 -> 0.8760315818930731
-    [INFO][abstract_intensifier.py:340] Challenger (0.2777) is better than incumbent (0.2777) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.1731571705331119 -> -1.173357486075275
+    [INFO][abstract_intensifier.py:340] Challenger (0.2639) is better than incumbent (0.2639) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8760315818930731 -> 0.8755995177612172
-    [INFO][abstract_intensifier.py:340] Challenger (0.2757) is better than incumbent (0.2757) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.173357486075275 -> -1.173430891047234
+    [INFO][abstract_intensifier.py:340] Challenger (0.2639) is better than incumbent (0.2639) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8755995177612172 -> 0.8874813197728479
-    [INFO][abstract_intensifier.py:340] Challenger (0.2757) is better than incumbent (0.2757) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.173430891047234 -> -1.1736659846779394
+    [INFO][abstract_intensifier.py:340] Challenger (0.2598) is better than incumbent (0.2599) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8874813197728479 -> 0.8872463259339494
-    [INFO][abstract_intensifier.py:340] Challenger (0.2757) is better than incumbent (0.2757) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.1736659846779394 -> -1.199505468821445
+    [INFO][abstract_intensifier.py:340] Challenger (0.2598) is better than incumbent (0.2598) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8872463259339494 -> 0.8871063044191763
-    [INFO][abstract_intensifier.py:340] Challenger (0.2757) is better than incumbent (0.2757) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.199505468821445 -> -1.1868767052586038
+    [INFO][abstract_intensifier.py:340] Challenger (0.2598) is better than incumbent (0.2598) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8871063044191763 -> 0.884289252250646
-    [INFO][abstract_intensifier.py:340] Challenger (0.2757) is better than incumbent (0.2757) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.1868767052586038 -> -1.1881219618652126
+    [INFO][abstract_intensifier.py:340] Challenger (0.2598) is better than incumbent (0.2598) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.884289252250646 -> 0.8846014029519238
-    [INFO][abstract_intensifier.py:340] Challenger (0.2757) is better than incumbent (0.2757) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.1881219618652126 -> -1.1886192958480413
+    [INFO][abstract_intensifier.py:340] Challenger (0.2598) is better than incumbent (0.2598) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8846014029519238 -> 0.8853108730819028
-    [INFO][abstract_intensifier.py:340] Challenger (0.2757) is better than incumbent (0.2757) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.1886192958480413 -> -1.188960306897171
+    [INFO][abstract_intensifier.py:340] Challenger (0.2598) is better than incumbent (0.2598) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8853108730819028 -> 0.8856249347721605
-    [INFO][abstract_intensifier.py:340] Challenger (0.2757) is better than incumbent (0.2757) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.188960306897171 -> -1.1891790281629118
+    [INFO][abstract_intensifier.py:340] Challenger (0.2598) is better than incumbent (0.2598) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8856249347721605 -> 0.8856418469295093
-    [INFO][abstract_intensifier.py:340] Challenger (0.2575) is better than incumbent (0.259) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.1891790281629118 -> -1.1897144592927509
+    [INFO][abstract_intensifier.py:340] Challenger (0.2598) is better than incumbent (0.2598) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.8856418469295093 -> -1.0086452515654813
-    [INFO][abstract_intensifier.py:340] Challenger (0.2573) is better than incumbent (0.2575) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.1897144592927509 -> -1.193068449279342
+    [INFO][abstract_intensifier.py:340] Challenger (0.2389) is better than incumbent (0.2406) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: -1.0086452515654813 -> -0.9934231748307121
-    [INFO][abstract_intensifier.py:340] Challenger (0.2573) is better than incumbent (0.2573) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.193068449279342 -> -1.24515924007905
+    [INFO][abstract_intensifier.py:340] Challenger (0.2388) is better than incumbent (0.2389) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: -0.9934231748307121 -> 0.9913245595524192
-    [INFO][abstract_intensifier.py:340] Challenger (0.2572) is better than incumbent (0.2573) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.24515924007905 -> -1.2504825004110844
+    [INFO][abstract_intensifier.py:340] Challenger (0.2387) is better than incumbent (0.2388) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: 0.9913245595524192 -> -0.9785099183033301
-    [INFO][abstract_intensifier.py:340] Challenger (0.2571) is better than incumbent (0.2572) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.2504825004110844 -> -1.2617113515399638
+    [INFO][abstract_intensifier.py:340] Challenger (0.2386) is better than incumbent (0.2387) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: -0.9785099183033301 -> -0.9699546253744713
-    [INFO][abstract_intensifier.py:340] Challenger (0.2571) is better than incumbent (0.2571) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.2617113515399638 -> -1.2868030299177242
+    [INFO][abstract_intensifier.py:340] Challenger (0.2386) is better than incumbent (0.2386) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: -0.9699546253744713 -> -0.9708443248508019
-    [INFO][abstract_intensifier.py:340] Challenger (0.2571) is better than incumbent (0.2571) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x: -1.2868030299177242 -> -1.284268280183599
+    [INFO][abstract_intensifier.py:340] Challenger (0.2386) is better than incumbent (0.2386) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x: -0.9708443248508019 -> -0.9707750773060477
+    [INFO][abstract_intensifier.py:367] --- x: -1.284268280183599 -> -1.2832225932589822
+    [INFO][abstract_intensifier.py:340] Challenger (0.2386) is better than incumbent (0.2386) on 1 trials.
+    [INFO][abstract_intensifier.py:364] Changes in incumbent:
+    [INFO][abstract_intensifier.py:367] --- x: -1.2832225932589822 -> -1.2797239850921116
+    [INFO][abstract_intensifier.py:340] Challenger (0.2386) is better than incumbent (0.2386) on 1 trials.
+    [INFO][abstract_intensifier.py:364] Changes in incumbent:
+    [INFO][abstract_intensifier.py:367] --- x: -1.2797239850921116 -> -1.2795249484497022
+    [INFO][abstract_intensifier.py:340] Challenger (0.2386) is better than incumbent (0.2386) on 1 trials.
+    [INFO][abstract_intensifier.py:364] Changes in incumbent:
+    [INFO][abstract_intensifier.py:367] --- x: -1.2795249484497022 -> -1.2796848158374088
+    [INFO][abstract_intensifier.py:340] Challenger (0.2386) is better than incumbent (0.2386) on 1 trials.
+    [INFO][abstract_intensifier.py:364] Changes in incumbent:
+    [INFO][abstract_intensifier.py:367] --- x: -1.2796848158374088 -> -1.2796788948519637
+    [INFO][abstract_intensifier.py:340] Challenger (0.2386) is better than incumbent (0.2386) on 1 trials.
+    [INFO][abstract_intensifier.py:364] Changes in incumbent:
+    [INFO][abstract_intensifier.py:367] --- x: -1.2796788948519637 -> -1.2796139308001808
+    [INFO][abstract_intensifier.py:340] Challenger (0.2386) is better than incumbent (0.2386) on 1 trials.
+    [INFO][abstract_intensifier.py:364] Changes in incumbent:
+    [INFO][abstract_intensifier.py:367] --- x: -1.2796139308001808 -> -1.279623543617439
+    [INFO][abstract_intensifier.py:340] Challenger (0.2327) is better than incumbent (0.2328) on 1 trials.
+    [INFO][abstract_intensifier.py:364] Changes in incumbent:
+    [INFO][abstract_intensifier.py:367] --- x: -1.279623543617439 -> -1.311138660898445
+    [INFO][abstract_intensifier.py:340] Challenger (0.2327) is better than incumbent (0.2327) on 1 trials.
+    [INFO][abstract_intensifier.py:364] Changes in incumbent:
+    [INFO][abstract_intensifier.py:367] --- x: -1.311138660898445 -> -1.2972804523461572
+    [INFO][abstract_intensifier.py:340] Challenger (0.2327) is better than incumbent (0.2327) on 1 trials.
+    [INFO][abstract_intensifier.py:364] Changes in incumbent:
+    [INFO][abstract_intensifier.py:367] --- x: -1.2972804523461572 -> -1.2980629453226524
     [INFO][base_smbo.py:260] Configuration budget is exhausted.
-    [INFO][abstract_facade.py:314] Final Incumbent: {'x': -0.9707750773060477}
-    [INFO][abstract_facade.py:315] Estimated cost: 0.2571462968893417
+    [INFO][abstract_facade.py:314] Final Incumbent: {'x': -1.2980629453226524}
+    [INFO][abstract_facade.py:315] Estimated cost: 0.23265567918059796
     Default costs: [0. 4.]
-    Incumbent costs: [0.94240425 1.05930394]
+    Incumbent costs: [1.68496741 0.49271563]
 
 
 
@@ -179,7 +206,8 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
     from ConfigSpace import Configuration, ConfigurationSpace
     from matplotlib import pyplot as plt
 
-    from smac import HyperparameterOptimizationFacade, Scenario
+    from smac import HyperparameterOptimizationFacade as HPOFacade
+    from smac import Scenario
     from smac.facade import AbstractFacade
 
     __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -232,9 +260,13 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
             objectives=["metric1", "metric2"],
         )
 
-        smac = HyperparameterOptimizationFacade(
+        smac = HPOFacade(
             scenario=scenario,
             target_function=target_function,
+            multi_objective_algorithm=HPOFacade.get_multi_objective_algorithm(
+                scenario,
+                objective_weights=[1, 2],  # Weight metric2 twice as much as metric1
+            ),
             overwrite=True,
         )
         incumbent = smac.optimize()
@@ -251,7 +283,7 @@ A simple example on how to use multi-objective optimization is shown. The `schaf
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  42.637 seconds)
+   **Total running time of the script:** ( 0 minutes  38.026 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_1_schaffer.py:

@@ -220,12 +220,12 @@ style="width: 100%;">
     <ul>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/3_multi_objective/1_schaffer.html">
-       2D Schaffer Function
+       2D Schaffer Function with Objective Weights
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/3_multi_objective/2_parego.html">
-       ParEGO with Objective Weights
+       ParEGO
       </a>
      </li>
     </ul>
@@ -1127,6 +1127,15 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.runhistory.RunHistory.get_pareto_front">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         RunHistory.get_pareto_front()
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#smac.runhistory.RunHistory.get_trials">
        <code class="docutils literal notranslate">
         <span class="pre">
@@ -1172,19 +1181,19 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.runhistory.RunHistory.objective_bounds">
+      <a class="reference internal nav-link" href="#smac.runhistory.RunHistory.multi_objective_algorithm">
        <code class="docutils literal notranslate">
         <span class="pre">
-         RunHistory.objective_bounds
+         RunHistory.multi_objective_algorithm
         </span>
        </code>
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.runhistory.RunHistory.objective_weights">
+      <a class="reference internal nav-link" href="#smac.runhistory.RunHistory.objective_bounds">
        <code class="docutils literal notranslate">
         <span class="pre">
-         RunHistory.objective_weights
+         RunHistory.objective_bounds
         </span>
        </code>
       </a>
@@ -1390,7 +1399,7 @@ saved to disk and only used for EPM building.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runhistory.RunHistory">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.</span></span><span class="sig-name descname"><span class="pre">RunHistory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objective_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite_existing_trials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.RunHistory" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.</span></span><span class="sig-name descname"><span class="pre">RunHistory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite_existing_trials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.RunHistory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code>[<a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.TrialKey" title="smac.runhistory.dataclasses.TrialKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrialKey</span></code></a>, <a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.TrialValue" title="smac.runhistory.dataclasses.TrialValue"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrialValue</span></code></a>]</p>
 <p>Container for the target function run information.</p>
 <p>Most importantly, the runhistory contains an efficient mapping from each evaluated configuration to the
@@ -1409,8 +1418,7 @@ neither used nor tested.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>objective_weights</strong> (<em>list</em><em>[</em><em>float</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Weights for an weighted average to judge configurations. Must be of the same length as the number of
-objectives.</p></li>
+<li><p><strong>multi_objective_algorithm</strong> (<a class="reference internal" href="smac.multi_objective.html#smac.multi_objective.AbstractMultiObjectiveAlgorithm" title="smac.multi_objective.AbstractMultiObjectiveAlgorithm"><em>AbstractMultiObjectiveAlgorithm</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The multi-objective algorithm is required to scaralize the costs in case of multi-objective.</p></li>
 <li><p><strong>overwrite_existing_trials</strong> (<em>bool</em><em>, </em><em>defaults to false</em>) – Overwrites a trial (combination of configuration, instance, budget and seed) if it already exists.</p></li>
 </ul>
 </dd>
@@ -1611,9 +1619,15 @@ computed. The costs are not re-computed, but are read from cache.</p>
 <dt class="sig sig-object py" id="smac.runhistory.RunHistory.get_incumbent">
 <span class="sig-name descname"><span class="pre">get_incumbent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_incumbent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.RunHistory.get_incumbent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the incumbent configuration. The config with the lowest cost calculated by <cite>get_cost</cite> is returned.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The incumbent in a multi-objective setting depends on the multi-objective algorithm.
+If you use ParEGO, for example, you get a random incumbent on the Pareto front based on the current
+ParEGO weights.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1633,6 +1647,24 @@ but are read from cache.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.runhistory.RunHistory.get_pareto_front">
+<span class="sig-name descname"><span class="pre">get_pareto_front</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_pareto_front"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.RunHistory.get_pareto_front" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Pareto front of the runhistory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>configs</strong> (<em>list[Configuration]</em>) – The configs of the Pareto front.</p></li>
+<li><p><strong>costs</strong> (<em>list[list[float]]</em>) – The costs from the configs of the Pareto front.</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1736,23 +1768,23 @@ is returned.</p>
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="smac.runhistory.RunHistory.multi_objective_algorithm">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">multi_objective_algorithm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="smac.multi_objective.abstract_multi_objective_algorithm.html#smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm" title="smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm"><span class="pre">smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#smac.runhistory.RunHistory.multi_objective_algorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>The multi-objective algorithm is required to scaralize the costs in case of multi-objective.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Optional</span></code>[<a class="reference internal" href="smac.multi_objective.abstract_multi_objective_algorithm.html#smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm" title="smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractMultiObjectiveAlgorithm</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="smac.runhistory.RunHistory.objective_bounds">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">objective_bounds</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.runhistory.RunHistory.objective_bounds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the lower and upper bound of each objective.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="smac.runhistory.RunHistory.objective_weights">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">objective_weights</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#smac.runhistory.RunHistory.objective_weights" title="Permalink to this definition">¶</a></dt>
-<dd><p>Weights for an weighted average to judge configurations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</p>
 </dd>
 </dl>
 </dd></dl>

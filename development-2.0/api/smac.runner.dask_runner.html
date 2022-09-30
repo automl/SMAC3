@@ -220,12 +220,12 @@ style="width: 100%;">
     <ul>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/3_multi_objective/1_schaffer.html">
-       2D Schaffer Function
+       2D Schaffer Function with Objective Weights
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/3_multi_objective/2_parego.html">
-       ParEGO with Objective Weights
+       ParEGO
       </a>
      </li>
     </ul>
@@ -1099,7 +1099,7 @@ a RunInfo object.</p>
 <cite>DaskParallelRunner.single_worker</cite>, each with a <cite>run</cite> method coming from <cite>DaskParallelRunner.single_worker.run()</cite></p>
 </div></blockquote>
 <ol class="arabic simple" start="3">
-<li><p>TrialInfo objects are run in a distributed fashion, an their results are  available locally to each worker.
+<li><p>TrialInfo objects are run in a distributed fashion, an their results are available locally to each worker.
 Such result is collected by <cite>iter_results</cite> and then passed to SMBO.</p></li>
 <li><p>Exceptions are also locally available to each worker and need to be collected.</p></li>
 </ol>

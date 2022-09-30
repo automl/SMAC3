@@ -220,12 +220,12 @@ style="width: 100%;">
     <ul>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/3_multi_objective/1_schaffer.html">
-       2D Schaffer Function
+       2D Schaffer Function with Objective Weights
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/3_multi_objective/2_parego.html">
-       ParEGO with Objective Weights
+       ParEGO
       </a>
      </li>
     </ul>
@@ -1055,7 +1055,7 @@ style="width: 100%;">
 <dd><p>Transform a multi-objective loss to a single loss.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>values</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – Normalized values which might be weighted as well.</p>
+<dd class="field-odd"><p><strong>values</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – Normalized values in the range [0, 1].</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>cost</strong> – Combined cost.</p>

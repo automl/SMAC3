@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>ParEGO with Objective Weights &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>ParEGO &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -41,7 +41,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Advanced Usage" href="../../advanced_usage/index.html" />
-    <link rel="prev" title="2D Schaffer Function" href="1_schaffer.html" />
+    <link rel="prev" title="2D Schaffer Function with Objective Weights" href="1_schaffer.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -220,12 +220,12 @@ style="width: 100%;">
     <ul class="current">
      <li class="toctree-l3">
       <a class="reference internal" href="1_schaffer.html">
-       2D Schaffer Function
+       2D Schaffer Function with Objective Weights
       </a>
      </li>
      <li class="toctree-l3 current active">
       <a class="current reference internal" href="#">
-       ParEGO with Objective Weights
+       ParEGO
       </a>
      </li>
     </ul>
@@ -971,8 +971,8 @@ style="width: 100%;">
 <p>Click <a class="reference internal" href="#sphx-glr-download-examples-3-multi-objective-2-parego-py"><span class="std std-ref">here</span></a>
 to download the full example code</p>
 </div>
-<section class="sphx-glr-example-title" id="parego-with-objective-weights">
-<span id="sphx-glr-examples-3-multi-objective-2-parego-py"></span><h1>ParEGO with Objective Weights<a class="headerlink" href="#parego-with-objective-weights" title="Permalink to this heading">¶</a></h1>
+<section class="sphx-glr-example-title" id="parego">
+<span id="sphx-glr-examples-3-multi-objective-2-parego-py"></span><h1>ParEGO<a class="headerlink" href="#parego" title="Permalink to this heading">¶</a></h1>
 <p>An example of how to use multi-objective optimization with ParEGO. Both accuracy and run time are going to be
 optimized, and the configurations are shown in a plot, highlighting the best ones in a Pareto front. The red cross
 indicates the best configuration selected by SMAC.</p>
@@ -983,9 +983,9 @@ times more important than the run time.</p>
 [INFO][abstract_initial_design.py:133] Using 5 initial design and 0 additional configurations.
 [INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
 [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-[INFO][intensifier.py:567] Updated estimated cost of incumbent on 1 trials: 1.0
-[INFO][intensifier.py:567] Updated estimated cost of incumbent on 2 trials: 0.5
-[INFO][abstract_intensifier.py:340] Challenger (0.2462) is better than incumbent (0.7498) on 2 trials.
+[INFO][intensifier.py:566] Updated estimated cost of incumbent on 1 trials: 0.5752
+[INFO][intensifier.py:566] Updated estimated cost of incumbent on 2 trials: 0.2876
+[INFO][abstract_intensifier.py:340] Challenger (0.4909) is better than incumbent (0.5474) on 2 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
 [INFO][abstract_intensifier.py:367] --- activation: &#39;logistic&#39; -&gt; &#39;tanh&#39;
 [INFO][abstract_intensifier.py:367] --- batch_size: None -&gt; 77
@@ -993,27 +993,82 @@ times more important than the run time.</p>
 [INFO][abstract_intensifier.py:367] --- n_layer: 4 -&gt; 1
 [INFO][abstract_intensifier.py:367] --- n_neurons: 11 -&gt; 146
 [INFO][abstract_intensifier.py:367] --- solver: &#39;lbfgs&#39; -&gt; &#39;adam&#39;
-[INFO][intensifier.py:567] Updated estimated cost of incumbent on 3 trials: 0.2473
-[INFO][abstract_intensifier.py:340] Challenger (0.1834) is better than incumbent (0.2584) on 3 trials.
+[INFO][abstract_intensifier.py:340] Challenger (0.3596) is better than incumbent (0.4912) on 2 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- batch_size: 77 -&gt; 200
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.000534923804864797 -&gt; 0.001
+[INFO][abstract_intensifier.py:367] --- n_neurons: 146 -&gt; 10
+[INFO][intensifier.py:566] Updated estimated cost of incumbent on 3 trials: 0.3884
+[INFO][abstract_intensifier.py:340] Challenger (0.212) is better than incumbent (0.2438) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- batch_size: 200 -&gt; 128
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.001 -&gt; 0.0320911518754875
+[INFO][abstract_intensifier.py:367] --- n_layer: 1 -&gt; 2
+[INFO][abstract_intensifier.py:367] --- n_neurons: 10 -&gt; 147
+[INFO][abstract_intensifier.py:340] Challenger (0.1341) is better than incumbent (0.2733) on 3 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
 [INFO][abstract_intensifier.py:367] --- activation: &#39;tanh&#39; -&gt; &#39;logistic&#39;
-[INFO][abstract_intensifier.py:367] --- batch_size: 77 -&gt; 175
-[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.000534923804864797 -&gt; 0.004156370184967407
-[INFO][abstract_intensifier.py:367] --- n_layer: 1 -&gt; 2
-[INFO][abstract_intensifier.py:367] --- n_neurons: 146 -&gt; 90
-[INFO][abstract_intensifier.py:340] Challenger (0.0469) is better than incumbent (0.0538) on 3 trials.
+[INFO][abstract_intensifier.py:367] --- batch_size: 128 -&gt; 122
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0320911518754875 -&gt; 0.0002936810268282035
+[INFO][abstract_intensifier.py:367] --- n_layer: 2 -&gt; 1
+[INFO][abstract_intensifier.py:367] --- n_neurons: 147 -&gt; 136
+[INFO][abstract_intensifier.py:340] Challenger (0.0982) is better than incumbent (0.1341) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- activation: &#39;logistic&#39; -&gt; &#39;tanh&#39;
+[INFO][abstract_intensifier.py:367] --- batch_size: 122 -&gt; 200
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0002936810268282035 -&gt; 0.001
+[INFO][abstract_intensifier.py:367] --- n_neurons: 136 -&gt; 10
+[INFO][abstract_intensifier.py:340] Challenger (0.116) is better than incumbent (0.1341) on 3 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
 [INFO][abstract_intensifier.py:367] --- activation: &#39;logistic&#39; -&gt; &#39;relu&#39;
-[INFO][abstract_intensifier.py:367] --- batch_size: 175 -&gt; 165
+[INFO][abstract_intensifier.py:367] --- batch_size: 122 -&gt; 113
 [INFO][abstract_intensifier.py:367] --- learning_rate: None -&gt; &#39;adaptive&#39;
-[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.004156370184967407 -&gt; 0.002800459687107501
-[INFO][abstract_intensifier.py:367] --- n_neurons: 90 -&gt; 99
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0002936810268282035 -&gt; 0.00015446738779554907
+[INFO][abstract_intensifier.py:367] --- n_neurons: 136 -&gt; 139
 [INFO][abstract_intensifier.py:367] --- solver: &#39;adam&#39; -&gt; &#39;sgd&#39;
+[INFO][abstract_intensifier.py:340] Challenger (0.0982) is better than incumbent (0.116) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- activation: &#39;relu&#39; -&gt; &#39;tanh&#39;
+[INFO][abstract_intensifier.py:367] --- batch_size: 113 -&gt; 200
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.00015446738779554907 -&gt; 0.001
+[INFO][abstract_intensifier.py:367] --- n_neurons: 139 -&gt; 10
+[INFO][abstract_intensifier.py:367] --- solver: &#39;sgd&#39; -&gt; &#39;adam&#39;
+[INFO][abstract_intensifier.py:340] Challenger (0.1057) is better than incumbent (0.1286) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- activation: &#39;relu&#39; -&gt; &#39;logistic&#39;
+[INFO][abstract_intensifier.py:367] --- batch_size: 113 -&gt; 122
+[INFO][abstract_intensifier.py:367] --- learning_rate: &#39;adaptive&#39; -&gt; &#39;constant&#39;
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.00015446738779554907 -&gt; 0.0003782727935682951
+[INFO][abstract_intensifier.py:367] --- n_neurons: 139 -&gt; 124
+[INFO][abstract_intensifier.py:340] Challenger (0.022) is better than incumbent (0.1057) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- activation: &#39;logistic&#39; -&gt; &#39;tanh&#39;
+[INFO][abstract_intensifier.py:367] --- batch_size: 122 -&gt; 200
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0003782727935682951 -&gt; 0.001
+[INFO][abstract_intensifier.py:367] --- n_neurons: 124 -&gt; 10
+[INFO][abstract_intensifier.py:367] --- solver: &#39;sgd&#39; -&gt; &#39;adam&#39;
+[INFO][abstract_intensifier.py:340] Challenger (0.0662) is better than incumbent (0.2666) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- batch_size: 122 -&gt; 121
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0003782727935682951 -&gt; 0.00061208224468197
+[INFO][abstract_intensifier.py:367] --- n_neurons: 124 -&gt; 135
+[INFO][abstract_intensifier.py:367] --- solver: &#39;sgd&#39; -&gt; &#39;adam&#39;
+[INFO][abstract_intensifier.py:340] Challenger (0.0643) is better than incumbent (0.0662) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- batch_size: 121 -&gt; 120
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.00061208224468197 -&gt; 0.0006425767974277837
 [INFO][base_smbo.py:260] Configuration budget is exhausted.
-[INFO][abstract_facade.py:314] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 2, &#39;n_neurons&#39;: 99, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 165, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.002800459687107501}
-[INFO][abstract_facade.py:315] Estimated cost: 0.04907902647740611
-Default costs: [0.62956618 0.24064207]
-Incumbent costs: [0.04489374 0.69583535]
+[INFO][abstract_facade.py:314] Final Incumbent: {&#39;activation&#39;: &#39;logistic&#39;, &#39;n_layer&#39;: 1, &#39;n_neurons&#39;: 135, &#39;solver&#39;: &#39;adam&#39;, &#39;batch_size&#39;: 120, &#39;learning_rate_init&#39;: 0.0006425767974277837}
+[INFO][abstract_facade.py:315] Estimated cost: 0.05323545764380358
+Default costs: [0.62956618 0.18054525]
+
+Validated costs from the Pareto front:
+[0.05082431 0.6006031 ]
+[0.62956618 0.1827898 ]
+[0.17974415 0.50400201]
+[0.06640875 0.56803298]
+[0.01984731 0.70695806]
+[0.22221603 0.30610855]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1107,51 +1162,48 @@ Incumbent costs: [0.04489374 0.69583535]
 
 
 <span class="k">def</span> <span class="nf">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">:</span> <span class="n">AbstractFacade</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Plots configurations from SMAC and highlights the best configurations in a pareto front.&quot;&quot;&quot;</span>
-    <span class="c1"># Get costs from runhistory first</span>
-    <span class="n">incumbent_cost</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;Plots configurations from SMAC and highlights the best configurations in a Pareto front.&quot;&quot;&quot;</span>
+    <span class="c1"># Get Pareto costs</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_pareto_front</span><span class="p">()</span>
+    <span class="n">pareto_costs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+    <span class="c1"># Sort them a bit</span>
+    <span class="n">pareto_costs</span> <span class="o">=</span> <span class="n">pareto_costs</span><span class="p">[</span><span class="n">pareto_costs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">argsort</span><span class="p">()]</span>
+
+    <span class="c1"># Get all other costs from runhistory</span>
     <span class="n">average_costs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">smac</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_configs</span><span class="p">():</span>
         <span class="c1"># Since we use multiple seeds, we have to average them to get only one cost value pair for each configuration</span>
-        <span class="c1"># Luckily, SMAC already does this for us</span>
         <span class="n">average_cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">average_cost</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-        <span class="n">average_costs</span> <span class="o">+=</span> <span class="p">[</span><span class="n">average_cost</span><span class="p">]</span>
 
-        <span class="c1"># And we save the incumbent cost</span>
-        <span class="k">if</span> <span class="n">config</span> <span class="o">==</span> <span class="n">smac</span><span class="o">.</span><span class="n">incumbent</span><span class="p">:</span>
-            <span class="n">incumbent_cost</span> <span class="o">=</span> <span class="n">average_cost</span>
+        <span class="k">if</span> <span class="n">average_cost</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span><span class="p">:</span>
+            <span class="n">average_costs</span> <span class="o">+=</span> <span class="p">[</span><span class="n">average_cost</span><span class="p">]</span>
 
     <span class="c1"># Let&#39;s work with a numpy array</span>
     <span class="n">costs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">average_costs</span><span class="p">)</span>
-
-    <span class="c1"># Get pareto mask</span>
-    <span class="n">pareto_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">costs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">costs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">pareto_mask</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
-            <span class="c1"># Keep any point with a lower cost</span>
-            <span class="n">pareto_mask</span><span class="p">[</span><span class="n">pareto_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">costs</span><span class="p">[</span><span class="n">pareto_mask</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">c</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-            <span class="c1"># And keep self</span>
-            <span class="n">pareto_mask</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-
-    <span class="c1"># Find the pareto front</span>
-    <span class="n">front</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="n">pareto_mask</span><span class="p">]</span>
-
-    <span class="n">cost1</span><span class="p">,</span> <span class="n">cost2</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">costs</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
-    <span class="n">front</span> <span class="o">=</span> <span class="n">front</span><span class="p">[</span><span class="n">front</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">argsort</span><span class="p">()]</span>
+    <span class="n">costs_x</span><span class="p">,</span> <span class="n">costs_y</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">costs</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
 
     <span class="c1"># Add the bounds</span>
-    <span class="n">x_upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">cost1</span><span class="p">)</span>
-    <span class="n">y_upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">cost2</span><span class="p">)</span>
-    <span class="n">front</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([[</span><span class="n">front</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">y_upper</span><span class="p">],</span> <span class="n">front</span><span class="p">,</span> <span class="p">[</span><span class="n">x_upper</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">front</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])]])</span>
+    <span class="c1"># x_upper = np.max(costs_x)</span>
+    <span class="c1"># y_upper = np.max(costs_y)</span>
+    <span class="c1"># pareto_costs = np.vstack(</span>
+    <span class="c1">#    [</span>
+    <span class="c1">#        [pareto_costs[0][0], y_upper],</span>
+    <span class="c1">#        pareto_costs,</span>
+    <span class="c1">#        [x_upper, np.min(pareto_costs[:, 1])],</span>
+    <span class="c1">#    ],</span>
+    <span class="c1"># )</span>
 
-    <span class="n">x_front</span><span class="p">,</span> <span class="n">y_front</span> <span class="o">=</span> <span class="n">front</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">front</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">pareto_costs_x</span><span class="p">,</span> <span class="n">pareto_costs_y</span> <span class="o">=</span> <span class="n">pareto_costs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">pareto_costs</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">cost1</span><span class="p">,</span> <span class="n">cost2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">x_front</span><span class="p">,</span> <span class="n">y_front</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Highlight the incumbent</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">incumbent_cost</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">incumbent_cost</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">costs_x</span><span class="p">,</span> <span class="n">costs_y</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">pareto_costs_x</span><span class="p">,</span> <span class="n">pareto_costs_y</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">step</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">pareto_costs_x</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">pareto_costs_x</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">costs_x</span><span class="p">)],</span>  <span class="c1"># We add bounds</span>
+        <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">costs_y</span><span class="p">)]</span> <span class="o">+</span> <span class="n">pareto_costs_y</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">pareto_costs_y</span><span class="p">)],</span>  <span class="c1"># We add bounds</span>
+        <span class="n">where</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span>
+        <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Pareto-Front&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">smac</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">objectives</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -1166,7 +1218,6 @@ Incumbent costs: [0.04489374 0.69583535]
     <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span>
         <span class="n">mlp</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span>
         <span class="n">objectives</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;1 - accuracy&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">],</span>
-        <span class="n">objective_weights</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>  <span class="c1"># We want to focus on accuracy</span>
         <span class="n">walltime_limit</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>  <span class="c1"># After 40 seconds, we stop the hyperparameter optimization</span>
         <span class="n">n_trials</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>  <span class="c1"># Evaluate max 200 different trials</span>
         <span class="n">n_workers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -1186,21 +1237,23 @@ Incumbent costs: [0.04489374 0.69583535]
     <span class="p">)</span>
 
     <span class="c1"># Let&#39;s optimize</span>
-    <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+    <span class="c1"># Keep in mind: The incumbent is ambiguous here because of ParEGO</span>
+    <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
 
     <span class="c1"># Get cost of default configuration</span>
     <span class="n">default_cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">mlp</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">())</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default costs: </span><span class="si">{</span><span class="n">default_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default costs: </span><span class="si">{</span><span class="n">default_cost</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Let&#39;s calculate the cost of the incumbent</span>
-    <span class="n">incumbent_cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent costs: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Validated costs from the Pareto front:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">smac</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_pareto_front</span><span class="p">()[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
 
     <span class="c1"># Let&#39;s plot a pareto front</span>
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  42.979 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  49.459 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0422a2b52bca2c17c0ab975a6ae7e8db/2_parego.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_parego.py</span></code></a></p>
@@ -1221,7 +1274,7 @@ Incumbent costs: [0.04489374 0.69583535]
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">2D Schaffer Function</p>
+            <p class="prev-next-title">2D Schaffer Function with Objective Weights</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="../../advanced_usage/index.html" title="next page">

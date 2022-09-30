@@ -217,12 +217,12 @@ style="width: 100%;">
     <ul>
      <li class="toctree-l3">
       <a class="reference internal" href="../../../examples/3_multi_objective/1_schaffer.html">
-       2D Schaffer Function
+       2D Schaffer Function with Objective Weights
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../../examples/3_multi_objective/2_parego.html">
-       ParEGO with Objective Weights
+       ParEGO
       </a>
      </li>
     </ul>
@@ -960,6 +960,7 @@ style="width: 100%;">
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ConfigurationSpace</span>
+<span class="kn">from</span> <span class="nn">smac.multi_objective.abstract_multi_objective_algorithm</span> <span class="kn">import</span> <span class="n">AbstractMultiObjectiveAlgorithm</span>
 
 <span class="kn">from</span> <span class="nn">smac.runhistory.dataclasses</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">InstanceSeedBudgetKey</span><span class="p">,</span>
@@ -995,17 +996,30 @@ style="width: 100%;">
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    objective_weights : list[float] | None, defaults to None</span>
-<span class="sd">        Weights for an weighted average to judge configurations. Must be of the same length as the number of</span>
-<span class="sd">        objectives.</span>
+<span class="sd">    multi_objective_algorithm : AbstractMultiObjectiveAlgorithm | None, defaults to None</span>
+<span class="sd">        The multi-objective algorithm is required to scaralize the costs in case of multi-objective.</span>
 <span class="sd">    overwrite_existing_trials : bool, defaults to false</span>
 <span class="sd">        Overwrites a trial (combination of configuration, instance, budget and seed) if it already exists.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objective_weights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">overwrite_existing_trials</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span> <span class="o">=</span> <span class="n">objective_weights</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">multi_objective_algorithm</span><span class="p">:</span> <span class="n">AbstractMultiObjectiveAlgorithm</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">overwrite_existing_trials</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_multi_objective_algorithm</span> <span class="o">=</span> <span class="n">multi_objective_algorithm</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_overwrite_existing_trials</span> <span class="o">=</span> <span class="n">overwrite_existing_trials</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">multi_objective_algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractMultiObjectiveAlgorithm</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The multi-objective algorithm is required to scaralize the costs in case of multi-objective.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multi_objective_algorithm</span>
+
+    <span class="nd">@multi_objective_algorithm</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">multi_objective_algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">AbstractMultiObjectiveAlgorithm</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;We want to have the option to change the multi objective algorithm.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_multi_objective_algorithm</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">ids_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]:</span>
@@ -1016,11 +1030,6 @@ style="width: 100%;">
     <span class="k">def</span> <span class="nf">config_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Mapping from configuration to config id.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_ids</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">objective_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Weights for an weighted average to judge configurations.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">objective_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
@@ -1149,12 +1158,6 @@ style="width: 100%;">
                 <span class="sa">f</span><span class="s2">&quot;objectives (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span><span class="si">}</span><span class="s2">).&quot;</span>
             <span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Cost is not of the same length (</span><span class="si">{</span><span class="n">n_objectives</span><span class="si">}</span><span class="s2">) as the number of &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;objective weights (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span><span class="p">)</span><span class="si">}</span><span class="s2">).&quot;</span>
-            <span class="p">)</span>
-
         <span class="c1"># Let&#39;s always work with floats; Makes it easier to deal with later on</span>
         <span class="c1"># array.tolist(), it returns a scalar if the array has one element.</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">cost_array</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
@@ -1270,12 +1273,13 @@ style="width: 100%;">
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cost</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_objective_algorithm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
             <span class="c1"># We have to normalize the costs here</span>
             <span class="n">costs</span> <span class="o">=</span> <span class="n">normalize_costs</span><span class="p">(</span><span class="n">cost</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective_bounds</span><span class="p">)</span>
 
             <span class="c1"># After normalization, we get the weighted average</span>
-            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span><span class="p">))</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_objective_algorithm</span><span class="p">(</span><span class="n">costs</span><span class="p">)</span>
 
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cost</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span></div>
@@ -1300,10 +1304,12 @@ style="width: 100%;">
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_objective_algorithm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
             <span class="n">costs</span> <span class="o">=</span> <span class="n">normalize_costs</span><span class="p">(</span><span class="n">cost</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective_bounds</span><span class="p">)</span>
 
             <span class="c1"># Note: We have to mean here because we already got the min cost</span>
-            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span><span class="p">))</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_objective_algorithm</span><span class="p">(</span><span class="n">costs</span><span class="p">)</span>
 
         <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span> <span class="o">==</span> <span class="nb">float</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span></div>
@@ -1342,8 +1348,10 @@ style="width: 100%;">
                 <span class="n">averaged_costs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
                 <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_objective_algorithm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
                     <span class="n">normalized_costs</span> <span class="o">=</span> <span class="n">normalize_costs</span><span class="p">(</span><span class="n">averaged_costs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective_bounds</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">normalized_costs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span><span class="p">))</span>
+
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_objective_algorithm</span><span class="p">(</span><span class="n">normalized_costs</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">averaged_costs</span>
 
@@ -1386,8 +1394,10 @@ style="width: 100%;">
                 <span class="n">summed_costs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
                 <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_objective_algorithm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
                     <span class="n">normalized_costs</span> <span class="o">=</span> <span class="n">normalize_costs</span><span class="p">(</span><span class="n">summed_costs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective_bounds</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">normalized_costs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span><span class="p">))</span>
+
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_objective_algorithm</span><span class="p">(</span><span class="n">normalized_costs</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">summed_costs</span>
 
@@ -1431,8 +1441,10 @@ style="width: 100%;">
                 <span class="n">min_costs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
                 <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_objective_algorithm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
                     <span class="n">normalized_costs</span> <span class="o">=</span> <span class="n">normalize_costs</span><span class="p">(</span><span class="n">min_costs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective_bounds</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">normalized_costs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_objective_weights</span><span class="p">))</span>
+
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_objective_algorithm</span><span class="p">(</span><span class="n">normalized_costs</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">min_costs</span>
 
@@ -1511,8 +1523,15 @@ style="width: 100%;">
 
         <span class="k">return</span> <span class="n">configs</span></div>
 
-<div class="viewcode-block" id="RunHistory.get_incumbent"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_incumbent">[docs]</a>    <span class="k">def</span> <span class="nf">get_incumbent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the incumbent configuration. The config with the lowest cost calculated by `get_cost` is returned.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="RunHistory.get_incumbent"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_incumbent">[docs]</a>    <span class="k">def</span> <span class="nf">get_incumbent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Configuration</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the incumbent configuration. The config with the lowest cost calculated by `get_cost` is returned.</span>
+
+<span class="sd">        Warning</span>
+<span class="sd">        -------</span>
+<span class="sd">        The incumbent in a multi-objective setting depends on the multi-objective algorithm.</span>
+<span class="sd">        If you use ParEGO, for example, you get a random incumbent on the Pareto front based on the current</span>
+<span class="sd">        ParEGO weights.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">incumbent</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">lowest_cost</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_ids</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -1521,7 +1540,44 @@ style="width: 100%;">
                 <span class="n">incumbent</span> <span class="o">=</span> <span class="n">config</span>
                 <span class="n">lowest_cost</span> <span class="o">=</span> <span class="n">cost</span>
 
-        <span class="k">return</span> <span class="n">incumbent</span></div>
+        <span class="k">return</span> <span class="n">incumbent</span><span class="p">,</span> <span class="n">lowest_cost</span></div>
+
+<div class="viewcode-block" id="RunHistory.get_pareto_front"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_pareto_front">[docs]</a>    <span class="k">def</span> <span class="nf">get_pareto_front</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the Pareto front of the runhistory.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        configs : list[Configuration]</span>
+<span class="sd">            The configs of the Pareto front.</span>
+<span class="sd">        costs : list[list[float]]</span>
+<span class="sd">            The costs from the configs of the Pareto front.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Pareto front is only defined for multi-objective settings.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Get costs from runhistory first</span>
+        <span class="n">average_costs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_configs</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
+            <span class="c1"># Since we use multiple seeds, we have to average them to get only one cost value pair for each</span>
+            <span class="c1"># configuration</span>
+            <span class="c1"># Luckily, SMAC already does this for us</span>
+            <span class="n">average_cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">average_cost</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+            <span class="n">average_costs</span> <span class="o">+=</span> <span class="p">[</span><span class="n">average_cost</span><span class="p">]</span>
+
+        <span class="c1"># Let&#39;s work with a numpy array</span>
+        <span class="n">costs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">average_costs</span><span class="p">)</span>
+
+        <span class="n">is_efficient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">costs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">next_point_index</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Next index in the is_efficient array to search for</span>
+        <span class="k">while</span> <span class="n">next_point_index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">costs</span><span class="p">):</span>
+            <span class="n">nondominated_point_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">costs</span> <span class="o">&lt;</span> <span class="n">costs</span><span class="p">[</span><span class="n">next_point_index</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">nondominated_point_mask</span><span class="p">[</span><span class="n">next_point_index</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">is_efficient</span> <span class="o">=</span> <span class="n">is_efficient</span><span class="p">[</span><span class="n">nondominated_point_mask</span><span class="p">]</span>  <span class="c1"># Remove dominated points</span>
+            <span class="n">costs</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="n">nondominated_point_mask</span><span class="p">]</span>
+            <span class="n">next_point_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">nondominated_point_mask</span><span class="p">[:</span><span class="n">next_point_index</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">configs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">is_efficient</span><span class="p">],</span> <span class="p">[</span><span class="n">average_costs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">is_efficient</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="RunHistory.save_json"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.save_json">[docs]</a>    <span class="k">def</span> <span class="nf">save_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;runhistory.json&quot;</span><span class="p">,</span> <span class="n">save_external</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Saves runhistory on disk.</span>

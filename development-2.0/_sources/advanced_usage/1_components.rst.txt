@@ -48,8 +48,7 @@ Let me explain how the data are received in detail:
 - SMBO collects the data via the runhistory encoder which iterates over the runhistory trials.
 - The runhistory encoder only collects trials which are in ``considered_states`` and timeout trials. Also, only the
   highest budget is considered if budgets are used. In this step, multi-objective values are scalarized using the
-  ``normalize_costs`` function (uses ``objective_bounds`` from the runhistory) and the ``objective_weights`` provided by 
-  the user.
+  ``normalize_costs`` function (uses ``objective_bounds`` from the runhistory) and the multi-objective algorithm.
 - In the next step, the selected trial objectives are transformed (e.g., log-transformed, depending on the selected
   encoder).
 - The hyperparameters might still have inactive values. The model takes care of that after the collected data
@@ -142,15 +141,19 @@ If you want to know the exact values, use ``get_target_function_seeds``, ``get_t
 --------------------------------------------------------
 
 The multi-objective algorithm is used to scalarize multi-objective values. The multi-objective algorithm 
-gets normalized and weighted objective values passed and returns a single value. The resulting value (called by the 
-runhistory encoder) is then used to train the surrogate model. 
+gets normalized objective values passed and returns a single value. The resulting value (called by the 
+runhistory encoder) is then used to train the surrogate model.
+The runhistory has access to the multi-objective algorithm as well which plays a role in the method ``get_cost``.
+The method ``get_cost`` is used to compare configurations in the intensifier and therefore to determine the 
+incumbent.
 
 .. warning ::
 
-    To judge whether a configuration is better than another (comparison happens in the intensifier), we need to 
-    scalarize the multi-objective values. This, however, is *not* done by the multi-objective algorithm but directly in 
-    the runhistory object using the method ``average_cost``. The values are always normalized (based on all costs so 
-    far) and weighted averaged (based on the objective weights provided by the user).
+    Depending on the multi-objective algorithm, the incumbent might be ambiguous because there might be multiple 
+    incumbents on the Pareto front. Let's take ParEGO for example:
+    Everytime a new configuration is sampled, the objective weights are updated (see runhistory encoder). Therefore, 
+    calling the ``get_incumbent`` method in the runhistory might return a different configuration based on the internal state 
+    of the multi-objective algorithm. 
 
 
 :ref:`RunHistory<smac.runhistory.runhistory>`
@@ -191,9 +194,8 @@ code shows how to iterate over the runhistory:
 
 The runhistory encoder is used to encode the runhistory data into a format that can be used by the surrogate model.
 Only trials with the status ``considered_states`` and timeout trials are considered. Multi-objective values are 
-scalarized using the ``normalize_costs`` function (uses ``objective_bounds`` from the runhistory) and the 
-``objective_weights`` (provided by the user). Afterwards, the normalized and weighted value is processed by
-the multi-objective algorithm. 
+scalarized using the ``normalize_costs`` function (uses ``objective_bounds`` from the runhistory). Afterwards, the 
+normalized value is processed by the multi-objective algorithm. 
 
 
 :ref:`Callback<smac.callback>`

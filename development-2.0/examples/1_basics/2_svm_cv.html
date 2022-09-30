@@ -220,12 +220,12 @@ style="width: 100%;">
     <ul>
      <li class="toctree-l3">
       <a class="reference internal" href="../3_multi_objective/1_schaffer.html">
-       2D Schaffer Function
+       2D Schaffer Function with Objective Weights
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../3_multi_objective/2_parego.html">
-       ParEGO with Objective Weights
+       ParEGO
       </a>
      </li>
     </ul>
@@ -980,14 +980,14 @@ types as well as conditional hyperparameters.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:133] Using 5 initial design and 0 additional configurations.
 [INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
 [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-[INFO][intensifier.py:567] Updated estimated cost of incumbent on 1 trials: 0.0667
-[INFO][intensifier.py:567] Updated estimated cost of incumbent on 2 trials: 0.0667
+[INFO][intensifier.py:566] Updated estimated cost of incumbent on 1 trials: 0.0667
+[INFO][intensifier.py:566] Updated estimated cost of incumbent on 2 trials: 0.0667
 [INFO][abstract_intensifier.py:340] Challenger (0.0133) is better than incumbent (0.0667) on 2 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
 [INFO][abstract_intensifier.py:367] --- C: 0.03992740880515713 -&gt; 1.2760639488343621
 [INFO][abstract_intensifier.py:367] --- kernel: &#39;rbf&#39; -&gt; &#39;linear&#39;
 [INFO][abstract_intensifier.py:367] --- shrinking: True -&gt; False
-[INFO][intensifier.py:567] Updated estimated cost of incumbent on 3 trials: 0.0133
+[INFO][intensifier.py:566] Updated estimated cost of incumbent on 3 trials: 0.0133
 [INFO][base_smbo.py:260] Configuration budget is exhausted.
 [INFO][abstract_facade.py:314] Final Incumbent: {&#39;C&#39;: 1.2760639488343621, &#39;kernel&#39;: &#39;linear&#39;, &#39;shrinking&#39;: False}
 [INFO][abstract_facade.py:315] Estimated cost: 0.013333333333333308
@@ -1093,7 +1093,7 @@ Default cost: 0.013333333333333308
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  14.676 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  11.825 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-2-svm-cv-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/7543c6c00a01b61aefff0a6414c7ac77/2_svm_cv.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_svm_cv.py</span></code></a></p>

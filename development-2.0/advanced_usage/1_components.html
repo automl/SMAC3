@@ -220,12 +220,12 @@ style="width: 100%;">
     <ul>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/3_multi_objective/1_schaffer.html">
-       2D Schaffer Function
+       2D Schaffer Function with Objective Weights
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../examples/3_multi_objective/2_parego.html">
-       ParEGO with Objective Weights
+       ParEGO
       </a>
      </li>
     </ul>
@@ -1123,8 +1123,7 @@ each instance with a feature, you would end-up with the following data points:</
 <li><p>SMBO collects the data via the runhistory encoder which iterates over the runhistory trials.</p></li>
 <li><p>The runhistory encoder only collects trials which are in <code class="docutils literal notranslate"><span class="pre">considered_states</span></code> and timeout trials. Also, only the
 highest budget is considered if budgets are used. In this step, multi-objective values are scalarized using the
-<code class="docutils literal notranslate"><span class="pre">normalize_costs</span></code> function (uses <code class="docutils literal notranslate"><span class="pre">objective_bounds</span></code> from the runhistory) and the <code class="docutils literal notranslate"><span class="pre">objective_weights</span></code> provided by
-the user.</p></li>
+<code class="docutils literal notranslate"><span class="pre">normalize_costs</span></code> function (uses <code class="docutils literal notranslate"><span class="pre">objective_bounds</span></code> from the runhistory) and the multi-objective algorithm.</p></li>
 <li><p>In the next step, the selected trial objectives are transformed (e.g., log-transformed, depending on the selected
 encoder).</p></li>
 <li><p>The hyperparameters might still have inactive values. The model takes care of that after the collected data
@@ -1199,14 +1198,18 @@ If you want to know the exact values, use <code class="docutils literal notransl
 <section id="multi-objective-algorithm">
 <h2><a class="reference internal" href="../api/smac.multi_objective.html#module-smac.multi_objective"><span class="std std-ref">Multi-Objective Algorithm</span></a><a class="headerlink" href="#multi-objective-algorithm" title="Permalink to this heading">¶</a></h2>
 <p>The multi-objective algorithm is used to scalarize multi-objective values. The multi-objective algorithm
-gets normalized and weighted objective values passed and returns a single value. The resulting value (called by the
-runhistory encoder) is then used to train the surrogate model.</p>
+gets normalized objective values passed and returns a single value. The resulting value (called by the
+runhistory encoder) is then used to train the surrogate model.
+The runhistory has access to the multi-objective algorithm as well which plays a role in the method <code class="docutils literal notranslate"><span class="pre">get_cost</span></code>.
+The method <code class="docutils literal notranslate"><span class="pre">get_cost</span></code> is used to compare configurations in the intensifier and therefore to determine the
+incumbent.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>To judge whether a configuration is better than another (comparison happens in the intensifier), we need to
-scalarize the multi-objective values. This, however, is <em>not</em> done by the multi-objective algorithm but directly in
-the runhistory object using the method <code class="docutils literal notranslate"><span class="pre">average_cost</span></code>. The values are always normalized (based on all costs so
-far) and weighted averaged (based on the objective weights provided by the user).</p>
+<p>Depending on the multi-objective algorithm, the incumbent might be ambiguous because there might be multiple
+incumbents on the Pareto front. Let’s take ParEGO for example:
+Everytime a new configuration is sampled, the objective weights are updated (see runhistory encoder). Therefore,
+calling the <code class="docutils literal notranslate"><span class="pre">get_incumbent</span></code> method in the runhistory might return a different configuration based on the internal state
+of the multi-objective algorithm.</p>
 </div>
 </section>
 <section id="runhistory">
@@ -1243,9 +1246,8 @@ code shows how to iterate over the runhistory:</p>
 <h2><a class="reference internal" href="../api/smac.runhistory.encoder.html#module-smac.runhistory.encoder"><span class="std std-ref">RunHistory Encoder</span></a><a class="headerlink" href="#runhistory-encoder" title="Permalink to this heading">¶</a></h2>
 <p>The runhistory encoder is used to encode the runhistory data into a format that can be used by the surrogate model.
 Only trials with the status <code class="docutils literal notranslate"><span class="pre">considered_states</span></code> and timeout trials are considered. Multi-objective values are
-scalarized using the <code class="docutils literal notranslate"><span class="pre">normalize_costs</span></code> function (uses <code class="docutils literal notranslate"><span class="pre">objective_bounds</span></code> from the runhistory) and the
-<code class="docutils literal notranslate"><span class="pre">objective_weights</span></code> (provided by the user). Afterwards, the normalized and weighted value is processed by
-the multi-objective algorithm.</p>
+scalarized using the <code class="docutils literal notranslate"><span class="pre">normalize_costs</span></code> function (uses <code class="docutils literal notranslate"><span class="pre">objective_bounds</span></code> from the runhistory). Afterwards, the
+normalized value is processed by the multi-objective algorithm.</p>
 </section>
 <section id="callback">
 <h2><a class="reference internal" href="../api/smac.callback.html#module-smac.callback"><span class="std std-ref">Callback</span></a><a class="headerlink" href="#callback" title="Permalink to this heading">¶</a></h2>

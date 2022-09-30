@@ -217,12 +217,12 @@ style="width: 100%;">
     <ul>
      <li class="toctree-l3">
       <a class="reference internal" href="../../../../examples/3_multi_objective/1_schaffer.html">
-       2D Schaffer Function
+       2D Schaffer Function with Objective Weights
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../../../examples/3_multi_objective/2_parego.html">
-       ParEGO with Objective Weights
+       ParEGO
       </a>
      </li>
     </ul>
@@ -1008,12 +1008,6 @@ style="width: 100%;">
                 <span class="c1"># Let&#39;s normalize y here</span>
                 <span class="c1"># We use the objective_bounds calculated by the runhistory</span>
                 <span class="n">y_</span> <span class="o">=</span> <span class="n">normalize_costs</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">cost</span><span class="p">,</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">objective_bounds</span><span class="p">)</span>
-
-                <span class="c1"># We have to apply the objective weights here too</span>
-                <span class="c1"># Otherwise, the surrogate model and the acquisition maximizer won&#39;t integrate the weights from the user</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">weights</span> <span class="o">:=</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">objective_weights</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">y_</span> <span class="o">=</span> <span class="p">[</span><span class="n">weight</span> <span class="o">*</span> <span class="n">c</span> <span class="k">for</span> <span class="n">weight</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">y_</span><span class="p">)]</span>
-
                 <span class="n">y_agg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multi_objective_algorithm</span><span class="p">(</span><span class="n">y_</span><span class="p">)</span>
                 <span class="n">y</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_agg</span>
             <span class="k">else</span><span class="p">:</span>
