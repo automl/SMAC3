@@ -37,7 +37,7 @@ class Intensifier(AbstractIntensifier):
     1  for i := 1, . . . , length(Θ_new) do
     2      θ_new ← Θ_new[i]
 
-    STAGE -> RUN_INCUMBENT
+           STAGE -> RUN_INCUMBENT
 
     3      if R contains less than max_config_calls trials with configuration θ_inc then
     4          Π' ← {π'∈ Π | R contains less than or equal number of trials using θ_inc and π'
@@ -47,7 +47,7 @@ class Intensifier(AbstractIntensifier):
     7          R ← ExecuteRun(R, θ_inc, π, s)
     8      N ← 1
 
-    STAGE -> RUN_CHALLENGER
+           STAGE -> RUN_CHALLENGER
 
     9      while true do
     10         S_missing ← {instance, seed} pairs for which θ_inc was run before, but not θ_new
@@ -546,8 +546,7 @@ class Intensifier(AbstractIntensifier):
         else:
             available_insts = sorted(available_insts)  # type: ignore
 
-        # If all instances were used n times, we can pick an instances
-        # from the complete set again
+        # If all instances were used n times, we can pick an instances from the complete set again
         if not self._deterministic and not available_insts:
             available_insts = self._instances
 

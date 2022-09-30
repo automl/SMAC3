@@ -27,7 +27,15 @@ class ParEGO(AbstractMultiObjectiveAlgorithm):
         rho: float = 0.05,
         seed: int | None = None,
     ):
-        super(ParEGO, self).__init__(scenario=scenario, seed=seed)
+        super(ParEGO, self).__init__()
+
+        if seed is None:
+            seed = scenario.seed
+
+        self._n_objectives = scenario.count_objectives()
+        self._seed = seed
+        self._rng = np.random.RandomState(seed)
+
         self._rho = rho
         self._theta = self._rng.rand(self._n_objectives)
         self.update_on_iteration_start()
@@ -35,7 +43,13 @@ class ParEGO(AbstractMultiObjectiveAlgorithm):
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
         meta = super().meta
-        meta.update({"rho": self._rho})
+        meta.update(
+            {
+                "name": self.__class__.__name__,
+                "rho": self._rho,
+                "seed": self._seed,
+            }
+        )
 
         return meta
 
@@ -48,4 +62,4 @@ class ParEGO(AbstractMultiObjectiveAlgorithm):
     def __call__(self, values: list[float]) -> float:  # noqa: D102
         # Weight the values
         theta_f = self._theta * values
-        return np.max(theta_f, axis=0) + self._rho * np.sum(theta_f, axis=0)
+        return float(np.max(theta_f, axis=0) + self._rho * np.sum(theta_f, axis=0))

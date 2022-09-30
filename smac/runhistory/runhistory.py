@@ -8,6 +8,7 @@ from pathlib import Path
 
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
+from smac.multi_objective.abstract_multi_objective_algorithm import AbstractMultiObjectiveAlgorithm
 
 from smac.runhistory.dataclasses import (
     InstanceSeedBudgetKey,
@@ -43,17 +44,30 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
     Parameters
     ----------
-    objective_weights : list[float] | None, defaults to None
-        Weights for an weighted average to judge configurations. Must be of the same length as the number of
-        objectives.
+    multi_objective_algorithm : AbstractMultiObjectiveAlgorithm | None, defaults to None
+        The multi-objective algorithm is required to scaralize the costs in case of multi-objective.
     overwrite_existing_trials : bool, defaults to false
         Overwrites a trial (combination of configuration, instance, budget and seed) if it already exists.
     """
 
-    def __init__(self, objective_weights: list[float] | None = None, overwrite_existing_trials: bool = False) -> None:
-        self._objective_weights = objective_weights
+    def __init__(
+        self,
+        multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
+        overwrite_existing_trials: bool = False,
+    ) -> None:
+        self._multi_objective_algorithm = multi_objective_algorithm
         self._overwrite_existing_trials = overwrite_existing_trials
         self.reset()
+
+    @property
+    def multi_objective_algorithm(self) -> AbstractMultiObjectiveAlgorithm | None:
+        """The multi-objective algorithm is required to scaralize the costs in case of multi-objective."""
+        return self._multi_objective_algorithm
+
+    @multi_objective_algorithm.setter
+    def multi_objective_algorithm(self, value: AbstractMultiObjectiveAlgorithm) -> None:
+        """We want to have the option to change the multi objective algorithm."""
+        self._multi_objective_algorithm = value
 
     @property
     def ids_config(self) -> dict[int, Configuration]:
@@ -64,11 +78,6 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
     def config_ids(self) -> dict[Configuration, int]:
         """Mapping from configuration to config id."""
         return self._config_ids
-
-    @property
-    def objective_weights(self) -> list[float] | None:
-        """Weights for an weighted average to judge configurations."""
-        return self._objective_weights
 
     @property
     def objective_bounds(self) -> list[tuple[float, float]]:
@@ -197,12 +206,6 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 f"objectives ({self._n_objectives})."
             )
 
-        if self._objective_weights is not None and self._n_objectives != len(self._objective_weights):
-            raise ValueError(
-                f"Cost is not of the same length ({n_objectives}) as the number of "
-                f"objective weights ({len(self._objective_weights)})."
-            )
-
         # Let's always work with floats; Makes it easier to deal with later on
         # array.tolist(), it returns a scalar if the array has one element.
         c = cost_array.tolist()
@@ -318,12 +321,13 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         if self._n_objectives > 1:
             assert isinstance(cost, list)
+            assert self.multi_objective_algorithm is not None
 
             # We have to normalize the costs here
             costs = normalize_costs(cost, self._objective_bounds)
 
             # After normalization, we get the weighted average
-            return float(np.average(costs, axis=0, weights=self._objective_weights))
+            return self.multi_objective_algorithm(costs)
 
         assert isinstance(cost, float)
         return float(cost)
@@ -348,10 +352,12 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         if self._n_objectives > 1:
             assert type(cost) == list
+            assert self.multi_objective_algorithm is not None
+
             costs = normalize_costs(cost, self._objective_bounds)
 
             # Note: We have to mean here because we already got the min cost
-            return float(np.average(costs, axis=0, weights=self._objective_weights))
+            return self.multi_objective_algorithm(costs)
 
         assert type(cost) == float
         return float(cost)
@@ -390,8 +396,10 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 averaged_costs = np.mean(costs, axis=0).tolist()
 
                 if normalize:
+                    assert self.multi_objective_algorithm is not None
                     normalized_costs = normalize_costs(averaged_costs, self._objective_bounds)
-                    return float(np.average(normalized_costs, axis=0, weights=self._objective_weights))
+
+                    return self.multi_objective_algorithm(normalized_costs)
                 else:
                     return averaged_costs
 
@@ -434,8 +442,10 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 summed_costs = np.sum(costs, axis=0).tolist()
 
                 if normalize:
+                    assert self.multi_objective_algorithm is not None
                     normalized_costs = normalize_costs(summed_costs, self._objective_bounds)
-                    return float(np.average(normalized_costs, axis=0, weights=self._objective_weights))
+
+                    return self.multi_objective_algorithm(normalized_costs)
                 else:
                     return summed_costs
 
@@ -479,8 +489,10 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 min_costs = np.min(costs, axis=0).tolist()
 
                 if normalize:
+                    assert self.multi_objective_algorithm is not None
                     normalized_costs = normalize_costs(min_costs, self._objective_bounds)
-                    return float(np.average(normalized_costs, axis=0, weights=self._objective_weights))
+
+                    return self.multi_objective_algorithm(normalized_costs)
                 else:
                     return min_costs
 
@@ -559,8 +571,15 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         return configs
 
-    def get_incumbent(self) -> Configuration | None:
-        """Returns the incumbent configuration. The config with the lowest cost calculated by `get_cost` is returned."""
+    def get_incumbent(self) -> tuple[Configuration | None, float | list[float]]:
+        """Returns the incumbent configuration. The config with the lowest cost calculated by `get_cost` is returned.
+
+        Warning
+        -------
+        The incumbent in a multi-objective setting depends on the multi-objective algorithm.
+        If you use ParEGO, for example, you get a random incumbent on the Pareto front based on the current
+        ParEGO weights.
+        """
         incumbent = None
         lowest_cost = np.inf
         for config in self._config_ids.keys():
@@ -569,7 +588,44 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 incumbent = config
                 lowest_cost = cost
 
-        return incumbent
+        return incumbent, lowest_cost
+
+    def get_pareto_front(self) -> tuple[list[Configuration], list[list[float]]]:
+        """Returns the Pareto front of the runhistory.
+
+        Returns
+        -------
+        configs : list[Configuration]
+            The configs of the Pareto front.
+        costs : list[list[float]]
+            The costs from the configs of the Pareto front.
+        """
+        if self._n_objectives == 1:
+            raise ValueError("Pareto front is only defined for multi-objective settings.")
+
+        # Get costs from runhistory first
+        average_costs = []
+        configs = self.get_configs()
+        for config in configs:
+            # Since we use multiple seeds, we have to average them to get only one cost value pair for each
+            # configuration
+            # Luckily, SMAC already does this for us
+            average_cost = self.average_cost(config)
+            average_costs += [average_cost]
+
+        # Let's work with a numpy array
+        costs = np.vstack(average_costs)
+
+        is_efficient = np.arange(costs.shape[0])
+        next_point_index = 0  # Next index in the is_efficient array to search for
+        while next_point_index < len(costs):
+            nondominated_point_mask = np.any(costs < costs[next_point_index], axis=1)
+            nondominated_point_mask[next_point_index] = True
+            is_efficient = is_efficient[nondominated_point_mask]  # Remove dominated points
+            costs = costs[nondominated_point_mask]
+            next_point_index = np.sum(nondominated_point_mask[:next_point_index]) + 1
+
+        return [configs[i] for i in is_efficient], [average_costs[i] for i in is_efficient]
 
     def save_json(self, filename: str = "runhistory.json", save_external: bool = False) -> None:
         """Saves runhistory on disk.

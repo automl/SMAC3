@@ -58,7 +58,7 @@ The following table provides an overview of SMAC's capabilities in comparison wi
     :widths: 10, 10, 10, 10, 10, 10, 10
 
     HyperMapper, ✅, ✅, ❌, ❌, ❌, ❌
-    Optuna, ✅, ✅, ❌, ❌, ✅, ✅
+    Optuna, ✅, ✅, ✅, ❌, ✅, ✅
     Hyperopt, ✅, ❌, ❌, ❌, ✅, ✅
     BoTorch, ❌, ✅, ✅, ❌, ❌, ✅
     OpenBox, ✅, ✅, ❌, ❌, ❌, ✅

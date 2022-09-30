@@ -295,9 +295,21 @@ class BlackBoxFacade(AbstractFacade):
     @staticmethod
     def get_multi_objective_algorithm(  # type: ignore
         scenario: Scenario,
+        *,
+        objective_weights: list[float] | None = None,
     ) -> MeanAggregationStrategy:
-        """Returns the mean aggregation strategy for the multi objective algorithm."""
-        return MeanAggregationStrategy(scenario=scenario)
+        """Returns the mean aggregation strategy for the multi objective algorithm.
+
+        Parameters
+        ----------
+        scenario : Scenario
+        objective_weights : list[float] | None, defaults to None
+            Weights for an weighted average. Must be of the same length as the number of objectives.
+        """
+        return MeanAggregationStrategy(
+            scenario=scenario,
+            objective_weights=objective_weights,
+        )
 
     @staticmethod
     def get_runhistory_encoder(

@@ -38,9 +38,6 @@ class Scenario:
         to the target function to ensure generalization.
     objective : str | list[str] | None, defaults to "cost"
         The objective(s) to optimize. This argument is required for multi-objective optimization.
-    objective_weights : list[float] | None, defaults to None
-        Weights for an weighted average to judge configurations. Must be of the same length as the number of
-        objectives. Mostly used in the run history.
     crash_cost : float | list[float], defaults to np.inf
         Defines the cost for a failed trial. In case of multi-objective, each objective can be associated with
         a different cost.
@@ -90,7 +87,6 @@ class Scenario:
 
     # Objectives
     objectives: str | list[str] = "cost"
-    objective_weights: list[float] | None = None
     crash_cost: float | list[float] = np.inf
     termination_cost_threshold: float | list[float] = np.inf
 

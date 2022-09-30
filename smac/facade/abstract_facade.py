@@ -135,7 +135,7 @@ class AbstractFacade:
             runhistory_encoder = self.get_runhistory_encoder(scenario)
 
         # Initialize empty stats and runhistory object
-        runhistory = RunHistory(objective_weights=scenario.objective_weights)
+        runhistory = RunHistory(multi_objective_algorithm=multi_objective_algorithm)
         stats = Stats(scenario)
 
         # Set the seed for configuration space

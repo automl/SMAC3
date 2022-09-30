@@ -3,10 +3,6 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any
 
-import numpy as np
-
-from smac.scenario import Scenario
-
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
@@ -20,25 +16,13 @@ class AbstractMultiObjectiveAlgorithm(ABC):
     seed : int | None, defaults to None
     """
 
-    def __init__(
-        self,
-        scenario: Scenario,
-        seed: int | None = None,
-    ):
-        if seed is None:
-            seed = scenario.seed
-
-        self._n_objectives = scenario.count_objectives()
-        self._seed = seed
-        self._rng = np.random.RandomState(seed)
+    def __init__(self) -> None:
+        pass
 
     @property
     def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
-        return {
-            "name": self.__class__.__name__,
-            "seed": self._seed,
-        }
+        return {"name": self.__class__.__name__}
 
     def update_on_iteration_start(self) -> None:
         """Update the internal state on start of each SMBO iteration."""
@@ -51,7 +35,7 @@ class AbstractMultiObjectiveAlgorithm(ABC):
         Parameters
         ----------
         values : list[float]
-            Normalized values which might be weighted as well.
+            Normalized values in the range [0, 1].
 
         Returns
         -------

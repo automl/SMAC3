@@ -35,7 +35,7 @@ class DaskParallelRunner(AbstractRunner):
     2. An abstract runner takes this TrialInfo object and launches the task via
        `submit_run`. In the case of DaskParallelRunner, `n_workers` receive a pickle-object of
        `DaskParallelRunner.single_worker`, each with a `run` method coming from `DaskParallelRunner.single_worker.run()`
-    3. TrialInfo objects are run in a distributed fashion, an their results are  available locally to each worker.
+    3. TrialInfo objects are run in a distributed fashion, an their results are available locally to each worker.
        Such result is collected by `iter_results` and then passed to SMBO.
     4. Exceptions are also locally available to each worker and need to be collected.
 

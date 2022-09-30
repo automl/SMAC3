@@ -73,25 +73,34 @@ def test_mean_aggregation(facade, make_scenario, configspace):
     opt = f1_opt + f2_opt
     diff = abs(inc - opt)
 
-    assert diff < 0.05
+    assert diff < 0.06
 
 
-def test_parego(make_scenario, configspace):
+@pytest.mark.parametrize(
+    "facade", [BlackBoxFacade, HyperparameterOptimizationFacade, AlgorithmConfigurationFacade, RandomFacade]
+)
+def test_parego(facade, make_scenario, configspace):
     scenario = make_scenario(configspace, use_multi_objective=True)
 
-    for facade in [BlackBoxFacade, HyperparameterOptimizationFacade, AlgorithmConfigurationFacade, RandomFacade]:
-        smac = facade(
-            scenario=scenario,
-            target_function=tae,
-            multi_objective_algorithm=ParEGO(scenario=scenario),
-            overwrite=True,
-        )
-        incumbent = smac.optimize()
+    smac = facade(
+        scenario=scenario,
+        target_function=tae,
+        multi_objective_algorithm=ParEGO(scenario=scenario),
+        overwrite=True,
+    )
+    # The incumbent is not ambiguously because we have a Pareto front
+    smac.optimize()
+    
+    # We use the mean aggregation strategy to get the same weights
+    multi_objective_algorithm = MeanAggregationStrategy(scenario=scenario)
+    smac.runhistory.multi_objective_algorithm = multi_objective_algorithm
+    
+    incumbent, _ = smac.runhistory.get_incumbent()
 
-        f1_inc, f2_inc = schaffer(incumbent["x"])
-        f1_opt, f2_opt = get_optimum()
-        inc = f1_inc + f2_inc
-        opt = f1_opt + f2_opt
-        diff = abs(inc - opt)
+    f1_inc, f2_inc = schaffer(incumbent["x"])
+    f1_opt, f2_opt = get_optimum()
+    inc = f1_inc + f2_inc
+    opt = f1_opt + f2_opt
+    diff = abs(inc - opt)
 
-        assert diff < 0.05
+    assert diff < 0.06
