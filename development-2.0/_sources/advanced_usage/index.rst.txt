@@ -18,8 +18,9 @@ Navigation
     3_multi_objective
     4_instances
     5_ask_and_tell
-    6_parallelism
-    7_stopping_criteria
-    8_continue
-    9_reproducability
+    6_commandline
+    7_parallelism
+    8_stopping_criteria
+    9_continue
+    10_reproducability
 

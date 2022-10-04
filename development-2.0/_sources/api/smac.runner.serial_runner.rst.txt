@@ -1,0 +1,37 @@
+smac.runner.serial\_runner
+==========================
+
+.. automodule:: smac.runner.serial_runner
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      SerialRunner
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
