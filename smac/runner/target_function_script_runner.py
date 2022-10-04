@@ -8,7 +8,7 @@ from subprocess import PIPE, Popen
 from ConfigSpace import Configuration
 
 from smac.runner.abstract_runner import StatusType
-from smac.runner.serial_runner import SerialRunner
+from smac.runner.abstract_serial_runner import AbstractSerialRunner
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
@@ -18,7 +18,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class TargetFunctionScriptRunner(SerialRunner):
+class TargetFunctionScriptRunner(AbstractSerialRunner):
     """Class to execute target functions from scripts. Uses `Popen` to execute the script in a subprocess.
 
     The following example shows how the script is called:
@@ -67,7 +67,7 @@ class TargetFunctionScriptRunner(SerialRunner):
             logger.warning("Trial walltime limit is not supported for script target functions.")
 
     @property
-    def meta(self) -> dict[str, Any]:
+    def meta(self) -> dict[str, Any]:  # noqa: D102
         meta = super().meta
         meta.update({"filename": str(self._target_function)})
 
@@ -196,8 +196,7 @@ class TargetFunctionScriptRunner(SerialRunner):
         self,
         algorithm_kwargs: dict[str, Any],
     ) -> tuple[str, str]:
-        """Calls the algorithm, which is processed in the `run` method."""
-
+        """Calls the algorithm, which is processed in the ``run`` method."""
         cmd = [self._target_function]
         for k, v in algorithm_kwargs.items():
             v = str(v)

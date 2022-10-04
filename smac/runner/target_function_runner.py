@@ -13,7 +13,7 @@ from ConfigSpace import Configuration
 from pynisher import MemoryLimitException, WallTimeoutException, limit
 
 from smac.runner.abstract_runner import StatusType
-from smac.runner.serial_runner import SerialRunner
+from smac.runner.abstract_serial_runner import AbstractSerialRunner
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
@@ -23,7 +23,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class TargetFunctionRunner(SerialRunner):
+class TargetFunctionRunner(AbstractSerialRunner):
     """Class to execute target functions which are python functions. Evaluates functions for given configuration and
     resource limit.
 
@@ -81,7 +81,7 @@ class TargetFunctionRunner(SerialRunner):
         self._algorithm_walltime_limit = time
 
     @property
-    def meta(self) -> dict[str, Any]:
+    def meta(self) -> dict[str, Any]:  # ignore: D102
         meta = super().meta
         meta.update({"code": str(self._target_function.__code__.co_code)})
 
@@ -227,5 +227,5 @@ class TargetFunctionRunner(SerialRunner):
         | tuple[list[float], dict]
         | tuple[dict[str, float], dict]
     ):
-        """Calls the algorithm, which is processed in the `run` method."""
+        """Calls the algorithm, which is processed in the ``run`` method."""
         return algorithm(config, **algorithm_kwargs)

@@ -6,7 +6,7 @@ from smac.runhistory.dataclasses import TrialInfo, TrialValue
 from smac.runner.abstract_runner import AbstractRunner
 
 
-class SerialRunner(AbstractRunner):
+class AbstractSerialRunner(AbstractRunner):
     def submit_trial(self, trial_info: TrialInfo) -> None:
         """This function submits a trial_info object in a serial fashion. As there is a single worker for this task,
         this interface can be considered a wrapper over the `run` method.
