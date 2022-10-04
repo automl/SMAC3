@@ -60,9 +60,7 @@ class DaskParallelRunner(AbstractRunner):
         dask_client: Client | None = None,
     ):
         super().__init__(
-            target_function=single_worker._target_function,
             scenario=single_worker._scenario,
-            stats=single_worker._stats,
             required_arguments=single_worker._required_arguments,
         )
 

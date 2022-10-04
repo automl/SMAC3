@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Iterator
+from typing import Any, Callable
 
 import copy
+import inspect
 import math
 import time
 import traceback
@@ -11,8 +12,9 @@ import numpy as np
 from ConfigSpace import Configuration
 from pynisher import MemoryLimitException, WallTimeoutException, limit
 
-from smac.runhistory.dataclasses import TrialInfo, TrialValue
-from smac.runner.abstract_runner import AbstractRunner, StatusType
+from smac.runner.abstract_runner import StatusType
+from smac.runner.serial_runner import SerialRunner
+from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -21,17 +23,52 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class TargetFunctionRunner(AbstractRunner):
-    """Class to execute target functions which are (python) functions. Evaluates functions for given configuration and
+class TargetFunctionRunner(SerialRunner):
+    """Class to execute target functions which are python functions. Evaluates functions for given configuration and
     resource limit.
 
-    The target function can either return a float (the loss), or a tuple
-    with the first element being a float and the second being additional run
-    information. In a multi-objective setting, the float value is replaced by a list of floats.
+    The target function can either return a float (the loss), or a tuple with the first element being a float and the
+    second being additional run information. In a multi-objective setting, the float value is replaced by a list of
+    floats.
+
+    Parameters
+    ----------
+    target_function : Callable
+        The target function function.
+    scenario : Scenario
+    required_arguments : list[str]
+        A list of required arguments, which are passed to the target function.
     """
 
-    def __init__(self, *args: Any, **kwargs: Any):
-        super().__init__(*args, **kwargs)
+    def __init__(
+        self,
+        target_function: Callable,
+        scenario: Scenario,
+        required_arguments: list[str] = [],
+    ):
+        super().__init__(scenario=scenario, required_arguments=required_arguments)
+        self._target_function = target_function
+
+        # Check if target function is callable
+        if not callable(self._target_function):
+            raise TypeError(
+                "Argument `target_function` must be a callable but is type" f"`{type(self._target_function)}`."
+            )
+
+        # Signatures here
+        signature = inspect.signature(self._target_function).parameters
+        for argument in required_arguments:
+            if argument not in signature.keys():
+                raise RuntimeError(
+                    f"Target function needs to have the arguments {required_arguments} "
+                    f"but could not found {argument}."
+                )
+
+        # Now we check for additional arguments which are not used by SMAC
+        # However, we only want to warn the user and not
+        for key in list(signature.keys())[1:]:
+            if key not in required_arguments:
+                logger.warning(f"The argument {key} is not set by SMAC. Consider removing it.")
 
         # Pynisher limitations
         if (memory := self._scenario.trial_memory_limit) is not None:
@@ -43,39 +80,12 @@ class TargetFunctionRunner(AbstractRunner):
         self._memory_limit = memory
         self._algorithm_walltime_limit = time
 
-    def submit_trial(self, trial_info: TrialInfo) -> None:
-        """This function submits a trial_info object in a serial fashion. As there is a single worker for this task,
-        this interface can be considered a wrapper over the `run` method.
+    @property
+    def meta(self) -> dict[str, Any]:
+        meta = super().meta
+        meta.update({"code": str(self._target_function.__code__.co_code)})
 
-        Both result/exceptions can be completely determined in this step so both lists are properly filled.
-
-        Parameters
-        ----------
-        trial_info : TrialInfo
-            An object containing the configuration launched.
-        """
-        self._results_queue.append(self.run_wrapper(trial_info))
-
-    def iter_results(self) -> Iterator[tuple[TrialInfo, TrialValue]]:  # noqa: D102
-        while self._results_queue:
-            yield self._results_queue.pop(0)
-
-    def wait(self) -> None:
-        """The SMBO/intensifier might need to wait for trials to finish before making a decision.
-        For serial runners, no wait is needed as the result is immediately available.
-        """
-        # There is no need to wait in serial runners. When launching a trial via submit, as
-        # the serial trial uses the same process to run, the result is always available
-        # immediately after. This method implements is just an implementation of the
-        # abstract method via a simple return, again, because there is no need to wait
-        return
-
-    def is_running(self) -> bool:  # noqa: D102
-        return False
-
-    def count_available_workers(self) -> int:
-        """Returns the number of available workers. Serial workers only have one worker."""
-        return 1
+        return meta
 
     def run(
         self,
@@ -111,10 +121,13 @@ class TargetFunctionRunner(AbstractRunner):
         """
         # The kwargs are passed to the target function.
         kwargs: dict[str, Any] = {}
+
         if "seed" in self._required_arguments:
             kwargs["seed"] = seed
+
         if "instance" in self._required_arguments:
             kwargs["instance"] = instance
+
         if "budget" in self._required_arguments:
             kwargs["budget"] = budget
 

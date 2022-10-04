@@ -31,6 +31,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.runner.abstract_runner import AbstractRunner
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.target_function_runner import TargetFunctionRunner
+from smac.runner.target_function_script_runner import TargetFunctionScriptRunner
 from smac.scenario import Scenario
 from smac.stats import Stats
 from smac.utils.logging import get_logger, setup_logging
@@ -56,8 +57,9 @@ class AbstractFacade:
     ----------
     scenario : Scenario
         The scenario object, holding all environmental information.
-    target_function : AbstractRunner | Callable
-        This function is called internally to judge a trial's performance.
+    target_function : Callable | str | AbstractRunner
+        This function is called internally to judge a trial's performance. If a string is passed,
+        it is assumed to be a script. In this case, ``TargetFunctionScriptRunner`` is used to run the script.
     model : AbstractModel | None, defaults to None
         The surrogate model.
     acquisition_function : AbstractAcquisitionFunction | None, defaults to None
@@ -94,7 +96,7 @@ class AbstractFacade:
     def __init__(
         self,
         scenario: Scenario,
-        target_function: Callable,
+        target_function: Callable | str | AbstractRunner,
         *,
         model: AbstractModel | None = None,
         acquisition_function: AbstractAcquisitionFunction | None = None,
@@ -156,12 +158,21 @@ class AbstractFacade:
         self._overwrite = overwrite
 
         # Prepare the algorithm executer
-        runner: AbstractRunner = TargetFunctionRunner(
-            target_function,
-            scenario=scenario,
-            stats=stats,
-            required_arguments=self._get_signature_arguments(),
-        )
+        runner: AbstractRunner
+        if isinstance(target_function, AbstractRunner):
+            runner = target_function
+        elif isinstance(target_function, str):
+            runner = TargetFunctionScriptRunner(
+                target_function,
+                scenario=scenario,
+                required_arguments=self._get_signature_arguments(),
+            )
+        else:
+            runner = TargetFunctionRunner(
+                target_function,
+                scenario=scenario,
+                required_arguments=self._get_signature_arguments(),
+            )
 
         # In case of multiple jobs, we need to wrap the runner again using `DaskParallelRunner`
         if (n_workers := scenario.n_workers) > 1:

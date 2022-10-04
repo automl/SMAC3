@@ -5,9 +5,8 @@ __license__ = "3-clause BSD"
 
 
 from abc import ABC, abstractmethod
-from typing import Any, Callable, Iterator
+from typing import Any, Iterator
 
-import inspect
 import time
 import traceback
 
@@ -16,7 +15,6 @@ from ConfigSpace import Configuration
 
 from smac.runhistory import StatusType, TrialInfo, TrialValue
 from smac.scenario import Scenario
-from smac.stats import Stats
 from smac.utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -30,43 +28,35 @@ class AbstractRunner(ABC):
     From SMBO perspective, launching a configuration follows a
     submit/collect scheme as follows:
 
-    1. A run is launched via submit_run()
-       * `submit_run` internally calls run_wrapper(), a method that contains common processing functions among different
-         runners (e.g. stats checking).
-       * A class that implements AbstractRunner defines run() which is really the algorithm to translate a TrialInfo
-         to a TrialValue, i.e. a configuration to an actual result.
-    2. A completed run is collected via iter_results(), which iterates and consumes any finished runs, if any.
-    3. This interface also offers the method wait() as a mechanism to make sure we have enough data in the next
+    1. A run is launched via ``submit_run()``
+        * ``submit_run`` internally calls ``run_wrapper()``, a method that contains common processing functions among
+          different unners.
+        * A class that implements AbstractRunner defines ``run()`` which is really the algorithm to translate a
+          ``TrialInfo`` to a ``TrialValue``, i.e. a configuration to an actual result.
+    2. A completed run is collected via ``iter_results()``, which iterates and consumes any finished runs, if any.
+    3. This interface also offers the method ``wait()`` as a mechanism to make sure we have enough data in the next
        iteration to make a decision. For example, the intensifier might not be able to select the next challenger
        until more results are available.
 
     Parameters
     ----------
-    target_function : Callable
-        The target function function.
     scenario : Scenario
-    stats : Stats
     required_arguments : list[str]
-        A list of required arguments, which the target function function must have.
+        A list of required arguments, which are passed to the target function.
     """
 
     def __init__(
         self,
-        target_function: Callable,
         scenario: Scenario,
-        stats: Stats,
         required_arguments: list[str] = [],
     ):
         self._scenario = scenario
+        self._required_arguments = required_arguments
 
         # The results is a FIFO structure, implemented via a list
         # (because the Queue lock is not pickable). Finished runs are
         # put in this list and collected via _process_pending_runs
         self._results_queue: list[tuple[TrialInfo, TrialValue]] = []
-
-        # Below state the support for a Runner algorithm that implements a ta
-        self._target_function = target_function
-        self._stats = stats
         self._crash_cost = scenario.crash_cost
         self._supports_memory_limit = False
 
@@ -83,29 +73,6 @@ class AbstractRunner(ABC):
             if not isinstance(scenario.crash_cost, list):
                 assert isinstance(scenario.crash_cost, float)
                 self._crash_cost = [scenario.crash_cost for _ in range(self._n_objectives)]
-
-        # Check if target function is callable
-        if not callable(self._target_function):
-            raise TypeError(
-                "Argument `target_function` must be a callable but is type" f"`{type(self._target_function)}`."
-            )
-
-        # Signatures here
-        signature = inspect.signature(self._target_function).parameters
-        for argument in required_arguments:
-            if argument not in signature.keys():
-                raise RuntimeError(
-                    f"Target function needs to have the arguments {required_arguments} "
-                    f"but could not found {argument}."
-                )
-
-        # Now we check for additional arguments which are not used by SMAC
-        # However, we only want to warn the user and not
-        for key in list(signature.keys())[1:]:
-            if key not in required_arguments:
-                logger.warning(f"The argument {key} is not set by SMAC. Consider removing it.")
-
-        self._required_arguments = required_arguments
 
     def run_wrapper(self, trial_info: TrialInfo) -> tuple[TrialInfo, TrialValue]:
         """Wrapper around run() to execute and check the execution of a given config. This function encapsulates common
@@ -178,10 +145,7 @@ class AbstractRunner(ABC):
     @property
     def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
-        return {
-            "name": self.__class__.__name__,
-            "code": str(self._target_function.__code__.co_code),
-        }
+        return {"name": self.__class__.__name__}
 
     @abstractmethod
     def submit_trial(self, trial_info: TrialInfo) -> None:
