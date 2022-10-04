@@ -2,7 +2,6 @@
 Call Target Function From Script
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-SMAC can call a target function from a script. This is useful if you want to optimize non-python code.
 This simple example shows how to call a script with the following content:
 
 .. code-block:: bash
@@ -46,7 +45,7 @@ if __name__ == "__main__":
     # Now we use SMAC to find the best hyperparameters
     smac = BlackBoxFacade(
         scenario,
-        "examples/5_commandline/script.sh",  # We pass the filename of our script here
+        "./script.sh",  # We pass the filename of our script here
         overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data
     )
     incumbent = smac.optimize()

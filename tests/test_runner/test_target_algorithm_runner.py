@@ -11,7 +11,6 @@ from smac.runhistory import TrialInfo
 from smac.runner.abstract_runner import StatusType
 from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.scenario import Scenario
-from smac.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -62,7 +61,6 @@ def target_multi_objective2(
 def make_runner(
     configspace_small: ConfigurationSpace,
     make_scenario: Callable[..., Scenario],
-    make_stats: Callable[..., Stats],
 ) -> Callable[..., TargetFunctionRunner]:
     """Make a TargetFunctionRunner, ``make_dummy_ta(func)``"""
 
@@ -83,7 +81,6 @@ def make_runner(
         return TargetFunctionRunner(
             target_function=target_function,
             scenario=scenario,
-            stats=make_stats(scenario),
             required_arguments=required_arguments,
         )
 

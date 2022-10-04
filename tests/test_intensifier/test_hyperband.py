@@ -125,11 +125,10 @@ def make_hb_worker(make_scenario, make_stats, configspace_small):
 
 @pytest.fixture
 def make_target_function():
-    def _make(scenario, stats, func, required_arguments=[]):
+    def _make(scenario, func, required_arguments=[]):
         return TargetFunctionRunner(
             target_function=func,
             scenario=scenario,
-            stats=stats,
             required_arguments=required_arguments,
         )
 
@@ -519,9 +518,7 @@ def test_eval_challenger(runhistory, make_target_function, make_hb_worker, confi
         deterministic=True,
     )
 
-    target_function = make_target_function(
-        intensifier._scenario, intensifier._stats, target, required_arguments=["seed", "budget"]
-    )
+    target_function = make_target_function(intensifier._scenario, target, required_arguments=["seed", "budget"])
 
     # Testing get_next_trial - get next configuration
     intent, trial_info = intensifier.get_next_trial(

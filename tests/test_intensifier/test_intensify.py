@@ -59,7 +59,7 @@ def test_race_challenger_1(make_scenario, make_stats, configspace_small, runhist
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
     intensifier._stats = stats
-    target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
+    target_function = TargetFunctionRunner(scenario, target, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(3)
 
     assert intensifier._stage == IntensifierStage.RUN_FIRST_CONFIG
@@ -116,7 +116,7 @@ def test_race_challenger_large(make_scenario, make_stats, configspace_small, run
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
     intensifier._stats = stats
-    target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed", "instance"])
+    target_function = TargetFunctionRunner(scenario, target, required_arguments=["seed", "instance"])
     configs = configspace_small.sample_configuration(3)
 
     for i in range(3):
@@ -183,7 +183,7 @@ def test_race_challenger_large_blocked_seed(make_scenario, make_stats, configspa
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
     intensifier._stats = stats
-    target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
+    target_function = TargetFunctionRunner(scenario, target, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(3)
 
     for i in range(3):
@@ -253,7 +253,7 @@ def test_add_incumbent(make_scenario, make_stats, configspace_small, runhistory)
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
     intensifier._stats = stats
-    target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
+    target_function = TargetFunctionRunner(scenario, target, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(3)
     pending_instances = intensifier._get_pending_instances(incumbent=configs[0], runhistory=runhistory)
     assert len(pending_instances) == 3
@@ -309,7 +309,7 @@ def test_add_incumbent_non_deterministic(make_scenario, make_stats, configspace_
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario)
     intensifier._stats = stats
-    target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
+    target_function = TargetFunctionRunner(scenario, target, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(3)
 
     instance, seed = intensifier._get_next_instance(
@@ -446,7 +446,7 @@ def test_evaluate_challenger_1(make_scenario, make_stats, configspace_small, run
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario, race_against=None, min_challenger=2)
     intensifier._stats = stats
-    target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
+    target_function = TargetFunctionRunner(scenario, target, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(20)
 
     config0 = configs[16]
@@ -592,7 +592,7 @@ def test_evaluate_challenger_2(make_scenario, make_stats, configspace_small, run
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario, race_against=None)
     intensifier._stats = stats
-    target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
+    target_function = TargetFunctionRunner(scenario, target, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(20)
 
     config0 = configs[16]
@@ -644,7 +644,7 @@ def test_no_new_intensification_wo_challenger_run(make_scenario, make_stats, con
     stats = make_stats(scenario)
     intensifier = Intensifier(scenario=scenario, race_against=None, min_challenger=1)
     intensifier._stats = stats
-    target_function = TargetFunctionRunner(target, scenario, stats, required_arguments=["seed"])
+    target_function = TargetFunctionRunner(scenario, target, required_arguments=["seed"])
     configs = configspace_small.sample_configuration(20)
 
     config0 = configs[16]

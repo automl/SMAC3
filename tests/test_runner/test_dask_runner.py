@@ -13,7 +13,6 @@ from smac.runner.abstract_runner import StatusType
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.scenario import Scenario
-from smac.stats import Stats
 
 # https://github.com/dask/distributed/issues/4168
 # import multiprocessing.popen_spawn_posix  # noqa
@@ -42,7 +41,6 @@ def target_failed(x: float, seed: int, instance: str) -> tuple[float, dict]:
 def make_dummy_ta(
     configspace_small: ConfigurationSpace,
     make_scenario: Callable[..., Scenario],
-    make_stats: Callable[..., Stats],
 ) -> Callable[..., TargetFunctionRunner]:
     """Make a TargetFunctionRunner, ``make_dummy_ta(func)``"""
 
@@ -51,7 +49,6 @@ def make_dummy_ta(
         return TargetFunctionRunner(
             target_function=target_function,
             scenario=scenario,
-            stats=make_stats(scenario),
             required_arguments=["seed", "instance"],
         )
 

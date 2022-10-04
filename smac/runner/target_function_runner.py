@@ -42,8 +42,8 @@ class TargetFunctionRunner(SerialRunner):
 
     def __init__(
         self,
-        target_function: Callable,
         scenario: Scenario,
+        target_function: Callable,
         required_arguments: list[str] = [],
     ):
         super().__init__(scenario=scenario, required_arguments=required_arguments)

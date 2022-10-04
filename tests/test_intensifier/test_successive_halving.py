@@ -133,11 +133,10 @@ def make_sh_worker(make_scenario, make_stats, configspace_small):
 
 @pytest.fixture
 def make_target_function():
-    def _make(scenario, stats, func, required_arguments=[]):
+    def _make(scenario, func, required_arguments=[]):
         return TargetFunctionRunner(
             target_function=func,
             scenario=scenario,
-            stats=stats,
             required_arguments=required_arguments,
         )
 
@@ -739,7 +738,7 @@ def test_get_next_trial_1(make_sh_worker, runhistory, configs):
         return 1
 
     intensifier = make_sh_worker(deterministic=False, n_instances=2, min_budget=1, max_budget=2, n_seeds=1, eta=2)
-    target_function = TargetFunctionRunner(target, intensifier._scenario, intensifier._stats)
+    target_function = TargetFunctionRunner(intensifier._scenario, target)
     config1 = configs[0]
     config2 = configs[1]
 
@@ -944,9 +943,7 @@ def test_evaluate_challenger_1(make_sh_worker, make_target_function, runhistory,
     intensifier = make_sh_worker(deterministic=True, n_instances=0, min_budget=0.25, max_budget=0.5, eta=2)
     intensifier._update_stage(runhistory=None)
 
-    target_function = make_target_function(
-        intensifier._scenario, intensifier._stats, target, required_arguments=["seed", "budget"]
-    )
+    target_function = make_target_function(intensifier._scenario, target, required_arguments=["seed", "budget"])
 
     runhistory.add(
         config=config1,
@@ -1408,7 +1405,7 @@ def test_iteration_done_only_when_all_configs_processed_instance_as_budget(
     intensifier = make_sh_worker(deterministic=True, n_instances=5, min_budget=2, max_budget=5, eta=2)
     intensifier._update_stage(runhistory=None)
 
-    target_function = make_target_function(intensifier._scenario, intensifier._stats, target)
+    target_function = make_target_function(intensifier._scenario, target)
     target_function.runhistory = runhistory
 
     # we want to test instance as budget
@@ -1516,7 +1513,6 @@ def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(
 
     target_function = make_target_function(
         intensifier._scenario,
-        intensifier._stats,
         target,
         required_arguments=["seed", "budget"],
     )

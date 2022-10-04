@@ -186,7 +186,6 @@ def test_ask_and_tell(make_facade):
     #         smac.tell(trial_info, trial_value)
 
     assert smac.incumbent is not None
-    assert 1 == 0
 
 
 # def test_ask_and_tell_after_optimization(make_facade):

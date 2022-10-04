@@ -163,14 +163,14 @@ class AbstractFacade:
             runner = target_function
         elif isinstance(target_function, str):
             runner = TargetFunctionScriptRunner(
-                target_function,
                 scenario=scenario,
+                target_function=target_function,
                 required_arguments=self._get_signature_arguments(),
             )
         else:
             runner = TargetFunctionRunner(
-                target_function,
                 scenario=scenario,
+                target_function=target_function,
                 required_arguments=self._get_signature_arguments(),
             )
 
