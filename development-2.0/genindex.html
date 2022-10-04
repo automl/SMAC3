@@ -721,6 +721,11 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="api/smac.runner.abstract_serial_runner.html">
+       smac.runner.abstract_serial_runner
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="api/smac.runner.dask_runner.html">
        smac.runner.dask_runner
       </a>
@@ -728,11 +733,6 @@ style="width: 100%;">
      <li class="toctree-l3">
       <a class="reference internal" href="api/smac.runner.exceptions.html">
        smac.runner.exceptions
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.runner.serial_runner.html">
-       smac.runner.serial_runner
       </a>
      </li>
      <li class="toctree-l3">
@@ -1170,6 +1170,8 @@ style="width: 100%;">
         <li><a href="api/smac.runner.abstract_runner.html#smac.runner.abstract_runner.AbstractRunner">(class in smac.runner.abstract_runner)</a>
 </li>
       </ul></li>
+      <li><a href="api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner">AbstractSerialRunner (class in smac.runner.abstract_serial_runner)</a>
+</li>
       <li><a href="api/smac.acquisition.maximizer.abstract_acqusition_maximizer.html#smac.acquisition.maximizer.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer.acquisition_function">acquisition_function (smac.acquisition.maximizer.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer property)</a>
 
       <ul>
@@ -1319,13 +1321,13 @@ style="width: 100%;">
       <li><a href="api/smac.runner.abstract_runner.html#smac.runner.abstract_runner.AbstractRunner.count_available_workers">count_available_workers() (smac.runner.abstract_runner.AbstractRunner method)</a>
 
       <ul>
+        <li><a href="api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner.count_available_workers">(smac.runner.abstract_serial_runner.AbstractSerialRunner method)</a>
+</li>
         <li><a href="api/smac.runner.html#smac.runner.AbstractRunner.count_available_workers">(smac.runner.AbstractRunner method)</a>
 </li>
         <li><a href="api/smac.runner.dask_runner.html#smac.runner.dask_runner.DaskParallelRunner.count_available_workers">(smac.runner.dask_runner.DaskParallelRunner method)</a>
 </li>
         <li><a href="api/smac.runner.html#smac.runner.DaskParallelRunner.count_available_workers">(smac.runner.DaskParallelRunner method)</a>
-</li>
-        <li><a href="api/smac.runner.serial_runner.html#smac.runner.serial_runner.SerialRunner.count_available_workers">(smac.runner.serial_runner.SerialRunner method)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.scenario.html#smac.scenario.Scenario.count_instance_features">count_instance_features() (smac.scenario.Scenario method)</a>
@@ -1959,25 +1961,25 @@ style="width: 100%;">
       <li><a href="api/smac.runner.abstract_runner.html#smac.runner.abstract_runner.AbstractRunner.is_running">is_running() (smac.runner.abstract_runner.AbstractRunner method)</a>
 
       <ul>
+        <li><a href="api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner.is_running">(smac.runner.abstract_serial_runner.AbstractSerialRunner method)</a>
+</li>
         <li><a href="api/smac.runner.html#smac.runner.AbstractRunner.is_running">(smac.runner.AbstractRunner method)</a>
 </li>
         <li><a href="api/smac.runner.dask_runner.html#smac.runner.dask_runner.DaskParallelRunner.is_running">(smac.runner.dask_runner.DaskParallelRunner method)</a>
 </li>
         <li><a href="api/smac.runner.html#smac.runner.DaskParallelRunner.is_running">(smac.runner.DaskParallelRunner method)</a>
 </li>
-        <li><a href="api/smac.runner.serial_runner.html#smac.runner.serial_runner.SerialRunner.is_running">(smac.runner.serial_runner.SerialRunner method)</a>
-</li>
       </ul></li>
       <li><a href="api/smac.runner.abstract_runner.html#smac.runner.abstract_runner.AbstractRunner.iter_results">iter_results() (smac.runner.abstract_runner.AbstractRunner method)</a>
 
       <ul>
+        <li><a href="api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner.iter_results">(smac.runner.abstract_serial_runner.AbstractSerialRunner method)</a>
+</li>
         <li><a href="api/smac.runner.html#smac.runner.AbstractRunner.iter_results">(smac.runner.AbstractRunner method)</a>
 </li>
         <li><a href="api/smac.runner.dask_runner.html#smac.runner.dask_runner.DaskParallelRunner.iter_results">(smac.runner.dask_runner.DaskParallelRunner method)</a>
 </li>
         <li><a href="api/smac.runner.html#smac.runner.DaskParallelRunner.iter_results">(smac.runner.DaskParallelRunner method)</a>
-</li>
-        <li><a href="api/smac.runner.serial_runner.html#smac.runner.serial_runner.SerialRunner.iter_results">(smac.runner.serial_runner.SerialRunner method)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.intensifier.abstract_intensifier.html#smac.intensifier.abstract_intensifier.AbstractIntensifier.iteration_done">iteration_done (smac.intensifier.abstract_intensifier.AbstractIntensifier property)</a>
@@ -2454,11 +2456,11 @@ style="width: 100%;">
 </li>
         <li><a href="api/smac.runner.abstract_runner.html#module-smac.runner.abstract_runner">smac.runner.abstract_runner</a>
 </li>
+        <li><a href="api/smac.runner.abstract_serial_runner.html#module-smac.runner.abstract_serial_runner">smac.runner.abstract_serial_runner</a>
+</li>
         <li><a href="api/smac.runner.dask_runner.html#module-smac.runner.dask_runner">smac.runner.dask_runner</a>
 </li>
         <li><a href="api/smac.runner.exceptions.html#module-smac.runner.exceptions">smac.runner.exceptions</a>
-</li>
-        <li><a href="api/smac.runner.serial_runner.html#module-smac.runner.serial_runner">smac.runner.serial_runner</a>
 </li>
         <li><a href="api/smac.runner.target_function_runner.html#module-smac.runner.target_function_runner">smac.runner.target_function_runner</a>
 </li>
@@ -2923,8 +2925,6 @@ style="width: 100%;">
         <li><a href="api/smac.initial_design.html#smac.initial_design.AbstractInitialDesign.select_configurations">(smac.initial_design.AbstractInitialDesign method)</a>
 </li>
       </ul></li>
-      <li><a href="api/smac.runner.serial_runner.html#smac.runner.serial_runner.SerialRunner">SerialRunner (class in smac.runner.serial_runner)</a>
-</li>
       <li><a href="api/smac.utils.logging.html#smac.utils.logging.setup_logging">setup_logging() (in module smac.utils.logging)</a>
 </li>
       <li><a href="7_glossary.html#term-SMAC"><strong>SMAC</strong></a>
@@ -3328,8 +3328,6 @@ style="width: 100%;">
         <li><a href="api/smac.model.gaussian_process.kernels.matern_kernel.html#module-smac.model.gaussian_process.kernels.matern_kernel">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.model.gaussian_process.kernels.rbf_kernel
 
@@ -3337,6 +3335,8 @@ style="width: 100%;">
         <li><a href="api/smac.model.gaussian_process.kernels.rbf_kernel.html#module-smac.model.gaussian_process.kernels.rbf_kernel">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.model.gaussian_process.kernels.white_kernel
 
@@ -3604,6 +3604,13 @@ style="width: 100%;">
 </li>
       </ul></li>
       <li>
+    smac.runner.abstract_serial_runner
+
+      <ul>
+        <li><a href="api/smac.runner.abstract_serial_runner.html#module-smac.runner.abstract_serial_runner">module</a>
+</li>
+      </ul></li>
+      <li>
     smac.runner.dask_runner
 
       <ul>
@@ -3615,13 +3622,6 @@ style="width: 100%;">
 
       <ul>
         <li><a href="api/smac.runner.exceptions.html#module-smac.runner.exceptions">module</a>
-</li>
-      </ul></li>
-      <li>
-    smac.runner.serial_runner
-
-      <ul>
-        <li><a href="api/smac.runner.serial_runner.html#module-smac.runner.serial_runner">module</a>
 </li>
       </ul></li>
       <li>
@@ -3740,13 +3740,13 @@ style="width: 100%;">
       <li><a href="api/smac.runner.abstract_runner.html#smac.runner.abstract_runner.AbstractRunner.submit_trial">submit_trial() (smac.runner.abstract_runner.AbstractRunner method)</a>
 
       <ul>
+        <li><a href="api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner.submit_trial">(smac.runner.abstract_serial_runner.AbstractSerialRunner method)</a>
+</li>
         <li><a href="api/smac.runner.html#smac.runner.AbstractRunner.submit_trial">(smac.runner.AbstractRunner method)</a>
 </li>
         <li><a href="api/smac.runner.dask_runner.html#smac.runner.dask_runner.DaskParallelRunner.submit_trial">(smac.runner.dask_runner.DaskParallelRunner method)</a>
 </li>
         <li><a href="api/smac.runner.html#smac.runner.DaskParallelRunner.submit_trial">(smac.runner.DaskParallelRunner method)</a>
-</li>
-        <li><a href="api/smac.runner.serial_runner.html#smac.runner.serial_runner.SerialRunner.submit_trial">(smac.runner.serial_runner.SerialRunner method)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.intensifier.html#smac.intensifier.SuccessiveHalving">SuccessiveHalving (class in smac.intensifier)</a>
@@ -4046,13 +4046,13 @@ style="width: 100%;">
       <li><a href="api/smac.runner.abstract_runner.html#smac.runner.abstract_runner.AbstractRunner.wait">wait() (smac.runner.abstract_runner.AbstractRunner method)</a>
 
       <ul>
+        <li><a href="api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner.wait">(smac.runner.abstract_serial_runner.AbstractSerialRunner method)</a>
+</li>
         <li><a href="api/smac.runner.html#smac.runner.AbstractRunner.wait">(smac.runner.AbstractRunner method)</a>
 </li>
         <li><a href="api/smac.runner.dask_runner.html#smac.runner.dask_runner.DaskParallelRunner.wait">(smac.runner.dask_runner.DaskParallelRunner method)</a>
 </li>
         <li><a href="api/smac.runner.html#smac.runner.DaskParallelRunner.wait">(smac.runner.DaskParallelRunner method)</a>
-</li>
-        <li><a href="api/smac.runner.serial_runner.html#smac.runner.serial_runner.SerialRunner.wait">(smac.runner.serial_runner.SerialRunner method)</a>
 </li>
       </ul></li>
   </ul></td>

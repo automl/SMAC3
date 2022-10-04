@@ -41,7 +41,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.runner.target_function_script_runner" href="smac.runner.target_function_script_runner.html" />
-    <link rel="prev" title="smac.runner.serial_runner" href="smac.runner.serial_runner.html" />
+    <link rel="prev" title="smac.runner.exceptions" href="smac.runner.exceptions.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -724,6 +724,11 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="smac.runner.abstract_serial_runner.html">
+       smac.runner.abstract_serial_runner
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="smac.runner.dask_runner.html">
        smac.runner.dask_runner
       </a>
@@ -731,11 +736,6 @@ style="width: 100%;">
      <li class="toctree-l3">
       <a class="reference internal" href="smac.runner.exceptions.html">
        smac.runner.exceptions
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.runner.serial_runner.html">
-       smac.runner.serial_runner
       </a>
      </li>
      <li class="toctree-l3 current active">
@@ -1055,7 +1055,7 @@ style="width: 100%;">
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runner.target_function_runner.TargetFunctionRunner">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runner.target_function_runner.</span></span><span class="sig-name descname"><span class="pre">TargetFunctionRunner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required_arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/target_function_runner.html#TargetFunctionRunner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.target_function_runner.TargetFunctionRunner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.runner.serial_runner.html#smac.runner.serial_runner.SerialRunner" title="smac.runner.serial_runner.SerialRunner"><code class="xref py py-class docutils literal notranslate"><span class="pre">SerialRunner</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner" title="smac.runner.abstract_serial_runner.AbstractSerialRunner"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractSerialRunner</span></code></a></p>
 <p>Class to execute target functions which are python functions. Evaluates functions for given configuration and
 resource limit.</p>
 <p>The target function can either return a float (the loss), or a tuple with the first element being a float and the
@@ -1073,7 +1073,7 @@ floats.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.target_function_runner.TargetFunctionRunner.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/target_function_runner.html#TargetFunctionRunner.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.target_function_runner.TargetFunctionRunner.__call__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the algorithm, which is processed in the <cite>run</cite> method.</p>
+<dd><p>Calls the algorithm, which is processed in the <code class="docutils literal notranslate"><span class="pre">run</span></code> method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>] | <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>] | <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>] | <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>] | <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</p>
@@ -1133,11 +1133,11 @@ target function internally.</p></li>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.runner.serial_runner.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.runner.exceptions.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.runner.serial_runner</p>
+            <p class="prev-next-title">smac.runner.exceptions</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="smac.runner.target_function_script_runner.html" title="next page">

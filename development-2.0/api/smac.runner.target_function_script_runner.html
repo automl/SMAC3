@@ -724,6 +724,11 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="smac.runner.abstract_serial_runner.html">
+       smac.runner.abstract_serial_runner
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="smac.runner.dask_runner.html">
        smac.runner.dask_runner
       </a>
@@ -731,11 +736,6 @@ style="width: 100%;">
      <li class="toctree-l3">
       <a class="reference internal" href="smac.runner.exceptions.html">
        smac.runner.exceptions
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.runner.serial_runner.html">
-       smac.runner.serial_runner
       </a>
      </li>
      <li class="toctree-l3">
@@ -1055,7 +1055,7 @@ style="width: 100%;">
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runner.target_function_script_runner.TargetFunctionScriptRunner">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runner.target_function_script_runner.</span></span><span class="sig-name descname"><span class="pre">TargetFunctionScriptRunner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required_arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/target_function_script_runner.html#TargetFunctionScriptRunner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.target_function_script_runner.TargetFunctionScriptRunner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.runner.serial_runner.html#smac.runner.serial_runner.SerialRunner" title="smac.runner.serial_runner.SerialRunner"><code class="xref py py-class docutils literal notranslate"><span class="pre">SerialRunner</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner" title="smac.runner.abstract_serial_runner.AbstractSerialRunner"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractSerialRunner</span></code></a></p>
 <p>Class to execute target functions from scripts. Uses <cite>Popen</cite> to execute the script in a subprocess.</p>
 <p>The following example shows how the script is called:
 <code class="docutils literal notranslate"><span class="pre">target_function</span> <span class="pre">--instance=test</span> <span class="pre">--instance_features=test</span> <span class="pre">--seed=0</span> <span class="pre">--hyperparameter1=5323</span></code></p>
@@ -1081,7 +1081,7 @@ passed. If no instance feature for the instance is given, an empty list is passe
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.target_function_script_runner.TargetFunctionScriptRunner.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">algorithm_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/target_function_script_runner.html#TargetFunctionScriptRunner.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.target_function_script_runner.TargetFunctionScriptRunner.__call__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the algorithm, which is processed in the <cite>run</cite> method.</p>
+<dd><p>Calls the algorithm, which is processed in the <code class="docutils literal notranslate"><span class="pre">run</span></code> method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>

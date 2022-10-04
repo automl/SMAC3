@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.runner.serial_runner &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>smac.runner.abstract_serial_runner &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -40,8 +40,8 @@
     <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.runner.target_function_runner" href="smac.runner.target_function_runner.html" />
-    <link rel="prev" title="smac.runner.exceptions" href="smac.runner.exceptions.html" />
+    <link rel="next" title="smac.runner.dask_runner" href="smac.runner.dask_runner.html" />
+    <link rel="prev" title="smac.runner.abstract_runner" href="smac.runner.abstract_runner.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -723,6 +723,11 @@ style="width: 100%;">
        smac.runner.abstract_runner
       </a>
      </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       smac.runner.abstract_serial_runner
+      </a>
+     </li>
      <li class="toctree-l3">
       <a class="reference internal" href="smac.runner.dask_runner.html">
        smac.runner.dask_runner
@@ -731,11 +736,6 @@ style="width: 100%;">
      <li class="toctree-l3">
       <a class="reference internal" href="smac.runner.exceptions.html">
        smac.runner.exceptions
-      </a>
-     </li>
-     <li class="toctree-l3 current active">
-      <a class="current reference internal" href="#">
-       smac.runner.serial_runner
       </a>
      </li>
      <li class="toctree-l3">
@@ -978,55 +978,55 @@ style="width: 100%;">
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#smac.runner.serial_runner.SerialRunner">
+    <a class="reference internal nav-link" href="#smac.runner.abstract_serial_runner.AbstractSerialRunner">
      <code class="docutils literal notranslate">
       <span class="pre">
-       SerialRunner
+       AbstractSerialRunner
       </span>
      </code>
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.runner.serial_runner.SerialRunner.count_available_workers">
+      <a class="reference internal nav-link" href="#smac.runner.abstract_serial_runner.AbstractSerialRunner.count_available_workers">
        <code class="docutils literal notranslate">
         <span class="pre">
-         SerialRunner.count_available_workers()
+         AbstractSerialRunner.count_available_workers()
         </span>
        </code>
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.runner.serial_runner.SerialRunner.is_running">
+      <a class="reference internal nav-link" href="#smac.runner.abstract_serial_runner.AbstractSerialRunner.is_running">
        <code class="docutils literal notranslate">
         <span class="pre">
-         SerialRunner.is_running()
+         AbstractSerialRunner.is_running()
         </span>
        </code>
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.runner.serial_runner.SerialRunner.iter_results">
+      <a class="reference internal nav-link" href="#smac.runner.abstract_serial_runner.AbstractSerialRunner.iter_results">
        <code class="docutils literal notranslate">
         <span class="pre">
-         SerialRunner.iter_results()
+         AbstractSerialRunner.iter_results()
         </span>
        </code>
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.runner.serial_runner.SerialRunner.submit_trial">
+      <a class="reference internal nav-link" href="#smac.runner.abstract_serial_runner.AbstractSerialRunner.submit_trial">
        <code class="docutils literal notranslate">
         <span class="pre">
-         SerialRunner.submit_trial()
+         AbstractSerialRunner.submit_trial()
         </span>
        </code>
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.runner.serial_runner.SerialRunner.wait">
+      <a class="reference internal nav-link" href="#smac.runner.abstract_serial_runner.AbstractSerialRunner.wait">
        <code class="docutils literal notranslate">
         <span class="pre">
-         SerialRunner.wait()
+         AbstractSerialRunner.wait()
         </span>
        </code>
       </a>
@@ -1056,13 +1056,13 @@ style="width: 100%;">
               
               <div>
                 
-  <section id="module-smac.runner.serial_runner">
-<span id="smac-runner-serial-runner"></span><h1>smac.runner.serial_runner<a class="headerlink" href="#module-smac.runner.serial_runner" title="Permalink to this heading">¶</a></h1>
+  <section id="module-smac.runner.abstract_serial_runner">
+<span id="smac-runner-abstract-serial-runner"></span><h1>smac.runner.abstract_serial_runner<a class="headerlink" href="#module-smac.runner.abstract_serial_runner" title="Permalink to this heading">¶</a></h1>
 <section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.runner.serial_runner.SerialRunner" title="smac.runner.serial_runner.SerialRunner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SerialRunner</span></code></a>(scenario[, required_arguments])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.runner.abstract_serial_runner.AbstractSerialRunner" title="smac.runner.abstract_serial_runner.AbstractSerialRunner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractSerialRunner</span></code></a>(scenario[, ...])</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -1071,12 +1071,12 @@ style="width: 100%;">
 <section id="interfaces">
 <h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="smac.runner.serial_runner.SerialRunner">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runner.serial_runner.</span></span><span class="sig-name descname"><span class="pre">SerialRunner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required_arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/serial_runner.html#SerialRunner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.serial_runner.SerialRunner" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.abstract_serial_runner.AbstractSerialRunner">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runner.abstract_serial_runner.</span></span><span class="sig-name descname"><span class="pre">AbstractSerialRunner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required_arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/abstract_serial_runner.html#AbstractSerialRunner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.abstract_serial_runner.AbstractSerialRunner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.runner.abstract_runner.html#smac.runner.abstract_runner.AbstractRunner" title="smac.runner.abstract_runner.AbstractRunner"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractRunner</span></code></a></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.runner.serial_runner.SerialRunner.count_available_workers">
-<span class="sig-name descname"><span class="pre">count_available_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/serial_runner.html#SerialRunner.count_available_workers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.serial_runner.SerialRunner.count_available_workers" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.abstract_serial_runner.AbstractSerialRunner.count_available_workers">
+<span class="sig-name descname"><span class="pre">count_available_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/abstract_serial_runner.html#AbstractSerialRunner.count_available_workers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.abstract_serial_runner.AbstractSerialRunner.count_available_workers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the number of available workers. Serial workers only have one worker.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1086,8 +1086,8 @@ style="width: 100%;">
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.runner.serial_runner.SerialRunner.is_running">
-<span class="sig-name descname"><span class="pre">is_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/serial_runner.html#SerialRunner.is_running"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.serial_runner.SerialRunner.is_running" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.abstract_serial_runner.AbstractSerialRunner.is_running">
+<span class="sig-name descname"><span class="pre">is_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/abstract_serial_runner.html#AbstractSerialRunner.is_running"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.abstract_serial_runner.AbstractSerialRunner.is_running" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether or not there are trials still running.</p>
 <p>Generally, if the runner is serial, launching a trial instantly returns it’s result. On
 parallel runners, there might be pending configurations to complete.</p>
@@ -1099,8 +1099,8 @@ parallel runners, there might be pending configurations to complete.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.runner.serial_runner.SerialRunner.iter_results">
-<span class="sig-name descname"><span class="pre">iter_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/serial_runner.html#SerialRunner.iter_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.serial_runner.SerialRunner.iter_results" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.abstract_serial_runner.AbstractSerialRunner.iter_results">
+<span class="sig-name descname"><span class="pre">iter_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/abstract_serial_runner.html#AbstractSerialRunner.iter_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.abstract_serial_runner.AbstractSerialRunner.iter_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method returns any finished configuration, and returns a list with the
 results of exercising the configurations. This class keeps populating results
 to <code class="docutils literal notranslate"><span class="pre">self._results_queue</span></code> until a call to <code class="docutils literal notranslate"><span class="pre">get_finished</span></code> trials is done. In this case,
@@ -1117,8 +1117,8 @@ the <cite>self._results_queue</cite> list is emptied and all trial values produc
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.runner.serial_runner.SerialRunner.submit_trial">
-<span class="sig-name descname"><span class="pre">submit_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/serial_runner.html#SerialRunner.submit_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.serial_runner.SerialRunner.submit_trial" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.abstract_serial_runner.AbstractSerialRunner.submit_trial">
+<span class="sig-name descname"><span class="pre">submit_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/abstract_serial_runner.html#AbstractSerialRunner.submit_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.abstract_serial_runner.AbstractSerialRunner.submit_trial" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function submits a trial_info object in a serial fashion. As there is a single worker for this task,
 this interface can be considered a wrapper over the <cite>run</cite> method.</p>
 <p>Both result/exceptions can be completely determined in this step so both lists are properly filled.</p>
@@ -1133,8 +1133,8 @@ this interface can be considered a wrapper over the <cite>run</cite> method.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.runner.serial_runner.SerialRunner.wait">
-<span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/serial_runner.html#SerialRunner.wait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.serial_runner.SerialRunner.wait" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.runner.abstract_serial_runner.AbstractSerialRunner.wait">
+<span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/abstract_serial_runner.html#AbstractSerialRunner.wait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.abstract_serial_runner.AbstractSerialRunner.wait" title="Permalink to this definition">¶</a></dt>
 <dd><p>The SMBO/intensifier might need to wait for trials to finish before making a decision.
 For serial runners, no wait is needed as the result is immediately available.</p>
 <dl class="field-list simple">
@@ -1155,17 +1155,17 @@ For serial runners, no wait is needed as the result is immediately available.</p
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.runner.exceptions.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.runner.abstract_runner.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.runner.exceptions</p>
+            <p class="prev-next-title">smac.runner.abstract_runner</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.runner.target_function_runner.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.runner.dask_runner.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.runner.target_function_runner</p>
+        <p class="prev-next-title">smac.runner.dask_runner</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

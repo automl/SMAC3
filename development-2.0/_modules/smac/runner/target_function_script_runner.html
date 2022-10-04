@@ -721,6 +721,11 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.runner.abstract_serial_runner.html">
+       smac.runner.abstract_serial_runner
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.runner.dask_runner.html">
        smac.runner.dask_runner
       </a>
@@ -728,11 +733,6 @@ style="width: 100%;">
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.runner.exceptions.html">
        smac.runner.exceptions
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.runner.serial_runner.html">
-       smac.runner.serial_runner
       </a>
      </li>
      <li class="toctree-l3">
@@ -977,7 +977,7 @@ style="width: 100%;">
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 
 <span class="kn">from</span> <span class="nn">smac.runner.abstract_runner</span> <span class="kn">import</span> <span class="n">StatusType</span>
-<span class="kn">from</span> <span class="nn">smac.runner.serial_runner</span> <span class="kn">import</span> <span class="n">SerialRunner</span>
+<span class="kn">from</span> <span class="nn">smac.runner.abstract_serial_runner</span> <span class="kn">import</span> <span class="n">AbstractSerialRunner</span>
 <span class="kn">from</span> <span class="nn">smac.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span>
 
@@ -987,7 +987,7 @@ style="width: 100%;">
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="TargetFunctionScriptRunner"><a class="viewcode-back" href="../../../api/smac.runner.target_function_script_runner.html#smac.runner.target_function_script_runner.TargetFunctionScriptRunner">[docs]</a><span class="k">class</span> <span class="nc">TargetFunctionScriptRunner</span><span class="p">(</span><span class="n">SerialRunner</span><span class="p">):</span>
+<div class="viewcode-block" id="TargetFunctionScriptRunner"><a class="viewcode-back" href="../../../api/smac.runner.target_function_script_runner.html#smac.runner.target_function_script_runner.TargetFunctionScriptRunner">[docs]</a><span class="k">class</span> <span class="nc">TargetFunctionScriptRunner</span><span class="p">(</span><span class="n">AbstractSerialRunner</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class to execute target functions from scripts. Uses `Popen` to execute the script in a subprocess.</span>
 
 <span class="sd">    The following example shows how the script is called:</span>
@@ -1036,7 +1036,7 @@ style="width: 100%;">
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Trial walltime limit is not supported for script target functions.&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
         <span class="n">meta</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">meta</span>
         <span class="n">meta</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_target_function</span><span class="p">)})</span>
 
@@ -1165,8 +1165,7 @@ style="width: 100%;">
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">algorithm_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Calls the algorithm, which is processed in the `run` method.&quot;&quot;&quot;</span>
-
+        <span class="sd">&quot;&quot;&quot;Calls the algorithm, which is processed in the ``run`` method.&quot;&quot;&quot;</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_target_function</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">algorithm_kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">v</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
