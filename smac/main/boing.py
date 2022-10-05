@@ -88,11 +88,6 @@
 #     ):
 #         super(BOinGSMBO, self).__init__(*args, **kwargs)
 
-#         if not isinstance(self.model, RandomForest):
-#             raise ValueError("BOinG only supports RandomForestWithInstances as its global optimizer")
-#         if not isinstance(self.runhistory_encoder, RunHistoryRawEncoder):
-#             raise ValueError("BOinG only supports RunHistory2EPM4CostWithRaw as its rh transformer")
-
 #         self.subspace_info = {
 #             "model_local": model_local,
 #             "model_local_kwargs": model_local_kwargs,
@@ -502,7 +497,7 @@
 #     cat_dims: np.ndarray (D_cat)
 #         categorical dimensions
 #     cont_dims: np.ndarray(D_cont)
-#     continuous dimensions
+#         continuous dimensions
 
 #     Returns
 #     -------
