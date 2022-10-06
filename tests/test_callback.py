@@ -58,18 +58,35 @@ class CustomCallback(Callback):
 
 
 def test_callback(rosenbrock):
-    N_TRIALS = 500
+    N_TRIALS = 5
 
-    scenario = Scenario(
-        rosenbrock.configspace,
-        n_trials=N_TRIALS,
-        walltime_limit=10,
+    scenario = Scenario(rosenbrock.configspace, n_trials=N_TRIALS)
+
+    # The intensify percentage indirectly influences the number of calls of configuration
+    # sampling.
+    intensifier = Intensifier(scenario, max_config_calls=1, intensify_percentage=1e-10)
+    initial_design = DefaultInitialDesign(scenario)
+
+    smac = HyperparameterOptimizationFacade(
+        scenario,
+        rosenbrock.train,
+        intensifier=intensifier,
+        initial_design=initial_design,
+        callbacks=[Callback()],
+        overwrite=True,
     )
+    smac.optimize()
+
+
+def test_custom_callback(rosenbrock):
+    N_TRIALS = 40
+
+    scenario = Scenario(rosenbrock.configspace, n_trials=N_TRIALS)
     callback = CustomCallback()
 
     # The intensify percentage indirectly influences the number of calls of configuration
     # sampling.
-    intensifier = Intensifier(scenario, max_config_calls=1, intensify_percentage=0.1)
+    intensifier = Intensifier(scenario, max_config_calls=1, intensify_percentage=1e-10)
     initial_design = DefaultInitialDesign(scenario)
 
     smac = HyperparameterOptimizationFacade(
@@ -94,10 +111,13 @@ def test_callback(rosenbrock):
     assert callback.tell_start_counter > 0
     assert callback.tell_end_counter > 0
 
-    # We try one more round
-    assert callback.iteration_start_counter == N_TRIALS + 1
-    # but we stop because we already evaluated N_TRIALS
-    assert callback.iteration_end_counter == N_TRIALS
+    assert callback.ask_start_counter > callback.tell_start_counter
+    assert callback.ask_end_counter > callback.tell_end_counter
+
+    # Those function may differ depending on the runtime
+    assert callback.iteration_start_counter > 0
+    assert callback.iteration_end_counter > 0
+    assert callback.iteration_start_counter >= callback.iteration_end_counter
 
     # This is depending on the number of challengers/intensify percentage
     assert callback.next_configurations_start_counter > 0

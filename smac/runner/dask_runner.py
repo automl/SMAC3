@@ -86,6 +86,7 @@ class DaskParallelRunner(AbstractRunner):
                 threads_per_worker=1,
                 local_directory=str(self._scenario.output_directory),
             )
+
             if self._scenario.output_directory is not None:
                 self._scheduler_file = self._scenario.output_directory / ".dask_scheduler_file"
                 self._client.write_scheduler_file(scheduler_file=str(self._scheduler_file))

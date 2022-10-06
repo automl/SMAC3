@@ -46,9 +46,9 @@ def test_termination_cost_threshold_with_fidelities(rosenbrock):
 
     counter = 0
     config = None
-    for k, v in smac.runhistory.items():
-        if v.cost < termination_cost_threshold and k.budget == max_budget:
-            config = smac.runhistory.get_config(k.config_id)
+    for c in smac.runhistory.get_configs():
+        if smac.runhistory.get_cost(c) < termination_cost_threshold:
+            config = c
             counter += 1
 
     # We expect only one cost below termination_cost_threshold

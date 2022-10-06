@@ -81,7 +81,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
         self._algorithm_walltime_limit = time
 
     @property
-    def meta(self) -> dict[str, Any]:  # ignore: D102
+    def meta(self) -> dict[str, Any]:  # noqa: D102
         meta = super().meta
         meta.update({"code": str(self._target_function.__code__.co_code)})
 

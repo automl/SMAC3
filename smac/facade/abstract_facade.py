@@ -174,7 +174,7 @@ class AbstractFacade:
                 required_arguments=self._get_signature_arguments(),
             )
 
-        # In case of multiple jobs, we need to wrap the runner again using `DaskParallelRunner`
+        # In case of multiple jobs, we need to wrap the runner again using DaskParallelRunner
         if (n_workers := scenario.n_workers) > 1:
             available_workers = joblib.cpu_count()
             if n_workers > available_workers:
