@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Parallelism &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>Logging &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -40,8 +40,8 @@
     <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="API References" href="../5_api.html" />
-    <link rel="prev" title="Command-Line Interface" href="6_commandline.html" />
+    <link rel="next" title="Parallelism" href="9_parallelism.html" />
+    <link rel="prev" title="Stopping Criteria" href="7_stopping_criteria.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -289,9 +289,29 @@ style="width: 100%;">
      Command-Line Interface
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="7_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
+     Logging
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="9_parallelism.html">
      Parallelism
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="10_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="11_reproducability.html">
+     Reproducability
     </a>
    </li>
   </ul>
@@ -961,9 +981,24 @@ style="width: 100%;">
               
               <div class="toc-item">
                 
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
 
 <nav id="bd-toc-nav">
-    
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#level">
+   Level
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#custom-file">
+   Custom File
+  </a>
+ </li>
+</ul>
+
 </nav>
               </div>
               
@@ -983,10 +1018,84 @@ style="width: 100%;">
               
               <div>
                 
-  <section id="parallelism">
-<h1>Parallelism<a class="headerlink" href="#parallelism" title="Permalink to this heading">¶</a></h1>
-<p>SMAC supports multiple workers natively. Just specify <code class="docutils literal notranslate"><span class="pre">n_workers</span></code> in the scenario and you are
-good to go.</p>
+  <section id="logging">
+<h1>Logging<a class="headerlink" href="#logging" title="Permalink to this heading">¶</a></h1>
+<p>Logging is a crucical part of the optimization, which should be customizable by the user. This page gives you the
+overview how to customize the logging experience with SMAC.</p>
+<section id="level">
+<h2>Level<a class="headerlink" href="#level" title="Permalink to this heading">¶</a></h2>
+<p>The easiest way to change the logging behaviour is to change the level of the global logger. SMAC does this for you
+if you specify the <code class="docutils literal notranslate"><span class="pre">logging_level</span></code> in any facade.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">smac</span> <span class="o">=</span> <span class="n">Facade</span><span class="p">(</span>
+    <span class="o">...</span>
+    <span class="n">logging_level</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="o">...</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The table shows you the specific levels:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Level</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>SHOW ALL</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>DEBUG</p></td>
+</tr>
+<tr class="row-even"><td><p>20</p></td>
+<td><p>INFO</p></td>
+</tr>
+<tr class="row-odd"><td><p>30</p></td>
+<td><p>WARNING</p></td>
+</tr>
+<tr class="row-even"><td><p>40</p></td>
+<td><p>ERROR</p></td>
+</tr>
+<tr class="row-odd"><td><p>50</p></td>
+<td><p>CRITICAL</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="custom-file">
+<h2>Custom File<a class="headerlink" href="#custom-file" title="Permalink to this heading">¶</a></h2>
+<p>Sometimes, the user wants to disable or highlight specifiy modules. You can do that by passing a custom yaml
+file to the facade instead.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">smac</span> <span class="o">=</span> <span class="n">Facade</span><span class="p">(</span>
+    <span class="o">...</span>
+    <span class="n">logging_level</span><span class="o">=</span><span class="s2">&quot;path/to/your/logging.yaml&quot;</span><span class="p">,</span>
+    <span class="o">...</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The following file shows you how to display only error messages from the intensifier
+but keep the level of everything else on INFO:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="nt">disable_existing_loggers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="nt">formatters</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">simple</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;[%(levelname)s][%(filename)s:%(lineno)d]</span><span class="nv"> </span><span class="s">%(message)s&#39;</span><span class="w"></span>
+<span class="nt">handlers</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">console</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.StreamHandler</span><span class="w"></span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span><span class="w"></span>
+<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">simple</span><span class="w"></span>
+<span class="w">        </span><span class="nt">stream</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ext://sys.stdout</span><span class="w"></span>
+<span class="nt">loggers</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">smac.intensifier</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ERROR</span><span class="w"></span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">console</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="nt">root</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span><span class="w"></span>
+<span class="w">    </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">console</span><span class="p p-Indicator">]</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
 </section>
 
 
@@ -995,17 +1104,17 @@ good to go.</p>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="6_commandline.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="7_stopping_criteria.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Command-Line Interface</p>
+            <p class="prev-next-title">Stopping Criteria</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="../5_api.html" title="next page">
+    <a class='right-next' id="next-link" href="9_parallelism.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">API References</p>
+        <p class="prev-next-title">Parallelism</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

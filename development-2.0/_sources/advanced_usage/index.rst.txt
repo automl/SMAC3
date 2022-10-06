@@ -19,8 +19,9 @@ Navigation
     4_instances
     5_ask_and_tell
     6_commandline
-    7_parallelism
-    8_stopping_criteria
-    9_continue
-    10_reproducability
+    7_stopping_criteria
+    8_logging
+    9_parallelism
+    10_continue
+    11_reproducability
 

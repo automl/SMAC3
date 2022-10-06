@@ -12,4 +12,5 @@ which is further used to determine whether the next iteration should start (``in
     The intensifier ``Intensifier`` (used by HyperparameterOptimizationFacade) is *not* reproducable!
 
 
-However, since ``time_bound`` is only used in ``Intensifier``, all other intensifiers guarantee reproducability.
+However, since ``time_bound`` is only used in ``Intensifier``, all other intensifiers guarantee reproducability when 
+using one worker.

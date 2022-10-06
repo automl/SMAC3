@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Reproducability &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>Parallelism &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -40,6 +40,8 @@
     <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Continue a Run" href="10_continue.html" />
+    <link rel="prev" title="Logging" href="8_logging.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -116,7 +118,7 @@ style="width: 100%;">
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
 <div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
-    <ul class="nav bd-sidenav">
+    <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="../1_installation.html">
    Installation
@@ -247,16 +249,16 @@ style="width: 100%;">
    </li>
   </ul>
  </li>
- <li class="toctree-l1 has-children">
+ <li class="toctree-l1 current active has-children">
   <a class="reference internal" href="index.html">
    Advanced Usage
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
   <label for="toctree-checkbox-6">
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul>
+  <ul class="current">
    <li class="toctree-l2">
     <a class="reference internal" href="1_components.html">
      Components
@@ -288,8 +290,28 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="7_parallelism.html">
+    <a class="reference internal" href="7_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="8_logging.html">
+     Logging
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
      Parallelism
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="10_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="11_reproducability.html">
+     Reproducability
     </a>
    </li>
   </ul>
@@ -981,17 +1003,10 @@ style="width: 100%;">
               
               <div>
                 
-  <section id="reproducability">
-<h1>Reproducability<a class="headerlink" href="#reproducability" title="Permalink to this heading">¶</a></h1>
-<p>The intensifier <code class="docutils literal notranslate"><span class="pre">Intensifier</span></code> does not ensure reproducability because it is depending on computation time.
-The intensification of configurations are depending on the <code class="docutils literal notranslate"><span class="pre">intensifier_percentage</span></code> and how long the optimization
-run took so far. Based on that, a <code class="docutils literal notranslate"><span class="pre">time_bound</span></code> for the intensification procedure is computed (in <code class="docutils literal notranslate"><span class="pre">base_smbo</span></code>),
-which is further used to determine whether the next iteration should start (<code class="docutils literal notranslate"><span class="pre">intensifier.process_results</span></code>).</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>The intensifier <code class="docutils literal notranslate"><span class="pre">Intensifier</span></code> (used by HyperparameterOptimizationFacade) is <em>not</em> reproducable!</p>
-</div>
-<p>However, since <code class="docutils literal notranslate"><span class="pre">time_bound</span></code> is only used in <code class="docutils literal notranslate"><span class="pre">Intensifier</span></code>, all other intensifiers guarantee reproducability.</p>
+  <section id="parallelism">
+<h1>Parallelism<a class="headerlink" href="#parallelism" title="Permalink to this heading">¶</a></h1>
+<p>SMAC supports multiple workers when using <code class="docutils literal notranslate"><span class="pre">Successive</span> <span class="pre">Halving</span></code> or <code class="docutils literal notranslate"><span class="pre">Hyperband</span></code> natively.
+Just specify <code class="docutils literal notranslate"><span class="pre">n_workers</span></code> in the scenario and you are ready to go.</p>
 </section>
 
 
@@ -999,7 +1014,21 @@ which is further used to determine whether the next iteration should start (<cod
               
               
               <!-- Previous / next buttons -->
-<div class='prev-next-area'>
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="8_logging.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Logging</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="10_continue.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Continue a Run</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
 </div>
               
           </main>

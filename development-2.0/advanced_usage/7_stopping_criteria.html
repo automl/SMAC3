@@ -40,6 +40,8 @@
     <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Logging" href="8_logging.html" />
+    <link rel="prev" title="Command-Line Interface" href="6_commandline.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -116,7 +118,7 @@ style="width: 100%;">
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
 <div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
-    <ul class="nav bd-sidenav">
+    <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="../1_installation.html">
    Installation
@@ -247,16 +249,16 @@ style="width: 100%;">
    </li>
   </ul>
  </li>
- <li class="toctree-l1 has-children">
+ <li class="toctree-l1 current active has-children">
   <a class="reference internal" href="index.html">
    Advanced Usage
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
   <label for="toctree-checkbox-6">
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul>
+  <ul class="current">
    <li class="toctree-l2">
     <a class="reference internal" href="1_components.html">
      Components
@@ -287,9 +289,29 @@ style="width: 100%;">
      Command-Line Interface
     </a>
    </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Stopping Criteria
+    </a>
+   </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="7_parallelism.html">
+    <a class="reference internal" href="8_logging.html">
+     Logging
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="9_parallelism.html">
      Parallelism
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="10_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="11_reproducability.html">
+     Reproducability
     </a>
    </li>
   </ul>
@@ -970,6 +992,11 @@ style="width: 100%;">
    Termination Cost Threshold
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#automatically-stopping">
+   Automatically Stopping
+  </a>
+ </li>
 </ul>
 
 </nav>
@@ -993,12 +1020,30 @@ style="width: 100%;">
                 
   <section id="stopping-criteria">
 <h1>Stopping Criteria<a class="headerlink" href="#stopping-criteria" title="Permalink to this heading">¶</a></h1>
+<p>In addition to the standard stopping criteria like number of trials or wallclock time, SMAC also provides
+more advanced criteria.</p>
 <section id="termination-cost-threshold">
 <h2>Termination Cost Threshold<a class="headerlink" href="#termination-cost-threshold" title="Permalink to this heading">¶</a></h2>
-<p>SMAC stops the</p>
-<p>stops if cost was reached
-remember: costs are always minimized</p>
-<p>if intensifier supports budgets, optimization is only aborted on highest fidelity</p>
+<p>SMAC can stop the optimization process after a user-defined cost was reached. In each iteration, the average cost
+(using <code class="docutils literal notranslate"><span class="pre">average_cost</span></code> from the run history) from the incumbent is compared to the termination cost threshold. If one
+of the objective cost is below its associated termination cost threshold, the optimization process is stopped.
+Note, since the <code class="docutils literal notranslate"><span class="pre">average_cost</span></code> method is used, all instance-seed-budget trials of the incumbent are considered so far.
+In other words, the process can be stopped even if the incumbent has not been evaluated on all instances, on the
+highest fidelity, or on all seeds.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span>
+    <span class="o">...</span>
+    <span class="n">objectives</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">,</span> <span class="s2">&quot;runtime&quot;</span><span class="p">],</span>
+    <span class="n">termination_cost_threshold</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span>
+    <span class="o">...</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>In the code above, the optimization process is stopped if the average accuracy of the incumbent is below 0.1. The
+runtime is ignored completely as it is set to infinity. Note here again that SMAC minimizes the objective values.</p>
+</section>
+<section id="automatically-stopping">
+<h2>Automatically Stopping<a class="headerlink" href="#automatically-stopping" title="Permalink to this heading">¶</a></h2>
+<p>Coming in the next version of SMAC.</p>
 </section>
 </section>
 
@@ -1007,7 +1052,21 @@ remember: costs are always minimized</p>
               
               
               <!-- Previous / next buttons -->
-<div class='prev-next-area'>
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="6_commandline.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Command-Line Interface</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="8_logging.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Logging</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
 </div>
               
           </main>

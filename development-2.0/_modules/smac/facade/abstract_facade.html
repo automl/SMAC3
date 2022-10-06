@@ -287,8 +287,28 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/7_parallelism.html">
+    <a class="reference internal" href="../../../advanced_usage/7_stopping_criteria.html">
+     Stopping Criteria
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/8_logging.html">
+     Logging
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/9_parallelism.html">
      Parallelism
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/10_continue.html">
+     Continue a Run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/11_reproducability.html">
+     Reproducability
     </a>
    </li>
   </ul>
@@ -1143,7 +1163,7 @@ style="width: 100%;">
                 <span class="n">required_arguments</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_signature_arguments</span><span class="p">(),</span>
             <span class="p">)</span>
 
-        <span class="c1"># In case of multiple jobs, we need to wrap the runner again using `DaskParallelRunner`</span>
+        <span class="c1"># In case of multiple jobs, we need to wrap the runner again using DaskParallelRunner</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">n_workers</span> <span class="o">:=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">n_workers</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">available_workers</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">n_workers</span> <span class="o">&gt;</span> <span class="n">available_workers</span><span class="p">:</span>
