@@ -5,6 +5,16 @@ Additionally to the basic components mentioned in :ref:`Getting Started`, all ot
 explained in the following to get a better picture of SMAC. These components are all used to guide 
 the optimization process and simple changes can influence the results drastically.
 
+Before diving into the components, we shortly want to explain the main Bayesian optimization loop in SMAC.
+The :ref:`SMBO<smac.main.base_\\smbo>` receives all instantiated components from the facade and the logic happens here.
+In general, a while loop is used to ask for the next trial, submit it to the runner, and wait for the runner to 
+finish the evaluation. Since the runner and the SMBO object are decoupled, the while loop continues and asks for even 
+more trials, which also can be submitted to the runner. If the ask method (which is, by the way, processed by 
+the intensifier) returns a wait flag, no further trials will be passed to the runner, and SMAC needs to wait until 
+trials have been evaluated and told to the intensifier.
+
+Also, the limitations like wallclock time and remaining trials are checked, and callbacks are called in the SMBO class.
+
 
 :ref:`Surrogate Model<smac.model.abstract\\_model>`
 ---------------------------------------------------

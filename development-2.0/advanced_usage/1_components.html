@@ -81,7 +81,7 @@
       <div class="navbar-end-item">
         <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
         <li class="nav-item">
-          <a class="nav-link" href="https://github.com/https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+          <a class="nav-link" href="https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
             <span><i class="fab fa-github-square"></i></span>
             <label class="sr-only">GitHub</label>
           </a>
@@ -1083,6 +1083,14 @@ style="width: 100%;">
 <p>Additionally to the basic components mentioned in <a class="reference internal" href="../3_getting_started.html#getting-started"><span class="std std-ref">Getting Started</span></a>, all other components are
 explained in the following to get a better picture of SMAC. These components are all used to guide
 the optimization process and simple changes can influence the results drastically.</p>
+<p>Before diving into the components, we shortly want to explain the main Bayesian optimization loop in SMAC.
+The <span class="xref std std-ref">SMBO</span> receives all instantiated components from the facade and the logic happens here.
+In general, a while loop is used to ask for the next trial, submit it to the runner, and wait for the runner to
+finish the evaluation. Since the runner and the SMBO object are decoupled, the while loop continues and asks for even
+more trials, which also can be submitted to the runner. If the ask method (which is, by the way, processed by
+the intensifier) returns a wait flag, no further trials will be passed to the runner, and SMAC needs to wait until
+trials have been evaluated and told to the intensifier.</p>
+<p>Also, the limitations like wallclock time and remaining trials are checked, and callbacks are called in the SMBO class.</p>
 <section id="surrogate-model">
 <h2><a class="reference internal" href="../api/smac.model.abstract_model.html#module-smac.model.abstract_model"><span class="std std-ref">Surrogate Model</span></a><a class="headerlink" href="#surrogate-model" title="Permalink to this heading">¶</a></h2>
 <p>The surrogate model is used to approximate the objective function of configurations. In previous versions, the model was

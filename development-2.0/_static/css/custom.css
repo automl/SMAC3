@@ -1,3 +1,11 @@
+h1,
+h2,
+h3,
+h4 {
+    overflow-wrap: break-word !important;
+}
+
+
 .bd-search {
     margin: 0;
     padding-left: 0;
@@ -84,6 +92,7 @@ p.sphx-glr-timing,
     box-shadow: none !important;
     -webkit-box-shadow: none !important;
     border: 1px solid rgba(220, 220, 220, 1.0) !important;
+    text-align: center;
 }
 
 .sphx-glr-thumbcontainer:hover {
@@ -179,7 +188,6 @@ table.table {
     white-space: nowrap;
 }
 
-
 /* API DOC */
 
 p.rubric {
@@ -189,7 +197,8 @@ p.rubric {
 }
 
 table.autosummary {
-    margin-top: -1rem;
+    display: table !important;
+    white-space: normal !important;
 }
 
 table.autosummary td,

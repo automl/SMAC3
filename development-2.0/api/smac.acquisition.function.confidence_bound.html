@@ -82,7 +82,7 @@
       <div class="navbar-end-item">
         <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
         <li class="nav-item">
-          <a class="nav-link" href="https://github.com/https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+          <a class="nav-link" href="https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
             <span><i class="fab fa-github-square"></i></span>
             <label class="sr-only">GitHub</label>
           </a>
@@ -1069,7 +1069,7 @@ style="width: 100%;">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.function.confidence_bound.</span></span><span class="sig-name descname"><span class="pre">LCB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/function/confidence_bound.html#LCB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.function.confidence_bound.LCB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.function.abstract_acquisition_function.html#smac.acquisition.function.abstract_acquisition_function.AbstractAcquisitionFunction" title="smac.acquisition.function.abstract_acquisition_function.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a></p>
 <p>Computes the lower confidence bound for a given x over the best so far value as acquisition value.</p>
-<p><span class="math notranslate nohighlight">\(LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})\)</span> <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p>
+<p><span class="math notranslate nohighlight">\(LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})\)</span> <a class="reference internal" href="../6_references.html#skks10" id="id1"><span>[SKKS10]</span></a></p>
 <p>with</p>
 <p><span class="math notranslate nohighlight">\(\beta_t = 2 \log( |D| t^2 / \beta)\)</span></p>
 <p><span class="math notranslate nohighlight">\(\text{Input space} D\)</span>
@@ -1077,13 +1077,6 @@ style="width: 100%;">
 <span class="math notranslate nohighlight">\(\text{Number of data points} t\)</span>
 <span class="math notranslate nohighlight">\(\text{Exploration/exploitation tradeoff} \beta\)</span></p>
 <p>Returns -LCB(X) as the acquisition_function optimizer maximizes the acquisition value.</p>
-<p class="rubric">References</p>
-<aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id2" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
-<p>[GP-UCB](<a class="reference external" href="https://arxiv.org/pdf/0912.3995.pdf">https://arxiv.org/pdf/0912.3995.pdf</a>)</p>
-</aside>
-</aside>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>beta</strong> (<em>float</em><em>, </em><em>defaults to 1.0</em>) – Controls the balance between exploration and exploitation of the acquisition function.</p>

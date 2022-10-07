@@ -81,7 +81,7 @@
       <div class="navbar-end-item">
         <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
         <li class="nav-item">
-          <a class="nav-link" href="https://github.com/https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+          <a class="nav-link" href="https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
             <span><i class="fab fa-github-square"></i></span>
             <label class="sr-only">GitHub</label>
           </a>
@@ -1012,19 +1012,11 @@ SMAC. For comparisons against the original SMAC, we refer to a stable release of
 which can be found <a class="reference external" href="http://www.cs.ubc.ca/labs/beta/Projects/SMAC/">here</a>.
 Since SMAC3 is actively maintained, we recommend to use SMAC3 for any AutoML applications.</p>
 </dd>
-<dt>SMAC cannot be imported.</dt><dd><p>Try to either run SMAC from SMAC’s root directory
-or try to run the installation first.</p>
+<dt>SMAC cannot be imported.</dt><dd><p>Try to either run SMAC from SMAC’s root directory or try to run the installation first.</p>
 </dd>
 <dt>pyrfr raises cryptic import errors.</dt><dd><p>Ensure that the gcc used to compile the pyrfr is the same as used for linking
 during execution. This often happens with Anaconda. See
 <a class="reference internal" href="1_installation.html#installation"><span class="std std-ref">Installation</span></a> for a solution.</p>
-</dd>
-<dt>My target function is not accepted when using the scenario-file.</dt><dd><p>Make sure that your algorithm accepts commandline options as provided by
-SMAC. Refer to <span class="xref std std-ref">commandline execution</span> for
-details on how to wrap your algorithm.</p>
-<p>You can also run SMAC with <code class="docutils literal notranslate"><span class="pre">--verbose</span> <span class="pre">DEBUG</span></code> to see how SMAC tried to call your algorithm.</p>
-</dd>
-<dt>Can I restore SMAC from a previous state?</dt><dd><p>Yes. Have a look <span class="xref std std-ref">here</span>.</p>
 </dd>
 <dt>How can I use <a class="reference internal" href="7_glossary.html#term-BOHB"><span class="xref std std-term">BOHB</span></a> and/or <a class="reference external" href="https://github.com/automl/HpBandSter">HpBandSter</a> with SMAC?</dt><dd><p>The facade SMAC4HPO is the closes implementation to <a class="reference internal" href="7_glossary.html#term-BOHB"><span class="xref std std-term">BOHB</span></a> and/or <a class="reference external" href="https://github.com/automl/HpBandSter">HpBandSter</a>.</p>
 </dd>
@@ -1043,7 +1035,7 @@ details on how to wrap your algorithm.</p>
 </dd>
 <dt>I want to contribute code or discuss a new idea. Where should I report to?</dt><dd><p>SMAC uses the <a class="reference external" href="https://github.com/automl/SMAC3/issues">GitHub issue-tracker</a> to also take care
 of questions and feedback and is the preferred location for discussing new features and ongoing work. Please also have a look at our
-<a class="reference external" href="https://github.com/automl/SMAC3/blob/master/CONTRIBUTING.md">contribution guide</a>.</p>
+<a class="reference external" href="https://github.com/automl/SMAC3/blob/main/CONTRIBUTING.md">contribution guide</a>.</p>
 </dd>
 <dt>What is the meaning of <em>deterministic</em>?</dt><dd><p>If the <code class="docutils literal notranslate"><span class="pre">deterministic</span></code> flag is set to <cite>False</cite> the target function is assumed to be non-deterministic.
 To evaluate a configuration of a non-deterministic algorithm, multiple runs with different seeds will be evaluated
@@ -1052,13 +1044,8 @@ Deterministic algorithms don’t depend on seeds, thus requiring only one evalua
 to evaluate the performance on that instance. Nevertheless the default seed 0 is still passed to the
 target function.</p>
 </dd>
-<dt>I want my algorithm to be optimized across different datasets. How should I realize that?</dt><dd><p>Generally, you have two options: Validate all datasets within your <span class="xref std std-ref">TFE</span> or use instances.
-The significant advantage of instances is that not all datasets necessarily have to be processed.
-If the first instances already perform worse, the configuration might be discarded early. This
-will lead to a speed-up.</p>
-</dd>
 <dt>Why does SMAC not run on Colab/Mac and crashes with the error “Child process not yet created”?</dt><dd><p>SMAC uses pynisher to enforce time and memory limits on the target function runner. However, pynisher may not always
-work on specific setups. To overcome this error, it is recommended to set <cite>limit_resources</cite> to false to make SMAC run.</p>
+work on specific setups. To overcome this error, it is recommended to remove limitations to make SMAC run.</p>
 </dd>
 </dl>
 </section>

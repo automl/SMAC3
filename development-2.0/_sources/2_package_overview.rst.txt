@@ -31,7 +31,7 @@ Any Objectives
     Optimize arbitrary number of objectives using scalarized multi-ojective algorithms. Both ParEGO [Know06]_ and 
     mean aggregation strategies are supported.
 
-:term:`Multi-Fidelity<Multi-Fidelity Optimization>` Optimization
+:ref:`Multi-Fidelity<Multi-Fidelity Optimization>` Optimization
     Judge configurations on multiple :term:`budgets<Budget>` to discard unsuitable configurations
     early on. This will result in a massive speed-up, depending on the budgets.
     
