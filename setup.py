@@ -32,7 +32,7 @@ extras_require = {
         "pytest-xdist",
         "pytest-timeout",
         # Docs
-        "automl-sphinx-theme>=0.1.16",
+        "automl-sphinx-theme>=0.1.18",
         # Others
         "mypy",
         "isort",

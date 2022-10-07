@@ -11,26 +11,13 @@ Should I use SMAC2 or SMAC3?
 
 
 SMAC cannot be imported.
-  Try to either run SMAC from SMAC's root directory
-  or try to run the installation first.
+  Try to either run SMAC from SMAC's root directory or try to run the installation first.
 
 
 pyrfr raises cryptic import errors.
   Ensure that the gcc used to compile the pyrfr is the same as used for linking
   during execution. This often happens with Anaconda. See
   :ref:`Installation <installation>` for a solution.
-
-
-My target function is not accepted when using the scenario-file.
-  Make sure that your algorithm accepts commandline options as provided by
-  SMAC. Refer to :ref:`commandline execution <Basic Usage>` for
-  details on how to wrap your algorithm.
-
-  You can also run SMAC with ``--verbose DEBUG`` to see how SMAC tried to call your algorithm.
-
-
-Can I restore SMAC from a previous state?
-  Yes. Have a look :ref:`here<Restoring>`.
 
 
 How can I use :term:`BOHB` and/or `HpBandSter <https://github.com/automl/HpBandSter>`_ with SMAC?
@@ -54,7 +41,7 @@ I discovered a bug or SMAC does not behave as expected. Where should I report to
 I want to contribute code or discuss a new idea. Where should I report to?
   SMAC uses the `GitHub issue-tracker <https://github.com/automl/SMAC3/issues>`_ to also take care
   of questions and feedback and is the preferred location for discussing new features and ongoing work. Please also have a look at our
-  `contribution guide <https://github.com/automl/SMAC3/blob/master/CONTRIBUTING.md>`_.
+  `contribution guide <https://github.com/automl/SMAC3/blob/main/CONTRIBUTING.md>`_.
 
 
 What is the meaning of *deterministic*?
@@ -66,13 +53,6 @@ What is the meaning of *deterministic*?
   target function.
 
 
-I want my algorithm to be optimized across different datasets. How should I realize that?
-  Generally, you have two options: Validate all datasets within your :ref:`TFE<Target Function Evaluator>` or use instances.
-  The significant advantage of instances is that not all datasets necessarily have to be processed.
-  If the first instances already perform worse, the configuration might be discarded early. This
-  will lead to a speed-up.
-
-
 Why does SMAC not run on Colab/Mac and crashes with the error "Child process not yet created"?
   SMAC uses pynisher to enforce time and memory limits on the target function runner. However, pynisher may not always
-  work on specific setups. To overcome this error, it is recommended to set `limit_resources` to false to make SMAC run.
+  work on specific setups. To overcome this error, it is recommended to remove limitations to make SMAC run.

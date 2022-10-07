@@ -19,7 +19,7 @@ logger = get_logger(__name__)
 class LCB(AbstractAcquisitionFunction):
     r"""Computes the lower confidence bound for a given x over the best so far value as acquisition value.
 
-    :math:`LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})` [1]_
+    :math:`LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})` [SKKS10]_
 
     with
 
@@ -31,10 +31,6 @@ class LCB(AbstractAcquisitionFunction):
     :math:`\text{Exploration/exploitation tradeoff} \beta`
 
     Returns -LCB(X) as the acquisition_function optimizer maximizes the acquisition value.
-
-    References
-    ----------
-    .. [1] [GP-UCB](https://arxiv.org/pdf/0912.3995.pdf)
 
     Parameters
     ----------

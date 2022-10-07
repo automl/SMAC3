@@ -10,7 +10,7 @@ __license__ = "3-clause BSD"
 
 class HyperbandFacade(RandomFacade):
     """
-    Facade to use model-free Hyperband [1]_ for algorithm configuration.
+    Facade to use model-free Hyperband [LJDR18]_ for algorithm configuration.
 
     Uses Random Aggressive Online Racing (ROAR) to compare configurations, a random
     initial design and the Hyperband intensifier.

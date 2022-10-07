@@ -11,7 +11,7 @@ The basic recipe is as follows:
 
 #. Make sure that your target function returns a cost *dictionary* containing the objective names as keys
    and the objective values as values, e.g. ``{'myobj1': 0.3, 'myobj2': 200}``. Alternatively, you can simply
-   return a list, e.g, ``[0.3, 200]``.
+   return a list, e.g., ``[0.3, 200]``.
 #. When instantiating SMAC pass the names of your objectives to the scenario object via the ``objectives``
    argument, e.g., ``multi_objectives: ["myobj1", "myobj2"]``.
 #. Now you can optionally pass a custom multi-objective algorithm class to the SMAC
