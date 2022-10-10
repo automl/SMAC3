@@ -236,7 +236,7 @@ class GaussianProcess(AbstractGaussianProcess):
     def _predict(
         self,
         X: np.ndarray,
-        covariance_type: str | None = "diagonal_cov",
+        covariance_type: str | None = "diagonal",
     ) -> tuple[np.ndarray, np.ndarray | None]:
         if not self._is_trained:
             raise Exception("Model has to be trained first!")
