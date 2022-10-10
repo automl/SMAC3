@@ -236,7 +236,7 @@ class GaussianProcess(AbstractGaussianProcess):
     def _predict(
         self,
         X: np.ndarray,
-        covariance_type: str | None = "diagonal",
+        covariance_type: str | None = "diagonal_cov",
     ) -> tuple[np.ndarray, np.ndarray | None]:
         if not self._is_trained:
             raise Exception("Model has to be trained first!")
@@ -266,7 +266,7 @@ class GaussianProcess(AbstractGaussianProcess):
             if self._normalize_y:
                 mu, var = self._untransform_y(mu, var)
 
-            if covariance_type == "diagonal":
+            if covariance_type == "diagonal_std":
                 var = np.sqrt(var)  # Converting variance to std deviation if specified
 
         return mu, var
