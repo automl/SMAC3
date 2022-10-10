@@ -1016,7 +1016,7 @@ style="width: 100%;">
 
         <span class="n">ds</span> <span class="o">=</span> <span class="n">DifferentialEvolutionSolver</span><span class="p">(</span>
             <span class="n">func</span><span class="p">,</span>
-            <span class="n">bounds</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span>
+            <span class="n">bounds</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_configspace</span><span class="p">))],</span>
             <span class="n">args</span><span class="o">=</span><span class="p">(),</span>
             <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;best1bin&quot;</span><span class="p">,</span>
             <span class="n">maxiter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
