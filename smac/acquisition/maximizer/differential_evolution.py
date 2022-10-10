@@ -27,7 +27,7 @@ class DifferentialEvolution(AbstractAcquisitionMaximizer):
 
         ds = DifferentialEvolutionSolver(
             func,
-            bounds=[[0, 1], [0, 1]],
+            bounds=[[0, 1] for _ in range(len(self._configspace))],
             args=(),
             strategy="best1bin",
             maxiter=1000,
