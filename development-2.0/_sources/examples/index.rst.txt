@@ -193,7 +193,7 @@ Multi-Objective
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="An example of how to use multi-objective optimization with ParEGO. Both accuracy and run time a...">
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of how to use multi-objective optimization with ParEGO. Both accuracy and run-time a...">
 
 .. only:: html
 
