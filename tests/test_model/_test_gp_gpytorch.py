@@ -303,19 +303,19 @@ class TestGPGPyTorch(TestGP):
         self.assertLess(abs(var_hat[0][0] - 1017.1374468449195), 15)
 
         # test other covariance results
-        _, var_fc = model.predict(X, cov_return_type="full_cov")
+        _, var_fc = model.predict(X, cov_return_type="full")
         self.assertEqual(var_fc.shape, (8, 8))
-        _, var_sd = model.predict(X, cov_return_type="diagonal_std")
+        _, var_sd = model.predict(X, cov_return_type="std")
         self.assertEqual(var_sd.shape, (8, 1))
         _, var_no = model.predict(np.array([[10.0, 10.0, 10.0]]), cov_return_type=None)
         self.assertIsNone(var_no)
         # check values
-        _, var_fc = model.predict(np.array([[10.0, 10.0, 10.0]]), cov_return_type="full_cov")
+        _, var_fc = model.predict(np.array([[10.0, 10.0, 10.0]]), cov_return_type="full")
         self.assertAlmostEqual(var_fc[0][0], var_hat[0][0])
-        _, var_sd = model.predict(np.array([[10.0, 10.0, 10.0]]), cov_return_type="diagonal_std")
+        _, var_sd = model.predict(np.array([[10.0, 10.0, 10.0]]), cov_return_type="std")
         self.assertAlmostEqual(var_sd[0][0] ** 2, var_hat[0][0])
 
-        _, var_fc = model.predict(np.array([[10.0, 10.0, 10.0], [5.0, 5.0, 5.0]]), cov_return_type="full_cov")
+        _, var_fc = model.predict(np.array([[10.0, 10.0, 10.0], [5.0, 5.0, 5.0]]), cov_return_type="full")
         self.assertEqual(var_fc.shape, (2, 2))
 
     def test_normalization(self):

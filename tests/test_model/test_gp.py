@@ -138,7 +138,6 @@ def get_mixed_gp(cat_dims, cont_dims, seed, noise=1e-3, normalize_y=True):
     return model
 
 
-'''
 def test_predict_wrong_X_dimensions():
     seed = 1
     rs = np.random.RandomState(seed)
@@ -330,7 +329,7 @@ def test_predict_with_actual_values():
     _, var_fc = model.predict(np.array([[10, 10, 10]]), covariance_type="full")
     assert pytest.approx(var_fc[0][0]) == var_hat[0][0]
 
-    _, var_sd = model.predict(np.array([[10, 10, 10]]), covariance_type="diagonal")
+    _, var_sd = model.predict(np.array([[10, 10, 10]]), covariance_type="std")
     assert pytest.approx(var_sd[0][0] ** 2) == var_hat[0][0]
 
 
@@ -393,8 +392,6 @@ def test_sampling_shape():
             assert func.shape == (101, 1)
             func = gp.sample_functions(X_test=X_test, n_funcs=2)
             assert func.shape == (101, 2)
-
-'''
 
 
 def test_normalization():

@@ -266,7 +266,7 @@ class GaussianProcess(AbstractGaussianProcess):
             if self._normalize_y:
                 mu, var = self._untransform_y(mu, var)
 
-            if covariance_type == "diagonal_std":
+            if covariance_type == "std":
                 var = np.sqrt(var)  # Converting variance to std deviation if specified
 
         return mu, var
