@@ -2,13 +2,12 @@
 ParEGO
 ^^^^^^
 
-An example of how to use multi-objective optimization with ParEGO. Both accuracy and run time are going to be
+An example of how to use multi-objective optimization with ParEGO. Both accuracy and run-time are going to be
 optimized, and the configurations are shown in a plot, highlighting the best ones in a Pareto front. The red cross
 indicates the best configuration selected by SMAC.
 
 In the optimization, SMAC evaluates the configurations on three different seeds. Therefore, the plot shows the
-mean accuracy and runtime of each configuration. Since this example uses ``objective_weights``, the accuracy is three
-times more important than the run time.
+mean accuracy and run-time of each configuration.
 """
 from __future__ import annotations
 
@@ -118,18 +117,6 @@ def plot_pareto(smac: AbstractFacade) -> None:
     # Let's work with a numpy array
     costs = np.vstack(average_costs)
     costs_x, costs_y = costs[:, 0], costs[:, 1]
-
-    # Add the bounds
-    # x_upper = np.max(costs_x)
-    # y_upper = np.max(costs_y)
-    # pareto_costs = np.vstack(
-    #    [
-    #        [pareto_costs[0][0], y_upper],
-    #        pareto_costs,
-    #        [x_upper, np.min(pareto_costs[:, 1])],
-    #    ],
-    # )
-
     pareto_costs_x, pareto_costs_y = pareto_costs[:, 0], pareto_costs[:, 1]
 
     plt.scatter(costs_x, costs_y, marker="x")
