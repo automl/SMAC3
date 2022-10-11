@@ -1,14 +1,10 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import os
 import pickle
 import tempfile
 
 import pytest
-from ConfigSpace import Configuration, ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac.runhistory.runhistory import RunHistory, TrialKey
 from smac.runner.abstract_runner import StatusType

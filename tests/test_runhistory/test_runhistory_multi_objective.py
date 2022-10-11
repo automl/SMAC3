@@ -1,14 +1,9 @@
-import os
 import pickle
 import tempfile
-import unittest
 
 import pytest
-from ConfigSpace import Configuration, ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
-from smac.runhistory.runhistory import RunHistory
 from smac.runner.abstract_runner import StatusType
 from smac.scenario import Scenario
 
