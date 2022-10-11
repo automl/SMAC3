@@ -135,7 +135,7 @@ evaluate another seed pair, evaluate on another instance, or evaluate on a highe
 .. warning ::
 
     Always pay attention to ``max_config_calls``: If this argument is set high, the intensifier might spend a lot of 
-    time on a single configuration. Also, since the default ``Intensifier`` is depending on runtime, reproduciability 
+    time on a single configuration. Also, since the default ``Intensifier`` is depending on runtime, reproducibility
     is not given unless you set ``intensify_percentage`` to 0.
 
 
