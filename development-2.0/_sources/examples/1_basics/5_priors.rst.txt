@@ -51,19 +51,18 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
     [INFO][abstract_intensifier.py:367] --- n_layer: 2 -> 3
     [INFO][abstract_intensifier.py:367] --- n_neurons: 157 -> 108
     [INFO][abstract_intensifier.py:367] --- optimizer: 'sgd' -> 'adam'
-    [INFO][abstract_intensifier.py:340] Challenger (0.0306) is better than incumbent (0.039) on 1 trials.
+    [INFO][abstract_intensifier.py:340] Challenger (0.0267) is better than incumbent (0.039) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- batch_size: 128 -> 66
-    [INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0010000000000000002 -> 0.0010972380878858119
-    [INFO][abstract_intensifier.py:340] Challenger (0.0262) is better than incumbent (0.0306) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- batch_size: 128 -> 83
+    [INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0010000000000000002 -> 0.001682337847169736
+    [INFO][abstract_intensifier.py:340] Challenger (0.0256) is better than incumbent (0.0267) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- batch_size: 66 -> 65
-    [INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0010972380878858119 -> 0.0011090117979356453
+    [INFO][abstract_intensifier.py:367] --- n_neurons: 108 -> 157
     [INFO][base_smbo.py:260] Configuration budget is exhausted.
-    [INFO][abstract_facade.py:325] Final Incumbent: {'activation': 'relu', 'batch_size': 65, 'learning_rate_init': 0.0011090117979356453, 'n_layer': 3, 'n_neurons': 108, 'optimizer': 'adam'}
-    [INFO][abstract_facade.py:326] Estimated cost: 0.026155988857938794
+    [INFO][abstract_facade.py:325] Final Incumbent: {'activation': 'relu', 'batch_size': 83, 'learning_rate_init': 0.001682337847169736, 'n_layer': 3, 'n_neurons': 157, 'optimizer': 'adam'}
+    [INFO][abstract_facade.py:326] Estimated cost: 0.025600433302383152
     Default cost: 0.05787991333952347
-    Default cost: 0.046196224079232406
+    Default cost: 0.030609718353450943
 
 
 
@@ -238,7 +237,7 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  20.456 seconds)
+   **Total running time of the script:** ( 0 minutes  53.113 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_5_priors.py:
