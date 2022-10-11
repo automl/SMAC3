@@ -1044,7 +1044,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
 [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 2-1 with initial budget 8.
 [INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
-[INFO][successive_halving_worker.py:613] Challenger (0.0345) is better than incumbent (0.0384) on budget 25.0000.
+[INFO][successive_halving_worker.py:613] Challenger (0.0345) is better than incumbent (0.0406) on budget 25.0000.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
 [INFO][abstract_intensifier.py:367] --- activation: &#39;tanh&#39; -&gt; &#39;relu&#39;
 [INFO][abstract_intensifier.py:367] --- batch_size: 155 -&gt; 117
@@ -1056,11 +1056,19 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 2-2 with initial budget 25.
 [INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
 [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 3-1 with initial budget 8.
+[INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
+[INFO][successive_halving_worker.py:613] Challenger (0.0189) is better than incumbent (0.0345) on budget 25.0000.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- batch_size: 117 -&gt; 91
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.008282754423021153 -&gt; 0.006390670908394775
+[INFO][abstract_intensifier.py:367] --- n_neurons: 52 -&gt; 183
+[INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
+[INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 3-2 with initial budget 25.
 [INFO][base_smbo.py:260] Configuration budget is exhausted.
-[INFO][abstract_facade.py:325] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 5, &#39;n_neurons&#39;: 52, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 117, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.008282754423021153}
-[INFO][abstract_facade.py:326] Estimated cost: 0.03450789229340745
+[INFO][abstract_facade.py:325] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 5, &#39;n_neurons&#39;: 183, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 91, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.006390670908394775}
+[INFO][abstract_facade.py:326] Estimated cost: 0.01892138656762621
 Default cost: 0.4307319715258433
-Incumbent cost: 0.03450789229340767
+Incumbent cost: 0.025047972763850068
 </pre></div>
 </div>
 <div class="line-block">
@@ -1187,7 +1195,7 @@ Incumbent cost: 0.03450789229340767
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  44.704 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  48.294 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e36c26bb3a993c4641a06c811122b11e/1_mlp_epochs.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_mlp_epochs.py</span></code></a></p>

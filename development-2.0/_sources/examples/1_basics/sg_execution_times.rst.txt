@@ -5,16 +5,16 @@
 
 Computation times
 =================
-**02:38.249** total execution time for **examples_1_basics** files:
+**01:28.150** total execution time for **examples_1_basics** files:
 
 +-----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_1_basics_5_priors.py` (``5_priors.py``)                         | 01:29.700 | 0.0 MB |
+| :ref:`sphx_glr_examples_1_basics_5_priors.py` (``5_priors.py``)                         | 00:52.812 | 0.0 MB |
 +-----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_1_basics_3_ask_and_tell.py` (``3_ask_and_tell.py``)             | 00:33.615 | 0.0 MB |
+| :ref:`sphx_glr_examples_1_basics_3_ask_and_tell.py` (``3_ask_and_tell.py``)             | 00:17.158 | 0.0 MB |
 +-----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_1_basics_2_svm_cv.py` (``2_svm_cv.py``)                         | 00:16.251 | 0.0 MB |
+| :ref:`sphx_glr_examples_1_basics_2_svm_cv.py` (``2_svm_cv.py``)                         | 00:09.391 | 0.0 MB |
 +-----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_1_basics_4_callback.py` (``4_callback.py``)                     | 00:13.849 | 0.0 MB |
+| :ref:`sphx_glr_examples_1_basics_4_callback.py` (``4_callback.py``)                     | 00:05.742 | 0.0 MB |
 +-----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_1_basics_1_synthetic_function.py` (``1_synthetic_function.py``) | 00:04.835 | 0.0 MB |
+| :ref:`sphx_glr_examples_1_basics_1_synthetic_function.py` (``1_synthetic_function.py``) | 00:03.048 | 0.0 MB |
 +-----------------------------------------------------------------------------------------+-----------+--------+
