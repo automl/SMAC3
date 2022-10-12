@@ -1,0 +1,14 @@
+
+:orphan:
+
+.. _sphx_glr_examples_2_multi_fidelity_sg_execution_times:
+
+Computation times
+=================
+**01:27.801** total execution time for **examples_2_multi_fidelity** files:
+
++-------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_examples_2_multi_fidelity_1_mlp_epochs.py` (``1_mlp_epochs.py``)     | 00:50.483 | 0.0 MB |
++-------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_examples_2_multi_fidelity_2_sgd_datasets.py` (``2_sgd_datasets.py``) | 00:37.318 | 0.0 MB |
++-------------------------------------------------------------------------------------+-----------+--------+

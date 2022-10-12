@@ -1,0 +1,38 @@
+smac.runhistory.encoder.boing\_encoder
+======================================
+
+.. automodule:: smac.runhistory.encoder.boing_encoder
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      RunHistoryRawEncoder
+      RunHistoryRawScaledEncoder
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

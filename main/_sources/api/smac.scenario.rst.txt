@@ -14,18 +14,24 @@
    
    
    
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      Scenario
+   
+   
 
    
    
    
 
+   
+   Interfaces
+   ^^^^^^^^^^
+   
 
 
-.. rubric:: Modules
 
-.. autosummary::
-   :toctree:
-   :recursive:
-
-   smac.scenario.scenario
 

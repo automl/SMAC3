@@ -13,17 +13,25 @@ smac.initial\_design.latin\_hypercube\_design
 
    
    
-   .. rubric:: Classes
+   
+   Classes
+   ^^^^^^^
 
    .. autosummary::
    
-      LHDesign
+      LatinHypercubeInitialDesign
    
    
 
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

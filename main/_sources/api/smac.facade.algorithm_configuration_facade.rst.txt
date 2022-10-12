@@ -1,0 +1,37 @@
+smac.facade.algorithm\_configuration\_facade
+============================================
+
+.. automodule:: smac.facade.algorithm_configuration_facade
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      AlgorithmConfigurationFacade
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

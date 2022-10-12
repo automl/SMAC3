@@ -19,19 +19,26 @@
    
    
 
+   
+   Interfaces
+   ^^^^^^^^^^
+   
 
 
-.. rubric:: Modules
+
+
+
+Modules
+^^^^^^^
 
 .. autosummary::
+   :template: module.rst
    :toctree:
    :recursive:
 
-   smac.utils.constants
-   smac.utils.dependencies
-   smac.utils.io
+   smac.utils.configspace
+   smac.utils.data_structures
    smac.utils.logging
-   smac.utils.merge_foreign_data
-   smac.utils.test_helpers
-   smac.utils.validate
+   smac.utils.multi_objective
+   smac.utils.subspaces
 

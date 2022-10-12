@@ -1,0 +1,37 @@
+smac.utils.data\_structures
+===========================
+
+.. automodule:: smac.utils.data_structures
+
+   
+   
+   
+
+   
+   
+
+   Functions
+   ^^^^^^^^^
+
+   .. autosummary::
+   
+      recursively_compare_dicts
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
