@@ -19,7 +19,7 @@ copyright = f"""
     Copyright {datetime.date.today().strftime('%Y')}, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter"""
-version = "2.0.0a1"
+version = "2.0.0a2"
 
 
 try:

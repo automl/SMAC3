@@ -2,10 +2,11 @@
 
 
 [![Tests](https://github.com/automl/SMAC3/actions/workflows/pytest.yml/badge.svg?branch=main)](https://github.com/automl/SMAC3/actions/workflows/pytest.yml)
-[![Docs](https://github.com/automl/SMAC3/actions/workflows/docs.yml/badge.svg?branch=main)](https://github.com/automl/SMAC3/actions/workflows/docs.yml)
-[![Examples](https://github.com/automl/SMAC3/actions/workflows/examples.yml/badge.svg?branch=main)](https://github.com/automl/SMAC3/actions/workflows/examples.yml)
+[![Documentation](https://github.com/automl/SMAC3/actions/workflows/docs.yml/badge.svg?branch=main)](https://github.com/automl/SMAC3/actions/workflows/docs.yml)
 [![codecov
 Status](https://codecov.io/gh/automl/SMAC3/branch/master/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
+
+![SMAC Logo](docs/images/logo.png "SMAC Logo")
 
 SMAC is a tool for algorithm configuration to optimize the parameters of arbitrary algorithms, including hyperparameter 
 optimization of Machine Learning algorithms. The main core consists of Bayesian Optimization in combination with an 

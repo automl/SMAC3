@@ -1,3 +1,10 @@
+# 2.0.0a2
+
+## Minor
+- Removed example badget in README
+- Added SMAC logo to README
+
+
 # 2.0.0a1
 
 ## Big Changes
