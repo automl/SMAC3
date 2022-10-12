@@ -5,10 +5,10 @@
 
 Computation times
 =================
-**01:32.364** total execution time for **examples_3_multi_objective** files:
+**01:23.640** total execution time for **examples_3_multi_objective** files:
 
 +------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_3_multi_objective_2_parego.py` (``2_parego.py``)     | 00:50.697 | 0.0 MB |
+| :ref:`sphx_glr_examples_3_multi_objective_2_parego.py` (``2_parego.py``)     | 00:53.277 | 0.0 MB |
 +------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_3_multi_objective_1_schaffer.py` (``1_schaffer.py``) | 00:41.667 | 0.0 MB |
+| :ref:`sphx_glr_examples_3_multi_objective_1_schaffer.py` (``1_schaffer.py``) | 00:30.363 | 0.0 MB |
 +------------------------------------------------------------------------------+-----------+--------+
