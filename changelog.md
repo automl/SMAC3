@@ -14,20 +14,19 @@
 * We incorporated ConfigSpace 0.6, which simplified our examples.
 * Examples and documentation are completely reworked. Examples use the new ConfigSpace, and the documentation is adapted to version 2.0.
 * Transparent target function signatures: SMAC checks now explicitly if an argument is available (the required arguments are now specified in the intensifier). If there are more arguments that are not passed by SMAC, a warning is raised.
-* Instances, seeds, and budgets can be set to none now. However, mixing none and non-none will throw an exception.
 * Components implement a ``meta`` property now, all of which describe the initial state of SMAC. The facade collects all metadata and saves the initial state of the scenario.
 * Improved multi-objective in general: RunHistory (in addition to RunHistoryEncoder) both incorporates the multi-objective algorithm. In other words, if the multi-objective algorithm changes the output, it directly affects the optimization process.
 * Configspace is saved in json only
 * StatusType is saved as integer and not as dict anymore
 * We changed the behavior of continuing a run:
     * SMAC automatically checks if a scenario was saved earlier. If there exists a scenario and the initial state is the same, SMAC automatically loads the previous data. However, continuing from that run is not possible yet.
-    * If there was a scenario earlier, but the initial state is different, then the user is asked to overwrite the run or to still continue the run although the state is different (Note that this only can happen if the name specified in the scenario is the same). Alternatively, an `old` to the old run is added.
+    * If there was a scenario earlier, but the initial state is different, then the user is asked to overwrite the run or to still continue the run although the state is different (Note that this only can happen if the name specified in the scenario is the same). Alternatively, an `old` to the old run is added (e.g., the name was test, it becomes test-old).
     * The initial state of the SMAC run also specifies the name (if no name in the scenario is specified). If the user changes something in the code base or in the scenario, the name and, therefore, the save location automatically changes.
 
 ## New Features
 * Added a new termination feature: Use `terminate_cost_threshold` in the scenario to stop the optimization after a configuration was evaluated with a cost lower than the threshold.
 * Callbacks are completely redesigned. Added callbacks to the facade are called in different positions in the Bayesian optimization loop.
-* MeanAggregationStrategy supports objective weights now.
+* The multi-objective algorithm `MeanAggregationStrategy` supports objective weights now.
 * RunHistory got more methods like ``get_incumbent`` or ``get_pareto_front``.
 
 ## Fixes
@@ -42,6 +41,7 @@
 
 ## Code Related
 * Converted all unittests to pytests.
+* Instances, seeds, and budgets can be set to none now. However, mixing none and non-none will throw an exception.
 
 
 # 1.4.0
