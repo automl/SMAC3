@@ -9,14 +9,12 @@ on:
     branches:
       - main
       - development
-      - development-2.0
 
   # Trigger on a open/push to a PR targeting one of these branches
   pull_request:
     branches:
       - main
       - development
-      - development-2.0
 
 jobs:
   dist:

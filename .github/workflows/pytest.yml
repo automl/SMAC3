@@ -9,14 +9,12 @@ on:
     branches:
       - main
       - development
-      - development-2.0
 
   # Triggers with push to a pr aimed at main
   pull_request:
     branches:
       - main
       - development
-      - development-2.0
 
   schedule:
     # Every day at 7AM UTC
