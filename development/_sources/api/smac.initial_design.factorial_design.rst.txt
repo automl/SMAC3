@@ -13,7 +13,9 @@ smac.initial\_design.factorial\_design
 
    
    
-   .. rubric:: Classes
+   
+   Classes
+   ^^^^^^^
 
    .. autosummary::
    
@@ -24,6 +26,12 @@ smac.initial\_design.factorial\_design
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

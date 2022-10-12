@@ -1,0 +1,12 @@
+
+:orphan:
+
+.. _sphx_glr_examples_5_commandline_sg_execution_times:
+
+Computation times
+=================
+**00:00.844** total execution time for **examples_5_commandline** files:
+
++----------------------------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_examples_5_commandline_1_call_target_function_script.py` (``1_call_target_function_script.py``) | 00:00.844 | 0.0 MB |
++----------------------------------------------------------------------------------------------------------------+-----------+--------+

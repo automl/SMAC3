@@ -9,27 +9,31 @@ smac.utils.logging
 
    
    
-   .. rubric:: Functions
+
+   Functions
+   ^^^^^^^^^
 
    .. autosummary::
    
       format_array
-   
-   
-
-   
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      PickableLoggerAdapter
+      get_logger
+      setup_logging
    
    
 
    
    
    
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

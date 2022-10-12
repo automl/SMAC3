@@ -13,17 +13,25 @@ smac.initial\_design.sobol\_design
 
    
    
-   .. rubric:: Classes
+   
+   Classes
+   ^^^^^^^
 
    .. autosummary::
    
-      SobolDesign
+      SobolInitialDesign
    
    
 
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

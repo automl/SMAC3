@@ -13,24 +13,25 @@ smac.runhistory.runhistory
 
    
    
-   .. rubric:: Classes
+   
+   Classes
+   ^^^^^^^
 
    .. autosummary::
    
-      DataOrigin
-      EnumEncoder
-      InstSeedBudgetKey
-      InstSeedKey
       RunHistory
-      RunInfo
-      RunKey
-      RunValue
    
    
 
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

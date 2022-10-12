@@ -13,17 +13,25 @@ smac.facade.hyperband\_facade
 
    
    
-   .. rubric:: Classes
+   
+   Classes
+   ^^^^^^^
 
    .. autosummary::
    
-      HB4AC
+      HyperbandFacade
    
    
 
    
    
    
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
 
 
 

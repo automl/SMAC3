@@ -1,0 +1,37 @@
+smac.intensifier.hyperband\_worker
+==================================
+
+.. automodule:: smac.intensifier.hyperband_worker
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      HyperbandWorker
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

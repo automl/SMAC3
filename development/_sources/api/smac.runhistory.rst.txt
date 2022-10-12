@@ -19,15 +19,25 @@
    
    
 
+   
+   Interfaces
+   ^^^^^^^^^^
+   
 
 
-.. rubric:: Modules
+
+
+
+Modules
+^^^^^^^
 
 .. autosummary::
+   :template: module.rst
    :toctree:
    :recursive:
 
+   smac.runhistory.dataclasses
+   smac.runhistory.encoder
+   smac.runhistory.enumerations
    smac.runhistory.runhistory
-   smac.runhistory.runhistory2epm
-   smac.runhistory.runhistory2epm_boing
 
