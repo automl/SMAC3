@@ -6,7 +6,7 @@
 [![codecov
 Status](https://codecov.io/gh/automl/SMAC3/branch/master/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
 
-![SMAC Logo](docs/images/logo.png "SMAC Logo")
+<div style="width: 50%;"><img src="docs/images/logo.png" /></div>
 
 SMAC is a tool for algorithm configuration to optimize the parameters of arbitrary algorithms, including hyperparameter 
 optimization of Machine Learning algorithms. The main core consists of Bayesian Optimization in combination with an 
