@@ -1,6 +1,0 @@
-paramfile = examples/commandline/branin/configspace.pcs
-run_obj = quality
-runcount_limit = 10
-output_dir = tests/test_files/test_restored_state
-algo = python examples/commandline/branin.py
-deterministic = 0

@@ -1,7 +1,5 @@
 import datetime
-import os
-import sys
-import warnings
+import traceback
 
 name = "SMAC3"
 package_name = "smac"
@@ -20,13 +18,37 @@ project_urls = {
 copyright = f"""
     Copyright {datetime.date.today().strftime('%Y')}, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
-    and Frank Hutter
-"""
-version = "1.4.0"
+    and Frank Hutter"""
+version = "2.0.0a1"
 
 
-if os.name != "posix":
-    warnings.warn(
-        f"Detected unsupported operating system: {sys.platform}."
-        "Please be aware, that SMAC might not run on this system."
+try:
+    from smac.callback import Callback
+    from smac.facade import (
+        AlgorithmConfigurationFacade,
+        BlackBoxFacade,
+        HyperbandFacade,
+        HyperparameterOptimizationFacade,
+        MultiFidelityFacade,
+        RandomFacade,
     )
+    from smac.runhistory.runhistory import RunHistory
+    from smac.scenario import Scenario
+    from smac.utils.logging import setup_logging
+
+    setup_logging(0)
+
+    __all__ = [
+        "Scenario",
+        "RunHistory",
+        "BlackBoxFacade",
+        "HyperparameterOptimizationFacade",
+        "MultiFidelityFacade",
+        "AlgorithmConfigurationFacade",
+        "RandomFacade",
+        "HyperbandFacade",
+        "Callback",
+    ]
+except ModuleNotFoundError as e:
+    print(e)
+    traceback.print_exc()

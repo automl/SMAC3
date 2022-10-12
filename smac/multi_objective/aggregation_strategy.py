@@ -1,56 +1,44 @@
 from __future__ import annotations
 
-from abc import abstractmethod
+from typing import Any
 
 import numpy as np
 
 from smac.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
 )
+from smac.scenario import Scenario
 
 
-class AggregationStrategy(AbstractMultiObjectiveAlgorithm):
-    """
-    An abstract class to aggregate multi-objective losses to a single objective loss,
-    which can then be utilized by the single-objective optimizer.
-    """
+class MeanAggregationStrategy(AbstractMultiObjectiveAlgorithm):
+    """A class to mean-aggregate multi-objective costs to a single cost.
 
-    @abstractmethod
-    def __call__(self, values: list[float]) -> float:
-        """
-        Transform a multi-objective loss to a single loss.
-
-        Parameters
-        ----------
-        values : list[float]
-            Normalized values.
-
-        Returns
-        -------
-        cost : float
-            Combined cost.
-        """
-        raise NotImplementedError
-
-
-class MeanAggregationStrategy(AggregationStrategy):
-    """
-    A class to mean-aggregate multi-objective losses to a single objective losses,
-    which can then be utilized by the single-objective optimizer.
+    Parameters
+    ----------
+    scenario : Scenario
+    objective_weights : list[float] | None, defaults to None
+        Weights for an weighted average. Must be of the same length as the number of objectives.
     """
 
-    def __call__(self, values: list[float]) -> float:
-        """
-        Transform a multi-objective loss to a single loss.
+    def __init__(
+        self,
+        scenario: Scenario,
+        objective_weights: list[float] | None = None,
+    ):
+        super(MeanAggregationStrategy, self).__init__()
 
-        Parameters
-        ----------
-        values : list[float]
-            Normalized values.
+        if objective_weights is not None and scenario.count_objectives() != len(objective_weights):
+            raise ValueError("Number of objectives and number of weights must be equal.")
 
-        Returns
-        -------
-        cost : float
-            Combined cost.
-        """
-        return np.mean(values, axis=0)
+        self._objective_weights = objective_weights
+
+    @property
+    def meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+            "objective_weights": self._objective_weights,
+        }
+
+    def __call__(self, values: list[float]) -> float:  # noqa: D102
+        return float(np.average(values, axis=0, weights=self._objective_weights))
