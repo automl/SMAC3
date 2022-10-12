@@ -1,15 +1,17 @@
+import numpy as np
+import pytest
+from ConfigSpace import ConfigurationSpace, Float
+
+from smac import (
+    AlgorithmConfigurationFacade,
+    BlackBoxFacade,
+    HyperparameterOptimizationFacade,
+)
+from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
+from smac.multi_objective.parego import ParEGO
+
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
-
-import unittest
-
-import numpy as np
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter
-from matplotlib import pyplot as plt
-
-from smac.configspace import ConfigurationSpace
-from smac.facade.smac_ac_facade import SMAC4AC
-from smac.scenario.scenario import Scenario
 
 MIN_V = -2
 MAX_V = 2
@@ -29,7 +31,6 @@ def get_optimum():
 
     for v in np.linspace(MIN_V, MAX_V, 200):
         f1, f2 = schaffer(v)
-
         f2 = f2 / UPSCALING_FACTOR
 
         if f1 + f2 < optimum_sum:
@@ -39,78 +40,66 @@ def get_optimum():
     return optimum
 
 
-def plot(all_x):
-    plt.figure()
-    for x in all_x:
-        f1, f2 = schaffer(x)
-        plt.scatter(f1, f2, c="blue", alpha=0.1)
-
-    plt.show()
-
-
-def plot_from_smac(smac):
-    rh = smac.get_runhistory()
-    all_x = []
-    for (config_id, instance_id, seed, budget), (
-        cost,
-        time,
-        status,
-        starttime,
-        endtime,
-        additional_info,
-    ) in rh.data.items():
-        config = rh.ids_config[config_id]
-        all_x.append(config["x"])
-
-    plot(all_x)
-
-
-def tae(cfg):
+def tae(cfg, seed=0):
     f1, f2 = schaffer(cfg["x"])
-
-    return {"metric1": f1, "metric2": f2}
-
-
-class SchafferTest(unittest.TestCase):
-    def setUp(self):
-        self.cs = ConfigurationSpace()
-        self.cs.add_hyperparameter(UniformFloatHyperparameter("x", lower=MIN_V, upper=MAX_V))
-
-        # Scenario object
-        self.scenario = Scenario(
-            {
-                "run_obj": "quality",  # we optimize quality (alternatively runtime)
-                "runcount-limit": 50,  # max. number of function evaluations
-                "cs": self.cs,  # configuration space
-                "deterministic": True,
-                "multi_objectives": "metric1, metric2",
-                "limit_resources": False,
-            }
-        )
-
-        self.facade_kwargs = {
-            "scenario": self.scenario,
-            "rng": np.random.RandomState(0),
-            "tae_runner": tae,
-        }
-
-    def test_AC(self):
-        smac = SMAC4AC(**self.facade_kwargs)
-        incumbent = smac.optimize()
-
-        f1_inc, f2_inc = schaffer(incumbent["x"])
-        f1_opt, f2_opt = get_optimum()
-
-        f2_inc = f2_inc / UPSCALING_FACTOR
-
-        self.assertAlmostEqual(f1_inc + f2_inc, f1_opt + f2_opt, places=1)
-
-        return smac
+    return {"cost1": f1, "cost2": f2}
 
 
-if __name__ == "__main__":
-    t = SchafferTest()
-    t.setUp()
+@pytest.fixture
+def configspace():
+    cs = ConfigurationSpace()
+    cs.add_hyperparameter(Float("x", (MIN_V, MAX_V)))
 
-    smac = t.test_AC()
-    plot_from_smac(smac)
+    return cs
+
+
+@pytest.mark.parametrize("facade", [BlackBoxFacade, HyperparameterOptimizationFacade, AlgorithmConfigurationFacade])
+def test_mean_aggregation(facade, make_scenario, configspace):
+    scenario = make_scenario(configspace, use_multi_objective=True)
+
+    smac = facade(
+        scenario=scenario,
+        target_function=tae,
+        multi_objective_algorithm=MeanAggregationStrategy(scenario=scenario),
+        overwrite=True,
+    )
+    incumbent = smac.optimize()
+
+    f1_inc, f2_inc = schaffer(incumbent["x"])
+    f1_opt, f2_opt = get_optimum()
+    f2_inc = f2_inc / UPSCALING_FACTOR
+
+    inc = f1_inc + f2_inc
+    opt = f1_opt + f2_opt
+    diff = abs(inc - opt)
+
+    assert diff < 0.06
+
+
+@pytest.mark.parametrize("facade", [BlackBoxFacade, HyperparameterOptimizationFacade, AlgorithmConfigurationFacade])
+def test_parego(facade, make_scenario, configspace):
+    scenario = make_scenario(configspace, use_multi_objective=True)
+
+    smac = facade(
+        scenario=scenario,
+        target_function=tae,
+        multi_objective_algorithm=ParEGO(scenario=scenario),
+        overwrite=True,
+    )
+    smac.optimize()
+
+    # We use the mean aggregation strategy to get the same weights
+    multi_objective_algorithm = MeanAggregationStrategy(scenario=scenario)
+    smac.runhistory.multi_objective_algorithm = multi_objective_algorithm
+
+    incumbent, _ = smac.runhistory.get_incumbent()
+
+    f1_inc, f2_inc = schaffer(incumbent["x"])
+    f1_opt, f2_opt = get_optimum()
+    f2_inc = f2_inc / UPSCALING_FACTOR
+
+    inc = f1_inc + f2_inc
+    opt = f1_opt + f2_opt
+    diff = abs(inc - opt)
+
+    assert diff < 0.06

@@ -1,49 +1,37 @@
-from typing import Any
+from __future__ import annotations
 
-from smac.facade.roar_facade import ROAR
-from smac.initial_design.random_configuration_design import RandomConfigurations
-from smac.intensification.hyperband import Hyperband
+from smac.facade.random_facade import RandomFacade
+from smac.intensifier.hyperband import Hyperband
+from smac.scenario import Scenario
 
-__author__ = "Ashwin Raaghav Narayanan"
-__copyright__ = "Copyright 2019, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class HB4AC(ROAR):
-    """Facade to use model-free Hyperband for algorithm configuration.
+class HyperbandFacade(RandomFacade):
+    """
+    Facade to use model-free Hyperband [LJDR18]_ for algorithm configuration.
 
-    This facade overwrites options available via the SMAC facade.
-
-    See Also
-    --------
-    :class:`~smac.facade.smac_ac_facade.SMAC4AC` for documentation of parameters.
-
-    Attributes
-    ----------
-    logger
-    stats : Stats
-    solver : SMBO
-    runhistory : RunHistory
-        List with information about previous runs
-    trajectory : list
-        List of all incumbents
+    Uses Random Aggressive Online Racing (ROAR) to compare configurations, a random
+    initial design and the Hyperband intensifier.
     """
 
-    def __init__(self, **kwargs: Any):
-        kwargs["initial_design"] = kwargs.get("initial_design", RandomConfigurations)
+    @staticmethod
+    def get_intensifier(  # type: ignore
+        scenario: Scenario,
+        *,
+        min_challenger: int = 1,
+        eta: int = 3,
+    ) -> Hyperband:
+        """Returns a Hyperband intensifier instance. That means that budgets are supported.
 
-        # Intensification parameters
-        # select Hyperband as the intensifier ensure respective parameters are provided
-        kwargs["intensifier"] = Hyperband
-
-        # set Hyperband parameters if not given
-        intensifier_kwargs = kwargs.get("intensifier_kwargs", dict())
-        intensifier_kwargs["min_chall"] = 1
-        if intensifier_kwargs.get("eta") is None:
-            intensifier_kwargs["eta"] = 3
-        if intensifier_kwargs.get("instance_order") is None:
-            intensifier_kwargs["instance_order"] = "shuffle_once"
-        kwargs["intensifier_kwargs"] = intensifier_kwargs
-
-        super().__init__(**kwargs)
-        self.logger.info(self.__class__)
+        min_challenger : int, defaults to 1
+            Minimal number of challengers to be considered (even if time_bound is exhausted earlier).
+        eta : float, defaults to 3
+            The "halving" factor after each iteration in a Successive Halving run.
+        """
+        return Hyperband(
+            scenario=scenario,
+            min_challenger=min_challenger,
+            eta=eta,
+        )

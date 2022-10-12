@@ -1,7 +1,53 @@
+# 2.0.0a1
+
+## Big Changes
+* We redesigned the scenario class completely. The scenario is implemented as a dataclass now and holds only environment variables (like limitations or save directory). Everything else was moved to the components directly.
+* We removed runtime optimization completely (no adaptive capping or imputing anymore).
+* We removed the command-line interface and restructured everything alongside. Since SMAC was building upon the command-line interface (especially in combination with the scenario), it was complicated to understand the behavior or find specific implementations. With the removal, we re-wrote everything in python and re-implemented the feature of using scripts as target functions.
+* Introducing trials: Each config/seed/budget/instance calculation is a trial.
+* The configuration chooser is integrated into the SMBO object now. Therefore, SMBO finally implements an ask-tell interface now.
+* Facades are redesigned so that they accept instantiated components directly. If a component is not passed, a default component is used, which is specified for each facade individually in the form of static methods. You can use those static methods directly to adapt a component to your choice.
+* A lot of API changes and renamings (e.g., RandomConfigurationChooser -> RandomDesign, Runhistory2EPM -> RunHistoryEncoder).
+* Ambiguous variables are renamed and unified across files.
+* Dependencies of modules are reduced drastically.
+* We incorporated Pynisher 1.0, which ensures limitations cross-platform.
+* We incorporated ConfigSpace 0.6, which simplified our examples.
+* Examples and documentation are completely reworked. Examples use the new ConfigSpace, and the documentation is adapted to version 2.0.
+* Transparent target function signatures: SMAC checks now explicitly if an argument is available (the required arguments are now specified in the intensifier). If there are more arguments that are not passed by SMAC, a warning is raised.
+* Components implement a ``meta`` property now, all of which describe the initial state of SMAC. The facade collects all metadata and saves the initial state of the scenario.
+* Improved multi-objective in general: RunHistory (in addition to RunHistoryEncoder) both incorporates the multi-objective algorithm. In other words, if the multi-objective algorithm changes the output, it directly affects the optimization process.
+* Configspace is saved in json only
+* StatusType is saved as integer and not as dict anymore
+* We changed the behavior of continuing a run:
+    * SMAC automatically checks if a scenario was saved earlier. If there exists a scenario and the initial state is the same, SMAC automatically loads the previous data. However, continuing from that run is not possible yet.
+    * If there was a scenario earlier, but the initial state is different, then the user is asked to overwrite the run or to still continue the run although the state is different (Note that this only can happen if the name specified in the scenario is the same). Alternatively, an `old` to the old run is added (e.g., the name was test, it becomes test-old).
+    * The initial state of the SMAC run also specifies the name (if no name in the scenario is specified). If the user changes something in the code base or in the scenario, the name and, therefore, the save location automatically changes.
+
+## New Features
+* Added a new termination feature: Use `terminate_cost_threshold` in the scenario to stop the optimization after a configuration was evaluated with a cost lower than the threshold.
+* Callbacks are completely redesigned. Added callbacks to the facade are called in different positions in the Bayesian optimization loop.
+* The multi-objective algorithm `MeanAggregationStrategy` supports objective weights now.
+* RunHistory got more methods like ``get_incumbent`` or ``get_pareto_front``.
+
+## Fixes
+* You ever noticed that the third configuration has no origin? It's fixed now.
+* We fixed ParEGO (it updates every time training is performed now).
+
+## Optimization Changes
+* Changed initial design behavior
+    * You can add additional configurations now.
+    * ``max_ratio`` will limit both ``n_configs`` and ``n_configs_per_hyperparameter`` but not additional configurations
+    * Reduced default ``max_ratio`` to 0.1.
+
+## Code Related
+* Converted all unittests to pytests.
+* Instances, seeds, and budgets can be set to none now. However, mixing none and non-none will throw an exception.
+
+
 # 1.4.0
 
 ## Features
-* [BOinG](https://arxiv.org/abs/2111.05834): A two-stage Bayesian optimization approach to allow the 
+* [BOinG](https://arxiv.org/abs/2111.05834): A two-stage bayesian optimization approach to allow the 
 optimizer to focus on the most promising regions.
 * [TurBO](https://arxiv.org/abs/1910.01739): Reimplementaion of TurBO-1 algorithm.
 * Updated pSMAC: Can pass arbitrary SMAC facades now. Added example and fixed tests.
@@ -12,8 +58,8 @@ or optionally in `average_cost`/`sum_cost`/`min_cost` to receive a single float 
 the cached cost values do not need to be updated everytime a new entry to the runhistory was added.
 
 ## Interface changes
-* We changed the location of Gaussian processes and random forests. They are in the folders
-`epm/gaussian_process` and `epm/random_forest` now.
+* We changed the location of gaussian processes and random forests. They are in the folders
+epm/gaussian_process and epm/random_forest now.
 * Also, we restructured the optimizer folder and therefore the location of the acquisition functions
 and configuration chooser.
 * Multi-objective functions are located in the folder `multi_objective`.

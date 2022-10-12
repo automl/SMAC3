@@ -134,9 +134,13 @@ dmypy.json
 .pyre/
 
 *smac3-output_*
+*smac3_output*
 
 # macOS files
 .DS_Store
 
 # Remove docker files
 docker
+
+# Others
+src

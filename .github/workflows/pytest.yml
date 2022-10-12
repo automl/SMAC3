@@ -9,12 +9,14 @@ on:
     branches:
       - main
       - development
+      - development-2.0
 
   # Triggers with push to a pr aimed at main
   pull_request:
     branches:
       - main
       - development
+      - development-2.0
 
   schedule:
     # Every day at 7AM UTC
@@ -43,7 +45,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9"]
+        python-version: ["3.8", "3.9", "3.10"]
+        # python-version: ["3.8"]
         os: ["ubuntu-latest"]
 
     steps:
@@ -96,7 +99,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.8", "3.9", "3.10"]
+        # python-version: ["3.8"]
         os: ["ubuntu-latest"]
 
     steps:
@@ -132,7 +136,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.8", "3.9", "3.10"]
+        # python-version: ["3.8"]
         os: ["ubuntu-latest"]
 
     steps:

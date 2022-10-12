@@ -9,12 +9,14 @@ on:
     branches:
       - main
       - development
+      - development-2.0
 
   # When a push occurs on a PR that targets these branches
   pull_request:
     branches:
       - main
       - development
+      - development-2.0
 
 jobs:
   run-all-files:

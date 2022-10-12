@@ -1,5 +1,0 @@
-algo = python tests/test_files/test_deterministic_func.py
-paramfile = tests/test_files/test_deterministic.pcs
-run_obj = quality
-runcount_limit = 3
-deterministic = 1

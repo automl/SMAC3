@@ -9,12 +9,14 @@ on:
     branches:
       - main
       - development
+      - development-2.0
 
   # Trigger on a open/push to a PR targeting one of these branches
   pull_request:
     branches:
       - main
       - development
+      - development-2.0
 
 jobs:
   dist:
@@ -27,7 +29,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: "3.9"
+        python-version: "3.10"
 
     - name: Build dist
       run: |

@@ -1,77 +1,52 @@
-from typing import Any, Dict, Iterable, List, Union
+from __future__ import annotations
+
+from typing import Iterable
 
 import logging
+import logging.config
+from pathlib import Path
 
 import numpy as np
+import yaml
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+import smac
+
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class PickableLoggerAdapter(object):
-    def __init__(self, name: str) -> None:
-        self.name = name
-        self.logger = logging.getLogger(self.name)
+def setup_logging(level: int | Path | None = None) -> None:
+    """Sets up the logging configuration for all modules.
 
-    def __getstate__(self) -> Dict[str, str]:
-        """
-        Method is called when pickle dumps an object.
+    Parameters
+    ----------
+    level : int | Path | None, defaults to None
+        An integer representing the logging level. An own logging configuration can be used when passing a path.
+    """
+    if isinstance(level, Path):
+        log_filename = level
+    else:
+        path = Path() / smac.__file__
+        log_filename = path.parent / "logging.yml"
 
-        Returns
-        -------
-        Dictionary, representing the object state to be pickled. Ignores
-        the self.logger field and only returns the logger name.
-        """
-        return {"name": self.name}
+    with (log_filename).open("r") as stream:
+        config = yaml.safe_load(stream)
 
-    def __setstate__(self, state: Dict[str, Any]) -> None:
-        """
-        Method is called when pickle loads an object. Retrieves the name and
-        creates a logger.
+    if isinstance(level, int):
+        config["root"]["level"] = level
+        config["handlers"]["console"]["level"] = level
 
-        Parameters
-        ----------
-        state - dictionary, containing the logger name.
-        """
-        self.name = state["name"]
-        self.logger = logging.getLogger(self.name)
-
-    def debug(self, msg, *args, **kwargs):  # type: ignore[no-untyped-def] # noqa F821
-        """Debug method."""
-        self.logger.debug(msg, *args, **kwargs)
-
-    def info(self, msg, *args, **kwargs):  # type: ignore[no-untyped-def] # noqa F821
-        """Info method."""
-        self.logger.info(msg, *args, **kwargs)
-
-    def warning(self, msg, *args, **kwargs):  # type: ignore[no-untyped-def] # noqa F821
-        """Warning method."""
-        self.logger.warning(msg, *args, **kwargs)
-
-    def error(self, msg, *args, **kwargs):  # type: ignore[no-untyped-def] # noqa F821
-        """Error method."""
-        self.logger.error(msg, *args, **kwargs)
-
-    def exception(self, msg, *args, **kwargs):  # type: ignore[no-untyped-def] # noqa F821
-        """Exception method."""
-        self.logger.exception(msg, *args, **kwargs)
-
-    def critical(self, msg, *args, **kwargs):  # type: ignore[no-untyped-def] # noqa F821
-        """Critical method."""
-        self.logger.critical(msg, *args, **kwargs)
-
-    def log(self, level, msg, *args, **kwargs):  # type: ignore[no-untyped-def] # noqa F821
-        """Log method."""
-        self.logger.log(level, msg, *args, **kwargs)
-
-    def isEnabledFor(self, level):  # type: ignore[no-untyped-def] # noqa F821
-        """Check if logger is enabled for a given level."""
-        return self.logger.isEnabledFor(level)
+    logging.config.dictConfig(config)
 
 
-def format_array(
-    inputs: Union[str, int, float, np.ndarray, list], format_vals: bool = True
-) -> Union[float, List[float]]:
+def get_logger(logger_name: str) -> logging.Logger:
+    """Get the logger by name"""
+    logger = logging.getLogger(logger_name)
+    return logger
+
+
+# TODO: Move me
+def format_array(inputs: str | int | float | np.ndarray | list, format_vals: bool = True) -> float | list[float]:
     """Transform a numpy array to a list of format so that it can be printed by logger. If the list
     holds one element only, then a formatted string is returned.
 

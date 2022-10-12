@@ -20,13 +20,9 @@ def read_file(filepath: str) -> str:
         return fh.read()
 
 
+torch_requirements = ["torch>=1.9.0", "gpytorch>=1.5.0", "pyro-ppl>=1.7.0", "botorch>=0.5.0"]
 extras_require = {
-    "gpytorch": [
-        "torch>=1.9.0",
-        "gpytorch>=1.5.0",
-        "pyro-ppl>=1.7.0",
-        "botorch>=0.5.0"
-    ],
+    "gpytorch": torch_requirements,
     "dev": [
         "setuptools",
         "types-setuptools",
@@ -36,7 +32,7 @@ extras_require = {
         "pytest-xdist",
         "pytest-timeout",
         # Docs
-        "automl-sphinx-theme>=0.1.9",
+        "automl-sphinx-theme>=0.1.18",
         # Others
         "mypy",
         "isort",
@@ -44,6 +40,7 @@ extras_require = {
         "pydocstyle",
         "flake8",
         "pre-commit",
+        *torch_requirements,
     ],
 }
 
@@ -60,20 +57,21 @@ setuptools.setup(
     version=version,
     packages=setuptools.find_packages(exclude=["tests"]),
     include_package_data=True,
-    python_requires=">=3.7",
+    python_requires=">=3.8",
     install_requires=[
-        "numpy>=1.7.1",
-        "scipy>=1.7.0",
+        "numpy>=1.23.3",
+        "scipy>=1.9.2",
         "psutil",
-        "pynisher<1.0.0",
-        "ConfigSpace>=0.5.0",
+        "pynisher>=1.0.0",
+        "ConfigSpace>=0.6.0",
         "joblib",
-        "scikit-learn>=0.22.0",
+        "scikit-learn>=1.1.2",
         "pyrfr>=0.8.3",
         "dask",
         "distributed",
         "emcee>=3.0.0",
         "regex",
+        "pyyaml",
     ],
     extras_require=extras_require,
     test_suite="pytest",
@@ -82,7 +80,6 @@ setuptools.setup(
         "console_scripts": ["smac = smac.smac_cli:cmd_line_call"],
     },
     classifiers=[
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
