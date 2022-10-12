@@ -92,30 +92,26 @@ This examples show how to use the Ask-and-Tell interface.
     [INFO][abstract_intensifier.py:340] Challenger (4.6086) is better than incumbent (4.6237) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
     [INFO][abstract_intensifier.py:367] --- x0: 3.145247905049809 -> 3.1444841150528813
-    [INFO][abstract_intensifier.py:340] Challenger (4.5925) is better than incumbent (4.6086) on 1 trials.
+    [INFO][abstract_intensifier.py:340] Challenger (4.6085) is better than incumbent (4.6086) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: 3.1444841150528813 -> 3.141727004877872
-    [INFO][abstract_intensifier.py:340] Challenger (4.5918) is better than incumbent (4.5925) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x1: 9.877875247319713 -> 9.877925035353702
+    [INFO][abstract_intensifier.py:340] Challenger (4.6037) is better than incumbent (4.6085) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: 3.141727004877872 -> 3.1417153816987575
-    [INFO][abstract_intensifier.py:367] --- x1: 9.877875247319713 -> 9.87731699906795
-    [INFO][abstract_intensifier.py:340] Challenger (4.5885) is better than incumbent (4.5918) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: 3.1444841150528813 -> 3.144117537075383
+    [INFO][abstract_intensifier.py:367] --- x1: 9.877925035353702 -> 9.877451445404533
+    [INFO][abstract_intensifier.py:340] Challenger (4.591) is better than incumbent (4.6037) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: 3.1417153816987575 -> 3.1414623798123653
-    [INFO][abstract_intensifier.py:367] --- x1: 9.87731699906795 -> 9.873880849019194
-    [INFO][abstract_intensifier.py:340] Challenger (4.587) is better than incumbent (4.5885) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: 3.144117537075383 -> 3.1422294565785993
+    [INFO][abstract_intensifier.py:367] --- x1: 9.877451445404533 -> 9.877875247319713
+    [INFO][abstract_intensifier.py:340] Challenger (4.5851) is better than incumbent (4.591) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: 3.1414623798123653 -> 3.1417153816987575
-    [INFO][abstract_intensifier.py:367] --- x1: 9.873880849019194 -> 9.870950763527455
-    [INFO][abstract_intensifier.py:340] Challenger (4.5849) is better than incumbent (4.587) on 1 trials.
-    [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: 3.1417153816987575 -> 3.141228989380643
-    [INFO][abstract_intensifier.py:367] --- x1: 9.870950763527455 -> 9.867958320761574
+    [INFO][abstract_intensifier.py:367] --- x0: 3.1422294565785993 -> 3.141254801993627
+    [INFO][abstract_intensifier.py:367] --- x1: 9.877875247319713 -> 9.866354909011127
     [INFO][base_smbo.py:260] Configuration budget is exhausted.
-    [INFO][abstract_facade.py:325] Final Incumbent: {'x0': 3.141228989380643, 'x1': 9.867958320761574}
-    [INFO][abstract_facade.py:326] Estimated cost: 4.584902386019185
+    [INFO][abstract_facade.py:325] Final Incumbent: {'x0': 3.141254801993627, 'x1': 9.866354909011127}
+    [INFO][abstract_facade.py:326] Estimated cost: 4.58509909985105
     Default cost: 16916.0
-    Default cost: 4.584902386019185
+    Default cost: 4.58509909985105
 
 
 
@@ -205,7 +201,7 @@ This examples show how to use the Ask-and-Tell interface.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  18.216 seconds)
+   **Total running time of the script:** ( 0 minutes  21.217 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_3_ask_and_tell.py:
