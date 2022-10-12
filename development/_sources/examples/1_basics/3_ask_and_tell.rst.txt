@@ -107,15 +107,15 @@ This examples show how to use the Ask-and-Tell interface.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
     [INFO][abstract_intensifier.py:367] --- x0: 3.1414623798123653 -> 3.1417153816987575
     [INFO][abstract_intensifier.py:367] --- x1: 9.873880849019194 -> 9.870950763527455
-    [INFO][abstract_intensifier.py:340] Challenger (4.5849) is better than incumbent (4.587) on 1 trials.
+    [INFO][abstract_intensifier.py:340] Challenger (4.5859) is better than incumbent (4.587) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: 3.1417153816987575 -> 3.141228989380643
-    [INFO][abstract_intensifier.py:367] --- x1: 9.870950763527455 -> 9.867958320761574
+    [INFO][abstract_intensifier.py:367] --- x0: 3.1417153816987575 -> 3.1414623798123653
+    [INFO][abstract_intensifier.py:367] --- x1: 9.870950763527455 -> 9.86918189876106
     [INFO][base_smbo.py:260] Configuration budget is exhausted.
-    [INFO][abstract_facade.py:325] Final Incumbent: {'x0': 3.141228989380643, 'x1': 9.867958320761574}
-    [INFO][abstract_facade.py:326] Estimated cost: 4.584902386019185
+    [INFO][abstract_facade.py:325] Final Incumbent: {'x0': 3.1414623798123653, 'x1': 9.86918189876106}
+    [INFO][abstract_facade.py:326] Estimated cost: 4.585876806938448
     Default cost: 16916.0
-    Default cost: 4.584902386019185
+    Default cost: 4.585876806938448
 
 
 
@@ -205,7 +205,7 @@ This examples show how to use the Ask-and-Tell interface.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  18.432 seconds)
+   **Total running time of the script:** ( 0 minutes  20.881 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_3_ask_and_tell.py:
