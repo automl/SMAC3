@@ -88,18 +88,19 @@ def test_parego(facade, make_scenario, configspace):
     )
     smac.optimize()
 
-    # We use the mean aggregation strategy to get the same weights
-    multi_objective_algorithm = MeanAggregationStrategy(scenario=scenario)
-    smac.runhistory.multi_objective_algorithm = multi_objective_algorithm
+    confs, vals = smac.runhistory.get_pareto_front()
 
-    incumbent, _ = smac.runhistory.get_incumbent()
+    min_ = np.inf
+    for x, y in zip(confs, vals):
+        tr = schaffer(x["x"])
+        assert np.allclose(tr, y)
+        if np.sum(y) < np.sum(min_):
+            min_ = y
 
-    f1_inc, f2_inc = schaffer(incumbent["x"])
     f1_opt, f2_opt = get_optimum()
+    f1_inc, f2_inc = min_
     f2_inc = f2_inc / UPSCALING_FACTOR
 
     inc = f1_inc + f2_inc
     opt = f1_opt + f2_opt
-    diff = abs(inc - opt)
-
-    assert diff < 0.06
+    assert abs(inc - opt) < 0.06
