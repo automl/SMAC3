@@ -34,7 +34,9 @@ class SMBO(BaseSMBO):
         self._min_samples = 1
         self._considered_budgets: list[float | None] = [None]
 
-    def get_next_configurations(self, n: int | None = None) -> Iterator[Configuration]:  # noqa: D102
+    def next_configuration(self, n: int | None = None) -> Iterator[Configuration]:  # noqa: D102
+        # TODO: Let's return the initial configurations from this method too
+        
         for callback in self._callbacks:
             callback.on_next_configurations_start(self)
 
@@ -53,6 +55,7 @@ class SMBO(BaseSMBO):
             # the configspace.
             return iter([self._scenario.configspace.sample_configuration(1)])
 
+        # TODO: Check if X/Y differs from the last run, otherwise use cached results 
         self._model.train(X, Y)
 
         x_best_array: np.ndarray | None = None
