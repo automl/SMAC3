@@ -1,0 +1,37 @@
+smac.intensifier.new\_abstract\_intensifier
+===========================================
+
+.. automodule:: smac.intensifier.new_abstract_intensifier
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      NewAbstractIntensifier
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

@@ -635,6 +635,16 @@ style="width: 100%;">
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.intensifier.new_abstract_intensifier.html">
+       smac.intensifier.new_abstract_intensifier
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.intensifier.new_intensifier.html">
+       smac.intensifier.new_intensifier
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.intensifier.stages.html">
        smac.intensifier.stages
       </a>
@@ -1024,6 +1034,8 @@ style="width: 100%;">
         <span class="bp">self</span><span class="o">.</span><span class="n">_considered_budgets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
 
 <div class="viewcode-block" id="SMBO.get_next_configurations"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.SMBO.get_next_configurations">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_configurations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
+        <span class="c1"># TODO: Let&#39;s return the initial configurations from this method too</span>
+        
         <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>
             <span class="n">callback</span><span class="o">.</span><span class="n">on_next_configurations_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
@@ -1042,6 +1054,7 @@ style="width: 100%;">
             <span class="c1"># the configspace.</span>
             <span class="k">return</span> <span class="nb">iter</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">(</span><span class="mi">1</span><span class="p">)])</span>
 
+        <span class="c1"># TODO: Check if X/Y differs from the last run, otherwise use cached results </span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
 
         <span class="n">x_best_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
