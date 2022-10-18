@@ -23,3 +23,7 @@ target_algo_runs.json
 .project
 
 smac3_output*
+tests
+.mypy*
+.pytest*
+dist
