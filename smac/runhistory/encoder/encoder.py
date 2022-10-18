@@ -33,9 +33,6 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
         # TODO: Extend for native multi-objective
         y = np.ones([n_rows, 1])
 
-        if self._multi_objective_algorithm is not None:
-            self._multi_objective_algorithm.update_on_iteration_start()
-
         # Then populate matrix
         for row, (key, run) in enumerate(trials.items()):
             # Scaling is automatically done in configSpace
