@@ -7,6 +7,7 @@ from smac import (
     BlackBoxFacade,
     HyperparameterOptimizationFacade,
     RandomFacade,
+    Callback
 )
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.multi_objective.parego import ParEGO
@@ -82,25 +83,48 @@ def test_mean_aggregation(facade, make_scenario, configspace):
 def test_parego(facade, make_scenario, configspace):
     scenario = make_scenario(configspace, use_multi_objective=True)
 
+    class cb(Callback):
+
+        def __init__(self):
+            super(cb, self).__init__()
+            self._weights = None
+        def on_iteration_start(self, smbo):
+            # weights should still be the same as before
+            w = smbo._runhistory_encoder.multi_objective_algorithm._theta
+            print("start", w, self._weights)
+            if self._weights is not None:
+                print("compare")
+                assert np.allclose(w, self._weights)
+
+        def on_iteration_end(self, smbo):
+            # Weights should have been changed
+            w = smbo._runhistory_encoder.multi_objective_algorithm._theta
+            print("end", w, self._weights)
+            assert w is not None
+            if self._weights is not None:
+                assert not np.allclose(w, self._weights)
+            self._weights = w
+
+
     smac = facade(
         scenario=scenario,
         target_function=tae,
         multi_objective_algorithm=ParEGO(scenario=scenario),
         overwrite=True,
+        callbacks=[cb(), ]
     )
     # The incumbent is not ambiguously because we have a Pareto front
+
     smac.optimize()
 
-    # We use the mean aggregation strategy to get the same weights
-    multi_objective_algorithm = MeanAggregationStrategy(scenario=scenario)
-    smac.runhistory.multi_objective_algorithm = multi_objective_algorithm
+    confs, vals = smac.runhistory.get_pareto_front()
 
-    incumbent, _ = smac.runhistory.get_incumbent()
+    min_ = np.inf
+    for x, y in zip(confs, vals):
+        tr = schaffer(x["x"])
+        assert np.allclose(tr, y)
+        if np.sum(y) < min_:
+            min_ = np.sum(y)
 
-    f1_inc, f2_inc = schaffer(incumbent["x"])
-    f1_opt, f2_opt = get_optimum()
-    inc = f1_inc + f2_inc
-    opt = f1_opt + f2_opt
-    diff = abs(inc - opt)
-
-    assert diff < 0.06
+    opt = np.sum(get_optimum())
+    assert abs(np.sum(min_) - opt) <= 0.06
