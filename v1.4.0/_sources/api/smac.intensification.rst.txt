@@ -1,0 +1,36 @@
+﻿smac.intensification
+====================
+
+.. automodule:: smac.intensification
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   smac.intensification.abstract_racer
+   smac.intensification.hyperband
+   smac.intensification.intensification
+   smac.intensification.parallel_scheduling
+   smac.intensification.simple_intensifier
+   smac.intensification.successive_halving
+

@@ -1,0 +1,29 @@
+smac.optimizer.configuration\_chooser.turbo\_chooser
+====================================================
+
+.. automodule:: smac.optimizer.configuration_chooser.turbo_chooser
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      TurBOChooser
+   
+   
+
+   
+   
+   
+
+
+

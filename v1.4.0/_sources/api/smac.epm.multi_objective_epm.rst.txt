@@ -1,0 +1,29 @@
+smac.epm.multi\_objective\_epm
+==============================
+
+.. automodule:: smac.epm.multi_objective_epm
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      MultiObjectiveEPM
+   
+   
+
+   
+   
+   
+
+
+

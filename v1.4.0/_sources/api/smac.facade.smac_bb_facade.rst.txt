@@ -1,0 +1,29 @@
+smac.facade.smac\_bb\_facade
+============================
+
+.. automodule:: smac.facade.smac_bb_facade
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      SMAC4BB
+   
+   
+
+   
+   
+   
+
+
+

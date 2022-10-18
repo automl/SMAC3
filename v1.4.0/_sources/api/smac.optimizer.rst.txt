@@ -1,0 +1,35 @@
+﻿smac.optimizer
+==============
+
+.. automodule:: smac.optimizer
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   smac.optimizer.acquisition
+   smac.optimizer.configuration_chooser
+   smac.optimizer.pSMAC
+   smac.optimizer.smbo
+   smac.optimizer.subspaces
+

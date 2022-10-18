@@ -1,0 +1,30 @@
+smac.optimizer.pSMAC
+====================
+
+.. automodule:: smac.optimizer.pSMAC
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      read
+      write
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

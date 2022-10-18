@@ -1,0 +1,29 @@
+smac.epm.gaussian\_process.gp
+=============================
+
+.. automodule:: smac.epm.gaussian_process.gp
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      GaussianProcess
+   
+   
+
+   
+   
+   
+
+
+

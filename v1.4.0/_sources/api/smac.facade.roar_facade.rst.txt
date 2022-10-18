@@ -1,0 +1,29 @@
+smac.facade.roar\_facade
+========================
+
+.. automodule:: smac.facade.roar_facade
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ROAR
+   
+   
+
+   
+   
+   
+
+
+

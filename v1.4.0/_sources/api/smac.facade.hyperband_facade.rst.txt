@@ -1,0 +1,29 @@
+smac.facade.hyperband\_facade
+=============================
+
+.. automodule:: smac.facade.hyperband_facade
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      HB4AC
+   
+   
+
+   
+   
+   
+
+
+

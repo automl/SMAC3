@@ -1,0 +1,36 @@
+smac.runhistory.runhistory2epm
+==============================
+
+.. automodule:: smac.runhistory.runhistory2epm
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AbstractRunHistory2EPM
+      RunHistory2EPM4Cost
+      RunHistory2EPM4EIPS
+      RunHistory2EPM4InvScaledCost
+      RunHistory2EPM4LogCost
+      RunHistory2EPM4LogScaledCost
+      RunHistory2EPM4ScaledCost
+      RunHistory2EPM4SqrtScaledCost
+   
+   
+
+   
+   
+   
+
+
+

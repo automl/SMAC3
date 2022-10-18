@@ -1,0 +1,29 @@
+smac.optimizer.subspaces.turbo\_subspace
+========================================
+
+.. automodule:: smac.optimizer.subspaces.turbo_subspace
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      TuRBOSubSpace
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,30 @@
+smac.epm.gaussian\_process.gpytorch
+===================================
+
+.. automodule:: smac.epm.gaussian_process.gpytorch
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ExactGPModel
+      GPyTorchGaussianProcess
+   
+   
+
+   
+   
+   
+
+
+

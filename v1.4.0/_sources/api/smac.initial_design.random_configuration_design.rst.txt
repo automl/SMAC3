@@ -1,0 +1,29 @@
+smac.initial\_design.random\_configuration\_design
+==================================================
+
+.. automodule:: smac.initial_design.random_configuration_design
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      RandomConfigurations
+   
+   
+
+   
+   
+   
+
+
+

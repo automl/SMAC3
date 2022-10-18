@@ -1,0 +1,29 @@
+smac.initial\_design.default\_configuration\_design
+===================================================
+
+.. automodule:: smac.initial_design.default_configuration_design
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      DefaultConfiguration
+   
+   
+
+   
+   
+   
+
+
+

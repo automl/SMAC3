@@ -1,0 +1,31 @@
+smac.tae.execute\_func
+======================
+
+.. automodule:: smac.tae.execute_func
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AbstractTAFunc
+      ExecuteTAFuncArray
+      ExecuteTAFuncDict
+   
+   
+
+   
+   
+   
+
+
+
