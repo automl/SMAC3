@@ -1,8 +1,0 @@
-smac.initial\_design.latin\_hypercube\_design module
-====================================================
-
-.. automodule:: smac.initial_design.latin_hypercube_design
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:

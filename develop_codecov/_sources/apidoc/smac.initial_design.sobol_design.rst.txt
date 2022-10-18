@@ -1,8 +1,0 @@
-smac.initial\_design.sobol\_design module
-=========================================
-
-.. automodule:: smac.initial_design.sobol_design
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
