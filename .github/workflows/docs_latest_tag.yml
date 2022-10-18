@@ -36,9 +36,11 @@ jobs:
     - name: Install dependencies from latest tag
       run: |
         # Checkout latest tag
-        latesttag=$(git describe --tags)
-        echo checking out ${latesttag}
-        git checkout ${latesttag}
+        ls -la
+        git fetch --tags
+        tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+        echo checking out ${tag}
+        git checkout ${tag}
         pip install ".[gpytorch,dev]"
 
     - name: Make docs
