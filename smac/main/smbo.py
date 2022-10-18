@@ -34,7 +34,7 @@ class SMBO(BaseSMBO):
         self._min_samples = 1
         self._considered_budgets: list[float | None] = [None]
 
-    def next_configuration(self, n: int | None = None) -> Iterator[Configuration]:  # noqa: D102
+    def get_next_configurations(self, n: int | None = None) -> Iterator[Configuration]:  # noqa: D102
         # TODO: Let's return the initial configurations from this method too
         
         for callback in self._callbacks:
