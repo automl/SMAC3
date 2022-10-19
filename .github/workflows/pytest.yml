@@ -43,8 +43,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
-        # python-version: ["3.8"]
+        # python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.8"]
         os: ["ubuntu-latest"]
 
     steps:
@@ -97,8 +97,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
-        # python-version: ["3.8"]
+        # python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.8"]
         os: ["ubuntu-latest"]
 
     steps:
@@ -134,8 +134,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
-        # python-version: ["3.8"]
+        # python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.8"]
         os: ["ubuntu-latest"]
 
     steps:

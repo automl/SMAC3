@@ -36,7 +36,6 @@ jobs:
     - name: Install dependencies from latest tag
       run: |
         # Checkout latest tag
-        ls -la
         git fetch --tags
         tag=$(git describe --tags `git rev-list --tags --max-count=1`)
         echo checking out ${tag}
@@ -57,7 +56,7 @@ jobs:
     - name: Copy new docs into gh-pages (version)
       if: (contains(github.ref, 'develop') || contains(github.ref, 'main')) && github.event_name == 'push'
       run: |
-        tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+        # tag=$(git describe --tags `git rev-list --tags --max-count=1`)
         cd ../gh-pages
         rm -rf $tag
         cp -r ../${{ env.name }}/docs/build/html $tag
@@ -66,7 +65,8 @@ jobs:
       if: (contains(github.ref, 'develop') || contains(github.ref, 'main')) && github.event_name == 'push'
       run: |
         cd ../gh-pages
-        tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+        ls -la
+        # tag=$(git describe --tags `git rev-list --tags --max-count=1`)
         git add $tag/
         git config --global user.name 'Github Actions'
         git config --global user.email 'not@mail.com'
