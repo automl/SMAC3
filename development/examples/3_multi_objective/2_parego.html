@@ -96,12 +96,25 @@
       </div>
       
       <div class="navbar-end-item">
-        <form class="bd-search align-items-center" action="../../search.html" method="get"
-style="width: 100%;">
+        <div class="dropdown mt-1">
+    <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
+        data-toggle="dropdown">
+        v2.0.0a2
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../../search.html" method="get" style="width: 100%;">
   <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+  <input type="search" class="form-control btn btn-md" name="q" id="search-input"
+    placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off">
 </form>
-
       </div>
       
     </div>
@@ -1031,7 +1044,7 @@ mean accuracy and run-time of each configuration.</p>
 [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
 [INFO][intensifier.py:566] Updated estimated cost of incumbent on 1 trials: 0.5752
 [INFO][intensifier.py:566] Updated estimated cost of incumbent on 2 trials: 0.2876
-[INFO][abstract_intensifier.py:340] Challenger (0.4985) is better than incumbent (0.5468) on 2 trials.
+[INFO][abstract_intensifier.py:340] Challenger (0.496) is better than incumbent (0.5467) on 2 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
 [INFO][abstract_intensifier.py:367] --- activation: &#39;logistic&#39; -&gt; &#39;tanh&#39;
 [INFO][abstract_intensifier.py:367] --- batch_size: None -&gt; 77
@@ -1039,64 +1052,87 @@ mean accuracy and run-time of each configuration.</p>
 [INFO][abstract_intensifier.py:367] --- n_layer: 4 -&gt; 1
 [INFO][abstract_intensifier.py:367] --- n_neurons: 11 -&gt; 146
 [INFO][abstract_intensifier.py:367] --- solver: &#39;lbfgs&#39; -&gt; &#39;adam&#39;
-[INFO][abstract_intensifier.py:340] Challenger (0.3595) is better than incumbent (0.4985) on 2 trials.
+[INFO][abstract_intensifier.py:340] Challenger (0.3596) is better than incumbent (0.4962) on 2 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
 [INFO][abstract_intensifier.py:367] --- batch_size: 77 -&gt; 200
 [INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.000534923804864797 -&gt; 0.001
 [INFO][abstract_intensifier.py:367] --- n_neurons: 146 -&gt; 10
-[INFO][intensifier.py:566] Updated estimated cost of incumbent on 3 trials: 0.3883
-[INFO][abstract_intensifier.py:340] Challenger (0.22) is better than incumbent (0.2438) on 3 trials.
+[INFO][intensifier.py:566] Updated estimated cost of incumbent on 3 trials: 0.3885
+[INFO][abstract_intensifier.py:340] Challenger (0.419) is better than incumbent (0.4474) on 3 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- batch_size: 200 -&gt; 34
-[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.001 -&gt; 0.00012799260888233933
-[INFO][abstract_intensifier.py:367] --- n_neurons: 10 -&gt; 117
-[INFO][abstract_intensifier.py:340] Challenger (0.0613) is better than incumbent (0.0787) on 3 trials.
+[INFO][abstract_intensifier.py:367] --- batch_size: 200 -&gt; 63
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.001 -&gt; 0.000534923804864797
+[INFO][abstract_intensifier.py:367] --- n_layer: 1 -&gt; 4
+[INFO][abstract_intensifier.py:367] --- n_neurons: 10 -&gt; 146
+[INFO][abstract_intensifier.py:340] Challenger (0.108) is better than incumbent (0.419) on 3 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- batch_size: 34 -&gt; 67
-[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.00012799260888233933 -&gt; 0.0002686670253499307
-[INFO][abstract_intensifier.py:367] --- n_neurons: 117 -&gt; 201
-[INFO][abstract_intensifier.py:340] Challenger (0.0528) is better than incumbent (0.07) on 3 trials.
+[INFO][abstract_intensifier.py:367] --- batch_size: 63 -&gt; 171
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.000534923804864797 -&gt; 0.00022908615684954418
+[INFO][abstract_intensifier.py:367] --- n_layer: 4 -&gt; 2
+[INFO][abstract_intensifier.py:367] --- n_neurons: 146 -&gt; 147
+[INFO][abstract_intensifier.py:340] Challenger (0.0986) is better than incumbent (0.147) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- batch_size: 171 -&gt; 132
+[INFO][abstract_intensifier.py:367] --- learning_rate: None -&gt; &#39;constant&#39;
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.00022908615684954418 -&gt; 0.0005277240679959408
+[INFO][abstract_intensifier.py:367] --- n_layer: 2 -&gt; 1
+[INFO][abstract_intensifier.py:367] --- n_neurons: 147 -&gt; 131
+[INFO][abstract_intensifier.py:367] --- solver: &#39;adam&#39; -&gt; &#39;sgd&#39;
+[INFO][abstract_intensifier.py:340] Challenger (0.0646) is better than incumbent (0.0986) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- batch_size: 132 -&gt; 88
+[INFO][abstract_intensifier.py:367] --- learning_rate: &#39;constant&#39; -&gt; &#39;adaptive&#39;
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0005277240679959408 -&gt; 0.0005260087763509013
+[INFO][abstract_intensifier.py:367] --- n_neurons: 131 -&gt; 132
+[INFO][abstract_intensifier.py:340] Challenger (0.098) is better than incumbent (0.0996) on 3 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
 [INFO][abstract_intensifier.py:367] --- activation: &#39;tanh&#39; -&gt; &#39;relu&#39;
-[INFO][abstract_intensifier.py:367] --- batch_size: 67 -&gt; 80
-[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0002686670253499307 -&gt; 0.001070273993707427
-[INFO][abstract_intensifier.py:367] --- n_neurons: 201 -&gt; 153
-[INFO][abstract_intensifier.py:340] Challenger (0.0511) is better than incumbent (0.0727) on 3 trials.
+[INFO][abstract_intensifier.py:367] --- batch_size: 88 -&gt; 273
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0005260087763509013 -&gt; 0.0014228651662494796
+[INFO][abstract_intensifier.py:367] --- n_neurons: 132 -&gt; 181
+[INFO][abstract_intensifier.py:340] Challenger (0.0221) is better than incumbent (0.098) on 3 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
 [INFO][abstract_intensifier.py:367] --- activation: &#39;relu&#39; -&gt; &#39;tanh&#39;
-[INFO][abstract_intensifier.py:367] --- batch_size: 80 -&gt; 73
-[INFO][abstract_intensifier.py:367] --- learning_rate: None -&gt; &#39;constant&#39;
-[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.001070273993707427 -&gt; 0.001033508505624065
-[INFO][abstract_intensifier.py:367] --- n_neurons: 153 -&gt; 140
-[INFO][abstract_intensifier.py:367] --- solver: &#39;adam&#39; -&gt; &#39;sgd&#39;
-[INFO][abstract_intensifier.py:340] Challenger (0.0498) is better than incumbent (0.0511) on 3 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- batch_size: 73 -&gt; 77
-[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.001033508505624065 -&gt; 0.0007638588240764686
-[INFO][abstract_intensifier.py:367] --- n_neurons: 140 -&gt; 143
-[INFO][abstract_intensifier.py:340] Challenger (0.0343) is better than incumbent (0.0486) on 3 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- activation: &#39;tanh&#39; -&gt; &#39;logistic&#39;
-[INFO][abstract_intensifier.py:367] --- batch_size: 77 -&gt; 110
-[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0007638588240764686 -&gt; 0.0008426158546030821
-[INFO][abstract_intensifier.py:367] --- n_neurons: 143 -&gt; 150
+[INFO][abstract_intensifier.py:367] --- batch_size: 273 -&gt; 200
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0014228651662494796 -&gt; 0.001
+[INFO][abstract_intensifier.py:367] --- n_neurons: 181 -&gt; 10
 [INFO][abstract_intensifier.py:367] --- solver: &#39;sgd&#39; -&gt; &#39;adam&#39;
+[INFO][abstract_intensifier.py:340] Challenger (0.0833) is better than incumbent (0.098) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- activation: &#39;relu&#39; -&gt; &#39;tanh&#39;
+[INFO][abstract_intensifier.py:367] --- batch_size: 273 -&gt; 228
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0014228651662494796 -&gt; 0.4015745189097535
+[INFO][abstract_intensifier.py:367] --- n_neurons: 181 -&gt; 175
+[INFO][abstract_intensifier.py:340] Challenger (0.0221) is better than incumbent (0.0833) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- batch_size: 228 -&gt; 200
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.4015745189097535 -&gt; 0.001
+[INFO][abstract_intensifier.py:367] --- n_neurons: 175 -&gt; 10
+[INFO][abstract_intensifier.py:367] --- solver: &#39;sgd&#39; -&gt; &#39;adam&#39;
+[INFO][abstract_intensifier.py:340] Challenger (0.2101) is better than incumbent (0.961) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- activation: &#39;tanh&#39; -&gt; &#39;relu&#39;
+[INFO][abstract_intensifier.py:367] --- batch_size: 228 -&gt; 229
+[INFO][abstract_intensifier.py:367] --- learning_rate: &#39;adaptive&#39; -&gt; &#39;constant&#39;
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.4015745189097535 -&gt; 0.0003103157692913114
+[INFO][abstract_intensifier.py:367] --- n_layer: 1 -&gt; 2
+[INFO][abstract_intensifier.py:367] --- n_neurons: 175 -&gt; 85
+[INFO][abstract_intensifier.py:340] Challenger (0.1175) is better than incumbent (0.1435) on 3 trials.
+[INFO][abstract_intensifier.py:364] Changes in incumbent:
+[INFO][abstract_intensifier.py:367] --- activation: &#39;relu&#39; -&gt; &#39;tanh&#39;
+[INFO][abstract_intensifier.py:367] --- batch_size: 229 -&gt; 250
+[INFO][abstract_intensifier.py:367] --- learning_rate: &#39;constant&#39; -&gt; &#39;adaptive&#39;
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0003103157692913114 -&gt; 0.06518387844385301
+[INFO][abstract_intensifier.py:367] --- n_neurons: 85 -&gt; 203
 [INFO][base_smbo.py:260] Configuration budget is exhausted.
-[INFO][abstract_facade.py:325] Final Incumbent: {&#39;activation&#39;: &#39;logistic&#39;, &#39;n_layer&#39;: 1, &#39;n_neurons&#39;: 150, &#39;solver&#39;: &#39;adam&#39;, &#39;batch_size&#39;: 110, &#39;learning_rate_init&#39;: 0.0008426158546030821}
-[INFO][abstract_facade.py:326] Estimated cost: 0.02985147300874752
-Default costs: [0.62956618 0.13478788]
+[INFO][abstract_facade.py:325] Final Incumbent: {&#39;activation&#39;: &#39;tanh&#39;, &#39;n_layer&#39;: 2, &#39;n_neurons&#39;: 203, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 250, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.06518387844385301}
+[INFO][abstract_facade.py:326] Estimated cost: 0.13438421235134504
+Default costs: [0.62956618 0.15006598]
 
 Validated costs from the Pareto front:
-[0.05082431 0.44496934]
-[0.62956618 0.13664913]
-[0.02633911 0.93519362]
-[0.03839988 0.49577443]
-[0.04545032 0.50030669]
-[0.07179459 0.38406579]
-[0.09831012 0.37986628]
-[0.08532756 0.38709744]
-[0.01984731 0.52820945]
-[0.1098112  0.34792542]
+[0.62956618 0.15193756]
+[0.20496595 0.32993158]
+[0.02429692 0.38353841]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1269,7 +1305,7 @@ Validated costs from the Pareto front:
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  54.242 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  43.204 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0422a2b52bca2c17c0ab975a6ae7e8db/2_parego.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_parego.py</span></code></a></p>
