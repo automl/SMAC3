@@ -62,7 +62,6 @@ class ParEGO(AbstractMultiObjectiveAlgorithm):
     def __call__(self, values: list[float]) -> float:  # noqa: D102
         # Weight the values
         if self._theta is None:
-            raise ValueError("Iteration not yet initalized; "
-                             "Call `update_on_iteration_start()` first")
+            raise ValueError("Iteration not yet initalized; Call `update_on_iteration_start()` first")
         theta_f = self._theta * values
         return float(np.max(theta_f, axis=0) + self._rho * np.sum(theta_f, axis=0))
