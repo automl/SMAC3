@@ -82,12 +82,12 @@ def test_mean_aggregation(facade, make_scenario, configspace):
 )
 def test_parego(facade, make_scenario, configspace):
     scenario = make_scenario(configspace, use_multi_objective=True)
-
     class cb(Callback):
 
         def __init__(self):
             super(cb, self).__init__()
             self._weights = None
+
         def on_iteration_start(self, smbo):
             # weights should still be the same as before
             w = smbo._runhistory_encoder.multi_objective_algorithm._theta
@@ -100,11 +100,11 @@ def test_parego(facade, make_scenario, configspace):
             # Weights should have been changed
             w = smbo._runhistory_encoder.multi_objective_algorithm._theta
             print("end", w, self._weights)
+
             assert w is not None
             if self._weights is not None:
                 assert not np.allclose(w, self._weights)
             self._weights = w
-
 
     smac = facade(
         scenario=scenario,
