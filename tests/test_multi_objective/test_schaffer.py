@@ -9,6 +9,7 @@ from smac import (
     RandomFacade,
     Callback
 )
+from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.multi_objective.parego import ParEGO
 
@@ -53,16 +54,39 @@ def configspace():
     return cs
 
 
+class WrapStrategy(AbstractMultiObjectiveAlgorithm):
+
+    def __init__(
+        self,
+        strategy: AbstractMultiObjectiveAlgorithm,
+        *args,
+        **kwargs
+    ):
+        self.strategy = strategy(*args, **kwargs)
+        self.n_calls_update_on_iteration_start = 0
+        self.n_calls___call__ = 0
+
+    def update_on_iteration_start(self) -> None:  # noqa: D102
+        self.n_calls_update_on_iteration_start += 1
+        return self.strategy.update_on_iteration_start()
+
+    def __call__(self, values: list[float]) -> float:  # noqa: D102
+        self.n_calls___call__ += 1
+        return self.strategy(values)
+
+
 @pytest.mark.parametrize(
     "facade", [BlackBoxFacade, HyperparameterOptimizationFacade, AlgorithmConfigurationFacade, RandomFacade]
 )
 def test_mean_aggregation(facade, make_scenario, configspace):
     scenario = make_scenario(configspace, use_multi_objective=True)
 
+    multi_objective_algorithm = WrapStrategy(MeanAggregationStrategy, scenario=scenario)
+
     smac = facade(
         scenario=scenario,
         target_function=tae,
-        multi_objective_algorithm=MeanAggregationStrategy(scenario=scenario),
+        multi_objective_algorithm=multi_objective_algorithm,
         overwrite=True,
     )
     incumbent = smac.optimize()
@@ -76,47 +100,29 @@ def test_mean_aggregation(facade, make_scenario, configspace):
 
     assert diff < 0.06
 
+    assert multi_objective_algorithm.n_calls_update_on_iteration_start >= 100
+    assert multi_objective_algorithm.n_calls_update_on_iteration_start <= 130
+    assert multi_objective_algorithm.n_calls___call__ >= 100
+
 
 @pytest.mark.parametrize(
     "facade", [BlackBoxFacade, HyperparameterOptimizationFacade, AlgorithmConfigurationFacade, RandomFacade]
 )
 def test_parego(facade, make_scenario, configspace):
     scenario = make_scenario(configspace, use_multi_objective=True)
-    class cb(Callback):
 
-        def __init__(self):
-            super(cb, self).__init__()
-            self._weights = None
-
-        def on_iteration_start(self, smbo):
-            # weights should still be the same as before
-            w = smbo._runhistory_encoder.multi_objective_algorithm._theta
-            print("start", w, self._weights)
-            if self._weights is not None:
-                print("compare")
-                assert np.allclose(w, self._weights)
-
-        def on_iteration_end(self, smbo):
-            # Weights should have been changed
-            w = smbo._runhistory_encoder.multi_objective_algorithm._theta
-            print("end", w, self._weights)
-
-            assert w is not None
-            if self._weights is not None:
-                assert not np.allclose(w, self._weights)
-            self._weights = w
+    multi_objective_algorithm = WrapStrategy(ParEGO, scenario=scenario)
 
     smac = facade(
         scenario=scenario,
         target_function=tae,
-        multi_objective_algorithm=ParEGO(scenario=scenario),
+        multi_objective_algorithm=multi_objective_algorithm,
         overwrite=True,
-        callbacks=[cb(), ]
     )
-    # The incumbent is not ambiguously because we have a Pareto front
 
     smac.optimize()
 
+    # The incumbent is not ambiguous because we have a Pareto front
     confs, vals = smac.runhistory.get_pareto_front()
 
     min_ = np.inf
@@ -128,3 +134,7 @@ def test_parego(facade, make_scenario, configspace):
 
     opt = np.sum(get_optimum())
     assert abs(np.sum(min_) - opt) <= 0.06
+
+    assert multi_objective_algorithm.n_calls_update_on_iteration_start >= 100
+    assert multi_objective_algorithm.n_calls_update_on_iteration_start <= 120
+    assert multi_objective_algorithm.n_calls___call__ >= 100

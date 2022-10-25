@@ -38,6 +38,6 @@ def normalize_costs(
             cost = 1.0
         else:
             cost = p / q
-        costs += [cost]
+        costs.append(cost)
 
     return costs

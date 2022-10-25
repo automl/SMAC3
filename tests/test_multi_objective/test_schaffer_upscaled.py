@@ -88,19 +88,18 @@ def test_parego(facade, make_scenario, configspace):
     )
     smac.optimize()
 
+    # The incumbent is not ambiguous because we have a Pareto front
     confs, vals = smac.runhistory.get_pareto_front()
 
-    min_ = np.inf
+    min_ = [np.inf, np.inf]
     for x, y in zip(confs, vals):
         tr = schaffer(x["x"])
         assert np.allclose(tr, y)
-        if np.sum(y) < np.sum(min_):
+        if y[0] + y[1] / UPSCALING_FACTOR < min_[0] + min_[1] / UPSCALING_FACTOR:
             min_ = y
 
-    f1_opt, f2_opt = get_optimum()
+    opt = np.sum(get_optimum())
     f1_inc, f2_inc = min_
     f2_inc = f2_inc / UPSCALING_FACTOR
-
-    inc = f1_inc + f2_inc
-    opt = f1_opt + f2_opt
-    assert abs(inc - opt) < 0.06
+    min_ = (f1_inc, f2_inc)
+    assert abs(np.sum(min_) - opt) <= 0.06
