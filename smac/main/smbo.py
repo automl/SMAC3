@@ -82,8 +82,7 @@ class SMBO(BaseSMBO):
         )
 
         for callback in self._callbacks:
-            challenger_list = list(copy.deepcopy(challengers))
-            callback.on_next_configurations_end(self, challenger_list)
+            callback.on_next_configurations_end(self)
 
         return challengers
 
