@@ -1,0 +1,75 @@
+name: docs (latest tag)
+
+on:
+  # Manual trigger option in github
+  # This won't push to github pages where docs are hosted due
+  # to the gaurded if statement in those steps
+  workflow_dispatch:
+
+  # Trigger on push to these branches
+  push:
+    branches:
+      - main
+      - development
+
+  # Trigger on a open/push to a PR targeting one of these branches
+  pull_request:
+    branches:
+      - main
+      - development
+
+env:
+  name: SMAC3
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+
+    - name: Install dependencies from latest tag
+      run: |
+        # Checkout latest tag
+        git fetch --tags
+        tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+        echo checking out ${tag}
+        git checkout ${tag}
+        pip install ".[gpytorch,dev]"
+
+    - name: Make docs
+      run: |
+        make clean
+        make docs
+
+    - name: Pull latest gh-pages
+      if: (contains(github.ref, 'develop') || contains(github.ref, 'main')) && github.event_name == 'push'
+      run: |
+        cd ..
+        git clone https://github.com/${{ github.repository }}.git --branch gh-pages --single-branch gh-pages
+
+    - name: Copy new docs into gh-pages (version)
+      if: (contains(github.ref, 'develop') || contains(github.ref, 'main')) && github.event_name == 'push'
+      run: |
+        # tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+        cd ../gh-pages
+        rm -rf $tag
+        cp -r ../${{ env.name }}/docs/build/html $tag
+
+    - name: Push to gh-pages
+      if: (contains(github.ref, 'develop') || contains(github.ref, 'main')) && github.event_name == 'push'
+      run: |
+        cd ../gh-pages
+        ls -la
+        # tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+        git add $tag/
+        git config --global user.name 'Github Actions'
+        git config --global user.email 'not@mail.com'
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        git commit -am "Updated tag $last_commit"
+        git push
