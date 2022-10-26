@@ -37,85 +37,85 @@ This examples show how to use the Ask-and-Tell interface.
     [INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
     [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
     [INFO][intensifier.py:566] Updated estimated cost of incumbent on 1 trials: 1102.7878
-    [INFO][abstract_intensifier.py:340] Challenger (700.6438) is better than incumbent (1102.7878) on 1 trials.
+    [INFO][abstract_intensifier.py:340] Challenger (657.2534) is better than incumbent (1102.7878) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: -0.9968221839517355 -> -0.0801787059894652
-    [INFO][abstract_intensifier.py:367] --- x1: 4.30847043171525 -> 2.6511913893559456
-    [INFO][abstract_intensifier.py:340] Challenger (423.3081) is better than incumbent (700.6438) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: -0.9968221839517355 -> -1.3192483183561738
+    [INFO][abstract_intensifier.py:367] --- x1: 4.30847043171525 -> 4.293599385932769
+    [INFO][abstract_intensifier.py:340] Challenger (508.0605) is better than incumbent (657.2534) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: -0.0801787059894652 -> -0.5748483514276161
-    [INFO][abstract_intensifier.py:367] --- x1: 2.6511913893559456 -> 2.3818598505133917
-    [INFO][abstract_intensifier.py:340] Challenger (392.447) is better than incumbent (423.3081) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: -1.3192483183561738 -> -1.322176500365123
+    [INFO][abstract_intensifier.py:367] --- x1: 4.293599385932769 -> 3.990176539976968
+    [INFO][abstract_intensifier.py:340] Challenger (505.5016) is better than incumbent (508.0605) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: -0.5748483514276161 -> -0.5571954690033651
-    [INFO][abstract_intensifier.py:367] --- x1: 2.3818598505133917 -> 2.285364622945317
-    [INFO][abstract_intensifier.py:340] Challenger (373.356) is better than incumbent (392.447) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: -1.322176500365123 -> -1.3192483183561738
+    [INFO][abstract_intensifier.py:367] --- x1: 3.990176539976968 -> 3.976758315033301
+    [INFO][abstract_intensifier.py:340] Challenger (503.7298) is better than incumbent (505.5016) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: -0.5571954690033651 -> -0.5136112514398299
-    [INFO][abstract_intensifier.py:367] --- x1: 2.285364622945317 -> 2.1901013339486397
-    [INFO][abstract_intensifier.py:340] Challenger (341.9607) is better than incumbent (373.356) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: -1.3192483183561738 -> -1.3185110815210224
+    [INFO][abstract_intensifier.py:367] --- x1: 3.976758315033301 -> 3.9708564245469855
+    [INFO][abstract_intensifier.py:340] Challenger (500.0745) is better than incumbent (503.7298) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: -0.5136112514398299 -> -0.5216817868049262
-    [INFO][abstract_intensifier.py:367] --- x1: 2.1901013339486397 -> 2.115098301281617
-    [INFO][abstract_intensifier.py:340] Challenger (314.5626) is better than incumbent (341.9607) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: -1.3185110815210224 -> -1.3223619688098793
+    [INFO][abstract_intensifier.py:367] --- x1: 3.9708564245469855 -> 3.972784094963705
+    [INFO][abstract_intensifier.py:340] Challenger (365.9729) is better than incumbent (500.0745) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: -0.5216817868049262 -> -0.520999279200856
-    [INFO][abstract_intensifier.py:367] --- x1: 2.115098301281617 -> 2.038497452566906
-    [INFO][abstract_intensifier.py:340] Challenger (311.7474) is better than incumbent (314.5626) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: -1.3223619688098793 -> -1.3252199860300689
+    [INFO][abstract_intensifier.py:367] --- x1: 3.972784094963705 -> 3.655066271214169
+    [INFO][abstract_intensifier.py:340] Challenger (179.7681) is better than incumbent (365.9729) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: -0.520999279200856 -> -0.5235838293620301
-    [INFO][abstract_intensifier.py:367] --- x1: 2.038497452566906 -> 2.033191299635524
-    [INFO][abstract_intensifier.py:340] Challenger (311.1308) is better than incumbent (311.7474) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x1: 3.655066271214169 -> 3.0766680957028107
+    [INFO][abstract_intensifier.py:340] Challenger (101.2001) is better than incumbent (179.7681) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: -0.5235838293620301 -> -0.5317202403312171
-    [INFO][abstract_intensifier.py:367] --- x1: 2.033191299635524 -> 2.039953327639248
-    [INFO][abstract_intensifier.py:340] Challenger (208.9282) is better than incumbent (311.1308) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: -1.3252199860300689 -> -1.2879784021263396
+    [INFO][abstract_intensifier.py:367] --- x1: 3.0766680957028107 -> 2.638507107817224
+    [INFO][abstract_intensifier.py:340] Challenger (73.7738) is better than incumbent (101.2001) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: -0.5317202403312171 -> -0.578728392807137
-    [INFO][abstract_intensifier.py:367] --- x1: 2.039953327639248 -> 1.7717139425912283
-    [INFO][abstract_intensifier.py:340] Challenger (41.7306) is better than incumbent (208.9282) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: -1.2879784021263396 -> -1.2798289749424758
+    [INFO][abstract_intensifier.py:367] --- x1: 2.638507107817224 -> 2.466069498133966
+    [INFO][abstract_intensifier.py:340] Challenger (69.8772) is better than incumbent (73.7738) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: -0.578728392807137 -> 3.0288560991981086
-    [INFO][abstract_intensifier.py:367] --- x1: 1.7717139425912283 -> 8.56066371210313
-    [INFO][abstract_intensifier.py:340] Challenger (4.6951) is better than incumbent (41.7306) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: -1.2798289749424758 -> -1.2799170414725793
+    [INFO][abstract_intensifier.py:367] --- x1: 2.466069498133966 -> 2.442420995658015
+    [INFO][abstract_intensifier.py:340] Challenger (65.381) is better than incumbent (69.8772) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: 3.0288560991981086 -> 3.145247905049809
-    [INFO][abstract_intensifier.py:367] --- x1: 8.56066371210313 -> 9.862081698178606
-    [INFO][abstract_intensifier.py:340] Challenger (4.6715) is better than incumbent (4.6951) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: -1.2799170414725793 -> -1.2906867715983639
+    [INFO][abstract_intensifier.py:367] --- x1: 2.442420995658015 -> 2.4413316791645077
+    [INFO][abstract_intensifier.py:340] Challenger (55.8803) is better than incumbent (65.381) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: 3.145247905049809 -> 3.149965756898478
-    [INFO][abstract_intensifier.py:367] --- x1: 9.862081698178606 -> 9.900115619431636
-    [INFO][abstract_intensifier.py:340] Challenger (4.6237) is better than incumbent (4.6715) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: -1.2906867715983639 -> -1.3148355606771056
+    [INFO][abstract_intensifier.py:367] --- x1: 2.4413316791645077 -> 2.4395798258018546
+    [INFO][abstract_intensifier.py:340] Challenger (5.7265) is better than incumbent (55.8803) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: 3.149965756898478 -> 3.145247905049809
-    [INFO][abstract_intensifier.py:367] --- x1: 9.900115619431636 -> 9.877875247319713
-    [INFO][abstract_intensifier.py:340] Challenger (4.6086) is better than incumbent (4.6237) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: -1.3148355606771056 -> -1.312939445981982
+    [INFO][abstract_intensifier.py:367] --- x1: 2.4395798258018546 -> 1.7851965671304857
+    [INFO][abstract_intensifier.py:340] Challenger (5.4511) is better than incumbent (5.7265) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: 3.145247905049809 -> 3.1444841150528813
-    [INFO][abstract_intensifier.py:340] Challenger (4.5925) is better than incumbent (4.6086) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: -1.312939445981982 -> -1.31339138148163
+    [INFO][abstract_intensifier.py:367] --- x1: 1.7851965671304857 -> 1.6934798613411255
+    [INFO][abstract_intensifier.py:340] Challenger (5.3782) is better than incumbent (5.4511) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: 3.1444841150528813 -> 3.141727004877872
-    [INFO][abstract_intensifier.py:340] Challenger (4.5918) is better than incumbent (4.5925) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: -1.31339138148163 -> -1.3116263745498071
+    [INFO][abstract_intensifier.py:367] --- x1: 1.6934798613411255 -> 1.7017559227898733
+    [INFO][abstract_intensifier.py:340] Challenger (5.3609) is better than incumbent (5.3782) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: 3.141727004877872 -> 3.1417153816987575
-    [INFO][abstract_intensifier.py:367] --- x1: 9.877875247319713 -> 9.87731699906795
-    [INFO][abstract_intensifier.py:340] Challenger (4.5885) is better than incumbent (4.5918) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: -1.3116263745498071 -> -1.3118488592394675
+    [INFO][abstract_intensifier.py:367] --- x1: 1.7017559227898733 -> 1.7082015256333234
+    [INFO][abstract_intensifier.py:340] Challenger (5.3482) is better than incumbent (5.3609) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: 3.1417153816987575 -> 3.1414623798123653
-    [INFO][abstract_intensifier.py:367] --- x1: 9.87731699906795 -> 9.873880849019194
-    [INFO][abstract_intensifier.py:340] Challenger (4.587) is better than incumbent (4.5885) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: -1.3118488592394675 -> -1.3087626949250475
+    [INFO][abstract_intensifier.py:367] --- x1: 1.7082015256333234 -> 1.7262195165302554
+    [INFO][abstract_intensifier.py:340] Challenger (5.3482) is better than incumbent (5.3482) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: 3.1414623798123653 -> 3.1417153816987575
-    [INFO][abstract_intensifier.py:367] --- x1: 9.873880849019194 -> 9.870950763527455
-    [INFO][abstract_intensifier.py:340] Challenger (4.5849) is better than incumbent (4.587) on 1 trials.
+    [INFO][abstract_intensifier.py:367] --- x0: -1.3087626949250475 -> -1.3087967283792028
+    [INFO][abstract_intensifier.py:340] Challenger (5.3371) is better than incumbent (5.3482) on 1 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- x0: 3.1417153816987575 -> 3.141228989380643
-    [INFO][abstract_intensifier.py:367] --- x1: 9.870950763527455 -> 9.867958320761574
+    [INFO][abstract_intensifier.py:367] --- x0: -1.3087967283792028 -> -1.3087626949250475
+    [INFO][abstract_intensifier.py:367] --- x1: 1.7262195165302554 -> 1.7046672922919566
     [INFO][base_smbo.py:260] Configuration budget is exhausted.
-    [INFO][abstract_facade.py:325] Final Incumbent: {'x0': 3.141228989380643, 'x1': 9.867958320761574}
-    [INFO][abstract_facade.py:326] Estimated cost: 4.584902386019185
+    [INFO][abstract_facade.py:325] Final Incumbent: {'x0': -1.3087626949250475, 'x1': 1.7046672922919566}
+    [INFO][abstract_facade.py:326] Estimated cost: 5.3370968860138115
     Default cost: 16916.0
-    Default cost: 4.584902386019185
+    Default cost: 5.3370968860138115
 
 
 
@@ -205,7 +205,7 @@ This examples show how to use the Ask-and-Tell interface.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  18.947 seconds)
+   **Total running time of the script:** ( 0 minutes  24.008 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_3_ask_and_tell.py:
