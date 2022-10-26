@@ -41,8 +41,8 @@ jobs:
         # Getting the version
         SMAC_VERSION=$(python -c "import smac; print(smac.version);")
 
-        # Make it an env
-        echo "::set-env name=SMAC_VERSION::$SMAC_VERSION"
+        # Make it a global variable
+        echo "SMAC_VERSION=$SMAC_VERSION" >> $GITHUB_ENV
 
     - name: Make docs
       run: |
