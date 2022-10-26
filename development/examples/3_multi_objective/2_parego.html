@@ -1034,7 +1034,7 @@ mean accuracy and run-time of each configuration.</p>
 [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
 [INFO][intensifier.py:566] Updated estimated cost of incumbent on 1 trials: 0.6158
 [INFO][intensifier.py:566] Updated estimated cost of incumbent on 2 trials: 0.2876
-[INFO][intensifier.py:566] Updated estimated cost of incumbent on 3 trials: 0.3443
+[INFO][intensifier.py:566] Updated estimated cost of incumbent on 3 trials: 0.3438
 [WARNING][abstract_runner.py:122] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
 [WARNING][abstract_runner.py:128] Traceback: Traceback (most recent call last):
   File &quot;/opt/hostedtoolcache/Python/3.10.8/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 158, in run
@@ -1077,35 +1077,30 @@ ValueError: Solver produced non-finite parameter weights. The input data may con
 [INFO][abstract_intensifier.py:367] --- activation: &#39;logistic&#39; -&gt; &#39;tanh&#39;
 [INFO][abstract_intensifier.py:367] --- n_layer: 4 -&gt; 1
 [INFO][abstract_intensifier.py:367] --- n_neurons: 11 -&gt; 13
-[INFO][abstract_intensifier.py:340] Challenger (0.2111) is better than incumbent (0.2792) on 3 trials.
+[INFO][abstract_intensifier.py:340] Challenger (0.2114) is better than incumbent (0.2792) on 3 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
 [INFO][abstract_intensifier.py:367] --- activation: &#39;tanh&#39; -&gt; &#39;relu&#39;
 [INFO][abstract_intensifier.py:367] --- n_layer: 1 -&gt; 5
 [INFO][abstract_intensifier.py:367] --- n_neurons: 13 -&gt; 43
-[INFO][abstract_intensifier.py:340] Challenger (0.0789) is better than incumbent (0.3114) on 3 trials.
+[INFO][abstract_intensifier.py:340] Challenger (0.0799) is better than incumbent (0.3114) on 3 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
 [INFO][abstract_intensifier.py:367] --- batch_size: None -&gt; 50
 [INFO][abstract_intensifier.py:367] --- learning_rate_init: None -&gt; 0.004201682133459123
 [INFO][abstract_intensifier.py:367] --- n_layer: 5 -&gt; 2
 [INFO][abstract_intensifier.py:367] --- n_neurons: 43 -&gt; 148
 [INFO][abstract_intensifier.py:367] --- solver: &#39;lbfgs&#39; -&gt; &#39;adam&#39;
-[INFO][abstract_intensifier.py:340] Challenger (0.1603) is better than incumbent (0.6825) on 3 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- batch_size: 50 -&gt; 267
-[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.004201682133459123 -&gt; 0.0004610235684354645
-[INFO][abstract_intensifier.py:367] --- n_neurons: 148 -&gt; 90
 [INFO][base_smbo.py:260] Configuration budget is exhausted.
-[INFO][abstract_facade.py:325] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 2, &#39;n_neurons&#39;: 90, &#39;solver&#39;: &#39;adam&#39;, &#39;batch_size&#39;: 267, &#39;learning_rate_init&#39;: 0.0004610235684354645}
-[INFO][abstract_facade.py:326] Estimated cost: 0.11012336251125925
-Default costs: [0.62956618 0.1487879 ]
+[INFO][abstract_facade.py:325] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 2, &#39;n_neurons&#39;: 148, &#39;solver&#39;: &#39;adam&#39;, &#39;batch_size&#39;: 50, &#39;learning_rate_init&#39;: 0.004201682133459123}
+[INFO][abstract_facade.py:326] Estimated cost: 0.22503962834517327
+Default costs: [0.62956618 0.17365098]
 
 Validated costs from the Pareto front:
-[0.05082431 0.47923652]
-[0.0369122  0.54862897]
-[0.49397297 0.09024016]
-[0.43478954 0.1233329 ]
-[0.02114309 1.53265691]
-[0.12855824 0.43457143]
+[0.05082431 0.54579322]
+[0.0369122 0.6616044]
+[0.49397297 0.10698636]
+[0.43478954 0.14406776]
+[0.46224905 0.1318601 ]
+[0.02114309 1.85521833]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1278,7 +1273,7 @@ Validated costs from the Pareto front:
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  50.969 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  51.168 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0422a2b52bca2c17c0ab975a6ae7e8db/2_parego.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_parego.py</span></code></a></p>

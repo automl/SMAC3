@@ -48,7 +48,7 @@ mean accuracy and run-time of each configuration.
     [INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
     [INFO][intensifier.py:566] Updated estimated cost of incumbent on 1 trials: 0.6158
     [INFO][intensifier.py:566] Updated estimated cost of incumbent on 2 trials: 0.2876
-    [INFO][intensifier.py:566] Updated estimated cost of incumbent on 3 trials: 0.3443
+    [INFO][intensifier.py:566] Updated estimated cost of incumbent on 3 trials: 0.3438
     [WARNING][abstract_runner.py:122] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
     [WARNING][abstract_runner.py:128] Traceback: Traceback (most recent call last):
       File "/opt/hostedtoolcache/Python/3.10.8/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 158, in run
@@ -91,35 +91,30 @@ mean accuracy and run-time of each configuration.
     [INFO][abstract_intensifier.py:367] --- activation: 'logistic' -> 'tanh'
     [INFO][abstract_intensifier.py:367] --- n_layer: 4 -> 1
     [INFO][abstract_intensifier.py:367] --- n_neurons: 11 -> 13
-    [INFO][abstract_intensifier.py:340] Challenger (0.2111) is better than incumbent (0.2792) on 3 trials.
+    [INFO][abstract_intensifier.py:340] Challenger (0.2114) is better than incumbent (0.2792) on 3 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
     [INFO][abstract_intensifier.py:367] --- activation: 'tanh' -> 'relu'
     [INFO][abstract_intensifier.py:367] --- n_layer: 1 -> 5
     [INFO][abstract_intensifier.py:367] --- n_neurons: 13 -> 43
-    [INFO][abstract_intensifier.py:340] Challenger (0.0789) is better than incumbent (0.3114) on 3 trials.
+    [INFO][abstract_intensifier.py:340] Challenger (0.0799) is better than incumbent (0.3114) on 3 trials.
     [INFO][abstract_intensifier.py:364] Changes in incumbent:
     [INFO][abstract_intensifier.py:367] --- batch_size: None -> 50
     [INFO][abstract_intensifier.py:367] --- learning_rate_init: None -> 0.004201682133459123
     [INFO][abstract_intensifier.py:367] --- n_layer: 5 -> 2
     [INFO][abstract_intensifier.py:367] --- n_neurons: 43 -> 148
     [INFO][abstract_intensifier.py:367] --- solver: 'lbfgs' -> 'adam'
-    [INFO][abstract_intensifier.py:340] Challenger (0.1603) is better than incumbent (0.6825) on 3 trials.
-    [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- batch_size: 50 -> 267
-    [INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.004201682133459123 -> 0.0004610235684354645
-    [INFO][abstract_intensifier.py:367] --- n_neurons: 148 -> 90
     [INFO][base_smbo.py:260] Configuration budget is exhausted.
-    [INFO][abstract_facade.py:325] Final Incumbent: {'activation': 'relu', 'n_layer': 2, 'n_neurons': 90, 'solver': 'adam', 'batch_size': 267, 'learning_rate_init': 0.0004610235684354645}
-    [INFO][abstract_facade.py:326] Estimated cost: 0.11012336251125925
-    Default costs: [0.62956618 0.1487879 ]
+    [INFO][abstract_facade.py:325] Final Incumbent: {'activation': 'relu', 'n_layer': 2, 'n_neurons': 148, 'solver': 'adam', 'batch_size': 50, 'learning_rate_init': 0.004201682133459123}
+    [INFO][abstract_facade.py:326] Estimated cost: 0.22503962834517327
+    Default costs: [0.62956618 0.17365098]
 
     Validated costs from the Pareto front:
-    [0.05082431 0.47923652]
-    [0.0369122  0.54862897]
-    [0.49397297 0.09024016]
-    [0.43478954 0.1233329 ]
-    [0.02114309 1.53265691]
-    [0.12855824 0.43457143]
+    [0.05082431 0.54579322]
+    [0.0369122 0.6616044]
+    [0.49397297 0.10698636]
+    [0.43478954 0.14406776]
+    [0.46224905 0.1318601 ]
+    [0.02114309 1.85521833]
 
 
 
@@ -299,7 +294,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  50.969 seconds)
+   **Total running time of the script:** ( 0 minutes  51.168 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:
