@@ -648,16 +648,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.intensifier.new_abstract_intensifier.html">
-       smac.intensifier.new_abstract_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.intensifier.new_intensifier.html">
-       smac.intensifier.new_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.intensifier.stages.html">
        smac.intensifier.stages
       </a>
@@ -1014,8 +1004,6 @@
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterator</span>
 
-<span class="kn">import</span> <span class="nn">copy</span>
-
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 
@@ -1048,7 +1036,7 @@
 
 <div class="viewcode-block" id="SMBO.get_next_configurations"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.SMBO.get_next_configurations">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_configurations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
         <span class="c1"># TODO: Let&#39;s return the initial configurations from this method too</span>
-        
+
         <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>
             <span class="n">callback</span><span class="o">.</span><span class="n">on_next_configurations_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
@@ -1067,7 +1055,7 @@
             <span class="c1"># the configspace.</span>
             <span class="k">return</span> <span class="nb">iter</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">(</span><span class="mi">1</span><span class="p">)])</span>
 
-        <span class="c1"># TODO: Check if X/Y differs from the last run, otherwise use cached results </span>
+        <span class="c1"># TODO: Check if X/Y differs from the last run, otherwise use cached results</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
 
         <span class="n">x_best_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1101,6 +1089,9 @@
 <div class="viewcode-block" id="SMBO.ask"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.SMBO.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">TrialInfoIntent</span><span class="p">,</span> <span class="n">TrialInfo</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
         <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>
             <span class="n">callback</span><span class="o">.</span><span class="n">on_ask_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory_encoder</span><span class="o">.</span><span class="n">multi_objective_algorithm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory_encoder</span><span class="o">.</span><span class="n">multi_objective_algorithm</span><span class="o">.</span><span class="n">update_on_iteration_start</span><span class="p">()</span>
 
         <span class="n">intent</span><span class="p">,</span> <span class="n">trial_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">get_next_trial</span><span class="p">(</span>
             <span class="n">challengers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_design_configs</span><span class="p">,</span>
