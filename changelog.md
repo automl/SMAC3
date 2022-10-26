@@ -1,8 +1,11 @@
 # 2.0.0a2
 
+## Bugfixes
+- Fixed random weight (re-)generalization of multi-objective algorithms: Before the weights were generated for each call to ``build_matrix``, now we only re-generate them for every iteration.
+
 ## Minor
-- Removed example badget in README
-- Added SMAC logo to README
+- Removed example badget in README.
+- Added SMAC logo to README.
 
 
 # 2.0.0a1

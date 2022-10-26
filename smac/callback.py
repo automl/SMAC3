@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from ConfigSpace import Configuration
-
 import smac
 from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
 
