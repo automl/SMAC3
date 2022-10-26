@@ -107,29 +107,6 @@ def test_mean_aggregation(facade, make_scenario, configspace):
 def test_parego(facade, make_scenario, configspace):
     scenario = make_scenario(configspace, use_multi_objective=True)
 
-    class cb(Callback):
-        def __init__(self):
-            super(cb, self).__init__()
-            self._weights = None
-
-        def on_iteration_start(self, smbo):
-            # weights should still be the same as before
-            w = smbo._runhistory_encoder.multi_objective_algorithm._theta
-            print("start", w, self._weights)
-            if self._weights is not None:
-                print("compare")
-                assert np.allclose(w, self._weights)
-
-        def on_iteration_end(self, smbo):
-            # Weights should have been changed
-            w = smbo._runhistory_encoder.multi_objective_algorithm._theta
-            print("end", w, self._weights)
-
-            assert w is not None
-            if self._weights is not None:
-                assert not np.allclose(w, self._weights)
-            self._weights = w
-
     multi_objective_algorithm = WrapStrategy(ParEGO, scenario=scenario)
 
     smac = facade(
@@ -137,9 +114,6 @@ def test_parego(facade, make_scenario, configspace):
         target_function=tae,
         multi_objective_algorithm=multi_objective_algorithm,
         overwrite=True,
-        callbacks=[
-            cb(),
-        ],
     )
 
     smac.optimize()
