@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>User Priors over the Optimum &#8212; SMAC3 Documentation 2.0.0a1 documentation</title>
+    <title>User Priors over the Optimum &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -96,12 +96,26 @@
       </div>
       
       <div class="navbar-end-item">
-        <form class="bd-search align-items-center" action="../../search.html" method="get"
-style="width: 100%;">
+        <div class="dropdown mt-1">
+    <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
+        data-toggle="dropdown">
+        v2.0.0a2
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../../search.html" method="get" style="width: 100%;">
   <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+  <input type="search" class="form-control btn btn-md" name="q" id="search-input"
+    placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off">
 </form>
-
       </div>
       
     </div>
@@ -116,7 +130,7 @@ style="width: 100%;">
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -1030,18 +1044,19 @@ optimization, you have to change the acquisition function to <code class="docuti
 [INFO][abstract_intensifier.py:367] --- n_layer: 2 -&gt; 3
 [INFO][abstract_intensifier.py:367] --- n_neurons: 157 -&gt; 108
 [INFO][abstract_intensifier.py:367] --- optimizer: &#39;sgd&#39; -&gt; &#39;adam&#39;
-[INFO][abstract_intensifier.py:340] Challenger (0.0267) is better than incumbent (0.039) on 1 trials.
+[INFO][abstract_intensifier.py:340] Challenger (0.0306) is better than incumbent (0.039) on 1 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- batch_size: 128 -&gt; 83
-[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0010000000000000002 -&gt; 0.001682337847169736
-[INFO][abstract_intensifier.py:340] Challenger (0.0256) is better than incumbent (0.0267) on 1 trials.
+[INFO][abstract_intensifier.py:367] --- batch_size: 128 -&gt; 66
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0010000000000000002 -&gt; 0.0010972380878858119
+[INFO][abstract_intensifier.py:340] Challenger (0.0262) is better than incumbent (0.0306) on 1 trials.
 [INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- n_neurons: 108 -&gt; 157
+[INFO][abstract_intensifier.py:367] --- batch_size: 66 -&gt; 65
+[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.0010972380878858119 -&gt; 0.0011090117979356453
 [INFO][base_smbo.py:260] Configuration budget is exhausted.
-[INFO][abstract_facade.py:325] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;batch_size&#39;: 83, &#39;learning_rate_init&#39;: 0.001682337847169736, &#39;n_layer&#39;: 3, &#39;n_neurons&#39;: 157, &#39;optimizer&#39;: &#39;adam&#39;}
-[INFO][abstract_facade.py:326] Estimated cost: 0.025600433302383152
+[INFO][abstract_facade.py:325] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;batch_size&#39;: 65, &#39;learning_rate_init&#39;: 0.0011090117979356453, &#39;n_layer&#39;: 3, &#39;n_neurons&#39;: 108, &#39;optimizer&#39;: &#39;adam&#39;}
+[INFO][abstract_facade.py:326] Estimated cost: 0.026155988857938794
 Default cost: 0.05787991333952347
-Default cost: 0.030609718353450943
+Default cost: 0.046196224079232406
 </pre></div>
 </div>
 <div class="line-block">
@@ -1208,7 +1223,7 @@ Default cost: 0.030609718353450943
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  4.579 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  21.374 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-5-priors-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0f7950173da77ea98f5474f656060016/5_priors.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">5_priors.py</span></code></a></p>
@@ -1263,7 +1278,7 @@ Default cost: 0.030609718353450943
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.3. Template is modified version of <a
+5.3.0. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

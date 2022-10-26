@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Custom Callback &#8212; SMAC3 Documentation 2.0.0a1 documentation</title>
+    <title>Custom Callback &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -96,12 +96,26 @@
       </div>
       
       <div class="navbar-end-item">
-        <form class="bd-search align-items-center" action="../../search.html" method="get"
-style="width: 100%;">
+        <div class="dropdown mt-1">
+    <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
+        data-toggle="dropdown">
+        v2.0.0a2
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../../search.html" method="get" style="width: 100%;">
   <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+  <input type="search" class="form-control btn btn-md" name="q" id="search-input"
+    placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off">
 </form>
-
       </div>
       
     </div>
@@ -116,7 +130,7 @@ style="width: 100%;">
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -1024,16 +1038,16 @@ Current incumbent: {&#39;x0&#39;: 0.03135360777378082, &#39;x1&#39;: -0.21179260
 Current incumbent value: 5.465623793958126
 
 Evaluated 30 trials so far.
-Current incumbent: {&#39;x0&#39;: 0.03135360777378082, &#39;x1&#39;: -0.21179260686039925}
-Current incumbent value: 5.465623793958126
+Current incumbent: {&#39;x0&#39;: 0.03104708574713655, &#39;x1&#39;: -0.034678518343637776}
+Current incumbent value: 1.0659081020778713
 
 Evaluated 40 trials so far.
-Current incumbent: {&#39;x0&#39;: -0.005052565409502385, &#39;x1&#39;: -0.13760654280883244}
-Current incumbent value: 2.904389362233465
+Current incumbent: {&#39;x0&#39;: 0.03104708574713655, &#39;x1&#39;: 0.016330022764775798}
+Current incumbent value: 0.9624814567444364
 
 Evaluated 50 trials so far.
-Current incumbent: {&#39;x0&#39;: -0.02743356640448269, &#39;x1&#39;: -0.11005550223058247}
-Current incumbent value: 2.2834632979051013
+Current incumbent: {&#39;x0&#39;: 0.029508593566554886, &#39;x1&#39;: -0.011213346364975507}
+Current incumbent value: 0.956456125602556
 
 We just triggered to stop the optimization after 50 finished trials.
 </pre></div>
@@ -1118,7 +1132,7 @@ We just triggered to stop the optimization after 50 finished trials.
     <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  6.920 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  6.765 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-4-callback-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/43217042d929e9cbc326a2703a4cb336/4_callback.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">4_callback.py</span></code></a></p>
@@ -1173,7 +1187,7 @@ We just triggered to stop the optimization after 50 finished trials.
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.2.3. Template is modified version of <a
+5.3.0. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>
