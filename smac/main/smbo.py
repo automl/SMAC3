@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from typing import Any, Iterator
 
-import copy
-
 import numpy as np
 from ConfigSpace import Configuration
 
