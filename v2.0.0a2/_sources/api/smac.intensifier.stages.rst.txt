@@ -1,0 +1,37 @@
+smac.intensifier.stages
+=======================
+
+.. automodule:: smac.intensifier.stages
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      IntensifierStage
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

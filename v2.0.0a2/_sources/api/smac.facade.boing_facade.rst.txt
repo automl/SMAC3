@@ -1,0 +1,29 @@
+smac.facade.boing\_facade
+=========================
+
+.. automodule:: smac.facade.boing_facade
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

@@ -1,0 +1,29 @@
+smac.utils.subspaces.boing\_subspace
+====================================
+
+.. automodule:: smac.utils.subspaces.boing_subspace
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
