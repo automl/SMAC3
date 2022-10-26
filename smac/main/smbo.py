@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from typing import Any, Iterator
 
-import copy
-
 import numpy as np
 from ConfigSpace import Configuration
 
@@ -35,6 +33,8 @@ class SMBO(BaseSMBO):
         self._considered_budgets: list[float | None] = [None]
 
     def get_next_configurations(self, n: int | None = None) -> Iterator[Configuration]:  # noqa: D102
+        # TODO: Let's return the initial configurations from this method too
+
         for callback in self._callbacks:
             callback.on_next_configurations_start(self)
 
@@ -53,6 +53,7 @@ class SMBO(BaseSMBO):
             # the configspace.
             return iter([self._scenario.configspace.sample_configuration(1)])
 
+        # TODO: Check if X/Y differs from the last run, otherwise use cached results
         self._model.train(X, Y)
 
         x_best_array: np.ndarray | None = None
@@ -79,14 +80,16 @@ class SMBO(BaseSMBO):
         )
 
         for callback in self._callbacks:
-            challenger_list = list(copy.deepcopy(challengers))
-            callback.on_next_configurations_end(self, challenger_list)
+            callback.on_next_configurations_end(self)
 
         return challengers
 
     def ask(self) -> tuple[TrialInfoIntent, TrialInfo]:  # noqa: D102
         for callback in self._callbacks:
             callback.on_ask_start(self)
+
+        if self._runhistory_encoder.multi_objective_algorithm is not None:
+            self._runhistory_encoder.multi_objective_algorithm.update_on_iteration_start()
 
         intent, trial_info = self._intensifier.get_next_trial(
             challengers=self._initial_design_configs,

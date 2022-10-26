@@ -35,6 +35,8 @@ class TophatPrior(AbstractPrior):
         self._log_min = np.log(lower_bound)
         self._max = upper_bound
         self._log_max = np.log(upper_bound)
+        self._prob = 1 / (self._max - self._min)
+        self._log_prob = np.log(self._prob)
 
         if not (self._max > self._min):
             raise Exception("Upper bound of Tophat prior must be greater than the lower bound.")
@@ -50,7 +52,7 @@ class TophatPrior(AbstractPrior):
         if theta < self._min or theta > self._max:
             return -np.inf
         else:
-            return 0
+            return self._log_prob
 
     def _sample_from_prior(self, n_samples: int) -> np.ndarray:
         if np.ndim(n_samples) != 0:

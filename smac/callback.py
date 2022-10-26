@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from ConfigSpace import Configuration
-
 import smac
 from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
 
@@ -37,7 +35,7 @@ class Callback:
         """
         pass
 
-    def on_next_configurations_end(self, smbo: smac.main.BaseSMBO, configurations: list[Configuration]) -> None:
+    def on_next_configurations_end(self, smbo: smac.main.BaseSMBO) -> None:
         """Called after the intensification asks for new configurations. Essentially, this callback is called
         before the surrogate model is trained and before the acquisition function is called.
         """
