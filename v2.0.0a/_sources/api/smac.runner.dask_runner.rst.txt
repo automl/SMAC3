@@ -1,0 +1,37 @@
+smac.runner.dask\_runner
+========================
+
+.. automodule:: smac.runner.dask_runner
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      DaskParallelRunner
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

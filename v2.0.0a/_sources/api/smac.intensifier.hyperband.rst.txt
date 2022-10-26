@@ -1,0 +1,37 @@
+smac.intensifier.hyperband
+==========================
+
+.. automodule:: smac.intensifier.hyperband
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      Hyperband
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
