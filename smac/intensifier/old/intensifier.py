@@ -25,7 +25,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class NewIntensifier(AbstractIntensifier):
+class Intensifier(AbstractIntensifier):
     r"""Races challengers against an incumbent.
 
     SMAC's intensification procedure, in detail:

@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-from abc import abstractmethod
-from typing import Any, Iterator
+from typing import Any
 
-import time
 from itertools import product
 
 import numpy as np
@@ -12,17 +10,13 @@ from ConfigSpace import Configuration
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.acquisition.maximizer.abstract_acqusition_maximizer import (
-    AbstractAcquisitionMaximizer,
-)
+
+from smac.runner import FirstRunCrashedException, TargetAlgorithmAbortException
 from smac.callback import Callback
 from smac.constants import MAXINT
-from smac.initial_design import AbstractInitialDesign
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.model.abstract_model import AbstractModel
-from smac.random_design.abstract_random_design import AbstractRandomDesign
-from smac.runhistory import StatusType, TrialInfo, TrialInfoIntent, TrialValue
-from smac.runhistory.encoder.encoder import RunHistoryEncoder
+from smac.runhistory import StatusType, TrialInfo, TrialValue
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.abstract_runner import AbstractRunner
 from smac.scenario import Scenario
@@ -37,7 +31,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class BaseSMBO:
+class SMBO:
     """Implementation that contains the main Bayesian optimization loop.
 
     Parameters
@@ -84,35 +78,17 @@ class BaseSMBO:
         scenario: Scenario,
         stats: Stats,
         runner: AbstractRunner,
-        initial_design: AbstractInitialDesign,
         runhistory: RunHistory,
-        runhistory_encoder: RunHistoryEncoder,
         intensifier: AbstractIntensifier,
-        model: AbstractModel,
-        acquisition_maximizer: AbstractAcquisitionMaximizer,
-        acquisition_function: AbstractAcquisitionFunction,
-        random_design: AbstractRandomDesign,
         overwrite: bool = False,
     ):
         self._scenario = scenario
         self._configspace = scenario.configspace
         self._stats = stats
-        self._initial_design = initial_design
         self._runhistory = runhistory
-        self._runhistory_encoder = runhistory_encoder
         self._intensifier = intensifier
-        self._model = model
-        self._acquisition_maximizer = acquisition_maximizer
-        self._acquisition_function = acquisition_function
-        self._random_design = random_design
         self._runner = runner
         self._overwrite = overwrite
-
-        # Those are the configs sampled from the passed initial design
-        # Selecting configurations from initial design
-        self._initial_design_configs = self._initial_design.select_configurations()
-        if len(self._initial_design_configs) == 0:
-            raise RuntimeError("SMAC needs initial configurations to work.")
 
         # Internal variables
         self._finished = False
@@ -146,18 +122,111 @@ class BaseSMBO:
         """The best configuration so far."""
         return self._incumbent
 
+    def ask(self) -> TrialInfo:
+        """Asks the intensifier for the next trial.
+
+        Returns
+        -------
+        info : TrialInfo
+            Information about the trial (config, instance, seed, budget).
+        """
+        for callback in self._callbacks:
+            callback.on_ask_start(self)
+
+        # Now we use our generator to get the next trial info
+        trial_info = list(next(self._intensifier))[0]
+
+        for callback in self._callbacks:
+            callback.on_ask_end(self, trial_info)
+
+        return trial_info
+
+    def tell(
+        self,
+        info: TrialInfo,
+        value: TrialValue,
+        save: bool = True,
+    ) -> None:
+        """Adds the result of a trial to the runhistory. Also, the stats object is updated.
+
+        Parameters
+        ----------
+        info : TrialInfo
+            Describes the trial from which to process the results.
+        value : TrialValue
+            Contains relevant information regarding the execution of a trial.
+        save : bool, optional to True
+            Whether the runhistory should be saved.
+        """
+        # We first check if budget/instance/seed is supported by the intensifier
+        # if info.seed not in (seeds := self._intensifier.get_target_function_seeds()):
+        #    raise ValueError(f"Seed {info.seed} is not supported by the intensifier. Consider using one of {seeds}.")
+        # elif info.budget not in (budgets := self._intensifier.get_target_function_budgets()):
+        #    raise ValueError(
+        #        f"Budget {info.budget} is not supported by the intensifier. Consider using one of {budgets}."
+        #    )
+        # elif info.instance not in (instances := self._intensifier.get_target_function_instances()):
+        #    raise ValueError(
+        #        f"Instance {info.instance} is not supported by the intensifier. Consider using one of {instances}."
+        #    )
+
+        if info.config.origin is None:
+            info.config.origin = "Custom"
+
+        for callback in self._callbacks:
+            response = callback.on_tell_start(self, info, value)
+
+            # If a callback returns False, the optimization loop should be interrupted
+            # the other callbacks are still being called.
+            if response is False:
+                logger.info("An callback returned False. Abort is requested.")
+                self._stop = True
+
+        logger.debug(
+            f"Status: {value.status}, "
+            f"Cost: {value.cost}, "
+            f"Time: {value.time}, "
+            f"Additional: {value.additional_info}"
+        )
+
+        self._runhistory.add(
+            config=info.config,
+            cost=value.cost,
+            time=value.time,
+            status=value.status,
+            instance=info.instance,
+            seed=info.seed,
+            budget=info.budget,
+            starttime=value.starttime,
+            endtime=value.endtime,
+            additional_info=value.additional_info,
+            force_update=True,  # Important to overwrite the status RUNNING
+        )
+
+        for callback in self._callbacks:
+            response = callback.on_tell_end(self, info, value)
+
+            # If a callback returns False, the optimization loop should be interrupted
+            # the other callbacks are still being called.
+            if response is False:
+                logger.info("An callback returned False. Abort is requested.")
+                self._stop = True
+
+        if save:
+            self.save()
+
     def update_model(self, model: AbstractModel) -> None:
         """Updates the model and updates the acquisition function."""
-        self._model = model
-        self._acquisition_function.model = model
+        self._intensifier._config_selector._model = model
+        self._intensifier._config_selector._acquisition_function.model = model
 
     def update_acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
         """Updates acquisition function and assosiates the current model. Also, the acquisition
         optimizer is updated.
         """
-        self._acquisition_function = acquisition_function
-        self._acquisition_function.model = self._model
-        self._acquisition_maximizer.acquisition_function = acquisition_function
+        self._intensifier._config_selector._acquisition_function = acquisition_function
+        self._intensifier._config_selector._acquisition_function.model = self._intensifier._config_selector._model
+        self._intensifier._config_selector._acquisition_maximizer.acquisition_function = acquisition_function
 
     def optimize(self) -> Configuration:
         """Runs the Bayesian optimization loop.
@@ -177,166 +246,75 @@ class BaseSMBO:
 
         # Start the timer before we do anything
         self._stats.start_timing()
-        time_left = None
+        n_objectives = self._scenario.count_objectives()
 
         for callback in self._callbacks:
             callback.on_start(self)
 
         # Main BO loop
         while True:
-            start_time = time.time()
-
             for callback in self._callbacks:
                 callback.on_iteration_start(self)
 
-            # Sample next configuration for intensification.
-            # Initial design runs are also included in the BO loop now.
-            intent, trial_info = self.ask()
+            # Sample next trial from the intensification
+            trial_info = self.ask()
+            trial_info.config.config_id = self._runhistory._config_ids[trial_info.config]
 
-            # Update timebound only if a 'new' configuration is sampled as the challenger
-            if self._intensifier.num_trials == 0 or time_left is None:
-                time_spent = time.time() - start_time
-                time_left = self._get_timebound_for_intensification(time_spent)
-                logger.debug(f"New intensification time bound: {time_left}")
-            else:
-                old_time_left = time_left
-                time_spent = time_spent + (time.time() - start_time)
-                time_left = self._get_timebound_for_intensification(time_spent)
-                logger.debug(f"Updated intensification time bound from {old_time_left} to {time_left}.")
+            # Track the fact that a run was launched in the run
+            # history. It's status is tagged as RUNNING, and once
+            # completed and processed, it will be updated accordingly
+            self._runhistory.add(
+                config=trial_info.config,
+                cost=float(MAXINT) if n_objectives == 1 else [float(MAXINT) for _ in range(n_objectives)],
+                time=0.0,
+                status=StatusType.RUNNING,
+                instance=trial_info.instance,
+                seed=trial_info.seed,
+                budget=trial_info.budget,
+            )
 
-            # Skip starting new runs if the budget is now exhausted
-            if self._stats.is_budget_exhausted():
-                intent = TrialInfoIntent.SKIP
+            # We submit the trial to the runner
+            self._runner.submit_trial(trial_info=trial_info)
+            self._stats._submitted += 1
+            self._stats._n_configs = len(self._runhistory._config_ids)
 
-            # Skip the run if there was a request to do so.
-            # For example, during intensifier intensification, we
-            # don't want to rerun a config that was previously ran
-            if intent == TrialInfoIntent.RUN:
-                n_objectives = self._scenario.count_objectives()
+            # We add results from the runner if results are available
+            self._add_results()
 
-                # Track the fact that a run was launched in the run
-                # history. It's status is tagged as RUNNING, and once
-                # completed and processed, it will be updated accordingly
-                self._runhistory.add(
-                    config=trial_info.config,
-                    cost=float(MAXINT) if n_objectives == 1 else [float(MAXINT) for _ in range(n_objectives)],
-                    time=0.0,
-                    status=StatusType.RUNNING,
-                    instance=trial_info.instance,
-                    seed=trial_info.seed,
-                    budget=trial_info.budget,
-                )
-
-                trial_info.config.config_id = self._runhistory._config_ids[trial_info.config]
-                self._runner.submit_trial(trial_info=trial_info)
-            elif intent == TrialInfoIntent.SKIP:
-                # No launch is required
-                # This marks a transition request from the intensifier
-                # To a new iteration
-                pass
-            elif intent == TrialInfoIntent.WAIT:
-                # In any other case, we wait for resources
-                # This likely indicates that no further decision
-                # can be taken by the intensifier until more data is
-                # available
-                self._runner.wait()
-            else:
-                raise NotImplementedError("No other RunInfoIntent has been coded.")
-
-            # Check if there is any result, or else continue
-            for trial_info, trial_value in self._runner.iter_results():
-                # Add the results of the run to the run history
-                # Additionally check for new incumbent
-                self.tell(trial_info, trial_value, time_left)
-
+            # Some statistics
             logger.debug(
                 f"Remaining wallclock time: {self._stats.get_remaing_walltime()}; "
                 f"Remaining cpu time: {self._stats.get_remaining_cputime()}; "
                 f"Remaining trials: {self._stats.get_remaining_trials()}"
             )
 
+            # Now we check whether we have to stop the optimization
             if self._stats.is_budget_exhausted() or self._stop:
                 if self._stats.is_budget_exhausted():
                     logger.info("Configuration budget is exhausted.")
                 else:
                     logger.info("Shutting down because the stop flag was set.")
 
-                # The budget can be exhausted  for 2 reasons: number of ta runs or
-                # time. If the number of ta runs is reached, but there is still budget,
-                # wait for the runs to finish.
+                # Wait for the trials to finish
                 while self._runner.is_running():
                     self._runner.wait()
+                    self._add_results()
 
-                    for trial_info, trial_value in self._runner.iter_results():
-                        # Add the results of the run to the run history
-                        # Additionally check for new incumbent
-                        self.tell(trial_info, trial_value, time_left)
-
-                # Break from the intensification loop, as there are no more resources.
+                # Break from the intensification loop, as there are no more resources
                 break
 
             for callback in self._callbacks:
                 callback.on_iteration_end(self)
 
             # Print stats at the end of each intensification iteration.
-            if self._intensifier.iteration_done:
-                self._stats.print()
+            # if self._intensifier.iteration_done:
+            #    self._stats.print()
 
         for callback in self._callbacks:
             callback.on_end(self)
 
         self._finished = True
         return self._incumbent
-
-    @abstractmethod
-    def get_next_configurations(self, n: int | None = None) -> Iterator[Configuration]:
-        """Chooses next candidate solution with Bayesian optimization. The suggested configurations
-        depend on the surrogate model acquisition optimizer/function. This method is used by
-        the intensifier.
-
-        Parameters
-        ----------
-        n : int | None, defaults to None
-            Number of configurations to return. If None, uses the number of challengers defined in the acquisition
-            optimizer.
-
-        Returns
-        -------
-        configurations : Iterator[Configuration]
-            Iterator over configurations from the acquisition optimizer.
-        """
-        raise NotImplementedError
-
-    @abstractmethod
-    def ask(self) -> tuple[TrialInfoIntent, TrialInfo]:
-        """Asks the intensifier for the next trial.
-
-        Returns
-        -------
-        intent : TrialInfoIntent
-            Intent of the trials (wait/skip/run).
-        info : TrialInfo
-            Information about the trial (config, instance, seed, budget).
-        """
-        raise NotImplementedError
-
-    @abstractmethod
-    def tell(self, info: TrialInfo, value: TrialValue, time_left: float | None = None, save: bool = True) -> None:
-        """Adds the result of a trial to the runhistory and updates the intensifier. Also,
-        the stats object is updated.
-
-        Parameters
-        ----------
-        info : TrialInfo
-            Describes the trial from which to process the results.
-        value : TrialValue
-            Contains relevant information regarding the execution of a trial.
-        time_left : float | None, defaults to None
-            How much time in seconds is left to perform intensification.
-        save : bool, optional to True
-            Whether the runhistory should be saved.
-        """
-        raise NotImplementedError
 
     def save(self) -> None:
         """Saves the current stats and runhistory."""
@@ -345,6 +323,56 @@ class BaseSMBO:
         path = self._scenario.output_directory
         if path is not None:
             self._runhistory.save_json(str(path / "runhistory.json"))
+
+    def _add_results(self) -> None:
+        """Adds results from the runner to the runhistory. Although most of the functionality could be written
+        in the tell method, we separate it here to make it accessible for the automatic optimization procedure only.
+        """
+        # Check if there is any result
+        for trial_info, trial_value in self._runner.iter_results():
+            # Add the results of the run to the run history
+            self.tell(trial_info, trial_value)
+
+            # We expect the first run to always succeed.
+            if self._stats.finished == 0 and trial_value.status == StatusType.CRASHED:
+                additional_info = ""
+                if "traceback" in trial_value.additional_info:
+                    additional_info = "\n\n" + trial_value.additional_info["traceback"]
+
+                raise FirstRunCrashedException(
+                    "The first run crashed. Please check your setup again." + additional_info
+                )
+
+            # Update SMAC stats
+            self._stats._target_function_walltime_used += float(trial_value.time)
+            self._stats._finished += 1
+
+            if trial_value.status == StatusType.ABORT:
+                raise TargetAlgorithmAbortException(
+                    "The target function was aborted. The last incumbent can be found in the trajectory file."
+                )
+            elif trial_value.status == StatusType.STOP:
+                logger.debug("Value holds the status stop. Abort is requested.")
+                self._stop = True
+
+            # Gracefully end optimization if termination cost is reached
+            if self._scenario.termination_cost_threshold != np.inf:
+                cost = self.runhistory.average_cost(trial_info.config)
+
+                if not isinstance(cost, list):
+                    cost = [cost]
+
+                if not isinstance(self._scenario.termination_cost_threshold, list):
+                    cost_threshold = [self._scenario.termination_cost_threshold]
+                else:
+                    cost_threshold = self._scenario.termination_cost_threshold
+
+                if len(cost) != len(cost_threshold):
+                    raise RuntimeError("You must specify a termination cost threshold for each objective.")
+
+                if all(cost[i] < cost_threshold[i] for i in range(len(cost))):
+                    logger.info("Cost threshold was reached. Abort is requested.")
+                    self._stop = True
 
     def _register_callback(self, callback: Callback) -> None:
         """Registers a callback to be called before, in between, and after the Bayesian optimization loop."""

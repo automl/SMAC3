@@ -104,15 +104,12 @@ class TrialInfo:
     instance : str | None, defaults to None
     seed : int | None, defaults to None
     budget : float | None, defaults to None
-    source : int | None, defaults to 0
-        Source is used in the intensifier to indicate from which worker the trial was coming from.
     """
 
     config: Configuration
     instance: str | None = None
     seed: int | None = None
     budget: float | None = None
-    source: int = 0
 
 
 @dataclass

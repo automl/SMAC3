@@ -3,7 +3,7 @@ from __future__ import annotations
 from ConfigSpace import Configuration
 
 import smac
-from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
+from smac.runhistory import TrialInfo, TrialValue
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -47,7 +47,7 @@ class Callback:
         """Called before the intensifier is asked for the next trial."""
         pass
 
-    def on_ask_end(self, smbo: smac.main.BaseSMBO, intent: TrialInfoIntent, info: TrialInfo) -> None:
+    def on_ask_end(self, smbo: smac.main.BaseSMBO, info: TrialInfo) -> None:
         """Called after the intensifier is asked for the next trial."""
         pass
 

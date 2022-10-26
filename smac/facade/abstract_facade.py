@@ -16,6 +16,7 @@ from smac.acquisition.maximizer.abstract_acqusition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
 from smac.callback import Callback
+from smac.config_selector.config_selector import ConfigSelector
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.main import SMBO
@@ -186,6 +187,9 @@ class AbstractFacade:
 
         # Set the runner to access it globally
         self._runner = runner
+
+        # Create a config selector object
+        self._config_selector = self._get_config_selector()
 
         # Adding dependencies of the components
         self._update_dependencies()
@@ -417,20 +421,26 @@ class AbstractFacade:
         """
         raise NotImplementedError
 
+    def _get_config_selector(self) -> ConfigSelector:
+        return ConfigSelector(
+            scenario=self._scenario,
+            initial_design=self._initial_design,
+            runhistory=self._runhistory,
+            runhistory_encoder=self._runhistory_encoder,
+            model=self._model,
+            acquisition_function=self._acquisition_function,
+            acquisition_maximizer=self._acquisition_maximizer,
+            random_design=self._random_design,
+        )
+
     def _get_optimizer(self) -> SMBO:
         """Fills the SMBO with all the pre-initialized components."""
         return SMBO(
             scenario=self._scenario,
             stats=self._stats,
             runner=self._runner,
-            initial_design=self._initial_design,
             runhistory=self._runhistory,
-            runhistory_encoder=self._runhistory_encoder,
             intensifier=self._intensifier,
-            model=self._model,
-            acquisition_function=self._acquisition_function,
-            acquisition_maximizer=self._acquisition_maximizer,
-            random_design=self._random_design,
             overwrite=self._overwrite,
         )
 
@@ -439,10 +449,11 @@ class AbstractFacade:
         the components. This is the easiest way to incorporate dependencies, although
         it might be a bit hacky.
         """
-        self._intensifier._stats = self._stats
+        # self._intensifier._stats = self._stats
         self._runhistory_encoder.multi_objective_algorithm = self._multi_objective_algorithm
         self._acquisition_function.model = self._model
         self._acquisition_maximizer.acquisition_function = self._acquisition_function
+        self._intensifier.config_selector = self._config_selector
 
     def _validate(self) -> None:
         """Checks if the composition is correct if there are dependencies, not necessarily."""

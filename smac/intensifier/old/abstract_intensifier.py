@@ -20,29 +20,82 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class NewAbstractIntensifier:
-    def __init__(self, scenario: Scenario):
-        
-        # Some caching; will be also set when runhistory is set
-        self._used_configs = []
-        
-    
+class AbstractIntensifier:
+    """Base class for all racing methods.
+
+    The intensification is designed to output a TrialInfo object with enough information
+    to run a given configuration (for example, the trial info contains the instance/seed
+    pair, as well as the associated resources).
+
+    A worker can execute this TrialInfo object and produce a TrialValue object with the
+    execution results. Each intensifier process the TrialValue object and updates its
+    internal state in preparation for the next iteration.
+
+    Parameters
+    ----------
+    scenario : Scenario
+    min_config_calls : int, defaults to 1
+        Minimum number of trials per config (summed over all calls to intensify).
+    max_config_calls : int, defaults to 2000
+        Maximum number of trials per config (summed over all calls to intensify).
+    min_challenger : int, defaults to 1
+        Minimal number of challengers to be considered (even if time_bound is exhausted earlier).
+    seed : int | None, defaults to none
+    """
+
+    def __init__(
+        self,
+        scenario: Scenario,
+        min_config_calls: int = 1,
+        max_config_calls: int = 2000,
+        min_challenger: int = 1,
+        seed: int | None = None,
+    ):
+
+        if seed is None:
+            seed = scenario.seed
+
+        self._scenario = scenario
+        self._seed = seed
+        self._rng = np.random.RandomState(seed)
+        self._deterministic = scenario.deterministic
+        self._min_config_calls = min_config_calls
+        self._max_config_calls = max_config_calls
+        self._min_challenger = min_challenger
+        self._stats: Stats | None = None
+
+        # Set the instances
+        self._instances: list[str | None]
+        if scenario.instances is None:
+            # We need to include None here to tell whether None instance was evaluated or not
+            self._instances = [None]
+        else:
+            # Removing duplicates here
+            # Fun fact: When using a set here, it always includes randomness
+            self._instances = list(dict.fromkeys(scenario.instances))
+
+        # General attributes
+        self._num_trials = 0  # Number of trials done in an iteration so far
+        self._challenger_id = 0
+        self._repeat_configs = False  # Repeating configurations is discouraged for parallel trials.
+        self._iteration_done = False  # Marks the end of an iteration.
+        self._target_function_time = 0.0
+
     @property
-    def runhistory(self) -> RunHistory:
-        return self._runhistory
-    
-    @runhistory.setter
-    def runhistory(self, runhistory: RunHistory) -> None:
-        # Validate runhistory
-        # ...
-        
-        # Add all configs from runhistory to cache
-        # ...
-        
-        # Set it global
-        self._runhistory = runhistory
-        
-    
+    def repeat_configs(self) -> bool:
+        """Whether configs should be repeated or not."""
+        return self._repeat_configs
+
+    @property
+    def iteration_done(self) -> bool:
+        """Whether an iteration is done or not."""
+        return self._iteration_done
+
+    @property
+    def num_trials(self) -> int:
+        """How many trials have been done in an iteration so far."""
+        return self._num_trials
+
     @property
     @abstractmethod
     def uses_seeds(self) -> bool:
@@ -81,24 +134,11 @@ class NewAbstractIntensifier:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
+            "min_config_calls": self._min_config_calls,
+            "max_config_calls": self._max_config_calls,
+            "min_challenger": self._min_challenger,
+            "seed": self._seed,
         }
-    
-    @abstractmethod
-    def __next__(self) -> Iterator[TrialInfo | None]:
-        """Main loop of the intensifier. This method always returns a TrialInfo object, although the intensifier
-        algorithm may need to wait for the result of the trial."""
-        raise NotImplementedError
-        
-    def next_configuration(self) -> Iterator[Configuration]:
-        for config in self._initial_configs:
-            yield config
-            
-        # ... more code
-        # check if config was already used
-            
-        
-
-    ##################
 
     def get_next_trial(
         self,
@@ -132,6 +172,39 @@ class NewAbstractIntensifier:
             Indicator of how to consume the TrialInfo object.
         TrialInfo
             An object that encapsulates necessary information of the trial.
+        """
+        raise NotImplementedError()
+
+    def process_results(
+        self,
+        trial_info: TrialInfo,
+        trial_value: TrialValue,
+        incumbent: Configuration | None,
+        runhistory: RunHistory,
+        time_bound: float,
+        log_trajectory: bool = True,
+    ) -> tuple[Configuration, float | list[float]]:
+        """The intensifier stage will be updated based on the results/status of a configuration
+        execution. Also, a incumbent will be determined.
+
+        Parameters
+        ----------
+        trial_info : TrialInfo
+        trial_value: TrialValue
+        incumbent : Configuration | None
+            Best configuration seen so far.
+        runhistory : RunHistory
+        time_bound : float
+            Time [sec] available to perform intensify.
+        log_trajectory: bool
+            Whether to log changes of incumbents in the trajectory.
+
+        Returns
+        -------
+        incumbent: Configuration
+            Current (maybe new) incumbent configuration.
+        incumbent_costs: float | list[float]
+            Empirical cost(s) of the incumbent configuration.
         """
         raise NotImplementedError()
 
@@ -192,7 +265,7 @@ class NewAbstractIntensifier:
         logger.debug("No valid challenger was generated!")
         return None
 
-    def compare_configs(
+    def _compare_configs(
         self,
         incumbent: Configuration,
         challenger: Configuration,
@@ -219,7 +292,8 @@ class NewAbstractIntensifier:
         chall_trials = runhistory.get_trials(challenger, only_max_observed_budget=True)
         to_compare_trials = set(inc_trials).intersection(chall_trials)
 
-        # Performance on challenger trials, the challenger only becomes incumbent if it dominates the incumbent
+        # Performance on challenger trials, the challenger only becomes incumbent
+        # if it dominates the incumbent
         chal_perf = runhistory.average_cost(challenger, to_compare_trials, normalize=True)
         inc_perf = runhistory.average_cost(incumbent, to_compare_trials, normalize=True)
 
@@ -251,9 +325,8 @@ class NewAbstractIntensifier:
                     f"Incumbent ({inc_perf_format}) is at least as good as the "
                     f"challenger ({chal_perf_format}) on {len(chall_trials)} trials."
                 )
-
+                assert self._stats
                 if log_trajectory and self._stats.incumbent_changed == 0:
-                    assert self._stats
                     self._stats.add_incumbent(cost=chal_perf, incumbent=incumbent)
 
                 return incumbent
@@ -268,7 +341,7 @@ class NewAbstractIntensifier:
                 f"Challenger ({chal_perf_format}) is better than incumbent ({inc_perf_format}) "
                 f"on {n_samples} trials."
             )
-            self.print_incumbent_changes(incumbent, challenger)
+            self._log_incumbent_changes(incumbent, challenger)
 
             if log_trajectory:
                 assert self._stats
@@ -279,7 +352,7 @@ class NewAbstractIntensifier:
         # Undecided
         return None
 
-    def print_incumbent_changes(
+    def _log_incumbent_changes(
         self,
         incumbent: Configuration | None,
         challenger: Configuration | None,
