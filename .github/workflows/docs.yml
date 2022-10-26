@@ -39,7 +39,10 @@ jobs:
         pip install ".[gpytorch,dev]"
 
         # Getting the version
-        version=$(python -c "import smac; print(smac.version);")
+        SMAC_VERSION=$(python -c "import smac; print(smac.version);")
+
+        # Make it an env
+        echo "::set-env name=SMAC_VERSION::$SMAC_VERSION"
 
     - name: Make docs
       run: |
@@ -60,9 +63,9 @@ jobs:
         rm -rf $branch_name
         cp -r ../${{ env.name }}/docs/build/html $branch_name
 
-        # we also copy the current version
-        rm -rf $version
-        cp -r ../${{ env.name }}/docs/build/html $version
+        # we also copy the current SMAC_VERSION
+        rm -rf $SMAC_VERSION
+        cp -r ../${{ env.name }}/docs/build/html $SMAC_VERSION
 
 
     - name: Push to gh-pages
@@ -72,7 +75,7 @@ jobs:
         cd ../gh-pages
         branch_name=${GITHUB_REF##*/}
         git add $branch_name/
-        git add $version/
+        git add $SMAC_VERSION/
         git config --global user.name 'Github Actions'
         git config --global user.email 'not@mail.com'
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
