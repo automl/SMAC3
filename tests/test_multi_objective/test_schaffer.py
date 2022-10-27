@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import numpy as np
 import pytest
 from ConfigSpace import ConfigurationSpace, Float
@@ -5,9 +7,11 @@ from ConfigSpace import ConfigurationSpace, Float
 from smac import (
     AlgorithmConfigurationFacade,
     BlackBoxFacade,
+    Callback,
     HyperparameterOptimizationFacade,
     RandomFacade,
 )
+from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.multi_objective.parego import ParEGO
 
@@ -52,16 +56,33 @@ def configspace():
     return cs
 
 
+class WrapStrategy(AbstractMultiObjectiveAlgorithm):
+    def __init__(self, strategy: AbstractMultiObjectiveAlgorithm, *args, **kwargs):
+        self.strategy = strategy(*args, **kwargs)
+        self.n_calls_update_on_iteration_start = 0
+        self.n_calls___call__ = 0
+
+    def update_on_iteration_start(self) -> None:  # noqa: D102
+        self.n_calls_update_on_iteration_start += 1
+        return self.strategy.update_on_iteration_start()
+
+    def __call__(self, values: list[float]) -> float:  # noqa: D102
+        self.n_calls___call__ += 1
+        return self.strategy(values)
+
+
 @pytest.mark.parametrize(
     "facade", [BlackBoxFacade, HyperparameterOptimizationFacade, AlgorithmConfigurationFacade, RandomFacade]
 )
 def test_mean_aggregation(facade, make_scenario, configspace):
     scenario = make_scenario(configspace, use_multi_objective=True)
 
+    multi_objective_algorithm = WrapStrategy(MeanAggregationStrategy, scenario=scenario)
+
     smac = facade(
         scenario=scenario,
         target_function=tae,
-        multi_objective_algorithm=MeanAggregationStrategy(scenario=scenario),
+        multi_objective_algorithm=multi_objective_algorithm,
         overwrite=True,
     )
     incumbent = smac.optimize()
@@ -75,6 +96,10 @@ def test_mean_aggregation(facade, make_scenario, configspace):
 
     assert diff < 0.06
 
+    assert multi_objective_algorithm.n_calls_update_on_iteration_start >= 100
+    assert multi_objective_algorithm.n_calls_update_on_iteration_start <= 130
+    assert multi_objective_algorithm.n_calls___call__ >= 100
+
 
 @pytest.mark.parametrize(
     "facade", [BlackBoxFacade, HyperparameterOptimizationFacade, AlgorithmConfigurationFacade, RandomFacade]
@@ -82,25 +107,30 @@ def test_mean_aggregation(facade, make_scenario, configspace):
 def test_parego(facade, make_scenario, configspace):
     scenario = make_scenario(configspace, use_multi_objective=True)
 
+    multi_objective_algorithm = WrapStrategy(ParEGO, scenario=scenario)
+
     smac = facade(
         scenario=scenario,
         target_function=tae,
-        multi_objective_algorithm=ParEGO(scenario=scenario),
+        multi_objective_algorithm=multi_objective_algorithm,
         overwrite=True,
     )
-    # The incumbent is not ambiguously because we have a Pareto front
+
     smac.optimize()
 
-    # We use the mean aggregation strategy to get the same weights
-    multi_objective_algorithm = MeanAggregationStrategy(scenario=scenario)
-    smac.runhistory.multi_objective_algorithm = multi_objective_algorithm
+    # The incumbent is not ambiguous because we have a Pareto front
+    confs, vals = smac.runhistory.get_pareto_front()
 
-    incumbent, _ = smac.runhistory.get_incumbent()
+    min_ = np.inf
+    for x, y in zip(confs, vals):
+        tr = schaffer(x["x"])
+        assert np.allclose(tr, y)
+        if np.sum(y) < min_:
+            min_ = np.sum(y)
 
-    f1_inc, f2_inc = schaffer(incumbent["x"])
-    f1_opt, f2_opt = get_optimum()
-    inc = f1_inc + f2_inc
-    opt = f1_opt + f2_opt
-    diff = abs(inc - opt)
+    opt = np.sum(get_optimum())
+    assert abs(np.sum(min_) - opt) <= 0.06
 
-    assert diff < 0.06
+    assert multi_objective_algorithm.n_calls_update_on_iteration_start >= 100
+    assert multi_objective_algorithm.n_calls_update_on_iteration_start <= 120
+    assert multi_objective_algorithm.n_calls___call__ >= 100
