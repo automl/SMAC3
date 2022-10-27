@@ -1,4 +1,4 @@
-# Sequential Model Algorithm Configuration (SMAC)
+# SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization
 
 
 [![Tests](https://github.com/automl/SMAC3/actions/workflows/pytest.yml/badge.svg?branch=main)](https://github.com/automl/SMAC3/actions/workflows/pytest.yml)
