@@ -71,11 +71,8 @@ class ConfigSelector:
         # Processed configurations should be stored here
         # Important: We have to read them from the runhistory!
         self._processed_configs = self._runhistory.get_configs()
-        
-    def __iter__(self) -> ConfigSelector:
-        return self
 
-    def __next__(self) -> Iterator[Configuration]:
+    def __iter__(self) -> Iterator[Configuration]:
         """This method returns the next configuration to evaluate. It ignores already processed configs, i.e.,
         the configs from the runhistory if the runhistory is not empty.
         The method (after yielding the initial design configurations) trains the surrogate model, maximizes the

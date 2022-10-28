@@ -2,13 +2,13 @@ from __future__ import annotations
 
 from abc import abstractmethod
 from typing import Any, Iterator
-
+import numpy as np
 from smac.config_selector.config_selector import ConfigSelector
 
 from smac.runhistory import TrialInfo
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
-from smac.utils.logging import format_array, get_logger
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -17,15 +17,20 @@ logger = get_logger(__name__)
 
 
 class AbstractIntensifier:
-    def __init__(self, scenario: Scenario):
+    def __init__(self, scenario: Scenario, seed: int | None = None):
         self._scenario = scenario
         self._config_selector: ConfigSelector | None = None
         self._runhistory: RunHistory | None = None
 
+        if seed is None:
+            seed = self._scenario.seed
+
+        self._rng = np.random.RandomState(seed)
+
         # Internal variables
         self._tf_seeds: list[int] = []
-        self._tf_instances: list[str] = []
-        self._tf_budgets: list[float] = []
+        self._tf_instances: list[str | None] = []
+        self._tf_budgets: list[float | None] = []
 
     @property
     def config_selector(self) -> ConfigSelector:
@@ -49,35 +54,43 @@ class AbstractIntensifier:
                     self._tf_seeds.append(k.seed)
 
             if self.uses_instances:
-                #if k.instance is None:
+                # if k.instance is None:
                 #    raise ValueError(
                 #        "Trial contains no instance information, but intensifier expects instances to be used."
                 #    )
-                
+
                 if self._scenario.instances is None and k.instance is not None:
-                    raise ValueError("Scenario does not specify any instances but found instance information in runhistory.")
-                    
+                    raise ValueError(
+                        "Scenario does not specify any instances but found instance information in runhistory."
+                    )
+
                 if self._scenario.instances is not None and k.instance not in self._scenario.instances:
-                    raise ValueError("Instance information in runhistory is not part of the defined instances in scenario.")
+                    raise ValueError(
+                        "Instance information in runhistory is not part of the defined instances in scenario."
+                    )
 
                 if k.instance not in self._tf_instances:
                     self._tf_instances.append(k.instance)
 
             if self.uses_budgets:
                 if k.budget is None:
-                    raise ValueError(
-                        "Trial contains no budget information but intensifier expects budgets to be used."
-                    )
+                    raise ValueError("Trial contains no budget information but intensifier expects budgets to be used.")
 
                 if k.budget not in self._tf_budgets:
                     self._tf_budgets.append(k.budget)
-                    
+
         # Add all other instances to ``_tf_instances``
         # Behind idea: Prioritize instances that are found in the runhistory
         if (instances := self._scenario.instances) is not None:
             for inst in instances:
                 if inst not in self._tf_instances:
                     self._tf_instances.append(inst)
+
+        if len(self._tf_instances) == 0:
+            self._tf_instances = [None]
+
+        if len(self._tf_budgets) == 0:
+            self._tf_budgets = [None]
 
     @property
     def runhistory(self) -> RunHistory:
@@ -109,11 +122,8 @@ class AbstractIntensifier:
             "name": self.__class__.__name__,
         }
 
-    def __iter__(self) -> AbstractIntensifier:
-        return self
-
     @abstractmethod
-    def __next__(self) -> Iterator[TrialInfo]:
+    def __iter__(self) -> Iterator[TrialInfo]:
         """Main loop of the intensifier. This method always returns a TrialInfo object, although the intensifier
         algorithm may need to wait for the result of the trial. Please refer to a specific
         intensifier to get more information.

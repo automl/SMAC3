@@ -15,6 +15,7 @@ from smac.multi_objective.abstract_multi_objective_algorithm import (
 from smac.runhistory.dataclasses import (
     InstanceSeedBudgetKey,
     InstanceSeedKey,
+    TrialInfo,
     TrialKey,
     TrialValue,
 )
@@ -95,6 +96,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         # For fast access, we have also an unordered data structure to get all instance
         # seed pairs of a configuration.
         self._config_id_to_isk_to_budget: dict[int, dict[InstanceSeedKey, list[float | None]]] = {}
+        self._running_trials: list[TrialInfo] = []
 
         self._config_ids: dict[Configuration, int] = {}
         self._ids_config: dict[int, Configuration] = {}
@@ -536,6 +538,10 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         # Convert to instance-seed-budget key
         return [InstanceSeedBudgetKey(k.instance, k.seed, budget) for k, v in trials.items() for budget in v]
 
+    def get_running_trials(self) -> list[TrialInfo]:
+        # Always work on copies
+        return [trial for trial in self._running_trials]
+
     def get_config(self, config_id: int) -> Configuration:
         """Returns the configuration from the configuration id."""
         return self._ids_config[config_id]
@@ -928,6 +934,17 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 # This happens when budget > 0 (only successive halving and hyperband so far)
                 logger.debug(f"Update cost for config {k.config_id}.")
                 self.update_cost(config=self._ids_config[k.config_id])
+
+        # Make TrialInfo object
+        trial_info = TrialInfo(self.get_config(k.config_id), instance=k.instance, seed=k.seed, budget=k.budget)
+
+        if status.RUNNING:
+            # Add to running cache
+            self._running_trials.append(trial_info)
+        else:
+            # Remove from cache
+            if trial_info in self._running_trials:
+                self._running_trials.remove(trial_info)
 
     def _cost(
         self,

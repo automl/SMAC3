@@ -3,7 +3,7 @@ from typing import Callable
 import pytest
 from ConfigSpace import ConfigurationSpace
 
-from smac import Scenario
+from smac.scenario import Scenario
 
 
 @pytest.fixture
