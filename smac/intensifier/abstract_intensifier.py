@@ -19,7 +19,7 @@ logger = get_logger(__name__)
 class AbstractIntensifier:
     def __init__(self, scenario: Scenario, seed: int | None = None):
         self._scenario = scenario
-        self._config_selector: ConfigSelector | None = None
+        self._config_selector: Iterator[ConfigSelector] | None = None
         self._runhistory: RunHistory | None = None
 
         if seed is None:
@@ -33,14 +33,14 @@ class AbstractIntensifier:
         self._tf_budgets: list[float | None] = []
 
     @property
-    def config_selector(self) -> ConfigSelector:
+    def config_selector(self) -> Iterator[ConfigSelector]:
         assert self._config_selector is not None
         return self._config_selector
 
     @config_selector.setter
     def config_selector(self, config_selector: ConfigSelector) -> None:
         # Set it global
-        self._config_selector = config_selector
+        self._config_selector = iter(config_selector)
         self._runhistory = config_selector._runhistory
 
         # Validate runhistory: Are seeds/instances/budgets used?

@@ -23,6 +23,10 @@ version = "2.0.0a2"
 
 
 try:
+    from smac.utils.logging import setup_logging
+
+    setup_logging(0)
+
     from smac.callback import Callback
     from smac.facade import (
         AlgorithmConfigurationFacade,
@@ -34,9 +38,6 @@ try:
     )
     from smac.runhistory.runhistory import RunHistory
     from smac.scenario import Scenario
-    from smac.utils.logging import setup_logging
-
-    setup_logging(0)
 
     __all__ = [
         "Scenario",

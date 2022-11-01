@@ -5,6 +5,7 @@ from typing import Any, Iterable, Iterator, Mapping, cast
 import json
 from collections import OrderedDict
 from pathlib import Path
+from smac.constants import MAXINT
 
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
@@ -92,6 +93,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         # By having the data in a deterministic order we can do useful tests when we
         # serialize the data and can assume it's still in the same order as it was added.
         self._data: dict[TrialKey, TrialValue] = OrderedDict()
+        self._incumbent: Configuration | None = None
 
         # For fast access, we have also an unordered data structure to get all instance
         # seed pairs of a configuration.
@@ -150,7 +152,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         self,
         config: Configuration,
         cost: int | float | list[int | float],
-        time: float,
+        time: float = 0.0,
         status: StatusType = StatusType.SUCCESS,
         instance: str | None = None,
         seed: int | None = None,
@@ -202,21 +204,24 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
             config_id = self._n_id
 
-        if self._n_objectives == -1:
-            self._n_objectives = n_objectives
-        elif self._n_objectives != n_objectives:
-            raise ValueError(
-                f"Cost is not of the same length ({n_objectives}) as the number of "
-                f"objectives ({self._n_objectives})."
-            )
+        if status != StatusType.RUNNING:
+            if self._n_objectives == -1:
+                self._n_objectives = n_objectives
+            elif self._n_objectives != n_objectives:
+                raise ValueError(
+                    f"Cost is not of the same length ({n_objectives}) as the number of "
+                    f"objectives ({self._n_objectives})."
+                )
 
-        # Let's always work with floats; Makes it easier to deal with later on
-        # array.tolist(), it returns a scalar if the array has one element.
-        c = cost_array.tolist()
-        if self._n_objectives == 1:
-            c = float(c)
+            # Let's always work with floats; Makes it easier to deal with later on
+            # array.tolist(), it returns a scalar if the array has one element.
+            c = cost_array.tolist()
+            if self._n_objectives == 1:
+                c = float(c)
+            else:
+                c = [float(i) for i in c]
         else:
-            c = [float(i) for i in c]
+            c = cost_array.tolist()
 
         if budget is not None:
             # Just to make sure we really add a float
@@ -538,6 +543,17 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         # Convert to instance-seed-budget key
         return [InstanceSeedBudgetKey(k.instance, k.seed, budget) for k, v in trials.items() for budget in v]
 
+    def add_running_trial(self, trial: TrialInfo) -> None:
+        self.add(
+            config=trial.config,
+            cost=float(MAXINT),
+            time=0.0,
+            status=StatusType.RUNNING,
+            instance=trial.instance,
+            seed=trial.seed,
+            budget=trial.budget,
+        )
+
     def get_running_trials(self) -> list[TrialInfo]:
         # Always work on copies
         return [trial for trial in self._running_trials]
@@ -580,7 +596,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         return configs
 
     def get_incumbent(self) -> tuple[Configuration | None, float | list[float]]:
-        """Returns the incumbent configuration. The config with the lowest cost calculated by `get_cost` is returned.
+        """Returns the incumbent configuration. The config with the lowest cost calculated by ``get_cost`` is returned.
+        However, the incumbent only changes if the new configuration has at least as many trials as the incumbent.
 
         Warning
         -------
@@ -589,12 +606,24 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         ParEGO weights.
         """
         incumbent = None
+        required_trials = 0  # required trials to change the incumbent
         lowest_cost = np.inf
+
+        if self._incumbent is not None:
+            required_trials = len(self.get_trials(self._incumbent))
+            incumbent = self._incumbent
+
         for config in self._config_ids.keys():
+            if len(self.get_trials(config)) < required_trials:
+                continue
+
             cost = self.get_cost(config)
             if cost < lowest_cost:
                 incumbent = config
                 lowest_cost = cost
+
+        # Set it globally
+        self._incumbent = incumbent
 
         return incumbent, lowest_cost
 

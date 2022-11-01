@@ -19,7 +19,7 @@ from smac.callback import Callback
 from smac.config_selector.config_selector import ConfigSelector
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
-from smac.main import SMBO
+from smac.smbo import SMBO
 from smac.model.abstract_model import AbstractModel
 from smac.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,

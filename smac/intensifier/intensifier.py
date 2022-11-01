@@ -25,7 +25,10 @@ class Intensifier(AbstractIntensifier):
         max_config_calls: int = 2000,
         min_challenger: int = 2,
         intensify_percentage: float = 0.5,
-        race_against: Configuration | None = None,
+        # if no incumbent is available, the intensifier choses this configuration or the default configspace if none
+        # race_against: Configuration | None = None,
+        incumbent_configuration: Configuration | None = None,
+        retries: int = 10,  # Number of iterations to retry if no next trial can be found
         seed: int | None = None,
     ):
         if scenario.deterministic:
@@ -34,56 +37,93 @@ class Intensifier(AbstractIntensifier):
 
             min_challenger = 1
 
-        super().__init__(scenario=scenario)
+        super().__init__(scenario=scenario, seed=seed)
 
         # Internal variables
+        self._min_config_calls = min_config_calls
         self._max_config_calls = max_config_calls
         self._intensify_percentage = intensify_percentage
+        self._retries = retries
+        self._rejected: list[Configuration] = []
+        self._pending: list[tuple[Configuration, int, int]] = []  # Configuration, N, seed
+
+        if incumbent_configuration is None:
+            incumbent_configuration = scenario.configspace.get_default_configuration()
+
+        self._incumbent_configuration = incumbent_configuration
+
+    @property
+    def uses_seeds(self) -> bool:
+        return True
+
+    @property
+    def uses_budgets(self) -> bool:
+        return False
+
+    @property
+    def uses_instances(self) -> bool:
+        if self._scenario.instances is not None:
+            return False
+
+        return True
 
     def __iter__(self) -> Iterator[TrialInfo]:
         rh = self.runhistory
         old_incumbent: Configuration | None = None
 
         # TODO: How to handle this if we continue optimization run? Just start from scratch?
-        rejected: list[Configuration] = []
-        pending: list[tuple[Configuration, int, int]] = []  # Configuration, N, seed
+        # We make rejected and pending global so we can better test the behavior
+        self._rejected = []
+        self._pending = []  # Configuration, N, seed
 
-        i = -1
+        fails = 0
         while True:
-            i += 1
+            # We stop if we have not found new trials for a while
+            if fails >= self._retries:
+                logger.error(f"Could not find new trials for {fails} iterations.")
+                return
+
             # We select a new incumbent, which is based on the average of instance/seed pairs
             # A new incumbent is chosen only if the new configuration is evaluated as on all instance/seed pairs
             # the incumbent has
-            incumbent = rh.get_incumbent()
+            # TODO: How to deal with parego and rejection?
+            incumbent = rh.get_incumbent()[0]
+
+            # Select incumbent configuration if no incumbent is available
+            if incumbent is None:
+                incumbent = self._incumbent_configuration
 
             # Clear the pending queue if incumbent changed
             if old_incumbent != incumbent:
+                logger.debug("Incumbent changed! Clearing pending queue.")
                 old_incumbent = incumbent
-                pending = []
+                self._pending = []
 
             # We get ``self._max_config_calls`` == maxR trials to evaluate for the incumbent
             # First the instances are "filled-up" before a new seed is started
             # We don't yield the trials if the trials are marked as running in the runhistory
-            initial_incumbent_trials = self._get_missing_trials(incumbent)
-            for trial in initial_incumbent_trials:
+            incumbent_missing_trials = self._get_missing_trials(incumbent)
+            for trial in incumbent_missing_trials:
                 # Keep in mind: The generator keeps track of the state so the next time __next__ is called,
                 # we start directly after the yield again
                 yield trial
 
-            # Get evaluated incumbent trials: Important to check if the challenger has the same number of evaluated ones
-            evaluated_incumbent_trials = self._get_evaluated_trials(incumbent)
+            # We also need to remember how many trials we need
+            incumbent_trials_of_interest = self._get_trials_of_interest(incumbent)
 
             # Percentage parameter: We decide whether to intensify or to evaluate a fresh configuration
-            if i % 2 == 0:  # random.rand() < self._intensify_percentage:
+            if self._rng.rand() > self._intensify_percentage:
+                logger.debug("Get next (unseen) configuration.")
                 config = next(self.config_selector)
-                N = 1
+                N = self._min_config_calls  # or 1
 
                 # Seed is responsible for selecting random instance/seed pairs
                 seed = int(self._rng.randint(low=0, high=MAXINT, size=1)[0])
             else:
                 # Continue pending runs with the latest N
-                if len(pending) > 0:
-                    config, N, seed = pending.pop()
+                if len(self._pending) > 0:
+                    logger.debug("Selecting config from pending queue.")
+                    config, N, seed = self._pending.pop()
                 else:
                     # If there are no pending configs, we select a [???] config from the runhistory?
                     # Which configuration should be intensified?
@@ -94,27 +134,63 @@ class Intensifier(AbstractIntensifier):
                     # into the pending queue and might be chosen the next iteration. Should work?
                     # However, if the configuration is already rejected or the incumbent or else,
                     # then the intensification in this iteration is basically skipped.
+                    logger.debug("Selecting random config from runhistory.")
+                    config = None
+                    previous_configs = rh.get_configs()
 
-                    config = self._rng.choice(rh.get_configs())  # type: ignore
-                    N = 1
-                    seed = int(self._rng.randint(low=0, high=MAXINT, size=1)[0])
+                    if len(previous_configs) > 0:
+                        config_idx = int(self._rng.randint(low=0, high=len(previous_configs), size=1)[0])
+                        config = previous_configs[config_idx]
+                        N = self._min_config_calls  # or 1
+                        seed = int(self._rng.randint(low=0, high=MAXINT, size=1)[0])
+                    else:
+                        logger.debug("No configurations in runhistory. Do you mark runs as running?")
 
             # We don't want to evaluate a rejected configuration or an incumbent
-            if config is None or config in rejected or config == incumbent:
+            if config is None:
+                logger.debug("Skipping intensify config because it is None.")
+                fails += 1
+                continue
+
+            if config in self._rejected:
+                logger.debug("Skipping intensify config because it was rejected before.")
+                fails += 1
+                continue
+
+            if config == incumbent:
+                logger.debug("Skipping intensify config because it is the incumbent.")
+                fails += 1
                 continue
 
             # Don't return missing trials if marked as ``RUNNING`` in the runhistory
             # Basically, trials which haven't been run yet
-            initial_missing_trials = self._get_missing_trials(config, N, seed)
-            for trial in initial_missing_trials:
+            missing_trials = self._get_missing_trials(config, N, seed)
+            for trial in missing_trials:
+                fails = 0  # Reset fail counter
                 yield trial
 
             # Trials which are evaluated already
             evaluated_trials = self._get_evaluated_trials(config, N, seed)
             evaluated_isbk = [trial_info.get_instance_seed_budget_key() for trial_info in evaluated_trials]
 
-            # We only go here if all trials have been evaluated
-            if len(initial_missing_trials) == 0:
+            # In every iteration we deal with N different trials
+            # We need the trials of interest to decide whether we can complete this iteration and increase N
+            trials_of_interest = self._get_trials_of_interest(config, N=N, seed=seed)
+
+            # Get evaluated incumbent trials: Important to check if the challenger has the same number of evaluated ones
+            incumbent_evaluated_trials = self._get_evaluated_trials(incumbent, N, seed)
+
+            logger.debug(f"-- Config has {len(evaluated_trials)}/{len(trials_of_interest)} evaluated trials.")
+
+            logger.debug(
+                f"-- Incumbent has {len(incumbent_evaluated_trials)}/{len(trials_of_interest)} evaluated trials."
+            )
+
+            # We only go here if all necessary trials have been evaluated
+            if len(evaluated_trials) == len(incumbent_evaluated_trials) == len(trials_of_interest):
+                logger.debug("Intensify ...")
+                fails = 0  # Reset fail counter
+
                 # Now we have all trials evaluated and we can do a comparison
                 config_cost = rh.average_cost(config, evaluated_isbk, normalize=True)
                 incumbent_cost = rh.average_cost(incumbent, evaluated_isbk, normalize=True)
@@ -122,21 +198,29 @@ class Intensifier(AbstractIntensifier):
 
                 if config_cost > incumbent_cost:
                     # New config is worse than incumbent so we reject the configuration forever
-                    rejected.append(config)
+                    logger.debug(
+                        f"Rejecting config because it is worse than incumbent on {len(evaluated_isbk)} trials."
+                    )
+                    self._rejected.append(config)
                 # If we evaluated as much trials as we evaluated the incumbent
-                elif len(evaluated_trials) == len(evaluated_incumbent_trials):
+                elif len(trials_of_interest) == len(incumbent_trials_of_interest):
                     # New configuration is the new incumbent
                     # However, since the incumbent is evaluated in each iteration, we skip it here
                     pass
                 else:
                     # In the original paper, we would double N: In our case, we mark it as pending so it could
                     # be intensified in the next iteration.
-                    pending.append((config, N * 2, seed))
+                    logger.debug("Double N and add to pending queue.")
+                    self._pending.append((config, N * 2, seed))
             # Trials have not been evaluated yet
             else:
                 # We append the current N to the pending, so in the next iteration we check again
                 # if the trials have been evaluated
-                pending.append((config, N, seed))
+                logger.debug("Add to pending queue.")
+                self._pending.append((config, N, seed))
+
+                # We also have to increase the fails here, otherwise we might get stuck
+                fails += 1
 
     def _get_trials_of_interest(self, config: Configuration, N: int | None = None, seed: int = 0) -> list[TrialInfo]:
         if N is None:
