@@ -100,4 +100,4 @@ if __name__ == "__main__":
 
     # Let's calculate the cost of the incumbent
     incumbent_cost = smac.validate(incumbent)
-    print(f"Default cost: {incumbent_cost}")
+    print(f"Incumbent cost: {incumbent_cost}")

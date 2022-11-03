@@ -21,7 +21,6 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
     def _build_matrix(
         self,
         trials: Mapping[TrialKey, TrialValue],
-        runhistory: RunHistory,
         store_statistics: bool = False,
     ) -> tuple[np.ndarray, np.ndarray]:
         # First build nan-matrix of size #configs x #params+1

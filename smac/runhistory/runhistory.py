@@ -606,12 +606,13 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         ParEGO weights.
         """
         incumbent = None
-        required_trials = 0  # required trials to change the incumbent
         lowest_cost = np.inf
+        required_trials = 0  # Required trials to change the incumbent
 
         if self._incumbent is not None:
-            required_trials = len(self.get_trials(self._incumbent))
             incumbent = self._incumbent
+            lowest_cost = self.get_cost(incumbent)
+            required_trials = len(self.get_trials(incumbent))
 
         for config in self._config_ids.keys():
             if len(self.get_trials(config)) < required_trials:
@@ -621,6 +622,10 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             if cost < lowest_cost:
                 incumbent = config
                 lowest_cost = cost
+
+        # TODO: Save new incumbent to trajectory
+        if incumbent != self._incumbent:
+            self._
 
         # Set it globally
         self._incumbent = incumbent
@@ -963,6 +968,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 # This happens when budget > 0 (only successive halving and hyperband so far)
                 logger.debug(f"Update cost for config {k.config_id}.")
                 self.update_cost(config=self._ids_config[k.config_id])
+
+            # TODO: Calculate incumbents here
 
         # Make TrialInfo object
         trial_info = TrialInfo(self.get_config(k.config_id), instance=k.instance, seed=k.seed, budget=k.budget)

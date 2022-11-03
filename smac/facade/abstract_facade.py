@@ -16,10 +16,10 @@ from smac.acquisition.maximizer.abstract_acqusition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
 from smac.callback import Callback
-from smac.config_selector.config_selector import ConfigSelector
+from smac.main.config_selector import ConfigSelector
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
-from smac.smbo import SMBO
+from smac.main.smbo import SMBO
 from smac.model.abstract_model import AbstractModel
 from smac.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
@@ -255,18 +255,6 @@ class AbstractFacade:
 
         return meta
 
-    def get_target_function_seeds(self) -> list[int]:
-        """Which seeds are used to call the target function."""
-        return self._intensifier.get_target_function_seeds()
-
-    def get_target_function_budgets(self) -> list[float | None]:
-        """Which budgets are used to call the target function."""
-        return self._intensifier.get_target_function_budgets()
-
-    def get_target_function_instances(self) -> list[str | None]:
-        """Which instances are used to call the target function."""
-        return self._intensifier.get_target_function_instances()
-
     def get_next_configurations(self) -> Iterator[Configuration]:
         """Choose next candidate solution with Bayesian optimization. The suggested configurations
         depend on the surrogate model acquisition optimizer/function. This method is used by
@@ -275,23 +263,8 @@ class AbstractFacade:
         return self._optimizer.get_next_configurations()
 
     def ask(self) -> TrialInfo:
-        """Asks the intensifier for the next trial. This method returns only trials with the intend
-        to run.
-        """
-        counter = 0
-        while True:
-            if counter > 10:
-                logger.warning("It seems like SMAC only finds trials with the intent to skip/wait.")
-                counter = 0
-
-            intend, info = self._optimizer.ask()
-            # We only accept trials which are intented to run
-            if intend != TrialInfoIntent.RUN:
-                counter += 1
-                continue
-
-            counter = 0
-            return info
+        """Asks the intensifier for the next trial. This method returns only trials with the intend to run."""
+        return self._optimizer.ask()
 
     def tell(self, info: TrialInfo, value: TrialValue, save: bool = True) -> None:
         """Adds the result of a trial to the runhistory and updates the intensifier. Also,
@@ -306,7 +279,7 @@ class AbstractFacade:
         save : bool, optional to True
             Whether the runhistory should be saved.
         """
-        return self._optimizer.tell(info, value, time_left=None, save=save)
+        return self._optimizer.tell(info, value, save=save)
 
     def optimize(self) -> Configuration:
         """
@@ -335,7 +308,6 @@ class AbstractFacade:
         self,
         config: Configuration,
         *,
-        instances: list[str] | None = None,
         seed: int | None = None,
     ) -> float | list[float]:
         """Validates a configuration with different seeds than in the optimization process and on the highest
@@ -357,7 +329,7 @@ class AbstractFacade:
             The averaged cost of the configuration. In case of multi-fidelity, the cost of each objective is
             averaged.
         """
-        return self._optimizer.validate(config, instances=instances, seed=seed)
+        return self._optimizer.validate(config, seed=seed)
 
     @staticmethod
     @abstractmethod

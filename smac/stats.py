@@ -30,21 +30,6 @@ class Stats:
         self.reset()
 
     @property
-    def submitted(self) -> int:
-        """How many trials have been submitted."""
-        return self._submitted
-
-    @property
-    def finished(self) -> int:
-        """How many trials have been evaluated."""
-        return self._finished
-
-    @property
-    def n_configs(self) -> int:
-        """How many different configurations have been evaluated."""
-        return self._n_configs
-
-    @property
     def incumbent_changed(self) -> int:
         """How often the incumbent (aka best found configuration) changed."""
         return self._incumbent_changed
@@ -143,24 +128,6 @@ class Stats:
 
         return A or B or C
 
-    def update_average_configs_per_intensify(self, n_configs: int) -> None:
-        """Updates statistics how many configurations on average per used in intensify.
-
-        Parameters
-        ----------
-        n_configs : int
-            Number of configurations in current intensify.
-        """
-        self._n_calls_of_intensify += 1
-        self._n_configs_per_intensify += n_configs
-
-        if self._n_calls_of_intensify == 1:
-            self._ema_n_configs_per_intensifiy = float(n_configs)
-        else:
-            self._ema_n_configs_per_intensifiy = (
-                1 - self._EMA_ALPHA
-            ) * self._ema_n_configs_per_intensifiy + self._EMA_ALPHA * n_configs
-
     def print(self, debug: bool = True) -> None:
         """Prints all statistics."""
         log = logger.info
@@ -180,16 +147,6 @@ class Stats:
             f"----------------------------------------------------"
         )
 
-        if self._n_calls_of_intensify > 0:
-            logger.debug("Debug Statistics:")
-            logger.debug(
-                "Average Configurations per Intensify: %.2f"
-                % (self._n_configs_per_intensify / self._n_calls_of_intensify)
-            )
-            logger.debug(
-                "Exponential Moving Average of Configurations per Intensify: %.2f"
-                % (self._ema_n_configs_per_intensifiy)
-            )
 
     def save(self) -> None:
         """Save all relevant attributes to a json file."""

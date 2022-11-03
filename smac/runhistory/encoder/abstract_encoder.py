@@ -111,7 +111,6 @@ class AbstractRunHistoryEncoder:
     def _build_matrix(
         self,
         trials: Mapping[TrialKey, TrialValue],
-        runhistory: RunHistory,
         store_statistics: bool = False,
     ) -> tuple[np.ndarray, np.ndarray]:
         """Builds x and y matrixes from selected runs from the runhistory.
@@ -132,7 +131,6 @@ class AbstractRunHistoryEncoder:
 
     def _get_considered_trials(
         self,
-        runhistory: RunHistory,
         budget_subset: list | None = None,
     ) -> dict[TrialKey, TrialValue]:
         trials: dict[TrialKey, TrialValue] = {}
@@ -166,7 +164,6 @@ class AbstractRunHistoryEncoder:
 
     def _get_timeout_trials(
         self,
-        runhistory: RunHistory,
         budget_subset: list | None = None,
     ) -> dict[TrialKey, TrialValue]:
         if budget_subset is not None:
@@ -189,7 +186,6 @@ class AbstractRunHistoryEncoder:
 
     def get_configurations(
         self,
-        runhistory: RunHistory,
         budget_subset: list | None = None,
     ) -> np.ndarray:
         """Returns vector representation of the configurations. Instance features are not
@@ -217,7 +213,6 @@ class AbstractRunHistoryEncoder:
 
     def transform(
         self,
-        runhistory: RunHistory,
         budget_subset: list | None = None,
     ) -> tuple[np.ndarray, np.ndarray]:
         """Returns a vector representation of the runhistory.
@@ -251,8 +246,7 @@ class AbstractRunHistoryEncoder:
             store_statistics=store_statistics,
         )
 
-        # If we don't have successful runs,
-        # we have to return all timeout runs
+        # If we don't have successful runs, we have to return all timeout runs
         if not considered_trials:
             return tX, tY
 

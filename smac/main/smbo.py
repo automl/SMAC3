@@ -2,9 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from itertools import product
-
 import numpy as np
+import time
 from ConfigSpace import Configuration
 
 from smac.acquisition.function.abstract_acquisition_function import (
@@ -13,7 +12,6 @@ from smac.acquisition.function.abstract_acquisition_function import (
 
 from smac.runner import FirstRunCrashedException, TargetAlgorithmAbortException
 from smac.callback import Callback
-from smac.constants import MAXINT
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.model.abstract_model import AbstractModel
 from smac.runhistory import StatusType, TrialInfo, TrialValue
@@ -84,9 +82,9 @@ class SMBO:
     ):
         self._scenario = scenario
         self._configspace = scenario.configspace
-        self._stats = stats
         self._runhistory = runhistory
         self._intensifier = intensifier
+        self._trial_generator = iter(intensifier)
         self._runner = runner
         self._overwrite = overwrite
 
@@ -94,12 +92,14 @@ class SMBO:
         self._finished = False
         self._allow_optimization = True
         self._stop = False  # Gracefully stop SMAC
-        self._min_time = 10**-5
         self._callbacks: list[Callback] = []
 
-        # We don't restore the incumbent anymore but derive it directly from
-        # the stats object when the run is started.
-        self._incumbent = None
+        # Stats variables
+        self._start_time = 0.0
+        self._submitted = 0
+        self._finished = 0
+        self._n_configs = 0
+        self._used_target_function_walltime = 0.0
 
         # We initialize the state based on previous data.
         # If no previous data is found then we take care of the initial design.
@@ -111,11 +111,57 @@ class SMBO:
         return self._runhistory
 
     @property
-    def stats(self) -> Stats:
-        """The stats object, which is updated during the optimization and shows relevant information, e.g., how many
-        trials have been finished and how the trajectory looks like.
-        """
-        return self._stats
+    def submitted_trials(self) -> int:
+        """How many trials have been submitted."""
+        return self._submitted
+
+    @property
+    def finished_trials(self) -> int:
+        """How many trials have been evaluated."""
+        return self._finished
+
+    @property
+    def n_configs(self) -> int:
+        """How many different configurations have been evaluated."""
+        return self._n_configs
+
+    @property
+    def remaing_walltime(self) -> float:
+        """Subtracts the runtime configuration budget with the used wallclock time."""
+        return self._scenario.walltime_limit - (time.time() - self._start_time)
+
+    @property
+    def remaining_cputime(self) -> float:
+        """Subtracts the target function running budget with the used time."""
+        return self._scenario.cputime_limit - self._used_target_function_walltime
+
+    @property
+    def remaining_trials(self) -> int:
+        """Subtract the target function runs in the scenario with the used ta runs."""
+        return self._scenario.n_trials - self.submitted_trials
+
+    @property
+    def budget_exhausted(self) -> bool:
+        """Check whether the the remaining walltime, cputime or trials was exceeded."""
+        A = self.remaing_walltime < 0
+        B = self.remaining_cputime < 0
+        C = self.remaining_trials < 0
+
+        return A or B or C
+
+    @property
+    def used_walltime(self) -> float:
+        """Returns used wallclock time."""
+        return time.time() - self._start_time
+
+    @property
+    def used_target_function_walltime(self) -> float:
+        """Returns how much walltime the target function spend so far."""
+        return self._used_target_function_walltime
+
+    @property
+    def trajectory(self):
+        pass
 
     @property
     def incumbent(self) -> Configuration | None:
@@ -132,9 +178,16 @@ class SMBO:
         """
         for callback in self._callbacks:
             callback.on_ask_start(self)
+            
+        # TODO: Does this work with the new intensifier?
+        if (mo := self._runhistory_encoder.multi_objective_algorithm) is not None:
+            mo.update_on_iteration_start()
 
         # Now we use our generator to get the next trial info
-        trial_info = list(next(self._intensifier))[0]
+        trial_info = next(self._trial_generator)
+
+        # Track the fact that the trial was returned
+        self._runhistory.add_running_trial(trial_info)
 
         for callback in self._callbacks:
             callback.on_ask_end(self, trial_info)
@@ -217,16 +270,18 @@ class SMBO:
 
     def update_model(self, model: AbstractModel) -> None:
         """Updates the model and updates the acquisition function."""
-        self._intensifier._config_selector._model = model
-        self._intensifier._config_selector._acquisition_function.model = model
+        if (config_selector := self._intensifier._config_selector) is not None:
+            config_selector._model = model
+            config_selector._acquisition_function.model = model
 
     def update_acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
         """Updates acquisition function and assosiates the current model. Also, the acquisition
         optimizer is updated.
         """
-        self._intensifier._config_selector._acquisition_function = acquisition_function
-        self._intensifier._config_selector._acquisition_function.model = self._intensifier._config_selector._model
-        self._intensifier._config_selector._acquisition_maximizer.acquisition_function = acquisition_function
+        if (config_selector := self._intensifier._config_selector) is not None:
+            config_selector._acquisition_function = acquisition_function
+            config_selector._acquisition_function.model = config_selector._model
+            config_selector._acquisition_maximizer.acquisition_function = acquisition_function
 
     def optimize(self) -> Configuration:
         """Runs the Bayesian optimization loop.
@@ -236,8 +291,6 @@ class SMBO:
         incumbent : Configuration
             The best found configuration.
         """
-        if not self._allow_optimization:
-            raise NotImplementedError("Unfortunately, previous runs can not be continued yet. 😞")
 
         # We return the incumbent if we already finished the optimization process (we don't want to allow to call
         # optimize more than once).
@@ -245,8 +298,7 @@ class SMBO:
             return self._incumbent
 
         # Start the timer before we do anything
-        self._stats.start_timing()
-        n_objectives = self._scenario.count_objectives()
+        self._start_time = time.time() - self.used_walltime
 
         for callback in self._callbacks:
             callback.on_start(self)
@@ -258,39 +310,36 @@ class SMBO:
 
             # Sample next trial from the intensification
             trial_info = self.ask()
-            trial_info.config.config_id = self._runhistory._config_ids[trial_info.config]
+            # trial_info.config.config_id = self._runhistory._config_ids[trial_info.config]
 
-            # Track the fact that a run was launched in the run
-            # history. It's status is tagged as RUNNING, and once
-            # completed and processed, it will be updated accordingly
-            self._runhistory.add(
-                config=trial_info.config,
-                cost=float(MAXINT) if n_objectives == 1 else [float(MAXINT) for _ in range(n_objectives)],
-                time=0.0,
-                status=StatusType.RUNNING,
-                instance=trial_info.instance,
-                seed=trial_info.seed,
-                budget=trial_info.budget,
-            )
+            # self._runhistory.add(
+            #    config=trial_info.config,
+            #    cost=float(MAXINT) if n_objectives == 1 else [float(MAXINT) for _ in range(n_objectives)],
+            #    time=0.0,
+            #    status=StatusType.RUNNING,
+            #    instance=trial_info.instance,
+            #    seed=trial_info.seed,
+            #    budget=trial_info.budget,
+            # )
 
             # We submit the trial to the runner
             self._runner.submit_trial(trial_info=trial_info)
-            self._stats._submitted += 1
-            self._stats._n_configs = len(self._runhistory._config_ids)
+            self._submitted += 1
+            self._n_configs = len(self._runhistory._config_ids)
 
             # We add results from the runner if results are available
             self._add_results()
 
             # Some statistics
             logger.debug(
-                f"Remaining wallclock time: {self._stats.get_remaing_walltime()}; "
-                f"Remaining cpu time: {self._stats.get_remaining_cputime()}; "
-                f"Remaining trials: {self._stats.get_remaining_trials()}"
+                f"Remaining wallclock time: {self.remaing_walltime}; "
+                f"Remaining cpu time: {self.remaining_cputime}; "
+                f"Remaining trials: {self.remaining_trials}"
             )
 
             # Now we check whether we have to stop the optimization
-            if self._stats.is_budget_exhausted() or self._stop:
-                if self._stats.is_budget_exhausted():
+            if self.budget_exhausted or self._stop:
+                if self.budget_exhausted:
                     logger.info("Configuration budget is exhausted.")
                 else:
                     logger.info("Shutting down because the stop flag was set.")
@@ -306,15 +355,11 @@ class SMBO:
             for callback in self._callbacks:
                 callback.on_iteration_end(self)
 
-            # Print stats at the end of each intensification iteration.
-            # if self._intensifier.iteration_done:
-            #    self._stats.print()
-
         for callback in self._callbacks:
             callback.on_end(self)
 
         self._finished = True
-        return self._incumbent
+        return self.runhistory.get_incumbent()[0]
 
     def save(self) -> None:
         """Saves the current stats and runhistory."""
@@ -334,7 +379,7 @@ class SMBO:
             self.tell(trial_info, trial_value)
 
             # We expect the first run to always succeed.
-            if self._stats.finished == 0 and trial_value.status == StatusType.CRASHED:
+            if self.finished == 0 and trial_value.status == StatusType.CRASHED:
                 additional_info = ""
                 if "traceback" in trial_value.additional_info:
                     additional_info = "\n\n" + trial_value.additional_info["traceback"]
@@ -344,8 +389,8 @@ class SMBO:
                 )
 
             # Update SMAC stats
-            self._stats._target_function_walltime_used += float(trial_value.time)
-            self._stats._finished += 1
+            self._used_target_function_walltime += float(trial_value.time)
+            self._finished += 1
 
             if trial_value.status == StatusType.ABORT:
                 raise TargetAlgorithmAbortException(
@@ -409,17 +454,17 @@ class SMBO:
                     self._runhistory.load_json(str(old_runhistory_filename), configspace=self._scenario.configspace)
                     self._stats.load()
 
-                    if self._stats.submitted == 1 and self._stats.finished == 0:
+                    if self.submitted == 1 and self.finished == 0:
                         # Reset runhistory and stats if first run was not successful
                         logger.info("Since the previous run was not successful, SMAC will start from scratch again.")
                         self._runhistory.reset()
                         self._stats.reset()
-                    elif self._stats.submitted == 0 and self._stats.finished == 0:
+                    elif self.submitted == 0 and self.finished == 0:
                         # If the other run did not start, we can just continue
                         self._runhistory.reset()
                         self._stats.reset()
-                    else:
-                        self._allow_optimization = False
+                    # else:
+                    #    self._allow_optimization = False
                 else:
                     diff = recursively_compare_dicts(
                         Scenario.make_serializable(self._scenario),
@@ -471,7 +516,7 @@ class SMBO:
 
         # Sanity-checking: We expect an empty runhistory if finished in stats is 0
         # Note: stats.submitted might not be 0 because the user could have provide information via the tell method only
-        if self.stats.finished == 0 or self._incumbent is None:
+        if self.finished == 0 or self._incumbent is None:
             assert self.runhistory.empty()
         else:
             # That's the case when the runhistory is not empty
@@ -480,39 +525,10 @@ class SMBO:
             logger.info(f"Starting optimization with incumbent {self._incumbent.get_dictionary()}.")
             self.stats.print()
 
-    def _get_timebound_for_intensification(self, time_spent: float) -> float:
-        """Calculate time left for intensify from the time spent on choosing challengers using the
-        fraction of time intended for intensification (which is specified in
-        ``intensifier.intensification_percentage``).
-
-        Parameters
-        ----------
-        time_spent : float
-
-        Returns
-        -------
-        time_left : float
-        """
-        if not hasattr(self._intensifier, "intensify_percentage"):
-            return np.inf
-
-        intensify_percentage = self._intensifier.intensify_percentage  # type: ignore
-        total_time = time_spent / (1 - intensify_percentage)
-        time_left = intensify_percentage * total_time
-
-        logger.debug(
-            f"\n--- Total time: {round(total_time, 4)}"
-            f"\n--- Time spent on choosing next configurations: {round(time_spent, 4)} ({(1 - intensify_percentage)})"
-            f"\n--- Time left for intensification: {round(time_left, 4)} ({intensify_percentage})"
-        )
-
-        return time_left
-
     def validate(
         self,
         config: Configuration,
         *,
-        instances: list[str] | None = None,
         seed: int | None = None,
     ) -> float | list[float]:
         """Validates a configuration with different seeds than in the optimization process and on the highest
@@ -537,36 +553,34 @@ class SMBO:
         if seed is None:
             seed = self._scenario.seed
 
-        rng = np.random.default_rng(seed)
-
-        seeds = []
-        for _ in range(len(self._intensifier.get_target_function_seeds())):
-            seed = int(rng.integers(low=0, high=MAXINT, size=1)[0])
-            seeds += [seed]
-
-        used_budgets: list[float | None] = [None]
-        if self._intensifier.uses_budgets:
-            # Select last budget
-            used_budgets = [self._intensifier.get_target_function_budgets()[-1]]
-
-        used_instances: list[str | None] = [None]
-        if self._intensifier.uses_instances:
-            if instances is None:
-                assert self._scenario.instances is not None
-                used_instances = self._scenario.instances  # type: ignore
-
         costs = []
-        for s, b, i in product(seeds, used_budgets, used_instances):
+        for trial in self._intensifier.get_trials_of_interest(config, seed=seed, validate=True):
             kwargs: dict[str, Any] = {}
-            if s is not None:
-                kwargs["seed"] = s
-            if b is not None:
-                kwargs["budget"] = b
-            if i is not None:
-                kwargs["instance"] = i
+            if trial.seed is not None:
+                kwargs["seed"] = trial.seed
+            if trial.budget is not None:
+                kwargs["budget"] = trial.budget
+            if trial.instance is not None:
+                kwargs["instance"] = trial.instance
 
+            # TODO: Use submit run
             _, cost, _, _ = self._runner.run(config, **kwargs)
             costs += [cost]
 
         np_costs = np.array(costs)
         return np.mean(np_costs, axis=0)
+
+    def print_stats(self) -> None:
+        """Prints all statistics."""
+        logger.info(
+            "\n"
+            f"--- STATISTICS -------------------------------------\n"
+            f"--- Incumbent changed: {self._incumbent_changed - 1}\n"
+            f"--- Submitted trials: {self.submitted_trials} / {self._scenario.n_trials}\n"
+            f"--- Finished trials: {self.finished_trials} / {self._scenario.n_trials}\n"
+            f"--- Configurations: {self._n_configs}\n"
+            f"--- Used wallclock time: {round(self.used_walltime)} / {self._scenario.walltime_limit} sec\n"
+            "--- Used target function runtime: "
+            f"{round(self.used_target_function_walltime, 2)} / {self._scenario.cputime_limit} sec\n"
+            f"----------------------------------------------------"
+        )

@@ -31,9 +31,9 @@ try:
     from smac.facade import (
         AlgorithmConfigurationFacade,
         BlackBoxFacade,
-        HyperbandFacade,
+        # HyperbandFacade,
         HyperparameterOptimizationFacade,
-        MultiFidelityFacade,
+        # MultiFidelityFacade,
         RandomFacade,
     )
     from smac.runhistory.runhistory import RunHistory

@@ -3,7 +3,8 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import Any, Iterator
 import numpy as np
-from smac.config_selector.config_selector import ConfigSelector
+from smac.main.config_selector import ConfigSelector
+from ConfigSpace import Configuration
 
 from smac.runhistory import TrialInfo
 from smac.runhistory.runhistory import RunHistory
@@ -19,7 +20,8 @@ logger = get_logger(__name__)
 class AbstractIntensifier:
     def __init__(self, scenario: Scenario, seed: int | None = None):
         self._scenario = scenario
-        self._config_selector: Iterator[ConfigSelector] | None = None
+        self._config_selector: ConfigSelector | None = None
+        self._config_generator: Iterator[ConfigSelector] | None = None
         self._runhistory: RunHistory | None = None
 
         if seed is None:
@@ -33,14 +35,20 @@ class AbstractIntensifier:
         self._tf_budgets: list[float | None] = []
 
     @property
-    def config_selector(self) -> Iterator[ConfigSelector]:
+    def config_generator(self) -> Iterator[ConfigSelector]:
+        assert self._config_generator is not None
+        return self._config_generator
+
+    @property
+    def config_selector(self) -> ConfigSelector:
         assert self._config_selector is not None
         return self._config_selector
 
     @config_selector.setter
     def config_selector(self, config_selector: ConfigSelector) -> None:
         # Set it global
-        self._config_selector = iter(config_selector)
+        self._config_selector = config_selector
+        self._config_generator = iter(config_selector)
         self._runhistory = config_selector._runhistory
 
         # Validate runhistory: Are seeds/instances/budgets used?
@@ -54,11 +62,6 @@ class AbstractIntensifier:
                     self._tf_seeds.append(k.seed)
 
             if self.uses_instances:
-                # if k.instance is None:
-                #    raise ValueError(
-                #        "Trial contains no instance information, but intensifier expects instances to be used."
-                #    )
-
                 if self._scenario.instances is None and k.instance is not None:
                     raise ValueError(
                         "Scenario does not specify any instances but found instance information in runhistory."
@@ -129,3 +132,30 @@ class AbstractIntensifier:
         intensifier to get more information.
         """
         raise NotImplementedError
+
+    @abstractmethod
+    def get_trials_of_interest(
+        self,
+        config: Configuration,
+        *,
+        N: int | None = None,
+        seed: int = 0,
+        validate: bool = False,
+    ) -> list[TrialInfo]:
+        """Returns a list of trials of interest for a given configuration."""
+        raise NotImplementedError
+
+    def print_config_changes(
+        self,
+        incumbent: Configuration | None,
+        challenger: Configuration | None,
+    ) -> None:
+        if incumbent is None or challenger is None:
+            return
+
+        params = sorted([(param, incumbent[param], challenger[param]) for param in challenger.keys()])
+        for param in params:
+            if param[1] != param[2]:
+                logger.info("-- %s: %r -> %r" % param)
+            else:
+                logger.debug("-- %s Remains unchanged: %r", param[0], param[1])

@@ -1,6 +1,6 @@
 import pytest
 from smac.intensifier.intensifier import Intensifier
-from smac.config_selector.config_selector import ConfigSelector
+from smac.main.config_selector import ConfigSelector
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.initial_design.random_design import RandomInitialDesign

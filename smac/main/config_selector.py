@@ -192,6 +192,9 @@ class ConfigSelector:
 
             if X.shape[0] >= self._min_samples:
                 self._considered_budgets = [b]
+                
+                # TODO: Add running configs
+                
                 configs_array = self._runhistory_encoder.get_configurations(
                     self._runhistory, budget_subset=self._considered_budgets
                 )

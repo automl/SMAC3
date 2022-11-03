@@ -23,7 +23,6 @@ class Intensifier(AbstractIntensifier):
         scenario: Scenario,
         min_config_calls: int = 1,
         max_config_calls: int = 2000,
-        min_challenger: int = 2,
         intensify_percentage: float = 0.5,
         # if no incumbent is available, the intensifier choses this configuration or the default configspace if none
         # race_against: Configuration | None = None,
@@ -31,13 +30,12 @@ class Intensifier(AbstractIntensifier):
         retries: int = 10,  # Number of iterations to retry if no next trial can be found
         seed: int | None = None,
     ):
-        if scenario.deterministic:
-            if min_challenger != 1:
-                logger.info("The number of minimal challengers is set to one for deterministic algorithms.")
-
-            min_challenger = 1
-
         super().__init__(scenario=scenario, seed=seed)
+
+        if incumbent_configuration is None:
+            incumbent_configuration = scenario.configspace.get_default_configuration()
+
+        self._incumbent_configuration = incumbent_configuration
 
         # Internal variables
         self._min_config_calls = min_config_calls
@@ -46,11 +44,6 @@ class Intensifier(AbstractIntensifier):
         self._retries = retries
         self._rejected: list[Configuration] = []
         self._pending: list[tuple[Configuration, int, int]] = []  # Configuration, N, seed
-
-        if incumbent_configuration is None:
-            incumbent_configuration = scenario.configspace.get_default_configuration()
-
-        self._incumbent_configuration = incumbent_configuration
 
     @property
     def uses_seeds(self) -> bool:
@@ -62,7 +55,7 @@ class Intensifier(AbstractIntensifier):
 
     @property
     def uses_instances(self) -> bool:
-        if self._scenario.instances is not None:
+        if self._scenario.instances is None:
             return False
 
         return True
@@ -87,7 +80,8 @@ class Intensifier(AbstractIntensifier):
             # A new incumbent is chosen only if the new configuration is evaluated as on all instance/seed pairs
             # the incumbent has
             # TODO: How to deal with parego and rejection?
-            incumbent = rh.get_incumbent()[0]
+            # Menge von incumbents: was kommt rein und was fliegt raus
+            incumbent, incumbent_cost = rh.get_incumbent()
 
             # Select incumbent configuration if no incumbent is available
             if incumbent is None:
@@ -95,7 +89,11 @@ class Intensifier(AbstractIntensifier):
 
             # Clear the pending queue if incumbent changed
             if old_incumbent != incumbent:
-                logger.debug("Incumbent changed! Clearing pending queue.")
+                trials = rh.get_trials(incumbent, only_max_observed_budget=False)
+                logger.info(f"Incumbent changed with estimated cost {incumbent_cost} on {len(trials)} trials.")
+                self.print_config_changes(old_incumbent, incumbent)
+                logger.debug("Clearing pending queue.")
+
                 old_incumbent = incumbent
                 self._pending = []
 
@@ -109,12 +107,15 @@ class Intensifier(AbstractIntensifier):
                 yield trial
 
             # We also need to remember how many trials we need
-            incumbent_trials_of_interest = self._get_trials_of_interest(incumbent)
+            # TODO: Caching!
+            incumbent_trials_of_interest = self.get_trials_of_interest(incumbent)
 
             # Percentage parameter: We decide whether to intensify or to evaluate a fresh configuration
             if self._rng.rand() > self._intensify_percentage:
                 logger.debug("Get next (unseen) configuration.")
-                config = next(self.config_selector)
+                # TODO: Werden running configs im surrogate berücksichtigt? Keine imputation?
+                # Mean vom surrogate model nehmen und als halloziniert wert nehmen
+                config = next(self.config_generator)
                 N = self._min_config_calls  # or 1
 
                 # Seed is responsible for selecting random instance/seed pairs
@@ -137,6 +138,9 @@ class Intensifier(AbstractIntensifier):
                     logger.debug("Selecting random config from runhistory.")
                     config = None
                     previous_configs = rh.get_configs()
+
+                    # TODO: Eine finden die nicht rejected ist? -> Overhead
+                    # TODO: Nicht für immer rejected: wann ist es nicht mehr rejected?
 
                     if len(previous_configs) > 0:
                         config_idx = int(self._rng.randint(low=0, high=len(previous_configs), size=1)[0])
@@ -175,13 +179,12 @@ class Intensifier(AbstractIntensifier):
 
             # In every iteration we deal with N different trials
             # We need the trials of interest to decide whether we can complete this iteration and increase N
-            trials_of_interest = self._get_trials_of_interest(config, N=N, seed=seed)
+            trials_of_interest = self.get_trials_of_interest(config, N=N, seed=seed)
 
             # Get evaluated incumbent trials: Important to check if the challenger has the same number of evaluated ones
             incumbent_evaluated_trials = self._get_evaluated_trials(incumbent, N, seed)
 
             logger.debug(f"-- Config has {len(evaluated_trials)}/{len(trials_of_interest)} evaluated trials.")
-
             logger.debug(
                 f"-- Incumbent has {len(incumbent_evaluated_trials)}/{len(trials_of_interest)} evaluated trials."
             )
@@ -212,7 +215,8 @@ class Intensifier(AbstractIntensifier):
                     # be intensified in the next iteration.
                     logger.debug("Double N and add to pending queue.")
                     self._pending.append((config, N * 2, seed))
-            # Trials have not been evaluated yet
+            # Trials have not been evaluated yet so we just add the current config with the current N/seed to the queue
+            # again
             else:
                 # We append the current N to the pending, so in the next iteration we check again
                 # if the trials have been evaluated
@@ -222,21 +226,37 @@ class Intensifier(AbstractIntensifier):
                 # We also have to increase the fails here, otherwise we might get stuck
                 fails += 1
 
-    def _get_trials_of_interest(self, config: Configuration, N: int | None = None, seed: int = 0) -> list[TrialInfo]:
+    def get_trials_of_interest(
+        self,
+        config: Configuration,
+        *,
+        N: int | None = None,
+        seed: int = 0,
+        validate: bool = False,
+    ) -> list[TrialInfo]:
+        """Returns a list of trials of interest for a given configuration."""
         if N is None:
             N = self._max_config_calls
+
+        if validate:
+            rng = np.random.RandomState(seed)
+        else:
+            rng = self._rng
 
         # tf_seeds might include seeds specified by the user
         trials: list[TrialInfo] = []
 
         i = 0
         while len(trials) < self._max_config_calls:
-            try:
-                next_seed = self._tf_seeds[i]
-            except IndexError:
-                # Use global random generator for a new seed and mark it so it will be reused for another config
+            if validate:
                 next_seed = int(self._rng.randint(low=0, high=MAXINT, size=1)[0])
-                self._tf_seeds.append(next_seed)
+            else:
+                try:
+                    next_seed = self._tf_seeds[i]
+                except IndexError:
+                    # Use global random generator for a new seed and mark it so it will be reused for another config
+                    next_seed = int(self._rng.randint(low=0, high=MAXINT, size=1)[0])
+                    self._tf_seeds.append(next_seed)
 
             # If no instances are used, tf_instances includes None
             for instance in self._tf_instances:
@@ -270,7 +290,7 @@ class Intensifier(AbstractIntensifier):
         added first.
         """
         rh = self.runhistory
-        trials_of_interest = self._get_trials_of_interest(config, N=N, seed=seed)
+        trials_of_interest = self.get_trials_of_interest(config, N=N, seed=seed)
 
         # Now we actually have to check whether the trials have been evaluated already
         evaluated_isbk = rh.get_trials(config, only_max_observed_budget=False)
@@ -289,7 +309,7 @@ class Intensifier(AbstractIntensifier):
     def _get_evaluated_trials(self, config: Configuration, N: int | None = None, seed: int = 0) -> list[TrialInfo]:
         """Returns all evaluated trials from the trials of interest."""
         rh = self.runhistory
-        trials_of_interest = self._get_trials_of_interest(config, N=N, seed=seed)
+        trials_of_interest = self.get_trials_of_interest(config, N=N, seed=seed)
         trials: list[TrialInfo] = []
 
         # We iterate over the trials again
