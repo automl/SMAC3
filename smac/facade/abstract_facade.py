@@ -27,7 +27,6 @@ from smac.multi_objective.abstract_multi_objective_algorithm import (
 from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.runhistory.dataclasses import TrialInfo, TrialValue
 from smac.runhistory.encoder.abstract_encoder import AbstractRunHistoryEncoder
-from smac.runhistory.enumerations import TrialInfoIntent
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.abstract_runner import AbstractRunner
 from smac.runner.dask_runner import DaskParallelRunner
@@ -423,6 +422,7 @@ class AbstractFacade:
         """
         # self._intensifier._stats = self._stats
         self._runhistory_encoder.multi_objective_algorithm = self._multi_objective_algorithm
+        self._runhistory_encoder.runhistory = self._runhistory
         self._acquisition_function.model = self._model
         self._acquisition_maximizer.acquisition_function = self._acquisition_function
         self._intensifier.config_selector = self._config_selector

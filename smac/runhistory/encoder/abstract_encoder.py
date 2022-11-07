@@ -85,6 +85,7 @@ class AbstractRunHistoryEncoder:
         self._max_y = np.array([np.NaN] * self._n_objectives)
         self._percentile = np.array([np.NaN] * self._n_objectives)
         self._multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None
+        self._runhistory: RunHistory | None = None
 
     @property
     def meta(self) -> dict[str, Any]:
@@ -96,6 +97,17 @@ class AbstractRunHistoryEncoder:
             "scale_percentage": self._scale_percentage,
             "seed": self._seed,
         }
+
+    @property
+    def runhistory(self) -> RunHistory:
+        """The runhistory used to transform the data."""
+        assert self._runhistory is not None
+        return self._runhistory
+
+    @runhistory.setter
+    def runhistory(self, runhistory: RunHistory) -> None:
+        """Sets the multi objective algorithm."""
+        self._runhistory = runhistory
 
     @property
     def multi_objective_algorithm(self) -> AbstractMultiObjectiveAlgorithm | None:
@@ -139,7 +151,7 @@ class AbstractRunHistoryEncoder:
             if len(budget_subset) != 1:
                 raise ValueError("Can not yet handle getting runs from multiple budgets.")
 
-        for trial_key, trial_value in runhistory.items():
+        for trial_key, trial_value in self.runhistory.items():
             add = False
             if budget_subset is not None:
                 if trial_key.budget in budget_subset and trial_value.status in self._considered_states:
@@ -168,17 +180,17 @@ class AbstractRunHistoryEncoder:
     ) -> dict[TrialKey, TrialValue]:
         if budget_subset is not None:
             trials = {
-                run: runhistory[run]
-                for run in runhistory
-                if runhistory[run].status == StatusType.TIMEOUT
+                trial: self.runhistory[trial]
+                for trial in self.runhistory
+                if self.runhistory[trial].status == StatusType.TIMEOUT
                 # and runhistory.data[run].time >= self._algorithm_walltime_limit  # type: ignore
-                and run.budget in budget_subset
+                and trial.budget in budget_subset
             }
         else:
             trials = {
-                run: runhistory[run]
-                for run in runhistory
-                if runhistory[run].status == StatusType.TIMEOUT
+                trial: self.runhistory[trial]
+                for trial in self.runhistory
+                if self.runhistory[trial].status == StatusType.TIMEOUT
                 # and runhistory.data[run].time >= self._algorithm_walltime_limit  # type: ignore
             }
 
@@ -193,7 +205,6 @@ class AbstractRunHistoryEncoder:
 
         Parameters
         ----------
-        runhistory : RunHistory
         budget_subset : list | None, defaults to none
             List of budgets to consider.
 
@@ -201,12 +212,12 @@ class AbstractRunHistoryEncoder:
         -------
         configs_array : np.ndarray
         """
-        s_trials = self._get_considered_trials(runhistory, budget_subset)
+        s_trials = self._get_considered_trials(budget_subset)
         s_config_ids = set(s_trial.config_id for s_trial in s_trials)
-        t_trials = self._get_timeout_trials(runhistory, budget_subset)
+        t_trials = self._get_timeout_trials(budget_subset)
         t_config_ids = set(t_trial.config_id for t_trial in t_trials)
         config_ids = s_config_ids | t_config_ids
-        configurations = [runhistory._ids_config[config_id] for config_id in config_ids]
+        configurations = [self.runhistory._ids_config[config_id] for config_id in config_ids]
         configs_array = convert_configurations_to_array(configurations)
 
         return configs_array
@@ -219,7 +230,6 @@ class AbstractRunHistoryEncoder:
 
         Parameters
         ----------
-        runhistory : RunHistory
         budget_subset : list | None, defauls to none
             List of budgets to consider.
 
@@ -232,19 +242,15 @@ class AbstractRunHistoryEncoder:
         """
         logger.debug("Transforming runhistory into X, y format...")
 
-        considered_trials = self._get_considered_trials(runhistory, budget_subset)
-        X, Y = self._build_matrix(trials=considered_trials, runhistory=runhistory, store_statistics=True)
+        considered_trials = self._get_considered_trials(budget_subset)
+        X, Y = self._build_matrix(trials=considered_trials, store_statistics=True)
 
         # Get real TIMEOUT runs
-        timeout_trials = self._get_timeout_trials(runhistory, budget_subset)
+        timeout_trials = self._get_timeout_trials(budget_subset)
 
         # Use penalization (e.g. PAR10) for EPM training
         store_statistics = True if np.any(np.isnan(self._min_y)) else False
-        tX, tY = self._build_matrix(
-            trials=timeout_trials,
-            runhistory=runhistory,
-            store_statistics=store_statistics,
-        )
+        tX, tY = self._build_matrix(trials=timeout_trials, store_statistics=store_statistics)
 
         # If we don't have successful runs, we have to return all timeout runs
         if not considered_trials:
