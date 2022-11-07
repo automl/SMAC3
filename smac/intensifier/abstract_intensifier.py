@@ -138,8 +138,6 @@ class AbstractIntensifier:
         self,
         config: Configuration,
         *,
-        N: int | None = None,
-        seed: int = 0,
         validate: bool = False,
     ) -> list[TrialInfo]:
         """Returns a list of trials of interest for a given configuration."""

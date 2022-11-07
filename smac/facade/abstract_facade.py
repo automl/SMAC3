@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Any, Callable, Iterator
+from typing import Any, Callable
 
 from pathlib import Path
 
@@ -218,18 +218,6 @@ class AbstractFacade:
         return self._optimizer._runhistory
 
     @property
-    def stats(self) -> Stats:
-        """The stats object, which is updated during the optimization and shows relevant information, e.g., how many
-        trials have been finished and how the trajectory looks like.
-        """
-        return self._optimizer._stats
-
-    @property
-    def incumbent(self) -> Configuration | None:
-        """The best configuration so far."""
-        return self._optimizer._incumbent
-
-    @property
     def meta(self) -> dict[str, Any]:
         """Generates a hash based on all components of the facade. This is used for the run name or to determine
         whether a run should be continued or not.
@@ -253,13 +241,6 @@ class AbstractFacade:
         }
 
         return meta
-
-    def get_next_configurations(self) -> Iterator[Configuration]:
-        """Choose next candidate solution with Bayesian optimization. The suggested configurations
-        depend on the surrogate model acquisition optimizer/function. This method is used by
-        the intensifier.
-        """
-        return self._optimizer.get_next_configurations()
 
     def ask(self) -> TrialInfo:
         """Asks the intensifier for the next trial. This method returns only trials with the intend to run."""

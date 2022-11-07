@@ -188,16 +188,13 @@ class ConfigSelector:
 
         # Get #points per budget and if there are enough samples, then build a model
         for b in available_budgets:
-            X, Y = self._runhistory_encoder.transform(self._runhistory, budget_subset=[b])
+            X, Y = self._runhistory_encoder.transform(budget_subset=[b])
 
             if X.shape[0] >= self._min_samples:
                 self._considered_budgets = [b]
                 
                 # TODO: Add running configs
-                
-                configs_array = self._runhistory_encoder.get_configurations(
-                    self._runhistory, budget_subset=self._considered_budgets
-                )
+                configs_array = self._runhistory_encoder.get_configurations(budget_subset=self._considered_budgets)
 
                 return X, Y, configs_array
 

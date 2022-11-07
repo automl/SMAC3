@@ -46,7 +46,7 @@ class AbstractRunHistoryEncoder:
             StatusType.SUCCESS,
             StatusType.CRASHED,
             StatusType.MEMORYOUT,
-            StatusType.DONOTADVANCE,
+            # StatusType.DONOTADVANCE,
         ],
         lower_budget_states: list[StatusType] = [],
         scale_percentage: int = 5,

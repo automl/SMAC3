@@ -111,10 +111,7 @@ class HyperparameterOptimizationFacade(AbstractFacade):
     def get_intensifier(  # type: ignore
         scenario: Scenario,
         *,
-        min_challenger: int = 1,
-        min_config_calls: int = 1,
         max_config_calls: int = 3,
-        intensify_percentage: float = 0.5,
     ) -> Intensifier:
         """Returns ``Intensifier`` as intensifier. Uses the default configuration for ``race_against``.
 
@@ -133,11 +130,7 @@ class HyperparameterOptimizationFacade(AbstractFacade):
         """
         intensifier = Intensifier(
             scenario=scenario,
-            # min_challenger=min_challenger,
-            # race_against=scenario.configspace.get_default_configuration(),
-            min_config_calls=min_config_calls,
             max_config_calls=max_config_calls,
-            intensify_percentage=intensify_percentage,
         )
 
         return intensifier

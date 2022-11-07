@@ -64,6 +64,18 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         self.reset()
 
     @property
+    def submitted(self) -> int:
+        return self._submitted
+
+    @property
+    def finished(self) -> int:
+        return self._finished
+
+    @property
+    def running(self) -> int:
+        return self._running
+
+    @property
     def multi_objective_algorithm(self) -> AbstractMultiObjectiveAlgorithm | None:
         """The multi-objective algorithm is required to scaralize the costs in case of multi-objective."""
         return self._multi_objective_algorithm
@@ -94,6 +106,11 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         # serialize the data and can assume it's still in the same order as it was added.
         self._data: dict[TrialKey, TrialValue] = OrderedDict()
         self._incumbents: list[Configuration] = []
+
+        # Keep track of trials
+        self._submitted = 0
+        self._finished = 0
+        self._running = 0
 
         # For fast access, we have also an unordered data structure to get all instance
         # seed pairs of a configuration.
@@ -256,7 +273,20 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         # Each trial_key is supposed to be used only once. Repeated tries to add
         # the same trial_key will be ignored silently if not capped.
-        if self._overwrite_existing_trials or force_update or self._data.get(k) is None:
+        previous_k = self._data.get(k)
+        if self._overwrite_existing_trials or force_update or previous_k is None:
+            # Update stati
+            if previous_k is None:
+                if status == StatusType.RUNNING:
+                    self._running += 1
+                else:
+                    self._finished += 1
+
+                self._submitted += 1
+            else:
+                if previous_k.status == StatusType.RUNNING and status != StatusType.RUNNING:
+                    self._running -= 1
+
             self._add(k, v, status, origin)
         else:
             logger.info("Entry was not added to the runhistory because existing trials will not be overwritten.")
@@ -562,14 +592,25 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         """Returns the configuration from the configuration id."""
         return self._ids_config[config_id]
 
-    def get_configs(self) -> list[Configuration]:
+    def get_configs(self, sort_by: str | None = None) -> list[Configuration]:
         """Return all configurations in this RunHistory object.
 
         Returns
         -------
         parameter configurations: list
+        sort_by : str, defaults to None
+            Sort the configs by ``cost`` (lowest cost first) or ``num_trials`` (config with lowest number of trials
+            first).
         """
-        return list(self._config_ids.keys())
+        configs = list(self._config_ids.keys())
+
+        if sort_by == "cost":
+            return sorted(configs, key=lambda config: self._cost_per_config[self._config_ids[config]])
+
+        if sort_by == "num_trials":
+            return sorted(configs, key=lambda config: len(self.get_trials(config)))
+
+        return configs
 
     def get_configs_per_budget(
         self,
@@ -594,18 +635,18 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 configs.append(self._ids_config[key.config_id])
 
         return configs
-    
+
     def get_incumbent(self) -> Configuration | None:
         if self._n_objectives > 1:
             raise ValueError("Cannot get a single incumbent for multi-objective optimization.")
-        
+
         if len(self._incumbents) == 0:
             return None
-        
+
         assert len(self._incumbents) == 1
         return self._incumbents[0]
 
-    def get_incumbents(self) -> list[Configuration]:
+    def get_incumbents(self, sort_by: str | None = None) -> list[Configuration]:
         """Returns the incumbents (points on the pareto front) of the runhistory. In case of a single-objective
         optimization, only one incumbent (if is) is returned.
 
@@ -613,7 +654,17 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         -------
         configs : list[Configuration]
             The configs of the Pareto front.
+        sort_by : str, defaults to None
+            Sort the trials by ``cost`` (lowest cost first) or ``num_trials`` (config with lowest number of trials
+            first).
         """
+
+        if sort_by == "cost":
+            return sorted(self._incumbents, key=lambda config: self._cost_per_config[self._config_ids[config]])
+
+        if sort_by == "num_trials":
+            return sorted(self._incumbents, key=lambda config: len(self.get_trials(config)))
+
         return self._incumbents
 
     def _update_incumbents(self, config: Configuration) -> None:
@@ -622,6 +673,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         # Get current costs of incumbents
         average_costs = []
+        config_id = self._config_ids[config]
         configs = self.get_incumbents()
 
         # Now we add the config to the configs (if it's not already inside)
@@ -651,13 +703,24 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             is_efficient = is_efficient[nondominated_point_mask]  # Remove dominated points
             costs = costs[nondominated_point_mask]
             next_point_index = np.sum(nondominated_point_mask[:next_point_index]) + 1
-            
+
         new_incumbents = [configs[i] for i in is_efficient]
+        new_incumbent_ids = [self._config_ids[c] for c in new_incumbents]
+        new_incumbent_costs = [self._cost_per_config[id] for id in new_incumbent_ids]
+        pairs = list(zip(new_incumbent_ids, new_incumbent_costs))
+        pairs_readable = ", ".join([str(p) for p in pairs])
+
         if config in new_incumbents and not was_previous_incumbent:
-            logger.info(f"Added config {self._config_ids[config]} to the incumbents.")
-            
+            logger.info(
+                f"Added config {config_id} with cost {self._cost_per_config[config_id]} to the incumbents. "
+                f"Current number of incumbents: {len(new_incumbents)}"
+            )
+
         if config not in new_incumbents and was_previous_incumbent:
-            logger.info(f"Removed config {self._config_ids[config]} from the incumbents.")
+            logger.info(
+                f"Removed config {config_id} from the incumbents. "
+                f"Current number of incumbents: {len(new_incumbents)}"
+            )
 
         self._incumbents = new_incumbents
 
@@ -706,6 +769,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         with open(filename, "w") as fp:
             json.dump(
                 {
+                    "stats": {"submitted": self._submitted, "finished": self._finished},
                     "data": data,
                     "configs": configs,
                     "config_origins": config_origins,
