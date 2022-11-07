@@ -93,7 +93,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         # By having the data in a deterministic order we can do useful tests when we
         # serialize the data and can assume it's still in the same order as it was added.
         self._data: dict[TrialKey, TrialValue] = OrderedDict()
-        self._incumbent: Configuration | None = None
+        self._incumbents: list[Configuration] = []
 
         # For fast access, we have also an unordered data structure to get all instance
         # seed pairs of a configuration.
@@ -594,65 +594,50 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 configs.append(self._ids_config[key.config_id])
 
         return configs
+    
+    def get_incumbent(self) -> Configuration | None:
+        if self._n_objectives > 1:
+            raise ValueError("Cannot get a single incumbent for multi-objective optimization.")
+        
+        if len(self._incumbents) == 0:
+            return None
+        
+        assert len(self._incumbents) == 1
+        return self._incumbents[0]
 
-    def get_incumbent(self) -> tuple[Configuration | None, float | list[float]]:
-        """Returns the incumbent configuration. The config with the lowest cost calculated by ``get_cost`` is returned.
-        However, the incumbent only changes if the new configuration has at least as many trials as the incumbent.
-
-        Warning
-        -------
-        The incumbent in a multi-objective setting depends on the multi-objective algorithm.
-        If you use ParEGO, for example, you get a random incumbent on the Pareto front based on the current
-        ParEGO weights.
-        """
-        incumbent = None
-        lowest_cost = np.inf
-        required_trials = 0  # Required trials to change the incumbent
-
-        if self._incumbent is not None:
-            incumbent = self._incumbent
-            lowest_cost = self.get_cost(incumbent)
-            required_trials = len(self.get_trials(incumbent))
-
-        for config in self._config_ids.keys():
-            if len(self.get_trials(config)) < required_trials:
-                continue
-
-            cost = self.get_cost(config)
-            if cost < lowest_cost:
-                incumbent = config
-                lowest_cost = cost
-
-        # TODO: Save new incumbent to trajectory
-        if incumbent != self._incumbent:
-            self._
-
-        # Set it globally
-        self._incumbent = incumbent
-
-        return incumbent, lowest_cost
-
-    def get_pareto_front(self) -> tuple[list[Configuration], list[list[float]]]:
-        """Returns the Pareto front of the runhistory.
+    def get_incumbents(self) -> list[Configuration]:
+        """Returns the incumbents (points on the pareto front) of the runhistory. In case of a single-objective
+        optimization, only one incumbent (if is) is returned.
 
         Returns
         -------
         configs : list[Configuration]
             The configs of the Pareto front.
-        costs : list[list[float]]
-            The costs from the configs of the Pareto front.
         """
-        if self._n_objectives == 1:
-            raise ValueError("Pareto front is only defined for multi-objective settings.")
+        return self._incumbents
 
-        # Get costs from runhistory first
+    def _update_incumbents(self, config: Configuration) -> None:
+        """Updates the incumbents. This method is called everytime a trial is added to the runhistory. Since only
+        the affected config and the incumbents are used, this method is very efficient."""
+
+        # Get current costs of incumbents
         average_costs = []
-        configs = self.get_configs()
+        configs = self.get_incumbents()
+
+        # Now we add the config to the configs (if it's not already inside)
+        if config not in configs:
+            configs.append(config)
+            was_previous_incumbent = False
+        else:
+            was_previous_incumbent = True
+
         for config in configs:
+            config_id = self._config_ids[config]
+
             # Since we use multiple seeds, we have to average them to get only one cost value pair for each
             # configuration
-            # Luckily, SMAC already does this for us
-            average_cost = self.average_cost(config)
+            # Average cost is a list of floats (one for each objective)
+            average_cost = self._cost_per_config[config_id]
             average_costs += [average_cost]
 
         # Let's work with a numpy array
@@ -666,8 +651,15 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             is_efficient = is_efficient[nondominated_point_mask]  # Remove dominated points
             costs = costs[nondominated_point_mask]
             next_point_index = np.sum(nondominated_point_mask[:next_point_index]) + 1
+            
+        new_incumbents = [configs[i] for i in is_efficient]
+        if config in new_incumbents and not was_previous_incumbent:
+            logger.info(f"Added config {self._config_ids[config]} to the incumbents.")
+            
+        if config not in new_incumbents and was_previous_incumbent:
+            logger.info(f"Removed config {self._config_ids[config]} from the incumbents.")
 
-        return [configs[i] for i in is_efficient], [average_costs[i] for i in is_efficient]
+        self._incumbents = new_incumbents
 
     def save_json(self, filename: str = "runhistory.json", save_external: bool = False) -> None:
         """Saves runhistory on disk.
@@ -969,7 +961,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 logger.debug(f"Update cost for config {k.config_id}.")
                 self.update_cost(config=self._ids_config[k.config_id])
 
-            # TODO: Calculate incumbents here
+            # Update incumbents here
+            self._update_incumbents(self._ids_config[k.config_id])
 
         # Make TrialInfo object
         trial_info = TrialInfo(self.get_config(k.config_id), instance=k.instance, seed=k.seed, budget=k.budget)

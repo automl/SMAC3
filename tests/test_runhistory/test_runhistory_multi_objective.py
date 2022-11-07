@@ -611,7 +611,7 @@ def test_pareto_front1(scenario, runhistory, config1, config2):
         status=StatusType.SUCCESS,
     )
 
-    incumbents, _ = runhistory.get_pareto_front()
+    incumbents = runhistory.get_incumbents()
     assert config1 in incumbents and config2 in incumbents
 
 
@@ -631,5 +631,37 @@ def test_pareto_front2(scenario, runhistory, config1, config2):
         status=StatusType.SUCCESS,
     )
 
-    incumbents, _ = runhistory.get_pareto_front()
+    incumbents = runhistory.get_incumbents()
     assert config1 in incumbents and config2 not in incumbents
+
+
+def test_pareto_front3(scenario, runhistory, config1, config2, config3):
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
+    runhistory.add(
+        config=config1,
+        cost=[10, 15],
+        time=5,
+        status=StatusType.SUCCESS,
+    )
+
+    runhistory.add(
+        config=config2,
+        cost=[10, 10],
+        time=15,
+        status=StatusType.SUCCESS,
+    )
+
+    incumbents = runhistory.get_incumbents()
+    assert config2 in incumbents and config1 not in incumbents
+
+    runhistory.add(
+        config=config3,
+        cost=[5, 15],
+        time=15,
+        status=StatusType.SUCCESS,
+    )
+
+    incumbents = runhistory.get_incumbents()
+    assert len(incumbents) == 2
+    assert config2 in incumbents
+    assert config3 in incumbents

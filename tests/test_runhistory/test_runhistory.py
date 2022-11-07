@@ -527,3 +527,37 @@ def test_unpack(runhistory, config1):
     for (k, v), expected in zip(unpacked.items(), params):
         assert k.instance == expected["instance"]
         assert v.cost == expected["cost"]
+
+
+def test_incumbent(runhistory, config1, config2, config3):
+    incumbents = runhistory.get_incumbents()
+    assert len(incumbents) == 0
+    runhistory.add(
+        config=config1,
+        cost=10,
+        time=5,
+        status=StatusType.SUCCESS,
+    )
+    incumbents = runhistory.get_incumbents()
+    assert len(incumbents) == 1
+
+    runhistory.add(
+        config=config2,
+        cost=5,
+        time=15,
+        status=StatusType.SUCCESS,
+    )
+    incumbents = runhistory.get_incumbents()
+    assert len(incumbents) == 1
+
+    runhistory.add(
+        config=config3,
+        cost=15,
+        time=15,
+        status=StatusType.SUCCESS,
+    )
+
+    incumbents = runhistory.get_incumbents()
+    assert len(incumbents) == 1
+    assert config2 in incumbents
+    assert config2 == runhistory.get_incumbent()
