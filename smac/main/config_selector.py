@@ -158,6 +158,9 @@ class ConfigSelector:
 
                     # We break to enforce a new iteration of the while loop (i.e. we retrain the surrogate model)
                     if counter == self._n:
+                        logger.debug(
+                            f"Yielded {counter} configurations. Start new iteration and retrain surrogate model."
+                        )
                         break
                 else:
                     failed_counter += 1
@@ -192,7 +195,7 @@ class ConfigSelector:
 
             if X.shape[0] >= self._min_samples:
                 self._considered_budgets = [b]
-                
+
                 # TODO: Add running configs
                 configs_array = self._runhistory_encoder.get_configurations(budget_subset=self._considered_budgets)
 

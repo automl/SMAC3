@@ -1,3 +1,50 @@
+TODO:
+- Runhistory: Nur incumbent ändern, wenn auf gleichen trials auf pareto front
+- Wenn mehr als 20 incumbents, dann random einen entfernen
+- Queue für challenger: First in first out
+
+The idea is the following:
+- Runhistory keeps track of the incumbents and which configurations have been rejected
+- Intensifier keeps track of the challengers with a queue
+
+
+while True:
+    incumbents <- rh.incumbents (sorted by #trials) 
+    
+    if queue is empty or configs in queue are all running:
+        for incumbent in incumbents:
+            if incumbent.#trials < max_config_calls:
+                trial = get_next_random_trial(incumbent)
+                if trial not None:
+                    break
+
+        new_config <- get_next_config()
+        queue <- add(new_config, N=1)
+        yield get_next_random_trial(new_config)  // must be a random one of the incumbent seeds
+    else:
+        // queue abarbeiten
+        config, N <- queue.pop()
+
+        // config might be still running 
+        if trials of config still running:
+            // We add the same again back to the queue
+            queue <- add(config, N)
+            continue
+
+        // once a config is rejected, we don't look at it again
+        if config is not rejected:
+            trials <- get_next_random_trial(config, N)
+            // we want to return missing N trials 
+            for trial in trials:
+                if trial not None:
+                    yield trial
+            
+            // And then we add it to the queue with a higher N
+            queue <- add(config, N*2)
+
+
+
+
 while True
     // Incumbents are purely selected by average cost (no matter on how many trials have been evaluated)
     // Reason: If config with less trials was chosen, it will be evaluated on more trials
@@ -5,6 +52,10 @@ while True
     // incumbent again 
     incumbents <- rh.current_incumbents_on_pareto_front
     sort_incumbents_by_#trials <- sort(incumbents)  // incumbents with lowest trials first because of uncertainty
+
+    // einen neuen trial für das incumbent pro neue configuration
+    // 20 incumbents; 21 incumbents welchen rausschmeißen?
+    // queue: first in first out
 
     // Now we get the config with the least number of trials to make it more trustworthy
     for incumbent in sort_incumbents_by_#trials
@@ -22,12 +73,17 @@ while True
     // We sample a new configuration
     if i % 2 == 0
         new_config <- get_next_config
-        // TODO: Which random trial should we get? Prioritize? First all random instances and then seeds? 
+        // TODO: Which random trial should we get? Prioritize? First all random instances and then seeds? APPROVED
         yield get_next_random_trial(new_config)
+
+        // überlebt die config?
+        // challenger wird immer auf den instance seed pairs vom incumbent evaluiert -> immer vergleichbar
+        // rausschmeißen wenn 
+
     // A configuration might be not lucky to get evaluated on a good performing trial
     // Hence, we select random configuration and give it another shot to become an incumbent
     else
-        // TODO: We don't have 2*N, but it would makes sense?
+        // TODO: We don't have 2*N, but it would makes sense? MULTI-TASKING?
         // TODO: Select configs with the least number of trials? Because they are the most uncertain
         configs <- rh.get_all_existing_configs()
         configs <- configs \ incumbents

@@ -396,8 +396,8 @@ def test_json_origin(configspace_small, config1):
         )
 
         path = f"tests/test_files/test_json_origin_{i}.json"
-        runhistory.save_json(path)
-        runhistory.load_json(path, configspace_small)
+        runhistory.save(path)
+        runhistory.load(path, configspace_small)
 
         assert runhistory.get_configs()[0].origin == origin
 

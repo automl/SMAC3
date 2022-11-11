@@ -19,7 +19,6 @@ from smac.runhistory import StatusType, TrialInfo, TrialValue
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.abstract_runner import AbstractRunner
 from smac.scenario import Scenario
-from smac.stats import Stats
 from smac.utils.data_structures import recursively_compare_dicts
 from smac.utils.logging import get_logger
 
@@ -75,7 +74,6 @@ class SMBO:
     def __init__(
         self,
         scenario: Scenario,
-        stats: Stats,
         runner: AbstractRunner,
         runhistory: RunHistory,
         intensifier: AbstractIntensifier,
@@ -91,7 +89,6 @@ class SMBO:
 
         # Internal variables
         self._finished = False
-        self._allow_optimization = True
         self._stop = False  # Gracefully stop SMAC
         self._callbacks: list[Callback] = []
 
@@ -187,18 +184,6 @@ class SMBO:
         save : bool, optional to True
             Whether the runhistory should be saved.
         """
-        # We first check if budget/instance/seed is supported by the intensifier
-        # if info.seed not in (seeds := self._intensifier.get_target_function_seeds()):
-        #    raise ValueError(f"Seed {info.seed} is not supported by the intensifier. Consider using one of {seeds}.")
-        # elif info.budget not in (budgets := self._intensifier.get_target_function_budgets()):
-        #    raise ValueError(
-        #        f"Budget {info.budget} is not supported by the intensifier. Consider using one of {budgets}."
-        #    )
-        # elif info.instance not in (instances := self._intensifier.get_target_function_instances()):
-        #    raise ValueError(
-        #        f"Instance {info.instance} is not supported by the intensifier. Consider using one of {instances}."
-        #    )
-
         if info.config.origin is None:
             info.config.origin = "Custom"
 
@@ -212,7 +197,7 @@ class SMBO:
                 self._stop = True
 
         logger.debug(
-            f"Status: {value.status}, "
+            f"Status: {StatusType(value.status).name}, "
             f"Cost: {value.cost}, "
             f"Time: {value.time}, "
             f"Additional: {value.additional_info}"
@@ -267,7 +252,6 @@ class SMBO:
         incumbent : Configuration
             The best found configuration.
         """
-
         # We return the incumbent if we already finished the optimization process (we don't want to allow to call
         # optimize more than once).
         if self._finished:
@@ -331,8 +315,19 @@ class SMBO:
         else:
             return self.runhistory.get_incumbents()
 
+    def reset(self) -> None:
+        self._used_target_function_walltime = 0
+        self._finished = False
+
     def load(self) -> None:
-        pass
+        path = self._scenario.output_directory
+        if path is not None:
+            with open(str(path / "optimization.json")) as fp:
+                data = json.load(fp)
+
+            # self._used_walltime = data["used_walltime"]
+            self._used_target_function_walltime = data["used_target_function_walltime"]
+            self._finished = data["finished"]
 
     def save(self) -> None:
         """Saves the current stats and runhistory."""
@@ -350,7 +345,7 @@ class SMBO:
                 json.dump(data, file)
 
             # And save runhistory
-            self._runhistory.save_json(str(path / "runhistory.json"))
+            self._runhistory.save(str(path / "runhistory.json"))
 
     def _add_results(self) -> None:
         """Adds results from the runner to the runhistory. Although most of the functionality could be written
@@ -373,14 +368,6 @@ class SMBO:
 
             # Update SMAC stats
             self._used_target_function_walltime += float(trial_value.time)
-
-            # if trial_value.status == StatusType.ABORT:
-            #    raise TargetAlgorithmAbortException(
-            #        "The target function was aborted. The last incumbent can be found in the trajectory file."
-            #    )
-            # elif trial_value.status == StatusType.STOP:
-            #    logger.debug("Value holds the status stop. Abort is requested.")
-            #    self._stop = True
 
             # Gracefully end optimization if termination cost is reached
             if self._scenario.termination_cost_threshold != np.inf:
@@ -417,9 +404,9 @@ class SMBO:
             # First we get the paths from potentially previous data
             old_output_directory = self._scenario.output_directory
             old_runhistory_filename = self._scenario.output_directory / "runhistory.json"
-            old_stats_filename = self._scenario.output_directory / "stats.json"
+            old_smbo_filename = self._scenario.output_directory / "optimization.json"
 
-            if old_output_directory.exists() and old_runhistory_filename.exists() and old_stats_filename.exists():
+            if old_output_directory.exists() and old_runhistory_filename.exists() and old_smbo_filename.exists():
                 old_scenario = Scenario.load(old_output_directory)
 
                 if self._scenario == old_scenario:
@@ -430,23 +417,16 @@ class SMBO:
 
                     logger.info("Continuing from previous run.")
 
-                    # We update the runhistory and stats in-place.
-                    # Stats use the output directory from the config directly.
+                    # We update the runhistory in-place
                     self._runhistory.reset()
-                    self._runhistory.load_json(str(old_runhistory_filename), configspace=self._scenario.configspace)
+                    self._runhistory.load(str(old_runhistory_filename), configspace=self._scenario.configspace)
                     self.load()
 
-                    # if self.submitted == 1 and self.finished == 0:
-                    #    # Reset runhistory and stats if first run was not successful
-                    #    logger.info("Since the previous run was not successful, SMAC will start from scratch again.")
-                    #    self._runhistory.reset()
-                    #    self._stats.reset()
-                    # elif self.submitted == 0 and self.finished == 0:
-                    #    # If the other run did not start, we can just continue
-                    #    self._runhistory.reset()
-                    #    self._stats.reset()
-                    # else:
-                    #    self._allow_optimization = False
+                    if self._runhistory.submitted <= 1 and self._runhistory.finished == 0:
+                        # Reset runhistory and stats if first run was not successful
+                        logger.info("Since the previous run was not successful, SMAC will start from scratch again.")
+                        self._runhistory.reset()
+                        self.reset()
                 else:
                     diff = recursively_compare_dicts(
                         Scenario.make_serializable(self._scenario),
@@ -484,7 +464,7 @@ class SMBO:
                         # However, we should ensure that we use the same configspace.
                         assert self._scenario.configspace == old_scenario.configspace
 
-                        self._runhistory.load_json(str(old_runhistory_filename), configspace=self._scenario.configspace)
+                        self._runhistory.load(str(old_runhistory_filename), configspace=self._scenario.configspace)
                         self.load()
                     else:
                         raise RuntimeError("SMAC run was stopped by the user.")
@@ -492,16 +472,6 @@ class SMBO:
         # And now we save everything
         self._scenario.save()
         self.save()
-
-        # Sanity-checking: We expect an empty runhistory if finished in stats is 0
-        # Note: stats.submitted might not be 0 because the user could have provide information via the tell method only
-        # if self.finished == 0:
-        #    assert self.runhistory.empty()
-        # else:
-        #    # That's the case when the runhistory is not empty
-        #    assert not self.runhistory.empty()
-        #    # logger.info(f"Starting optimization with incumbent {self._incumbent.get_dictionary()}.")
-        #    self.stats.print()
 
     def validate(
         self,

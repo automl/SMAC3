@@ -8,7 +8,7 @@ from ConfigSpace import Configuration
 from smac.constants import MAXINT
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.runhistory import TrialInfo
-from smac.runhistory.dataclasses import InstanceSeedKey
+from smac.runhistory.dataclasses import InstanceSeedBudgetKey, InstanceSeedKey
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
@@ -50,50 +50,71 @@ class Intensifier(AbstractIntensifier):
 
     def __iter__(self) -> Iterator[TrialInfo]:
         rh = self.runhistory
+        queue: list[tuple[Configuration, int]] = []  # (config, N=how many trials should be sampled)
 
         i = -1
         while True:
             i += 1
 
-            # Incumbents are purely selected by the average cost for each objective (no matter how many trials have
-            # been evaluated)
-            # Reason: If config with low amount of trials was chosen, it will be evaluated on more trials.
-            # If it then performs worse than the previous incumbent, the previous incumbnet becomes incumbent again.
+            # Some criteria to stop the intensification if nothing can be intensified anymore
+            if i >= self._scenario.n_workers * 2:
+                exit()
+
+            # Some configs from the runhistory
+            running_configs = rh.get_running_configs()
+            rejected_configs = rh.get_rejected_configs()
+
+            # Now we get the incumbents sorted by number of trials
+            # Also, incorporate ``get_incumbent_instances`` here because challenger are only allowed to
+            # sample from the incumbent's instances
             incumbents = rh.get_incumbents(sort_by="num_trials")
+            incumbent_instances = rh.get_incumbent_instances()
 
-            # Now we get the config with the least number of trials to make it more trustworthy
-            for incumbent in incumbents:
-                trial = self._get_next_trial(incumbent)
-                if trial is not None:
-                    yield trial
-
-                    # We break here because we only want to intensify one incumbent at a time
-                    # Intensifying all incumbents on all trials would produce a strong overhead
+            # Check if configs in queue are still running
+            all_configs_running = True
+            for config, _ in queue:
+                if config not in running_configs:
+                    all_configs_running = False
                     break
 
-            # We sample a new configuration
-            if i % 2 == 0:
-                config = next(self.config_generator)
-                trial = self._get_next_trial(config)
-                if trial is not None:
-                    yield trial
-            # A configuration might be not lucky enough to get evaluated on a good performing trial
-            # Hence, we select a random configuration and give it another shot to become an incumbent
-            else:
-                configs = rh.get_configs(sort_by="num_trials")
+            if len(queue) == 0 or all_configs_running:
+                for incumbent in incumbents:
+                    # If incumbent was evaluated on all incumbent_instances but was not evaluated on all
+                    # max_config_calls, then we have to get a new instance
+                    trials = self._get_next_trials(incumbent, from_instances=incumbent_instances, incumbent=True)
+                    if len(trials) > 0:
+                        i = -1
+                        logger.debug("Intensifying trial of one incumbent...")
+                        yield trials[0]
 
-                # Get rid of incumbents
-                for config in incumbents:
-                    try:
-                        configs.remove(config)
-                    except ValueError:
-                        pass
-
-                for config in configs:
-                    trial = self._get_next_trial(incumbent)
-                    if trial is not None:
-                        yield trial
+                        # We break here because we only want to intensify one more trial of one incumbent
                         break
+
+                # For each intensification of the incumbent, we also want to intensify the next configuration
+                # We simply add it to the queue and intensify it in the next iteration
+                config = next(self.config_generator)
+                queue.append((config, 1))
+            else:
+                # Now we try to empty the queue
+                config, N = queue.pop(0)
+
+                # If the config is still running, we just add it at the end of the queue and continue
+                if config in running_configs:
+                    queue.append((config, N))
+                    continue
+
+                # If the config is rejected, we simply remove it from the queue so that the configuration is never
+                # intensified again
+                if config not in rejected_configs:
+                    trials = self._get_next_trials(config, N=N, from_instances=incumbent_instances)
+                    for trial in trials:
+                        i = -1
+                        yield trial
+
+                    # Finally, we add the same config to the queue with a higher N
+                    # If the config was rejected by the runhistory, then it's gonna removed
+                    if N < self._max_config_calls:
+                        queue.append((config, N * 2))
 
     def get_trials_of_interest(
         self,
@@ -101,7 +122,9 @@ class Intensifier(AbstractIntensifier):
         *,
         validate: bool = False,
     ) -> list[TrialInfo]:
-        """Returns a list of trials of interest for a given configuration."""
+        """Returns a list of trials of interest for a given configuration. Only ``max_config_calls`` trials are
+        returned.
+        """
         if (self._instance_seed_pairs is None and not validate) or (
             self._instance_seed_pairs_validation is None and validate
         ):
@@ -158,14 +181,28 @@ class Intensifier(AbstractIntensifier):
 
         return trials
 
-    def _get_next_trial(self, config: Configuration) -> TrialInfo | None:
+    def _get_next_trials(
+        self,
+        config: Configuration,
+        *,
+        N: int | None = None,
+        from_instances: list[InstanceSeedBudgetKey] | None = None,
+        incumbent: bool = False,
+    ) -> list[TrialInfo]:
+        """Returns the next trials of the configuration based on ``get_trials_of_interest``. If N is specified,
+        maximum N trials are returned but not necessarely all of them (depending on evaluated already or still running).
+
+        Parameters
+        ----------
+        incumbent : bool, defaults to False
+            If true, ``from_instances`` are expanded.
+        """
         rh = self.runhistory
         trials = self.get_trials_of_interest(config)
 
         # Now we actually have to check whether the trials have been evaluated already
-        evaluated_isbk = rh.get_trials(config, only_max_observed_budget=False)
-        for isbk in evaluated_isbk:
-            trial = TrialInfo(config, instance=isbk.instance, seed=isbk.seed)
+        evaluated_trials = rh.get_trials(config, only_max_observed_budget=False)
+        for trial in evaluated_trials:
             if trial in trials:
                 trials.remove(trial)
 
@@ -174,11 +211,26 @@ class Intensifier(AbstractIntensifier):
             if trial in trials:
                 trials.remove(trial)
 
+        # Only leave ``from_instances`` trials
+        removed_trials = []
+        if from_instances is not None:
+            for trial in trials:
+                isbk = trial.get_instance_seed_budget_key()
+                if isbk not in from_instances:
+                    removed_trials.append(trial)
+                    trials.remove(trial)
+
+        if incumbent:
+            if len(trials) == 0 and len(removed_trials) > 0:
+                trials.append(removed_trials[0])
+
         # Now we shuffle the trials
         # TODO: Shuffle in groups (first all instances, then all seeds)
         self._rng.shuffle(trials)  # type: ignore
 
-        try:
-            return trials[0]
-        except IndexError:
-            return None
+        # Return only N trials
+        if N is not None:
+            if len(trials) > N:
+                trials = trials[:N]
+
+        return trials

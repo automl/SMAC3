@@ -53,6 +53,13 @@ class InstanceSeedBudgetKey:
 
         raise RuntimeError("Could not compare InstanceSeedBudgetKey.")
 
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, InstanceSeedBudgetKey):
+            if self.instance == other.instance and self.seed == other.seed and self.budget == other.budget:
+                return True
+
+        return False
+
 
 @dataclass(frozen=True)
 class TrialKey:
@@ -110,7 +117,7 @@ class TrialInfo:
     instance: str | None = None
     seed: int | None = None
     budget: float | None = None
-    
+
     def get_instance_seed_budget_key(self) -> InstanceSeedBudgetKey:
         """Get instance, seed and budget key."""
         return InstanceSeedBudgetKey(instance=self.instance, seed=self.seed, budget=self.budget)
@@ -120,13 +127,16 @@ class TrialInfo:
 class TrajectoryItem:
     """Item of a trajectory."""
 
-    incumbent: Configuration | dict[str, Any]
-    cost: float | list[float]
-    budget: float | None
-    walltime_used: float
-    num_trial: int
+    config_ids: list[int]
+    finished_trials: int
 
-    def __post_init__(self) -> None:
-        # Transform configuration to dict
-        if isinstance(self.incumbent, Configuration):
-            self.incumbent = self.incumbent.get_dictionary()
+    # incumbent: Configuration | dict[str, Any]
+    # cost: float | list[float]
+    # budget: float | None
+    # walltime_used: float
+    # num_trial: int
+
+    # def __post_init__(self) -> None:
+    #    # Transform configuration to dict
+    #    if isinstance(self.incumbent, Configuration):
+    #        self.incumbent = self.incumbent.get_dictionary()

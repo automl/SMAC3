@@ -33,7 +33,6 @@ from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.runner.target_function_script_runner import TargetFunctionScriptRunner
 from smac.scenario import Scenario
-from smac.stats import Stats
 from smac.utils.logging import get_logger, setup_logging
 
 logger = get_logger(__name__)
@@ -138,7 +137,6 @@ class AbstractFacade:
 
         # Initialize empty stats and runhistory object
         runhistory = RunHistory(multi_objective_algorithm=multi_objective_algorithm)
-        stats = Stats(scenario)
 
         # Set the seed for configuration space
         scenario.configspace.seed(scenario.seed)
@@ -154,7 +152,6 @@ class AbstractFacade:
         self._multi_objective_algorithm = multi_objective_algorithm
         self._runhistory = runhistory
         self._runhistory_encoder = runhistory_encoder
-        self._stats = stats
         self._overwrite = overwrite
 
         # Prepare the algorithm executer
@@ -247,8 +244,7 @@ class AbstractFacade:
         return self._optimizer.ask()
 
     def tell(self, info: TrialInfo, value: TrialValue, save: bool = True) -> None:
-        """Adds the result of a trial to the runhistory and updates the intensifier. Also,
-        the stats object is updated.
+        """Adds the result of a trial to the runhistory and updates the intensifier.
 
         Parameters
         ----------
@@ -275,7 +271,6 @@ class AbstractFacade:
             incumbent = self._optimizer.optimize()
         finally:
             self._optimizer.save()
-            self._stats.print()
 
             if incumbent is not None:
                 cost = self._runhistory.get_cost(incumbent)
