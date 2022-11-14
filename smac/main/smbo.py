@@ -106,6 +106,11 @@ class SMBO:
         return self._runhistory
 
     @property
+    def intensifier(self) -> AbstractIntensifier:
+        """The run history, which is filled with all information during the optimization process."""
+        return self._intensifier
+
+    @property
     def remaing_walltime(self) -> float:
         """Subtracts the runtime configuration budget with the used wallclock time."""
         return self._scenario.walltime_limit - (time.time() - self._start_time)
@@ -252,13 +257,13 @@ class SMBO:
         incumbent : Configuration
             The best found configuration.
         """
-        # We return the incumbent if we already finished the optimization process (we don't want to allow to call
+        # We return the incumbent if we already finished the a process (we don't want to allow to call
         # optimize more than once).
         if self._finished:
             if self._scenario.count_objectives() == 1:
-                return self.runhistory.get_incumbent()
+                return self.intensifier.get_incumbent()
             else:
-                return self.runhistory.get_incumbents()
+                return self.intensifier.get_incumbents()
 
         # Start the timer before we do anything
         self._start_time = time.time() - self.used_walltime
@@ -311,9 +316,9 @@ class SMBO:
         self._finished = True
 
         if self._scenario.count_objectives() == 1:
-            return self.runhistory.get_incumbent()
+            return self.intensifier.get_incumbent()
         else:
-            return self.runhistory.get_incumbents()
+            return self.intensifier.get_incumbents()
 
     def reset(self) -> None:
         self._used_target_function_walltime = 0

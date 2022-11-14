@@ -52,23 +52,23 @@ class Intensifier(AbstractIntensifier):
         rh = self.runhistory
         queue: list[tuple[Configuration, int]] = []  # (config, N=how many trials should be sampled)
 
-        i = -1
+        fails = -1
         while True:
-            i += 1
+            fails += 1
 
             # Some criteria to stop the intensification if nothing can be intensified anymore
-            if i >= self._scenario.n_workers * 2:
+            if fails > 8 and fails >= self._scenario.n_workers * 2:
+                logger.error("Intensifier could not find any new trials.")
                 exit()
 
             # Some configs from the runhistory
             running_configs = rh.get_running_configs()
-            rejected_configs = rh.get_rejected_configs()
 
             # Now we get the incumbents sorted by number of trials
             # Also, incorporate ``get_incumbent_instances`` here because challenger are only allowed to
             # sample from the incumbent's instances
-            incumbents = rh.get_incumbents(sort_by="num_trials")
-            incumbent_instances = rh.get_incumbent_instances()
+            incumbents = self.get_incumbents(sort_by="num_trials")
+            incumbent_instances = self.get_incumbent_instances()
 
             # Check if configs in queue are still running
             all_configs_running = True
@@ -83,7 +83,7 @@ class Intensifier(AbstractIntensifier):
                     # max_config_calls, then we have to get a new instance
                     trials = self._get_next_trials(incumbent, from_instances=incumbent_instances, incumbent=True)
                     if len(trials) > 0:
-                        i = -1
+                        fails = -1
                         logger.debug("Intensifying trial of one incumbent...")
                         yield trials[0]
 
@@ -99,16 +99,19 @@ class Intensifier(AbstractIntensifier):
                 config, N = queue.pop(0)
 
                 # If the config is still running, we just add it at the end of the queue and continue
+                # KEINE UMSORTIERUNG?
+                # WIESO CONFIG UND NICHT TRIAL?
                 if config in running_configs:
                     queue.append((config, N))
                     continue
 
                 # If the config is rejected, we simply remove it from the queue so that the configuration is never
                 # intensified again
+                rejected_configs = self.get_rejected_configs()
                 if config not in rejected_configs:
                     trials = self._get_next_trials(config, N=N, from_instances=incumbent_instances)
                     for trial in trials:
-                        i = -1
+                        fails = -1
                         yield trial
 
                     # Finally, we add the same config to the queue with a higher N
