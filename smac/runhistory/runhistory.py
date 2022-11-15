@@ -609,6 +609,10 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         """Returns the configuration from the configuration id."""
         return self._ids_config[config_id]
 
+    def get_config_id(self, config: Configuration) -> int:
+        """Returns the configuration id from a configuration."""
+        return self._config_ids[config]
+
     def get_configs(self, sort_by: str | None = None) -> list[Configuration]:
         """Return all configurations in this RunHistory object.
 
@@ -967,7 +971,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         # Make TrialInfo object
         trial_info = TrialInfo(self.get_config(k.config_id), instance=k.instance, seed=k.seed, budget=k.budget)
 
-        if status.RUNNING:
+        if status == StatusType.RUNNING:
             # Add to running cache
             self._running_trials.append(trial_info)
         else:

@@ -203,10 +203,10 @@ class AbstractFacade:
         # Register callbacks here
         for callback in callbacks:
             self._optimizer._register_callback(callback)
-            
+
         # Additionally, we register the runhistory callback from the intensifier to efficiently update our incumbent
         # every time new information are available
-        self._optimizer._register_callback(self._intensifier.get_runhistory_callback())
+        self._optimizer._register_callback(self._intensifier.get_callback())
 
     @property
     def scenario(self) -> Scenario:

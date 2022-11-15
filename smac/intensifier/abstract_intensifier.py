@@ -24,7 +24,12 @@ logger = get_logger(__name__)
 
 
 class AbstractIntensifier:
-    def __init__(self, scenario: Scenario, seed: int | None = None):
+    def __init__(
+        self,
+        scenario: Scenario,
+        max_incumbents: int = 20,
+        seed: int | None = None,
+    ):
         self._scenario = scenario
         self._config_selector: ConfigSelector | None = None
         self._config_generator: Iterator[ConfigSelector] | None = None
@@ -41,6 +46,7 @@ class AbstractIntensifier:
         self._tf_budgets: list[float | None] = []
 
         # Incumbent variables
+        self._max_incumbents = max_incumbents
         self._incumbents: list[Configuration] = []
         self._incumbents_changed = 0
         self._rejected_config_ids: list[int] = []
@@ -184,6 +190,19 @@ class AbstractIntensifier:
         else:
             return []
 
+    def get_next_incumbent_instances(self) -> list[InstanceSeedBudgetKey]:
+        """There are situations in which incumbents are evaluated on more trials than others. This method returns the
+        instances which are not part of the lowest intersection of instances for all incumbents.
+        """
+        incumbents = self.get_incumbents()
+
+        if len(incumbents) > 0:
+            # We want to calculate the differences so that we can evaluate the other incumbents on the same instances
+            incumbent_instances = [self.runhistory.get_instances(incumbent) for incumbent in incumbents]
+            return set.difference(*map(set, incumbent_instances))  # type: ignore
+        else:
+            return []
+
     def get_rejected_configs(self) -> list[Configuration]:
         """Returns rejected configurations when racing against the incumbent failed."""
         configs = []
@@ -192,7 +211,7 @@ class AbstractIntensifier:
 
         return configs
 
-    def get_runhistory_callback(self) -> Callback:
+    def get_callback(self) -> Callback:
         """The intensifier makes use of a callback to efficiently update the incumbent based on the runhistory
         (every time new information are available). Moreover, incorporating the callback here allows developers
         more options in the future.
@@ -232,7 +251,12 @@ class AbstractIntensifier:
         # If there are no incumbents at all, we just use the new config as new incumbent
         if len(incumbent_instances) == 0:
             self._incumbents = [config]
+            self._incumbents_changed += 1
+            self._trajectory.append(TrajectoryItem(config_ids=[config_id], finished_trials=rh.finished))
             logger.info(f"Added config {config_id} as new incumbent because there are no incumbents yet.")
+            logger.debug("Updated trajectory.")
+
+            # Nothing else to do
             return
 
         # Now we have to check if the new config has been evaluated on the same trials as the incumbents
@@ -250,6 +274,10 @@ class AbstractIntensifier:
             # If all instances are available and the config is incumbent and even evaluated on more trials
             # then there's nothing we can do
             if config in incumbents and len(config_instances) > len(incumbent_instances):
+                logger.debug(
+                    "Config is already an incumbent but can not be compared to other incumbents because "
+                    "others are missing trials."
+                )
                 return
 
         # Now we get the costs for the trials of the config
@@ -284,64 +312,57 @@ class AbstractIntensifier:
         new_incumbents = [incumbents[i] for i in is_efficient]
         new_incumbent_ids = [rh._config_ids[c] for c in new_incumbents]
 
-        # We have multiple cases now:
-
-        # - The new config is rejected (incumbents == new_incumbents)
-        # - The new config is added to the incumbents (len(new_incumbents) == len(incumbents) + 1)
-        # - The new config replaces an incumbent (len(new_incumbents) == len(incumbents))
-
         # Was config incumbent before?
         if config in self._incumbents:
             if len(incumbents) == len(new_incumbents):
-                logger.info(f"Config {config_id} keeps being an incumbent.")
+                logger.debug(f"Config {config_id} keeps being an incumbent.")
+
+                # If config was rejected before, undo it
+                if config_id in self._rejected_config_ids:
+                    self._rejected_config_ids.remove(config_id)
+
+                # Nothing changed here so we don't need to do anything here
                 return
             elif len(incumbents) > len(new_incumbents):
-                self._rejected_config_ids.append(config_id)
+                if config_id not in self._rejected_config_ids:
+                    self._rejected_config_ids.append(config_id)
+
                 logger.info(f"Config {config_id} is no longer an incumbent and gets rejected.")
             else:
                 raise RuntimeError("This should never happen.")
         else:
             if len(incumbents) == len(new_incumbents):
+                # If config was rejected before, undo it
+                if config_id in self._rejected_config_ids:
+                    self._rejected_config_ids.remove(config_id)
+
                 logger.info(
                     f"Config {config_id} is a new incumbent. " f"Total number of incumbents: {len(new_incumbents)}."
                 )
             elif len(incumbents) > len(new_incumbents):
-                self._rejected_config_ids.append(config_id)
-                logger.info(
-                    f"Rejected config {config_id} because it is not better than the "
-                    f"incumbents on {len(config_instances)} trials."
+                # An old incumbent was removed: We have to determine which one and add it to the
+                # rejected configs
+                removed_incumbent_id = list(set(incumbent_ids) - set(new_incumbent_ids))[0]
+                if removed_incumbent_id not in self._rejected_config_ids:
+                    self._rejected_config_ids.append(removed_incumbent_id)
+
+                logger.debug(
+                    f"Rejected config {removed_incumbent_id} because config {config_id} is better "
+                    f"on {len(config_instances)} trials."
                 )
             else:
                 raise RuntimeError("This should never happen.")
 
-        # if len(incumbents) == len(new_incumbents):
-        #     if config_id not in self._rejected_config_ids:
-        #         self._rejected_config_ids.append(config_id)
-
-        #     logger.info(
-        #         f"Rejected config {config_id} because it is not better than the "
-        #         f"incumbents on {len(config_instances)} trials."
-        #     )
-        #     return
-        # elif len(new_incumbents) > len(incumbents):
-        #     logger.info(
-        #         f"Added config {config_id} as new incumbent. Total number of incumbents: {len(new_incumbents)}."
-        #     )
-        # elif len(new_incumbents) < len(incumbents):
-        #     # Figure out which config was removed
-        #     removed_incumbent_id = list(set(incumbent_ids) - set(new_incumbent_ids))[0]
-        #     if removed_incumbent_id not in self._rejected_config_ids:
-        #         self._rejected_config_ids.append(removed_incumbent_id)
-
-        #     logger.info(f"Removed config {removed_incumbent_id} from the incumbents.")
-
-        # TODO: Rejected configs can be undone again
-
         # Cut incumbents: We only want to keep a specific number of incumbents
         # Approach: Do it randomly for now; task for a future phd student ;)
-        if len(new_incumbents) > 10:
-            pass
+        if len(new_incumbents) > self._max_incumbents:
+            idx = self._rng.randint(0, len(new_incumbents))
+            del new_incumbents[idx]
+            del new_incumbent_ids[idx]
 
+            logger.info(f"Removed one incumbent randomly because more than {self._max_incumbents} are available.")
+
+        logger.debug("Updated trajectory.")
         self._incumbents = new_incumbents
         self._incumbents_changed += 1
         self._trajectory.append(TrajectoryItem(config_ids=new_incumbent_ids, finished_trials=rh.finished))

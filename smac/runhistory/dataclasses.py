@@ -25,6 +25,13 @@ class InstanceSeedKey:
     instance: str | None = None
     seed: int | None = None
 
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, InstanceSeedKey):
+            if self.instance == other.instance and self.seed == other.seed:
+                return True
+
+        return False
+
 
 @dataclass(frozen=True)
 class InstanceSeedBudgetKey:
