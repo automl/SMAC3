@@ -178,7 +178,7 @@ class AbstractIntensifier:
         else:
             raise ValueError(f"Unknown sort_by value: {sort_by}.")
 
-    def get_incumbent_instances(self) -> list[InstanceSeedBudgetKey]:
+    def get_incumbent_instances(self) -> list[InstanceSeedBudgetKey] | None:
         """Find the lowest intersection of instances for all incumbents."""
         incumbents = self.get_incumbents()
 
@@ -186,11 +186,16 @@ class AbstractIntensifier:
             # We want to calculate the smallest set of trials that is used by all incumbents
             # Reason: We can not fairly compare otherwise
             incumbent_instances = [self.runhistory.get_instances(incumbent) for incumbent in incumbents]
-            return set.intersection(*map(set, incumbent_instances))  # type: ignore
-        else:
-            return []
+            instances = set.intersection(*map(set, incumbent_instances))  # type: ignore
 
-    def get_next_incumbent_instances(self) -> list[InstanceSeedBudgetKey]:
+            if len(instances) == 0:
+                return None
+
+            return instances  # type: ignore
+
+        return None
+
+    def get_next_incumbent_instances(self) -> list[InstanceSeedBudgetKey] | None:
         """There are situations in which incumbents are evaluated on more trials than others. This method returns the
         instances which are not part of the lowest intersection of instances for all incumbents.
         """
@@ -199,9 +204,14 @@ class AbstractIntensifier:
         if len(incumbents) > 0:
             # We want to calculate the differences so that we can evaluate the other incumbents on the same instances
             incumbent_instances = [self.runhistory.get_instances(incumbent) for incumbent in incumbents]
-            return set.difference(*map(set, incumbent_instances))  # type: ignore
-        else:
-            return []
+            instances = set.difference(*map(set, incumbent_instances))  # type: ignore
+
+            if len(instances) == 0:
+                return None
+
+            return instances  # type: ignore
+
+        return None
 
     def get_rejected_configs(self) -> list[Configuration]:
         """Returns rejected configurations when racing against the incumbent failed."""
@@ -249,7 +259,7 @@ class AbstractIntensifier:
         incumbent_instances = self.get_incumbent_instances()
 
         # If there are no incumbents at all, we just use the new config as new incumbent
-        if len(incumbent_instances) == 0:
+        if incumbent_instances is None:
             self._incumbents = [config]
             self._incumbents_changed += 1
             self._trajectory.append(TrajectoryItem(config_ids=[config_id], finished_trials=rh.finished))

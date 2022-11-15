@@ -118,15 +118,21 @@ class Intensifier(AbstractIntensifier):
                 # We simply add it to the queue and intensify it in the next iteration
                 config = next(self.config_generator)
                 queue.append((config, 1))
+                logger.debug("Added a new config to the queue.")
             else:
                 # Now we try to empty the queue
                 config, N = queue.pop(0)
+                config_id = "unknown"
+                try:
+                    config_id = str(rh.get_config_id(config))
+                except KeyError:
+                    pass
 
                 # If the config is still running, we just add it at the end of the queue and continue
-                # KEINE UMSORTIERUNG?
-                # WIESO CONFIG UND NICHT TRIAL?
+                # TODO: Don't sort... just take the first one in the queue which is ready
                 if config in running_configs:
                     queue.append((config, N))
+                    logger.debug(f"Config {config_id} is still running. Skipping...")
                     continue
 
                 # If the config is rejected, we simply remove it from the queue so that the configuration is never
@@ -141,6 +147,7 @@ class Intensifier(AbstractIntensifier):
                     # Finally, we add the same config to the queue with a higher N
                     # If the config was rejected by the runhistory, then it's gonna removed
                     if N < self._max_config_calls:
+                        logger.debug(f"Doubled trials of config {config_id} to {N*2} and added to the queue again.")
                         queue.append((config, N * 2))
 
     def get_trials_of_interest(
