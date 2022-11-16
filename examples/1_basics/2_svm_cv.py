@@ -90,7 +90,7 @@ if __name__ == "__main__":
         classifier.train,
         initial_design=initial_design,
         overwrite=True,  # If the run exists, we overwrite it; alternatively, we can continue from last state
-        # logging_level=0,
+        logging_level=0,
     )
 
     incumbent = smac.optimize()

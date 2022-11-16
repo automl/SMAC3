@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from functools import partial
+import hashlib
 
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
@@ -151,6 +152,11 @@ def get_conditional_hyperparameters(X: np.ndarray, Y: np.ndarray | None = None) 
 
     active = ~((np.expand_dims(X_cond, axis=1) != Y_cond).any(axis=2))
     return active
+
+
+def get_hash(config: Configuration, chars: int = 6) -> str:
+    """Returns a hash of the configuration."""
+    return hashlib.sha1(str(config).encode("utf-8")).hexdigest()[:chars]
 
 
 # def check_subspace_points(

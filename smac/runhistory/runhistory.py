@@ -20,7 +20,8 @@ from smac.runhistory.dataclasses import (
     TrialKey,
     TrialValue,
 )
-from smac.runhistory.enumerations import DataOrigin, StatusType
+from smac.runhistory.enumerations import StatusType
+from smac.utils.configspace import get_hash
 from smac.utils.logging import get_logger
 from smac.utils.multi_objective import normalize_costs
 
@@ -130,7 +131,6 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         # Store whether a datapoint is "external", which means it was read from
         # a JSON file. Can be chosen to not be written to disk.
-        self._external: dict[TrialKey, DataOrigin] = {}
         self._n_objectives: int = -1
         self._objective_bounds: list[tuple[float, float]] = []
 
@@ -176,7 +176,6 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         starttime: float = 0.0,
         endtime: float = 0.0,
         additional_info: dict[str, Any] = {},
-        origin: DataOrigin = DataOrigin.INTERNAL,
         force_update: bool = False,
     ) -> None:
         """Adds a new trial.
@@ -196,7 +195,6 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         starttime : float, defaults to 0.0
         endtime : float, defaults to 0.0
         additional_info : dict[str, Any], defaults to {}
-        origin : DataOrigin, defaults to DataOrigin.INTERNAL
         force_update : bool, defaults to false
             Overwrites a previous trial if the trial already exists.
         """
@@ -287,7 +285,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                     self._running -= 1
                     self._finished += 1
 
-            self._add(k, v, status, origin)
+            self._add(k, v, status)
         else:
             logger.info("Entry was not added to the runhistory because existing trials will not be overwritten.")
 
@@ -658,33 +656,30 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         return configs
 
-    def save(self, filename: str = "runhistory.json", save_external: bool = False) -> None:
+    def save(self, filename: str = "runhistory.json") -> None:
         """Saves runhistory on disk.
 
         Parameters
         ----------
         filename : str
             file name.
-        save_external : bool
-            Whether to save external data in the runhistory file.
         """
         data = []
         for k, v in self._data.items():
-            if save_external or self._external[k] == DataOrigin.INTERNAL:
-                data += [
-                    (
-                        int(k.config_id),
-                        str(k.instance) if k.instance is not None else None,
-                        int(k.seed) if k.seed is not None else None,
-                        float(k.budget) if k.budget is not None else None,
-                        v.cost,
-                        v.time,
-                        v.status,
-                        v.starttime,
-                        v.endtime,
-                        v.additional_info,
-                    )
-                ]
+            data += [
+                (
+                    int(k.config_id),
+                    str(k.instance) if k.instance is not None else None,
+                    int(k.seed) if k.seed is not None else None,
+                    float(k.budget) if k.budget is not None else None,
+                    v.cost,
+                    v.time,
+                    v.status,
+                    v.starttime,
+                    v.endtime,
+                    v.additional_info,
+                )
+            ]
 
         config_ids_to_serialize = set([entry[0] for entry in data])
         configs = {}
@@ -789,7 +784,6 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         self,
         filename: str,
         configspace: ConfigurationSpace,
-        origin: DataOrigin = DataOrigin.EXTERNAL_SAME_INSTANCES,
     ) -> None:
         """Updates the current runhistory by adding new trials from a json file.
 
@@ -798,17 +792,14 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         filename : str
             File name to load from.
         configspace : ConfigurationSpace
-        origin : DataOrigin, defaults to DataOrigin.EXTERNAL_SAME_INSTANCES
-            What to store as data origin.
         """
         new_runhistory = RunHistory()
         new_runhistory.load(filename, configspace)
-        self.update(runhistory=new_runhistory, origin=origin)
+        self.update(runhistory=new_runhistory)
 
     def update(
         self,
-        runhistory: RunHistory,
-        origin: DataOrigin = DataOrigin.EXTERNAL_SAME_INSTANCES,
+        runhistory: RunHistory
     ) -> None:
         """Updates the current runhistory by adding new trials from a RunHistory.
 
@@ -816,10 +807,6 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         ----------
         runhistory : RunHistory
             Runhistory with additional data to be added to self
-        origin : DataOrigin, defaults to DataOrigin.EXTERNAL_SAME_INSTANCES
-            If set to ``INTERNAL`` or ``EXTERNAL_FULL`` the data will be
-            added to the internal data structure self._config_id_to_inst_seed_budget
-            and be available :meth:`through get_trials`.
         """
         # Configurations might be already known, but by a different ID. This
         # does not matter here because the add() method handles this
@@ -837,7 +824,6 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 seed=key.seed,
                 budget=key.budget,
                 additional_info=value.additional_info,
-                origin=origin,
             )
 
     def update_costs(self, instances: list[str] | None = None) -> None:
@@ -903,7 +889,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         for min_v, max_v in zip(min_values, max_values):
             self._objective_bounds += [(min_v, max_v)]
 
-    def _add(self, k: TrialKey, v: TrialValue, status: StatusType, origin: DataOrigin) -> None:
+    def _add(self, k: TrialKey, v: TrialValue, status: StatusType) -> None:
         """
         Actual function to add new entry to data structures.
 
@@ -912,20 +898,12 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         This method always calls `update_cost` in the multi-objective setting.
         """
         self._data[k] = v
-        self._external[k] = origin
 
         # Update objective bounds based on raw data
         self._update_objective_bounds()
 
         # Do not register the cost until the run has completed
-        if (
-            origin
-            in (
-                DataOrigin.INTERNAL,
-                DataOrigin.EXTERNAL_SAME_INSTANCES,
-            )
-            and status != StatusType.RUNNING
-        ):
+        if status != StatusType.RUNNING:
             # Also add to fast data structure
             isk = InstanceSeedKey(k.instance, k.seed)
             self._config_id_to_isk_to_budget[k.config_id] = self._config_id_to_isk_to_budget.get(k.config_id, {})
@@ -955,22 +933,26 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
                 # Append new budget to existing inst-seed-key dict
                 self._config_id_to_isk_to_budget[k.config_id][isk].append(k.budget)
+                
+            config = self._ids_config[k.config_id]
+            config_hash = get_hash(config)
 
             # If budget is used, then update cost instead of incremental updates
             if not self._overwrite_existing_trials and k.budget == 0:
-                logger.debug(f"Incremental update cost for config {k.config_id}")
+                logger.debug(f"Incremental update cost for config {config_hash}")
                 # Assumes an average across trials as cost function aggregation, this is used for
                 # algorithm configuration (incremental updates are used to save time as getting the
                 # cost for > 100 instances is high)
-                self.incremental_update_cost(self._ids_config[k.config_id], v.cost)
+                self.incremental_update_cost(config, v.cost)
             else:
                 # This happens when budget > 0 (only successive halving and hyperband so far)
-                logger.debug(f"Update cost for config {k.config_id}.")
-                self.update_cost(config=self._ids_config[k.config_id])
+                logger.debug(f"Update cost for config {config_hash}.")
+                self.update_cost(config)
 
         # Make TrialInfo object
         trial_info = TrialInfo(self.get_config(k.config_id), instance=k.instance, seed=k.seed, budget=k.budget)
 
+        # Fast data structure for pending trials
         if status == StatusType.RUNNING:
             # Add to running cache
             self._running_trials.append(trial_info)

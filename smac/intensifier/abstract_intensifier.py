@@ -16,6 +16,7 @@ from smac.scenario import Scenario
 from smac.callback import Callback
 from smac.utils.logging import get_logger
 from smac.runhistory.dataclasses import TrajectoryItem
+from smac.utils.configspace import get_hash
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -38,6 +39,7 @@ class AbstractIntensifier:
         if seed is None:
             seed = self._scenario.seed
 
+        self._seed = seed
         self._rng = np.random.RandomState(seed)
 
         # Internal variables
@@ -57,6 +59,8 @@ class AbstractIntensifier:
         """Returns the meta data of the created object."""
         return {
             "name": self.__class__.__name__,
+            "max_incumbents": self._max_incumbents,
+            "seed": self._seed,
         }
 
     @property
@@ -178,7 +182,7 @@ class AbstractIntensifier:
         else:
             raise ValueError(f"Unknown sort_by value: {sort_by}.")
 
-    def get_incumbent_instances(self) -> list[InstanceSeedBudgetKey] | None:
+    def get_incumbent_instances(self) -> list[InstanceSeedBudgetKey]:
         """Find the lowest intersection of instances for all incumbents."""
         incumbents = self.get_incumbents()
 
@@ -186,16 +190,13 @@ class AbstractIntensifier:
             # We want to calculate the smallest set of trials that is used by all incumbents
             # Reason: We can not fairly compare otherwise
             incumbent_instances = [self.runhistory.get_instances(incumbent) for incumbent in incumbents]
-            instances = set.intersection(*map(set, incumbent_instances))  # type: ignore
-
-            if len(instances) == 0:
-                return None
+            instances = list(set.intersection(*map(set, incumbent_instances)))  # type: ignore
 
             return instances  # type: ignore
 
-        return None
+        return []
 
-    def get_next_incumbent_instances(self) -> list[InstanceSeedBudgetKey] | None:
+    def get_incumbent_instance_differences(self) -> list[InstanceSeedBudgetKey]:
         """There are situations in which incumbents are evaluated on more trials than others. This method returns the
         instances which are not part of the lowest intersection of instances for all incumbents.
         """
@@ -204,14 +205,18 @@ class AbstractIntensifier:
         if len(incumbents) > 0:
             # We want to calculate the differences so that we can evaluate the other incumbents on the same instances
             incumbent_instances = [self.runhistory.get_instances(incumbent) for incumbent in incumbents]
-            instances = set.difference(*map(set, incumbent_instances))  # type: ignore
+
+            if len(incumbent_instances) <= 1:
+                return []
+
+            instances = list(set.difference(*map(set, incumbent_instances)))  # type: ignore
 
             if len(instances) == 0:
-                return None
+                return []
 
             return instances  # type: ignore
 
-        return None
+        return []
 
     def get_rejected_configs(self) -> list[Configuration]:
         """Returns rejected configurations when racing against the incumbent failed."""
@@ -251,30 +256,45 @@ class AbstractIntensifier:
         # Associated trials and id
         config_instances = rh.get_instances(config)
         config_id = rh._config_ids[config]
+        config_hash = get_hash(config)
+
+        # We skip updating incumbents if no instances are available
+        # Note: This is especially the case if trials of a config are still running
+        # because if trials are running, the runhistory does not update the trials in the fast data structure
+        if len(config_instances) == 0:
+            logger.debug(f"No instances evaluated for config {config_hash}. Updating incumbents is skipped.")
+            return
 
         # Now we get the incumbents and see which trials have been used
         incumbents = self.get_incumbents()
         incumbent_ids = [rh._config_ids[c] for c in incumbents]
-
         incumbent_instances = self.get_incumbent_instances()
 
+        # Little sanity check here for consistency
+        if len(incumbents) > 0:
+            assert incumbent_instances is not None
+            assert len(incumbent_instances) > 0
+
         # If there are no incumbents at all, we just use the new config as new incumbent
-        if incumbent_instances is None:
+        # Problem: We can add running incumbents
+        if len(incumbents) == 0:  # incumbent_instances is None and len(incumbents) == 0:
             self._incumbents = [config]
             self._incumbents_changed += 1
             self._trajectory.append(TrajectoryItem(config_ids=[config_id], finished_trials=rh.finished))
-            logger.info(f"Added config {config_id} as new incumbent because there are no incumbents yet.")
+            logger.info(f"Added config {config_hash} as new incumbent because there are no incumbents yet.")
             logger.debug("Updated trajectory.")
 
             # Nothing else to do
             return
+
+        assert incumbent_instances is not None
 
         # Now we have to check if the new config has been evaluated on the same trials as the incumbents
         if not all([trial in config_instances for trial in incumbent_instances]):
             # We can not tell if the new config is better/worse than the incumbents because it has not been
             # evaluated on the necessary trials
             logger.debug(
-                f"Could not compare config {config_id} with incumbents because it's evaluated on "
+                f"Could not compare config {config_hash} with incumbents because it's evaluated on "
                 f"{len(config_instances)}/{len(incumbent_instances)} trials only."
             )
 
@@ -323,9 +343,9 @@ class AbstractIntensifier:
         new_incumbent_ids = [rh._config_ids[c] for c in new_incumbents]
 
         # Was config incumbent before?
-        if config in self._incumbents:
+        if config in incumbents:
             if len(incumbents) == len(new_incumbents):
-                logger.debug(f"Config {config_id} keeps being an incumbent.")
+                logger.debug(f"Config {config_hash} keeps being an incumbent.")
 
                 # If config was rejected before, undo it
                 if config_id in self._rejected_config_ids:
@@ -336,8 +356,8 @@ class AbstractIntensifier:
             elif len(incumbents) > len(new_incumbents):
                 if config_id not in self._rejected_config_ids:
                     self._rejected_config_ids.append(config_id)
-
-                logger.info(f"Config {config_id} is no longer an incumbent and gets rejected.")
+                # TODO: Is this correct?
+                logger.info(f"Config {config_hash} is no longer an incumbent and gets rejected.")
             else:
                 raise RuntimeError("This should never happen.")
         else:
@@ -347,17 +367,18 @@ class AbstractIntensifier:
                     self._rejected_config_ids.remove(config_id)
 
                 logger.info(
-                    f"Config {config_id} is a new incumbent. " f"Total number of incumbents: {len(new_incumbents)}."
+                    f"Config {config_hash} is a new incumbent. " f"Total number of incumbents: {len(new_incumbents)}."
                 )
             elif len(incumbents) > len(new_incumbents):
                 # An old incumbent was removed: We have to determine which one and add it to the
                 # rejected configs
                 removed_incumbent_id = list(set(incumbent_ids) - set(new_incumbent_ids))[0]
+                removed_incumbent_hash = get_hash(rh.get_config(removed_incumbent_id))
                 if removed_incumbent_id not in self._rejected_config_ids:
                     self._rejected_config_ids.append(removed_incumbent_id)
 
                 logger.debug(
-                    f"Rejected config {removed_incumbent_id} because config {config_id} is better "
+                    f"Rejected config {removed_incumbent_hash} because config {config_hash} is better "
                     f"on {len(config_instances)} trials."
                 )
             else:
@@ -391,6 +412,7 @@ class AbstractIntensifier:
         config: Configuration,
         *,
         validate: bool = False,
+        seed: int | None = None,
     ) -> list[TrialInfo]:
         """Returns a list of trials of interest for a given configuration."""
         raise NotImplementedError

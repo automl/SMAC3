@@ -9,8 +9,8 @@ from smac.initial_design.random_design import RandomInitialDesign
 
 
 class CustomConfigSelector(ConfigSelector):
-    def __init__(self, scenario: Scenario, runhistory: RunHistory) -> None:
-        initial_design = RandomInitialDesign(scenario, n_configs=3)
+    def __init__(self, scenario: Scenario, runhistory: RunHistory, n_initial_configs: int = 3) -> None:
+        initial_design = RandomInitialDesign(scenario, n_configs=n_initial_configs)
         super().__init__(
             scenario,
             initial_design=initial_design,
@@ -24,7 +24,13 @@ class CustomConfigSelector(ConfigSelector):
         )
 
     def __iter__(self):
+
         for config in self._initial_design_configs:
+            self._processed_configs.append(config)
+            yield config
+
+        while True:
+            config = self._scenario.configspace.sample_configuration(1)
             if config not in self._processed_configs:
                 self._processed_configs.append(config)
                 yield config
@@ -130,11 +136,57 @@ def test_next_trials(make_scenario, configspace_small):
         status=StatusType.RUNNING,
     )
 
-    # Now we expand the trials and therefore expec the new instance different from the passed ones
-    trials = intensifier._get_next_trials(config, from_instances=[isbk], expand_from_instances=[isbk2])
-    assert len(trials) == 1
-    assert trials[0].instance != isbk.instance or trials[0].seed != isbk.seed
-    assert trials[0].instance == isbk2.instance and trials[0].seed == isbk2.seed
+
+def test_intensifier(make_scenario, configspace_small):
+    """Tests whether the generator returns trials as expected."""
+    scenario = make_scenario(configspace_small, use_instances=True, n_instances=3)
+    runhistory = RunHistory()
+    intensifier = Intensifier(scenario=scenario, max_config_calls=3, seed=0)
+    intensifier.config_selector = CustomConfigSelector(scenario, runhistory, n_initial_configs=1)
+
+    gen = iter(intensifier)
+
+    # Because queue is empty and we don't have any incumbents yet, we expect the first trial
+    # to be the config from the random initial design
+    trial = next(gen)
+    runhistory.add_running_trial(trial)  # We have to mark it as running manually
+    intensifier.update_incumbents(trial.config)
+    assert intensifier.config_selector._initial_design_configs[0] == trial.config
+
+    # In the next step, (config, N*2) is added to the queue but the intensifier realizes
+    # that the previous trial is still running
+    # Therefore, we expect to sample a new configuration as there are still no incumbents available
+    # (not evaluated yet)
+    trial2 = next(gen)
+    runhistory.add_running_trial(trial2)
+    intensifier.update_incumbents(trial2.config)
+    assert intensifier.config_selector._processed_configs[1] == trial2.config
+
+    # Let's mark the first trial as finished
+    # The config should become an incumbent now.
+    runhistory.add(config=trial.config, cost=10, time=0.0, instance=trial.instance, seed=trial.seed, force_update=True)
+    intensifier.update_incumbents(trial.config)
+    assert intensifier.get_incumbent() == trial.config
+
+    # Since everything in the queue is running, we start to intensify the incumbent
+    trial3 = next(gen)
+    runhistory.add_running_trial(trial3)
+    intensifier.update_incumbents(trial3.config)
+    assert trial3.config == trial.config
+
+    # And we expect a new config again (after incumbent intensification)
+    trial4 = next(gen)
+    runhistory.add_running_trial(trial4)
+    intensifier.update_incumbents(trial4.config)
+    assert intensifier.config_selector._processed_configs[2] == trial4.config
+
+
+def test_intensifier_with_filled_runhistory():
+    pass
+
+
+def test_intensifier_multiple_workers():
+    pass
 
 
 # def test_missing_and_evaluated_trials(make_scenario, configspace_small):
