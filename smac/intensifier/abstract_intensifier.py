@@ -270,6 +270,10 @@ class AbstractIntensifier:
         incumbent_ids = [rh._config_ids[c] for c in incumbents]
         incumbent_instances = self.get_incumbent_instances()
 
+        # Save for later
+        previous_incumbents = incumbents.copy()
+        previous_incumbent_ids = incumbent_ids.copy()
+
         # Little sanity check here for consistency
         if len(incumbents) > 0:
             assert incumbent_instances is not None
@@ -306,7 +310,7 @@ class AbstractIntensifier:
             if config in incumbents and len(config_instances) > len(incumbent_instances):
                 logger.debug(
                     "Config is already an incumbent but can not be compared to other incumbents because "
-                    "others are missing trials."
+                    "the others are missing trials."
                 )
                 return
 
@@ -342,47 +346,41 @@ class AbstractIntensifier:
         new_incumbents = [incumbents[i] for i in is_efficient]
         new_incumbent_ids = [rh._config_ids[c] for c in new_incumbents]
 
-        # Was config incumbent before?
-        if config in incumbents:
-            if len(incumbents) == len(new_incumbents):
-                logger.debug(f"Config {config_hash} keeps being an incumbent.")
-
-                # If config was rejected before, undo it
-                if config_id in self._rejected_config_ids:
-                    self._rejected_config_ids.remove(config_id)
-
-                # Nothing changed here so we don't need to do anything here
+        if len(previous_incumbents) == len(new_incumbents):
+            if previous_incumbents == new_incumbents:
+                # No changes in the incumbents
+                logger.debug("Karpador setzt Platscher ein.")
                 return
-            elif len(incumbents) > len(new_incumbents):
-                if config_id not in self._rejected_config_ids:
-                    self._rejected_config_ids.append(config_id)
-                # TODO: Is this correct?
-                logger.info(f"Config {config_hash} is no longer an incumbent and gets rejected.")
             else:
-                raise RuntimeError("This should never happen.")
-        else:
-            if len(incumbents) == len(new_incumbents):
-                # If config was rejected before, undo it
-                if config_id in self._rejected_config_ids:
-                    self._rejected_config_ids.remove(config_id)
-
-                logger.info(
-                    f"Config {config_hash} is a new incumbent. " f"Total number of incumbents: {len(new_incumbents)}."
-                )
-            elif len(incumbents) > len(new_incumbents):
-                # An old incumbent was removed: We have to determine which one and add it to the
-                # rejected configs
-                removed_incumbent_id = list(set(incumbent_ids) - set(new_incumbent_ids))[0]
+                # In this case, we have to determine which config replaced which incumbent and reject it
+                removed_incumbent_id = list(set(previous_incumbent_ids) - set(new_incumbent_ids))[0]
                 removed_incumbent_hash = get_hash(rh.get_config(removed_incumbent_id))
                 if removed_incumbent_id not in self._rejected_config_ids:
                     self._rejected_config_ids.append(removed_incumbent_id)
 
-                logger.debug(
-                    f"Rejected config {removed_incumbent_hash} because config {config_hash} is better "
-                    f"on {len(config_instances)} trials."
-                )
-            else:
-                raise RuntimeError("This should never happen.")
+                if removed_incumbent_id == config_id:
+                    logger.debug(
+                        f"Rejected config {config_hash} because it is not better than the incumbents on "
+                        f"{len(config_instances)} instances."
+                    )
+                else:
+                    logger.debug(
+                        f"Added config {config_hash} and rejected config {removed_incumbent_hash} because "
+                        f"it is not better than the incumbents on {len(config_instances)} instances."
+                    )
+        elif len(previous_incumbents) < len(new_incumbents):
+            # Config becomes a new incumbent; nothing is rejected in this case
+            logger.info(
+                f"Config {config_hash} is a new incumbent. " f"Total number of incumbents: {len(new_incumbents)}."
+            )
+        else:
+            # There might be situations that incumbents might be removed because of updated cost information
+            for incumbent in previous_incumbents:
+                if incumbent not in new_incumbents:
+                    logger.debug(
+                        f"Removed incumbent {get_hash(incumbent)} because of the updated costs from config "
+                        f"{config_hash}."
+                    )
 
         # Cut incumbents: We only want to keep a specific number of incumbents
         # Approach: Do it randomly for now; task for a future phd student ;)
@@ -393,10 +391,10 @@ class AbstractIntensifier:
 
             logger.info(f"Removed one incumbent randomly because more than {self._max_incumbents} are available.")
 
-        logger.debug("Updated trajectory.")
         self._incumbents = new_incumbents
         self._incumbents_changed += 1
         self._trajectory.append(TrajectoryItem(config_ids=new_incumbent_ids, finished_trials=rh.finished))
+        logger.debug("Updated trajectory.")
 
     @abstractmethod
     def __iter__(self) -> Iterator[TrialInfo]:

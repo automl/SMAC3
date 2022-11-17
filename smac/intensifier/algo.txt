@@ -8,36 +8,36 @@ The idea is the following:
 - Intensifier keeps track of the challengers with a queue
 
 
+queue(config, N) <- empty queue
 while True:
     incumbents <- rh.incumbents (sorted by #trials) 
     
     if queue is empty or configs in queue are all running:
+        // every time we get an incumbent we also get a new configuration
         for incumbent in incumbents:
             if incumbent.#trials < max_config_calls:
                 trial = get_next_random_trial(incumbent)
                 if trial not None:
+                    yield trial
                     break
 
         new_config <- get_next_config()
         queue <- add(new_config, N=1)
-        yield get_next_random_trial(new_config)  // must be a random one of the incumbent seeds
+        // yield get_next_random_trial(new_config)  // must be a random one of the incumbent seeds
     else:
-        // queue abarbeiten
-        config, N <- queue.pop()
 
-        // config might be still running 
-        if trials of config still running:
-            // We add the same again back to the queue
-            queue <- add(config, N)
-            continue
+        for (config, N) in queue:
+            // config might be still running 
+            if trials of config are still running:
+                continue
 
-        // once a config is rejected, we don't look at it again
-        if config is not rejected:
-            trials <- get_next_random_trial(config, N)
-            // we want to return missing N trials 
-            for trial in trials:
-                if trial not None:
-                    yield trial
-            
-            // And then we add it to the queue with a higher N
-            queue <- add(config, N*2)
+            // once a config is rejected, we don't look at it again
+            if config is not rejected:
+                trials <- get_next_random_trial(config, N)
+                // we want to return missing N trials 
+                for trial in trials:
+                    if trial not None:
+                        yield trial
+                
+                // And then we add it to the queue with a higher N
+                queue <- add(config, N*2)

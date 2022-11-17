@@ -119,22 +119,48 @@ def test_next_trials(make_scenario, configspace_small):
 
     # The only thing missing is ``from_instances`` now
     isbk = trials[0].get_instance_seed_budget_key()
-    isbk2 = trials[1].get_instance_seed_budget_key()
 
     trials = intensifier._get_next_trials(config, from_instances=[isbk])
     assert len(trials) == 1
     assert trials[0].instance == isbk.instance
     assert trials[0].seed == isbk.seed
 
-    # Add trial as running
-    runhistory.add(
-        config=config,
-        cost=0.5,
-        time=0.0,
-        instance=isbk.instance,
-        seed=isbk.seed,
-        status=StatusType.RUNNING,
-    )
+
+def test_next_trials_counter(make_scenario, configspace_small):
+    """Tests whether the next trials are as expected."""
+
+    scenario = make_scenario(configspace_small, use_instances=True, n_instances=3)
+    runhistory = RunHistory()
+    intensifier = Intensifier(scenario=scenario, max_config_calls=9, seed=0)
+    intensifier.config_selector = CustomConfigSelector(scenario, runhistory)
+    config = configspace_small.get_default_configuration()
+
+    # All good here
+    trials = intensifier._get_next_trials(config, N=5)
+    assert len(trials) == 5
+
+    # But now we set a trial running
+    runhistory.add_running_trial(trials[0])
+
+    # Now we call the same thing again but expect 4 trials instead
+    trials = intensifier._get_next_trials(config, N=5)
+    assert len(trials) == 4
+
+    # More interesting case: Use ``from_instances`` too
+    instances = []
+    for trial in trials:
+        instances.append(trial.get_instance_seed_budget_key())
+
+    # We have three instances now ...
+    del instances[0]
+
+    # ... but request 8
+    trials = intensifier._get_next_trials(config, N=8, from_instances=instances)
+    assert len(trials) == 3
+
+    # ... but request 2
+    trials = intensifier._get_next_trials(config, N=2, from_instances=instances)
+    assert len(trials) == 2
 
 
 def test_intensifier(make_scenario, configspace_small):

@@ -120,7 +120,7 @@ class Intensifier(AbstractIntensifier):
                         # TODO: This should actually not happen because if a config is rejected the incumbent should
                         # have changed
                         logger.debug(f"--- Skipping intensifying incumbent {incumbent_hash} because it was rejected.")
-                        # raise RuntimeError()
+                        raise RuntimeError()
                         continue
 
                     # If incumbent was evaluated on all incumbent instance intersections but was not evaluated on
@@ -140,7 +140,7 @@ class Intensifier(AbstractIntensifier):
                     if len(trials) == 0:
                         logger.debug(
                             f"--- Incumbent {incumbent_hash} was already evaluated on all incumbent instances "
-                            "and incumbent instance differences."
+                            "and incumbent instance differences so far. Looking for new instances..."
                         )
                         trials = self._get_next_trials(incumbent)
                         logger.debug(f"--- Randomly found {len(trials)} new trials.")
@@ -263,6 +263,7 @@ class Intensifier(AbstractIntensifier):
                         # Use global random generator for a new seed and mark it so it will be reused for another config
                         next_seed = int(rng.randint(low=0, high=MAXINT, size=1)[0])
                         self._tf_seeds.append(next_seed)
+                        logger.info(f"Added new seed {next_seed} to the intensifier.")
 
                 # If no instances are used, tf_instances includes None
                 for instance in self._tf_instances:
@@ -322,26 +323,33 @@ class Intensifier(AbstractIntensifier):
         rh = self.runhistory
         trials = self.get_trials_of_interest(config)
 
+        # Keep ``from_instances`` trials only
+        if from_instances is not None:
+            for trial in trials.copy():
+                isbk = trial.get_instance_seed_budget_key()
+                if isbk not in from_instances:
+                    trials.remove(trial)
+
+        # Counter is important to actually subtract the number of trials that are already evaluated/running
+        # Otherwise, evaluated/running trials are not considered
+        # Example: max_config_calls=16, N=8, 2 trials are running, 2 trials are evaluated, 4 trials are pending
+        # Without counter, we would return 8 trials because there are still so many trials left open
+        # With counter, we would return only 4 trials because 4 trials are already evaluated/running
+        counter = 0
+
         # Now we actually have to check whether the trials have been evaluated already
         evaluated_trials = rh.get_trials(config, only_max_observed_budget=False)
         for trial in evaluated_trials:
             if trial in trials:
+                counter += 1
                 trials.remove(trial)
 
         # It's also important to remove running trials from the selection (we don't want to queue them again)
         running_trials = rh.get_running_trials()
         for trial in running_trials:
             if trial in trials:
+                counter += 1
                 trials.remove(trial)
-
-        # Keep ``from_instances`` trials only
-        removed_trials = []
-        if from_instances is not None:
-            for trial in trials.copy():
-                isbk = trial.get_instance_seed_budget_key()
-                if isbk not in from_instances:
-                    removed_trials.append(trial)
-                    trials.remove(trial)
 
         if shuffle:
             # Now we shuffle the trials in groups (first all instances, then all seeds)
@@ -361,12 +369,12 @@ class Intensifier(AbstractIntensifier):
                     shuffled_trials += [trial for trial in shuffled]  # type: ignore
 
             assert len(shuffled_trials) == len(trials)
+            trials = shuffled_trials
 
-            # Return only N trials
-            if N is not None:
-                if len(shuffled_trials) > N:
-                    shuffled_trials = shuffled_trials[:N]
+        # Return only N trials
+        if N is not None:
+            N = N - counter
+            if len(trials) > N:
+                trials = trials[:N]
 
-            return shuffled_trials
-        else:
-            return trials
+        return trials

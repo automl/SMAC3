@@ -90,5 +90,3 @@ def test_incumbent_selection_multi_objective(make_scenario, configspace_small):
     runhistory.add(config=config2, cost=[500, 500], time=0.0, instance=scenario.instances[1], seed=999)
     intensifier.update_incumbents(config2)
     assert intensifier.get_incumbents() == [config]
-
-    assert 1 == 0
