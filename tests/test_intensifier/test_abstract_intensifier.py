@@ -1,7 +1,6 @@
 import pytest
 from smac.intensifier.intensifier import Intensifier
 from smac.main.config_selector import ConfigSelector
-from smac.runhistory.dataclasses import TrialInfo
 from smac.runhistory.enumerations import StatusType
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
@@ -9,8 +8,8 @@ from smac.initial_design.random_design import RandomInitialDesign
 
 
 class CustomConfigSelector(ConfigSelector):
-    def __init__(self, scenario: Scenario, runhistory: RunHistory) -> None:
-        initial_design = RandomInitialDesign(scenario, n_configs=3)
+    def __init__(self, scenario: Scenario, runhistory: RunHistory, n_initial_configs: int = 3) -> None:
+        initial_design = RandomInitialDesign(scenario, n_configs=n_initial_configs)
         super().__init__(
             scenario,
             initial_design=initial_design,
@@ -24,10 +23,49 @@ class CustomConfigSelector(ConfigSelector):
         )
 
     def __iter__(self):
+
         for config in self._initial_design_configs:
+            self._processed_configs.append(config)
+            yield config
+
+        while True:
+            config = self._scenario.configspace.sample_configuration(1)
             if config not in self._processed_configs:
                 self._processed_configs.append(config)
                 yield config
+
+
+def test_setting_runhistory(make_scenario, configspace_small):
+    """Tests information from runhistory are used."""
+    scenario = make_scenario(configspace_small, use_instances=True, n_instances=3)
+    runhistory = RunHistory()
+    intensifier = Intensifier(scenario=scenario, max_config_calls=3, seed=0)
+    intensifier.config_selector = CustomConfigSelector(scenario, runhistory, n_initial_configs=1)
+
+    config = configspace_small.get_default_configuration()
+    config2 = configspace_small.sample_configuration(1)
+
+    # Add some entries to the runhistory
+    runhistory.add(
+        config=config,
+        cost=0.5,
+        time=0.0,
+        instance=scenario.instances[1],
+        seed=8,
+        status=StatusType.RUNNING,
+    )
+
+    runhistory.add(
+        config=config2,
+        cost=0.5,
+        time=0.0,
+        instance=scenario.instances[1],
+        seed=59,
+        status=StatusType.SUCCESS,
+    )
+
+    intensifier.runhistory = runhistory
+    assert intensifier._tf_seeds == [8, 59]
 
 
 def test_incumbent_selection_single_objective(make_scenario, configspace_small):
@@ -37,6 +75,7 @@ def test_incumbent_selection_single_objective(make_scenario, configspace_small):
     runhistory = RunHistory()
     intensifier = Intensifier(scenario=scenario, max_config_calls=10, seed=0)
     intensifier.config_selector = CustomConfigSelector(scenario, runhistory)
+    intensifier.runhistory = runhistory
 
     config = configspace_small.get_default_configuration()
     config2 = configspace_small.sample_configuration(1)
@@ -69,6 +108,7 @@ def test_incumbent_selection_multi_objective(make_scenario, configspace_small):
     runhistory = RunHistory()
     intensifier = Intensifier(scenario=scenario, max_config_calls=10, seed=0)
     intensifier.config_selector = CustomConfigSelector(scenario, runhistory)
+    intensifier.runhistory = runhistory
 
     config = configspace_small.get_default_configuration()
     config2 = configspace_small.sample_configuration(1)
@@ -90,3 +130,7 @@ def test_incumbent_selection_multi_objective(make_scenario, configspace_small):
     runhistory.add(config=config2, cost=[500, 500], time=0.0, instance=scenario.instances[1], seed=999)
     intensifier.update_incumbents(config2)
     assert intensifier.get_incumbents() == [config]
+
+
+def test_incumbent_differences(make_scenario, configspace_small):
+    pass

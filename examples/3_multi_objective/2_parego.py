@@ -96,26 +96,24 @@ class MLP:
         }
 
 
-def plot_pareto(smac: AbstractFacade) -> None:
+def plot_pareto(smac: AbstractFacade, incumbents: list[Configuration]) -> None:
     """Plots configurations from SMAC and highlights the best configurations in a Pareto front."""
-    # Get Pareto costs
-    _, c = smac.runhistory.get_pareto_front()
-    pareto_costs = np.array(c)
-
-    # Sort them a bit
-    pareto_costs = pareto_costs[pareto_costs[:, 0].argsort()]
-
-    # Get all other costs from runhistory
     average_costs = []
+    average_pareto_costs = []
     for config in smac.runhistory.get_configs():
         # Since we use multiple seeds, we have to average them to get only one cost value pair for each configuration
         average_cost = smac.runhistory.average_cost(config)
 
-        if average_cost not in c:
+        if config in incumbents:
+            average_pareto_costs += [average_cost]
+        else:
             average_costs += [average_cost]
 
     # Let's work with a numpy array
     costs = np.vstack(average_costs)
+    pareto_costs = np.vstack(average_pareto_costs)
+    pareto_costs = pareto_costs[pareto_costs[:, 0].argsort()]  # Sort them
+
     costs_x, costs_y = costs[:, 0], costs[:, 1]
     pareto_costs_x, pareto_costs_y = pareto_costs[:, 0], pareto_costs[:, 1]
 
@@ -157,20 +155,20 @@ if __name__ == "__main__":
         initial_design=initial_design,
         multi_objective_algorithm=multi_objective_algorithm,
         overwrite=True,
+        logging_level=0,
     )
 
     # Let's optimize
-    # Keep in mind: The incumbent is ambiguous here because of ParEGO
-    smac.optimize()
+    incumbents = smac.optimize()
 
     # Get cost of default configuration
     default_cost = smac.validate(mlp.configspace.get_default_configuration())
-    print(f"Default costs: {default_cost}\n")
+    print(f"Validated costs from default config: \n--- {default_cost}\n")
 
-    print("Validated costs from the Pareto front:")
-    for i, config in enumerate(smac.runhistory.get_pareto_front()[0]):
-        cost = smac.validate(config)
-        print(cost)
+    print("Validated costs from the Pareto front (incumbents):")
+    for incumbent in incumbents:
+        cost = smac.validate(incumbent)
+        print("---", cost)
 
     # Let's plot a pareto front
-    plot_pareto(smac)
+    plot_pareto(smac, incumbents)

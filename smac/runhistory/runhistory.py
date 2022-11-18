@@ -21,7 +21,7 @@ from smac.runhistory.dataclasses import (
     TrialValue,
 )
 from smac.runhistory.enumerations import StatusType
-from smac.utils.configspace import get_hash
+from smac.utils.configspace import get_config_hash
 from smac.utils.logging import get_logger
 from smac.utils.multi_objective import normalize_costs
 
@@ -797,10 +797,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         new_runhistory.load(filename, configspace)
         self.update(runhistory=new_runhistory)
 
-    def update(
-        self,
-        runhistory: RunHistory
-    ) -> None:
+    def update(self, runhistory: RunHistory) -> None:
         """Updates the current runhistory by adding new trials from a RunHistory.
 
         Parameters
@@ -933,9 +930,9 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
                 # Append new budget to existing inst-seed-key dict
                 self._config_id_to_isk_to_budget[k.config_id][isk].append(k.budget)
-                
+
             config = self._ids_config[k.config_id]
-            config_hash = get_hash(config)
+            config_hash = get_config_hash(config)
 
             # If budget is used, then update cost instead of incremental updates
             if not self._overwrite_existing_trials and k.budget == 0:

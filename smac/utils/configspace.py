@@ -3,6 +3,7 @@ from __future__ import annotations
 from functools import partial
 import hashlib
 
+import logging
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import (
@@ -154,9 +155,26 @@ def get_conditional_hyperparameters(X: np.ndarray, Y: np.ndarray | None = None) 
     return active
 
 
-def get_hash(config: Configuration, chars: int = 6) -> str:
+def get_config_hash(config: Configuration, chars: int = 6) -> str:
     """Returns a hash of the configuration."""
     return hashlib.sha1(str(config).encode("utf-8")).hexdigest()[:chars]
+
+
+def print_config_changes(
+    incumbent: Configuration | None,
+    challenger: Configuration | None,
+    logger: logging.Logger,
+) -> None:
+    """Compares two configurations and prints the differences."""
+    if incumbent is None or challenger is None:
+        return
+
+    params = sorted([(param, incumbent[param], challenger[param]) for param in challenger.keys()])
+    for param in params:
+        if param[1] != param[2]:
+            logger.info("--- %s: %r -> %r" % param)
+        else:
+            logger.debug("--- %s Remains unchanged: %r", param[0], param[1])
 
 
 # def check_subspace_points(

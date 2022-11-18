@@ -261,7 +261,7 @@ class AbstractFacade:
         """
         return self._optimizer.tell(info, value, save=save)
 
-    def optimize(self) -> Configuration:
+    def optimize(self) -> Configuration | list[Configuration]:
         """
         Optimizes the algorithm.
 
@@ -270,18 +270,13 @@ class AbstractFacade:
         incumbent : Configuration
             Best found configuration.
         """
-        incumbent = None
+        incumbents = None
         try:
-            incumbent = self._optimizer.optimize()
+            incumbents = self._optimizer.optimize()
         finally:
             self._optimizer.save()
 
-            if incumbent is not None:
-                cost = self._runhistory.get_cost(incumbent)
-                logger.info(f"Final Incumbent: {incumbent.get_dictionary()}")
-                logger.info(f"Estimated cost: {cost}")
-
-        return incumbent
+        return incumbents
 
     def validate(
         self,

@@ -111,10 +111,12 @@ class ConfigSelector:
                 # We got rid of random search here and replaced it with a simple configuration sampling from
                 # the configspace.
                 logger.debug("No data available to train the model. Sample a random configuration.")
-                assert len(self._processed_configs) == 0
 
                 config = self._scenario.configspace.sample_configuration(1)
                 yield config
+                
+                # Important to continue here because we still don't have data available
+                continue
 
             # Check if X/Y differs from the last run, otherwise use cached results
             if self._previous_entries != Y.shape[0]:

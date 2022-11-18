@@ -12,7 +12,7 @@ from smac.runhistory import TrialInfo
 from smac.runhistory.dataclasses import InstanceSeedBudgetKey, InstanceSeedKey
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
-from smac.utils.configspace import get_hash
+from smac.utils.configspace import get_config_hash
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -34,6 +34,7 @@ class Intensifier(AbstractIntensifier):
         self._max_config_calls = max_config_calls
         self._instance_seed_pairs: list[InstanceSeedKey] | None = None
         self._instance_seed_pairs_validation: list[InstanceSeedKey] | None = None
+        self._queue: list[tuple[Configuration, int]] = []  # (config, N=how many trials should be sampled)
 
     @property
     def uses_seeds(self) -> bool:
@@ -52,22 +53,18 @@ class Intensifier(AbstractIntensifier):
 
     def __iter__(self) -> Iterator[TrialInfo]:
         rh = self.runhistory
-        queue: list[tuple[Configuration, int]] = []  # (config, N=how many trials should be sampled)
 
         # What if there are already trials in the runhistory? Should we queue them up?
-        # Because they are part of the runhistory, they might be selecdted as incumbent. However, they are not
+        # Because they are part of the runhistory, they might be selected as incumbent. However, they are not
         # intensified because they are not part of the queue. We could add them here to incorporate them in the
         # intensification process.
-        # Idea: Add all configs to queue which are not incumbents
+        # Idea: Add all configs to queue (if it is an incumbent it is removed automatically later on)
         # N=1 is enough here as it will increase automatically in the iterations if the configuration is worthy
-        incumbents = self.get_incumbents()
+        # Note: The incumbents are updated once the runhistory is set (see abstract intensifier)
         for config in rh.get_configs():
-            hash = get_hash(config)
-            if config not in incumbents:
-                logger.info(f"Added config {hash} to the intensifier queue.")
-                queue.append((config, 1))
-            else:
-                logger.info(f"Config {hash} was not added to the intensifier queue because it is an incumbent already.")
+            hash = get_config_hash(config)
+            self._queue.append((config, 1))
+            logger.info(f"Added config {hash} from runhistory to the intensifier queue.")
 
         fails = -1
         while True:
@@ -90,13 +87,13 @@ class Intensifier(AbstractIntensifier):
 
             # Check if configs in queue are still running
             all_configs_running = True
-            for config, _ in queue:
+            for config, _ in self._queue:
                 if config not in running_configs:
                     all_configs_running = False
                     break
 
-            if len(queue) == 0 or all_configs_running:
-                if len(queue) == 0:
+            if len(self._queue) == 0 or all_configs_running:
+                if len(self._queue) == 0:
                     logger.debug("Queue is empty:")
                 else:
                     logger.debug("All configs in the queue are running:")
@@ -107,7 +104,7 @@ class Intensifier(AbstractIntensifier):
                 for incumbent in incumbents:
                     # Instances of this particular incumbent
                     individual_incumbent_instances = rh.get_instances(incumbent)
-                    incumbent_hash = get_hash(incumbent)
+                    incumbent_hash = get_config_hash(incumbent)
 
                     # We don't want to intensify an incumbent which is either still running or rejected
                     if incumbent in running_configs:
@@ -117,10 +114,10 @@ class Intensifier(AbstractIntensifier):
                         continue
 
                     if incumbent in rejected_configs:
-                        # TODO: This should actually not happen because if a config is rejected the incumbent should
+                        # This should actually not happen because if a config is rejected the incumbent should
                         # have changed
+                        # However, we just keep it here as sanity check
                         logger.debug(f"--- Skipping intensifying incumbent {incumbent_hash} because it was rejected.")
-                        raise RuntimeError()
                         continue
 
                     # If incumbent was evaluated on all incumbent instance intersections but was not evaluated on
@@ -167,13 +164,13 @@ class Intensifier(AbstractIntensifier):
                 # For each intensification of the incumbent, we also want to intensify the next configuration
                 # We simply add it to the queue and intensify it in the next iteration
                 config = next(self.config_generator)
-                config_hash = get_hash(config)
-                queue.append((config, 1))
+                config_hash = get_config_hash(config)
+                self._queue.append((config, 1))
                 logger.debug(f"--- Added a new config {config_hash} to the queue.")
             else:
                 logger.debug("Start finding a new challenger in the queue:")
-                for i, (config, N) in enumerate(queue.copy()):
-                    config_hash = get_hash(config)
+                for i, (config, N) in enumerate(self._queue.copy()):
+                    config_hash = get_config_hash(config)
 
                     # If the config is still running, we ignore it and head to the next config
                     if config in running_configs:
@@ -183,13 +180,13 @@ class Intensifier(AbstractIntensifier):
                     # We want to get rid of configs in the queue which are rejected
                     if config in rejected_configs:
                         logger.debug(f"--- Config {config_hash} was removed from the queue because it was rejected.")
-                        del queue[i]
+                        del self._queue[i]
                         continue
 
                     # We don't want to intensify an incumbent here
                     if config in incumbents:
                         logger.debug(f"--- Config {config_hash} was removed from the queue because it is an incumbent.")
-                        del queue[i]
+                        del self._queue[i]
                         continue
 
                     # And then we yield as many trials as we specified N
@@ -207,18 +204,18 @@ class Intensifier(AbstractIntensifier):
                     logger.debug(f"--- Finished yielding for config {config_hash}.")
 
                     # Now we have to remove the config
-                    del queue[i]
+                    del self._queue[i]
 
                     # Finally, we add the same config to the queue with a higher N
                     # If the config was rejected by the runhistory, then it's be removed in the next iteration
                     if N < self._max_config_calls:
                         new_pair = (config, N * 2)
-                        if new_pair not in queue:
+                        if new_pair not in self._queue:
                             logger.debug(
                                 f"--- Doubled trials of config {config_hash} to N={N*2} and added it to the queue "
                                 "again."
                             )
-                            queue.append((config, N * 2))
+                            self._queue.append((config, N * 2))
                         else:
                             logger.debug(f"--- Config {config_hash} with N={N*2} is already in the queue.")
 
@@ -259,11 +256,12 @@ class Intensifier(AbstractIntensifier):
                 else:
                     try:
                         next_seed = self._tf_seeds[i]
+                        logger.info(f"Added existing seed {next_seed} from runhistory to the intensifier.")
                     except IndexError:
                         # Use global random generator for a new seed and mark it so it will be reused for another config
                         next_seed = int(rng.randint(low=0, high=MAXINT, size=1)[0])
                         self._tf_seeds.append(next_seed)
-                        logger.info(f"Added new seed {next_seed} to the intensifier.")
+                        logger.info(f"Added new random seed {next_seed} to the intensifier.")
 
                 # If no instances are used, tf_instances includes None
                 for instance in self._tf_instances:

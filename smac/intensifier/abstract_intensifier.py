@@ -16,7 +16,7 @@ from smac.scenario import Scenario
 from smac.callback import Callback
 from smac.utils.logging import get_logger
 from smac.runhistory.dataclasses import TrajectoryItem
-from smac.utils.configspace import get_hash
+from smac.utils.configspace import get_config_hash, print_config_changes
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -64,25 +64,17 @@ class AbstractIntensifier:
         }
 
     @property
-    def config_generator(self) -> Iterator[ConfigSelector]:
-        assert self._config_generator is not None
-        return self._config_generator
+    def runhistory(self) -> RunHistory:
+        assert self._runhistory is not None
+        return self._runhistory
 
-    @property
-    def config_selector(self) -> ConfigSelector:
-        assert self._config_selector is not None
-        return self._config_selector
-
-    @config_selector.setter
-    def config_selector(self, config_selector: ConfigSelector) -> None:
-        # Set it global
-        self._config_selector = config_selector
-        self._config_generator = iter(config_selector)
-        self._runhistory = config_selector._runhistory
+    @runhistory.setter
+    def runhistory(self, runhistory: RunHistory) -> None:
+        self._runhistory = runhistory
 
         # Validate runhistory: Are seeds/instances/budgets used?
         # Add seed/instance/budget to the cache
-        for k in self.runhistory.keys():
+        for k in runhistory.keys():
             if self.uses_seeds:
                 if k.seed is None:
                     raise ValueError("Trial contains no seed information but intensifier expects seeds to be used.")
@@ -124,6 +116,26 @@ class AbstractIntensifier:
         if len(self._tf_budgets) == 0:
             self._tf_budgets = [None]
 
+        # Update our incumbents here
+        for config in self._runhistory.get_configs():
+            self.update_incumbents(config)
+
+    @property
+    def config_generator(self) -> Iterator[ConfigSelector]:
+        assert self._config_generator is not None
+        return self._config_generator
+
+    @property
+    def config_selector(self) -> ConfigSelector:
+        assert self._config_selector is not None
+        return self._config_selector
+
+    @config_selector.setter
+    def config_selector(self, config_selector: ConfigSelector) -> None:
+        # Set it global
+        self._config_selector = config_selector
+        self._config_generator = iter(config_selector)
+
     @property
     @abstractmethod
     def uses_seeds(self) -> bool:
@@ -141,12 +153,6 @@ class AbstractIntensifier:
     def uses_instances(self) -> bool:
         """If the intensifier needs to make use of instances."""
         raise NotImplementedError
-
-    @property
-    def runhistory(self) -> RunHistory:
-        """Returns the runhistory."""
-        assert self._runhistory is not None
-        return self._runhistory
 
     def get_incumbent(self) -> Configuration | None:
         """Returns the current incumbent in a single-objective setting."""
@@ -256,7 +262,7 @@ class AbstractIntensifier:
         # Associated trials and id
         config_instances = rh.get_instances(config)
         config_id = rh._config_ids[config]
-        config_hash = get_hash(config)
+        config_hash = get_config_hash(config)
 
         # We skip updating incumbents if no instances are available
         # Note: This is especially the case if trials of a config are still running
@@ -354,7 +360,7 @@ class AbstractIntensifier:
             else:
                 # In this case, we have to determine which config replaced which incumbent and reject it
                 removed_incumbent_id = list(set(previous_incumbent_ids) - set(new_incumbent_ids))[0]
-                removed_incumbent_hash = get_hash(rh.get_config(removed_incumbent_id))
+                removed_incumbent_hash = get_config_hash(rh.get_config(removed_incumbent_id))
                 if removed_incumbent_id not in self._rejected_config_ids:
                     self._rejected_config_ids.append(removed_incumbent_id)
 
@@ -364,10 +370,12 @@ class AbstractIntensifier:
                         f"{len(config_instances)} instances."
                     )
                 else:
-                    logger.debug(
+                    logger.info(
                         f"Added config {config_hash} and rejected config {removed_incumbent_hash} because "
-                        f"it is not better than the incumbents on {len(config_instances)} instances."
+                        f"it is not better than the incumbents on {len(config_instances)} instances:"
                     )
+                    print_config_changes(config, rh.get_config(removed_incumbent_id), logger=logger)
+
         elif len(previous_incumbents) < len(new_incumbents):
             # Config becomes a new incumbent; nothing is rejected in this case
             logger.info(
@@ -378,7 +386,7 @@ class AbstractIntensifier:
             for incumbent in previous_incumbents:
                 if incumbent not in new_incumbents:
                     logger.debug(
-                        f"Removed incumbent {get_hash(incumbent)} because of the updated costs from config "
+                        f"Removed incumbent {get_config_hash(incumbent)} because of the updated costs from config "
                         f"{config_hash}."
                     )
 
@@ -453,6 +461,6 @@ class AbstractIntensifier:
         params = sorted([(param, incumbent[param], challenger[param]) for param in challenger.keys()])
         for param in params:
             if param[1] != param[2]:
-                logger.info("-- %s: %r -> %r" % param)
+                logger.info("--- %s: %r -> %r" % param)
             else:
-                logger.debug("-- %s Remains unchanged: %r", param[0], param[1])
+                logger.debug("--- %s Remains unchanged: %r", param[0], param[1])

@@ -93,7 +93,7 @@ class SMBO:
         self._callbacks: list[Callback] = []
 
         # Stats variables
-        self._start_time = 0.0
+        self._start_time: float | None = None
         self._used_target_function_walltime = 0.0
 
         # We initialize the state based on previous data.
@@ -113,6 +113,7 @@ class SMBO:
     @property
     def remaing_walltime(self) -> float:
         """Subtracts the runtime configuration budget with the used wallclock time."""
+        assert self._start_time is not None
         return self._scenario.walltime_limit - (time.time() - self._start_time)
 
     @property
@@ -137,6 +138,9 @@ class SMBO:
     @property
     def used_walltime(self) -> float:
         """Returns used wallclock time."""
+        if self._start_time is None:
+            return 0.0
+
         return time.time() - self._start_time
 
     @property
@@ -249,7 +253,7 @@ class SMBO:
             config_selector._acquisition_function.model = config_selector._model
             config_selector._acquisition_maximizer.acquisition_function = acquisition_function
 
-    def optimize(self) -> Configuration:
+    def optimize(self) -> Configuration | list[Configuration]:
         """Runs the Bayesian optimization loop.
 
         Returns
@@ -265,8 +269,13 @@ class SMBO:
             else:
                 return self.intensifier.get_incumbents()
 
+        # Important to set the runhistory here
+        # Only because we set the runhistory here, the user inputs are recognized
+        self._intensifier.runhistory = self._runhistory
+
         # Start the timer before we do anything
-        self._start_time = time.time() - self.used_walltime
+        if self._start_time is None:
+            self._start_time = time.time()
 
         for callback in self._callbacks:
             callback.on_start(self)
@@ -280,6 +289,7 @@ class SMBO:
             trial_info = self.ask()
 
             # We submit the trial to the runner
+            # In multi-worker mode, SMAC waits till a new worker is available here
             self._runner.submit_trial(trial_info=trial_info)
 
             # We add results from the runner if results are available
@@ -295,7 +305,10 @@ class SMBO:
             # Now we check whether we have to stop the optimization
             if self.budget_exhausted or self._stop:
                 if self.budget_exhausted:
-                    logger.info("Configuration budget is exhausted.")
+                    logger.info("Configuration budget is exhausted:")
+                    logger.info(f"--- Remaining wallclock time: {self.remaing_walltime}")
+                    logger.info(f"--- Remaining cpu time: {self.remaining_cputime}")
+                    logger.info(f"--- Remaining trials: {self.remaining_trials}")
                 else:
                     logger.info("Shutting down because the stop flag was set.")
 
@@ -330,7 +343,7 @@ class SMBO:
             with open(str(path / "optimization.json")) as fp:
                 data = json.load(fp)
 
-            # self._used_walltime = data["used_walltime"]
+            self._start_time = time.time() - data["used_walltime"]
             self._used_target_function_walltime = data["used_target_function_walltime"]
             self._finished = data["finished"]
 
