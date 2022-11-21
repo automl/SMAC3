@@ -131,7 +131,7 @@ class AbstractInitialDesign:
         # (Reference: https://stackoverflow.com/questions/7961363/removing-duplicates-in-lists)
         configs = list(OrderedDict.fromkeys(configs))
         logger.info(
-            f"Using {len(configs) - len(self._additional_configs)} initial design "
+            f"Using {len(configs) - len(self._additional_configs)} initial design configurations "
             f"and {len(self._additional_configs)} additional configurations."
         )
 

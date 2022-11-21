@@ -32,13 +32,18 @@ class Intensifier(AbstractIntensifier):
     ):
         super().__init__(scenario=scenario, max_incumbents=max_incumbents, seed=seed)
 
-        # The queue for the challengers
+        # Internal variables
+        self._max_config_calls = max_config_calls
+
+        # Reset
+        self.reset()
+
+    def reset(self) -> None:  # noqa: D102
+        super().reset()
+
         self._queue: list[tuple[Configuration, int]] = []  # (config, N=how many trials should be sampled)
         self._instance_seed_pairs: list[InstanceSeedKey] | None = None
         self._instance_seed_pairs_validation: list[InstanceSeedKey] | None = None
-
-        # Internal variables
-        self._max_config_calls = max_config_calls
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
@@ -91,6 +96,19 @@ class Intensifier(AbstractIntensifier):
             ]
 
     def __iter__(self) -> Iterator[TrialInfo]:
+        """This iter method holds the logic for the intensification loop.
+        Some facts about the loop:
+        - Adds existing configurations from the runhistory to the queue (that means it supports user-inputs).
+        - Everytime an incumbent (with the lowest amount of trials) is intensified, a new challenger is added to the
+        queue.
+        - If all incumbents are evaluated on the same trials, a new trial is added to one of the incumbents.
+        - Only challengers which are not rejected/running/incumbent are intensified by N*2.
+
+        Returns
+        -------
+        trials : Iterator[TrialInfo]
+            Iterator over the trials.
+        """
         rh = self.runhistory
 
         # What if there are already trials in the runhistory? Should we queue them up?
@@ -272,12 +290,27 @@ class Intensifier(AbstractIntensifier):
         validate: bool = False,
         seed: int | None = None,
     ) -> list[TrialInfo]:
-        """Returns a list of trials of interest for a given configuration. Only ``max_config_calls`` trials are
-        returned.
+        """Returns a list of trials of interest for a given configuration. Considers seeds and instances from the
+        runhistory (``self._tf_seeds`` and ``self._tf_instances``). If no seeds or instances were found, new
+        seeds and instances are generated based on the global intensifier seed.
 
         Warning
         -------
-        The passed seed is only used for validation.
+        The passed seed is only used for validation. For training, the global intensifier seed is used.
+
+        Parameters
+        ----------
+        config : Configuration
+            The config of interest,
+        validate : bool, defaults to False
+            Whether to get validation trials or training trials. The only difference lays in different seeds.
+        seed : int | None, defaults to None
+            The seed used for the validation trials.
+
+        Returns
+        -------
+        trials : list[TrialInfo]
+            Trials of the config of interest.
         """
         if seed is None:
             seed = 0
@@ -303,7 +336,7 @@ class Intensifier(AbstractIntensifier):
                         # Use global random generator for a new seed and mark it so it will be reused for another config
                         next_seed = int(rng.randint(low=0, high=MAXINT, size=1)[0])
                         self._tf_seeds.append(next_seed)
-                        logger.info(f"Added new random seed {next_seed} to the intensifier.")
+                        logger.info(f"Added a new random seed {next_seed} to the intensifier.")
 
                 # If no instances are used, tf_instances includes None
                 for instance in self._tf_instances:
@@ -353,12 +386,13 @@ class Intensifier(AbstractIntensifier):
 
         Parameters
         ----------
+        N : int | None, defaults to None
+            The maximum number of trials to return. If None, all trials (``max_config_calls``) are returned.
+            Running and evaluated trials are counted in.
         from_instances : list[InstanceSeedBudgetKey], defaults to None
             Only instances from the list are considered for the trials.
-        expand_from_instances : list[InstanceSeedBudgetKey], defaults to None
-            If no trials are found anymore, ``expand_from_instances`` is used to get more trials. This is especially
-            useful in combination with ``from_instances`` as trials can additionally added. Use-case: Next instance
-            for incumbent.
+        shuffle : bool, defaults to True
+            Shuffles the trials in groups. First all instances are shuffled, then all seeds.
         """
         rh = self.runhistory
         trials = self.get_trials_of_interest(config)

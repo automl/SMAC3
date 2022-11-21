@@ -89,9 +89,9 @@ class ConfigSelector:
         """This method returns the next configuration to evaluate. It ignores already processed configs, i.e.,
         the configs from the runhistory if the runhistory is not empty.
         The method (after yielding the initial design configurations) trains the surrogate model, maximizes the
-        acquisition function and yields ``n`` configurations. After the ``n`` configurations the surrogate model is
-        trained again, etc. The program stops if ``self._n_retries`` was reached within each iteration. A configuration
-        is rejected if it was used already before.
+        acquisition function and yields ``n`` configurations. After the ``n`` configurations, the surrogate model is
+        trained again, etc. The program stops if ``n_retries`` was reached within each iteration. A configuration
+        is ignored if it was used already before.
 
         Note
         ----

@@ -60,6 +60,7 @@ class AbstractIntensifier:
         self.reset()
 
     def reset(self) -> None:
+        """Resets the intensifier."""
         self._incumbents: list[Configuration] = []
         self._incumbents_changed = 0
         self._rejected_config_ids: list[int] = []
@@ -76,11 +77,15 @@ class AbstractIntensifier:
 
     @property
     def runhistory(self) -> RunHistory:
+        """Runhistory of the intensifier."""
         assert self._runhistory is not None
         return self._runhistory
 
     @runhistory.setter
     def runhistory(self, runhistory: RunHistory) -> None:
+        """Sets the runhistory and fills ``self._tf_seeds`` and ``self._tf_instances``. Moreover, the incumbents
+        are updated.
+        """
         self._runhistory = runhistory
 
         # Validate runhistory: Are seeds/instances/budgets used?
@@ -133,11 +138,13 @@ class AbstractIntensifier:
 
     @property
     def config_generator(self) -> Iterator[ConfigSelector]:
+        """Based on the configuration selector, an iterator is returned that generates configurations."""
         assert self._config_generator is not None
         return self._config_generator
 
     @property
     def config_selector(self) -> ConfigSelector:
+        """The configuration selector for the intensifier."""
         assert self._config_selector is not None
         return self._config_selector
 
@@ -164,6 +171,10 @@ class AbstractIntensifier:
     def uses_instances(self) -> bool:
         """If the intensifier needs to make use of instances."""
         raise NotImplementedError
+
+    @property
+    def incumbents_changed(self) -> int:
+        return self._incumbents_changed
 
     def get_incumbent(self) -> Configuration | None:
         """Returns the current incumbent in a single-objective setting."""
@@ -260,10 +271,8 @@ class AbstractIntensifier:
 
     def update_incumbents(self, config: Configuration) -> None:
         """Updates the incumbents. This method is called everytime a trial is added to the runhistory. Since only
-        the affected config and the current incumbents are used, this method is very efficient.
-
-        Furthermore, a configuration is only considered if it is evaluated on all trials as the trials. If it is
-        evaluated on all t
+        the affected config and the current incumbents are used, this method is very efficient. Furthermore, a
+        configuration is only considered incumbent if it has a better performance on all incumbent instances.
         """
         rh = self.runhistory
 
@@ -366,14 +375,14 @@ class AbstractIntensifier:
         if len(previous_incumbents) == len(new_incumbents):
             if previous_incumbents == new_incumbents:
                 # No changes in the incumbents
+                self._remove_rejected_config(config_id)
                 logger.debug("Karpador setzt Platscher ein.")
                 return
             else:
                 # In this case, we have to determine which config replaced which incumbent and reject it
                 removed_incumbent_id = list(set(previous_incumbent_ids) - set(new_incumbent_ids))[0]
                 removed_incumbent_hash = get_config_hash(rh.get_config(removed_incumbent_id))
-                if removed_incumbent_id not in self._rejected_config_ids:
-                    self._rejected_config_ids.append(removed_incumbent_id)
+                self._add_rejected_config(removed_incumbent_id)
 
                 if removed_incumbent_id == config_id:
                     logger.debug(
@@ -381,21 +390,24 @@ class AbstractIntensifier:
                         f"{len(config_instances)} instances."
                     )
                 else:
+                    self._remove_rejected_config(config_id)
                     logger.info(
                         f"Added config {config_hash} and rejected config {removed_incumbent_hash} because "
                         f"it is not better than the incumbents on {len(config_instances)} instances:"
                     )
                     print_config_changes(config, rh.get_config(removed_incumbent_id), logger=logger)
-
         elif len(previous_incumbents) < len(new_incumbents):
             # Config becomes a new incumbent; nothing is rejected in this case
+            self._remove_rejected_config(config_id)
             logger.info(
                 f"Config {config_hash} is a new incumbent. " f"Total number of incumbents: {len(new_incumbents)}."
             )
         else:
-            # There might be situations that incumbents might be removed because of updated cost information
+            # There might be situations that the incumbents might be removed because of updated cost information of
+            # config
             for incumbent in previous_incumbents:
                 if incumbent not in new_incumbents:
+                    self._add_rejected_config(incumbent)
                     logger.debug(
                         f"Removed incumbent {get_config_hash(incumbent)} because of the updated costs from config "
                         f"{config_hash}."
@@ -431,7 +443,26 @@ class AbstractIntensifier:
         validate: bool = False,
         seed: int | None = None,
     ) -> list[TrialInfo]:
-        """Returns a list of trials of interest for a given configuration."""
+        """Returns a list of trials of interest for a given configuration.
+
+        Warning
+        -------
+        The passed seed is only used for validation.
+
+        Parameters
+        ----------
+        config : Configuration
+            The config of interest,
+        validate : bool, defaults to False
+            Whether to get validation trials or training trials. The only difference lays in different seeds.
+        seed : int | None, defaults to None
+            The seed used for the validation trials.
+
+        Returns
+        -------
+        trials : list[TrialInfo]
+            Trials of the config of interest.
+        """
         raise NotImplementedError
 
     def get_state(self) -> dict[str, Any]:
@@ -443,9 +474,8 @@ class AbstractIntensifier:
         pass
 
     def save(self, filename: str | Path) -> None:
-        """Saves the current state of the intensifier. We only save the trajectory here because the state should be
-        restored dynamically by the runhistory. However, the trajectory can not be restored dynamically because
-        of the overwritten running trials.
+        """Saves the current state of the intensifier. In addition to the state (retrieved by ``get_state``), this
+        method also saves the incumbents and trajectory.
         """
         if isinstance(filename, str):
             filename = Path(filename)
@@ -455,8 +485,8 @@ class AbstractIntensifier:
 
         data = {
             "incumbent_ids": [self.runhistory.get_config_id(config) for config in self._incumbents],
-            "incumbents_changed": self._incumbents_changed,
             "rejected_config_ids": self._rejected_config_ids,
+            "incumbents_changed": self._incumbents_changed,
             "trajectory": [dataclasses.asdict(item) for item in self._trajectory],
             "state": self.get_state(),
         }
@@ -465,7 +495,7 @@ class AbstractIntensifier:
             json.dump(data, fp, indent=2)
 
     def load(self, filename: str | Path) -> None:
-        """Loads the latest state of the intensifier."""
+        """Loads the latest state of the intensifier including the incumbents and trajectory."""
         if isinstance(filename, str):
             filename = Path(filename)
 
@@ -499,3 +529,21 @@ class AbstractIntensifier:
                 logger.info("--- %s: %r -> %r" % param)
             else:
                 logger.debug("--- %s Remains unchanged: %r", param[0], param[1])
+
+    def _add_rejected_config(self, config: Configuration | int) -> None:
+        if isinstance(config, Configuration):
+            config_id = self.runhistory.get_config_id(config)
+        else:
+            config_id = config
+
+        if config_id not in self._rejected_config_ids:
+            self._rejected_config_ids.append(config_id)
+
+    def _remove_rejected_config(self, config: Configuration | int) -> None:
+        if isinstance(config, Configuration):
+            config_id = self.runhistory.get_config_id(config)
+        else:
+            config_id = config
+
+        if config_id in self._rejected_config_ids:
+            self._rejected_config_ids.remove(config_id)

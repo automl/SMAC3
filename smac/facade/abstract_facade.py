@@ -211,17 +211,17 @@ class AbstractFacade:
 
     @property
     def scenario(self) -> Scenario:
-        """The scenario object."""
+        """The scenario object which holds all environment information."""
         return self._scenario
 
     @property
     def runhistory(self) -> RunHistory:
-        """The run history, which is filled with all information during the optimization process."""
+        """The runhistory which is filled with all trials during the optimization process."""
         return self._optimizer._runhistory
 
     @property
     def optimizer(self) -> SMBO:
-        """The optimizer, which is responsible for the AutoML loop."""
+        """The optimizer which is responsible for the AutoML loop. Keeps track of useful information like status."""
         return self._optimizer
 
     @property
@@ -250,7 +250,7 @@ class AbstractFacade:
         return meta
 
     def ask(self) -> TrialInfo:
-        """Asks the intensifier for the next trial. This method returns only trials with the intend to run."""
+        """Asks the intensifier for the next trial."""
         return self._optimizer.ask()
 
     def tell(self, info: TrialInfo, value: TrialValue, save: bool = True) -> None:

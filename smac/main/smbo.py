@@ -534,10 +534,10 @@ class SMBO:
             averaged.
         """
         if seed is None:
-            seed = self._scenario.seed
+            seed = 0
 
         costs = []
-        for trial in self._intensifier.get_trials_of_interest(config, validate=True):
+        for trial in self._intensifier.get_trials_of_interest(config, validate=True, seed=seed):
             kwargs: dict[str, Any] = {}
             if trial.seed is not None:
                 kwargs["seed"] = trial.seed
@@ -546,7 +546,8 @@ class SMBO:
             if trial.instance is not None:
                 kwargs["instance"] = trial.instance
 
-            # TODO: Use submit run
+            # TODO: Use submit run for faster evaluation
+            # self._runner.submit_trial(trial_info=trial)
             _, cost, _, _ = self._runner.run(config, **kwargs)
             costs += [cost]
 
@@ -559,7 +560,7 @@ class SMBO:
         logger.info(
             "\n"
             f"--- STATISTICS -------------------------------------\n"
-            # f"--- Incumbent changed: {self._incumbent_changed - 1}\n"
+            f"--- Incumbent changed: {self.intensifier.incumbents_changed}\n"
             f"--- Submitted trials: {self.runhistory.submitted} / {self._scenario.n_trials}\n"
             f"--- Finished trials: {self.runhistory.finished} / {self._scenario.n_trials}\n"
             f"--- Configurations: {self.runhistory._n_id}\n"

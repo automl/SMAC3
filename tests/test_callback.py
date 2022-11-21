@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-import pytest
-from ConfigSpace import Categorical, Configuration, ConfigurationSpace, Float, Integer
+from ConfigSpace import Configuration
 
 import smac
 from smac import HyperparameterOptimizationFacade, Scenario
