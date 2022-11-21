@@ -47,13 +47,14 @@ if __name__ == "__main__":
     model = Rosenbrock2D()
 
     # Scenario object specifying the optimization "environment"
-    scenario = Scenario(model.configspace, name="synthetic_function", n_trials=300)
+    scenario = Scenario(model.configspace, name="synthetic_function", n_trials=100)
 
     # Now we use SMAC to find the best hyperparameters
     smac = BlackBoxFacade(
         scenario,
         model.train,  # We pass the target function here
         overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data.
+        logging_level=0,
     )
 
     incumbent = smac.optimize()

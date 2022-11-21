@@ -196,7 +196,7 @@ class ConfigSelector:
                     # We exit the loop if we have tried to add the same configuration too often
                     if failed_counter == self._n_retries:
                         logger.warning(f"Could not return a new configuration after {self._n_retries} retries." "")
-                        raise StopIteration
+                        return
 
     def _call_callbacks_on_start(self) -> None:
         for callback in self._callbacks:

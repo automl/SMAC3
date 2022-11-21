@@ -35,9 +35,7 @@ def make_facade(digits_dataset, make_sgd) -> HyperparameterOptimizationFacade:
             scenario,
             model.train,
             initial_design=HyperparameterOptimizationFacade.get_initial_design(scenario, n_configs=2, max_ratio=1),
-            intensifier=HyperparameterOptimizationFacade.get_intensifier(
-                scenario, max_config_calls=5, intensify_percentage=0.0
-            ),
+            intensifier=HyperparameterOptimizationFacade.get_intensifier(scenario, max_config_calls=5),
             logging_level=0,
             overwrite=True,
         )

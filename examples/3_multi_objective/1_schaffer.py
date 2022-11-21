@@ -76,13 +76,16 @@ if __name__ == "__main__":
         ),
         overwrite=True,
     )
-    incumbent = smac.optimize()
+    incumbents = smac.optimize()
 
+    # Get cost of default configuration
     default_cost = smac.validate(cs.get_default_configuration())
-    print(f"Default costs: {default_cost}")
+    print(f"Validated costs from default config: \n--- {default_cost}\n")
 
-    incumbent_cost = smac.validate(incumbent)
-    print(f"Incumbent costs: {incumbent_cost}")
+    print("Validated costs from the Pareto front (incumbents):")
+    for incumbent in incumbents:
+        cost = smac.validate(incumbent)
+        print("---", cost)
 
     # Plot the evaluated points
     plot_from_smac(smac)

@@ -70,7 +70,6 @@ if __name__ == "__main__":
 
     # After calling ask+tell, we can still optimize
     incumbent = smac.optimize()
-    assert smac.stats.finished == 100
 
     # Get cost of default configuration
     default_cost = smac.validate(model.configspace.get_default_configuration())

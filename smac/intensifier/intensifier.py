@@ -222,8 +222,12 @@ class Intensifier(AbstractIntensifier):
 
                 # For each intensification of the incumbent, we also want to intensify the next configuration
                 # We simply add it to the queue and intensify it in the next iteration
-                # Note: If config generator throws a StopIteration, it will be caught by the SMBO loop
-                config = next(self.config_generator)
+                try:
+                    config = next(self.config_generator)
+                except Exception:
+                    # We stop if we don't find any configuration anymore
+                    return
+
                 config_hash = get_config_hash(config)
                 self._queue.append((config, 1))
                 logger.debug(f"--- Added a new config {config_hash} to the queue.")

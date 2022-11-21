@@ -159,6 +159,7 @@ if __name__ == "__main__":
         acquisition_function=acquisition_function,
         intensifier=intensifier,
         overwrite=True,
+        logging_level=0,
     )
 
     incumbent = smac.optimize()
