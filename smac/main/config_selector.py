@@ -1,14 +1,11 @@
 from __future__ import annotations
-import copy
 
 from typing import Iterator
 
+import copy
 
 import numpy as np
 from ConfigSpace import Configuration
-from smac.runhistory.encoder.abstract_encoder import AbstractRunHistoryEncoder
-
-from smac.utils.logging import get_logger
 
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
@@ -16,13 +13,14 @@ from smac.acquisition.function.abstract_acquisition_function import (
 from smac.acquisition.maximizer.abstract_acqusition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
+from smac.callback import Callback
 from smac.initial_design import AbstractInitialDesign
 from smac.model.abstract_model import AbstractModel
 from smac.random_design.abstract_random_design import AbstractRandomDesign
+from smac.runhistory.encoder.abstract_encoder import AbstractRunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
-from smac.callback import Callback
-
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

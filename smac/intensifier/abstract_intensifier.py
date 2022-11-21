@@ -1,23 +1,28 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from pathlib import Path
 from typing import Any, Iterator
+
+import dataclasses
+import json
+from pathlib import Path
+
 import numpy as np
-from smac.main.config_selector import ConfigSelector
 from ConfigSpace import Configuration
 
-import json
-import dataclasses
 import smac
+from smac.callback import Callback
+from smac.main.config_selector import ConfigSelector
 from smac.runhistory import TrialInfo
-from smac.runhistory.dataclasses import InstanceSeedBudgetKey, TrialValue
+from smac.runhistory.dataclasses import (
+    InstanceSeedBudgetKey,
+    TrajectoryItem,
+    TrialValue,
+)
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
-from smac.callback import Callback
-from smac.utils.logging import get_logger
-from smac.runhistory.dataclasses import TrajectoryItem
 from smac.utils.configspace import get_config_hash, print_config_changes
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

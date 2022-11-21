@@ -1,11 +1,13 @@
 import random
+
 import pytest
+
+from smac.initial_design.random_design import RandomInitialDesign
 from smac.intensifier.intensifier import Intensifier
 from smac.main.config_selector import ConfigSelector
 from smac.runhistory.enumerations import StatusType
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
-from smac.initial_design.random_design import RandomInitialDesign
 
 
 class CustomConfigSelector(ConfigSelector):

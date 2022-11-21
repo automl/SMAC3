@@ -147,7 +147,6 @@ class Stats:
             f"----------------------------------------------------"
         )
 
-
     def save(self) -> None:
         """Save all relevant attributes to a json file."""
         data = {

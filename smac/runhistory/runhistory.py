@@ -5,11 +5,11 @@ from typing import Any, Iterable, Iterator, Mapping, cast
 import json
 from collections import OrderedDict
 from pathlib import Path
-from smac.constants import MAXINT
 
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 
+from smac.constants import MAXINT
 from smac.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
 )

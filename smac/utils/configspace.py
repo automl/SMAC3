@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from functools import partial
 import hashlib
-
 import logging
+from functools import partial
+
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import (

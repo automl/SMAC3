@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+from ConfigSpace import Configuration
+
 import smac
 from smac.runhistory import TrialInfo, TrialValue
-from ConfigSpace import Configuration
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

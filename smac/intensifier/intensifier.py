@@ -1,10 +1,11 @@
 from __future__ import annotations
-from collections import defaultdict
-import dataclasses
 
-import numpy as np
 from typing import Any, Iterator
 
+import dataclasses
+from collections import defaultdict
+
+import numpy as np
 from ConfigSpace import Configuration
 
 from smac.constants import MAXINT
@@ -12,8 +13,8 @@ from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.runhistory import TrialInfo
 from smac.runhistory.dataclasses import InstanceSeedBudgetKey, InstanceSeedKey
 from smac.scenario import Scenario
-from smac.utils.logging import get_logger
 from smac.utils.configspace import get_config_hash
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

@@ -1,23 +1,23 @@
 from __future__ import annotations
-import json
-from pathlib import Path
 
 from typing import Any
 
-import numpy as np
+import json
 import time
+from pathlib import Path
+
+import numpy as np
 from ConfigSpace import Configuration
 
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-
-from smac.runner import FirstRunCrashedException
 from smac.callback import Callback
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.model.abstract_model import AbstractModel
 from smac.runhistory import StatusType, TrialInfo, TrialValue
 from smac.runhistory.runhistory import RunHistory
+from smac.runner import FirstRunCrashedException
 from smac.runner.abstract_runner import AbstractRunner
 from smac.scenario import Scenario
 from smac.utils.data_structures import recursively_compare_dicts

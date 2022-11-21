@@ -1,9 +1,9 @@
+from smac.initial_design.random_design import RandomInitialDesign
 from smac.intensifier.intensifier import Intensifier
 from smac.main.config_selector import ConfigSelector
 from smac.runhistory.enumerations import StatusType
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
-from smac.initial_design.random_design import RandomInitialDesign
 
 
 class CustomConfigSelector(ConfigSelector):
@@ -254,5 +254,3 @@ def test_intensifier_with_filled_runhistory(make_scenario, configspace_small):
     # Therefore, it is the incumbent and not a challenger anymore
     assert (config2, 1) not in intensifier._queue
     assert config2 in intensifier.get_incumbents()
-
-
