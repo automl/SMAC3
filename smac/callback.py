@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import smac
 from smac.runhistory import TrialInfo, TrialValue
+from ConfigSpace import Configuration
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -29,13 +30,15 @@ class Callback:
         """Called after an iteration ended."""
         pass
 
-    def on_next_configurations_start(self, smbo: smac.main.smbo.SMBO) -> None:
+    def on_next_configurations_start(self, config_selector: smac.main.config_selector.ConfigSelector) -> None:
         """Called before the intensification asks for new configurations. Essentially, this callback is called
         before the surrogate model is trained and before the acquisition function is called.
         """
         pass
 
-    def on_next_configurations_end(self, smbo: smac.main.smbo.SMBO) -> None:
+    def on_next_configurations_end(
+        self, config_selector: smac.main.config_selector.ConfigSelector, config: Configuration
+    ) -> None:
         """Called after the intensification asks for new configurations. Essentially, this callback is called
         before the surrogate model is trained and before the acquisition function is called.
         """

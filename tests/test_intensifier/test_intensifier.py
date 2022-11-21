@@ -254,3 +254,5 @@ def test_intensifier_with_filled_runhistory(make_scenario, configspace_small):
     # Therefore, it is the incumbent and not a challenger anymore
     assert (config2, 1) not in intensifier._queue
     assert config2 in intensifier.get_incumbents()
+
+

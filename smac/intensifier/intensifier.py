@@ -1,8 +1,9 @@
 from __future__ import annotations
 from collections import defaultdict
+import dataclasses
 
 import numpy as np
-from typing import Iterator
+from typing import Any, Iterator
 
 from ConfigSpace import Configuration
 
@@ -25,31 +26,68 @@ class Intensifier(AbstractIntensifier):
         self,
         scenario: Scenario,
         max_config_calls: int = 2000,
-        retries: int = 10,  # Number of iterations to retry if no next trial can be found
+        max_incumbents: int = 20,
         seed: int | None = None,
     ):
-        super().__init__(scenario=scenario, seed=seed)
+        super().__init__(scenario=scenario, max_incumbents=max_incumbents, seed=seed)
+
+        # The queue for the challengers
+        self._queue: list[tuple[Configuration, int]] = []  # (config, N=how many trials should be sampled)
+        self._instance_seed_pairs: list[InstanceSeedKey] | None = None
+        self._instance_seed_pairs_validation: list[InstanceSeedKey] | None = None
 
         # Internal variables
         self._max_config_calls = max_config_calls
-        self._instance_seed_pairs: list[InstanceSeedKey] | None = None
-        self._instance_seed_pairs_validation: list[InstanceSeedKey] | None = None
-        self._queue: list[tuple[Configuration, int]] = []  # (config, N=how many trials should be sampled)
 
     @property
-    def uses_seeds(self) -> bool:
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
+        meta.update({"max_config_calls": self._max_config_calls})
+
+        return meta
+
+    @property
+    def uses_seeds(self) -> bool:  # noqa: D102
         return True
 
     @property
-    def uses_budgets(self) -> bool:
+    def uses_budgets(self) -> bool:  # noqa: D102
         return False
 
     @property
-    def uses_instances(self) -> bool:
+    def uses_instances(self) -> bool:  # noqa: D102
         if self._scenario.instances is None:
             return False
 
         return True
+
+    def get_state(self) -> dict[str, Any]:  # noqa: D102
+        instance_seed_pairs: list[dict] | None = None
+        if self._instance_seed_pairs is not None:
+            instance_seed_pairs = [dataclasses.asdict(item) for item in self._instance_seed_pairs]
+
+        instance_seed_pairs_validation: list[dict] | None = None
+        if self._instance_seed_pairs_validation is not None:
+            instance_seed_pairs_validation = [dataclasses.asdict(item) for item in self._instance_seed_pairs_validation]
+
+        return {
+            "queue": [(self.runhistory.get_config_id(config), n) for config, n in self._queue],
+            "instance_seed_pairs": instance_seed_pairs,
+            "instance_seed_pairs_validation": instance_seed_pairs_validation,
+        }
+
+    def set_state(self, state: dict[str, Any]) -> None:  # noqa: D102
+        self._queue = [(self.runhistory.ids_config[id], n) for id, n in state["queue"]]
+        self._instance_seed_pairs = None
+        self._instance_seed_pairs_validation = None
+
+        if state["instance_seed_pairs"] is not None:
+            self._instance_seed_pairs = [InstanceSeedKey(**item) for item in state["instance_seed_pairs"]]
+
+        if state["instance_seed_pairs_validation"] is not None:
+            self._instance_seed_pairs_validation = [
+                InstanceSeedKey(**item) for item in state["instance_seed_pairs_validation"]
+            ]
 
     def __iter__(self) -> Iterator[TrialInfo]:
         rh = self.runhistory
@@ -61,10 +99,12 @@ class Intensifier(AbstractIntensifier):
         # Idea: Add all configs to queue (if it is an incumbent it is removed automatically later on)
         # N=1 is enough here as it will increase automatically in the iterations if the configuration is worthy
         # Note: The incumbents are updated once the runhistory is set (see abstract intensifier)
-        for config in rh.get_configs():
-            hash = get_config_hash(config)
-            self._queue.append((config, 1))
-            logger.info(f"Added config {hash} from runhistory to the intensifier queue.")
+        # Note 2: If the queue was restored, we don't want to go in here (queue is restored)
+        if len(self._queue) == 0:
+            for config in rh.get_configs():
+                hash = get_config_hash(config)
+                self._queue.append((config, 1))
+                logger.info(f"Added config {hash} from runhistory to the intensifier queue.")
 
         fails = -1
         while True:
@@ -73,7 +113,7 @@ class Intensifier(AbstractIntensifier):
             # Some criteria to stop the intensification if nothing can be intensified anymore
             if fails > 8 and fails >= self._scenario.n_workers * 2:
                 logger.error("Intensifier could not find any new trials.")
-                exit()
+                return
 
             # Some configs from the runhistory
             running_configs = rh.get_running_configs()
@@ -163,6 +203,7 @@ class Intensifier(AbstractIntensifier):
 
                 # For each intensification of the incumbent, we also want to intensify the next configuration
                 # We simply add it to the queue and intensify it in the next iteration
+                # Note: If config generator throws a StopIteration, it will be caught by the SMBO loop
                 config = next(self.config_generator)
                 config_hash = get_config_hash(config)
                 self._queue.append((config, 1))
@@ -180,13 +221,13 @@ class Intensifier(AbstractIntensifier):
                     # We want to get rid of configs in the queue which are rejected
                     if config in rejected_configs:
                         logger.debug(f"--- Config {config_hash} was removed from the queue because it was rejected.")
-                        del self._queue[i]
+                        self._queue.remove((config, N))
                         continue
 
                     # We don't want to intensify an incumbent here
                     if config in incumbents:
                         logger.debug(f"--- Config {config_hash} was removed from the queue because it is an incumbent.")
-                        del self._queue[i]
+                        self._queue.remove((config, N))
                         continue
 
                     # And then we yield as many trials as we specified N
@@ -204,7 +245,7 @@ class Intensifier(AbstractIntensifier):
                     logger.debug(f"--- Finished yielding for config {config_hash}.")
 
                     # Now we have to remove the config
-                    del self._queue[i]
+                    self._queue.remove((config, N))
 
                     # Finally, we add the same config to the queue with a higher N
                     # If the config was rejected by the runhistory, then it's be removed in the next iteration

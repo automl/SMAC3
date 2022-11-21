@@ -1,4 +1,5 @@
 from __future__ import annotations
+import copy
 
 from typing import Iterator
 
@@ -20,6 +21,7 @@ from smac.model.abstract_model import AbstractModel
 from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
+from smac.callback import Callback
 
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -30,6 +32,17 @@ logger = get_logger(__name__)
 
 
 class ConfigSelector:
+    """The config selector handles the surrogate model and the acquisition function. Based on both components, the next
+    configuration is selected.
+
+    Parameters
+    ----------
+    n : int, defaults to 8
+        How many configurations should be returned before the surrogate model is retrained.
+    n_retries : int, defaults to 8
+        How often to retry receiving a new configuration before giving up.
+    """
+
     def __init__(
         self,
         scenario: Scenario,
@@ -40,7 +53,9 @@ class ConfigSelector:
         acquisition_maximizer: AbstractAcquisitionMaximizer,
         acquisition_function: AbstractAcquisitionFunction,
         random_design: AbstractRandomDesign,
+        callbacks: list[Callback] = [],
         n: int = 8,
+        n_retries: int = 8,
     ) -> None:
         # Those are the configs sampled from the passed initial design
         # Selecting configurations from initial design
@@ -56,6 +71,7 @@ class ConfigSelector:
         self._acquisition_maximizer = acquisition_maximizer
         self._acquisition_function = acquisition_function
         self._random_design = random_design
+        self._callbacks = callbacks
 
         # And other variables
         self._n = n
@@ -66,11 +82,10 @@ class ConfigSelector:
 
         # How often to retry receiving a new configuration
         # (counter increases if the received config was already returned before)
-        self._n_retries = n
+        self._n_retries = n_retries
 
-        # Processed configurations should be stored here
-        # Important: We have to read them from the runhistory!
-        self._processed_configs = self._runhistory.get_configs()
+        # Processed configurations should be stored here; this is important to not return the same configuration twice
+        self._processed_configs: list[Configuration] = []
 
     def __iter__(self) -> Iterator[Configuration]:
         """This method returns the next configuration to evaluate. It ignores already processed configs, i.e.,
@@ -80,21 +95,29 @@ class ConfigSelector:
         trained again, etc. The program stops if ``self._n_retries`` was reached within each iteration. A configuration
         is rejected if it was used already before.
 
+        Note
+        ----
+        When SMAC continues a run, processed configurations from the runhistory are ignored. For example, if the
+        intitial design configurations already have been processed, they are ignored here. After the run is
+        continued, however, the surrogate model is trained based on the runhistory in all cases.
+
         Returns
         -------
         next_config : Iterator[Configuration]
             The next configuration to evaluate.
         """
+        self._processed_configs = self._runhistory.get_configs()
+
         logger.debug("Search for the next configuration...")
+        self._call_callbacks_on_start()
 
         # First: We return the initial configurations
         for config in self._initial_design_configs:
             if config not in self._processed_configs:
                 self._processed_configs.append(config)
+                self._call_callbacks_on_end(config)
                 yield config
-
-        # for callback in self._callbacks:
-        #    callback.on_next_configurations_start(self)
+                self._call_callbacks_on_start()
 
         # We want to generate configurations endlessly
         while True:
@@ -113,8 +136,10 @@ class ConfigSelector:
                 logger.debug("No data available to train the model. Sample a random configuration.")
 
                 config = self._scenario.configspace.sample_configuration(1)
+                self._call_callbacks_on_end(config)
                 yield config
-                
+                self._call_callbacks_on_start()
+
                 # Important to continue here because we still don't have data available
                 continue
 
@@ -146,7 +171,7 @@ class ConfigSelector:
             # Now we maximize the acquisition function
             challengers = self._acquisition_maximizer.maximize(
                 previous_configs,
-                n_points=self._n + self._n_retries,
+                n_points=self._n,
                 random_design=self._random_design,
             )
 
@@ -156,10 +181,13 @@ class ConfigSelector:
                 if config not in self._processed_configs:
                     counter += 1
                     self._processed_configs.append(config)
+                    self._call_callbacks_on_end(config)
                     yield config
+                    retrain = counter == self._n
+                    self._call_callbacks_on_start()
 
                     # We break to enforce a new iteration of the while loop (i.e. we retrain the surrogate model)
-                    if counter == self._n:
+                    if retrain:
                         logger.debug(
                             f"Yielded {counter} configurations. Start new iteration and retrain surrogate model."
                         )
@@ -170,11 +198,20 @@ class ConfigSelector:
                     # We exit the loop if we have tried to add the same configuration too often
                     if failed_counter == self._n_retries:
                         logger.warning(f"Could not return a new configuration after {self._n_retries} retries." "")
-                        exit()
+                        raise StopIteration
 
-        # for callback in self._callbacks:
-        #    challenger_list = list(copy.deepcopy(challengers))
-        #    callback.on_next_configurations_end(self, challenger_list)
+    def _call_callbacks_on_start(self) -> None:
+        for callback in self._callbacks:
+            callback.on_next_configurations_start(self)
+
+    def _call_callbacks_on_end(self, config: Configuration) -> None:
+        """Calls ``on_next_configurations_end`` of the registered callbacks."""
+        # For safety reasons: Return a copy of the config
+        if len(self._callbacks) > 0:
+            config = copy.deepcopy(config)
+
+        for callback in self._callbacks:
+            callback.on_next_configurations_end(self, config)
 
     def _collect_data(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Collects the data from the runhistory to train the surrogate model. The data collection strategy if budgets

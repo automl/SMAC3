@@ -152,6 +152,7 @@ class AbstractFacade:
         self._multi_objective_algorithm = multi_objective_algorithm
         self._runhistory = runhistory
         self._runhistory_encoder = runhistory_encoder
+        self._callbacks = callbacks
         self._overwrite = overwrite
 
         # Prepare the algorithm executer
@@ -217,6 +218,11 @@ class AbstractFacade:
     def runhistory(self) -> RunHistory:
         """The run history, which is filled with all information during the optimization process."""
         return self._optimizer._runhistory
+
+    @property
+    def optimizer(self) -> SMBO:
+        """The optimizer, which is responsible for the AutoML loop."""
+        return self._optimizer
 
     @property
     def meta(self) -> dict[str, Any]:
@@ -377,6 +383,7 @@ class AbstractFacade:
             acquisition_function=self._acquisition_function,
             acquisition_maximizer=self._acquisition_maximizer,
             random_design=self._random_design,
+            callbacks=self._callbacks,
         )
 
     def _get_optimizer(self) -> SMBO:
@@ -400,6 +407,7 @@ class AbstractFacade:
         self._acquisition_function.model = self._model
         self._acquisition_maximizer.acquisition_function = self._acquisition_function
         self._intensifier.config_selector = self._config_selector
+        self._intensifier.runhistory = self._runhistory
 
     def _validate(self) -> None:
         """Checks if the composition is correct if there are dependencies, not necessarily."""

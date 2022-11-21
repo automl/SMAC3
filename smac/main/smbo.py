@@ -1,5 +1,6 @@
 from __future__ import annotations
 import json
+from pathlib import Path
 
 from typing import Any
 
@@ -129,9 +130,9 @@ class SMBO:
     @property
     def budget_exhausted(self) -> bool:
         """Check whether the the remaining walltime, cputime or trials was exceeded."""
-        A = self.remaing_walltime < 0
-        B = self.remaining_cputime < 0
-        C = self.remaining_trials < 0
+        A = self.remaing_walltime <= 0
+        B = self.remaining_cputime <= 0
+        C = self.remaining_trials <= 0
 
         return A or B or C
 
@@ -202,7 +203,7 @@ class SMBO:
             # If a callback returns False, the optimization loop should be interrupted
             # the other callbacks are still being called.
             if response is False:
-                logger.info("An callback returned False. Abort is requested.")
+                logger.info("A callback returned False. Abort is requested.")
                 self._stop = True
 
         logger.debug(
@@ -232,7 +233,7 @@ class SMBO:
             # If a callback returns False, the optimization loop should be interrupted
             # the other callbacks are still being called.
             if response is False:
-                logger.info("An callback returned False. Abort is requested.")
+                logger.info("A callback returned False. Abort is requested.")
                 self._stop = True
 
         if save:
@@ -264,16 +265,18 @@ class SMBO:
         # We return the incumbent if we already finished the a process (we don't want to allow to call
         # optimize more than once).
         if self._finished:
+            logger.info("Optimization process was already finished. Returning incumbent...")
             if self._scenario.count_objectives() == 1:
                 return self.intensifier.get_incumbent()
             else:
                 return self.intensifier.get_incumbents()
 
-        # Important to set the runhistory here
-        # Only because we set the runhistory here, the user inputs are recognized
+        # Important to set the runhistory here (again)
+        # Only because we set the runhistory here, the user inputs are recognized (if the tell method was used)
         self._intensifier.runhistory = self._runhistory
 
         # Start the timer before we do anything
+        # If we continue the optimization, the starting time is set by the load method
         if self._start_time is None:
             self._start_time = time.time()
 
@@ -285,12 +288,15 @@ class SMBO:
             for callback in self._callbacks:
                 callback.on_iteration_start(self)
 
-            # Sample next trial from the intensification
-            trial_info = self.ask()
+            try:
+                # Sample next trial from the intensification
+                trial_info = self.ask()
 
-            # We submit the trial to the runner
-            # In multi-worker mode, SMAC waits till a new worker is available here
-            self._runner.submit_trial(trial_info=trial_info)
+                # We submit the trial to the runner
+                # In multi-worker mode, SMAC waits till a new worker is available here
+                self._runner.submit_trial(trial_info=trial_info)
+            except StopIteration:
+                self._stop = True
 
             # We add results from the runner if results are available
             self._add_results()
@@ -301,6 +307,9 @@ class SMBO:
                 f"Remaining cpu time: {self.remaining_cputime}; "
                 f"Remaining trials: {self.remaining_trials}"
             )
+
+            for callback in self._callbacks:
+                callback.on_iteration_end(self)
 
             # Now we check whether we have to stop the optimization
             if self.budget_exhausted or self._stop:
@@ -320,13 +329,12 @@ class SMBO:
                 # Break from the intensification loop, as there are no more resources
                 break
 
-            for callback in self._callbacks:
-                callback.on_iteration_end(self)
-
         for callback in self._callbacks:
             callback.on_end(self)
 
-        self._finished = True
+        # We only set the finished flag if the budget really was exhausted
+        if self.budget_exhausted:
+            self._finished = True
 
         if self._scenario.count_objectives() == 1:
             return self.intensifier.get_incumbent()
@@ -337,33 +345,60 @@ class SMBO:
         self._used_target_function_walltime = 0
         self._finished = False
 
+        # We also reset runhistory and intensifier here
+        self._runhistory.reset()
+        self._intensifier.reset()
+
+    def exists(self, filename: str | Path) -> bool:
+        if isinstance(filename, str):
+            filename = Path(filename)
+
+        optimization_fn = filename / "optimization.json"
+        runhistory_fn = filename / "runhistory.json"
+        intensifier_fn = filename / "intensifier.json"
+
+        if optimization_fn.exists() and runhistory_fn.exists() and intensifier_fn.exists():
+            return True
+
+        return False
+
     def load(self) -> None:
-        path = self._scenario.output_directory
-        if path is not None:
-            with open(str(path / "optimization.json")) as fp:
+        filename = self._scenario.output_directory
+
+        optimization_fn = filename / "optimization.json"
+        runhistory_fn = filename / "runhistory.json"
+        intensifier_fn = filename / "intensifier.json"
+
+        if filename is not None:
+            with open(optimization_fn) as fp:
                 data = json.load(fp)
 
-            self._start_time = time.time() - data["used_walltime"]
+            self._runhistory.load(runhistory_fn, configspace=self._scenario.configspace)
+            self._intensifier.load(intensifier_fn)
+
             self._used_target_function_walltime = data["used_target_function_walltime"]
             self._finished = data["finished"]
+            self._start_time = time.time() - data["used_walltime"]
 
     def save(self) -> None:
-        """Saves the current stats and runhistory."""
+        """Saves the current stats, runhistory, and intensifier."""
         path = self._scenario.output_directory
 
         if path is not None:
             data = {
                 "used_walltime": self.used_walltime,
                 "used_target_function_walltime": self.used_target_function_walltime,
+                "last_update": time.time(),
                 "finished": self._finished,
             }
 
             # Save optimization data
             with open(str(path / "optimization.json"), "w") as file:
-                json.dump(data, file)
+                json.dump(data, file, indent=2)
 
-            # And save runhistory
-            self._runhistory.save(str(path / "runhistory.json"))
+            # And save runhistory and intensifier
+            self._runhistory.save(path / "runhistory.json")
+            self._intensifier.save(path / "intensifier.json")
 
     def _add_results(self) -> None:
         """Adds results from the runner to the runhistory. Although most of the functionality could be written
@@ -413,39 +448,30 @@ class SMBO:
     def _initialize_state(self) -> None:
         """Detects whether the optimization is restored from a previous state."""
         # Here we actually check whether the run should be continued or not.
-        # More precisely, we update our stats and runhistory object if all component arguments
-        # and scenario/stats object are the same. For doing so, we create a specific hash.
-        # The SMBO object recognizes that stats is not empty and hence does not the run initial design anymore.
+        # More precisely, we update our smbo/runhistory/intensifier object if all component arguments
+        # and scenario object are the same. For doing so, we create a specific hash.
+        # The SMBO object recognizes that stats (based on runhistory) is not empty and hence does not the run initial
+        # design anymore.
         # Since the runhistory is already updated, the model uses previous data directly.
 
         if not self._overwrite:
-            # First we get the paths from potentially previous data
             old_output_directory = self._scenario.output_directory
-            old_runhistory_filename = self._scenario.output_directory / "runhistory.json"
-            old_smbo_filename = self._scenario.output_directory / "optimization.json"
-
-            if old_output_directory.exists() and old_runhistory_filename.exists() and old_smbo_filename.exists():
+            if self.exists(old_output_directory):
                 old_scenario = Scenario.load(old_output_directory)
 
                 if self._scenario == old_scenario:
-                    # TODO: We have to do something different here:
-                    # The intensifier needs to know about what happened.
-                    # Therefore, we read in the runhistory but use the tell method to add everything.
-                    # Update: Not working yet as it's much more complicated. Therefore, we just throw an error.
-
                     logger.info("Continuing from previous run.")
 
-                    # We update the runhistory in-place
-                    self._runhistory.reset()
-                    self._runhistory.load(str(old_runhistory_filename), configspace=self._scenario.configspace)
+                    # First we reset everything and then we load the old states
+                    self.reset()
                     self.load()
 
+                    # If the last run was not successful, we reset everything again
                     if self._runhistory.submitted <= 1 and self._runhistory.finished == 0:
-                        # Reset runhistory and stats if first run was not successful
                         logger.info("Since the previous run was not successful, SMAC will start from scratch again.")
-                        self._runhistory.reset()
                         self.reset()
                 else:
+                    # Here, we run into differen scenarios
                     diff = recursively_compare_dicts(
                         Scenario.make_serializable(self._scenario),
                         Scenario.make_serializable(old_scenario),
@@ -460,8 +486,6 @@ class SMBO:
                         "\nPress one of the following numbers to continue or any other key to abort:\n"
                         "(1) Overwrite old run completely and start a new run.\n"
                         "(2) Rename the old run (append an '-old') and start a new run.\n"
-                        "(3) Overwrite old run and re-use previous runhistory data. The configuration space "
-                        "has to be the same for this option. This option is not tested yet.\n"
                     )
 
                     if feedback == "1":
@@ -477,13 +501,6 @@ class SMBO:
                                 break
                             except OSError:
                                 pass
-                    elif feedback == "3":
-                        # We overwrite runhistory and stats.
-                        # However, we should ensure that we use the same configspace.
-                        assert self._scenario.configspace == old_scenario.configspace
-
-                        self._runhistory.load(str(old_runhistory_filename), configspace=self._scenario.configspace)
-                        self.load()
                     else:
                         raise RuntimeError("SMAC run was stopped by the user.")
 
@@ -538,18 +555,6 @@ class SMBO:
 
     def print_stats(self) -> None:
         """Prints all statistics."""
-
-        # RunHISTORY
-        # submitted ( == running)
-        # finished (== everything except running)
-        # crashed (== crashed)
-        # configurations
-        # incumbent history
-
-        # SMBO
-        # wallclock time
-        # tf wallclock time
-        # if it finished
 
         logger.info(
             "\n"

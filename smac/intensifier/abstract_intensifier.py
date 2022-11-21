@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
+from pathlib import Path
 from typing import Any, Iterator
 import numpy as np
 from smac.main.config_selector import ConfigSelector
@@ -49,6 +50,11 @@ class AbstractIntensifier:
 
         # Incumbent variables
         self._max_incumbents = max_incumbents
+
+        # Reset
+        self.reset()
+
+    def reset(self) -> None:
         self._incumbents: list[Configuration] = []
         self._incumbents_changed = 0
         self._rejected_config_ids: list[int] = []
@@ -423,20 +429,41 @@ class AbstractIntensifier:
         """Returns a list of trials of interest for a given configuration."""
         raise NotImplementedError
 
-    def save(self, filename: str) -> None:
-        """Saves the current state of the intensifier."""
-        with open(filename, "w") as fp:
-            json.dump(
-                {
-                    "incumbents_changed": self._incumbents_changed,
-                    "trajectory": [dataclasses.asdict(item) for item in self._trajectory],
-                },
-                fp,
-                indent=2,
-            )
+    def get_state(self) -> dict[str, Any]:
+        """The current state of the intensifier. Used to restore the state of the intensifier when continuing a run."""
+        return {}
 
-    def load(self, filename: str) -> None:
+    def set_state(self, state: dict[str, Any]) -> None:
+        """Sets the state of the intensifier. Used to restore the state of the intensifier when continuing a run."""
+        pass
+
+    def save(self, filename: str | Path) -> None:
+        """Saves the current state of the intensifier. We only save the trajectory here because the state should be
+        restored dynamically by the runhistory. However, the trajectory can not be restored dynamically because
+        of the overwritten running trials.
+        """
+        if isinstance(filename, str):
+            filename = Path(filename)
+
+        assert str(filename).endswith(".json")
+        filename.parent.mkdir(parents=True, exist_ok=True)
+
+        data = {
+            "incumbent_ids": [self.runhistory.get_config_id(config) for config in self._incumbents],
+            "incumbents_changed": self._incumbents_changed,
+            "rejected_config_ids": self._rejected_config_ids,
+            "trajectory": [dataclasses.asdict(item) for item in self._trajectory],
+            "state": self.get_state(),
+        }
+
+        with open(filename, "w") as fp:
+            json.dump(data, fp, indent=2)
+
+    def load(self, filename: str | Path) -> None:
         """Loads the latest state of the intensifier."""
+        if isinstance(filename, str):
+            filename = Path(filename)
+
         try:
             with open(filename) as fp:
                 data = json.load(fp)
@@ -446,8 +473,11 @@ class AbstractIntensifier:
             )
             return
 
-        self._incumbents_changed = data["stats"]["incumbents_changed"]
+        self._incumbents = [self.runhistory.get_config(config_id) for config_id in data["incumbent_ids"]]
+        self._incumbents_changed = data["incumbents_changed"]
+        self._rejected_config_ids = data["rejected_config_ids"]
         self._trajectory = [TrajectoryItem(**item) for item in data["trajectory"]]
+        self.set_state(data["state"])
 
     def print_config_changes(
         self,

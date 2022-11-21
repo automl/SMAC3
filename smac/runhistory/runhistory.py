@@ -656,7 +656,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         return configs
 
-    def save(self, filename: str = "runhistory.json") -> None:
+    def save(self, filename: str | Path = "runhistory.json") -> None:
         """Saves runhistory on disk.
 
         Parameters
@@ -690,15 +690,17 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
             config_origins[id_] = config.origin
 
-        # Some sanity-checks
-        assert filename.endswith(".json")
-        path = Path(filename)
-        path.parent.mkdir(parents=True, exist_ok=True)
+        if isinstance(filename, str):
+            filename = Path(filename)
+
+        assert str(filename).endswith(".json")
+        filename.parent.mkdir(parents=True, exist_ok=True)
 
         with open(filename, "w") as fp:
+            assert self._running == len(self._running_trials)
             json.dump(
                 {
-                    "stats": {"submitted": self._submitted, "finished": self._finished},
+                    "stats": {"submitted": self._submitted, "finished": self._finished, "running": self._running},
                     "data": data,
                     "configs": configs,
                     "config_origins": config_origins,
@@ -707,7 +709,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 indent=2,
             )
 
-    def load(self, filename: str, configspace: ConfigurationSpace) -> None:
+    def load(self, filename: str | Path, configspace: ConfigurationSpace) -> None:
         """Load and runhistory in json representation from disk.
 
         Warning
@@ -721,6 +723,10 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         configspace : ConfigSpace
             instance of configuration space
         """
+        if isinstance(filename, str):
+            filename = Path(filename)
+
+        # We reset the runhistory first to avoid any inconsistencies
         self.reset()
 
         try:

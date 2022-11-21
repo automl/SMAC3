@@ -1,3 +1,4 @@
+import random
 import pytest
 from smac.intensifier.intensifier import Intensifier
 from smac.main.config_selector import ConfigSelector
@@ -23,7 +24,6 @@ class CustomConfigSelector(ConfigSelector):
         )
 
     def __iter__(self):
-
         for config in self._initial_design_configs:
             self._processed_configs.append(config)
             yield config
@@ -134,3 +134,39 @@ def test_incumbent_selection_multi_objective(make_scenario, configspace_small):
 
 def test_incumbent_differences(make_scenario, configspace_small):
     pass
+
+
+def test_save_and_load(make_scenario, configspace_small):
+    """Tests whether entries from the runhistory are incorporated."""
+    scenario: Scenario = make_scenario(configspace_small, use_instances=True, n_instances=3)
+    runhistory = RunHistory()
+    intensifier = Intensifier(scenario=scenario, max_config_calls=3, seed=0)
+    intensifier.config_selector = CustomConfigSelector(scenario, runhistory, n_initial_configs=1)
+    intensifier.runhistory = runhistory
+    gen = iter(intensifier)
+
+    for i in range(50):
+        trial = next(gen)
+        cost = random.random()
+        runhistory.add(
+            config=trial.config,
+            cost=cost,
+            time=0.0,
+            instance=trial.instance,
+            seed=trial.seed,
+            status=StatusType.SUCCESS,
+            force_update=True,
+        )
+        intensifier.update_incumbents(trial.config)
+
+    filename = "smac3_output_test/test_intensifier/intensifier.json"
+    intensifier.save(filename)
+
+    old_incumbents_changed = intensifier._incumbents_changed
+    old_trajectory = intensifier._trajectory
+    assert old_incumbents_changed > 0
+
+    intensifier.load(filename)
+
+    assert intensifier._incumbents_changed == old_incumbents_changed
+    assert intensifier._trajectory == old_trajectory

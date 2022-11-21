@@ -8,7 +8,7 @@ from smac import HyperparameterOptimizationFacade, Scenario
 from smac.callback import Callback
 from smac.initial_design import DefaultInitialDesign
 from smac.intensifier.intensifier import Intensifier
-from smac.runhistory import TrialInfo, TrialInfoIntent, TrialValue
+from smac.runhistory import TrialInfo, TrialValue
 
 
 class CustomCallback(Callback):
@@ -36,16 +36,18 @@ class CustomCallback(Callback):
     def on_iteration_end(self, smbo: smac.main.BaseSMBO) -> None:
         self.iteration_end_counter += 1
 
-    def on_next_configurations_start(self, smbo: smac.main.BaseSMBO) -> None:
+    def on_next_configurations_start(self, config_selector: smac.main.config_selector.ConfigSelector) -> None:
         self.next_configurations_start_counter += 1
 
-    def on_next_configurations_end(self, smbo: smac.main.BaseSMBO) -> None:
+    def on_next_configurations_end(
+        self, config_selector: smac.main.config_selector.ConfigSelector, config: Configuration
+    ) -> None:
         self.next_configurations_end_counter += 1
 
     def on_ask_start(self, smbo: smac.main.BaseSMBO) -> None:
         self.ask_start_counter += 1
 
-    def on_ask_end(self, smbo: smac.main.BaseSMBO, intent: TrialInfoIntent, info: TrialInfo) -> None:
+    def on_ask_end(self, smbo: smac.main.BaseSMBO, info: TrialInfo) -> None:
         self.ask_end_counter += 1
 
     def on_tell_start(self, smbo: smac.main.BaseSMBO, info: TrialInfo, value: TrialValue) -> bool | None:
@@ -64,7 +66,7 @@ def test_callback(rosenbrock):
 
     # The intensify percentage indirectly influences the number of calls of configuration
     # sampling.
-    intensifier = Intensifier(scenario, max_config_calls=1, intensify_percentage=1e-10)
+    intensifier = Intensifier(scenario, max_config_calls=1)
     initial_design = DefaultInitialDesign(scenario)
 
     smac = HyperparameterOptimizationFacade(
@@ -86,7 +88,7 @@ def test_custom_callback(rosenbrock):
 
     # The intensify percentage indirectly influences the number of calls of configuration
     # sampling.
-    intensifier = Intensifier(scenario, max_config_calls=1, intensify_percentage=1e-10)
+    intensifier = Intensifier(scenario, max_config_calls=1)
     initial_design = DefaultInitialDesign(scenario)
 
     smac = HyperparameterOptimizationFacade(
@@ -103,22 +105,15 @@ def test_custom_callback(rosenbrock):
     assert callback.start_counter == 1
     assert callback.end_counter == 1
 
-    # Those function may differ depending on the runtime
-    assert callback.ask_start_counter > 0
-    assert callback.ask_end_counter > 0
+    assert callback.ask_start_counter == 40
+    assert callback.ask_end_counter == 40
 
-    # Those function may differ depending on the runtime
-    assert callback.tell_start_counter > 0
-    assert callback.tell_end_counter > 0
+    assert callback.ask_start_counter == callback.tell_start_counter
+    assert callback.ask_end_counter == callback.tell_end_counter
 
-    assert callback.ask_start_counter > callback.tell_start_counter
-    assert callback.ask_end_counter > callback.tell_end_counter
+    assert callback.iteration_start_counter == 40
+    assert callback.iteration_end_counter == 40
+    assert callback.iteration_start_counter == callback.iteration_end_counter
 
-    # Those function may differ depending on the runtime
-    assert callback.iteration_start_counter > 0
-    assert callback.iteration_end_counter > 0
-    assert callback.iteration_start_counter >= callback.iteration_end_counter
-
-    # This is depending on the number of challengers/intensify percentage
-    assert callback.next_configurations_start_counter > 0
-    assert callback.next_configurations_end_counter > 0
+    assert callback.next_configurations_start_counter == 40
+    assert callback.next_configurations_end_counter == 40
