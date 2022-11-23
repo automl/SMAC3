@@ -12,10 +12,12 @@ from ConfigSpace import Configuration
 
 import smac
 from smac.callback import Callback
+from smac.constants import MAXINT
 from smac.main.config_selector import ConfigSelector
 from smac.runhistory import TrialInfo
 from smac.runhistory.dataclasses import (
     InstanceSeedBudgetKey,
+    InstanceSeedKey,
     TrajectoryItem,
     TrialValue,
 )
@@ -34,6 +36,8 @@ class AbstractIntensifier:
     def __init__(
         self,
         scenario: Scenario,
+        n_seeds: int | None = None,
+        max_config_calls: int | None = None,
         max_incumbents: int = 20,
         seed: int | None = None,
     ):
@@ -49,9 +53,13 @@ class AbstractIntensifier:
         self._rng = np.random.RandomState(seed)
 
         # Internal variables
+        self._n_seeds = n_seeds
+        self._max_config_calls = max_config_calls
         self._tf_seeds: list[int] = []
         self._tf_instances: list[str | None] = []
         self._tf_budgets: list[float | None] = []
+        self._instance_seed_pairs: list[InstanceSeedKey] | None = None
+        self._instance_seed_pairs_validation: list[InstanceSeedKey] | None = None
 
         # Incumbent variables
         self._max_incumbents = max_incumbents
@@ -435,24 +443,22 @@ class AbstractIntensifier:
         """
         raise NotImplementedError
 
-    @abstractmethod
-    def get_trials_of_interest(
+    def get_instance_seed_pairs(
         self,
-        config: Configuration,
         *,
         validate: bool = False,
         seed: int | None = None,
-    ) -> list[TrialInfo]:
-        """Returns a list of trials of interest for a given configuration.
+    ) -> list[InstanceSeedKey]:
+        """Returns a list of instance seed pairs. Considers seeds and instances from the
+        runhistory (``self._tf_seeds`` and ``self._tf_instances``). If no seeds or instances were found, new
+        seeds and instances are generated based on the global intensifier seed.
 
         Warning
         -------
-        The passed seed is only used for validation.
+        The passed seed is only used for validation. For training, the global intensifier seed is used.
 
         Parameters
         ----------
-        config : Configuration
-            The config of interest,
         validate : bool, defaults to False
             Whether to get validation trials or training trials. The only difference lays in different seeds.
         seed : int | None, defaults to None
@@ -463,7 +469,79 @@ class AbstractIntensifier:
         trials : list[TrialInfo]
             Trials of the config of interest.
         """
-        raise NotImplementedError
+        if seed is None:
+            seed = 0
+
+        # We cache the instance seed pairs for efficiency and consistency reasons
+        if (self._instance_seed_pairs is None and not validate) or (
+            self._instance_seed_pairs_validation is None and validate
+        ):
+            instance_seed_pairs: list[InstanceSeedKey] = []
+            if validate:
+                rng = np.random.RandomState(seed)
+            else:
+                rng = self._rng
+
+            i = 0
+            while True:
+                # We have two conditions to stop the loop:
+                # A) We found enough configs
+                # B) We used enough seeds
+                A = self._max_config_calls is not None and len(instance_seed_pairs) >= self._max_config_calls
+                B = self._n_seeds is not None and i >= self._n_seeds
+
+                if A or B:
+                    break
+
+                if validate:
+                    next_seed = int(rng.randint(low=0, high=MAXINT, size=1)[0])
+                else:
+                    try:
+                        next_seed = self._tf_seeds[i]
+                        logger.info(f"Added existing seed {next_seed} from runhistory to the intensifier.")
+                    except IndexError:
+                        # Use global random generator for a new seed and mark it so it will be reused for another config
+                        next_seed = int(rng.randint(low=0, high=MAXINT, size=1)[0])
+                        self._tf_seeds.append(next_seed)
+                        logger.info(f"Added a new random seed {next_seed} to the intensifier.")
+
+                # If no instances are used, tf_instances includes None
+                for instance in self._tf_instances:
+                    instance_seed_pairs.append(InstanceSeedKey(instance, next_seed))
+
+                # Only use one seed in deterministic case
+                if self._scenario.deterministic:
+                    logger.info("Using only one seed for deterministic scenario.")
+                    break
+
+                # Seed counter
+                i += 1
+
+            # Now we cut so that we only have max_config_calls instance_seed_pairs
+            # We favor instances over seeds here: That makes sure we always work with the same instance/seed pairs
+            if self._max_config_calls is not None:
+                if len(instance_seed_pairs) > self._max_config_calls:
+                    instance_seed_pairs = instance_seed_pairs[: self._max_config_calls]
+                    logger.info(f"Cut instance seed pairs to {self._max_config_calls} entries.")
+
+            # Set it globally
+            if not validate:
+                self._instance_seed_pairs = instance_seed_pairs
+            else:
+                self._instance_seed_pairs_validation = instance_seed_pairs
+
+        if not validate:
+            assert self._instance_seed_pairs is not None
+            instance_seed_pairs = self._instance_seed_pairs
+        else:
+            assert self._instance_seed_pairs_validation is not None
+            instance_seed_pairs = self._instance_seed_pairs_validation
+
+        # trials: list[TrialInfo] = []
+        # for instance_seed in instance_seed_pairs:
+        #    trials.append(TrialInfo(config=config, instance=instance_seed.instance, seed=instance_seed.seed))
+
+        return instance_seed_pairs
 
     def get_state(self) -> dict[str, Any]:
         """The current state of the intensifier. Used to restore the state of the intensifier when continuing a run."""

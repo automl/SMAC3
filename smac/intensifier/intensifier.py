@@ -2,16 +2,13 @@ from __future__ import annotations
 
 from typing import Any, Iterator
 
-import dataclasses
 from collections import defaultdict
 
-import numpy as np
 from ConfigSpace import Configuration
 
-from smac.constants import MAXINT
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.runhistory import TrialInfo
-from smac.runhistory.dataclasses import InstanceSeedBudgetKey, InstanceSeedKey
+from smac.runhistory.dataclasses import InstanceSeedBudgetKey
 from smac.scenario import Scenario
 from smac.utils.configspace import get_config_hash
 from smac.utils.logging import get_logger
@@ -30,10 +27,10 @@ class Intensifier(AbstractIntensifier):
         max_incumbents: int = 20,
         seed: int | None = None,
     ):
-        super().__init__(scenario=scenario, max_incumbents=max_incumbents, seed=seed)
+        super().__init__(scenario=scenario, max_config_calls=max_config_calls, max_incumbents=max_incumbents, seed=seed)
 
-        # Internal variables
-        self._max_config_calls = max_config_calls
+        # Calculate instance seed pairs once
+        self.get_instance_seed_pairs()
 
         # Reset
         self.reset()
@@ -42,15 +39,13 @@ class Intensifier(AbstractIntensifier):
         super().reset()
 
         self._queue: list[tuple[Configuration, int]] = []  # (config, N=how many trials should be sampled)
-        self._instance_seed_pairs: list[InstanceSeedKey] | None = None
-        self._instance_seed_pairs_validation: list[InstanceSeedKey] | None = None
 
-    @property
-    def meta(self) -> dict[str, Any]:  # noqa: D102
-        meta = super().meta
-        meta.update({"max_config_calls": self._max_config_calls})
+    # @property
+    # def meta(self) -> dict[str, Any]:  # noqa: D102
+    #    meta = super().meta
+    #    meta.update({"max_config_calls": self._max_config_calls})
 
-        return meta
+    #    return meta
 
     @property
     def uses_seeds(self) -> bool:  # noqa: D102
@@ -68,32 +63,12 @@ class Intensifier(AbstractIntensifier):
         return True
 
     def get_state(self) -> dict[str, Any]:  # noqa: D102
-        instance_seed_pairs: list[dict] | None = None
-        if self._instance_seed_pairs is not None:
-            instance_seed_pairs = [dataclasses.asdict(item) for item in self._instance_seed_pairs]
-
-        instance_seed_pairs_validation: list[dict] | None = None
-        if self._instance_seed_pairs_validation is not None:
-            instance_seed_pairs_validation = [dataclasses.asdict(item) for item in self._instance_seed_pairs_validation]
-
         return {
             "queue": [(self.runhistory.get_config_id(config), n) for config, n in self._queue],
-            "instance_seed_pairs": instance_seed_pairs,
-            "instance_seed_pairs_validation": instance_seed_pairs_validation,
         }
 
     def set_state(self, state: dict[str, Any]) -> None:  # noqa: D102
         self._queue = [(self.runhistory.ids_config[id], n) for id, n in state["queue"]]
-        self._instance_seed_pairs = None
-        self._instance_seed_pairs_validation = None
-
-        if state["instance_seed_pairs"] is not None:
-            self._instance_seed_pairs = [InstanceSeedKey(**item) for item in state["instance_seed_pairs"]]
-
-        if state["instance_seed_pairs_validation"] is not None:
-            self._instance_seed_pairs_validation = [
-                InstanceSeedKey(**item) for item in state["instance_seed_pairs_validation"]
-            ]
 
     def __iter__(self) -> Iterator[TrialInfo]:
         """This iter method holds the logic for the intensification loop.
@@ -110,6 +85,7 @@ class Intensifier(AbstractIntensifier):
             Iterator over the trials.
         """
         rh = self.runhistory
+        assert self._max_config_calls is not None
 
         # What if there are already trials in the runhistory? Should we queue them up?
         # Because they are part of the runhistory, they might be selected as incumbent. However, they are not
@@ -224,13 +200,12 @@ class Intensifier(AbstractIntensifier):
                 # We simply add it to the queue and intensify it in the next iteration
                 try:
                     config = next(self.config_generator)
-                except Exception:
+                    config_hash = get_config_hash(config)
+                    self._queue.append((config, 1))
+                    logger.debug(f"--- Added a new config {config_hash} to the queue.")
+                except StopIteration:
                     # We stop if we don't find any configuration anymore
                     return
-
-                config_hash = get_config_hash(config)
-                self._queue.append((config, 1))
-                logger.debug(f"--- Added a new config {config_hash} to the queue.")
             else:
                 logger.debug("Start finding a new challenger in the queue:")
                 for i, (config, N) in enumerate(self._queue.copy()):
@@ -287,96 +262,6 @@ class Intensifier(AbstractIntensifier):
                     # all configs in the queue in one iteration
                     break
 
-    def get_trials_of_interest(
-        self,
-        config: Configuration,
-        *,
-        validate: bool = False,
-        seed: int | None = None,
-    ) -> list[TrialInfo]:
-        """Returns a list of trials of interest for a given configuration. Considers seeds and instances from the
-        runhistory (``self._tf_seeds`` and ``self._tf_instances``). If no seeds or instances were found, new
-        seeds and instances are generated based on the global intensifier seed.
-
-        Warning
-        -------
-        The passed seed is only used for validation. For training, the global intensifier seed is used.
-
-        Parameters
-        ----------
-        config : Configuration
-            The config of interest,
-        validate : bool, defaults to False
-            Whether to get validation trials or training trials. The only difference lays in different seeds.
-        seed : int | None, defaults to None
-            The seed used for the validation trials.
-
-        Returns
-        -------
-        trials : list[TrialInfo]
-            Trials of the config of interest.
-        """
-        if seed is None:
-            seed = 0
-
-        if (self._instance_seed_pairs is None and not validate) or (
-            self._instance_seed_pairs_validation is None and validate
-        ):
-            instance_seed_pairs: list[InstanceSeedKey] = []
-            if validate:
-                rng = np.random.RandomState(seed)
-            else:
-                rng = self._rng
-
-            i = 0
-            while len(instance_seed_pairs) < self._max_config_calls:
-                if validate:
-                    next_seed = int(rng.randint(low=0, high=MAXINT, size=1)[0])
-                else:
-                    try:
-                        next_seed = self._tf_seeds[i]
-                        logger.info(f"Added existing seed {next_seed} from runhistory to the intensifier.")
-                    except IndexError:
-                        # Use global random generator for a new seed and mark it so it will be reused for another config
-                        next_seed = int(rng.randint(low=0, high=MAXINT, size=1)[0])
-                        self._tf_seeds.append(next_seed)
-                        logger.info(f"Added a new random seed {next_seed} to the intensifier.")
-
-                # If no instances are used, tf_instances includes None
-                for instance in self._tf_instances:
-                    instance_seed_pairs.append(InstanceSeedKey(instance, next_seed))
-
-                # Only use one seed in deterministic case
-                if self._scenario.deterministic:
-                    break
-
-                # Seed counter
-                i += 1
-
-            # Now we cut so that we only have max_config_calls instance_seed_pairs
-            # We favor instances over seeds here: That makes sure we always work with the same instance/seed pairs
-            if len(instance_seed_pairs) > self._max_config_calls:
-                instance_seed_pairs = instance_seed_pairs[: self._max_config_calls]
-
-            # Set it globally
-            if not validate:
-                self._instance_seed_pairs = instance_seed_pairs
-            else:
-                self._instance_seed_pairs_validation = instance_seed_pairs
-
-        if not validate:
-            assert self._instance_seed_pairs is not None
-            instance_seed_pairs = self._instance_seed_pairs
-        else:
-            assert self._instance_seed_pairs_validation is not None
-            instance_seed_pairs = self._instance_seed_pairs_validation
-
-        trials: list[TrialInfo] = []
-        for instance_seed in instance_seed_pairs:
-            trials.append(TrialInfo(config=config, instance=instance_seed.instance, seed=instance_seed.seed))
-
-        return trials
-
     def _get_next_trials(
         self,
         config: Configuration,
@@ -399,7 +284,12 @@ class Intensifier(AbstractIntensifier):
             Shuffles the trials in groups. First all instances are shuffled, then all seeds.
         """
         rh = self.runhistory
-        trials = self.get_trials_of_interest(config)
+        instance_seed_pairs = self.get_instance_seed_pairs()
+
+        # Create trials from the instance seed pairs
+        trials: list[TrialInfo] = []
+        for instance_seed in instance_seed_pairs:
+            trials.append(TrialInfo(config=config, instance=instance_seed.instance, seed=instance_seed.seed))
 
         # Keep ``from_instances`` trials only
         if from_instances is not None:

@@ -542,7 +542,11 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         config: Configuration,
         only_max_observed_budget: bool = True,
     ) -> list[TrialInfo]:
-        """Return all trials (instance seed budget key in this case) for a configuration.
+        """Return all trials for a configuration.
+        
+        Warning
+        -------
+        Does not return running trials. Please use ``get_running_trials`` to receive running trials.
 
         Parameters
         ----------
@@ -591,9 +595,12 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             budget=trial.budget,
         )
 
-    def get_running_trials(self) -> list[TrialInfo]:
+    def get_running_trials(self, config: Configuration | None = None) -> list[TrialInfo]:
         # Always work on copies
-        return [trial for trial in self._running_trials]
+        if config is None:
+            return [trial for trial in self._running_trials]
+        else:
+            return [trial for trial in self._running_trials if trial.config == config]
 
     def get_running_configs(self) -> list[Configuration]:
         configs = []

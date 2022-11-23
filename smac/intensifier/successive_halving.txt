@@ -1,0 +1,35 @@
+TODO:
+- Runhistory: Nur incumbent ändern, wenn auf gleichen trials auf pareto front
+- Wenn mehr als 20 incumbents, dann random einen entfernen
+- Queue für challenger: First in first out
+
+The idea is the following:
+- Runhistory keeps track of the incumbents and which configurations have been rejected
+- Intensifier keeps track of the challengers with a queue
+
+
+queue(config, N) <- empty queue
+while True:
+    incumbents <- rh.incumbents (sorted by #trials) 
+    
+    if queue is empty or configs in queue are all running:
+        // every time we get an incumbent we also get a new configuration
+        yield trial of incumbent with lowest number of trials
+
+        // get new configuration
+        new_config <- get_next_config()
+        queue <- add(new_config, N=1)
+    else:
+        for (config, N) in queue:
+            // config might be still running 
+            if trials of config are still running:
+                continue
+
+            // once a config is rejected, we don't look at it again
+            if config is not rejected:
+                trials <- get_next_random_trial(config, N)
+                // we want to return missing N trials 
+                yield trials
+                
+                // And then we add it to the queue with a higher N
+                queue <- add(config, N*2)
