@@ -30,7 +30,7 @@ class Intensifier(AbstractIntensifier):
         super().__init__(scenario=scenario, max_config_calls=max_config_calls, max_incumbents=max_incumbents, seed=seed)
 
         # Calculate instance seed pairs once
-        self.get_instance_seed_pairs()
+        self.get_instance_seed_keys()
 
         # Reset
         self.reset()
@@ -68,7 +68,7 @@ class Intensifier(AbstractIntensifier):
         }
 
     def set_state(self, state: dict[str, Any]) -> None:  # noqa: D102
-        self._queue = [(self.runhistory.ids_config[id], n) for id, n in state["queue"]]
+        self._queue = [(self.runhistory.get_config(id), n) for id, n in state["queue"]]
 
     def __iter__(self) -> Iterator[TrialInfo]:
         """This iter method holds the logic for the intensification loop.
@@ -115,10 +115,10 @@ class Intensifier(AbstractIntensifier):
             rejected_configs = self.get_rejected_configs()
 
             # Now we get the incumbents sorted by number of trials
-            # Also, incorporate ``get_incumbent_instances`` here because challenger are only allowed to
+            # Also, incorporate ``get_incumbent_instance_seed_budget_keys`` here because challenger are only allowed to
             # sample from the incumbent's instances
             incumbents = self.get_incumbents(sort_by="num_trials")
-            incumbent_instances = self.get_incumbent_instances()
+            incumbent_isb_keys = self.get_incumbent_instance_seed_budget_keys()
 
             # Check if configs in queue are still running
             all_configs_running = True
@@ -138,7 +138,7 @@ class Intensifier(AbstractIntensifier):
 
                 for incumbent in incumbents:
                     # Instances of this particular incumbent
-                    individual_incumbent_instances = rh.get_instances(incumbent)
+                    individual_incumbent_isb_keys = rh.get_instance_seed_budget_keys(incumbent)
                     incumbent_hash = get_config_hash(incumbent)
 
                     # We don't want to intensify an incumbent which is either still running or rejected
@@ -157,13 +157,13 @@ class Intensifier(AbstractIntensifier):
 
                     # If incumbent was evaluated on all incumbent instance intersections but was not evaluated on
                     # the differences, we have to add it here
-                    incumbent_instance_differences = self.get_incumbent_instance_differences()
+                    incumbent_isk_differences = self.get_incumbent_differences()
 
                     # We set shuffle to false because we first want to evaluate the incumbent instances, then the
                     # differences (to make the incumbents equal again)
                     trials = self._get_next_trials(
                         incumbent,
-                        from_instances=incumbent_instances + incumbent_instance_differences,
+                        from_keys=incumbent_isb_keys + incumbent_isk_differences,
                         shuffle=False,
                     )
 
@@ -180,7 +180,7 @@ class Intensifier(AbstractIntensifier):
                     if len(trials) > 0:
                         fails = -1
                         logger.debug(
-                            f"--- Yielding trial {len(individual_incumbent_instances)+1} of "
+                            f"--- Yielding trial {len(individual_incumbent_isb_keys)+1} of "
                             f"{self._max_config_calls} from incumbent {incumbent_hash}..."
                         )
                         yield trials[0]
@@ -189,11 +189,11 @@ class Intensifier(AbstractIntensifier):
                         # We break here because we only want to intensify one more trial of one incumbent
                         break
                     else:
-                        # assert len(incumbent_instances) == self._max_config_calls
+                        # assert len(incumbent_isb_keys) == self._max_config_calls
                         logger.debug(
                             f"--- Skipped intensifying incumbent {incumbent_hash} because no new trials have "
                             "been found. Evaluated "
-                            f"{len(individual_incumbent_instances)}/{self._max_config_calls} trials."
+                            f"{len(individual_incumbent_isb_keys)}/{self._max_config_calls} trials."
                         )
 
                 # For each intensification of the incumbent, we also want to intensify the next configuration
@@ -230,11 +230,11 @@ class Intensifier(AbstractIntensifier):
 
                     # And then we yield as many trials as we specified N
                     # However, only the same instances as the incumbents are used
-                    instances: list[InstanceSeedBudgetKey] | None = None
-                    if len(incumbent_instances) > 0:
-                        instances = incumbent_instances
+                    isk_keys: list[InstanceSeedBudgetKey] | None = None
+                    if len(incumbent_isb_keys) > 0:
+                        isk_keys = incumbent_isb_keys
 
-                    trials = self._get_next_trials(config, N=N, from_instances=instances)
+                    trials = self._get_next_trials(config, N=N, from_keys=isk_keys)
                     logger.debug(f"--- Yielding {len(trials)} trials to evaluate config {config_hash}...")
                     for trial in trials:
                         fails = -1
@@ -262,12 +262,13 @@ class Intensifier(AbstractIntensifier):
                     # all configs in the queue in one iteration
                     break
 
+    # TODO: Work on instance seed directly
     def _get_next_trials(
         self,
         config: Configuration,
         *,
         N: int | None = None,
-        from_instances: list[InstanceSeedBudgetKey] | None = None,
+        from_keys: list[InstanceSeedBudgetKey] | None = None,
         shuffle: bool = True,
     ) -> list[TrialInfo]:
         """Returns the next trials of the configuration based on ``get_trials_of_interest``. If N is specified,
@@ -278,24 +279,24 @@ class Intensifier(AbstractIntensifier):
         N : int | None, defaults to None
             The maximum number of trials to return. If None, all trials (``max_config_calls``) are returned.
             Running and evaluated trials are counted in.
-        from_instances : list[InstanceSeedBudgetKey], defaults to None
+        from_keys : list[InstanceSeedBudgetKey], defaults to None
             Only instances from the list are considered for the trials.
         shuffle : bool, defaults to True
             Shuffles the trials in groups. First all instances are shuffled, then all seeds.
         """
         rh = self.runhistory
-        instance_seed_pairs = self.get_instance_seed_pairs()
+        instance_seed_keys = self.get_instance_seed_keys()
 
         # Create trials from the instance seed pairs
         trials: list[TrialInfo] = []
-        for instance_seed in instance_seed_pairs:
+        for instance_seed in instance_seed_keys:
             trials.append(TrialInfo(config=config, instance=instance_seed.instance, seed=instance_seed.seed))
 
-        # Keep ``from_instances`` trials only
-        if from_instances is not None:
+        # Keep ``from_keys`` trials only
+        if from_keys is not None:
             for trial in trials.copy():
                 isbk = trial.get_instance_seed_budget_key()
-                if isbk not in from_instances:
+                if isbk not in from_keys:
                     trials.remove(trial)
 
         # Counter is important to actually subtract the number of trials that are already evaluated/running
@@ -320,6 +321,7 @@ class Intensifier(AbstractIntensifier):
                 trials.remove(trial)
 
         if shuffle:
+            # TODO: Use shuffle instnace seed pairs method here
             # Now we shuffle the trials in groups (first all instances, then all seeds)
             # - Group by seeds
             # - Shuffle instances in this group of seeds

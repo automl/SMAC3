@@ -301,11 +301,13 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         config_id = self._config_ids[config]
 
         # Removing duplicates while keeping the order
-        inst_seed_budgets = list(dict.fromkeys(self.get_instances(config, only_max_observed_budget=True)))
+        inst_seed_budgets = list(
+            dict.fromkeys(self.get_instance_seed_budget_keys(config, only_max_observed_budget=True))
+        )
         self._cost_per_config[config_id] = self.average_cost(config, inst_seed_budgets)
         self._num_trials_per_config[config_id] = len(inst_seed_budgets)
 
-        all_isb = list(dict.fromkeys(self.get_instances(config, only_max_observed_budget=False)))
+        all_isb = list(dict.fromkeys(self.get_instance_seed_budget_keys(config, only_max_observed_budget=False)))
         self._min_cost_per_config[config_id] = self.min_cost(config, all_isb)
 
     def incremental_update_cost(self, config: Configuration, cost: float | list[float]) -> None:
@@ -402,7 +404,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
     def average_cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: Iterable[InstanceSeedBudgetKey] | None = None,
+        instance_seed_budget_keys: list[InstanceSeedBudgetKey] | None = None,
         normalize: bool = False,
     ) -> float | list[float]:
         """Return the average cost of a configuration. This is the mean of costs of all instance-
@@ -447,7 +449,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
     def sum_cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: Iterable[InstanceSeedBudgetKey] | None = None,
+        instance_seed_budget_keys: list[InstanceSeedBudgetKey] | None = None,
         normalize: bool = False,
     ) -> float | list[float]:
         """Return the sum of costs of a configuration. This is the sum of costs of all instance-seed
@@ -491,7 +493,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
     def min_cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: Iterable[InstanceSeedBudgetKey] | None = None,
+        instance_seed_budget_keys: list[InstanceSeedBudgetKey] | None = None,
         normalize: bool = False,
     ) -> float | list[float]:
         """Return the minimum cost of a configuration. This is the minimum cost of all instance-seed pairs.
@@ -543,7 +545,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         only_max_observed_budget: bool = True,
     ) -> list[TrialInfo]:
         """Return all trials for a configuration.
-        
+
         Warning
         -------
         Does not return running trials. Please use ``get_running_trials`` to receive running trials.
@@ -574,11 +576,28 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         return [TrialInfo(config, k.instance, k.seed, budget) for k, v in trials.items() for budget in v]
 
-    def get_instances(
+    def get_instance_seed_budget_keys(
         self,
         config: Configuration,
         only_max_observed_budget: bool = True,
     ) -> list[InstanceSeedBudgetKey]:
+        """
+
+        Warning
+        -------
+        Does not return running instances.
+
+        Parameters
+        ----------
+        config : Configuration
+            _description_
+        only_max_observed_budget : bool, optional
+            _description_, by default True
+
+        Returns
+        -------
+        list[InstanceSeedBudgetKey]
+        """
         trials = self.get_trials(config, only_max_observed_budget)
 
         # Convert to instance-seed-budget key
@@ -849,7 +868,9 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         self._num_trials_per_config = {}
         for config, config_id in self._config_ids.items():
             # Removing duplicates while keeping the order
-            inst_seed_budgets = list(dict.fromkeys(self.get_instances(config, only_max_observed_budget=True)))
+            inst_seed_budgets = list(
+                dict.fromkeys(self.get_instance_seed_budget_keys(config, only_max_observed_budget=True))
+            )
             if instances is not None:
                 inst_seed_budgets = list(filter(lambda x: x.instance in cast(list, instances), inst_seed_budgets))
 
@@ -974,7 +995,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
     def _cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: Iterable[InstanceSeedBudgetKey] | None = None,
+        instance_seed_budget_keys: list[InstanceSeedBudgetKey] | None = None,
     ) -> list[float | list[float]]:
         """Returns a list of all costs for the given config for further calculations.
         The costs are directly taken from the runhistory data.
@@ -998,7 +1019,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             return []
 
         if instance_seed_budget_keys is None:
-            instance_seed_budget_keys = self.get_instances(config, only_max_observed_budget=True)
+            instance_seed_budget_keys = self.get_instance_seed_budget_keys(config, only_max_observed_budget=True)
 
         costs = []
         for key in instance_seed_budget_keys:
@@ -1008,6 +1029,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 seed=key.seed,
                 budget=key.budget,
             )
+
             costs.append(self._data[k].cost)
 
         return costs

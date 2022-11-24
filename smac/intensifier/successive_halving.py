@@ -1,4 +1,5 @@
 from __future__ import annotations
+from collections import defaultdict
 
 from typing import Any, Iterator
 
@@ -10,18 +11,17 @@ from smac.constants import MAXINT
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.runhistory import TrialInfo
 from smac.runhistory.dataclasses import InstanceSeedBudgetKey
+from smac.runhistory.errors import NotEvaluatedError
 from smac.scenario import Scenario
 from smac.utils.configspace import get_config_hash
+from smac.utils.data_structures import batch
 from smac.utils.logging import get_logger
+from smac.utils.pareto_front import calculate_pareto_front
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
-
-
-class NotEvaluatedError(RuntimeError):
-    pass
 
 
 class SuccessiveHalving(AbstractIntensifier):
@@ -38,7 +38,7 @@ class SuccessiveHalving(AbstractIntensifier):
         super().__init__(scenario=scenario, n_seeds=n_seeds, max_incumbents=max_incumbents, seed=seed)
 
         # We generate our instance seed pairs once
-        instance_seed_pairs = self.get_instance_seed_pairs()
+        instance_seed_keys = self.get_instance_seed_keys()
 
         # Budgets, followed by lots of sanity-checking
         min_budget = scenario.min_budget
@@ -52,18 +52,18 @@ class SuccessiveHalving(AbstractIntensifier):
                 raise ValueError("Successive Halving requires integer budgets when using instances.")
 
             min_budget = min_budget if min_budget is not None else 1
-            max_budget = max_budget if max_budget is not None else len(instance_seed_pairs)
+            max_budget = max_budget if max_budget is not None else len(instance_seed_keys)
 
-            if max_budget > len(instance_seed_pairs):
+            if max_budget > len(instance_seed_keys):
                 raise ValueError(
                     f"Max budget of {max_budget} can not be greater than the number of instance seed "
-                    f"pairs ({len(instance_seed_pairs)})."
+                    f"pairs ({len(instance_seed_keys)})."
                 )
 
-            if max_budget < len(instance_seed_pairs):
+            if max_budget < len(instance_seed_keys):
                 logger.warning(
                     f"Max budget {max_budget} does not include all instance seed  "
-                    f"pairs ({len(instance_seed_pairs)})."
+                    f"pairs ({len(instance_seed_keys)})."
                 )
         else:
             if min_budget is None or max_budget is None:
@@ -71,7 +71,7 @@ class SuccessiveHalving(AbstractIntensifier):
                     "Successive Halving requires the parameters min_budget and max_budget defined in the scenario."
                 )
 
-            if len(instance_seed_pairs) != 1:
+            if len(instance_seed_keys) != 1:
                 raise ValueError("Successive Halving supports only one seed when using budgets.")
 
         if min_budget is None or min_budget <= 0:
@@ -105,6 +105,16 @@ class SuccessiveHalving(AbstractIntensifier):
         self._n_configs_in_stage = n_configs
         self._budgets_in_stage = budgets
 
+        # States
+        # dict[stage, list[tuple[instance shuffle seed, list[config_id]]]
+        self._tracker: dict[int, list[tuple[int | None, list[int]]]] = defaultdict(list)
+
+    def get_state(self) -> dict[str, Any]:  # noqa: D102
+        return {"tracker": self._tracker}
+
+    def set_state(self, state: dict[str, Any]) -> None:  # noqa: D102
+        self._tracker = {int(k): v for k, v in state["tracker"]}
+
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
         meta = super().meta
@@ -118,8 +128,6 @@ class SuccessiveHalving(AbstractIntensifier):
         )
 
         return meta
-
-    # TODO: State: Also save the rng state
 
     @property
     def uses_seeds(self) -> bool:  # noqa: D102
@@ -140,11 +148,34 @@ class SuccessiveHalving(AbstractIntensifier):
         return True
 
     def __iter__(self) -> Iterator[TrialInfo]:
-        tracker: dict[int, list[tuple[int | None, list[Configuration]]]] = {}  # dict[stage, tuple[seed, list[config]]]
+        rh = self.runhistory
 
-        # TODO: We have to add existing trials from the runhistory
-        # TODO: How to deal with the shuffle index then? Just assign randomly and hope for the best
-        # TODO: Configs which are in the tracker have to be ignored
+        # We have to add already existing trials from the runhistory
+        # Idea: We simply add existing configs to the tracker (first stage) but assign a random instance shuffle seed.
+        # In the best case, trials (added from the users) are included in the seed and it has not re-computed again.
+        # Note: If the intensifier was restored, we don't want to go in here
+        if len(self._tracker) == 0:
+            # We batch the configs because we need n_configs in each iteration
+            # If we don't have n_configs, we sample new ones
+            n_configs = self._n_configs_in_stage[0]
+            for configs in batch(rh.get_configs(), n_configs):
+                n_rh_configs = len(configs)
+
+                if len(configs) < n_configs:
+                    try:
+                        config = next(self.config_generator)
+                        configs.append(config)
+                    except StopIteration:
+                        # We stop if we don't find any configuration anymore
+                        return
+
+                config_ids = [rh.get_config_id(config) for config in configs]
+                seed = self._get_next_instance_order_seed()
+                self._tracker[0].append((seed, config_ids))
+                logger.info(
+                    f"Added {n_rh_configs} configs from runhistory and {n_configs - n_rh_configs} new configs to "
+                    f"Successive Halving's first stage with seed {seed}."
+                )
 
         while True:
             # If we don't yield trials anymore, we have to update
@@ -156,18 +187,24 @@ class SuccessiveHalving(AbstractIntensifier):
             # 2) Update tracker and move better configs to the next stage
             # We start in reverse order to complete higher stages first
             logger.debug("Updating tracker:")
-            stages: list[int] = sorted(list(tracker.keys()), reverse=True)
+
+            # TODO: Sorting? Does it make sense? Or try yielding one trial from each stage?
+            # TODO: Logging how many configs are in each stage; add as debugging info
+            stages: list[int] = sorted(list(self._tracker.keys()), reverse=True)
             for stage in stages:
-                pairs = tracker[stage].copy()
-                for i, (seed, configs) in enumerate(pairs):
-                    instances = self._get_instances(stage=stage, seed=seed)
+                pairs = self._tracker[stage].copy()
+                for i, (seed, config_ids) in enumerate(pairs):
+                    isb_keys = self._get_instance_seed_budget_keys(stage=stage, seed=seed)
+                    configs = []
 
                     # We iterate over the configs and yield trials which are not running/evaluated yet
-                    for config in configs:
+                    for config_id in config_ids:
+                        config = rh.get_config(config_id)
+                        configs.append(config)
                         config_hash = get_config_hash(config)
-                        trials = self._get_next_trials(config, from_instances=instances)
+                        trials = self._get_next_trials(config, from_keys=isb_keys)
                         logger.debug(
-                            f"--- Yielding {len(trials)}/{len(instances)} for config {config_hash} in "
+                            f"--- Yielding {len(trials)}/{len(isb_keys)} for config {config_hash} in "
                             f"stage {stage} with seed {seed}..."
                         )
 
@@ -177,7 +214,7 @@ class SuccessiveHalving(AbstractIntensifier):
 
                     # If all configs were evaluated on ``n_configs_required``, we finally can compare
                     try:
-                        successful = self._get_best_configs(configs, from_instances=instances)
+                        successful_configs = self._get_best_configs(configs, stage, from_keys=isb_keys)
                     except NotEvaluatedError:
                         # We can't compare anything, so we just continue with the next pairs
                         logger.debug("--- Could not compare configs because not all trials have been evaluated yet.")
@@ -185,13 +222,16 @@ class SuccessiveHalving(AbstractIntensifier):
 
                     # Update tracker
                     # Remove current shuffle index / config pair
-                    del tracker[stage][i]
+                    del self._tracker[stage][i]
 
                     # Add successful to the next stage
                     if stage < self._max_iterations:
-                        tracker[stage + 1].append((seed, successful))
+                        config_ids = [rh.get_config_id(config) for config in successful_configs]
+                        self._tracker[stage + 1].append((seed, config_ids))
 
-                    logger.debug(f"--- Promoted {len(successful)} configs from stage {stage} to stage {stage + 1}.")
+                        logger.debug(f"--- Promoted {len(config_ids)} configs from stage {stage} to stage {stage + 1}.")
+                    else:
+                        logger.debug(f"--- Removed {len(successful_configs)} configs in last stage.")
 
             if update:
                 continue
@@ -209,51 +249,43 @@ class SuccessiveHalving(AbstractIntensifier):
                     # We stop if we don't find any configuration anymore
                     return
 
-            # Here we have the option to shuffle the trials when specified by the user
-            if self._instance_order == "shuffle":
-                seed = self._rng.randint(0, MAXINT)
-            elif self._instance_order == "shuffle_once":
-                seed = 0
-            else:
-                seed = None
-
             # We keep track of the seed so we always evaluate on the same instances
-            tracker[0].append((seed, configs))
+            config_ids = [rh.get_config_id(config) for config in configs]
+            self._tracker[0].append((self._get_next_instance_order_seed(), config_ids))
             logger.debug(f"Added {len(configs)} new configs to stage 0 with seed {seed}.")
 
-    def _get_instances(self, stage: int, seed: int | None = None) -> list[InstanceSeedBudgetKey]:
+    def _get_instance_seed_budget_keys(self, stage: int, seed: int | None = None) -> list[InstanceSeedBudgetKey]:
         """Returns all instances (instance-seed-budget keys in this case) for the given stage. Each stage
         is associated with a budget (N). Two possible options:
 
         1) Instance based: We return N instances. If a seed is specified, we shuffle the instances, before
-        returning the first N instances.
+        returning the first N instances. The budget is set to None here.
         2) Budget based: We return one instance only but the budget is set to N.
         """
         budget: float | int | None = None
-        instance_seed_pairs = self.get_instance_seed_pairs()
+        instance_seed_keys = self.get_instance_seed_keys()
 
         # We have to differentiate between budgets and instance based here
         # If we are budget based, we always have one instance seed pair only
         # If we are in the instance setting, we have to return a specific number of instance seed pairs
 
         if self.uses_instances:
-            # Shuffle instance seed pairs based on the seed
-            # TODO: Do it group based
-            rng = np.random.RandomState(seed)
-            rng.shuffle(instance_seed_pairs)  # type: ignore
+            # Shuffle instance seed pairs group-based
+            if seed is not None:
+                self._reorder_instance_seed_keys(instance_seed_keys, seed=seed)
 
             # We only return the first N instances
             N = self._budgets_in_stage[stage]
-            instance_seed_pairs = instance_seed_pairs[:N]
+            instance_seed_keys = instance_seed_keys[:N]
         else:
-            assert len(instance_seed_pairs) == 1
+            assert len(instance_seed_keys) == 1
 
             # The stage defines which budget should be used (in real-valued setting)
             # No shuffle is needed here because we only have on instance seed pair
             budget = self._budgets_in_stage[stage]
 
         isbk = []
-        for isk in instance_seed_pairs:
+        for isk in instance_seed_keys:
             isbk.append(InstanceSeedBudgetKey(instance=isk.instance, seed=isk.seed, budget=budget))
 
         return isbk
@@ -261,7 +293,7 @@ class SuccessiveHalving(AbstractIntensifier):
     def _get_next_trials(
         self,
         config: Configuration,
-        from_instances: list[InstanceSeedBudgetKey],
+        from_keys: list[InstanceSeedBudgetKey],
     ) -> list[TrialInfo]:
         """Returns trials for a given config from a list of instances (instance-seed-budget keys). The returned trials
         have not run or evaluated yet.
@@ -271,7 +303,7 @@ class SuccessiveHalving(AbstractIntensifier):
         running_trials = rh.get_running_trials(config)
 
         next_trials: list[TrialInfo] = []
-        for instance in from_instances:
+        for instance in from_keys:
             trial = TrialInfo(config=config, instance=instance.instance, seed=instance.seed, budget=instance.budget)
 
             if trial in evaluated_trials or trial in running_trials:
@@ -284,32 +316,43 @@ class SuccessiveHalving(AbstractIntensifier):
     def _get_best_configs(
         self,
         configs: list[Configuration],
-        from_instances: list[InstanceSeedBudgetKey],
-        *,
-        keep: float = 0.5,
+        stage: int,
+        from_keys: list[InstanceSeedBudgetKey],
     ) -> list[Configuration]:
         rh = self.runhistory
+        n_configs = self._n_configs_in_stage[stage + 1]
+        configs = configs.copy()
 
-        # TODO: Which ones to keep?
-        # We could do pareto front, and if we have less/more than we use average cost
-        costs: list[tuple[float, Configuration]] = []
+        # TODO: Make it more efficient
         for config in configs:
-            # Small sanity check that config really was evaluated on all instances
-            # TODO: Too much overhead?
-            available_instances = [
-                trial.get_instance_seed_budget_key() for trial in rh.get_trials(config, only_max_observed_budget=False)
-            ]
+            isb_keys = rh.get_instance_seed_budget_keys(config, only_max_observed_budget=False)
+            if not all(isb_key in isb_keys for isb_key in from_keys):
+                raise NotEvaluatedError
 
-            for instance in from_instances:
-                if instance not in available_instances:
-                    raise NotEvaluatedError(f"Config {config} was not evaluated on {instance}.")
+        selected_configs: list[Configuration] = []
+        while len(selected_configs) < n_configs:
+            # We calculate the pareto front for the given configs
+            incumbents = calculate_pareto_front(rh, configs, from_keys)
 
-            cost = rh.average_cost(config, from_instances, normalize=True)
-            assert isinstance(cost, float)
+            # Idea: We recursively calculate the pareto front in every iteration
+            for incumbent in incumbents:
+                configs.remove(incumbent)
+                selected_configs.append(incumbent)
 
-            costs.append((cost, config))
+        # If we have more selected configs, we remove the last ones
+        if len(selected_configs) > n_configs:
+            selected_configs = selected_configs[:n_configs]
 
-        # Sort by cost
-        costs.sort(key=lambda x: x[0])
+        return selected_configs
 
-        return costs[: int(len(costs) * keep)]
+    def _get_next_instance_order_seed(self) -> int | None:
+        """Next instances shuffle seed to use."""
+        # Here we have the option to shuffle the trials when specified by the user
+        if self._instance_order == "shuffle":
+            seed = self._rng.randint(0, MAXINT)
+        elif self._instance_order == "shuffle_once":
+            seed = 0
+        else:
+            seed = None
+
+        return seed

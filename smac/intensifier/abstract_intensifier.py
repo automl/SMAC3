@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
+from collections import defaultdict
 from typing import Any, Iterator
 
 import dataclasses
@@ -25,6 +26,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.configspace import get_config_hash, print_config_changes
 from smac.utils.logging import get_logger
+from smac.utils.pareto_front import calculate_pareto_front
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -58,8 +60,8 @@ class AbstractIntensifier:
         self._tf_seeds: list[int] = []
         self._tf_instances: list[str | None] = []
         self._tf_budgets: list[float | None] = []
-        self._instance_seed_pairs: list[InstanceSeedKey] | None = None
-        self._instance_seed_pairs_validation: list[InstanceSeedKey] | None = None
+        self._instance_seed_keys: list[InstanceSeedKey] | None = None
+        self._instance_seed_keys_validation: list[InstanceSeedKey] | None = None
 
         # Incumbent variables
         self._max_incumbents = max_incumbents
@@ -218,21 +220,21 @@ class AbstractIntensifier:
         else:
             raise ValueError(f"Unknown sort_by value: {sort_by}.")
 
-    def get_incumbent_instances(self) -> list[InstanceSeedBudgetKey]:
+    def get_incumbent_instance_seed_budget_keys(self) -> list[InstanceSeedBudgetKey]:
         """Find the lowest intersection of instances for all incumbents."""
         incumbents = self.get_incumbents()
 
         if len(incumbents) > 0:
             # We want to calculate the smallest set of trials that is used by all incumbents
             # Reason: We can not fairly compare otherwise
-            incumbent_instances = [self.runhistory.get_instances(incumbent) for incumbent in incumbents]
-            instances = list(set.intersection(*map(set, incumbent_instances)))  # type: ignore
+            incumbent_isb_keys = [self.runhistory.get_instance_seed_budget_keys(incumbent) for incumbent in incumbents]
+            instances = list(set.intersection(*map(set, incumbent_isb_keys)))  # type: ignore
 
             return instances  # type: ignore
 
         return []
 
-    def get_incumbent_instance_differences(self) -> list[InstanceSeedBudgetKey]:
+    def get_incumbent_differences(self) -> list[InstanceSeedBudgetKey]:
         """There are situations in which incumbents are evaluated on more trials than others. This method returns the
         instances which are not part of the lowest intersection of instances for all incumbents.
         """
@@ -240,17 +242,17 @@ class AbstractIntensifier:
 
         if len(incumbents) > 0:
             # We want to calculate the differences so that we can evaluate the other incumbents on the same instances
-            incumbent_instances = [self.runhistory.get_instances(incumbent) for incumbent in incumbents]
+            incumbent_isb_keys = [self.runhistory.get_instance_seed_budget_keys(incumbent) for incumbent in incumbents]
 
-            if len(incumbent_instances) <= 1:
+            if len(incumbent_isb_keys) <= 1:
                 return []
 
-            instances = list(set.difference(*map(set, incumbent_instances)))  # type: ignore
+            incumbent_isb_keys = list(set.difference(*map(set, incumbent_isb_keys)))  # type: ignore
 
-            if len(instances) == 0:
+            if len(incumbent_isb_keys) == 0:
                 return []
 
-            return instances  # type: ignore
+            return incumbent_isb_keys  # type: ignore
 
         return []
 
@@ -288,21 +290,21 @@ class AbstractIntensifier:
         # already was evaluated? YES!
 
         # Associated trials and id
-        config_instances = rh.get_instances(config)
+        config_isb_keys = rh.get_instance_seed_budget_keys(config)
         config_id = rh._config_ids[config]
         config_hash = get_config_hash(config)
 
         # We skip updating incumbents if no instances are available
         # Note: This is especially the case if trials of a config are still running
         # because if trials are running, the runhistory does not update the trials in the fast data structure
-        if len(config_instances) == 0:
+        if len(config_isb_keys) == 0:
             logger.debug(f"No instances evaluated for config {config_hash}. Updating incumbents is skipped.")
             return
 
         # Now we get the incumbents and see which trials have been used
         incumbents = self.get_incumbents()
         incumbent_ids = [rh._config_ids[c] for c in incumbents]
-        incumbent_instances = self.get_incumbent_instances()
+        incumbent_isb_keys = self.get_incumbent_instance_seed_budget_keys()
 
         # Save for later
         previous_incumbents = incumbents.copy()
@@ -310,12 +312,12 @@ class AbstractIntensifier:
 
         # Little sanity check here for consistency
         if len(incumbents) > 0:
-            assert incumbent_instances is not None
-            assert len(incumbent_instances) > 0
+            assert incumbent_isb_keys is not None
+            assert len(incumbent_isb_keys) > 0
 
         # If there are no incumbents at all, we just use the new config as new incumbent
         # Problem: We can add running incumbents
-        if len(incumbents) == 0:  # incumbent_instances is None and len(incumbents) == 0:
+        if len(incumbents) == 0:  # incumbent_isb_keys is None and len(incumbents) == 0:
             self._incumbents = [config]
             self._incumbents_changed += 1
             self._trajectory.append(TrajectoryItem(config_ids=[config_id], finished_trials=rh.finished))
@@ -325,15 +327,15 @@ class AbstractIntensifier:
             # Nothing else to do
             return
 
-        assert incumbent_instances is not None
+        assert incumbent_isb_keys is not None
 
         # Now we have to check if the new config has been evaluated on the same trials as the incumbents
-        if not all([trial in config_instances for trial in incumbent_instances]):
+        if not all([trial in config_isb_keys for trial in incumbent_isb_keys]):
             # We can not tell if the new config is better/worse than the incumbents because it has not been
             # evaluated on the necessary trials
             logger.debug(
                 f"Could not compare config {config_hash} with incumbents because it's evaluated on "
-                f"{len(config_instances)}/{len(incumbent_instances)} trials only."
+                f"{len(config_isb_keys)}/{len(incumbent_isb_keys)} trials only."
             )
 
             # The config has to go to a queue now as it is a challenger and a potential incumbent
@@ -341,43 +343,20 @@ class AbstractIntensifier:
         else:
             # If all instances are available and the config is incumbent and even evaluated on more trials
             # then there's nothing we can do
-            if config in incumbents and len(config_instances) > len(incumbent_instances):
+            if config in incumbents and len(config_isb_keys) > len(incumbent_isb_keys):
                 logger.debug(
                     "Config is already an incumbent but can not be compared to other incumbents because "
                     "the others are missing trials."
                 )
                 return
 
-        # Now we get the costs for the trials of the config
-        average_costs = []
-
         # Add config to incumbents so that we compare only the new config and existing incumbents
         if config not in incumbents:
             incumbents.append(config)
             incumbent_ids.append(config_id)
 
-        for incumbent in incumbents:
-            # Since we use multiple seeds, we have to average them to get only one cost value pair for each
-            # configuration
-            # However, we only want to consider the config trials
-            # Average cost is a list of floats (one for each objective)
-            average_cost = rh.average_cost(incumbent, config_instances, normalize=False)
-            average_costs += [average_cost]
-
-        # Let's work with a numpy array for efficiency
-        costs = np.vstack(average_costs)
-
-        # The following code is an efficient pareto front implementation
-        is_efficient = np.arange(costs.shape[0])
-        next_point_index = 0  # Next index in the is_efficient array to search for
-        while next_point_index < len(costs):
-            nondominated_point_mask = np.any(costs < costs[next_point_index], axis=1)
-            nondominated_point_mask[next_point_index] = True
-            is_efficient = is_efficient[nondominated_point_mask]  # Remove dominated points
-            costs = costs[nondominated_point_mask]
-            next_point_index = np.sum(nondominated_point_mask[:next_point_index]) + 1
-
-        new_incumbents = [incumbents[i] for i in is_efficient]
+        # We compare the incumbents now and only return the ones on the pareto front
+        new_incumbents = calculate_pareto_front(rh, incumbents, config_isb_keys)
         new_incumbent_ids = [rh._config_ids[c] for c in new_incumbents]
 
         if len(previous_incumbents) == len(new_incumbents):
@@ -395,13 +374,13 @@ class AbstractIntensifier:
                 if removed_incumbent_id == config_id:
                     logger.debug(
                         f"Rejected config {config_hash} because it is not better than the incumbents on "
-                        f"{len(config_instances)} instances."
+                        f"{len(config_isb_keys)} instances."
                     )
                 else:
                     self._remove_rejected_config(config_id)
                     logger.info(
                         f"Added config {config_hash} and rejected config {removed_incumbent_hash} because "
-                        f"it is not better than the incumbents on {len(config_instances)} instances:"
+                        f"it is not better than the incumbents on {len(config_isb_keys)} instances:"
                     )
                     print_config_changes(config, rh.get_config(removed_incumbent_id), logger=logger)
         elif len(previous_incumbents) < len(new_incumbents):
@@ -443,13 +422,13 @@ class AbstractIntensifier:
         """
         raise NotImplementedError
 
-    def get_instance_seed_pairs(
+    def get_instance_seed_keys(
         self,
         *,
         validate: bool = False,
         seed: int | None = None,
     ) -> list[InstanceSeedKey]:
-        """Returns a list of instance seed pairs. Considers seeds and instances from the
+        """Returns a list of instance seed keys. Considers seeds and instances from the
         runhistory (``self._tf_seeds`` and ``self._tf_instances``). If no seeds or instances were found, new
         seeds and instances are generated based on the global intensifier seed.
 
@@ -473,10 +452,10 @@ class AbstractIntensifier:
             seed = 0
 
         # We cache the instance seed pairs for efficiency and consistency reasons
-        if (self._instance_seed_pairs is None and not validate) or (
-            self._instance_seed_pairs_validation is None and validate
+        if (self._instance_seed_keys is None and not validate) or (
+            self._instance_seed_keys_validation is None and validate
         ):
-            instance_seed_pairs: list[InstanceSeedKey] = []
+            instance_seed_keys: list[InstanceSeedKey] = []
             if validate:
                 rng = np.random.RandomState(seed)
             else:
@@ -487,7 +466,7 @@ class AbstractIntensifier:
                 # We have two conditions to stop the loop:
                 # A) We found enough configs
                 # B) We used enough seeds
-                A = self._max_config_calls is not None and len(instance_seed_pairs) >= self._max_config_calls
+                A = self._max_config_calls is not None and len(instance_seed_keys) >= self._max_config_calls
                 B = self._n_seeds is not None and i >= self._n_seeds
 
                 if A or B:
@@ -507,7 +486,7 @@ class AbstractIntensifier:
 
                 # If no instances are used, tf_instances includes None
                 for instance in self._tf_instances:
-                    instance_seed_pairs.append(InstanceSeedKey(instance, next_seed))
+                    instance_seed_keys.append(InstanceSeedKey(instance, next_seed))
 
                 # Only use one seed in deterministic case
                 if self._scenario.deterministic:
@@ -517,31 +496,31 @@ class AbstractIntensifier:
                 # Seed counter
                 i += 1
 
-            # Now we cut so that we only have max_config_calls instance_seed_pairs
+            # Now we cut so that we only have max_config_calls instance_seed_keys
             # We favor instances over seeds here: That makes sure we always work with the same instance/seed pairs
             if self._max_config_calls is not None:
-                if len(instance_seed_pairs) > self._max_config_calls:
-                    instance_seed_pairs = instance_seed_pairs[: self._max_config_calls]
+                if len(instance_seed_keys) > self._max_config_calls:
+                    instance_seed_keys = instance_seed_keys[: self._max_config_calls]
                     logger.info(f"Cut instance seed pairs to {self._max_config_calls} entries.")
 
             # Set it globally
             if not validate:
-                self._instance_seed_pairs = instance_seed_pairs
+                self._instance_seed_keys = instance_seed_keys
             else:
-                self._instance_seed_pairs_validation = instance_seed_pairs
+                self._instance_seed_keys_validation = instance_seed_keys
 
         if not validate:
-            assert self._instance_seed_pairs is not None
-            instance_seed_pairs = self._instance_seed_pairs
+            assert self._instance_seed_keys is not None
+            instance_seed_keys = self._instance_seed_keys
         else:
-            assert self._instance_seed_pairs_validation is not None
-            instance_seed_pairs = self._instance_seed_pairs_validation
+            assert self._instance_seed_keys_validation is not None
+            instance_seed_keys = self._instance_seed_keys_validation
 
         # trials: list[TrialInfo] = []
-        # for instance_seed in instance_seed_pairs:
+        # for instance_seed in instance_seed_keys:
         #    trials.append(TrialInfo(config=config, instance=instance_seed.instance, seed=instance_seed.seed))
 
-        return instance_seed_pairs
+        return instance_seed_keys.copy()
 
     def get_state(self) -> dict[str, Any]:
         """The current state of the intensifier. Used to restore the state of the intensifier when continuing a run."""
@@ -566,6 +545,7 @@ class AbstractIntensifier:
             "rejected_config_ids": self._rejected_config_ids,
             "incumbents_changed": self._incumbents_changed,
             "trajectory": [dataclasses.asdict(item) for item in self._trajectory],
+            "seed_state": self._rng.get_state(),
             "state": self.get_state(),
         }
 
@@ -590,6 +570,7 @@ class AbstractIntensifier:
         self._incumbents_changed = data["incumbents_changed"]
         self._rejected_config_ids = data["rejected_config_ids"]
         self._trajectory = [TrajectoryItem(**item) for item in data["trajectory"]]
+        self._rng.set_state(data["seed_state"])
         self.set_state(data["state"])
 
     def print_config_changes(
@@ -625,3 +606,36 @@ class AbstractIntensifier:
 
         if config_id in self._rejected_config_ids:
             self._rejected_config_ids.remove(config_id)
+
+    def _reorder_instance_seed_keys(
+        self,
+        instance_seed_keys: list[InstanceSeedKey],
+        *,
+        seed: int | None = None,
+    ) -> list[InstanceSeedKey]:
+        """Shuffles the instance seed pairs by groups (first all instances, then all seeds). The following is done:
+        - Group by seeds
+        - Shuffle instances in the group of seeds
+        - Attach groups together
+        """
+        if seed is None:
+            rng = self._rng
+        else:
+            rng = np.random.RandomState(seed)
+        
+        groups = defaultdict(list)
+        for pair in instance_seed_keys:
+            groups[pair.seed].append(pair)
+            assert pair.seed in self._tf_seeds
+
+        # Shuffle groups + attach groups together
+        shuffled_pairs: list[InstanceSeedKey] = []
+        for seed in self._tf_seeds:
+            if seed in groups and len(groups[seed]) > 0:
+                # Shuffle pairs in the group and add to shuffled pairs
+                shuffled = rng.choice(groups[seed], size=len(groups[seed]), replace=False)  # type: ignore
+                shuffled_pairs.append([pair for pair in shuffled])  # type: ignore
+
+        assert len(shuffled_pairs) == len(instance_seed_keys)
+        return shuffled_pairs
+        

@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Iterable
 
 from smac.utils.logging import get_logger
 
@@ -64,3 +65,10 @@ def recursively_compare_dicts(
             # logger.info("len1={}; len2={}".format(len(d1), len(d2)))
 
     return diff
+
+
+def batch(iterable: list, n: int = 1) -> Iterable[list]:
+    """Batches an iterable into chunks of size n."""
+    length = len(iterable)
+    for ndx in range(0, length, n):
+        yield iterable[ndx : min(ndx + n, length)]
