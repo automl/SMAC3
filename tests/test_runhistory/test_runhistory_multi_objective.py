@@ -135,7 +135,7 @@ def test_add_multiple_times(scenario, runhistory, config1):
         )
 
     assert len(runhistory._data) == 1
-    assert len(runhistory.get_trials(config1, only_max_observed_budget=True)) == 1
+    assert len(runhistory.get_trials(config1, highest_observed_budget_only=True)) == 1
     assert len(runhistory._config_id_to_isk_to_budget[1]) == 1
 
     # We expect to get 1.0 and 2.0 because runhistory does not overwrite by default

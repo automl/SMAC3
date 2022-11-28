@@ -49,7 +49,6 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
         scenario: Scenario,
         *,
         eta: int = 3,
-        min_challenger: int = 1,
         n_seeds: int = 1,
     ) -> Hyperband:
         """Returns a Hyperband intensifier instance. That means that budgets are supported.
@@ -64,7 +63,6 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
         return Hyperband(
             scenario=scenario,
             eta=eta,
-            min_challenger=min_challenger,
             n_seeds=n_seeds,
         )
 

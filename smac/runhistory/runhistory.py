@@ -302,12 +302,12 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         # Removing duplicates while keeping the order
         inst_seed_budgets = list(
-            dict.fromkeys(self.get_instance_seed_budget_keys(config, only_max_observed_budget=True))
+            dict.fromkeys(self.get_instance_seed_budget_keys(config, highest_observed_budget_only=True))
         )
         self._cost_per_config[config_id] = self.average_cost(config, inst_seed_budgets)
         self._num_trials_per_config[config_id] = len(inst_seed_budgets)
 
-        all_isb = list(dict.fromkeys(self.get_instance_seed_budget_keys(config, only_max_observed_budget=False)))
+        all_isb = list(dict.fromkeys(self.get_instance_seed_budget_keys(config, highest_observed_budget_only=False)))
         self._min_cost_per_config[config_id] = self.min_cost(config, all_isb)
 
     def incremental_update_cost(self, config: Configuration, cost: float | list[float]) -> None:
@@ -542,7 +542,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
     def get_trials(
         self,
         config: Configuration,
-        only_max_observed_budget: bool = True,
+        highest_observed_budget_only: bool = True,
     ) -> list[TrialInfo]:
         """Return all trials for a configuration.
 
@@ -554,7 +554,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         ----------
         config : Configuration
             Parameter configuration
-        only_max_observed_budget : bool
+        highest_observed_budget_only : bool
             Select only the maximally observed budget run for this configuration
 
         Returns
@@ -567,7 +567,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             trials = self._config_id_to_isk_to_budget[config_id].copy()
 
         # Select only the max budget run if specified
-        if only_max_observed_budget:
+        if highest_observed_budget_only:
             for k, v in trials.items():
                 if None in v:
                     trials[k] = [None]
@@ -579,7 +579,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
     def get_instance_seed_budget_keys(
         self,
         config: Configuration,
-        only_max_observed_budget: bool = True,
+        highest_observed_budget_only: bool = True,
     ) -> list[InstanceSeedBudgetKey]:
         """
 
@@ -591,14 +591,14 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         ----------
         config : Configuration
             _description_
-        only_max_observed_budget : bool, optional
+        highest_observed_budget_only : bool, optional
             _description_, by default True
 
         Returns
         -------
         list[InstanceSeedBudgetKey]
         """
-        trials = self.get_trials(config, only_max_observed_budget)
+        trials = self.get_trials(config, highest_observed_budget_only)
 
         # Convert to instance-seed-budget key
         return [InstanceSeedBudgetKey(t.instance, t.seed, t.budget) for t in trials]
@@ -869,7 +869,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         for config, config_id in self._config_ids.items():
             # Removing duplicates while keeping the order
             inst_seed_budgets = list(
-                dict.fromkeys(self.get_instance_seed_budget_keys(config, only_max_observed_budget=True))
+                dict.fromkeys(self.get_instance_seed_budget_keys(config, highest_observed_budget_only=True))
             )
             if instances is not None:
                 inst_seed_budgets = list(filter(lambda x: x.instance in cast(list, instances), inst_seed_budgets))
@@ -1019,7 +1019,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             return []
 
         if instance_seed_budget_keys is None:
-            instance_seed_budget_keys = self.get_instance_seed_budget_keys(config, only_max_observed_budget=True)
+            instance_seed_budget_keys = self.get_instance_seed_budget_keys(config, highest_observed_budget_only=True)
 
         costs = []
         for key in instance_seed_budget_keys:

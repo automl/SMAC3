@@ -25,24 +25,67 @@ logger = get_logger(__name__)
 
 
 class SuccessiveHalving(AbstractIntensifier):
+    """
+    Parameters
+    ----------
+    incumbent_selection : str, defaults to "any_budget"
+        How to select the incumbent when using budgets. Can be set to:
+        * any_budget: Incumbent is the best on any budget i.e., best performance regardless of budget.
+        * highest_observed_budget: Incumbent is the best in the highest budget run so far.
+        * highest_budget: Incumbent is selected only based on the highest budget.
+    """
+
     def __init__(
         self,
         scenario: Scenario,
         eta: int = 3,
         n_seeds: int = 1,  # How many seeds to use for each instance
         instance_order: str | None = "shuffle",  # shuffle_once, shuffle, None
-        incumbent_selection: str = "highest_executed_budget",
         max_incumbents: int = 20,
+        incumbent_selection: str = "highest_observed_budget",
         seed: int | None = None,
     ):
-        super().__init__(scenario=scenario, n_seeds=n_seeds, max_incumbents=max_incumbents, seed=seed)
+        super().__init__(
+            scenario=scenario,
+            n_seeds=n_seeds,
+            max_incumbents=max_incumbents,
+            seed=seed,
+        )
 
+        self._eta = eta
+        self._instance_order = instance_order
+        self._incumbent_selection = incumbent_selection
+        self._highest_observed_budget_only = False if incumbent_selection == "any_budget" else True
+
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
+        meta.update(
+            {
+                "eta": self._eta,
+                "instance_order": self._instance_order,
+                "incumbent_selection": self._incumbent_selection,
+            }
+        )
+
+        return meta
+
+    def reset(self) -> None:
+        super().reset()
+
+        # States
+        # dict[stage, list[tuple[instance shuffle seed, list[config_id]]]
+        self._tracker: dict[int, list[tuple[int | None, list[Configuration]]]] = defaultdict(list)
+
+    def __post_init__(self) -> None:
+        """Post initilization steps after the runhistory has been set."""
         # We generate our instance seed pairs once
-        instance_seed_keys = self.get_instance_seed_keys()
+        is_keys = self.get_instance_seed_keys_of_interest()
 
         # Budgets, followed by lots of sanity-checking
-        min_budget = scenario.min_budget
-        max_budget = scenario.max_budget
+        eta = self._eta
+        min_budget = self._scenario.min_budget
+        max_budget = self._scenario.max_budget
 
         if max_budget is not None and min_budget is not None and max_budget < min_budget:
             raise ValueError("Max budget has to be larger than min budget.")
@@ -52,18 +95,17 @@ class SuccessiveHalving(AbstractIntensifier):
                 raise ValueError("Successive Halving requires integer budgets when using instances.")
 
             min_budget = min_budget if min_budget is not None else 1
-            max_budget = max_budget if max_budget is not None else len(instance_seed_keys)
+            max_budget = max_budget if max_budget is not None else len(is_keys)
 
-            if max_budget > len(instance_seed_keys):
+            if max_budget > len(is_keys):
                 raise ValueError(
                     f"Max budget of {max_budget} can not be greater than the number of instance seed "
-                    f"pairs ({len(instance_seed_keys)})."
+                    f"pairs ({len(is_keys)})."
                 )
 
-            if max_budget < len(instance_seed_keys):
+            if max_budget < len(is_keys):
                 logger.warning(
-                    f"Max budget {max_budget} does not include all instance seed  "
-                    f"pairs ({len(instance_seed_keys)})."
+                    f"Max budget {max_budget} does not include all instance seed  " f"pairs ({len(is_keys)})."
                 )
         else:
             if min_budget is None or max_budget is None:
@@ -71,7 +113,7 @@ class SuccessiveHalving(AbstractIntensifier):
                     "Successive Halving requires the parameters min_budget and max_budget defined in the scenario."
                 )
 
-            if len(instance_seed_keys) != 1:
+            if len(is_keys) != 1:
                 raise ValueError("Successive Halving supports only one seed when using budgets.")
 
         if min_budget is None or min_budget <= 0:
@@ -80,7 +122,7 @@ class SuccessiveHalving(AbstractIntensifier):
         budget_type = "INSTANCES" if self.uses_instances else "BUDGETS"
         logger.info(
             f"Successive Halving uses budget type {budget_type} with eta {eta}, "
-            f"min budget {min_budget} and max budget {max_budget}."
+            f"min budget {min_budget}, and max budget {max_budget}."
         )
 
         # Pre-computing Successive Halving variables
@@ -97,37 +139,30 @@ class SuccessiveHalving(AbstractIntensifier):
         budgets = (max_budget * np.power(eta, linspace)).tolist()
 
         # Global variables
-        self._eta = eta
-        self._instance_order = instance_order
         self._min_budget = min_budget
         self._max_budget = max_budget
         self._max_iterations = max_iterations
         self._n_configs_in_stage = n_configs
         self._budgets_in_stage = budgets
 
-        # States
-        # dict[stage, list[tuple[instance shuffle seed, list[config_id]]]
-        self._tracker: dict[int, list[tuple[int | None, list[int]]]] = defaultdict(list)
-
     def get_state(self) -> dict[str, Any]:  # noqa: D102
-        return {"tracker": self._tracker}
+        # Replace config by dict
+        tracker: dict[int, list[tuple[int | None, list[dict]]]] = defaultdict(list)
+        for stage in self._tracker.keys():
+            for seed, configs in self._tracker[stage]:
+                tracker[stage].append((seed, [config.get_dictionary() for config in configs]))
+
+        return {"tracker": tracker}
 
     def set_state(self, state: dict[str, Any]) -> None:  # noqa: D102
-        self._tracker = {int(k): v for k, v in state["tracker"]}
+        self._tracker = defaultdict(list)
 
-    @property
-    def meta(self) -> dict[str, Any]:  # noqa: D102
-        meta = super().meta
-        meta.update(
-            {
-                "eta": self._eta,
-                "instance_order": self._instance_order,
-                "min_budget": self._min_budget,
-                "max_budget": self._max_budget,
-            }
-        )
-
-        return meta
+        tracker = state["tracker"]
+        for stage in tracker.keys():
+            for seed, config_dicts in tracker[stage]:
+                self._tracker[stage].append(
+                    (seed, [Configuration(self._scenario.configspace, config_dict) for config_dict in config_dicts])
+                )
 
     @property
     def uses_seeds(self) -> bool:  # noqa: D102
@@ -146,6 +181,40 @@ class SuccessiveHalving(AbstractIntensifier):
             return False
 
         return True
+
+    def get_trials_of_interest(
+        self,
+        config: Configuration,
+        *,
+        validate: bool = False,
+        seed: int | None = None,
+    ) -> list[TrialInfo]:
+        is_keys = self.get_instance_seed_keys_of_interest(validate=validate, seed=seed)
+        budget = None
+
+        # When we use budgets, we always evaluated on the highest budget only
+        if self.uses_budgets:
+            budget = self._max_budget
+
+        trials = []
+        for key in is_keys:
+            trials.append(TrialInfo(config=config, instance=key.instance, seed=key.seed, budget=budget))
+
+        return trials
+
+    def get_instance_seed_budget_keys(self, config: Configuration) -> list[InstanceSeedBudgetKey]:
+        """Returns the instance-seed-budget keys for a given configuration. This method supports ``highest_budget``,
+        which only returns the instance-seed-budget keys for the highest budget (if specified). In this case, the
+        incumbents are only changed if the costs on the highest budget are lower.
+        """
+        isb_keys = self.runhistory.get_instance_seed_budget_keys(
+            config, highest_observed_budget_only=self._highest_observed_budget_only
+        )
+        # If incumbent should only be changed on the highest budget, we have to kick out all budgets below the highest
+        if self.uses_budgets and self._incumbent_selection == "highest_budget":
+            isb_keys = [key for key in isb_keys if key.budget == self._max_budget]
+
+        return isb_keys
 
     def __iter__(self) -> Iterator[TrialInfo]:
         rh = self.runhistory
@@ -169,9 +238,8 @@ class SuccessiveHalving(AbstractIntensifier):
                         # We stop if we don't find any configuration anymore
                         return
 
-                config_ids = [rh.get_config_id(config) for config in configs]
                 seed = self._get_next_instance_order_seed()
-                self._tracker[0].append((seed, config_ids))
+                self._tracker[0].append((seed, configs))
                 logger.info(
                     f"Added {n_rh_configs} configs from runhistory and {n_configs - n_rh_configs} new configs to "
                     f"Successive Halving's first stage with seed {seed}."
@@ -193,14 +261,11 @@ class SuccessiveHalving(AbstractIntensifier):
             stages: list[int] = sorted(list(self._tracker.keys()), reverse=True)
             for stage in stages:
                 pairs = self._tracker[stage].copy()
-                for i, (seed, config_ids) in enumerate(pairs):
-                    isb_keys = self._get_instance_seed_budget_keys(stage=stage, seed=seed)
-                    configs = []
+                for i, (seed, configs) in enumerate(pairs):
+                    isb_keys = self._get_instance_seed_budget_keys_by_stage(stage=stage, seed=seed)
 
                     # We iterate over the configs and yield trials which are not running/evaluated yet
-                    for config_id in config_ids:
-                        config = rh.get_config(config_id)
-                        configs.append(config)
+                    for config in configs:
                         config_hash = get_config_hash(config)
                         trials = self._get_next_trials(config, from_keys=isb_keys)
                         logger.debug(
@@ -227,7 +292,7 @@ class SuccessiveHalving(AbstractIntensifier):
                     # Add successful to the next stage
                     if stage < self._max_iterations:
                         config_ids = [rh.get_config_id(config) for config in successful_configs]
-                        self._tracker[stage + 1].append((seed, config_ids))
+                        self._tracker[stage + 1].append((seed, successful_configs))
 
                         logger.debug(f"--- Promoted {len(config_ids)} configs from stage {stage} to stage {stage + 1}.")
                     else:
@@ -250,11 +315,13 @@ class SuccessiveHalving(AbstractIntensifier):
                     return
 
             # We keep track of the seed so we always evaluate on the same instances
-            config_ids = [rh.get_config_id(config) for config in configs]
-            self._tracker[0].append((self._get_next_instance_order_seed(), config_ids))
-            logger.debug(f"Added {len(configs)} new configs to stage 0 with seed {seed}.")
+            next_seed = self._get_next_instance_order_seed()
+            self._tracker[0].append((next_seed, configs))
+            logger.debug(f"Added {len(configs)} new configs to stage 0 with seed {next_seed}.")
 
-    def _get_instance_seed_budget_keys(self, stage: int, seed: int | None = None) -> list[InstanceSeedBudgetKey]:
+    def _get_instance_seed_budget_keys_by_stage(
+        self, stage: int, seed: int | None = None
+    ) -> list[InstanceSeedBudgetKey]:
         """Returns all instances (instance-seed-budget keys in this case) for the given stage. Each stage
         is associated with a budget (N). Two possible options:
 
@@ -263,7 +330,7 @@ class SuccessiveHalving(AbstractIntensifier):
         2) Budget based: We return one instance only but the budget is set to N.
         """
         budget: float | int | None = None
-        instance_seed_keys = self.get_instance_seed_keys()
+        is_keys = self.get_instance_seed_keys_of_interest()
 
         # We have to differentiate between budgets and instance based here
         # If we are budget based, we always have one instance seed pair only
@@ -272,20 +339,20 @@ class SuccessiveHalving(AbstractIntensifier):
         if self.uses_instances:
             # Shuffle instance seed pairs group-based
             if seed is not None:
-                self._reorder_instance_seed_keys(instance_seed_keys, seed=seed)
+                is_keys = self._reorder_instance_seed_keys(is_keys, seed=seed)
 
             # We only return the first N instances
             N = self._budgets_in_stage[stage]
-            instance_seed_keys = instance_seed_keys[:N]
+            is_keys = is_keys[:N]
         else:
-            assert len(instance_seed_keys) == 1
+            assert len(is_keys) == 1
 
             # The stage defines which budget should be used (in real-valued setting)
             # No shuffle is needed here because we only have on instance seed pair
             budget = self._budgets_in_stage[stage]
 
         isbk = []
-        for isk in instance_seed_keys:
+        for isk in is_keys:
             isbk.append(InstanceSeedBudgetKey(instance=isk.instance, seed=isk.seed, budget=budget))
 
         return isbk
@@ -299,7 +366,7 @@ class SuccessiveHalving(AbstractIntensifier):
         have not run or evaluated yet.
         """
         rh = self.runhistory
-        evaluated_trials = rh.get_trials(config, only_max_observed_budget=False)
+        evaluated_trials = rh.get_trials(config, highest_observed_budget_only=False)
         running_trials = rh.get_running_trials(config)
 
         next_trials: list[TrialInfo] = []
@@ -319,13 +386,17 @@ class SuccessiveHalving(AbstractIntensifier):
         stage: int,
         from_keys: list[InstanceSeedBudgetKey],
     ) -> list[Configuration]:
+        try:
+            n_configs = self._n_configs_in_stage[stage + 1]
+        except IndexError:
+            return []
+
         rh = self.runhistory
-        n_configs = self._n_configs_in_stage[stage + 1]
         configs = configs.copy()
 
         # TODO: Make it more efficient
         for config in configs:
-            isb_keys = rh.get_instance_seed_budget_keys(config, only_max_observed_budget=False)
+            isb_keys = self.get_instance_seed_budget_keys(config)
             if not all(isb_key in isb_keys for isb_key in from_keys):
                 raise NotEvaluatedError
 

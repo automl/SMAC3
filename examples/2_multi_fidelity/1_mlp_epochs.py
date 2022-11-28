@@ -36,7 +36,9 @@ from sklearn.datasets import load_digits
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.neural_network import MLPClassifier
 
-from smac import MultiFidelityFacade, Scenario
+from smac import Scenario
+from smac import HyperparameterOptimizationFacade as HPOFacade
+from smac.intensifier.successive_halving import SuccessiveHalving
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -119,13 +121,15 @@ if __name__ == "__main__":
     )
 
     # We want to run five random configurations before starting the optimization.
-    initial_design = MultiFidelityFacade.get_initial_design(scenario, n_configs=5)
+    initial_design = HPOFacade.get_initial_design(scenario, n_configs=5)
+    intensifier = SuccessiveHalving(scenario)
 
     # Create our SMAC object and pass the scenario and the train method
-    smac = MultiFidelityFacade(
+    smac = HPOFacade(
         scenario,
         mlp.train,
         initial_design=initial_design,
+        intensifier=intensifier,
         overwrite=True,
     )
 

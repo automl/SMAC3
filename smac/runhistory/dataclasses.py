@@ -67,6 +67,9 @@ class InstanceSeedBudgetKey:
 
         return False
 
+    def get_instance_seed_key(self) -> InstanceSeedKey:
+        return InstanceSeedKey(instance=self.instance, seed=self.seed)
+
 
 @dataclass(frozen=True)
 class TrialKey:
@@ -124,9 +127,13 @@ class TrialInfo:
     instance: str | None = None
     seed: int | None = None
     budget: float | None = None
+    
+    def get_instance_seed_key(self) -> InstanceSeedKey:
+        """Get instance-seed key"""
+        return InstanceSeedKey(instance=self.instance, seed=self.seed)
 
     def get_instance_seed_budget_key(self) -> InstanceSeedBudgetKey:
-        """Get instance, seed and budget key."""
+        """Get instance-seed-budget key."""
         return InstanceSeedBudgetKey(instance=self.instance, seed=self.seed, budget=self.budget)
 
 

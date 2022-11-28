@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from typing import Any, Iterator
 
-from collections import defaultdict
-
 from ConfigSpace import Configuration
 
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
@@ -29,23 +27,12 @@ class Intensifier(AbstractIntensifier):
     ):
         super().__init__(scenario=scenario, max_config_calls=max_config_calls, max_incumbents=max_incumbents, seed=seed)
 
-        # Calculate instance seed pairs once
-        self.get_instance_seed_keys()
-
-        # Reset
-        self.reset()
-
-    def reset(self) -> None:  # noqa: D102
+    def reset(self) -> None:
         super().reset()
 
-        self._queue: list[tuple[Configuration, int]] = []  # (config, N=how many trials should be sampled)
-
-    # @property
-    # def meta(self) -> dict[str, Any]:  # noqa: D102
-    #    meta = super().meta
-    #    meta.update({"max_config_calls": self._max_config_calls})
-
-    #    return meta
+        # Queue to keep track of the challengers
+        # (config, N=how many trials should be sampled)
+        self._queue: list[tuple[Configuration, int]] = []
 
     @property
     def uses_seeds(self) -> bool:  # noqa: D102
@@ -157,13 +144,13 @@ class Intensifier(AbstractIntensifier):
 
                     # If incumbent was evaluated on all incumbent instance intersections but was not evaluated on
                     # the differences, we have to add it here
-                    incumbent_isk_differences = self.get_incumbent_differences()
+                    incumbent_isb_key_differences = self.get_incumbent_instance_seed_budget_key_differences()
 
                     # We set shuffle to false because we first want to evaluate the incumbent instances, then the
                     # differences (to make the incumbents equal again)
                     trials = self._get_next_trials(
                         incumbent,
-                        from_keys=incumbent_isb_keys + incumbent_isk_differences,
+                        from_keys=incumbent_isb_keys + incumbent_isb_key_differences,
                         shuffle=False,
                     )
 
@@ -262,7 +249,6 @@ class Intensifier(AbstractIntensifier):
                     # all configs in the queue in one iteration
                     break
 
-    # TODO: Work on instance seed directly
     def _get_next_trials(
         self,
         config: Configuration,
@@ -285,19 +271,19 @@ class Intensifier(AbstractIntensifier):
             Shuffles the trials in groups. First all instances are shuffled, then all seeds.
         """
         rh = self.runhistory
-        instance_seed_keys = self.get_instance_seed_keys()
+        is_keys = self.get_instance_seed_keys_of_interest()
 
         # Create trials from the instance seed pairs
-        trials: list[TrialInfo] = []
-        for instance_seed in instance_seed_keys:
-            trials.append(TrialInfo(config=config, instance=instance_seed.instance, seed=instance_seed.seed))
+        # trials: list[TrialInfo] = []
+        # for is_key in is_keys:
+        #    trials.append(TrialInfo(config=config, instance=is_key.instance, seed=is_key.seed))
 
         # Keep ``from_keys`` trials only
         if from_keys is not None:
-            for trial in trials.copy():
-                isbk = trial.get_instance_seed_budget_key()
-                if isbk not in from_keys:
-                    trials.remove(trial)
+            valid_is_keys = [key.get_instance_seed_key() for key in from_keys]
+            for is_key in is_keys.copy():
+                if is_key not in valid_is_keys:
+                    is_keys.remove(is_key)
 
         # Counter is important to actually subtract the number of trials that are already evaluated/running
         # Otherwise, evaluated/running trials are not considered
@@ -307,44 +293,33 @@ class Intensifier(AbstractIntensifier):
         counter = 0
 
         # Now we actually have to check whether the trials have been evaluated already
-        evaluated_trials = rh.get_trials(config, only_max_observed_budget=False)
-        for trial in evaluated_trials:
-            if trial in trials:
+        evaluated_isb_keys = rh.get_instance_seed_budget_keys(config, highest_observed_budget_only=False)
+        for isb_key in evaluated_isb_keys:
+            is_key = isb_key.get_instance_seed_key()
+            if is_key in is_keys:
                 counter += 1
-                trials.remove(trial)
+                is_keys.remove(is_key)
 
         # It's also important to remove running trials from the selection (we don't want to queue them again)
         running_trials = rh.get_running_trials()
         for trial in running_trials:
-            if trial in trials:
+            is_key = trial.get_instance_seed_key()
+            if is_key in is_keys:
                 counter += 1
-                trials.remove(trial)
+                is_keys.remove(is_key)
 
         if shuffle:
-            # TODO: Use shuffle instnace seed pairs method here
-            # Now we shuffle the trials in groups (first all instances, then all seeds)
-            # - Group by seeds
-            # - Shuffle instances in this group of seeds
-            # - Attach groups together
-            groups = defaultdict(list)
-            for trial in trials:
-                groups[trial.seed].append(trial)
-
-            # Shuffle groups + attach groups together
-            shuffled_trials: list[TrialInfo] = []
-            for seed in self._tf_seeds:
-                if seed in groups and len(groups[seed]) > 0:
-                    # Shuffle trials in the group and add to shuffled trials
-                    shuffled = self._rng.choice(groups[seed], size=len(groups[seed]), replace=False)  # type: ignore
-                    shuffled_trials += [trial for trial in shuffled]  # type: ignore
-
-            assert len(shuffled_trials) == len(trials)
-            trials = shuffled_trials
+            is_keys = self._reorder_instance_seed_keys(is_keys)
 
         # Return only N trials
         if N is not None:
             N = N - counter
-            if len(trials) > N:
-                trials = trials[:N]
+            if len(is_keys) > N:
+                is_keys = is_keys[:N]
+
+        # Now we convert to trials
+        trials: list[TrialInfo] = []
+        for is_key in is_keys:
+            trials.append(TrialInfo(config=config, instance=is_key.instance, seed=is_key.seed))
 
         return trials

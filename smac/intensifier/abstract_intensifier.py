@@ -57,6 +57,12 @@ class AbstractIntensifier:
         # Internal variables
         self._n_seeds = n_seeds
         self._max_config_calls = max_config_calls
+        self._max_incumbents = max_incumbents
+
+        # Reset everything
+        self.reset()
+
+    def reset(self) -> None:
         self._tf_seeds: list[int] = []
         self._tf_instances: list[str | None] = []
         self._tf_budgets: list[float | None] = []
@@ -64,17 +70,14 @@ class AbstractIntensifier:
         self._instance_seed_keys_validation: list[InstanceSeedKey] | None = None
 
         # Incumbent variables
-        self._max_incumbents = max_incumbents
-
-        # Reset
-        self.reset()
-
-    def reset(self) -> None:
-        """Resets the intensifier."""
         self._incumbents: list[Configuration] = []
         self._incumbents_changed = 0
         self._rejected_config_ids: list[int] = []
         self._trajectory: list[TrajectoryItem] = []
+
+    def __post_init__(self) -> None:
+        """Post initilization steps after the runhistory has been set."""
+        pass
 
     @property
     def meta(self) -> dict[str, Any]:
@@ -142,6 +145,9 @@ class AbstractIntensifier:
         if len(self._tf_budgets) == 0:
             self._tf_budgets = [None]
 
+        # After the instances/budgets/seeds are set, we can call the post init
+        self.__post_init__()
+
         # Update our incumbents here
         for config in self._runhistory.get_configs():
             self.update_incumbents(config)
@@ -186,6 +192,120 @@ class AbstractIntensifier:
     def incumbents_changed(self) -> int:
         return self._incumbents_changed
 
+    def get_instance_seed_keys_of_interest(
+        self,
+        *,
+        validate: bool = False,
+        seed: int | None = None,
+    ) -> list[InstanceSeedKey]:
+        """Returns a list of instance-seed keys. Considers seeds and instances from the
+        runhistory (``self._tf_seeds`` and ``self._tf_instances``). If no seeds or instances were found, new
+        seeds and instances are generated based on the global intensifier seed.
+
+        Warning
+        -------
+        The passed seed is only used for validation. For training, the global intensifier seed is used.
+
+        Parameters
+        ----------
+        validate : bool, defaults to False
+            Whether to get validation trials or training trials. The only difference lays in different seeds.
+        seed : int | None, defaults to None
+            The seed used for the validation trials.
+
+        Returns
+        -------
+        trials : list[TrialInfo]
+            Trials of the config of interest.
+        """
+        if self._runhistory is None:
+            raise RuntimeError("Please set the runhistory before calling this method.")
+
+        if seed is None:
+            seed = 0
+
+        # We cache the instance seed pairs for efficiency and consistency reasons
+        if (self._instance_seed_keys is None and not validate) or (
+            self._instance_seed_keys_validation is None and validate
+        ):
+            instance_seed_keys: list[InstanceSeedKey] = []
+            if validate:
+                rng = np.random.RandomState(seed)
+            else:
+                rng = self._rng
+
+            i = 0
+            while True:
+                # We have two conditions to stop the loop:
+                # A) We found enough configs
+                # B) We used enough seeds
+                A = self._max_config_calls is not None and len(instance_seed_keys) >= self._max_config_calls
+                B = self._n_seeds is not None and i >= self._n_seeds
+
+                if A or B:
+                    break
+
+                if validate:
+                    next_seed = int(rng.randint(low=0, high=MAXINT, size=1)[0])
+                else:
+                    try:
+                        next_seed = self._tf_seeds[i]
+                        logger.info(f"Added existing seed {next_seed} from runhistory to the intensifier.")
+                    except IndexError:
+                        # Use global random generator for a new seed and mark it so it will be reused for another config
+                        next_seed = int(rng.randint(low=0, high=MAXINT, size=1)[0])
+                        self._tf_seeds.append(next_seed)
+                        logger.info(f"Added a new random seed {next_seed} to the intensifier.")
+
+                # If no instances are used, tf_instances includes None
+                for instance in self._tf_instances:
+                    instance_seed_keys.append(InstanceSeedKey(instance, next_seed))
+
+                # Only use one seed in deterministic case
+                if self._scenario.deterministic:
+                    logger.info("Using only one seed for deterministic scenario.")
+                    break
+
+                # Seed counter
+                i += 1
+
+            # Now we cut so that we only have max_config_calls instance_seed_keys
+            # We favor instances over seeds here: That makes sure we always work with the same instance/seed pairs
+            if self._max_config_calls is not None:
+                if len(instance_seed_keys) > self._max_config_calls:
+                    instance_seed_keys = instance_seed_keys[: self._max_config_calls]
+                    logger.info(f"Cut instance seed pairs to {self._max_config_calls} entries.")
+
+            # Set it globally
+            if not validate:
+                self._instance_seed_keys = instance_seed_keys
+            else:
+                self._instance_seed_keys_validation = instance_seed_keys
+
+        if not validate:
+            assert self._instance_seed_keys is not None
+            instance_seed_keys = self._instance_seed_keys
+        else:
+            assert self._instance_seed_keys_validation is not None
+            instance_seed_keys = self._instance_seed_keys_validation
+
+        return instance_seed_keys.copy()
+
+    def get_trials_of_interest(
+        self,
+        config: Configuration,
+        *,
+        validate: bool = False,
+        seed: int | None = None,
+    ) -> list[TrialInfo]:
+        is_keys = self.get_instance_seed_keys_of_interest(validate=validate, seed=seed)
+
+        trials = []
+        for key in is_keys:
+            trials.append(TrialInfo(config=config, instance=key.instance, seed=key.seed))
+
+        return trials
+
     def get_incumbent(self) -> Configuration | None:
         """Returns the current incumbent in a single-objective setting."""
         if self._scenario.count_objectives() > 1:
@@ -220,21 +340,28 @@ class AbstractIntensifier:
         else:
             raise ValueError(f"Unknown sort_by value: {sort_by}.")
 
+    def get_instance_seed_budget_keys(self, config: Configuration) -> list[InstanceSeedBudgetKey]:
+        """Returns the instance-seed-budget keys for a given configuration. This method is *used for
+        updating the incumbents* and might differ for different intensifiers. For example, if incumbents should only
+        be compared on the highest observed budgets.
+        """
+        return self.runhistory.get_instance_seed_budget_keys(config, highest_observed_budget_only=False)
+
     def get_incumbent_instance_seed_budget_keys(self) -> list[InstanceSeedBudgetKey]:
-        """Find the lowest intersection of instances for all incumbents."""
+        """Find the lowest intersection of instance-seed-budget keys for all incumbents."""
         incumbents = self.get_incumbents()
 
         if len(incumbents) > 0:
             # We want to calculate the smallest set of trials that is used by all incumbents
             # Reason: We can not fairly compare otherwise
-            incumbent_isb_keys = [self.runhistory.get_instance_seed_budget_keys(incumbent) for incumbent in incumbents]
+            incumbent_isb_keys = [self.get_instance_seed_budget_keys(incumbent) for incumbent in incumbents]
             instances = list(set.intersection(*map(set, incumbent_isb_keys)))  # type: ignore
 
             return instances  # type: ignore
 
         return []
 
-    def get_incumbent_differences(self) -> list[InstanceSeedBudgetKey]:
+    def get_incumbent_instance_seed_budget_key_differences(self) -> list[InstanceSeedBudgetKey]:
         """There are situations in which incumbents are evaluated on more trials than others. This method returns the
         instances which are not part of the lowest intersection of instances for all incumbents.
         """
@@ -242,7 +369,7 @@ class AbstractIntensifier:
 
         if len(incumbents) > 0:
             # We want to calculate the differences so that we can evaluate the other incumbents on the same instances
-            incumbent_isb_keys = [self.runhistory.get_instance_seed_budget_keys(incumbent) for incumbent in incumbents]
+            incumbent_isb_keys = [self.get_instance_seed_budget_keys(incumbent) for incumbent in incumbents]
 
             if len(incumbent_isb_keys) <= 1:
                 return []
@@ -287,10 +414,10 @@ class AbstractIntensifier:
         rh = self.runhistory
 
         # What happens if a config was rejected but it appears again? Give it another try since it
-        # already was evaluated? YES!
+        # already was evaluated? Yes!
 
         # Associated trials and id
-        config_isb_keys = rh.get_instance_seed_budget_keys(config)
+        config_isb_keys = self.get_instance_seed_budget_keys(config)
         config_id = rh._config_ids[config]
         config_hash = get_config_hash(config)
 
@@ -326,8 +453,6 @@ class AbstractIntensifier:
 
             # Nothing else to do
             return
-
-        assert incumbent_isb_keys is not None
 
         # Now we have to check if the new config has been evaluated on the same trials as the incumbents
         if not all([trial in config_isb_keys for trial in incumbent_isb_keys]):
@@ -422,106 +547,6 @@ class AbstractIntensifier:
         """
         raise NotImplementedError
 
-    def get_instance_seed_keys(
-        self,
-        *,
-        validate: bool = False,
-        seed: int | None = None,
-    ) -> list[InstanceSeedKey]:
-        """Returns a list of instance seed keys. Considers seeds and instances from the
-        runhistory (``self._tf_seeds`` and ``self._tf_instances``). If no seeds or instances were found, new
-        seeds and instances are generated based on the global intensifier seed.
-
-        Warning
-        -------
-        The passed seed is only used for validation. For training, the global intensifier seed is used.
-
-        Parameters
-        ----------
-        validate : bool, defaults to False
-            Whether to get validation trials or training trials. The only difference lays in different seeds.
-        seed : int | None, defaults to None
-            The seed used for the validation trials.
-
-        Returns
-        -------
-        trials : list[TrialInfo]
-            Trials of the config of interest.
-        """
-        if seed is None:
-            seed = 0
-
-        # We cache the instance seed pairs for efficiency and consistency reasons
-        if (self._instance_seed_keys is None and not validate) or (
-            self._instance_seed_keys_validation is None and validate
-        ):
-            instance_seed_keys: list[InstanceSeedKey] = []
-            if validate:
-                rng = np.random.RandomState(seed)
-            else:
-                rng = self._rng
-
-            i = 0
-            while True:
-                # We have two conditions to stop the loop:
-                # A) We found enough configs
-                # B) We used enough seeds
-                A = self._max_config_calls is not None and len(instance_seed_keys) >= self._max_config_calls
-                B = self._n_seeds is not None and i >= self._n_seeds
-
-                if A or B:
-                    break
-
-                if validate:
-                    next_seed = int(rng.randint(low=0, high=MAXINT, size=1)[0])
-                else:
-                    try:
-                        next_seed = self._tf_seeds[i]
-                        logger.info(f"Added existing seed {next_seed} from runhistory to the intensifier.")
-                    except IndexError:
-                        # Use global random generator for a new seed and mark it so it will be reused for another config
-                        next_seed = int(rng.randint(low=0, high=MAXINT, size=1)[0])
-                        self._tf_seeds.append(next_seed)
-                        logger.info(f"Added a new random seed {next_seed} to the intensifier.")
-
-                # If no instances are used, tf_instances includes None
-                for instance in self._tf_instances:
-                    instance_seed_keys.append(InstanceSeedKey(instance, next_seed))
-
-                # Only use one seed in deterministic case
-                if self._scenario.deterministic:
-                    logger.info("Using only one seed for deterministic scenario.")
-                    break
-
-                # Seed counter
-                i += 1
-
-            # Now we cut so that we only have max_config_calls instance_seed_keys
-            # We favor instances over seeds here: That makes sure we always work with the same instance/seed pairs
-            if self._max_config_calls is not None:
-                if len(instance_seed_keys) > self._max_config_calls:
-                    instance_seed_keys = instance_seed_keys[: self._max_config_calls]
-                    logger.info(f"Cut instance seed pairs to {self._max_config_calls} entries.")
-
-            # Set it globally
-            if not validate:
-                self._instance_seed_keys = instance_seed_keys
-            else:
-                self._instance_seed_keys_validation = instance_seed_keys
-
-        if not validate:
-            assert self._instance_seed_keys is not None
-            instance_seed_keys = self._instance_seed_keys
-        else:
-            assert self._instance_seed_keys_validation is not None
-            instance_seed_keys = self._instance_seed_keys_validation
-
-        # trials: list[TrialInfo] = []
-        # for instance_seed in instance_seed_keys:
-        #    trials.append(TrialInfo(config=config, instance=instance_seed.instance, seed=instance_seed.seed))
-
-        return instance_seed_keys.copy()
-
     def get_state(self) -> dict[str, Any]:
         """The current state of the intensifier. Used to restore the state of the intensifier when continuing a run."""
         return {}
@@ -545,7 +570,6 @@ class AbstractIntensifier:
             "rejected_config_ids": self._rejected_config_ids,
             "incumbents_changed": self._incumbents_changed,
             "trajectory": [dataclasses.asdict(item) for item in self._trajectory],
-            "seed_state": self._rng.get_state(),
             "state": self.get_state(),
         }
 
@@ -566,11 +590,15 @@ class AbstractIntensifier:
             )
             return
 
+        # We reset the intensifier and then reset the runhistory
+        self.reset()
+        if self._runhistory is not None:
+            self.runhistory = self._runhistory
+
         self._incumbents = [self.runhistory.get_config(config_id) for config_id in data["incumbent_ids"]]
         self._incumbents_changed = data["incumbents_changed"]
         self._rejected_config_ids = data["rejected_config_ids"]
         self._trajectory = [TrajectoryItem(**item) for item in data["trajectory"]]
-        self._rng.set_state(data["seed_state"])
         self.set_state(data["state"])
 
     def print_config_changes(
@@ -622,7 +650,7 @@ class AbstractIntensifier:
             rng = self._rng
         else:
             rng = np.random.RandomState(seed)
-        
+
         groups = defaultdict(list)
         for pair in instance_seed_keys:
             groups[pair.seed].append(pair)
@@ -634,8 +662,7 @@ class AbstractIntensifier:
             if seed in groups and len(groups[seed]) > 0:
                 # Shuffle pairs in the group and add to shuffled pairs
                 shuffled = rng.choice(groups[seed], size=len(groups[seed]), replace=False)  # type: ignore
-                shuffled_pairs.append([pair for pair in shuffled])  # type: ignore
+                shuffled_pairs += [pair for pair in shuffled]  # type: ignore
 
         assert len(shuffled_pairs) == len(instance_seed_keys)
         return shuffled_pairs
-        

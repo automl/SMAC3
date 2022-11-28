@@ -101,7 +101,7 @@ def test_add_multiple_times(runhistory, config1):
         )
 
     assert len(runhistory._data) == 1
-    assert len(runhistory.get_trials(config1, only_max_observed_budget=True)) == 1
+    assert len(runhistory.get_trials(config1, highest_observed_budget_only=True)) == 1
     assert len(runhistory._config_id_to_isk_to_budget[1]) == 1
     assert list(runhistory._data.values())[0].cost == 1
 
@@ -152,7 +152,7 @@ def test_get_config_runs(runhistory, config1, config2):
         budget=1,
     )
 
-    ist = runhistory.get_trials(config=config1, only_max_observed_budget=True)
+    ist = runhistory.get_trials(config=config1, highest_observed_budget_only=True)
 
     # assert len(ist) == 2
     assert len(ist) == 1
@@ -165,7 +165,7 @@ def test_get_config_runs(runhistory, config1, config2):
 
 def test_get_config_runs2(runhistory, config1, config2):
     """
-    get some config runs from runhistory (multiple budgets (only_max_observed_budget=False))
+    get some config runs from runhistory (multiple budgets (highest_observed_budget_only=False))
     """
     runhistory.add(
         config=config1,
@@ -205,7 +205,7 @@ def test_get_config_runs2(runhistory, config1, config2):
         budget=2,
     )
 
-    ist = runhistory.get_trials(config=config1, only_max_observed_budget=False)
+    ist = runhistory.get_trials(config=config1, highest_observed_budget_only=False)
 
     assert len(ist) == 2
     assert ist[0].instance == 1
