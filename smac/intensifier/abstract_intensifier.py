@@ -340,28 +340,30 @@ class AbstractIntensifier:
         else:
             raise ValueError(f"Unknown sort_by value: {sort_by}.")
 
-    def get_instance_seed_budget_keys(self, config: Configuration) -> list[InstanceSeedBudgetKey]:
+    def get_instance_seed_budget_keys(
+        self, config: Configuration, compare: bool = False
+    ) -> list[InstanceSeedBudgetKey]:
         """Returns the instance-seed-budget keys for a given configuration. This method is *used for
         updating the incumbents* and might differ for different intensifiers. For example, if incumbents should only
         be compared on the highest observed budgets.
         """
         return self.runhistory.get_instance_seed_budget_keys(config, highest_observed_budget_only=False)
 
-    def get_incumbent_instance_seed_budget_keys(self) -> list[InstanceSeedBudgetKey]:
+    def get_incumbent_instance_seed_budget_keys(self, compare: bool = False) -> list[InstanceSeedBudgetKey]:
         """Find the lowest intersection of instance-seed-budget keys for all incumbents."""
         incumbents = self.get_incumbents()
 
         if len(incumbents) > 0:
             # We want to calculate the smallest set of trials that is used by all incumbents
             # Reason: We can not fairly compare otherwise
-            incumbent_isb_keys = [self.get_instance_seed_budget_keys(incumbent) for incumbent in incumbents]
+            incumbent_isb_keys = [self.get_instance_seed_budget_keys(incumbent, compare) for incumbent in incumbents]
             instances = list(set.intersection(*map(set, incumbent_isb_keys)))  # type: ignore
 
             return instances  # type: ignore
 
         return []
 
-    def get_incumbent_instance_seed_budget_key_differences(self) -> list[InstanceSeedBudgetKey]:
+    def get_incumbent_instance_seed_budget_key_differences(self, compare: bool = False) -> list[InstanceSeedBudgetKey]:
         """There are situations in which incumbents are evaluated on more trials than others. This method returns the
         instances which are not part of the lowest intersection of instances for all incumbents.
         """
@@ -369,7 +371,7 @@ class AbstractIntensifier:
 
         if len(incumbents) > 0:
             # We want to calculate the differences so that we can evaluate the other incumbents on the same instances
-            incumbent_isb_keys = [self.get_instance_seed_budget_keys(incumbent) for incumbent in incumbents]
+            incumbent_isb_keys = [self.get_instance_seed_budget_keys(incumbent, compare) for incumbent in incumbents]
 
             if len(incumbent_isb_keys) <= 1:
                 return []
@@ -425,7 +427,7 @@ class AbstractIntensifier:
         # Note: This is especially the case if trials of a config are still running
         # because if trials are running, the runhistory does not update the trials in the fast data structure
         if len(config_isb_keys) == 0:
-            logger.debug(f"No instances evaluated for config {config_hash}. Updating incumbents is skipped.")
+            logger.debug(f"No relevant instances evaluated for config {config_hash}. Updating incumbents is skipped.")
             return
 
         # Now we get the incumbents and see which trials have been used
@@ -454,13 +456,26 @@ class AbstractIntensifier:
             # Nothing else to do
             return
 
-        # Now we have to check if the new config has been evaluated on the same trials as the incumbents
-        if not all([trial in config_isb_keys for trial in incumbent_isb_keys]):
+        # Comparison keys
+        # This one is a bit tricky: We would have problems if we compare with budgets because we might have different
+        # scenarios (depending on the incumbent selection specified in Successive Halving).
+        # 1) Any budget/highest observed budget: We want to get rid of the budgets because if we know it is calculated
+        # on the same instance-seed already then we are ready to go. Imagine we would check for the same budgets,
+        # then the configs can not be compared although the user does not care on which budgets configurations have
+        # been evaluated.
+        # 2) Highest budget: We only want to compare the configs if they are evaluated on the highest budget.
+        # Here we do actually care about the budgets. Please see the ``get_instance_seed_budget_keys`` method from
+        # Successive Halving to get more information.
+        config_isb_comparison_keys = self.get_instance_seed_budget_keys(config, compare=True)
+        config_incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
+
+        # Now we have to check if the new config has been evaluated on the same keys as the incumbents
+        if not all([key in config_isb_comparison_keys for key in config_incumbent_isb_comparison_keys]):
             # We can not tell if the new config is better/worse than the incumbents because it has not been
             # evaluated on the necessary trials
             logger.debug(
                 f"Could not compare config {config_hash} with incumbents because it's evaluated on "
-                f"{len(config_isb_keys)}/{len(incumbent_isb_keys)} trials only."
+                f"{len(config_isb_comparison_keys)}/{len(config_incumbent_isb_comparison_keys)} trials only."
             )
 
             # The config has to go to a queue now as it is a challenger and a potential incumbent
@@ -480,8 +495,13 @@ class AbstractIntensifier:
             incumbents.append(config)
             incumbent_ids.append(config_id)
 
+        # Now we get all instance-seed-budget keys for each incumbent (they might be different when using budgets)
+        all_incumbent_isb_keys = []
+        for incumbent in incumbents:
+            all_incumbent_isb_keys.append(self.get_instance_seed_budget_keys(incumbent))
+
         # We compare the incumbents now and only return the ones on the pareto front
-        new_incumbents = calculate_pareto_front(rh, incumbents, config_isb_keys)
+        new_incumbents = calculate_pareto_front(rh, incumbents, all_incumbent_isb_keys)
         new_incumbent_ids = [rh._config_ids[c] for c in new_incumbents]
 
         if len(previous_incumbents) == len(new_incumbents):

@@ -10,18 +10,20 @@ from smac.runhistory.dataclasses import InstanceSeedBudgetKey
 def calculate_pareto_front(
     runhistory: RunHistory,
     configs: list[Configuration],
-    instances: list[InstanceSeedBudgetKey],
+    config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]],
 ) -> list[Configuration]:
     """Compares the passed configurations and returns only the ones one the pareto front."""
+    assert len(configs) == len(config_instance_seed_budget_keys)
+    
     # Now we get the costs for the trials of the config
     average_costs = []
         
-    for config in configs:
+    for config, isb_keys in zip(configs, config_instance_seed_budget_keys):
         # Since we use multiple seeds, we have to average them to get only one cost value pair for each
         # configuration
         # However, we only want to consider the config trials
         # Average cost is a list of floats (one for each objective)
-        average_cost = runhistory.average_cost(config, instances, normalize=False)
+        average_cost = runhistory.average_cost(config, isb_keys, normalize=False)
         average_costs += [average_cost]
 
     # Let's work with a numpy array for efficiency

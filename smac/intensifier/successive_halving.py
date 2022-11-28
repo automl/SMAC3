@@ -99,8 +99,8 @@ class SuccessiveHalving(AbstractIntensifier):
 
             if max_budget > len(is_keys):
                 raise ValueError(
-                    f"Max budget of {max_budget} can not be greater than the number of instance seed "
-                    f"pairs ({len(is_keys)})."
+                    f"Max budget of {max_budget} can not be greater than the number of instance-seed "
+                    f"keys ({len(is_keys)})."
                 )
 
             if max_budget < len(is_keys):
@@ -202,17 +202,32 @@ class SuccessiveHalving(AbstractIntensifier):
 
         return trials
 
-    def get_instance_seed_budget_keys(self, config: Configuration) -> list[InstanceSeedBudgetKey]:
+    def get_instance_seed_budget_keys(
+        self, config: Configuration, compare: bool = False
+    ) -> list[InstanceSeedBudgetKey]:
         """Returns the instance-seed-budget keys for a given configuration. This method supports ``highest_budget``,
         which only returns the instance-seed-budget keys for the highest budget (if specified). In this case, the
-        incumbents are only changed if the costs on the highest budget are lower.
+        incumbents in ``update_incumbents`` are only changed if the costs on the highest budget are lower.
+
+        Parameters
+        ----------
+        compare : bool, defaults to False
+            Get rid of the budget information for comparing if the configuration was evaluated on the same
+            instance-seed keys.
         """
         isb_keys = self.runhistory.get_instance_seed_budget_keys(
             config, highest_observed_budget_only=self._highest_observed_budget_only
         )
+
         # If incumbent should only be changed on the highest budget, we have to kick out all budgets below the highest
         if self.uses_budgets and self._incumbent_selection == "highest_budget":
             isb_keys = [key for key in isb_keys if key.budget == self._max_budget]
+
+        if compare:
+            # Get rid of duplicates
+            isb_keys = list(
+                set([InstanceSeedBudgetKey(instance=key.instance, seed=key.seed, budget=None) for key in isb_keys])
+            )
 
         return isb_keys
 
@@ -394,7 +409,7 @@ class SuccessiveHalving(AbstractIntensifier):
         rh = self.runhistory
         configs = configs.copy()
 
-        # TODO: Make it more efficient
+        # TODO: Make it more efficient?
         for config in configs:
             isb_keys = self.get_instance_seed_budget_keys(config)
             if not all(isb_key in isb_keys for isb_key in from_keys):
@@ -403,7 +418,9 @@ class SuccessiveHalving(AbstractIntensifier):
         selected_configs: list[Configuration] = []
         while len(selected_configs) < n_configs:
             # We calculate the pareto front for the given configs
-            incumbents = calculate_pareto_front(rh, configs, from_keys)
+            # We use the same isb keys for all the configs
+            all_keys = [from_keys for _ in configs]
+            incumbents = calculate_pareto_front(rh, configs, all_keys)
 
             # Idea: We recursively calculate the pareto front in every iteration
             for incumbent in incumbents:

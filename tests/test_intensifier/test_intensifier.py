@@ -22,7 +22,6 @@ class CustomConfigSelector(ConfigSelector):
         )
 
     def __iter__(self):
-
         for config in self._initial_design_configs:
             self._processed_configs.append(config)
             yield config
@@ -117,10 +116,10 @@ def test_next_trials(make_scenario, configspace_small):
     trials = intensifier._get_next_trials(config)
     assert len(trials) == 7
 
-    # The only thing missing is ``from_instances`` now
+    # The only thing missing is ``from_keys`` now
     isbk = trials[0].get_instance_seed_budget_key()
 
-    trials = intensifier._get_next_trials(config, from_instances=[isbk])
+    trials = intensifier._get_next_trials(config, from_keys=[isbk])
     assert len(trials) == 1
     assert trials[0].instance == isbk.instance
     assert trials[0].seed == isbk.seed
@@ -147,7 +146,7 @@ def test_next_trials_counter(make_scenario, configspace_small):
     trials = intensifier._get_next_trials(config, N=5)
     assert len(trials) == 4
 
-    # More interesting case: Use ``from_instances`` too
+    # More interesting case: Use ``from_keys`` too
     instances = []
     for trial in trials:
         instances.append(trial.get_instance_seed_budget_key())
@@ -156,11 +155,11 @@ def test_next_trials_counter(make_scenario, configspace_small):
     del instances[0]
 
     # ... but request 8
-    trials = intensifier._get_next_trials(config, N=8, from_instances=instances)
+    trials = intensifier._get_next_trials(config, N=8, from_keys=instances)
     assert len(trials) == 3
 
     # ... but request 2
-    trials = intensifier._get_next_trials(config, N=2, from_instances=instances)
+    trials = intensifier._get_next_trials(config, N=2, from_keys=instances)
     assert len(trials) == 2
 
 

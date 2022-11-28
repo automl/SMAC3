@@ -125,10 +125,7 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
         first_five = [f"{_[0]} ({_[1].origin})" for _ in next_configs_by_acq_value[:5]]
 
-        logger.debug(
-            "First 5 acquisition function values of selected configurations:\n%s",
-            ", ".join(first_five),
-        )
+        logger.debug(f"First 5 acquisition function values of selected configurations:\n{', '.join(first_five)}")
 
         return next_configs_by_acq_value
 
