@@ -1,3 +1,9 @@
+# 2.0.0a3
+
+Completely reimplemented the intensifiers (including Successive Halving and Hyperband).
+All intensifiers support multi-fidelity, multi-objective and multi-threading by nature now.
+
+
 # 2.0.0a2
 
 ## Bugfixes

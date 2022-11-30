@@ -308,6 +308,9 @@ class SMBO:
                 f"Remaining trials: {self.remaining_trials}"
             )
 
+            if self.runhistory.finished % 50 == 0:
+                logger.info(f"Finished {self.runhistory.finished} trials.")
+
             for callback in self._callbacks:
                 callback.on_iteration_end(self)
 

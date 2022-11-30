@@ -14,35 +14,7 @@ __license__ = "3-clause BSD"
 
 
 class MultiFidelityFacade(HyperparameterOptimizationFacade):
-    """
-    This facade configures SMAC in a multi-fidelity setting.
-    The way this facade combines the components is the following and exploits
-    fidelity information in the following form:
-
-    1. The initial design is a RandomInitialDesign.
-    2. The intensification is Hyperband. The configurations from the initial design
-    are presented as challengers and executed in the Hyperband fashion.
-    3. The model is a RandomForest surrogate model. The data to train it is collected by ``SMBO._collect_data``.
-      Notably, the method searches through the runhistory and collects the data from the highest fidelity level,
-      that supports at least ``SMBO._min_samples_model`` number of configurations.
-    4. The acquisition function is ``EI``, presenting the value of a candidate configuration.
-    5. The acquisition optimizer is ``LocalAndSortedRandomSearch``. It optimizes the acquisition
-      function to present the best configuration as challenger to the intensifier.
-      From now on 2. works as follows: The intensifier runs the challenger in a Hyperband fashion against the existing
-      configurations and their observed performances until the challenger does not survive a fidelity level. The
-      intensifier can inquire about a known configuration on a yet unseen fidelity if necessary.
-
-    The loop 2-5 continues until a termination criterion is reached.
-
-    Note
-    ----
-    For intensification the data acquisition and aggregation strategy in step 2 is changed.
-    Incumbents are updated by the mean performance over the intersection of instances, that
-    the challenger and incumbent have in common (``abstract_intensifier._compare_configs``).
-    The model in step 3 is trained on all the available instance performance values.
-    The datapoints for a hyperparameter configuration are disambiguated by the instance features
-    or an index as replacement if no instance features are available.
-    """
+    """This facade configures SMAC in a multi-fidelity setting."""
 
     @staticmethod
     def get_intensifier(  # type: ignore
@@ -50,20 +22,36 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
         *,
         eta: int = 3,
         n_seeds: int = 1,
+        instance_seed_order: str | None = "shuffle_once",
+        max_incumbents: int = 10,
+        incumbent_selection: str = "highest_observed_budget",
     ) -> Hyperband:
-        """Returns a Hyperband intensifier instance. That means that budgets are supported.
+        """Returns a Hyperband intensifier instance. Budgets are supported.
 
-        min_challenger : int, defaults to 1
-            Minimal number of challengers to be considered (even if time_bound is exhausted earlier).
-        eta : float, defaults to 3
-            The "halving" factor after each iteration in a Successive Halving run.
-        n_seeds : int | None, defaults to None
-            The number of seeds to use if the target function is non-deterministic.
+        eta : int, defaults to 3
+            Input that controls the proportion of configurations discarded in each round of Successive Halving.
+        n_seeds : int, defaults to 1
+            How many seeds to use for each instance.
+        instance_seed_order : str, defaults to "shuffle_once"
+            How to order the instance-seed pairs. Can be set to:
+            * None: No shuffling at all and use the instance-seed order provided by the user.
+            * "shuffle_once": Shuffle the instance-seed keys once and use the same order across all runs.
+            * "shuffle": Shuffles the instance-seed keys for each bracket individually.
+        incumbent_selection : str, defaults to "any_budget"
+            How to select the incumbent when using budgets. Can be set to:
+            * "any_budget": Incumbent is the best on any budget i.e., best performance regardless of budget.
+            * "highest_observed_budget": Incumbent is the best in the highest budget run so far.
+            * "highest_budget": Incumbent is selected only based on the highest budget.
+        max_incumbents : int, defaults to 10
+            How many incumbents to keep track of in the case of multi-objective.
         """
         return Hyperband(
             scenario=scenario,
             eta=eta,
             n_seeds=n_seeds,
+            instance_seed_order=instance_seed_order,
+            max_incumbents=max_incumbents,
+            incumbent_selection=incumbent_selection,
         )
 
     @staticmethod

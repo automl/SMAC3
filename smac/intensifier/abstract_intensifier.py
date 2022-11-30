@@ -215,8 +215,8 @@ class AbstractIntensifier:
 
         Returns
         -------
-        trials : list[TrialInfo]
-            Trials of the config of interest.
+        instance_seed_keys : list[InstanceSeedKey]
+            Instance-seed keys of interest.
         """
         if self._runhistory is None:
             raise RuntimeError("Please set the runhistory before calling this method.")
@@ -298,6 +298,10 @@ class AbstractIntensifier:
         validate: bool = False,
         seed: int | None = None,
     ) -> list[TrialInfo]:
+        """
+        Returns the trials of interest for a given configuration.
+        Expands the keys from ``get_instance_seed_keys_of_interest`` with the config.
+        """
         is_keys = self.get_instance_seed_keys_of_interest(validate=validate, seed=seed)
 
         trials = []
@@ -524,7 +528,7 @@ class AbstractIntensifier:
                 else:
                     self._remove_rejected_config(config_id)
                     logger.info(
-                        f"Added config {config_hash} and rejected config {removed_incumbent_hash} because "
+                        f"Added config {config_hash} and rejected config {removed_incumbent_hash} as incumbent because "
                         f"it is not better than the incumbents on {len(config_isb_keys)} instances:"
                     )
                     print_config_changes(config, rh.get_config(removed_incumbent_id), logger=logger)

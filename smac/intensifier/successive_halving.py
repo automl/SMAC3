@@ -26,22 +26,41 @@ logger = get_logger(__name__)
 
 class SuccessiveHalving(AbstractIntensifier):
     """
+    Implementation of Succesive Halving supporting multi-fidelity, multi-objective, and multi-threading.
+
+    Note
+    ----
+    The implementation natively supports brackets from Hyperband. However, in the case of Successive Halving,
+    only one bracket is used.
+
     Parameters
     ----------
+    eta : int, defaults to 3
+        Input that controls the proportion of configurations discarded in each round of Successive Halving.
+    n_seeds : int, defaults to 1
+        How many seeds to use for each instance.
+    instance_seed_order : str, defaults to "shuffle_once"
+        How to order the instance-seed pairs. Can be set to:
+        * None: No shuffling at all and use the instance-seed order provided by the user.
+        * "shuffle_once": Shuffle the instance-seed keys once and use the same order across all runs.
+        * "shuffle": Shuffles the instance-seed keys for each bracket individually.
     incumbent_selection : str, defaults to "any_budget"
         How to select the incumbent when using budgets. Can be set to:
-        * any_budget: Incumbent is the best on any budget i.e., best performance regardless of budget.
-        * highest_observed_budget: Incumbent is the best in the highest budget run so far.
-        * highest_budget: Incumbent is selected only based on the highest budget.
+        * "any_budget": Incumbent is the best on any budget i.e., best performance regardless of budget.
+        * "highest_observed_budget": Incumbent is the best in the highest budget run so far.
+        * "highest_budget": Incumbent is selected only based on the highest budget.
+    max_incumbents : int, defaults to 10
+        How many incumbents to keep track of in the case of multi-objective.
+    seed : int, defaults to None
+        Internal seed used for random events like shuffle seeds.
     """
 
     def __init__(
         self,
         scenario: Scenario,
         eta: int = 3,
-        n_seeds: int = 1,  # How many seeds to use for each instance
-        # instance_seed_order
-        instance_seed_order: str | None = "shuffle",  # shuffle_once, shuffle, None
+        n_seeds: int = 1,
+        instance_seed_order: str | None = "shuffle_once",
         max_incumbents: int = 10,
         incumbent_selection: str = "highest_observed_budget",
         seed: int | None = None,
@@ -71,7 +90,7 @@ class SuccessiveHalving(AbstractIntensifier):
 
         return meta
 
-    def reset(self) -> None:
+    def reset(self) -> None:  # noqa: D102
         super().reset()
 
         # States
@@ -150,10 +169,12 @@ class SuccessiveHalving(AbstractIntensifier):
 
     def get_state(self) -> dict[str, Any]:  # noqa: D102
         # Replace config by dict
-        tracker: dict[tuple[int, int], list[tuple[int | None, list[dict]]]] = defaultdict(list)
+        tracker: dict[str, list[tuple[int | None, list[dict]]]] = defaultdict(list)
         for key in self._tracker.keys():
             for seed, configs in self._tracker[key]:
-                tracker[key].append((seed, [config.get_dictionary() for config in configs]))
+                # We have to make key serializable
+                new_key = f"{key[0]},{key[1]}"
+                tracker[new_key].append((seed, [config.get_dictionary() for config in configs]))
 
         return {"tracker": tracker}
 
@@ -161,12 +182,14 @@ class SuccessiveHalving(AbstractIntensifier):
         self._tracker = defaultdict(list)
 
         tracker = state["tracker"]
-        for (bracket, stage) in tracker.keys():
-            key = (int(bracket), int(stage))
+        for old_key in tracker.keys():
+            keys = [k for k in old_key.split(",")]
+            key = (int(keys[0]), int(keys[1]))
             for seed, config_dicts in tracker[key]:
+                seed = None if seed is None else int(seed)
                 self._tracker[key].append(
                     (
-                        int(seed),
+                        seed,
                         [Configuration(self._scenario.configspace, config_dict) for config_dict in config_dicts],
                     )
                 )
@@ -195,7 +218,7 @@ class SuccessiveHalving(AbstractIntensifier):
         *,
         validate: bool = False,
         seed: int | None = None,
-    ) -> list[TrialInfo]:
+    ) -> list[TrialInfo]:  # noqa: D102
         is_keys = self.get_instance_seed_keys_of_interest(validate=validate, seed=seed)
         budget = None
 
@@ -238,7 +261,7 @@ class SuccessiveHalving(AbstractIntensifier):
 
         return isb_keys
 
-    def __iter__(self) -> Iterator[TrialInfo]:
+    def __iter__(self) -> Iterator[TrialInfo]:  # noqa: D102
         rh = self.runhistory
 
         # We have to add already existing trials from the runhistory
@@ -316,7 +339,6 @@ class SuccessiveHalving(AbstractIntensifier):
 
                     # Add successful to the next stage
                     if stage < self._max_iterations[bracket] - 1:
-                        print("DRIN")
                         config_ids = [rh.get_config_id(config) for config in successful_configs]
                         self._tracker[(bracket, stage + 1)].append((seed, successful_configs))
 
@@ -387,8 +409,6 @@ class SuccessiveHalving(AbstractIntensifier):
 
             # The stage defines which budget should be used (in real-valued setting)
             # No shuffle is needed here because we only have on instance seed pair
-            print(bracket, stage)
-            print(self._budgets_in_stage)
             budget = self._budgets_in_stage[bracket][stage]
 
         isbk = []
