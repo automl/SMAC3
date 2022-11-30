@@ -127,16 +127,16 @@ class SuccessiveHalving(AbstractIntensifier):
         )
 
         # Pre-computing Successive Halving variables
-        max_iterations = int(np.floor(np.log(max_budget / min_budget) / np.log(eta)))
-        n_initial_challengers = int(eta**max_iterations)
+        max_iter = int(np.floor(np.log(max_budget / min_budget) / np.log(eta)))
+        n_initial_challengers = int(eta**max_iter)
 
         # How many configs in each stage
-        linspace = -np.linspace(0, max_iterations, max_iterations + 1)
-        n_configs = n_initial_challengers * np.power(eta, linspace)
-        n_configs = np.array(np.round(n_configs), dtype=int).tolist()
+        linspace = -np.linspace(0, max_iter, max_iter + 1)
+        n_configs_ = n_initial_challengers * np.power(eta, linspace)
+        n_configs = np.array(np.round(n_configs_), dtype=int).tolist()
 
         # How many budgets in each stage
-        linspace = -np.linspace(max_iterations, 0, max_iterations + 1)
+        linspace = -np.linspace(max_iter, 0, max_iter + 1)
         budgets = (max_budget * np.power(eta, linspace)).tolist()
 
         # Global variables
@@ -144,7 +144,7 @@ class SuccessiveHalving(AbstractIntensifier):
         self._max_budget = max_budget
 
         # Stage variables, depending on the bracket (0 is the bracket here since SH only has one bracket)
-        self._max_iterations: dict[int, int] = {0: max_iterations}
+        self._max_iterations: dict[int, int] = {0: max_iter + 1}
         self._n_configs_in_stage: dict[int, list] = {0: n_configs}
         self._budgets_in_stage: dict[int, list] = {0: budgets}
 
@@ -315,7 +315,8 @@ class SuccessiveHalving(AbstractIntensifier):
                     del self._tracker[(bracket, stage)][i]
 
                     # Add successful to the next stage
-                    if stage < self._max_iterations[bracket]:
+                    if stage < self._max_iterations[bracket] - 1:
+                        print("DRIN")
                         config_ids = [rh.get_config_id(config) for config in successful_configs]
                         self._tracker[(bracket, stage + 1)].append((seed, successful_configs))
 
@@ -354,7 +355,10 @@ class SuccessiveHalving(AbstractIntensifier):
             )
 
     def _get_instance_seed_budget_keys_by_stage(
-        self, bracket: int, stage: int, seed: int | None = None
+        self,
+        bracket: int,
+        stage: int,
+        seed: int | None = None,
     ) -> list[InstanceSeedBudgetKey]:
         """Returns all instance-seed-budget keys for the given stage. Each stage
         is associated with a budget (N). Two possible options:
@@ -383,6 +387,8 @@ class SuccessiveHalving(AbstractIntensifier):
 
             # The stage defines which budget should be used (in real-valued setting)
             # No shuffle is needed here because we only have on instance seed pair
+            print(bracket, stage)
+            print(self._budgets_in_stage)
             budget = self._budgets_in_stage[bracket][stage]
 
         isbk = []
