@@ -1,4 +1,5 @@
 import pytest
+
 from smac.initial_design.random_design import RandomInitialDesign
 from smac.intensifier.successive_halving import SuccessiveHalving
 from smac.main.config_selector import ConfigSelector

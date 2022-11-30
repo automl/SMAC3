@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Iterable
 
 from smac.utils.logging import get_logger

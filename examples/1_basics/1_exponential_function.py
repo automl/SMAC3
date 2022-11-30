@@ -10,12 +10,12 @@ The facade works best on a numerical hyperparameter configuration space and shou
 be applied to problems with large evaluation budgets (up to 1000 evaluations).
 """
 
-from ConfigSpace import Configuration, ConfigurationSpace, Float
-
 import numpy as np
+from ConfigSpace import Configuration, ConfigurationSpace, Float
 from matplotlib import pyplot as plt
+
 from smac import HyperparameterOptimizationFacade as HPOFacade
-from smac import Scenario, RunHistory
+from smac import RunHistory, Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

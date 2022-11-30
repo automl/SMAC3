@@ -25,7 +25,7 @@ from sklearn import datasets
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 
-from smac import Scenario, MultiFidelityFacade
+from smac import MultiFidelityFacade, Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

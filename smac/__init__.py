@@ -29,11 +29,11 @@ try:
 
     from smac.callback import Callback
     from smac.facade import (
-        HyperbandFacade,
-        MultiFidelityFacade,
         AlgorithmConfigurationFacade,
         BlackBoxFacade,
+        HyperbandFacade,
         HyperparameterOptimizationFacade,
+        MultiFidelityFacade,
         RandomFacade,
     )
     from smac.runhistory.runhistory import RunHistory

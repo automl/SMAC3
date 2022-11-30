@@ -61,31 +61,32 @@ class RandomFacade(AbstractFacade):
     def get_intensifier(
         scenario: Scenario,
         *,
-        min_challenger: int = 1,
-        min_config_calls: int = 1,
         max_config_calls: int = 3,
-        intensify_percentage: float = 0.5,
+        max_incumbents: int = 10,
     ) -> Intensifier:
-        """Returns ``Intensifier`` as intensifier. Uses the default configuration for ``race_against``.
+        """Returns ``Intensifier`` as intensifier.
 
         Note
         ----
-        Please use ``HyperbandFacade`` if you want to incorporate budgets.
+        Please use the ``HyperbandFacade`` if you want to incorporate budgets.
 
         Warning
         -------
         If you are in an algorithm configuration setting, consider increasing ``max_config_calls``.
-        """
-        intensifier = Intensifier(
-            scenario=scenario,
-            min_challenger=min_challenger,
-            race_against=scenario.configspace.get_default_configuration(),
-            min_config_calls=min_config_calls,
-            max_config_calls=max_config_calls,
-            intensify_percentage=intensify_percentage,
-        )
 
-        return intensifier
+        Parameters
+        ----------
+        max_config_calls : int, defaults to 3
+            Maximum number of configuration evaluations. Basically, how many instance-seed keys should be max evaluated
+            for a configuration.
+        max_incumbents : int, defaults to 10
+            How many incumbents to keep track of in the case of multi-objective.
+        """
+        return Intensifier(
+            scenario=scenario,
+            max_config_calls=max_config_calls,
+            max_incumbents=max_incumbents,
+        )
 
     @staticmethod
     def get_initial_design(

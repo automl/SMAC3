@@ -221,10 +221,11 @@ class BlackBoxFacade(AbstractFacade):
         Parameters
         ----------
         scenario : Scenario
-        max_config_calls : int, defaults to 1
-            Maximum number of trials per config (summed over all calls to intensify).
-        max_incumbents : int, defaults to 20
-            How many incumbents to keep track of.
+        max_config_calls : int, defaults to 3
+            Maximum number of configuration evaluations. Basically, how many instance-seed keys should be max evaluated
+            for a configuration.
+        max_incumbents : int, defaults to 10
+            How many incumbents to keep track of in the case of multi-objective.
         """
         return Intensifier(
             scenario=scenario,

@@ -1,13 +1,13 @@
 from __future__ import annotations
-from collections import defaultdict
 
 from typing import Any, Iterator
 
+from collections import defaultdict
 
 import numpy as np
 from ConfigSpace import Configuration
-from smac.constants import MAXINT
 
+from smac.constants import MAXINT
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.runhistory import TrialInfo
 from smac.runhistory.dataclasses import InstanceSeedBudgetKey

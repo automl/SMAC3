@@ -127,7 +127,7 @@ class TrialInfo:
     instance: str | None = None
     seed: int | None = None
     budget: float | None = None
-    
+
     def get_instance_seed_key(self) -> InstanceSeedKey:
         """Get instance-seed key"""
         return InstanceSeedKey(instance=self.instance, seed=self.seed)

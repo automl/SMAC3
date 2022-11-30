@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from collections import defaultdict
 from typing import Any, Iterator
 
 import dataclasses
 import json
+from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
@@ -35,6 +35,22 @@ logger = get_logger(__name__)
 
 
 class AbstractIntensifier:
+    """Abstract implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-threading.
+    The abstract intensifier keeps track of the incumbent, which is updated everytime the runhistory changes.
+
+    Parameters
+    ----------
+    n_seeds : int | None, defaults to None
+        How many seeds to use for each instance. It is used in the abstract intensifier to determine validation trials.
+    max_config_calls : int, defaults to None
+        Maximum number of configuration evaluations. Basically, how many instance-seed keys should be max evaluated
+        for a configuration. It is used in the abstract intensifier to determine validation trials.
+    max_incumbents : int, defaults to 10
+        How many incumbents to keep track of in the case of multi-objective.
+    seed : int, defaults to None
+        Internal seed used for random events like shuffle seeds.
+    """
+
     def __init__(
         self,
         scenario: Scenario,
@@ -632,22 +648,6 @@ class AbstractIntensifier:
         self._rejected_config_ids = data["rejected_config_ids"]
         self._trajectory = [TrajectoryItem(**item) for item in data["trajectory"]]
         self.set_state(data["state"])
-
-    def print_config_changes(
-        self,
-        incumbent: Configuration | None,
-        challenger: Configuration | None,
-    ) -> None:
-        """Compares two configurations and prints the differences."""
-        if incumbent is None or challenger is None:
-            return
-
-        params = sorted([(param, incumbent[param], challenger[param]) for param in challenger.keys()])
-        for param in params:
-            if param[1] != param[2]:
-                logger.info("--- %s: %r -> %r" % param)
-            else:
-                logger.debug("--- %s Remains unchanged: %r", param[0], param[1])
 
     def _add_rejected_config(self, config: Configuration | int) -> None:
         if isinstance(config, Configuration):

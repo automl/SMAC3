@@ -18,10 +18,24 @@ logger = get_logger(__name__)
 
 
 class Intensifier(AbstractIntensifier):
+    """Implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-threading.
+    Races challengers against current incumbents.
+
+    Parameters
+    ----------
+    max_config_calls : int, defaults to 3
+        Maximum number of configuration evaluations. Basically, how many instance-seed keys should be max evaluated
+        for a configuration.
+    max_incumbents : int, defaults to 10
+        How many incumbents to keep track of in the case of multi-objective.
+    seed : int, defaults to None
+        Internal seed used for random events like shuffle seeds.
+    """
+
     def __init__(
         self,
         scenario: Scenario,
-        max_config_calls: int = 2000,
+        max_config_calls: int = 3,
         max_incumbents: int = 10,
         seed: int | None = None,
     ):

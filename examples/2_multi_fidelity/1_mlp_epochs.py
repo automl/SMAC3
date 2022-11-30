@@ -36,8 +36,8 @@ from sklearn.datasets import load_digits
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.neural_network import MLPClassifier
 
-from smac import Scenario
 from smac import HyperparameterOptimizationFacade as HPOFacade
+from smac import Scenario
 from smac.intensifier.successive_halving import SuccessiveHalving
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
