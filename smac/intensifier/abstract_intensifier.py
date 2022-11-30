@@ -26,7 +26,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.configspace import get_config_hash, print_config_changes
 from smac.utils.logging import get_logger
-from smac.utils.pareto_front import calculate_pareto_front
+from smac.utils.pareto_front import calculate_pareto_front, sort_by_crowding_distance
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -40,7 +40,7 @@ class AbstractIntensifier:
         scenario: Scenario,
         n_seeds: int | None = None,
         max_config_calls: int | None = None,
-        max_incumbents: int = 20,
+        max_incumbents: int = 10,
         seed: int | None = None,
     ):
         self._scenario = scenario
@@ -332,7 +332,7 @@ class AbstractIntensifier:
         rh = self.runhistory
 
         if sort_by == "cost":
-            return list(sorted(self._incumbents, key=lambda config: rh._cost_per_config[rh._config_ids[config]]))
+            return list(sorted(self._incumbents, key=lambda config: rh._cost_per_config[rh.get_config_id(config)]))
         elif sort_by == "num_trials":
             return list(sorted(self._incumbents, key=lambda config: len(rh.get_trials(config))))
         elif sort_by is None:
@@ -420,7 +420,7 @@ class AbstractIntensifier:
 
         # Associated trials and id
         config_isb_keys = self.get_instance_seed_budget_keys(config)
-        config_id = rh._config_ids[config]
+        config_id = rh.get_config_id(config)
         config_hash = get_config_hash(config)
 
         # We skip updating incumbents if no instances are available
@@ -432,7 +432,7 @@ class AbstractIntensifier:
 
         # Now we get the incumbents and see which trials have been used
         incumbents = self.get_incumbents()
-        incumbent_ids = [rh._config_ids[c] for c in incumbents]
+        incumbent_ids = [rh.get_config_id(c) for c in incumbents]
         incumbent_isb_keys = self.get_incumbent_instance_seed_budget_keys()
 
         # Save for later
@@ -502,7 +502,7 @@ class AbstractIntensifier:
 
         # We compare the incumbents now and only return the ones on the pareto front
         new_incumbents = calculate_pareto_front(rh, incumbents, all_incumbent_isb_keys)
-        new_incumbent_ids = [rh._config_ids[c] for c in new_incumbents]
+        new_incumbent_ids = [rh.get_config_id(c) for c in new_incumbents]
 
         if len(previous_incumbents) == len(new_incumbents):
             if previous_incumbents == new_incumbents:
@@ -546,13 +546,21 @@ class AbstractIntensifier:
                     )
 
         # Cut incumbents: We only want to keep a specific number of incumbents
-        # Approach: Do it randomly for now; task for a future phd student ;)
+        # We use the crowding distance for that
         if len(new_incumbents) > self._max_incumbents:
-            idx = self._rng.randint(0, len(new_incumbents))
-            del new_incumbents[idx]
-            del new_incumbent_ids[idx]
+            new_incumbents = sort_by_crowding_distance(rh, new_incumbents, all_incumbent_isb_keys)
+            new_incumbents = new_incumbents[: self._max_incumbents]
+            new_incumbent_ids = [rh.get_config_id(c) for c in new_incumbents]
 
-            logger.info(f"Removed one incumbent randomly because more than {self._max_incumbents} are available.")
+            # or random?
+            # idx = self._rng.randint(0, len(new_incumbents))
+            # del new_incumbents[idx]
+            # del new_incumbent_ids[idx]
+
+            logger.info(
+                f"Removed one incumbent using crowding distance because more than {self._max_incumbents} are "
+                "available."
+            )
 
         self._incumbents = new_incumbents
         self._incumbents_changed += 1
