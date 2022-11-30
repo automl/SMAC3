@@ -87,8 +87,8 @@ def test_initialization_with_instances(make_scenario, configspace_small):
     assert intensifier._eta == 2
     assert intensifier._min_budget == 1
     assert intensifier._max_budget == 6
-    assert intensifier._n_configs_in_stage == [4, 2, 1]
-    assert intensifier._budgets_in_stage == [1.5, 3.0, 6.0]
+    assert intensifier._n_configs_in_stage[0] == [4, 2, 1]
+    assert intensifier._budgets_in_stage[0] == [1.5, 3.0, 6.0]
     assert len(intensifier.get_instance_seed_keys_of_interest()) == 6
 
 
@@ -122,8 +122,8 @@ def test_initialization_with_budgets(make_scenario, configspace_small):
     assert intensifier._eta == 2
     assert intensifier._min_budget == 1
     assert intensifier._max_budget == 6
-    assert intensifier._n_configs_in_stage == [4, 2, 1]
-    assert intensifier._budgets_in_stage == [1.5, 3.0, 6.0]
+    assert intensifier._n_configs_in_stage[0] == [4, 2, 1]
+    assert intensifier._budgets_in_stage[0] == [1.5, 3.0, 6.0]
     assert len(intensifier.get_instance_seed_keys_of_interest()) == 1
 
 
@@ -339,10 +339,10 @@ def test_with_filled_runhistory(make_scenario, configspace_small):
     # The tracker has to be updated now, meaning that all configs should have been added to
     # the first stage
     # Since we have a max budget of 3, we expect to have these configs batched
-    assert len(intensifier._tracker[0][0][1]) == 3
+    assert len(intensifier._tracker[(0, 0)][0][1]) == 3
 
     # We would expect 2 here but SH is always filling up empty spaces so that we naturally get 3
-    assert len(intensifier._tracker[0][1][1]) == 3
+    assert len(intensifier._tracker[(0, 0)][1][1]) == 3
 
 
 def test_promoting(make_scenario, configspace_small):
@@ -357,13 +357,13 @@ def test_promoting(make_scenario, configspace_small):
     n_configs = intensifier._n_configs_in_stage
     budgets = intensifier._budgets_in_stage
 
-    assert n_configs == [3, 1]
-    assert budgets == [1.0, 3.0]
+    assert n_configs[0] == [3, 1]
+    assert budgets[0] == [1.0, 3.0]
 
     gen = iter(intensifier)
-    for i in range(n_configs[0]):
+    for i in range(n_configs[0][0]):
         trial = next(gen)
-        assert trial.budget == budgets[0]
+        assert trial.budget == budgets[0][0]
         runhistory.add(
             config=trial.config,
             cost=i,
@@ -374,25 +374,25 @@ def test_promoting(make_scenario, configspace_small):
             status=StatusType.SUCCESS,
         )
 
-        assert 1 not in intensifier._tracker
+        assert (0, 1) not in intensifier._tracker
 
     # Now we should trigger the next stage
     trial = next(gen)
     runhistory.add_running_trial(trial)
-    assert 1 in intensifier._tracker
+    assert (0, 1) in intensifier._tracker
 
     # There should be only one batch
-    assert len(intensifier._tracker[1]) == 1
+    assert len(intensifier._tracker[(0, 1)]) == 1
 
     # There should be only one configuration inside this batch
-    assert len(intensifier._tracker[1][0][1]) == n_configs[1]
+    assert len(intensifier._tracker[(0, 1)][0][1]) == n_configs[0][1]
 
     # And the next trial should have the highest budget
-    assert trial.budget == budgets[1]
+    assert trial.budget == budgets[0][1]
 
     # If we would call next(gen) again we expect a new batch in the first stage
     first_stage_trial = next(gen)
-    assert first_stage_trial.budget == budgets[0]
+    assert first_stage_trial.budget == budgets[0][0]
 
     # Now we mark the previous trial as finished
     runhistory.add(
@@ -405,9 +405,9 @@ def test_promoting(make_scenario, configspace_small):
     )
 
     # If we call next(gen) again, we expect no entries in the second stage anymore
-    assert len(intensifier._tracker[1]) == 0
-    assert 2 not in intensifier._tracker
+    assert len(intensifier._tracker[(0, 1)]) == 0
+    assert (0, 2) not in intensifier._tracker
 
     # However, the first batch should still be there
-    assert len(intensifier._tracker[0]) == 1
-    assert len(intensifier._tracker[0][0][1]) == n_configs[0]
+    assert len(intensifier._tracker[(0, 0)]) == 1
+    assert len(intensifier._tracker[(0, 0)][0][1]) == n_configs[0][0]

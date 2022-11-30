@@ -75,8 +75,8 @@ class SuccessiveHalving(AbstractIntensifier):
         super().reset()
 
         # States
-        # dict[stage, list[tuple[instance shuffle seed, list[config_id]]]
-        self._tracker: dict[int, list[tuple[int | None, list[Configuration]]]] = defaultdict(list)
+        # dict[tuple[bracket, stage], list[tuple[seed to shuffle instance-seed keys, list[config_id]]]
+        self._tracker: dict[tuple[int, int], list[tuple[int | None, list[Configuration]]]] = defaultdict(list)
 
     def __post_init__(self) -> None:
         """Post initilization steps after the runhistory has been set."""
@@ -142,16 +142,18 @@ class SuccessiveHalving(AbstractIntensifier):
         # Global variables
         self._min_budget = min_budget
         self._max_budget = max_budget
-        self._max_iterations = max_iterations
-        self._n_configs_in_stage = n_configs
-        self._budgets_in_stage = budgets
+
+        # Stage variables, depending on the bracket (0 is the bracket here since SH only has one bracket)
+        self._max_iterations: dict[int, int] = {0: max_iterations}
+        self._n_configs_in_stage: dict[int, list] = {0: n_configs}
+        self._budgets_in_stage: dict[int, list] = {0: budgets}
 
     def get_state(self) -> dict[str, Any]:  # noqa: D102
         # Replace config by dict
-        tracker: dict[int, list[tuple[int | None, list[dict]]]] = defaultdict(list)
-        for stage in self._tracker.keys():
-            for seed, configs in self._tracker[stage]:
-                tracker[stage].append((seed, [config.get_dictionary() for config in configs]))
+        tracker: dict[tuple[int, int], list[tuple[int | None, list[dict]]]] = defaultdict(list)
+        for key in self._tracker.keys():
+            for seed, configs in self._tracker[key]:
+                tracker[key].append((seed, [config.get_dictionary() for config in configs]))
 
         return {"tracker": tracker}
 
@@ -159,9 +161,10 @@ class SuccessiveHalving(AbstractIntensifier):
         self._tracker = defaultdict(list)
 
         tracker = state["tracker"]
-        for stage in tracker.keys():
-            for seed, config_dicts in tracker[stage]:
-                self._tracker[int(stage)].append(
+        for (bracket, stage) in tracker.keys():
+            key = (int(bracket), int(stage))
+            for seed, config_dicts in tracker[key]:
+                self._tracker[key].append(
                     (
                         int(seed),
                         [Configuration(self._scenario.configspace, config_dict) for config_dict in config_dicts],
@@ -243,9 +246,13 @@ class SuccessiveHalving(AbstractIntensifier):
         # In the best case, trials (added from the users) are included in the seed and it has not re-computed again.
         # Note: If the intensifier was restored, we don't want to go in here
         if len(self._tracker) == 0:
+            bracket = 0
+            stage = 0
+
             # We batch the configs because we need n_configs in each iteration
             # If we don't have n_configs, we sample new ones
-            n_configs = self._n_configs_in_stage[0]
+            # We take the number of configs from the first bracket and the first stage
+            n_configs = self._n_configs_in_stage[bracket][stage]
             for configs in batch(rh.get_configs(), n_configs):
                 n_rh_configs = len(configs)
 
@@ -258,10 +265,10 @@ class SuccessiveHalving(AbstractIntensifier):
                         return
 
                 seed = self._get_next_order_seed()
-                self._tracker[0].append((seed, configs))
+                self._tracker[(bracket, stage)].append((seed, configs))
                 logger.info(
                     f"Added {n_rh_configs} configs from runhistory and {n_configs - n_rh_configs} new configs to "
-                    f"Successive Halving's first stage with seed {seed}."
+                    f"Successive Halving's first bracket and first stage with seed {seed}."
                 )
 
         while True:
@@ -277,10 +284,10 @@ class SuccessiveHalving(AbstractIntensifier):
 
             # TODO: Process stages ascending or descending?
             # TODO: Log how many configs are in each stage
-            for stage in list(self._tracker.keys()):
-                pairs = self._tracker[stage].copy()
+            for (bracket, stage) in list(self._tracker.keys()):
+                pairs = self._tracker[(bracket, stage)].copy()
                 for i, (seed, configs) in enumerate(pairs):
-                    isb_keys = self._get_instance_seed_budget_keys_by_stage(stage=stage, seed=seed)
+                    isb_keys = self._get_instance_seed_budget_keys_by_stage(bracket=bracket, stage=stage, seed=seed)
 
                     # We iterate over the configs and yield trials which are not running/evaluated yet
                     for config in configs:
@@ -297,7 +304,7 @@ class SuccessiveHalving(AbstractIntensifier):
 
                     # If all configs were evaluated on ``n_configs_required``, we finally can compare
                     try:
-                        successful_configs = self._get_best_configs(configs, stage, from_keys=isb_keys)
+                        successful_configs = self._get_best_configs(configs, bracket, stage, from_keys=isb_keys)
                     except NotEvaluatedError:
                         # We can't compare anything, so we just continue with the next pairs
                         logger.debug("--- Could not compare configs because not all trials have been evaluated yet.")
@@ -305,16 +312,21 @@ class SuccessiveHalving(AbstractIntensifier):
 
                     # Update tracker
                     # Remove current shuffle index / config pair
-                    del self._tracker[stage][i]
+                    del self._tracker[(bracket, stage)][i]
 
                     # Add successful to the next stage
-                    if stage < self._max_iterations:
+                    if stage < self._max_iterations[bracket]:
                         config_ids = [rh.get_config_id(config) for config in successful_configs]
-                        self._tracker[stage + 1].append((seed, successful_configs))
+                        self._tracker[(bracket, stage + 1)].append((seed, successful_configs))
 
-                        logger.debug(f"--- Promoted {len(config_ids)} configs from stage {stage} to stage {stage + 1}.")
+                        logger.debug(
+                            f"--- Promoted {len(config_ids)} configs from stage {stage} to stage {stage + 1} in "
+                            f"bracket {bracket}."
+                        )
                     else:
-                        logger.debug(f"--- Removed {len(successful_configs)} configs in last stage.")
+                        logger.debug(
+                            f"--- Removed {len(successful_configs)} configs to last stage in bracket {bracket}."
+                        )
 
             if update:
                 continue
@@ -325,7 +337,8 @@ class SuccessiveHalving(AbstractIntensifier):
             # If we are running out of trials, we want to add configs to the first stage
             # We simply add as many configs to the stage as required (_n_configs_in_stage[0])
             configs = []
-            for _ in range(self._n_configs_in_stage[0]):
+            next_bracket = self._get_next_bracket()
+            for _ in range(self._n_configs_in_stage[next_bracket][0]):
                 try:
                     config = next(self.config_generator)
                     configs.append(config)
@@ -335,11 +348,13 @@ class SuccessiveHalving(AbstractIntensifier):
 
             # We keep track of the seed so we always evaluate on the same instances
             next_seed = self._get_next_order_seed()
-            self._tracker[0].append((next_seed, configs))
-            logger.debug(f"Added {len(configs)} new configs to stage 0 with seed {next_seed}.")
+            self._tracker[(next_bracket, 0)].append((next_seed, configs))
+            logger.debug(
+                f"Added {len(configs)} new configs to bracket {next_bracket} stage 0 with shuffle seed {next_seed}."
+            )
 
     def _get_instance_seed_budget_keys_by_stage(
-        self, stage: int, seed: int | None = None
+        self, bracket: int, stage: int, seed: int | None = None
     ) -> list[InstanceSeedBudgetKey]:
         """Returns all instance-seed-budget keys for the given stage. Each stage
         is associated with a budget (N). Two possible options:
@@ -361,14 +376,14 @@ class SuccessiveHalving(AbstractIntensifier):
                 is_keys = self._reorder_instance_seed_keys(is_keys, seed=seed)
 
             # We only return the first N instances
-            N = int(self._budgets_in_stage[stage])
+            N = int(self._budgets_in_stage[bracket][stage])
             is_keys = is_keys[:N]
         else:
             assert len(is_keys) == 1
 
             # The stage defines which budget should be used (in real-valued setting)
             # No shuffle is needed here because we only have on instance seed pair
-            budget = self._budgets_in_stage[stage]
+            budget = self._budgets_in_stage[bracket][stage]
 
         isbk = []
         for isk in is_keys:
@@ -402,12 +417,13 @@ class SuccessiveHalving(AbstractIntensifier):
     def _get_best_configs(
         self,
         configs: list[Configuration],
+        bracket: int,
         stage: int,
         from_keys: list[InstanceSeedBudgetKey],
     ) -> list[Configuration]:
         """Returns the best configurations. The number of configurations is depending on the stage."""
         try:
-            n_configs = self._n_configs_in_stage[stage + 1]
+            n_configs = self._n_configs_in_stage[bracket][stage + 1]
         except IndexError:
             return []
 
@@ -450,3 +466,7 @@ class SuccessiveHalving(AbstractIntensifier):
             seed = None
 
         return seed
+
+    def _get_next_bracket(self) -> int:
+        """Successive Halving only uses one bracket. Therefore, we always return 0 here."""
+        return 0
