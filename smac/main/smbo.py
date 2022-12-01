@@ -160,16 +160,11 @@ class SMBO:
         for callback in self._callbacks:
             callback.on_ask_start(self)
 
-        # TODO: Does this work with the new intensifier?
-        # TODO: Maybe call this somewhere else?
-        if (config_selector := self._intensifier._config_selector) is not None:
-            if (mo := config_selector._runhistory_encoder.multi_objective_algorithm) is not None:
-                mo.update_on_iteration_start()
-
         # Now we use our generator to get the next trial info
         trial_info = next(self._trial_generator)
 
         # Track the fact that the trial was returned
+        # This is really important because otherwise the intensifier would most likly sample the same trial again
         self._runhistory.add_running_trial(trial_info)
 
         for callback in self._callbacks:

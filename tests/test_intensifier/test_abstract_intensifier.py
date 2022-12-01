@@ -3,6 +3,7 @@ import random
 import pytest
 
 from smac.initial_design.random_design import RandomInitialDesign
+from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.intensifier.intensifier import Intensifier
 from smac.main.config_selector import ConfigSelector
 from smac.runhistory.enumerations import StatusType
@@ -172,3 +173,104 @@ def test_save_and_load(make_scenario, configspace_small):
 
     assert intensifier._incumbents_changed == old_incumbents_changed
     assert intensifier._trajectory == old_trajectory
+
+
+def test_pareto_front1(make_scenario, configspace_small):
+    """Tests whether the configs are in the incumbents."""
+    scenario: Scenario = make_scenario(configspace_small, use_instances=True, n_instances=3)
+    runhistory = RunHistory()
+    intensifier = AbstractIntensifier(scenario=scenario, max_config_calls=3, seed=0)
+    intensifier.runhistory = runhistory
+    config1 = configspace_small.sample_configuration(1)
+    config2 = configspace_small.sample_configuration(1)
+
+    runhistory.add(
+        config=config1,
+        cost=[0, 10],
+        time=5,
+        status=StatusType.SUCCESS,
+    )
+    intensifier.update_incumbents(config1)
+
+    runhistory.add(
+        config=config2,
+        cost=[100, 0],
+        time=15,
+        status=StatusType.SUCCESS,
+    )
+    intensifier.update_incumbents(config2)
+
+    incumbents = intensifier.get_incumbents()
+    assert config1 in incumbents and config2 in incumbents
+
+
+def test_pareto_front2(make_scenario, configspace_small):
+    """Tests whether the configs are in the incumbents."""
+    scenario: Scenario = make_scenario(configspace_small, use_instances=True, n_instances=3)
+    runhistory = RunHistory()
+    intensifier = AbstractIntensifier(scenario=scenario, max_config_calls=3, seed=0)
+    intensifier.runhistory = runhistory
+    config1 = configspace_small.sample_configuration(1)
+    config2 = configspace_small.sample_configuration(1)
+
+    runhistory.add(
+        config=config1,
+        cost=[0, 10],
+        time=5,
+        status=StatusType.SUCCESS,
+    )
+    intensifier.update_incumbents(config1)
+
+    runhistory.add(
+        config=config2,
+        cost=[0, 15],
+        time=15,
+        status=StatusType.SUCCESS,
+    )
+    intensifier.update_incumbents(config2)
+
+    incumbents = intensifier.get_incumbents()
+    assert config1 in incumbents and config2 not in incumbents
+
+
+def test_pareto_front3(make_scenario, configspace_small):
+    """Tests whether the configs are in the incumbents."""
+    scenario: Scenario = make_scenario(configspace_small, use_instances=True, n_instances=3)
+    runhistory = RunHistory()
+    intensifier = AbstractIntensifier(scenario=scenario, max_config_calls=3, seed=0)
+    intensifier.runhistory = runhistory
+    config1 = configspace_small.sample_configuration(1)
+    config2 = configspace_small.sample_configuration(1)
+    config3 = configspace_small.sample_configuration(1)
+
+    runhistory.add(
+        config=config1,
+        cost=[10, 15],
+        time=5,
+        status=StatusType.SUCCESS,
+    )
+    intensifier.update_incumbents(config1)
+
+    runhistory.add(
+        config=config2,
+        cost=[10, 10],
+        time=15,
+        status=StatusType.SUCCESS,
+    )
+    intensifier.update_incumbents(config2)
+
+    incumbents = intensifier.get_incumbents()
+    assert config2 in incumbents and config1 not in incumbents
+
+    runhistory.add(
+        config=config3,
+        cost=[5, 15],
+        time=15,
+        status=StatusType.SUCCESS,
+    )
+    intensifier.update_incumbents(config3)
+
+    incumbents = intensifier.get_incumbents()
+    assert len(incumbents) == 2
+    assert config2 in incumbents
+    assert config3 in incumbents

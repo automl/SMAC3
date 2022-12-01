@@ -170,7 +170,7 @@ class SuccessiveHalving(AbstractIntensifier):
     def get_state(self) -> dict[str, Any]:  # noqa: D102
         # Replace config by dict
         tracker: dict[str, list[tuple[int | None, list[dict]]]] = defaultdict(list)
-        for key in self._tracker.keys():
+        for key in list(self._tracker.keys()):
             for seed, configs in self._tracker[key]:
                 # We have to make key serializable
                 new_key = f"{key[0]},{key[1]}"
@@ -182,12 +182,12 @@ class SuccessiveHalving(AbstractIntensifier):
         self._tracker = defaultdict(list)
 
         tracker = state["tracker"]
-        for old_key in tracker.keys():
+        for old_key in list(tracker.keys()):
             keys = [k for k in old_key.split(",")]
-            key = (int(keys[0]), int(keys[1]))
-            for seed, config_dicts in tracker[key]:
+            new_key = (int(keys[0]), int(keys[1]))
+            for seed, config_dicts in tracker[old_key]:
                 seed = None if seed is None else int(seed)
-                self._tracker[key].append(
+                self._tracker[new_key].append(
                     (
                         seed,
                         [Configuration(self._scenario.configspace, config_dict) for config_dict in config_dicts],

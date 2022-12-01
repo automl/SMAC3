@@ -225,6 +225,11 @@ class AbstractFacade:
         return self._optimizer
 
     @property
+    def intensifier(self) -> AbstractIntensifier:
+        """The optimizer which is responsible for the AutoML loop. Keeps track of useful information like status."""
+        return self._intensifier
+
+    @property
     def meta(self) -> dict[str, Any]:
         """Generates a hash based on all components of the facade. This is used for the run name or to determine
         whether a run should be continued or not.

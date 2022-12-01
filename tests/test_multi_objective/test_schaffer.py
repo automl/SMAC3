@@ -85,16 +85,18 @@ def test_mean_aggregation(facade, make_scenario, configspace):
         multi_objective_algorithm=multi_objective_algorithm,
         overwrite=True,
     )
-    incumbent = smac.optimize()
+    incumbents = smac.optimize()
 
-    f1_inc, f2_inc = schaffer(incumbent["x"])
-    f1_opt, f2_opt = get_optimum()
+    for incumbent in incumbents:
+        print(incumbent)
+        f1_inc, f2_inc = schaffer(incumbent["x"])
+        f1_opt, f2_opt = get_optimum()
 
-    inc = f1_inc + f2_inc
-    opt = f1_opt + f2_opt
-    diff = abs(inc - opt)
+        inc = f1_inc + f2_inc
+        opt = f1_opt + f2_opt
+        diff = abs(inc - opt)
 
-    assert diff < 0.06
+        assert diff < 0.06
 
     assert multi_objective_algorithm.n_calls_update_on_iteration_start >= 100
     assert multi_objective_algorithm.n_calls_update_on_iteration_start <= 130
@@ -106,9 +108,7 @@ def test_mean_aggregation(facade, make_scenario, configspace):
 )
 def test_parego(facade, make_scenario, configspace):
     scenario = make_scenario(configspace, use_multi_objective=True)
-
     multi_objective_algorithm = WrapStrategy(ParEGO, scenario=scenario)
-
     smac = facade(
         scenario=scenario,
         target_function=tae,
@@ -116,13 +116,15 @@ def test_parego(facade, make_scenario, configspace):
         overwrite=True,
     )
 
-    smac.optimize()
+    incumbents = smac.optimize()
 
     # The incumbent is not ambiguous because we have a Pareto front
-    confs, vals = smac.runhistory.get_pareto_front()
+    values = []
+    for config in incumbents:
+        values.append(smac.runhistory.get_cost(config))
 
     min_ = np.inf
-    for x, y in zip(confs, vals):
+    for x, y in zip(incumbents, values):
         tr = schaffer(x["x"])
         assert np.allclose(tr, y)
         if np.sum(y) < min_:

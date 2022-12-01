@@ -124,6 +124,10 @@ class ConfigSelector:
             # If not given and runhistory is empty, it will raise a ValueError.
             incumbent_value: float | None = None
 
+            # Everytime we re-train the surrogate model, we also update our multi-objective algorithm
+            if (mo := self._runhistory_encoder.multi_objective_algorithm) is not None:
+                mo.update_on_iteration_start()
+
             X, Y, X_configurations = self._collect_data()
             previous_configs = self._runhistory.get_configs()
 

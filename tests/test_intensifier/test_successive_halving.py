@@ -270,13 +270,19 @@ def test_state(make_scenario, configspace_small):
         runhistory.add_running_trial(trial)  # We have to mark it as running manually
         intensifier.update_incumbents(trial.config)
 
-    state = intensifier.get_state()
+    # Save current state as old state
+    old_state = intensifier.get_state()
     assert len(intensifier.get_state()["tracker"]) > 0
+
+    # Now we reset the intensifier
     intensifier._tracker = {}
     assert len(intensifier.get_state()["tracker"]) == 0
 
-    intensifier.set_state(state)
-    assert intensifier.get_state() == state
+    # Next, we set the state again
+    intensifier.set_state(old_state)
+    new_state = intensifier.get_state()
+
+    assert old_state == new_state
 
 
 def test_trials_of_interest(make_scenario, configspace_small):
