@@ -25,7 +25,8 @@ from sklearn import datasets
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 
-from smac import MultiFidelityFacade, Scenario
+from smac import MultiFidelityFacade as MFFacade
+from smac import Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -123,7 +124,7 @@ if __name__ == "__main__":
     )
 
     # Create our SMAC object and pass the scenario and the train method
-    smac = MultiFidelityFacade(
+    smac = MFFacade(
         scenario,
         model.train,
         overwrite=True,

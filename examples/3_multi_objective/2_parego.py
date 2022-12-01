@@ -3,10 +3,10 @@ ParEGO
 ^^^^^^
 
 An example of how to use multi-objective optimization with ParEGO. Both accuracy and run-time are going to be
-optimized, and the configurations are shown in a plot, highlighting the best ones in a Pareto front. The red cross
-indicates the best configuration selected by SMAC.
+optimized on the digits dataset using an MLP, and the configurations are shown in a plot, highlighting the best ones in 
+a Pareto front. The red cross indicates the best configuration selected by SMAC.
 
-In the optimization, SMAC evaluates the configurations on three different seeds. Therefore, the plot shows the
+In the optimization, SMAC evaluates the configurations on two different seeds. Therefore, the plot shows the
 mean accuracy and run-time of each configuration.
 """
 from __future__ import annotations
@@ -117,8 +117,8 @@ def plot_pareto(smac: AbstractFacade, incumbents: list[Configuration]) -> None:
     costs_x, costs_y = costs[:, 0], costs[:, 1]
     pareto_costs_x, pareto_costs_y = pareto_costs[:, 0], pareto_costs[:, 1]
 
-    plt.scatter(costs_x, costs_y, marker="x")
-    plt.scatter(pareto_costs_x, pareto_costs_y, marker="x", c="r")
+    plt.scatter(costs_x, costs_y, marker="x", label="Configuration")
+    plt.scatter(pareto_costs_x, pareto_costs_y, marker="x", c="r", label="Incumbent")
     plt.step(
         [pareto_costs_x[0]] + pareto_costs_x.tolist() + [np.max(costs_x)],  # We add bounds
         [np.max(costs_y)] + pareto_costs_y.tolist() + [np.min(pareto_costs_y)],  # We add bounds
@@ -129,17 +129,19 @@ def plot_pareto(smac: AbstractFacade, incumbents: list[Configuration]) -> None:
     plt.title("Pareto-Front")
     plt.xlabel(smac.scenario.objectives[0])
     plt.ylabel(smac.scenario.objectives[1])
+    plt.legend()
     plt.show()
 
 
 if __name__ == "__main__":
     mlp = MLP()
+    objectives = ["1 - accuracy", "time"]
 
     # Define our environment variables
     scenario = Scenario(
         mlp.configspace,
-        objectives=["1 - accuracy", "time"],
-        walltime_limit=40,  # After 40 seconds, we stop the hyperparameter optimization
+        objectives=objectives,
+        walltime_limit=30,  # After 30 seconds, we stop the hyperparameter optimization
         n_trials=200,  # Evaluate max 200 different trials
         n_workers=1,
     )
@@ -147,6 +149,7 @@ if __name__ == "__main__":
     # We want to run five random configurations before starting the optimization.
     initial_design = HPOFacade.get_initial_design(scenario, n_configs=5)
     multi_objective_algorithm = ParEGO(scenario)
+    intensifier = HPOFacade.get_intensifier(scenario, max_config_calls=2)
 
     # Create our SMAC object and pass the scenario and the train method
     smac = HPOFacade(
@@ -154,8 +157,8 @@ if __name__ == "__main__":
         mlp.train,
         initial_design=initial_design,
         multi_objective_algorithm=multi_objective_algorithm,
+        intensifier=intensifier,
         overwrite=True,
-        logging_level=0,
     )
 
     # Let's optimize

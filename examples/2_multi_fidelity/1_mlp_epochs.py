@@ -3,10 +3,10 @@ Multi-Layer Perceptron Using Multiple Epochs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets.
-Since we want to take advantage of Multi-Fidelity, the ``MultiFidelityFacade`` is a good choice. By default,
+Since we want to take advantage of multi-fidelity, the ``MultiFidelityFacade`` is a good choice. By default,
 ``MultiFidelityFacade`` internally runs with `hyperband <https://arxiv.org/abs/1603.06560>`_ as
 intensification, which is a combination of an
-aggressive racing mechanism and successive halving. Crucially, the target function function
+aggressive racing mechanism and Successive Halving. Crucially, the target function function
 must accept a budget variable, detailing how much fidelity smac wants to allocate to this
 configuration.
 
@@ -36,9 +36,8 @@ from sklearn.datasets import load_digits
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.neural_network import MLPClassifier
 
-from smac import HyperparameterOptimizationFacade as HPOFacade
+from smac import MultiFidelityFacade as MFFacade
 from smac import Scenario
-from smac.intensifier.successive_halving import SuccessiveHalving
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -121,15 +120,13 @@ if __name__ == "__main__":
     )
 
     # We want to run five random configurations before starting the optimization.
-    initial_design = HPOFacade.get_initial_design(scenario, n_configs=5)
-    intensifier = SuccessiveHalving(scenario)
+    initial_design = MFFacade.get_initial_design(scenario, n_configs=5)
 
     # Create our SMAC object and pass the scenario and the train method
-    smac = HPOFacade(
+    smac = MFFacade(
         scenario,
         mlp.train,
         initial_design=initial_design,
-        intensifier=intensifier,
         overwrite=True,
     )
 
