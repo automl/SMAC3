@@ -1,8 +1,8 @@
 """
-Synthetic Function
+Quadratic Function
 ^^^^^^^^^^^^^^^^^^
 
-An example of applying SMAC to optimize a synthetic function (2D Rosenbrock function).
+An example of applying SMAC to optimize a quadratic function.
 
 We use the black-box facade because it is designed for black-box function optimization.
 The black-box facade uses a :term:`Gaussian Process<GP>` as its surrogate model.
@@ -21,7 +21,7 @@ __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class ExponentialFunction:
+class QuadraticFunction:
     @property
     def configspace(self) -> ConfigurationSpace:
         cs = ConfigurationSpace(seed=0)
@@ -31,13 +31,7 @@ class ExponentialFunction:
         return cs
 
     def train(self, config: Configuration, seed: int = 0) -> float:
-        """The 2-dimensional Rosenbrock function as a toy model.
-        The Rosenbrock function is well-known in the optimization community and
-        often serves as a toy problem. It can be defined for arbitrary
-        dimensions. The minimum is always at x_i = 1 with a function value of
-        zero. All input parameters are continuous. The search domain for
-        all x's is the interval [-5, 10].
-        """
+        """Returns the y value of a quadratic function with a minimum at x=0."""
         x = config["x"]
         return x * x
 
@@ -64,7 +58,7 @@ def plot(runhistory: RunHistory, incumbent: Configuration) -> None:
 
 
 if __name__ == "__main__":
-    model = ExponentialFunction()
+    model = QuadraticFunction()
 
     # Scenario object specifying the optimization "environment"
     scenario = Scenario(model.configspace, n_trials=100)

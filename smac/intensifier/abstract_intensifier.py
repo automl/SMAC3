@@ -91,10 +91,6 @@ class AbstractIntensifier:
         self._rejected_config_ids: list[int] = []
         self._trajectory: list[TrajectoryItem] = []
 
-    def __post_init__(self) -> None:
-        """Post initilization steps after the runhistory has been set."""
-        pass
-
     @property
     def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
@@ -117,9 +113,12 @@ class AbstractIntensifier:
         """
         self._runhistory = runhistory
 
+    def __post_init__(self) -> None:
+        rh = self.runhistory
+
         # Validate runhistory: Are seeds/instances/budgets used?
         # Add seed/instance/budget to the cache
-        for k in runhistory.keys():
+        for k in rh.keys():
             if self.uses_seeds:
                 if k.seed is None:
                     raise ValueError("Trial contains no seed information but intensifier expects seeds to be used.")
@@ -161,11 +160,8 @@ class AbstractIntensifier:
         if len(self._tf_budgets) == 0:
             self._tf_budgets = [None]
 
-        # After the instances/budgets/seeds are set, we can call the post init
-        self.__post_init__()
-
         # Update our incumbents here
-        for config in self._runhistory.get_configs():
+        for config in rh.get_configs():
             self.update_incumbents(config)
 
     @property
@@ -237,10 +233,13 @@ class AbstractIntensifier:
         if self._runhistory is None:
             raise RuntimeError("Please set the runhistory before calling this method.")
 
+        if len(self._tf_instances) == 0:
+            raise RuntimeError("Please call __post_init__ before calling this method.")
+
         if seed is None:
             seed = 0
 
-        # We cache the instance seed pairs for efficiency and consistency reasons
+        # We cache the instance-seed keys for efficiency and consistency reasons
         if (self._instance_seed_keys is None and not validate) or (
             self._instance_seed_keys_validation is None and validate
         ):
@@ -290,7 +289,7 @@ class AbstractIntensifier:
             if self._max_config_calls is not None:
                 if len(instance_seed_keys) > self._max_config_calls:
                     instance_seed_keys = instance_seed_keys[: self._max_config_calls]
-                    logger.info(f"Cut instance seed pairs to {self._max_config_calls} entries.")
+                    logger.info(f"Cut instance-seed keys to {self._max_config_calls} entries.")
 
             # Set it globally
             if not validate:
@@ -495,7 +494,7 @@ class AbstractIntensifier:
             # evaluated on the necessary trials
             logger.debug(
                 f"Could not compare config {config_hash} with incumbents because it's evaluated on "
-                f"{len(config_isb_comparison_keys)}/{len(config_incumbent_isb_comparison_keys)} trials only."
+                f"different trials."
             )
 
             # The config has to go to a queue now as it is a challenger and a potential incumbent
@@ -528,7 +527,6 @@ class AbstractIntensifier:
             if previous_incumbents == new_incumbents:
                 # No changes in the incumbents
                 self._remove_rejected_config(config_id)
-                logger.debug("Karpador setzt Platscher ein.")
                 return
             else:
                 # In this case, we have to determine which config replaced which incumbent and reject it
@@ -673,7 +671,7 @@ class AbstractIntensifier:
         *,
         seed: int | None = None,
     ) -> list[InstanceSeedKey]:
-        """Shuffles the instance seed pairs by groups (first all instances, then all seeds). The following is done:
+        """Shuffles the instance-seed keys by groups (first all instances, then all seeds). The following is done:
         - Group by seeds
         - Shuffle instances in the group of seeds
         - Attach groups together

@@ -5,33 +5,6 @@ from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 
 
-class CustomConfigSelector(ConfigSelector):
-    def __init__(self, scenario: Scenario, runhistory: RunHistory, n_initial_configs: int = 3) -> None:
-        initial_design = RandomInitialDesign(scenario, n_configs=n_initial_configs)
-        super().__init__(
-            scenario,
-            initial_design=initial_design,
-            runhistory=runhistory,
-            runhistory_encoder=None,  # type: ignore
-            model=None,  # type: ignore
-            acquisition_maximizer=None,  # type: ignore
-            acquisition_function=None,  # type: ignore
-            random_design=None,  # type: ignore
-            n=8,
-        )
-
-    def __iter__(self):
-        for config in self._initial_design_configs:
-            self._processed_configs.append(config)
-            yield config
-
-        while True:
-            config = self._scenario.configspace.sample_configuration(1)
-            if config not in self._processed_configs:
-                self._processed_configs.append(config)
-                yield config
-
-
 def test_initialization(make_scenario, configspace_small):
     """Tests whether HB is initialized correctly."""
     scenario: Scenario = make_scenario(
@@ -47,6 +20,7 @@ def test_initialization(make_scenario, configspace_small):
         eta=3,
     )
     intensifier.runhistory = runhistory
+    intensifier.__post_init__()
 
     # Test table 1 from https://arxiv.org/pdf/1603.06560.pdf
     assert intensifier._max_iterations[0] == 5
@@ -83,18 +57,19 @@ def test_next_bracket(make_scenario, configspace_small):
         eta=3,
     )
     intensifier.runhistory = runhistory
+    intensifier.__post_init__()
 
     for _ in range(20):
         next_bracket = intensifier._get_next_bracket()
         assert next_bracket in intensifier._budgets_in_stage
 
 
-def test_state(make_scenario, configspace_small):
+def test_state(make_scenario, configspace_small, make_config_selector):
     """Tests whether the tracker is saved and loaded correctly."""
     scenario: Scenario = make_scenario(configspace_small, use_instances=False, min_budget=1, max_budget=3)
     runhistory = RunHistory()
     intensifier = Hyperband(scenario=scenario)
-    intensifier.config_selector = CustomConfigSelector(scenario, runhistory, n_initial_configs=1)
+    intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
     intensifier.runhistory = runhistory
 
     gen = iter(intensifier)

@@ -105,6 +105,7 @@ class AbstractFacade:
         intensifier: AbstractIntensifier | None = None,
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
         runhistory_encoder: AbstractRunHistoryEncoder | None = None,
+        config_selector: ConfigSelector | None = None,
         logging_level: int | Path | None = None,
         callbacks: list[Callback] = [],
         overwrite: bool = False,
@@ -135,6 +136,9 @@ class AbstractFacade:
         if runhistory_encoder is None:
             runhistory_encoder = self.get_runhistory_encoder(scenario)
 
+        if config_selector is None:
+            config_selector = self.get_config_selector(scenario)
+
         # Initialize empty stats and runhistory object
         runhistory = RunHistory(multi_objective_algorithm=multi_objective_algorithm)
 
@@ -152,6 +156,7 @@ class AbstractFacade:
         self._multi_objective_algorithm = multi_objective_algorithm
         self._runhistory = runhistory
         self._runhistory_encoder = runhistory_encoder
+        self._config_selector = config_selector
         self._callbacks = callbacks
         self._overwrite = overwrite
 
@@ -184,9 +189,6 @@ class AbstractFacade:
 
         # Set the runner to access it globally
         self._runner = runner
-
-        # Create a config selector object
-        self._config_selector = self._get_config_selector()
 
         # Adding dependencies of the components
         self._update_dependencies()
@@ -374,22 +376,15 @@ class AbstractFacade:
     @abstractmethod
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
         """Returns the multi-objective algorithm instance to be used in the Bayesian optimization loop,
-        specifying the scalarization strategy for multiple objectives' costs
+        specifying the scalarization strategy for multiple objectives' costs.
         """
         raise NotImplementedError
 
-    def _get_config_selector(self) -> ConfigSelector:
-        return ConfigSelector(
-            scenario=self._scenario,
-            initial_design=self._initial_design,
-            runhistory=self._runhistory,
-            runhistory_encoder=self._runhistory_encoder,
-            model=self._model,
-            acquisition_function=self._acquisition_function,
-            acquisition_maximizer=self._acquisition_maximizer,
-            random_design=self._random_design,
-            callbacks=self._callbacks,
-        )
+    @staticmethod
+    @abstractmethod
+    def get_config_selector(scenario: Scenario) -> ConfigSelector:
+        """Returns the configuration selector which is responsible for sampling new configurations."""
+        raise NotImplementedError
 
     def _get_optimizer(self) -> SMBO:
         """Fills the SMBO with all the pre-initialized components."""
@@ -406,7 +401,18 @@ class AbstractFacade:
         the components. This is the easiest way to incorporate dependencies, although
         it might be a bit hacky.
         """
-        # self._intensifier._stats = self._stats
+        # Set components to config selector
+        self._config_selector._set_components(
+            initial_design=self._initial_design,
+            runhistory=self._runhistory,
+            runhistory_encoder=self._runhistory_encoder,
+            model=self._model,
+            acquisition_function=self._acquisition_function,
+            acquisition_maximizer=self._acquisition_maximizer,
+            random_design=self._random_design,
+            callbacks=self._callbacks,
+        )
+
         self._runhistory_encoder.multi_objective_algorithm = self._multi_objective_algorithm
         self._runhistory_encoder.runhistory = self._runhistory
         self._acquisition_function.model = self._model

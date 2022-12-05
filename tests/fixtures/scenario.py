@@ -12,6 +12,7 @@ def make_scenario() -> Callable:
         configspace: ConfigurationSpace,
         deterministic: bool = False,
         use_multi_objective: bool = False,
+        n_objectives: int = 2,
         use_instances: bool = False,
         n_instances: int = 3,
         n_instance_features: int = 3,
@@ -22,7 +23,9 @@ def make_scenario() -> Callable:
     ) -> Scenario:
         objectives = "cost"
         if use_multi_objective:
-            objectives = ["cost1", "cost2"]
+            objectives = []
+            for i in range(n_objectives):
+                objectives.append(f"cost{i+1}")
 
         instances = None
         instance_features = None

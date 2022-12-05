@@ -68,7 +68,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
         # However, we only want to warn the user and not
         for key in list(signature.keys())[1:]:
             if key not in required_arguments:
-                logger.warning(f"The argument {key} is not set by SMAC. Consider removing it.")
+                logger.warning(f"The argument {key} is not set by SMAC: Consider removing it from the target function.")
 
         # Pynisher limitations
         if (memory := self._scenario.trial_memory_limit) is not None:

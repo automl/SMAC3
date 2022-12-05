@@ -180,7 +180,6 @@ class AbstractInitialDesign:
             else:
                 raise ValueError("Hyperparameter not supported in LHD.")
 
-        logger.debug("Initial Design")
         configs = []
         for vector in design:
             try:
@@ -192,6 +191,5 @@ class AbstractInitialDesign:
 
             conf.origin = origin
             configs.append(conf)
-            logger.debug(conf)
 
         return configs

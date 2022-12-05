@@ -9,33 +9,6 @@ from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 
 
-class CustomConfigSelector(ConfigSelector):
-    def __init__(self, scenario: Scenario, runhistory: RunHistory, n_initial_configs: int = 3) -> None:
-        initial_design = RandomInitialDesign(scenario, n_configs=n_initial_configs)
-        super().__init__(
-            scenario,
-            initial_design=initial_design,
-            runhistory=runhistory,
-            runhistory_encoder=None,  # type: ignore
-            model=None,  # type: ignore
-            acquisition_maximizer=None,  # type: ignore
-            acquisition_function=None,  # type: ignore
-            random_design=None,  # type: ignore
-            n=8,
-        )
-
-    def __iter__(self):
-        for config in self._initial_design_configs:
-            self._processed_configs.append(config)
-            yield config
-
-        while True:
-            config = self._scenario.configspace.sample_configuration(1)
-            if config not in self._processed_configs:
-                self._processed_configs.append(config)
-                yield config
-
-
 def test_initialization_fails(make_scenario, configspace_small):
     """Tests whether SH is initialized correctly."""
     # Error: Max budget must be higher than min budget
@@ -45,6 +18,7 @@ def test_initialization_fails(make_scenario, configspace_small):
 
     with pytest.raises(ValueError):
         intensifier.runhistory = runhistory
+        intensifier.__post_init__()
 
     # Error: Must be integers
     scenario: Scenario = make_scenario(configspace_small, use_instances=True, min_budget=3.0, max_budget=6.0)
@@ -53,6 +27,7 @@ def test_initialization_fails(make_scenario, configspace_small):
 
     with pytest.raises(ValueError):
         intensifier.runhistory = runhistory
+        intensifier.__post_init__()
 
     # Error: Need budgets defined
     scenario: Scenario = make_scenario(configspace_small, use_instances=False, min_budget=None, max_budget=None)
@@ -61,6 +36,7 @@ def test_initialization_fails(make_scenario, configspace_small):
 
     with pytest.raises(ValueError):
         intensifier.runhistory = runhistory
+        intensifier.__post_init__()
 
     # Error: Min budget must be higher than 0
     scenario: Scenario = make_scenario(configspace_small, use_instances=False, min_budget=-1, max_budget=50)
@@ -69,9 +45,10 @@ def test_initialization_fails(make_scenario, configspace_small):
 
     with pytest.raises(ValueError):
         intensifier.runhistory = runhistory
+        intensifier.__post_init__()
 
 
-def test_initialization_with_instances(make_scenario, configspace_small):
+def test_initialization_with_instances(make_scenario, configspace_small, make_config_selector):
     """Tests whether SH is initialized correctly."""
     scenario: Scenario = make_scenario(configspace_small, use_instances=True, n_instances=3, min_budget=1, max_budget=6)
     runhistory = RunHistory()
@@ -82,8 +59,9 @@ def test_initialization_with_instances(make_scenario, configspace_small):
         instance_seed_order=None,
         incumbent_selection="any_budget",
     )
-    intensifier.config_selector = CustomConfigSelector(scenario, runhistory, n_initial_configs=1)
+    intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
     intensifier.runhistory = runhistory
+    intensifier.__post_init__()
 
     assert intensifier._eta == 2
     assert intensifier._min_budget == 1
@@ -93,7 +71,7 @@ def test_initialization_with_instances(make_scenario, configspace_small):
     assert len(intensifier.get_instance_seed_keys_of_interest()) == 6
 
 
-def test_initialization_with_instances_fail(make_scenario, configspace_small):
+def test_initialization_with_instances_fail(make_scenario, configspace_small, make_config_selector):
     """Tests whether SH is initialized correctly."""
     scenario: Scenario = make_scenario(
         configspace_small, use_instances=True, n_instances=3, min_budget=1, max_budget=10
@@ -102,23 +80,25 @@ def test_initialization_with_instances_fail(make_scenario, configspace_small):
     intensifier = SuccessiveHalving(
         scenario=scenario, eta=3, n_seeds=2, instance_seed_order=None, incumbent_selection="any_budget"
     )
-    intensifier.config_selector = CustomConfigSelector(scenario, runhistory, n_initial_configs=1)
+    intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
 
     # As soon as we set the runhistory, we should get into trouble because we only may have max budget of 6
     # (3 instances * 2 seeds)
     with pytest.raises(ValueError):
         intensifier.runhistory = runhistory
+        intensifier.__post_init__()
 
 
-def test_initialization_with_budgets(make_scenario, configspace_small):
+def test_initialization_with_budgets(make_scenario, configspace_small, make_config_selector):
     """Tests whether SH is initialized correctly."""
     scenario: Scenario = make_scenario(configspace_small, use_instances=False, min_budget=1, max_budget=6)
     runhistory = RunHistory()
     intensifier = SuccessiveHalving(
         scenario=scenario, eta=2, n_seeds=1, instance_seed_order=None, incumbent_selection="any_budget"
     )
-    intensifier.config_selector = CustomConfigSelector(scenario, runhistory, n_initial_configs=1)
+    intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
     intensifier.runhistory = runhistory
+    intensifier.__post_init__()
 
     assert intensifier._eta == 2
     assert intensifier._min_budget == 1
@@ -128,26 +108,27 @@ def test_initialization_with_budgets(make_scenario, configspace_small):
     assert len(intensifier.get_instance_seed_keys_of_interest()) == 1
 
 
-def test_initialization_with_budgets_fail(make_scenario, configspace_small):
+def test_initialization_with_budgets_fail(make_scenario, configspace_small, make_config_selector):
     """Tests whether SH is initialized correctly."""
     scenario: Scenario = make_scenario(configspace_small, use_instances=False, min_budget=1, max_budget=6)
     runhistory = RunHistory()
     intensifier = SuccessiveHalving(
         scenario=scenario, eta=2, n_seeds=2, instance_seed_order=None, incumbent_selection="any_budget"
     )
-    intensifier.config_selector = CustomConfigSelector(scenario, runhistory, n_initial_configs=1)
+    intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
     with pytest.raises(ValueError):
         intensifier.runhistory = runhistory
+        intensifier.__post_init__()
 
 
-def test_incumbents_any_budget(make_scenario, configspace_small):
+def test_incumbents_any_budget(make_scenario, configspace_small, make_config_selector):
     """Tests whether the incumbent is updated correctly."""
     scenario: Scenario = make_scenario(configspace_small, use_instances=False, min_budget=1, max_budget=3)
     runhistory = RunHistory()
     intensifier = SuccessiveHalving(
         scenario=scenario, eta=3, n_seeds=1, instance_seed_order=None, incumbent_selection="any_budget"
     )
-    intensifier.config_selector = CustomConfigSelector(scenario, runhistory, n_initial_configs=1)
+    intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
     intensifier.runhistory = runhistory
     config = configspace_small.get_default_configuration()
     config2 = configspace_small.sample_configuration(1)
@@ -184,15 +165,16 @@ def test_incumbents_any_budget(make_scenario, configspace_small):
     ]
 
 
-def test_incumbents_highest_observed_budget(make_scenario, configspace_small):
+def test_incumbents_highest_observed_budget(make_scenario, configspace_small, make_config_selector):
     """Tests whether the incumbent is updated correctly."""
     scenario: Scenario = make_scenario(configspace_small, use_instances=False, min_budget=1, max_budget=3)
     runhistory = RunHistory()
     intensifier = SuccessiveHalving(
         scenario=scenario, eta=3, n_seeds=1, instance_seed_order=None, incumbent_selection="highest_observed_budget"
     )
-    intensifier.config_selector = CustomConfigSelector(scenario, runhistory, n_initial_configs=1)
+    intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
     intensifier.runhistory = runhistory
+    intensifier.__post_init__()
     config = configspace_small.get_default_configuration()
     config2 = configspace_small.sample_configuration(1)
 
@@ -224,15 +206,16 @@ def test_incumbents_highest_observed_budget(make_scenario, configspace_small):
     ]
 
 
-def test_incumbents_highest_budget(make_scenario, configspace_small):
+def test_incumbents_highest_budget(make_scenario, configspace_small, make_config_selector):
     """Tests whether the incumbent is updated correctly."""
     scenario: Scenario = make_scenario(configspace_small, use_instances=False, min_budget=1, max_budget=3)
     runhistory = RunHistory()
     intensifier = SuccessiveHalving(
         scenario=scenario, eta=3, n_seeds=1, instance_seed_order=None, incumbent_selection="highest_budget"
     )
-    intensifier.config_selector = CustomConfigSelector(scenario, runhistory, n_initial_configs=1)
+    intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
     intensifier.runhistory = runhistory
+    intensifier.__post_init__()
     config = configspace_small.get_default_configuration()
     config2 = configspace_small.sample_configuration(1)
 
@@ -254,12 +237,12 @@ def test_incumbents_highest_budget(make_scenario, configspace_small):
     ]
 
 
-def test_state(make_scenario, configspace_small):
+def test_state(make_scenario, configspace_small, make_config_selector):
     """Tests whether the tracker is saved and loaded correctly."""
     scenario: Scenario = make_scenario(configspace_small, use_instances=False, min_budget=1, max_budget=3)
     runhistory = RunHistory()
     intensifier = SuccessiveHalving(scenario=scenario)
-    intensifier.config_selector = CustomConfigSelector(scenario, runhistory, n_initial_configs=1)
+    intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
     intensifier.runhistory = runhistory
 
     gen = iter(intensifier)
@@ -292,6 +275,7 @@ def test_trials_of_interest(make_scenario, configspace_small):
     runhistory = RunHistory()
     intensifier = SuccessiveHalving(scenario=scenario)
     intensifier.runhistory = runhistory
+    intensifier.__post_init__()
 
     # We expect to get only one trial of interest but with the highest budget (because real-value based)
     trials = intensifier.get_trials_of_interest(None)
@@ -306,6 +290,7 @@ def test_trials_of_interest(make_scenario, configspace_small):
     runhistory = RunHistory()
     intensifier = SuccessiveHalving(scenario=scenario, n_seeds=10)
     intensifier.runhistory = runhistory
+    intensifier.__post_init__()
 
     # We receive 50 trials because n_instances*n_seeds
     # We need to receive all of them because of shuffling
@@ -314,13 +299,13 @@ def test_trials_of_interest(make_scenario, configspace_small):
     assert trials[0].budget is None
 
 
-def test_with_filled_runhistory(make_scenario, configspace_small):
+def test_with_filled_runhistory(make_scenario, configspace_small, make_config_selector):
     """Tests whether the tracker is updated when providing a filled runhistory"""
     # Without instances
     scenario: Scenario = make_scenario(configspace_small, use_instances=True, min_budget=1, max_budget=3)
     runhistory = RunHistory()
     intensifier = SuccessiveHalving(scenario=scenario)
-    intensifier.config_selector = CustomConfigSelector(scenario, runhistory, n_initial_configs=1)
+    intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
 
     # Add some entries to the runhistory
     configs = configspace_small.sample_configuration(5)
@@ -337,6 +322,7 @@ def test_with_filled_runhistory(make_scenario, configspace_small):
 
     # Now we set the runhistory
     intensifier.runhistory = runhistory
+    intensifier.__post_init__()
 
     assert 8 in intensifier._tf_seeds
 
@@ -352,14 +338,15 @@ def test_with_filled_runhistory(make_scenario, configspace_small):
     assert len(intensifier._tracker[(0, 0)][1][1]) == 3
 
 
-def test_promoting(make_scenario, configspace_small):
+def test_promoting(make_scenario, configspace_small, make_config_selector):
     """Tests whether an evaluated batch is promoted correctly."""
     max_budget = 3
     scenario: Scenario = make_scenario(configspace_small, use_instances=False, min_budget=1, max_budget=max_budget)
     runhistory = RunHistory()
     intensifier = SuccessiveHalving(scenario=scenario)
-    intensifier.config_selector = CustomConfigSelector(scenario, runhistory, n_initial_configs=1)
+    intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
     intensifier.runhistory = runhistory
+    intensifier.__post_init__()
 
     n_configs = intensifier._n_configs_in_stage
     budgets = intensifier._budgets_in_stage

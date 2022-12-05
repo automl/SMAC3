@@ -35,15 +35,49 @@ class ConfigSelector:
 
     Parameters
     ----------
-    n : int, defaults to 8
+    retrain_after : int, defaults to 8
         How many configurations should be returned before the surrogate model is retrained.
-    n_retries : int, defaults to 8
+    retries : int, defaults to 8
         How often to retry receiving a new configuration before giving up.
     """
 
     def __init__(
         self,
         scenario: Scenario,
+        *,
+        retrain_after: int = 8,
+        retries: int = 8,
+    ) -> None:
+        # Those are the configs sampled from the passed initial design
+        # Selecting configurations from initial design
+        self._initial_design_configs: list[Configuration] = []
+
+        # Set classes globally
+        self._scenario = scenario
+        self._runhistory: RunHistory | None = None
+        self._runhistory_encoder: AbstractRunHistoryEncoder | None = None
+        self._model: AbstractModel | None = None
+        self._acquisition_maximizer: AbstractAcquisitionMaximizer | None = None
+        self._acquisition_function: AbstractAcquisitionFunction | None = None
+        self._random_design: AbstractRandomDesign | None = None
+        self._callbacks: list[Callback] = []
+
+        # And other variables
+        self._retrain_after = retrain_after
+        self._previous_entries = -1
+        self._predict_x_best = True
+        self._min_samples = 1
+        self._considered_budgets: list[float | None] = [None]
+
+        # How often to retry receiving a new configuration
+        # (counter increases if the received config was already returned before)
+        self._retries = retries
+
+        # Processed configurations should be stored here; this is important to not return the same configuration twice
+        self._processed_configs: list[Configuration] = []
+
+    def _set_components(
+        self,
         initial_design: AbstractInitialDesign,
         runhistory: RunHistory,
         runhistory_encoder: AbstractRunHistoryEncoder,
@@ -52,17 +86,7 @@ class ConfigSelector:
         acquisition_function: AbstractAcquisitionFunction,
         random_design: AbstractRandomDesign,
         callbacks: list[Callback] = [],
-        n: int = 8,
-        n_retries: int = 8,
     ) -> None:
-        # Those are the configs sampled from the passed initial design
-        # Selecting configurations from initial design
-        self._initial_design_configs = initial_design.select_configurations()
-        if len(self._initial_design_configs) == 0:
-            raise RuntimeError("SMAC needs initial configurations to work.")
-
-        # Set classes globally
-        self._scenario = scenario
         self._runhistory = runhistory
         self._runhistory_encoder = runhistory_encoder
         self._model = model
@@ -71,26 +95,16 @@ class ConfigSelector:
         self._random_design = random_design
         self._callbacks = callbacks
 
-        # And other variables
-        self._n = n
-        self._previous_entries = -1
-        self._predict_x_best = True
-        self._min_samples = 1
-        self._considered_budgets: list[float | None] = [None]
-
-        # How often to retry receiving a new configuration
-        # (counter increases if the received config was already returned before)
-        self._n_retries = n_retries
-
-        # Processed configurations should be stored here; this is important to not return the same configuration twice
-        self._processed_configs: list[Configuration] = []
+        self._initial_design_configs = initial_design.select_configurations()
+        if len(self._initial_design_configs) == 0:
+            raise RuntimeError("SMAC needs initial configurations to work.")
 
     def __iter__(self) -> Iterator[Configuration]:
         """This method returns the next configuration to evaluate. It ignores already processed configs, i.e.,
         the configs from the runhistory if the runhistory is not empty.
         The method (after yielding the initial design configurations) trains the surrogate model, maximizes the
         acquisition function and yields ``n`` configurations. After the ``n`` configurations, the surrogate model is
-        trained again, etc. The program stops if ``n_retries`` was reached within each iteration. A configuration
+        trained again, etc. The program stops if ``retries`` was reached within each iteration. A configuration
         is ignored if it was used already before.
 
         Note
@@ -104,6 +118,13 @@ class ConfigSelector:
         next_config : Iterator[Configuration]
             The next configuration to evaluate.
         """
+        assert self._runhistory is not None
+        assert self._runhistory_encoder is not None
+        assert self._model is not None
+        assert self._acquisition_maximizer is not None
+        assert self._acquisition_function is not None
+        assert self._random_design is not None
+
         self._processed_configs = self._runhistory.get_configs()
 
         logger.debug("Search for the next configuration...")
@@ -173,7 +194,7 @@ class ConfigSelector:
             # Now we maximize the acquisition function
             challengers = self._acquisition_maximizer.maximize(
                 previous_configs,
-                n_points=self._n,
+                n_points=self._retrain_after,
                 random_design=self._random_design,
             )
 
@@ -185,7 +206,7 @@ class ConfigSelector:
                     self._processed_configs.append(config)
                     self._call_callbacks_on_end(config)
                     yield config
-                    retrain = counter == self._n
+                    retrain = counter == self._retrain_after
                     self._call_callbacks_on_start()
 
                     # We break to enforce a new iteration of the while loop (i.e. we retrain the surrogate model)
@@ -198,8 +219,8 @@ class ConfigSelector:
                     failed_counter += 1
 
                     # We exit the loop if we have tried to add the same configuration too often
-                    if failed_counter == self._n_retries:
-                        logger.warning(f"Could not return a new configuration after {self._n_retries} retries." "")
+                    if failed_counter == self._retries:
+                        logger.warning(f"Could not return a new configuration after {self._retries} retries." "")
                         return
 
     def _call_callbacks_on_start(self) -> None:
@@ -222,6 +243,9 @@ class ConfigSelector:
 
         If no budgets are used, this is equivalent to returning all observations.
         """
+        assert self._runhistory is not None
+        assert self._runhistory_encoder is not None
+
         # If we use a float value as a budget, we want to train the model only on the highest budget
         available_budgets = []
         for run_key in self._runhistory:
@@ -253,6 +277,7 @@ class ConfigSelector:
         )
 
     def _get_evaluated_configs(self) -> list[Configuration]:
+        assert self._runhistory is not None
         return self._runhistory.get_configs_per_budget(budget_subset=self._considered_budgets)
 
     def _get_x_best(self, X: np.ndarray) -> tuple[np.ndarray, float]:

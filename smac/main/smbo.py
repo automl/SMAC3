@@ -37,31 +37,13 @@ class SMBO:
     ----------
     scenario : Scenario
         The scenario object, holding all environmental information.
-    stats : Stats
-        Stats object to collect statistics about SMAC.
     runner : AbstractRunner
         The runner (containing the target function) is called internally to judge a trial's performance.
-    initial_design : InitialDesign
-        The sampled configurations from the initial design are evaluated before the Bayesian optimization loop starts.
     runhistory : Runhistory
         The runhistory stores all trials.
-    runhistory_encoder : RunHistoryEncoder
-        Based on the runhistory, the surrogate model is trained. However, the data first needs to be encoded, which
-        is done by the runhistory encoder. For example, inactive hyperparameters need to be encoded or cost values
-        can be log transformed.
     intensifier : AbstractIntensifier
         The intensifier decides which trial (combination of configuration, seed, budget and instance) should be run
         next.
-    model : AbstractModel
-        The surrogate model.
-    acquisition_maximizer : AbstractAcquisitionMaximizer
-        The acquisition maximizer, deciding which configuration is most promising based on the surrogate model and
-        acquisition function.
-    acquisition_function : AbstractAcquisitionFunction
-        The acquisition function.
-    random_design : RandomDesign
-        The random design is used in the acquisition maximier, deciding whether the next configuration should be drawn
-        from the acquisition function or randomly.
     overwrite: bool, defaults to False
         When True, overwrites the run results if a previous run is found that is
         inconsistent in the meta data with the current setup. If ``overwrite`` is set to False, the user is asked
@@ -69,7 +51,7 @@ class SMBO:
 
     Warning
     -------
-    This model should only be initialized by a facade.
+    This model should be initialized by a facade only.
     """
 
     def __init__(
@@ -157,6 +139,8 @@ class SMBO:
         info : TrialInfo
             Information about the trial (config, instance, seed, budget).
         """
+        logger.debug("Calling ask...")
+
         for callback in self._callbacks:
             callback.on_ask_start(self)
 
@@ -169,6 +153,8 @@ class SMBO:
 
         for callback in self._callbacks:
             callback.on_ask_end(self, trial_info)
+
+        logger.debug("...and received a new trial.")
 
         return trial_info
 
@@ -201,12 +187,12 @@ class SMBO:
                 logger.info("A callback returned False. Abort is requested.")
                 self._stop = True
 
-        logger.debug(
-            f"Status: {StatusType(value.status).name}, "
-            f"Cost: {value.cost}, "
-            f"Time: {value.time}, "
-            f"Additional: {value.additional_info}"
-        )
+        # Some sanity checks here
+        if self._intensifier.uses_instances and info.instance is None:
+            raise ValueError("Passed instance is None but intensifier requires instances.")
+
+        if self._intensifier.uses_budgets and info.budget is None:
+            raise ValueError("Passed budget is None but intensifier requires budgets.")
 
         self._runhistory.add(
             config=info.config,
@@ -221,6 +207,8 @@ class SMBO:
             additional_info=value.additional_info,
             force_update=True,  # Important to overwrite the status RUNNING
         )
+
+        logger.debug(f"Tell method was called with cost {value.cost} ({StatusType(value.status).name}).")
 
         for callback in self._callbacks:
             response = callback.on_tell_end(self, info, value)
@@ -238,6 +226,8 @@ class SMBO:
         """Updates the model and updates the acquisition function."""
         if (config_selector := self._intensifier._config_selector) is not None:
             config_selector._model = model
+
+            assert config_selector._acquisition_function is not None
             config_selector._acquisition_function.model = model
 
     def update_acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
@@ -247,6 +237,8 @@ class SMBO:
         if (config_selector := self._intensifier._config_selector) is not None:
             config_selector._acquisition_function = acquisition_function
             config_selector._acquisition_function.model = config_selector._model
+
+            assert config_selector._acquisition_maximizer is not None
             config_selector._acquisition_maximizer.acquisition_function = acquisition_function
 
     def optimize(self) -> Configuration | list[Configuration]:
@@ -265,10 +257,6 @@ class SMBO:
                 return self.intensifier.get_incumbent()
             else:
                 return self.intensifier.get_incumbents()
-
-        # Important to set the runhistory here (again)
-        # Only because we set the runhistory here, the user inputs are recognized (if the tell method was used)
-        self._intensifier.runhistory = self._runhistory
 
         # Start the timer before we do anything
         # If we continue the optimization, the starting time is set by the load method

@@ -6,41 +6,15 @@ from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 
 
-class CustomConfigSelector(ConfigSelector):
-    def __init__(self, scenario: Scenario, runhistory: RunHistory, n_initial_configs: int = 3) -> None:
-        initial_design = RandomInitialDesign(scenario, n_configs=n_initial_configs)
-        super().__init__(
-            scenario,
-            initial_design=initial_design,
-            runhistory=runhistory,
-            runhistory_encoder=None,  # type: ignore
-            model=None,  # type: ignore
-            acquisition_maximizer=None,  # type: ignore
-            acquisition_function=None,  # type: ignore
-            random_design=None,  # type: ignore
-            n=8,
-        )
-
-    def __iter__(self):
-        for config in self._initial_design_configs:
-            self._processed_configs.append(config)
-            yield config
-
-        while True:
-            config = self._scenario.configspace.sample_configuration(1)
-            if config not in self._processed_configs:
-                self._processed_configs.append(config)
-                yield config
-
-
-def test_trials_of_interest(make_scenario, configspace_small):
+def test_trials_of_interest(make_scenario, configspace_small, make_config_selector):
     """Tests whether the trials of interests are as expected."""
 
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=3)
     runhistory = RunHistory()
     intensifier = Intensifier(scenario=scenario, max_config_calls=10, seed=0)
-    intensifier.config_selector = CustomConfigSelector(scenario, runhistory)
+    intensifier.config_selector = make_config_selector(scenario, runhistory)
     intensifier.runhistory = runhistory
+    intensifier.__post_init__()
 
     trials = intensifier.get_trials_of_interest(None)
     assert len(trials) == 10
@@ -66,14 +40,15 @@ def test_trials_of_interest(make_scenario, configspace_small):
     assert trials[3].instance == val_trials[3].instance
 
 
-def test_next_trials(make_scenario, configspace_small):
+def test_next_trials(make_scenario, configspace_small, make_config_selector):
     """Tests whether the next trials are as expected."""
 
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=3)
     runhistory = RunHistory()
     intensifier = Intensifier(scenario=scenario, max_config_calls=9, seed=0)
-    intensifier.config_selector = CustomConfigSelector(scenario, runhistory)
+    intensifier.config_selector = make_config_selector(scenario, runhistory)
     intensifier.runhistory = runhistory
+    intensifier.__post_init__()
 
     # If we don't specify N we expect max config call trials here
     trials = intensifier._get_next_trials(None)
@@ -125,14 +100,15 @@ def test_next_trials(make_scenario, configspace_small):
     assert trials[0].seed == isbk.seed
 
 
-def test_next_trials_counter(make_scenario, configspace_small):
+def test_next_trials_counter(make_scenario, configspace_small, make_config_selector):
     """Tests whether the next trials are as expected."""
 
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=3)
     runhistory = RunHistory()
     intensifier = Intensifier(scenario=scenario, max_config_calls=9, seed=0)
-    intensifier.config_selector = CustomConfigSelector(scenario, runhistory)
+    intensifier.config_selector = make_config_selector(scenario, runhistory)
     intensifier.runhistory = runhistory
+    intensifier.__post_init__()
     config = configspace_small.get_default_configuration()
 
     # All good here
@@ -163,12 +139,12 @@ def test_next_trials_counter(make_scenario, configspace_small):
     assert len(trials) == 2
 
 
-def test_intensifier(make_scenario, configspace_small):
+def test_intensifier(make_scenario, configspace_small, make_config_selector):
     """Tests whether the generator returns trials as expected."""
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=3)
     runhistory = RunHistory()
     intensifier = Intensifier(scenario=scenario, max_config_calls=3, seed=0)
-    intensifier.config_selector = CustomConfigSelector(scenario, runhistory, n_initial_configs=1)
+    intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
     intensifier.runhistory = runhistory
 
     gen = iter(intensifier)
@@ -208,12 +184,13 @@ def test_intensifier(make_scenario, configspace_small):
     assert intensifier.config_selector._processed_configs[2] == trial4.config
 
 
-def test_intensifier_with_filled_runhistory(make_scenario, configspace_small):
+def test_intensifier_with_filled_runhistory(make_scenario, configspace_small, make_config_selector):
     """Tests whether entries from the runhistory are incorporated."""
     scenario: Scenario = make_scenario(configspace_small, use_instances=True, n_instances=3)
     runhistory = RunHistory()
     intensifier = Intensifier(scenario=scenario, max_config_calls=3, seed=0)
-    intensifier.config_selector = CustomConfigSelector(scenario, runhistory, n_initial_configs=1)
+    intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
+    intensifier.runhistory = runhistory
     config = configspace_small.get_default_configuration()
     config2 = configspace_small.sample_configuration(1)
 
@@ -236,8 +213,8 @@ def test_intensifier_with_filled_runhistory(make_scenario, configspace_small):
         status=StatusType.SUCCESS,
     )
 
-    # Now we set the runhistory
-    intensifier.runhistory = runhistory
+    # Now we post init
+    intensifier.__post_init__()
 
     assert 8 in intensifier._tf_seeds
     assert 59 in intensifier._tf_seeds

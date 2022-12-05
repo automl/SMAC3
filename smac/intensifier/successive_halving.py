@@ -99,6 +99,8 @@ class SuccessiveHalving(AbstractIntensifier):
 
     def __post_init__(self) -> None:
         """Post initilization steps after the runhistory has been set."""
+        super().__post_init__()
+
         # We generate our instance seed pairs once
         is_keys = self.get_instance_seed_keys_of_interest()
 
@@ -262,6 +264,8 @@ class SuccessiveHalving(AbstractIntensifier):
         return isb_keys
 
     def __iter__(self) -> Iterator[TrialInfo]:  # noqa: D102
+        self.__post_init__()
+
         rh = self.runhistory
 
         # We have to add already existing trials from the runhistory
@@ -271,6 +275,18 @@ class SuccessiveHalving(AbstractIntensifier):
         if len(self._tracker) == 0:
             bracket = 0
             stage = 0
+
+            # Print ignored budgets
+            ignored_budgets = []
+            for k in rh.keys():
+                if k.budget not in self._budgets_in_stage[0] and k.budget not in ignored_budgets:
+                    ignored_budgets.append(k.budget)
+
+            if len(ignored_budgets) > 0:
+                logger.warning(
+                    f"Trials with budgets {ignored_budgets} will been ignored. Consider adding trials with budgets "
+                    f"{self._budgets_in_stage[0]}."
+                )
 
             # We batch the configs because we need n_configs in each iteration
             # If we don't have n_configs, we sample new ones
@@ -291,7 +307,7 @@ class SuccessiveHalving(AbstractIntensifier):
                 self._tracker[(bracket, stage)].append((seed, configs))
                 logger.info(
                     f"Added {n_rh_configs} configs from runhistory and {n_configs - n_rh_configs} new configs to "
-                    f"Successive Halving's first bracket and first stage with seed {seed}."
+                    f"Successive Halving's first bracket and first stage with order seed {seed}."
                 )
 
         while True:

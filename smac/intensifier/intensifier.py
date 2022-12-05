@@ -28,6 +28,8 @@ class Intensifier(AbstractIntensifier):
         for a configuration.
     max_incumbents : int, defaults to 10
         How many incumbents to keep track of in the case of multi-objective.
+    retries : int, defaults to 16
+        How many more iterations should be done in case of no new trial is found.
     seed : int, defaults to None
         Internal seed used for random events like shuffle seeds.
     """
@@ -37,9 +39,11 @@ class Intensifier(AbstractIntensifier):
         scenario: Scenario,
         max_config_calls: int = 3,
         max_incumbents: int = 10,
+        retries: int = 16,
         seed: int | None = None,
     ):
         super().__init__(scenario=scenario, max_config_calls=max_config_calls, max_incumbents=max_incumbents, seed=seed)
+        self._retries = retries
 
     def reset(self) -> None:
         super().reset()
@@ -85,6 +89,8 @@ class Intensifier(AbstractIntensifier):
         trials : Iterator[TrialInfo]
             Iterator over the trials.
         """
+        self.__post_init__()
+
         rh = self.runhistory
         assert self._max_config_calls is not None
 
@@ -107,7 +113,7 @@ class Intensifier(AbstractIntensifier):
             fails += 1
 
             # Some criteria to stop the intensification if nothing can be intensified anymore
-            if fails > 8 and fails >= self._scenario.n_workers * 2:
+            if fails > self._retries:
                 logger.error("Intensifier could not find any new trials.")
                 return
 
@@ -161,7 +167,7 @@ class Intensifier(AbstractIntensifier):
                     incumbent_isb_key_differences = self.get_incumbent_instance_seed_budget_key_differences()
 
                     # We set shuffle to false because we first want to evaluate the incumbent instances, then the
-                    # differences (to make the incumbents equal again)
+                    # differences (to make the instance-seed keys for the incumbents equal again)
                     trials = self._get_next_trials(
                         incumbent,
                         from_keys=incumbent_isb_keys + incumbent_isb_key_differences,
@@ -204,6 +210,9 @@ class Intensifier(AbstractIntensifier):
                     config_hash = get_config_hash(config)
                     self._queue.append((config, 1))
                     logger.debug(f"--- Added a new config {config_hash} to the queue.")
+
+                    # If we added a new config, then we did something in this iteration
+                    fails = -1
                 except StopIteration:
                     # We stop if we don't find any configuration anymore
                     return
@@ -235,6 +244,8 @@ class Intensifier(AbstractIntensifier):
                     if len(incumbent_isb_keys) > 0:
                         isk_keys = incumbent_isb_keys
 
+                    # TODO: What to do if there are no incumbent instances? (Use-case: call multiple asks)
+
                     trials = self._get_next_trials(config, N=N, from_keys=isk_keys)
                     logger.debug(f"--- Yielding {len(trials)} trials to evaluate config {config_hash}...")
                     for trial in trials:
@@ -245,6 +256,7 @@ class Intensifier(AbstractIntensifier):
 
                     # Now we have to remove the config
                     self._queue.remove((config, N))
+                    logger.debug(f"--- Removed config {config_hash} with N={N} from queue.")
 
                     # Finally, we add the same config to the queue with a higher N
                     # If the config was rejected by the runhistory, then it's be removed in the next iteration
@@ -256,6 +268,9 @@ class Intensifier(AbstractIntensifier):
                                 "again."
                             )
                             self._queue.append((config, N * 2))
+
+                            # Also reset fails here
+                            fails = -1
                         else:
                             logger.debug(f"--- Config {config_hash} with N={N*2} is already in the queue.")
 
@@ -315,7 +330,7 @@ class Intensifier(AbstractIntensifier):
                 is_keys.remove(is_key)
 
         # It's also important to remove running trials from the selection (we don't want to queue them again)
-        running_trials = rh.get_running_trials()
+        running_trials = rh.get_running_trials(config)
         for trial in running_trials:
             is_key = trial.get_instance_seed_key()
             if is_key in is_keys:
