@@ -1,10 +1,10 @@
 from typing import Callable
 
 import pytest
+
 from smac.initial_design.random_design import RandomInitialDesign
 from smac.main.config_selector import ConfigSelector
 from smac.runhistory.runhistory import RunHistory
-
 from smac.scenario import Scenario
 
 
