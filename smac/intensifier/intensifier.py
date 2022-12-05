@@ -46,6 +46,7 @@ class Intensifier(AbstractIntensifier):
         self._retries = retries
 
     def reset(self) -> None:
+        """Reset the internal variables of the intensifier including the queue."""
         super().reset()
 
         # Queue to keep track of the challengers

@@ -79,6 +79,7 @@ class AbstractIntensifier:
         self.reset()
 
     def reset(self) -> None:
+        """Reset the internal variables of the intensifier."""
         self._tf_seeds: list[int] = []
         self._tf_instances: list[str | None] = []
         self._tf_budgets: list[float | None] = []
@@ -202,6 +203,7 @@ class AbstractIntensifier:
 
     @property
     def incumbents_changed(self) -> int:
+        """How often the incumbents has changed."""
         return self._incumbents_changed
 
     def get_instance_seed_keys_of_interest(

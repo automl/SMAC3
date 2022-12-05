@@ -66,14 +66,17 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
     @property
     def submitted(self) -> int:
+        """Returns how many trials have been submitted."""
         return self._submitted
 
     @property
     def finished(self) -> int:
+        """Returns how many trials have been finished."""
         return self._finished
 
     @property
     def running(self) -> int:
+        """Returns how many trials are still running."""
         return self._running
 
     @property
@@ -604,6 +607,13 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         return [InstanceSeedBudgetKey(t.instance, t.seed, t.budget) for t in trials]
 
     def add_running_trial(self, trial: TrialInfo) -> None:
+        """Adds a running trial to the runhistory.
+
+        Parameters
+        ----------
+        trial : TrialInfo
+            The ``TrialInfo`` object of the running trial.
+        """
         self.add(
             config=trial.config,
             cost=float(MAXINT),
@@ -615,6 +625,18 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         )
 
     def get_running_trials(self, config: Configuration | None = None) -> list[TrialInfo]:
+        """Returns all running trials for the passed configuration.
+
+        Parameters
+        ----------
+        config : Configuration | None, defaults to None
+            Return only running trials from the passed configuration. If None, all configs are considered.
+
+        Returns
+        -------
+        list[TrialInfo]
+            List of trials, all of which are still running.
+        """
         # Always work on copies
         if config is None:
             return [trial for trial in self._running_trials]
@@ -622,6 +644,13 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             return [trial for trial in self._running_trials if trial.config == config]
 
     def get_running_configs(self) -> list[Configuration]:
+        """Returns all configurations which have at least one running trial.
+
+        Returns
+        -------
+        list[Configuration]
+            List of configurations, all of which have at least one running trial.
+        """
         configs = []
         for trial in self._running_trials:
             if trial.config not in configs:

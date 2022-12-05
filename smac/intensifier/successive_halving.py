@@ -90,7 +90,8 @@ class SuccessiveHalving(AbstractIntensifier):
 
         return meta
 
-    def reset(self) -> None:  # noqa: D102
+    def reset(self) -> None:
+        """Reset the internal variables of the intensifier including the tracker."""
         super().reset()
 
         # States

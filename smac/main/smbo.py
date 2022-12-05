@@ -328,6 +328,7 @@ class SMBO:
             return self.intensifier.get_incumbents()
 
     def reset(self) -> None:
+        """Resets the internal variables of the optimizer, intensifier, and runhistory."""
         self._used_target_function_walltime = 0
         self._finished = False
 
@@ -336,6 +337,13 @@ class SMBO:
         self._intensifier.reset()
 
     def exists(self, filename: str | Path) -> bool:
+        """Checks if the run already exists. Checks all files that are created by the optimizer.
+
+        Parameters
+        ----------
+        filename : str | Path
+            The name of the folder of the SMAC run.
+        """
         if isinstance(filename, str):
             filename = Path(filename)
 
@@ -349,6 +357,7 @@ class SMBO:
         return False
 
     def load(self) -> None:
+        """Loads the optimizer, intensifier, and runhistory from the output directory specified in the scenario."""
         filename = self._scenario.output_directory
 
         optimization_fn = filename / "optimization.json"
@@ -542,7 +551,6 @@ class SMBO:
 
     def print_stats(self) -> None:
         """Prints all statistics."""
-
         logger.info(
             "\n"
             f"--- STATISTICS -------------------------------------\n"

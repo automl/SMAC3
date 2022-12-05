@@ -68,6 +68,7 @@ class InstanceSeedBudgetKey:
         return False
 
     def get_instance_seed_key(self) -> InstanceSeedKey:
+        """Returns the instance-seed key. Basically, the budget is simply removed."""
         return InstanceSeedKey(instance=self.instance, seed=self.seed)
 
 
