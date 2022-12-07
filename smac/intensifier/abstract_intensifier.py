@@ -271,11 +271,11 @@ class AbstractIntensifier:
                     except IndexError:
                         # Use global random generator for a new seed and mark it so it will be reused for another config
                         next_seed = int(rng.randint(low=0, high=MAXINT, size=1)[0])
-                        
+
                         # This line here is really important because we don't want to add the same seed twice
                         if next_seed in self._tf_seeds:
                             continue
-                        
+
                         self._tf_seeds.append(next_seed)
                         logger.debug(f"Added a new random seed {next_seed} to the intensifier.")
 

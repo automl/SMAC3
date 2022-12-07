@@ -1,20 +1,20 @@
 from __future__ import annotations
+
 import os
 import shutil
 from io import StringIO
 
 import pytest
 
+from smac import AlgorithmConfigurationFacade as ACFacade
 from smac import BlackBoxFacade as BBFacade
+from smac import HyperbandFacade as HBFacade
 from smac import HyperparameterOptimizationFacade as HPOFacade
 from smac import MultiFidelityFacade as MFFacade
 from smac import RandomFacade as RFacade
-from smac import HyperbandFacade as HBFacade
-from smac import AlgorithmConfigurationFacade as ACFacade
 from smac import Scenario
 from smac.callback import Callback
 from smac.runhistory.dataclasses import TrialInfo, TrialValue
-
 
 FACADES = [BBFacade, HPOFacade, MFFacade, RFacade, HBFacade, ACFacade]
 

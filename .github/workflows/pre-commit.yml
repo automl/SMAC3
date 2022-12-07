@@ -34,6 +34,7 @@ jobs:
       run: |
         pip install pre-commit
         pre-commit install
+        
     - name: Run pre-commit
       run: |
         pre-commit run --all-files

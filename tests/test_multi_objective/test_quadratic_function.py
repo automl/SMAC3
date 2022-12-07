@@ -4,22 +4,19 @@ import numpy as np
 import pytest
 from ConfigSpace import ConfigurationSpace, Float
 
+from smac import AlgorithmConfigurationFacade as ACFacade
+from smac import BlackBoxFacade as BBFacade
+from smac import HyperbandFacade as HBFacade
+from smac import HyperparameterOptimizationFacade as HPOFacade
+from smac import MultiFidelityFacade as MFFacade
+from smac import RandomFacade as RFacade
+from smac import Scenario
 from smac.intensifier.intensifier import Intensifier
 from smac.main.config_selector import ConfigSelector
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.multi_objective.parego import ParEGO
 from smac.scenario import Scenario
-
-
-from smac import BlackBoxFacade as BBFacade
-from smac import HyperparameterOptimizationFacade as HPOFacade
-from smac import MultiFidelityFacade as MFFacade
-from smac import RandomFacade as RFacade
-from smac import HyperbandFacade as HBFacade
-from smac import AlgorithmConfigurationFacade as ACFacade
-from smac import Scenario
-
 
 FACADES = [BBFacade, HPOFacade, MFFacade, RFacade, HBFacade, ACFacade]
 
@@ -123,7 +120,7 @@ def test_parego(facade, make_scenario, configspace):
         overwrite=True,
     )
     incumbents = smac.optimize()
-    
+
     for incumbent in incumbents:
         x_inc, _ = func(incumbent["x"])
         print(x_inc)
