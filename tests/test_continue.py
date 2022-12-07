@@ -42,7 +42,7 @@ def test_continue_same_scenario(rosenbrock, facade):
     # We expect that the old state is just reloaded
     # Since in the first optimization, we already finished, we should have the same incumbent
     assert incumbent1 == incumbent2
-
+    
 
 @pytest.mark.parametrize("facade", FACADES)
 def test_continue_different_scenario(rosenbrock, monkeypatch, facade):

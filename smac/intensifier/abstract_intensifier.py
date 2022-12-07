@@ -552,7 +552,7 @@ class AbstractIntensifier:
                         f"Added config {config_hash} and rejected config {removed_incumbent_hash} as incumbent because "
                         f"it is not better than the incumbents on {len(config_isb_keys)} instances:"
                     )
-                    print_config_changes(config, rh.get_config(removed_incumbent_id), logger=logger)
+                    print_config_changes(rh.get_config(removed_incumbent_id), config, logger=logger)
         elif len(previous_incumbents) < len(new_incumbents):
             # Config becomes a new incumbent; nothing is rejected in this case
             self._remove_rejected_config(config_id)
