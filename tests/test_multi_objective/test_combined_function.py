@@ -88,13 +88,18 @@ def test_mean_aggregation(facade, make_scenario, configspace):
     )
     incumbents = smac.optimize()
 
+    # We sort the incumbents by their x values and then make sure that the current y is 
+    # smaller than the previous one.
+    sorted_incumbents = []
     for incumbent in incumbents:
-        x_inc, _ = func(incumbent["x"])
-        print(x_inc)
+        x, y = func(incumbent["x"])
+        sorted_incumbents.append((x, y))
 
-    for incumbent in incumbents:
-        x_inc, _ = func(incumbent["x"])
-        assert x_inc < -2 or x_inc > 2
+    sorted_incumbents = sorted(sorted_incumbents, key=lambda x: x[0])
+    previous_y = np.inf
+    for x, y in sorted_incumbents:
+        assert y <= previous_y
+        previous_y = y
 
     # We expect N_TRIALS/RETRAIN_AFTER updates
     assert multi_objective_algorithm._n_calls_update_on_iteration_start == int(N_TRIALS / RETRAIN_AFTER)
@@ -121,15 +126,16 @@ def test_parego(facade, make_scenario, configspace):
     )
     incumbents = smac.optimize()
 
+    sorted_incumbents = []
     for incumbent in incumbents:
-        x_inc, _ = func(incumbent["x"])
-        print(x_inc)
+        x, y = func(incumbent["x"])
+        sorted_incumbents.append((x, y))
 
-    for incumbent in incumbents:
-        x_inc, _ = func(incumbent["x"])
-
-        # Nothing should be between -2 and 2 (as those points are not on the pareto front)
-        assert x_inc < -2 or x_inc > 2
+    sorted_incumbents = sorted(sorted_incumbents, key=lambda x: x[0])
+    previous_y = np.inf
+    for x, y in sorted_incumbents:
+        assert y <= previous_y
+        previous_y = y
 
     # We expect N_TRIALS/RETRAIN_AFTER updates
     assert multi_objective_algorithm._n_calls_update_on_iteration_start == int(N_TRIALS / RETRAIN_AFTER)
