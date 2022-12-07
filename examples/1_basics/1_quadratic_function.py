@@ -61,7 +61,7 @@ if __name__ == "__main__":
     model = QuadraticFunction()
 
     # Scenario object specifying the optimization "environment"
-    scenario = Scenario(model.configspace, n_trials=100)
+    scenario = Scenario(model.configspace, deterministic=True, n_trials=100)
 
     # Now we use SMAC to find the best hyperparameters
     smac = HPOFacade(

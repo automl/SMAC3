@@ -68,7 +68,11 @@ if __name__ == "__main__":
 
     # Now, we want to continue the optimization
     # Make sure, we don't overwrite the last run
-    smac2 = HPOFacade(scenario, model.train, overwrite=False)
+    smac2 = HPOFacade(
+        scenario,
+        model.train,
+        overwrite=False,
+    )
 
     # Check whether we get the same incumbent
     assert smac.intensifier.get_incumbent() == smac2.intensifier.get_incumbent()
