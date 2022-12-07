@@ -1332,6 +1332,10 @@ code shows how to iterate over the runhistory:</p>
     <span class="n">average_cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">average_cost</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The intensifier uses a callback to update the incumbent everytime a new trial is added to the runhistory.</p>
+</div>
 </section>
 <section id="runhistory-encoder">
 <h2><a class="reference internal" href="../api/smac.runhistory.encoder.html#module-smac.runhistory.encoder"><span class="std std-ref">RunHistory Encoder</span></a><a class="headerlink" href="#runhistory-encoder" title="Permalink to this heading">¶</a></h2>
