@@ -9,37 +9,33 @@ optimized by SMAC. However, the run history still keeps the original objectives.
 
 The basic recipe is as follows:
 
-#. Make sure that your target function returns a cost *dictionary* containing the objective names as keys
-   and the objective values as values, e.g. ``{'myobj1': 0.3, 'myobj2': 200}``. Alternatively, you can simply
-   return a list, e.g., ``[0.3, 200]``.
-#. When instantiating SMAC pass the names of your objectives to the scenario object via the ``objectives``
-   argument, e.g., ``multi_objectives: ["myobj1", "myobj2"]``.
-#. Now you can optionally pass a custom multi-objective algorithm class to the SMAC
-   facade (via ``multi_objective_algorithm``). In all facades, a mean aggregation strategy is used as the 
-   multi-objective algorithm default.
+- Specify the objectives in the scenario object as list. For example, ``Scenario(objectives=["obj1", "obj2"])``.)
+- Make sure that your target function returns a cost *dictionary* containing the objective names as keys
+  and the objective values as values, e.g. ``{'obj1': 0.3, 'obj2': 200}``. Alternatively, you can simply
+  return a list, e.g., ``[0.3, 200]``.
+- Now you can optionally pass a custom multi-objective algorithm class to the SMAC
+  facade (via ``multi_objective_algorithm``). In all facades, a mean aggregation strategy is used as the 
+  multi-objective algorithm default.
 
 
 .. warning ::
 
-    Depending on the multi-objective algorithm, the incumbent might be ambiguous because there might be multiple 
-    incumbents on the Pareto front. Let's take ParEGO for example:
-    Everytime a new configuration is sampled, the weights are updated (see runhistory encoder). Therefore, calling
-    the ``get_incumbent`` method in the runhistory might return a different configuration based on the internal state 
-    of the multi-objective algorithm. 
+   The multi-objective algorithm influences which configurations are sampled next. More specifically, 
+   since only one surrogate model is trained, multiple objectives have to be scalarized into a single objective.
+   This scalarized value is used to train the surrogate model, which is used by the acquisition function/maximizer
+   to sample the next configurations.  
 
 
-You can use ``get_pareto_front`` in the run history to get the configurations on the Pareto front.
-
+You receive the incumbents (points on the Pareto front) after the optimization process directly. Alternatively, you can 
+use the method ``get_incumbents`` in the intensifier.
 
 .. code-block:: python
 
-    smac = ...
-    smac.optimize()
+   smac = ...
+   incumbents = smac.optimize()
 
-    for incumbent, costs in smac.get_pareto_front():
-        print(incumbent, costs)
-
-
+   # Or you use the intensifier
+   incumbents = smac.intensifier.get_incumbents()
 
 
 We show an example of how to use multi-objective with plots in our :ref:`examples<Multi-Objective>`.

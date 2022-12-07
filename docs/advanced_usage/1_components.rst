@@ -8,12 +8,11 @@ the optimization process and simple changes can influence the results drasticall
 Before diving into the components, we shortly want to explain the main Bayesian optimization loop in SMAC.
 The :ref:`SMBO<smac.main.base_\\smbo>` receives all instantiated components from the facade and the logic happens here.
 In general, a while loop is used to ask for the next trial, submit it to the runner, and wait for the runner to 
-finish the evaluation. Since the runner and the SMBO object are decoupled, the while loop continues and asks for even 
-more trials, which also can be submitted to the runner. If the ask method (which is, by the way, processed by 
-the intensifier) returns a wait flag, no further trials will be passed to the runner, and SMAC needs to wait until 
-trials have been evaluated and told to the intensifier.
-
-Also, the limitations like wallclock time and remaining trials are checked, and callbacks are called in the SMBO class.
+finish the evaluation. Since the runner and the SMBO 
+object are decoupled, the while loop continues and asks for even 
+more trials (e.g., in case of multi-threading), which also can be submitted to the runner. If all workers are
+occupied, SMAC will wait until a new worker is available again. Moreover, limitations like wallclock time and remaining 
+trials are checked in every iteration.
 
 
 :ref:`Surrogate Model<smac.model.abstract\\_model>`
@@ -21,11 +20,12 @@ Also, the limitations like wallclock time and remaining trials are checked, and 
 
 The surrogate model is used to approximate the objective function of configurations. In previous versions, the model was 
 referred to Empirical Performance Model (EPM). Mostly, Bayesian optimization is used/associated with Gaussian 
-processes. However, SMAC incorporates random forests as surrogate models, which makes it possible to optimize for higher 
-dimensional and complex spaces.
+processes. However, SMAC also incorporates random forests as surrogate models, which makes it possible to optimize for 
+higher dimensional and complex spaces.
 
-The data used to train the surrogate model is collected by the runhistory encoder from the runhistory. If budgets are
-involved, the highest budget which satisfies ``self._min_samples`` (defaults to 1) in :ref:`smac.main.smbo` is
+The data used to train the surrogate model is collected by the runhistory encoder (receives data from the runhistory 
+and transforms them). If budgets are
+involved, the highest budget which satisfies ``min_trials`` (defaults to 1) in :ref:`smac.main.config_selector` is
 used. If no budgets are used, all observations are used.
 
 If you are using instances, it is recommended to use instance features. The model is trained on each instance 
@@ -54,16 +54,16 @@ each instance with a feature, you would end-up with the following data points:
 
 Let me explain how the data are received in detail:
 
-- Intensifier requests new configurations via ``get_next_configurations`` by :ref:`smac.main.smbo`.
-- SMBO collects the data via the runhistory encoder which iterates over the runhistory trials.
+- Intensifier requests new configurations via ``next(self.config_generator)``.
+- Config selector collects the data via the runhistory encoder which iterates over the runhistory trials.
 - The runhistory encoder only collects trials which are in ``considered_states`` and timeout trials. Also, only the
   highest budget is considered if budgets are used. In this step, multi-objective values are scalarized using the
   ``normalize_costs`` function (uses ``objective_bounds`` from the runhistory) and the multi-objective algorithm.
+  For example, when ParEGO is used, the scalarization would be different in each training.
 - In the next step, the selected trial objectives are transformed (e.g., log-transformed, depending on the selected
   encoder).
-- The hyperparameters might still have inactive values. The model takes care of that after the collected data
-  are passed from the SMBO object to the model.
-
+- The hyperparameters might still have inactive values. The model takes care of that after the collected data 
+  are passed to the model.
 
 
 :ref:`Acquisition Function<smac.acquisition.function>`
@@ -111,6 +111,9 @@ points of the configuration space. The sobol sequences are an example of quasi-r
 the latin hypercube design is a statistical method for generating a near-random sample of parameter values from
 a multidimensional distribution.
 
+The initial design configurations are yielded by the config selector first. Moreover, the config selector keeps
+track of which configurations already have been returned to make sure a configuration is not returned twice.
+
 
 :ref:`Random Design<smac.random\\_design>`
 ------------------------------------------
@@ -134,17 +137,55 @@ evaluate another seed pair, evaluate on another instance, or evaluate on a highe
 
 .. warning ::
 
-    Always pay attention to ``max_config_calls``: If this argument is set high, the intensifier might spend a lot of 
-    time on a single configuration. Also, since the default ``Intensifier`` is depending on runtime, reproducibility
-    is not given unless you set ``intensify_percentage`` to 0.
+    Always pay attention to ``max_config_calls`` or ``n_seeds``: If this argument is set high, the intensifier might 
+    spend a lot of time on a single configuration.
 
 
 Depending on the components and arguments, the intensifier tells you which seeds, budgets, and/or instances
 are used throughout the optimization process. You can use the methods ``uses_seeds``, ``uses_budgets``, and 
 ``uses_instances`` (directly callable via the facade) to (sanity-)check whether the intensifier uses these arguments.
-If you want to know the exact values, use ``get_target_function_seeds``, ``get_target_function_budgets``, and 
-``get_target_function_instances``.
 
+Another important fact is that the intensifier keeps track of the current incumbent (a.k.a. the best configuration 
+found so far). In case of multi-objective, multiple incumbents could be found.
+
+All intensifiers support multi-objective, multi-fidelity, and multi-threading:
+- Multi-Objective: Keeping track of multiple incumbents at once.
+- Multi-Fidelity: Incorporating instances or budgets.
+- Multi-Threading: Intensifier are implemented as generators so that calling ``next`` on the intensifier can be 
+  repeated as often as needed. Intensifier are not required to receive results as the results are directly taken from 
+  the runhistory. 
+
+.. note ::
+
+    All intensifiers are working on the runhistory and recognize previous logged trials (e.g., if the user already
+    evaluated something beforehand). Previous configurations (in the best case, also complete trials) are added to the 
+    queue/tracker again so that they are integrated into the intensification process.
+
+    That means continuing a run as well as incorporating user inputs are natively supported.
+
+
+:ref:`Configuration Selector<smac.main.config\\_selector>`
+----------------------------------------------------------
+
+The configuration selector uses the initial design, surrogate model, acquisition maximizer/function, runhistory,
+runhistory encoder, and random design to select the next configuration. The configuration selector is directly
+used by the intensifier and is called everytime a new configuration is requested. 
+
+The idea behind the configuration selector is straight forward:
+1. Yield the initial design configurations.
+2. Train the surrogate model with the data from the runhistory encoder.
+3. Get the next ``retrain_after`` configurations from the acquisition function/maximizer and yield them.
+4. After all ``retrain_after`` configurations were yield, go back to step 2.
+
+.. note ::
+
+    The configuration selector is a generator and yields configurations. Therefore, the current state of the 
+    selector is saved and when the intensifier calls ``next``, the selector continues there where it stopped.
+
+.. note ::
+
+    Everytime the surrogate model is trained, the multi-objective algorithm is updated via 
+    ``update_on_iteration_start``.
 
 
 :ref:`Multi-Objective Algorithm<smac.multi\\_objective>`
@@ -170,7 +211,7 @@ incumbent.
 ---------------------------------------------
 
 The runhistory holds all (un-)evaluated trials of the optimization run. You can use the runhistory to 
-get configs, the :term:`incumbent<Incumbent>`, (min/sum/average) cost of configs, trials of a config, and more.
+get (running) configs, (running) trials, trials of a specificconfig, and more.
 The runhistory encoder iterates over the runhistory to receive data for the surrogate model. The following 
 code shows how to iterate over the runhistory:
 
@@ -183,6 +224,7 @@ code shows how to iterate over the runhistory:
         # Trial info
         config = trial_info.config
         instance = trial_info.instance
+        budget = trial_info.budget
         seed = trial_info.seed
 
         # Trial value
