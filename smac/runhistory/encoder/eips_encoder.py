@@ -5,7 +5,7 @@ from typing import Mapping
 import numpy as np
 
 from smac.runhistory.encoder import AbstractRunHistoryEncoder
-from smac.runhistory.runhistory import RunHistory, TrialKey, TrialValue
+from smac.runhistory.runhistory import TrialKey, TrialValue
 from smac.utils.configspace import convert_configurations_to_array
 from smac.utils.logging import get_logger
 from smac.utils.multi_objective import normalize_costs
@@ -23,7 +23,6 @@ class RunHistoryEIPSEncoder(AbstractRunHistoryEncoder):
     def _build_matrix(
         self,
         trials: Mapping[TrialKey, TrialValue],
-        runhistory: RunHistory,
         store_statistics: bool = False,
     ) -> tuple[np.ndarray, np.ndarray]:
         if store_statistics:
@@ -39,7 +38,7 @@ class RunHistoryEIPSEncoder(AbstractRunHistoryEncoder):
         # Then populate matrix
         for row, (key, run) in enumerate(trials.items()):
             # Scaling is automatically done in configSpace
-            conf = runhistory.ids_config[key.config_id]
+            conf = self.runhistory.ids_config[key.config_id]
             conf_vector = convert_configurations_to_array([conf])[0]
             if self._n_features > 0 and self._instance_features is not None:
                 assert isinstance(key.instance, str)
@@ -54,7 +53,7 @@ class RunHistoryEIPSEncoder(AbstractRunHistoryEncoder):
 
                 # Let's normalize y here
                 # We use the objective_bounds calculated by the runhistory
-                y_ = normalize_costs(run.cost, runhistory.objective_bounds)
+                y_ = normalize_costs(run.cost, self.runhistory.objective_bounds)
                 y_agg = self._multi_objective_algorithm(y_)
                 y[row, 0] = y_agg
             else:

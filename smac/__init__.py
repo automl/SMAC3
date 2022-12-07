@@ -19,10 +19,14 @@ copyright = f"""
     Copyright {datetime.date.today().strftime('%Y')}, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter"""
-version = "2.0.0a2"
+version = "2.0.0a3"
 
 
 try:
+    from smac.utils.logging import setup_logging
+
+    setup_logging(0)
+
     from smac.callback import Callback
     from smac.facade import (
         AlgorithmConfigurationFacade,
@@ -34,9 +38,6 @@ try:
     )
     from smac.runhistory.runhistory import RunHistory
     from smac.scenario import Scenario
-    from smac.utils.logging import setup_logging
-
-    setup_logging(0)
 
     __all__ = [
         "Scenario",

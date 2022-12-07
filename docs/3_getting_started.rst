@@ -5,7 +5,6 @@ In the core, SMAC needs four components (configuration space, target function, s
 optimization process, all of which are explained on this page.
 
 
-
 Configuration Space
 -------------------
 

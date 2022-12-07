@@ -2,7 +2,9 @@
 2D Schaffer Function with Objective Weights
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A simple example on how to use multi-objective optimization is shown. The `schaffer` function is used.
+A simple example on how to use multi-objective optimization is shown. The 2D Schaffer function is used. In the plot
+you can see that all points are on the Pareto front. However, since we set the objective weights, you can notice that
+SMAC prioritizes the second objective over the first one.
 """
 
 from __future__ import annotations
@@ -33,26 +35,38 @@ def target_function(config: Configuration, seed: int = 0) -> Dict[str, float]:
     return {"metric1": f1, "metric2": f2}
 
 
-def plot(all_x: list[float]) -> None:
+def plot_from_smac(smac: AbstractFacade) -> None:
     plt.figure()
-    for x in all_x:
-        f1, f2 = schaffer(x)
-        plt.scatter(f1, f2, c="blue", alpha=0.1, zorder=3000)
+    configs = smac.runhistory.get_configs()
+    incumbents = smac.intensifier.get_incumbents()
 
-    # plt.vlines([1], 0, 4, linestyles="dashed", colors=["red"])
-    # plt.hlines([1], 0, 4, linestyles="dashed", colors=["red"])
+    for i, config in enumerate(configs):
+        if config in incumbents:
+            continue
+
+        label = None
+        if i == 0:
+            label = "Configuration"
+
+        x = config["x"]
+        f1, f2 = schaffer(x)
+        plt.scatter(f1, f2, c="blue", alpha=0.1, marker="o", zorder=3000, label=label)
+
+    for i, config in enumerate(incumbents):
+        label = None
+        if i == 0:
+            label = "Incumbent"
+
+        x = config["x"]
+        f1, f2 = schaffer(x)
+        plt.scatter(f1, f2, c="red", alpha=1, marker="x", zorder=3000, label=label)
+
+    plt.xlabel("f1")
+    plt.ylabel("f2")
+    plt.title("Schaffer 2D")
+    plt.legend()
 
     plt.show()
-
-
-def plot_from_smac(smac: AbstractFacade) -> None:
-    rh = smac.runhistory
-    all_x = []
-    for trial_key in rh:
-        config = rh.ids_config[trial_key.config_id]
-        all_x.append(config["x"])
-
-    plot(all_x)
 
 
 if __name__ == "__main__":
@@ -76,13 +90,16 @@ if __name__ == "__main__":
         ),
         overwrite=True,
     )
-    incumbent = smac.optimize()
+    incumbents = smac.optimize()
 
+    # Get cost of default configuration
     default_cost = smac.validate(cs.get_default_configuration())
-    print(f"Default costs: {default_cost}")
+    print(f"Validated costs from default config: \n--- {default_cost}\n")
 
-    incumbent_cost = smac.validate(incumbent)
-    print(f"Incumbent costs: {incumbent_cost}")
+    print("Validated costs from the Pareto front (incumbents):")
+    for incumbent in incumbents:
+        cost = smac.validate(incumbent)
+        print("---", cost)
 
     # Plot the evaluated points
     plot_from_smac(smac)

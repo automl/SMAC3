@@ -1,4 +1,4 @@
-# Sequential Model Algorithm Configuration (SMAC)
+# SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization
 
 
 [![Tests](https://github.com/automl/SMAC3/actions/workflows/pytest.yml/badge.svg?branch=main)](https://github.com/automl/SMAC3/actions/workflows/pytest.yml)
@@ -23,9 +23,12 @@ Forest is written in C++. In further texts, SMAC is representatively mentioned f
 ## Important: Changes in v2.0
 
 With the next big major release of SMAC, we drastically boosted the user experience by improving the APIs and how the 
-pipelining is done (see [changelog](CHANGELOG.md)). However, cleaning the code base, we removed the command-line 
-interface (calling a target function from a script is still supported), runtime optimization, and pSMAC. Also,
- python 3.7 is not supported anymore. If you depend on those functionalities, we kindly ask you to keep using v1.4.
+pipelining is done (see [changelog](CHANGELOG.md)). All facades/intensifiers support multi-objective, multi-fidelity, 
+and multi-threading natively now! That includes having an ask-and-tell interface and continuing a run
+wherever you left off. pSMAC is removed because when specifying the number of workers, SMAC automatically uses 
+multi-threading for evaluating trials. When cleaning the code base, however, we removed the command-line 
+interface (calling a target function from a script is still supported), and runtime optimization. Also,
+python 3.7 is not supported anymore. If you depend on those functionalities, please keep using v1.4.
 
 We are excited to introduce the new major release and look forward to developing new features on the new code base. 
 We hope you enjoy this new user experience as much as we do. 🚀

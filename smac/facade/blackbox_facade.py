@@ -213,33 +213,24 @@ class BlackBoxFacade(AbstractFacade):
     def get_intensifier(  # type: ignore
         scenario: Scenario,
         *,
-        min_challenger: int = 1,
-        min_config_calls: int = 1,
         max_config_calls: int = 3,
-        intensify_percentage: float = 0.5,
+        max_incumbents: int = 20,
     ) -> Intensifier:
         """Returns ``Intensifier`` as intensifier. Uses the default configuration for ``race_against``.
 
         Parameters
         ----------
         scenario : Scenario
-        min_config_calls : int, defaults to 1
-            Minimum number of trials per config (summed over all calls to intensify).
-        max_config_calls : int, defaults to 1
-            Maximum number of trials per config (summed over all calls to intensify).
-        min_challenger : int, defaults to 3
-            Minimal number of challengers to be considered (even if time_bound is exhausted earlier).
-        intensify_percentage : float, defaults to 0.5
-            How much percentage of the time should configurations be intensified (evaluated on higher budgets or
-            more instances). This parameter is accessed in the SMBO class.
+        max_config_calls : int, defaults to 3
+            Maximum number of configuration evaluations. Basically, how many instance-seed keys should be max evaluated
+            for a configuration.
+        max_incumbents : int, defaults to 10
+            How many incumbents to keep track of in the case of multi-objective.
         """
         return Intensifier(
             scenario=scenario,
-            min_challenger=min_challenger,
-            race_against=scenario.configspace.get_default_configuration(),
-            min_config_calls=min_config_calls,
             max_config_calls=max_config_calls,
-            intensify_percentage=intensify_percentage,
+            max_incumbents=max_incumbents,
         )
 
     @staticmethod

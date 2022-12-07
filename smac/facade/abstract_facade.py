@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Any, Callable, Iterator
+from typing import Any, Callable
 
 from pathlib import Path
 
@@ -18,7 +18,8 @@ from smac.acquisition.maximizer.abstract_acqusition_maximizer import (
 from smac.callback import Callback
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
-from smac.main import SMBO
+from smac.main.config_selector import ConfigSelector
+from smac.main.smbo import SMBO
 from smac.model.abstract_model import AbstractModel
 from smac.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
@@ -26,14 +27,12 @@ from smac.multi_objective.abstract_multi_objective_algorithm import (
 from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.runhistory.dataclasses import TrialInfo, TrialValue
 from smac.runhistory.encoder.abstract_encoder import AbstractRunHistoryEncoder
-from smac.runhistory.enumerations import TrialInfoIntent
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.abstract_runner import AbstractRunner
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.runner.target_function_script_runner import TargetFunctionScriptRunner
 from smac.scenario import Scenario
-from smac.stats import Stats
 from smac.utils.logging import get_logger, setup_logging
 
 logger = get_logger(__name__)
@@ -106,6 +105,7 @@ class AbstractFacade:
         intensifier: AbstractIntensifier | None = None,
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
         runhistory_encoder: AbstractRunHistoryEncoder | None = None,
+        config_selector: ConfigSelector | None = None,
         logging_level: int | Path | None = None,
         callbacks: list[Callback] = [],
         overwrite: bool = False,
@@ -136,9 +136,11 @@ class AbstractFacade:
         if runhistory_encoder is None:
             runhistory_encoder = self.get_runhistory_encoder(scenario)
 
+        if config_selector is None:
+            config_selector = self.get_config_selector(scenario)
+
         # Initialize empty stats and runhistory object
         runhistory = RunHistory(multi_objective_algorithm=multi_objective_algorithm)
-        stats = Stats(scenario)
 
         # Set the seed for configuration space
         scenario.configspace.seed(scenario.seed)
@@ -154,7 +156,8 @@ class AbstractFacade:
         self._multi_objective_algorithm = multi_objective_algorithm
         self._runhistory = runhistory
         self._runhistory_encoder = runhistory_encoder
-        self._stats = stats
+        self._config_selector = config_selector
+        self._callbacks = callbacks
         self._overwrite = overwrite
 
         # Prepare the algorithm executer
@@ -204,27 +207,29 @@ class AbstractFacade:
         for callback in callbacks:
             self._optimizer._register_callback(callback)
 
+        # Additionally, we register the runhistory callback from the intensifier to efficiently update our incumbent
+        # every time new information are available
+        self._optimizer._register_callback(self._intensifier.get_callback())
+
     @property
     def scenario(self) -> Scenario:
-        """The scenario object."""
+        """The scenario object which holds all environment information."""
         return self._scenario
 
     @property
     def runhistory(self) -> RunHistory:
-        """The run history, which is filled with all information during the optimization process."""
+        """The runhistory which is filled with all trials during the optimization process."""
         return self._optimizer._runhistory
 
     @property
-    def stats(self) -> Stats:
-        """The stats object, which is updated during the optimization and shows relevant information, e.g., how many
-        trials have been finished and how the trajectory looks like.
-        """
-        return self._optimizer._stats
+    def optimizer(self) -> SMBO:
+        """The optimizer which is responsible for the AutoML loop. Keeps track of useful information like status."""
+        return self._optimizer
 
     @property
-    def incumbent(self) -> Configuration | None:
-        """The best configuration so far."""
-        return self._optimizer._incumbent
+    def intensifier(self) -> AbstractIntensifier:
+        """The optimizer which is responsible for the AutoML loop. Keeps track of useful information like status."""
+        return self._intensifier
 
     @property
     def meta(self) -> dict[str, Any]:
@@ -246,52 +251,18 @@ class AbstractFacade:
             "random_design": self._random_design.meta,
             "runhistory_encoder": self._runhistory_encoder.meta,
             "multi_objective_algorithm": multi_objective_algorithm_meta,
+            "config_selector": self._config_selector.meta,
             "version": smac.version,
         }
 
         return meta
 
-    def get_target_function_seeds(self) -> list[int]:
-        """Which seeds are used to call the target function."""
-        return self._intensifier.get_target_function_seeds()
-
-    def get_target_function_budgets(self) -> list[float | None]:
-        """Which budgets are used to call the target function."""
-        return self._intensifier.get_target_function_budgets()
-
-    def get_target_function_instances(self) -> list[str | None]:
-        """Which instances are used to call the target function."""
-        return self._intensifier.get_target_function_instances()
-
-    def get_next_configurations(self) -> Iterator[Configuration]:
-        """Choose next candidate solution with Bayesian optimization. The suggested configurations
-        depend on the surrogate model acquisition optimizer/function. This method is used by
-        the intensifier.
-        """
-        return self._optimizer.get_next_configurations()
-
     def ask(self) -> TrialInfo:
-        """Asks the intensifier for the next trial. This method returns only trials with the intend
-        to run.
-        """
-        counter = 0
-        while True:
-            if counter > 10:
-                logger.warning("It seems like SMAC only finds trials with the intent to skip/wait.")
-                counter = 0
-
-            intend, info = self._optimizer.ask()
-            # We only accept trials which are intented to run
-            if intend != TrialInfoIntent.RUN:
-                counter += 1
-                continue
-
-            counter = 0
-            return info
+        """Asks the intensifier for the next trial."""
+        return self._optimizer.ask()
 
     def tell(self, info: TrialInfo, value: TrialValue, save: bool = True) -> None:
-        """Adds the result of a trial to the runhistory and updates the intensifier. Also,
-        the stats object is updated.
+        """Adds the result of a trial to the runhistory and updates the intensifier.
 
         Parameters
         ----------
@@ -302,9 +273,9 @@ class AbstractFacade:
         save : bool, optional to True
             Whether the runhistory should be saved.
         """
-        return self._optimizer.tell(info, value, time_left=None, save=save)
+        return self._optimizer.tell(info, value, save=save)
 
-    def optimize(self) -> Configuration:
+    def optimize(self) -> Configuration | list[Configuration]:
         """
         Optimizes the algorithm.
 
@@ -313,25 +284,18 @@ class AbstractFacade:
         incumbent : Configuration
             Best found configuration.
         """
-        incumbent = None
+        incumbents = None
         try:
-            incumbent = self._optimizer.optimize()
+            incumbents = self._optimizer.optimize()
         finally:
             self._optimizer.save()
-            self._stats.print()
 
-            if incumbent is not None:
-                cost = self._runhistory.get_cost(incumbent)
-                logger.info(f"Final Incumbent: {incumbent.get_dictionary()}")
-                logger.info(f"Estimated cost: {cost}")
-
-        return incumbent
+        return incumbents
 
     def validate(
         self,
         config: Configuration,
         *,
-        instances: list[str] | None = None,
         seed: int | None = None,
     ) -> float | list[float]:
         """Validates a configuration with different seeds than in the optimization process and on the highest
@@ -353,7 +317,7 @@ class AbstractFacade:
             The averaged cost of the configuration. In case of multi-fidelity, the cost of each objective is
             averaged.
         """
-        return self._optimizer.validate(config, instances=instances, seed=seed)
+        return self._optimizer.validate(config, seed=seed)
 
     @staticmethod
     @abstractmethod
@@ -413,24 +377,27 @@ class AbstractFacade:
     @abstractmethod
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
         """Returns the multi-objective algorithm instance to be used in the Bayesian optimization loop,
-        specifying the scalarization strategy for multiple objectives' costs
+        specifying the scalarization strategy for multiple objectives' costs.
         """
         raise NotImplementedError
+
+    @staticmethod
+    def get_config_selector(
+        scenario: Scenario,
+        *,
+        retrain_after: int = 8,
+        retries: int = 16,
+    ) -> ConfigSelector:
+        """Returns the default configuration selector."""
+        return ConfigSelector(scenario, retrain_after=retrain_after, retries=retries)
 
     def _get_optimizer(self) -> SMBO:
         """Fills the SMBO with all the pre-initialized components."""
         return SMBO(
             scenario=self._scenario,
-            stats=self._stats,
             runner=self._runner,
-            initial_design=self._initial_design,
             runhistory=self._runhistory,
-            runhistory_encoder=self._runhistory_encoder,
             intensifier=self._intensifier,
-            model=self._model,
-            acquisition_function=self._acquisition_function,
-            acquisition_maximizer=self._acquisition_maximizer,
-            random_design=self._random_design,
             overwrite=self._overwrite,
         )
 
@@ -439,10 +406,24 @@ class AbstractFacade:
         the components. This is the easiest way to incorporate dependencies, although
         it might be a bit hacky.
         """
-        self._intensifier._stats = self._stats
+        # Set components to config selector
+        self._config_selector._set_components(
+            initial_design=self._initial_design,
+            runhistory=self._runhistory,
+            runhistory_encoder=self._runhistory_encoder,
+            model=self._model,
+            acquisition_function=self._acquisition_function,
+            acquisition_maximizer=self._acquisition_maximizer,
+            random_design=self._random_design,
+            callbacks=self._callbacks,
+        )
+
         self._runhistory_encoder.multi_objective_algorithm = self._multi_objective_algorithm
+        self._runhistory_encoder.runhistory = self._runhistory
         self._acquisition_function.model = self._model
         self._acquisition_maximizer.acquisition_function = self._acquisition_function
+        self._intensifier.config_selector = self._config_selector
+        self._intensifier.runhistory = self._runhistory
 
     def _validate(self) -> None:
         """Checks if the composition is correct if there are dependencies, not necessarily."""

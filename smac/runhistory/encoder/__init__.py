@@ -1,8 +1,9 @@
 from smac.runhistory.encoder.abstract_encoder import AbstractRunHistoryEncoder
-from smac.runhistory.encoder.boing_encoder import (
-    RunHistoryRawEncoder,
-    RunHistoryRawScaledEncoder,
-)
+
+# from smac.runhistory.encoder.boing_encoder import (
+#     RunHistoryRawEncoder,
+#     RunHistoryRawScaledEncoder,
+# )
 from smac.runhistory.encoder.eips_encoder import RunHistoryEIPSEncoder
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runhistory.encoder.inverse_scaled_encoder import (
@@ -16,8 +17,8 @@ from smac.runhistory.encoder.sqrt_scaled_encoder import RunHistorySqrtScaledEnco
 __all__ = [
     "AbstractRunHistoryEncoder",
     "RunHistoryEncoder",
-    "RunHistoryRawEncoder",
-    "RunHistoryRawScaledEncoder",
+    # "RunHistoryRawEncoder",
+    # "RunHistoryRawScaledEncoder",
     "RunHistoryEIPSEncoder",
     "RunHistoryInverseScaledEncoder",
     "RunHistoryLogEncoder",

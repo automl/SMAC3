@@ -114,6 +114,7 @@ class DaskParallelRunner(AbstractRunner):
         """
         # Check for resources or block till one is available
         if self.count_available_workers() <= 0:
+            logger.debug("No worker available. Waiting for one to be available...")
             wait(self._pending_trials, return_when="FIRST_COMPLETED")
             self._process_pending_trials()
 
@@ -128,8 +129,8 @@ class DaskParallelRunner(AbstractRunner):
                 )
 
         # At this point we can submit the job
-        run = self._client.submit(self._single_worker.run_wrapper, trial_info=trial_info)
-        self._pending_trials.append(run)
+        trial = self._client.submit(self._single_worker.run_wrapper, trial_info=trial_info)
+        self._pending_trials.append(trial)
 
     def iter_results(self) -> Iterator[tuple[TrialInfo, TrialValue]]:  # noqa: D102
         self._process_pending_trials()
@@ -165,7 +166,7 @@ class DaskParallelRunner(AbstractRunner):
         """The completed trials are moved from ``self._pending_trials`` to ``self._reseults_queue``. We make sure
         pending trials never exceed the capacity of the scheduler.
         """
-        # In code check to make sure we don;t exceed resource allocation
+        # In code check to make sure we don't exceed resource allocation
         if self.count_available_workers() < 0:
             logger.warning(
                 "More running jobs than resources available. "

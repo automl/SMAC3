@@ -3,10 +3,10 @@ ParEGO
 ^^^^^^
 
 An example of how to use multi-objective optimization with ParEGO. Both accuracy and run-time are going to be
-optimized, and the configurations are shown in a plot, highlighting the best ones in a Pareto front. The red cross
-indicates the best configuration selected by SMAC.
+optimized on the digits dataset using an MLP, and the configurations are shown in a plot, highlighting the best ones in 
+a Pareto front. The red cross indicates the best configuration selected by SMAC.
 
-In the optimization, SMAC evaluates the configurations on three different seeds. Therefore, the plot shows the
+In the optimization, SMAC evaluates the configurations on two different seeds. Therefore, the plot shows the
 mean accuracy and run-time of each configuration.
 """
 from __future__ import annotations
@@ -96,31 +96,29 @@ class MLP:
         }
 
 
-def plot_pareto(smac: AbstractFacade) -> None:
+def plot_pareto(smac: AbstractFacade, incumbents: list[Configuration]) -> None:
     """Plots configurations from SMAC and highlights the best configurations in a Pareto front."""
-    # Get Pareto costs
-    _, c = smac.runhistory.get_pareto_front()
-    pareto_costs = np.array(c)
-
-    # Sort them a bit
-    pareto_costs = pareto_costs[pareto_costs[:, 0].argsort()]
-
-    # Get all other costs from runhistory
     average_costs = []
+    average_pareto_costs = []
     for config in smac.runhistory.get_configs():
         # Since we use multiple seeds, we have to average them to get only one cost value pair for each configuration
         average_cost = smac.runhistory.average_cost(config)
 
-        if average_cost not in c:
+        if config in incumbents:
+            average_pareto_costs += [average_cost]
+        else:
             average_costs += [average_cost]
 
     # Let's work with a numpy array
     costs = np.vstack(average_costs)
+    pareto_costs = np.vstack(average_pareto_costs)
+    pareto_costs = pareto_costs[pareto_costs[:, 0].argsort()]  # Sort them
+
     costs_x, costs_y = costs[:, 0], costs[:, 1]
     pareto_costs_x, pareto_costs_y = pareto_costs[:, 0], pareto_costs[:, 1]
 
-    plt.scatter(costs_x, costs_y, marker="x")
-    plt.scatter(pareto_costs_x, pareto_costs_y, marker="x", c="r")
+    plt.scatter(costs_x, costs_y, marker="x", label="Configuration")
+    plt.scatter(pareto_costs_x, pareto_costs_y, marker="x", c="r", label="Incumbent")
     plt.step(
         [pareto_costs_x[0]] + pareto_costs_x.tolist() + [np.max(costs_x)],  # We add bounds
         [np.max(costs_y)] + pareto_costs_y.tolist() + [np.min(pareto_costs_y)],  # We add bounds
@@ -131,17 +129,19 @@ def plot_pareto(smac: AbstractFacade) -> None:
     plt.title("Pareto-Front")
     plt.xlabel(smac.scenario.objectives[0])
     plt.ylabel(smac.scenario.objectives[1])
+    plt.legend()
     plt.show()
 
 
 if __name__ == "__main__":
     mlp = MLP()
+    objectives = ["1 - accuracy", "time"]
 
     # Define our environment variables
     scenario = Scenario(
         mlp.configspace,
-        objectives=["1 - accuracy", "time"],
-        walltime_limit=40,  # After 40 seconds, we stop the hyperparameter optimization
+        objectives=objectives,
+        walltime_limit=30,  # After 30 seconds, we stop the hyperparameter optimization
         n_trials=200,  # Evaluate max 200 different trials
         n_workers=1,
     )
@@ -149,6 +149,7 @@ if __name__ == "__main__":
     # We want to run five random configurations before starting the optimization.
     initial_design = HPOFacade.get_initial_design(scenario, n_configs=5)
     multi_objective_algorithm = ParEGO(scenario)
+    intensifier = HPOFacade.get_intensifier(scenario, max_config_calls=2)
 
     # Create our SMAC object and pass the scenario and the train method
     smac = HPOFacade(
@@ -156,21 +157,21 @@ if __name__ == "__main__":
         mlp.train,
         initial_design=initial_design,
         multi_objective_algorithm=multi_objective_algorithm,
+        intensifier=intensifier,
         overwrite=True,
     )
 
     # Let's optimize
-    # Keep in mind: The incumbent is ambiguous here because of ParEGO
-    smac.optimize()
+    incumbents = smac.optimize()
 
     # Get cost of default configuration
     default_cost = smac.validate(mlp.configspace.get_default_configuration())
-    print(f"Default costs: {default_cost}\n")
+    print(f"Validated costs from default config: \n--- {default_cost}\n")
 
-    print("Validated costs from the Pareto front:")
-    for i, config in enumerate(smac.runhistory.get_pareto_front()[0]):
-        cost = smac.validate(config)
-        print(cost)
+    print("Validated costs from the Pareto front (incumbents):")
+    for incumbent in incumbents:
+        cost = smac.validate(incumbent)
+        print("---", cost)
 
     # Let's plot a pareto front
-    plot_pareto(smac)
+    plot_pareto(smac, incumbents)

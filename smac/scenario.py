@@ -63,13 +63,10 @@ class Scenario:
     instance_features : dict[str, list[float]] | None, defaults to None
         Instances can be associated with features. For example, meta data of the dataset (mean, var, ...) can be
         incorporated which are then further used to expand the training data of the surrogate model.
-    instance_order : str | None, defaults to "shuffle_once"
-        How to order the instances. Possible values are "shuffle" and "shuffle_once". You can disable this feature by
-        setting the argument to None.
-    min_budget : float | None, defaults to None
+    min_budget : float | int | None, defaults to None
         The minimum budget (epochs, subset size, number of instances, ...) that is used for the optimization.
         Use this argument if you use multi-fidelity or instance optimization.
-    max_budget : float | None, defaults to None
+    max_budget : float | int | None, defaults to None
         The maximum budget (epochs, subset size, number of instances, ...) that is used for the optimization.
         Use this argument if you use multi-fidelity or instance optimization.
     seed : int, defaults to 0
@@ -102,8 +99,8 @@ class Scenario:
     instance_features: dict[str, list[float]] | None = None
 
     # Budgets
-    min_budget: float | None = None
-    max_budget: float | None = None
+    min_budget: float | int | None = None
+    max_budget: float | int | None = None
 
     # Others
     seed: int = 0

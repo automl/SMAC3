@@ -9,16 +9,19 @@ from pathlib import Path
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 
+from smac.constants import MAXINT
 from smac.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
 )
 from smac.runhistory.dataclasses import (
     InstanceSeedBudgetKey,
     InstanceSeedKey,
+    TrialInfo,
     TrialKey,
     TrialValue,
 )
-from smac.runhistory.enumerations import DataOrigin, StatusType
+from smac.runhistory.enumerations import StatusType
+from smac.utils.configspace import get_config_hash
 from smac.utils.logging import get_logger
 from smac.utils.multi_objective import normalize_costs
 
@@ -62,6 +65,21 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         self.reset()
 
     @property
+    def submitted(self) -> int:
+        """Returns how many trials have been submitted."""
+        return self._submitted
+
+    @property
+    def finished(self) -> int:
+        """Returns how many trials have been finished."""
+        return self._finished
+
+    @property
+    def running(self) -> int:
+        """Returns how many trials are still running."""
+        return self._running
+
+    @property
     def multi_objective_algorithm(self) -> AbstractMultiObjectiveAlgorithm | None:
         """The multi-objective algorithm is required to scaralize the costs in case of multi-objective."""
         return self._multi_objective_algorithm
@@ -92,9 +110,15 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         # serialize the data and can assume it's still in the same order as it was added.
         self._data: dict[TrialKey, TrialValue] = OrderedDict()
 
+        # Keep track of trials
+        self._submitted = 0
+        self._finished = 0
+        self._running = 0
+
         # For fast access, we have also an unordered data structure to get all instance
         # seed pairs of a configuration.
         self._config_id_to_isk_to_budget: dict[int, dict[InstanceSeedKey, list[float | None]]] = {}
+        self._running_trials: list[TrialInfo] = []
 
         self._config_ids: dict[Configuration, int] = {}
         self._ids_config: dict[int, Configuration] = {}
@@ -110,7 +134,6 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         # Store whether a datapoint is "external", which means it was read from
         # a JSON file. Can be chosen to not be written to disk.
-        self._external: dict[TrialKey, DataOrigin] = {}
         self._n_objectives: int = -1
         self._objective_bounds: list[tuple[float, float]] = []
 
@@ -148,7 +171,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         self,
         config: Configuration,
         cost: int | float | list[int | float],
-        time: float,
+        time: float = 0.0,
         status: StatusType = StatusType.SUCCESS,
         instance: str | None = None,
         seed: int | None = None,
@@ -156,7 +179,6 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         starttime: float = 0.0,
         endtime: float = 0.0,
         additional_info: dict[str, Any] = {},
-        origin: DataOrigin = DataOrigin.INTERNAL,
         force_update: bool = False,
     ) -> None:
         """Adds a new trial.
@@ -176,7 +198,6 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         starttime : float, defaults to 0.0
         endtime : float, defaults to 0.0
         additional_info : dict[str, Any], defaults to {}
-        origin : DataOrigin, defaults to DataOrigin.INTERNAL
         force_update : bool, defaults to false
             Overwrites a previous trial if the trial already exists.
         """
@@ -200,21 +221,24 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
             config_id = self._n_id
 
-        if self._n_objectives == -1:
-            self._n_objectives = n_objectives
-        elif self._n_objectives != n_objectives:
-            raise ValueError(
-                f"Cost is not of the same length ({n_objectives}) as the number of "
-                f"objectives ({self._n_objectives})."
-            )
+        if status != StatusType.RUNNING:
+            if self._n_objectives == -1:
+                self._n_objectives = n_objectives
+            elif self._n_objectives != n_objectives:
+                raise ValueError(
+                    f"Cost is not of the same length ({n_objectives}) as the number of "
+                    f"objectives ({self._n_objectives})."
+                )
 
-        # Let's always work with floats; Makes it easier to deal with later on
-        # array.tolist(), it returns a scalar if the array has one element.
-        c = cost_array.tolist()
-        if self._n_objectives == 1:
-            c = float(c)
+            # Let's always work with floats; Makes it easier to deal with later on
+            # array.tolist(), it returns a scalar if the array has one element.
+            c = cost_array.tolist()
+            if self._n_objectives == 1:
+                c = float(c)
+            else:
+                c = [float(i) for i in c]
         else:
-            c = [float(i) for i in c]
+            c = cost_array.tolist()
 
         if budget is not None:
             # Just to make sure we really add a float
@@ -249,8 +273,22 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         # Each trial_key is supposed to be used only once. Repeated tries to add
         # the same trial_key will be ignored silently if not capped.
-        if self._overwrite_existing_trials or force_update or self._data.get(k) is None:
-            self._add(k, v, status, origin)
+        previous_k = self._data.get(k)
+        if self._overwrite_existing_trials or force_update or previous_k is None:
+            # Update stati
+            if previous_k is None:
+                if status == StatusType.RUNNING:
+                    self._running += 1
+                else:
+                    self._finished += 1
+
+                self._submitted += 1
+            else:
+                if previous_k.status == StatusType.RUNNING and status != StatusType.RUNNING:
+                    self._running -= 1
+                    self._finished += 1
+
+            self._add(k, v, status)
         else:
             logger.info("Entry was not added to the runhistory because existing trials will not be overwritten.")
 
@@ -266,11 +304,13 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         config_id = self._config_ids[config]
 
         # Removing duplicates while keeping the order
-        inst_seed_budgets = list(dict.fromkeys(self.get_trials(config, only_max_observed_budget=True)))
+        inst_seed_budgets = list(
+            dict.fromkeys(self.get_instance_seed_budget_keys(config, highest_observed_budget_only=True))
+        )
         self._cost_per_config[config_id] = self.average_cost(config, inst_seed_budgets)
         self._num_trials_per_config[config_id] = len(inst_seed_budgets)
 
-        all_isb = list(dict.fromkeys(self.get_trials(config, only_max_observed_budget=False)))
+        all_isb = list(dict.fromkeys(self.get_instance_seed_budget_keys(config, highest_observed_budget_only=False)))
         self._min_cost_per_config[config_id] = self.min_cost(config, all_isb)
 
     def incremental_update_cost(self, config: Configuration, cost: float | list[float]) -> None:
@@ -367,7 +407,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
     def average_cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: Iterable[InstanceSeedBudgetKey] | None = None,
+        instance_seed_budget_keys: list[InstanceSeedBudgetKey] | None = None,
         normalize: bool = False,
     ) -> float | list[float]:
         """Return the average cost of a configuration. This is the mean of costs of all instance-
@@ -412,7 +452,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
     def sum_cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: Iterable[InstanceSeedBudgetKey] | None = None,
+        instance_seed_budget_keys: list[InstanceSeedBudgetKey] | None = None,
         normalize: bool = False,
     ) -> float | list[float]:
         """Return the sum of costs of a configuration. This is the sum of costs of all instance-seed
@@ -456,7 +496,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
     def min_cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: Iterable[InstanceSeedBudgetKey] | None = None,
+        instance_seed_budget_keys: list[InstanceSeedBudgetKey] | None = None,
         normalize: bool = False,
     ) -> float | list[float]:
         """Return the minimum cost of a configuration. This is the minimum cost of all instance-seed pairs.
@@ -505,15 +545,19 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
     def get_trials(
         self,
         config: Configuration,
-        only_max_observed_budget: bool = True,
-    ) -> list[InstanceSeedBudgetKey]:
-        """Return all trials (instance seed budget key in this case) for a configuration.
+        highest_observed_budget_only: bool = True,
+    ) -> list[TrialInfo]:
+        """Return all trials for a configuration.
+
+        Warning
+        -------
+        Does not return running trials. Please use ``get_running_trials`` to receive running trials.
 
         Parameters
         ----------
         config : Configuration
             Parameter configuration
-        only_max_observed_budget : bool
+        highest_observed_budget_only : bool
             Select only the maximally observed budget run for this configuration
 
         Returns
@@ -526,28 +570,122 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             trials = self._config_id_to_isk_to_budget[config_id].copy()
 
         # Select only the max budget run if specified
-        if only_max_observed_budget:
+        if highest_observed_budget_only:
             for k, v in trials.items():
                 if None in v:
                     trials[k] = [None]
                 else:
                     trials[k] = [max([v_ for v_ in v if v_ is not None])]
 
+        return [TrialInfo(config, k.instance, k.seed, budget) for k, v in trials.items() for budget in v]
+
+    def get_instance_seed_budget_keys(
+        self,
+        config: Configuration,
+        highest_observed_budget_only: bool = True,
+    ) -> list[InstanceSeedBudgetKey]:
+        """
+
+        Warning
+        -------
+        Does not return running instances.
+
+        Parameters
+        ----------
+        config : Configuration
+            _description_
+        highest_observed_budget_only : bool, optional
+            _description_, by default True
+
+        Returns
+        -------
+        list[InstanceSeedBudgetKey]
+        """
+        trials = self.get_trials(config, highest_observed_budget_only)
+
         # Convert to instance-seed-budget key
-        return [InstanceSeedBudgetKey(k.instance, k.seed, budget) for k, v in trials.items() for budget in v]
+        return [InstanceSeedBudgetKey(t.instance, t.seed, t.budget) for t in trials]
+
+    def add_running_trial(self, trial: TrialInfo) -> None:
+        """Adds a running trial to the runhistory.
+
+        Parameters
+        ----------
+        trial : TrialInfo
+            The ``TrialInfo`` object of the running trial.
+        """
+        self.add(
+            config=trial.config,
+            cost=float(MAXINT),
+            time=0.0,
+            status=StatusType.RUNNING,
+            instance=trial.instance,
+            seed=trial.seed,
+            budget=trial.budget,
+        )
+
+    def get_running_trials(self, config: Configuration | None = None) -> list[TrialInfo]:
+        """Returns all running trials for the passed configuration.
+
+        Parameters
+        ----------
+        config : Configuration | None, defaults to None
+            Return only running trials from the passed configuration. If None, all configs are considered.
+
+        Returns
+        -------
+        list[TrialInfo]
+            List of trials, all of which are still running.
+        """
+        # Always work on copies
+        if config is None:
+            return [trial for trial in self._running_trials]
+        else:
+            return [trial for trial in self._running_trials if trial.config == config]
+
+    def get_running_configs(self) -> list[Configuration]:
+        """Returns all configurations which have at least one running trial.
+
+        Returns
+        -------
+        list[Configuration]
+            List of configurations, all of which have at least one running trial.
+        """
+        configs = []
+        for trial in self._running_trials:
+            if trial.config not in configs:
+                configs.append(trial.config)
+
+        return configs
 
     def get_config(self, config_id: int) -> Configuration:
         """Returns the configuration from the configuration id."""
         return self._ids_config[config_id]
 
-    def get_configs(self) -> list[Configuration]:
+    def get_config_id(self, config: Configuration) -> int:
+        """Returns the configuration id from a configuration."""
+        return self._config_ids[config]
+
+    def get_configs(self, sort_by: str | None = None) -> list[Configuration]:
         """Return all configurations in this RunHistory object.
 
         Returns
         -------
         parameter configurations: list
+        sort_by : str, defaults to None
+            Sort the configs by ``cost`` (lowest cost first) or ``num_trials`` (config with lowest number of trials
+            first).
         """
-        return list(self._config_ids.keys())
+        configs = list(self._config_ids.keys())
+
+        if sort_by == "cost":
+            return sorted(configs, key=lambda config: self._cost_per_config[self._config_ids[config]])
+        elif sort_by == "num_trials":
+            return sorted(configs, key=lambda config: len(self.get_trials(config)))
+        elif sort_by is None:
+            return configs
+        else:
+            raise ValueError(f"Unknown sort_by value: {sort_by}.")
 
     def get_configs_per_budget(
         self,
@@ -573,89 +711,30 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         return configs
 
-    def get_incumbent(self) -> tuple[Configuration | None, float | list[float]]:
-        """Returns the incumbent configuration. The config with the lowest cost calculated by `get_cost` is returned.
-
-        Warning
-        -------
-        The incumbent in a multi-objective setting depends on the multi-objective algorithm.
-        If you use ParEGO, for example, you get a random incumbent on the Pareto front based on the current
-        ParEGO weights.
-        """
-        incumbent = None
-        lowest_cost = np.inf
-        for config in self._config_ids.keys():
-            cost = self.get_cost(config)
-            if cost < lowest_cost:
-                incumbent = config
-                lowest_cost = cost
-
-        return incumbent, lowest_cost
-
-    def get_pareto_front(self) -> tuple[list[Configuration], list[list[float]]]:
-        """Returns the Pareto front of the runhistory.
-
-        Returns
-        -------
-        configs : list[Configuration]
-            The configs of the Pareto front.
-        costs : list[list[float]]
-            The costs from the configs of the Pareto front.
-        """
-        if self._n_objectives == 1:
-            raise ValueError("Pareto front is only defined for multi-objective settings.")
-
-        # Get costs from runhistory first
-        average_costs = []
-        configs = self.get_configs()
-        for config in configs:
-            # Since we use multiple seeds, we have to average them to get only one cost value pair for each
-            # configuration
-            # Luckily, SMAC already does this for us
-            average_cost = self.average_cost(config)
-            average_costs += [average_cost]
-
-        # Let's work with a numpy array
-        costs = np.vstack(average_costs)
-
-        is_efficient = np.arange(costs.shape[0])
-        next_point_index = 0  # Next index in the is_efficient array to search for
-        while next_point_index < len(costs):
-            nondominated_point_mask = np.any(costs < costs[next_point_index], axis=1)
-            nondominated_point_mask[next_point_index] = True
-            is_efficient = is_efficient[nondominated_point_mask]  # Remove dominated points
-            costs = costs[nondominated_point_mask]
-            next_point_index = np.sum(nondominated_point_mask[:next_point_index]) + 1
-
-        return [configs[i] for i in is_efficient], [average_costs[i] for i in is_efficient]
-
-    def save_json(self, filename: str = "runhistory.json", save_external: bool = False) -> None:
+    def save(self, filename: str | Path = "runhistory.json") -> None:
         """Saves runhistory on disk.
 
         Parameters
         ----------
         filename : str
             file name.
-        save_external : bool
-            Whether to save external data in the runhistory file.
         """
         data = []
         for k, v in self._data.items():
-            if save_external or self._external[k] == DataOrigin.INTERNAL:
-                data += [
-                    (
-                        int(k.config_id),
-                        str(k.instance) if k.instance is not None else None,
-                        int(k.seed) if k.seed is not None else None,
-                        float(k.budget) if k.budget is not None else None,
-                        v.cost,
-                        v.time,
-                        v.status,
-                        v.starttime,
-                        v.endtime,
-                        v.additional_info,
-                    )
-                ]
+            data += [
+                (
+                    int(k.config_id),
+                    str(k.instance) if k.instance is not None else None,
+                    int(k.seed) if k.seed is not None else None,
+                    float(k.budget) if k.budget is not None else None,
+                    v.cost,
+                    v.time,
+                    v.status,
+                    v.starttime,
+                    v.endtime,
+                    v.additional_info,
+                )
+            ]
 
         config_ids_to_serialize = set([entry[0] for entry in data])
         configs = {}
@@ -666,14 +745,17 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
             config_origins[id_] = config.origin
 
-        # Some sanity-checks
-        assert filename.endswith(".json")
-        path = Path(filename)
-        path.parent.mkdir(parents=True, exist_ok=True)
+        if isinstance(filename, str):
+            filename = Path(filename)
+
+        assert str(filename).endswith(".json")
+        filename.parent.mkdir(parents=True, exist_ok=True)
 
         with open(filename, "w") as fp:
+            assert self._running == len(self._running_trials)
             json.dump(
                 {
+                    "stats": {"submitted": self._submitted, "finished": self._finished, "running": self._running},
                     "data": data,
                     "configs": configs,
                     "config_origins": config_origins,
@@ -682,7 +764,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 indent=2,
             )
 
-    def load_json(self, filename: str, configspace: ConfigurationSpace) -> None:
+    def load(self, filename: str | Path, configspace: ConfigurationSpace) -> None:
         """Load and runhistory in json representation from disk.
 
         Warning
@@ -696,19 +778,25 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         configspace : ConfigSpace
             instance of configuration space
         """
+        if isinstance(filename, str):
+            filename = Path(filename)
+
+        # We reset the runhistory first to avoid any inconsistencies
+        self.reset()
+
         try:
             with open(filename) as fp:
-                all_data = json.load(fp)
+                data = json.load(fp)
         except Exception as e:
             logger.warning(
                 f"Encountered exception {e} while reading runhistory from {filename}. Not adding any trials!"
             )
             return
 
-        config_origins = all_data.get("config_origins", {})
+        config_origins = data.get("config_origins", {})
 
         self._ids_config = {}
-        for id_, values in all_data["configs"].items():
+        for id_, values in data["configs"].items():
             self._ids_config[int(id_)] = Configuration(
                 configspace,
                 values=values,
@@ -719,7 +807,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         self._n_id = len(self._config_ids)
 
         # Important to use add method to use all data structure correctly
-        for entry in all_data["data"]:
+        for entry in data["data"]:
             # Set n_objectives first
             if self._n_objectives == -1:
                 if isinstance(entry[4], float) or isinstance(entry[4], int):
@@ -746,11 +834,17 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 additional_info=entry[9],
             )
 
+        # Although adding trials should give us the same stats, the trajectory might be different
+        # because of the running status and/or overwriting trials
+        # Therefore, we just overwrite them
+        self._submitted = data["stats"]["submitted"]
+        self._finished = data["stats"]["finished"]
+        self._running = data["stats"]["running"]
+
     def update_from_json(
         self,
         filename: str,
         configspace: ConfigurationSpace,
-        origin: DataOrigin = DataOrigin.EXTERNAL_SAME_INSTANCES,
     ) -> None:
         """Updates the current runhistory by adding new trials from a json file.
 
@@ -759,28 +853,18 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         filename : str
             File name to load from.
         configspace : ConfigurationSpace
-        origin : DataOrigin, defaults to DataOrigin.EXTERNAL_SAME_INSTANCES
-            What to store as data origin.
         """
         new_runhistory = RunHistory()
-        new_runhistory.load_json(filename, configspace)
-        self.update(runhistory=new_runhistory, origin=origin)
+        new_runhistory.load(filename, configspace)
+        self.update(runhistory=new_runhistory)
 
-    def update(
-        self,
-        runhistory: RunHistory,
-        origin: DataOrigin = DataOrigin.EXTERNAL_SAME_INSTANCES,
-    ) -> None:
+    def update(self, runhistory: RunHistory) -> None:
         """Updates the current runhistory by adding new trials from a RunHistory.
 
         Parameters
         ----------
         runhistory : RunHistory
             Runhistory with additional data to be added to self
-        origin : DataOrigin, defaults to DataOrigin.EXTERNAL_SAME_INSTANCES
-            If set to ``INTERNAL`` or ``EXTERNAL_FULL`` the data will be
-            added to the internal data structure self._config_id_to_inst_seed_budget
-            and be available :meth:`through get_trials`.
         """
         # Configurations might be already known, but by a different ID. This
         # does not matter here because the add() method handles this
@@ -798,7 +882,6 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 seed=key.seed,
                 budget=key.budget,
                 additional_info=value.additional_info,
-                origin=origin,
             )
 
     def update_costs(self, instances: list[str] | None = None) -> None:
@@ -814,7 +897,9 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         self._num_trials_per_config = {}
         for config, config_id in self._config_ids.items():
             # Removing duplicates while keeping the order
-            inst_seed_budgets = list(dict.fromkeys(self.get_trials(config, only_max_observed_budget=True)))
+            inst_seed_budgets = list(
+                dict.fromkeys(self.get_instance_seed_budget_keys(config, highest_observed_budget_only=True))
+            )
             if instances is not None:
                 inst_seed_budgets = list(filter(lambda x: x.instance in cast(list, instances), inst_seed_budgets))
 
@@ -864,7 +949,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         for min_v, max_v in zip(min_values, max_values):
             self._objective_bounds += [(min_v, max_v)]
 
-    def _add(self, k: TrialKey, v: TrialValue, status: StatusType, origin: DataOrigin) -> None:
+    def _add(self, k: TrialKey, v: TrialValue, status: StatusType) -> None:
         """
         Actual function to add new entry to data structures.
 
@@ -873,20 +958,12 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         This method always calls `update_cost` in the multi-objective setting.
         """
         self._data[k] = v
-        self._external[k] = origin
 
         # Update objective bounds based on raw data
         self._update_objective_bounds()
 
         # Do not register the cost until the run has completed
-        if (
-            origin
-            in (
-                DataOrigin.INTERNAL,
-                DataOrigin.EXTERNAL_SAME_INSTANCES,
-            )
-            and status != StatusType.RUNNING
-        ):
+        if status != StatusType.RUNNING:
             # Also add to fast data structure
             isk = InstanceSeedKey(k.instance, k.seed)
             self._config_id_to_isk_to_budget[k.config_id] = self._config_id_to_isk_to_budget.get(k.config_id, {})
@@ -917,22 +994,37 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 # Append new budget to existing inst-seed-key dict
                 self._config_id_to_isk_to_budget[k.config_id][isk].append(k.budget)
 
+            config = self._ids_config[k.config_id]
+            config_hash = get_config_hash(config)
+
             # If budget is used, then update cost instead of incremental updates
             if not self._overwrite_existing_trials and k.budget == 0:
-                logger.debug(f"Incremental update cost for config {k.config_id}")
+                logger.debug(f"Incremental update cost for config {config_hash}")
                 # Assumes an average across trials as cost function aggregation, this is used for
                 # algorithm configuration (incremental updates are used to save time as getting the
                 # cost for > 100 instances is high)
-                self.incremental_update_cost(self._ids_config[k.config_id], v.cost)
+                self.incremental_update_cost(config, v.cost)
             else:
                 # This happens when budget > 0 (only successive halving and hyperband so far)
-                logger.debug(f"Update cost for config {k.config_id}.")
-                self.update_cost(config=self._ids_config[k.config_id])
+                logger.debug(f"Update cost for config {config_hash}.")
+                self.update_cost(config)
+
+        # Make TrialInfo object
+        trial_info = TrialInfo(self.get_config(k.config_id), instance=k.instance, seed=k.seed, budget=k.budget)
+
+        # Fast data structure for pending trials
+        if status == StatusType.RUNNING:
+            # Add to running cache
+            self._running_trials.append(trial_info)
+        else:
+            # Remove from cache
+            if trial_info in self._running_trials:
+                self._running_trials.remove(trial_info)
 
     def _cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: Iterable[InstanceSeedBudgetKey] | None = None,
+        instance_seed_budget_keys: list[InstanceSeedBudgetKey] | None = None,
     ) -> list[float | list[float]]:
         """Returns a list of all costs for the given config for further calculations.
         The costs are directly taken from the runhistory data.
@@ -956,7 +1048,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             return []
 
         if instance_seed_budget_keys is None:
-            instance_seed_budget_keys = self.get_trials(config, only_max_observed_budget=True)
+            instance_seed_budget_keys = self.get_instance_seed_budget_keys(config, highest_observed_budget_only=True)
 
         costs = []
         for key in instance_seed_budget_keys:
@@ -966,6 +1058,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 seed=key.seed,
                 budget=key.budget,
             )
+
             costs.append(self._data[k].cost)
 
         return costs

@@ -133,7 +133,7 @@ clean-data:
 # Will echo the commands to actually publish to be run to publish to actual PyPi
 # This is done to prevent accidental publishing but provide the same conveniences
 publish: clean build
-	read -p "Did you update the version number?"
+	read -p "Did you update the version number? Did you add the old version to docs/conf.py?"
 	
 	$(PIP) install twine
 	$(PYTHON) -m twine upload --repository testpypi ${DIST}/*
