@@ -381,10 +381,14 @@ class AbstractFacade:
         raise NotImplementedError
 
     @staticmethod
-    @abstractmethod
-    def get_config_selector(scenario: Scenario) -> ConfigSelector:
-        """Returns the configuration selector which is responsible for sampling new configurations."""
-        raise NotImplementedError
+    def get_config_selector(
+        scenario: Scenario,
+        *,
+        retrain_after: int = 8,
+        retries: int = 16,
+    ) -> ConfigSelector:
+        """Returns the default configuration selector."""
+        return ConfigSelector(scenario, retrain_after=retrain_after, retries=retries)
 
     def _get_optimizer(self) -> SMBO:
         """Fills the SMBO with all the pre-initialized components."""

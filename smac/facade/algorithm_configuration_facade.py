@@ -9,7 +9,6 @@ from smac.acquisition.maximizer.local_and_random_search import (
 from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensifier.intensifier import Intensifier
-from smac.main.config_selector import ConfigSelector
 from smac.model.random_forest.random_forest import RandomForest
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.random_design.probability_design import ProbabilityRandomDesign
@@ -178,13 +177,3 @@ class AlgorithmConfigurationFacade(AbstractFacade):
     def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:
         """Returns the default runhistory encoder."""
         return RunHistoryEncoder(scenario)
-
-    @staticmethod
-    def get_config_selector(
-        scenario: Scenario,
-        *,
-        retrain_after: int = 8,
-        retries: int = 8,
-    ) -> ConfigSelector:
-        """Returns the default configuration selector."""
-        return ConfigSelector(scenario, retrain_after=retrain_after, retries=retries)

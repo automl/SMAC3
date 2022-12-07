@@ -271,8 +271,13 @@ class AbstractIntensifier:
                     except IndexError:
                         # Use global random generator for a new seed and mark it so it will be reused for another config
                         next_seed = int(rng.randint(low=0, high=MAXINT, size=1)[0])
+                        
+                        # This line here is really important because we don't want to add the same seed twice
+                        if next_seed in self._tf_seeds:
+                            continue
+                        
                         self._tf_seeds.append(next_seed)
-                        logger.info(f"Added a new random seed {next_seed} to the intensifier.")
+                        logger.debug(f"Added a new random seed {next_seed} to the intensifier.")
 
                 # If no instances are used, tf_instances includes None
                 for instance in self._tf_instances:
@@ -684,17 +689,19 @@ class AbstractIntensifier:
             rng = np.random.RandomState(seed)
 
         groups = defaultdict(list)
-        for pair in instance_seed_keys:
-            groups[pair.seed].append(pair)
-            assert pair.seed in self._tf_seeds
+        for key in instance_seed_keys:
+            groups[key.seed].append(key)
+            assert key.seed in self._tf_seeds
 
         # Shuffle groups + attach groups together
-        shuffled_pairs: list[InstanceSeedKey] = []
+        shuffled_keys: list[InstanceSeedKey] = []
         for seed in self._tf_seeds:
             if seed in groups and len(groups[seed]) > 0:
                 # Shuffle pairs in the group and add to shuffled pairs
                 shuffled = rng.choice(groups[seed], size=len(groups[seed]), replace=False)  # type: ignore
-                shuffled_pairs += [pair for pair in shuffled]  # type: ignore
+                shuffled_keys += [pair for pair in shuffled]  # type: ignore
 
-        assert len(shuffled_pairs) == len(instance_seed_keys)
-        return shuffled_pairs
+        # Small sanity check
+        assert len(shuffled_keys) == len(instance_seed_keys)
+
+        return shuffled_keys

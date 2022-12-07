@@ -46,7 +46,7 @@ class ConfigSelector:
         scenario: Scenario,
         *,
         retrain_after: int = 8,
-        retries: int = 8,
+        retries: int = 16,
     ) -> None:
         # Those are the configs sampled from the passed initial design
         # Selecting configurations from initial design
@@ -126,6 +126,9 @@ class ConfigSelector:
         assert self._random_design is not None
 
         self._processed_configs = self._runhistory.get_configs()
+
+        # We add more retries because there could be a case in which the processed configs are sampled again
+        self._retries += len(self._processed_configs)
 
         logger.debug("Search for the next configuration...")
         self._call_callbacks_on_start()
@@ -216,6 +219,7 @@ class ConfigSelector:
                         )
                         break
                 else:
+                    print("in processed configs")
                     failed_counter += 1
 
                     # We exit the loop if we have tried to add the same configuration too often
