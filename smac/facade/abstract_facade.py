@@ -251,6 +251,7 @@ class AbstractFacade:
             "random_design": self._random_design.meta,
             "runhistory_encoder": self._runhistory_encoder.meta,
             "multi_objective_algorithm": multi_objective_algorithm_meta,
+            "config_selector": self._config_selector.meta,
             "version": smac.version,
         }
 

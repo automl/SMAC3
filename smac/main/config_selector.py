@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Iterator
+from typing import Any, Iterator
 
 import copy
 
@@ -39,6 +39,11 @@ class ConfigSelector:
         How many configurations should be returned before the surrogate model is retrained.
     retries : int, defaults to 8
         How often to retry receiving a new configuration before giving up.
+    min_trials: int, defaults to 1
+        How many samples are required to train the surrogate model. If budgets are involved,
+        the highest budgets are checked first. For example, if min_trials is three but we find only
+        two trials in the runhistory for the highest budget, we will use trials of a lower budget
+        instead.
     """
 
     def __init__(
@@ -47,6 +52,7 @@ class ConfigSelector:
         *,
         retrain_after: int = 8,
         retries: int = 16,
+        min_trials: int = 1,
     ) -> None:
         # Those are the configs sampled from the passed initial design
         # Selecting configurations from initial design
@@ -66,7 +72,7 @@ class ConfigSelector:
         self._retrain_after = retrain_after
         self._previous_entries = -1
         self._predict_x_best = True
-        self._min_samples = 1
+        self._min_trials = min_trials
         self._considered_budgets: list[float | None] = [None]
 
         # How often to retry receiving a new configuration
@@ -98,6 +104,16 @@ class ConfigSelector:
         self._initial_design_configs = initial_design.select_configurations()
         if len(self._initial_design_configs) == 0:
             raise RuntimeError("SMAC needs initial configurations to work.")
+
+    @property
+    def meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {
+            "name": self.__class__.__name__,
+            "retrain_after": self._retrain_after,
+            "retries": self._retries,
+            "min_trials": self._min_trials,
+        }
 
     def __iter__(self) -> Iterator[Configuration]:
         """This method returns the next configuration to evaluate. It ignores already processed configs, i.e.,
@@ -242,7 +258,7 @@ class ConfigSelector:
     def _collect_data(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Collects the data from the runhistory to train the surrogate model. The data collection strategy if budgets
         are used is as follows: Looking from highest to lowest budget, return those observations
-        that support at least ``self._min_samples`` points.
+        that support at least ``self._min_trials`` points.
 
         If no budgets are used, this is equivalent to returning all observations.
         """
@@ -261,7 +277,7 @@ class ConfigSelector:
         for b in available_budgets:
             X, Y = self._runhistory_encoder.transform(budget_subset=[b])
 
-            if X.shape[0] >= self._min_samples:
+            if X.shape[0] >= self._min_trials:
                 self._considered_budgets = [b]
 
                 # TODO: Add running configs
