@@ -42,7 +42,7 @@ def test_continue_same_scenario(rosenbrock, facade):
     # We expect that the old state is just reloaded
     # Since in the first optimization, we already finished, we should have the same incumbent
     assert incumbent1 == incumbent2
-    
+
 
 @pytest.mark.parametrize("facade", FACADES)
 def test_continue_different_scenario(rosenbrock, monkeypatch, facade):
@@ -129,7 +129,7 @@ def test_continue_when_walltime_stopped(rosenbrock, facade):
 
     # Let's see if we restored the runhistory correctly; used walltime should be roughly the same
     # However, since some more things happen in the background, it might be slightly different
-    assert pytest.approx(smac2._optimizer.used_walltime, 0.1) == smac._optimizer.used_walltime
+    assert pytest.approx(smac2._optimizer.used_walltime, 0.2) == smac._optimizer.used_walltime
     assert smac2.runhistory.finished == smac.runhistory.finished
 
     smac2.optimize()
