@@ -1,0 +1,41 @@
+﻿smac.acquisition
+================
+
+.. automodule:: smac.acquisition
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
+
+Modules
+^^^^^^^
+
+.. autosummary::
+   :template: module.rst
+   :toctree:
+   :recursive:
+
+   smac.acquisition.function
+   smac.acquisition.maximizer
+

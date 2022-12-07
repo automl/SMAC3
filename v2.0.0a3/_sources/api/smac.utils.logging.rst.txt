@@ -1,0 +1,39 @@
+smac.utils.logging
+==================
+
+.. automodule:: smac.utils.logging
+
+   
+   
+   
+
+   
+   
+
+   Functions
+   ^^^^^^^^^
+
+   .. autosummary::
+   
+      format_array
+      get_logger
+      setup_logging
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

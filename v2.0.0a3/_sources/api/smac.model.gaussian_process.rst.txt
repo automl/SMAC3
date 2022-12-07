@@ -1,0 +1,45 @@
+smac.model.gaussian\_process
+============================
+
+.. automodule:: smac.model.gaussian_process
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
+
+Modules
+^^^^^^^
+
+.. autosummary::
+   :template: module.rst
+   :toctree:
+   :recursive:
+
+   smac.model.gaussian_process.abstract_gaussian_process
+   smac.model.gaussian_process.gaussian_process
+   smac.model.gaussian_process.gpytorch_gaussian_process
+   smac.model.gaussian_process.kernels
+   smac.model.gaussian_process.mcmc_gaussian_process
+   smac.model.gaussian_process.priors
+
