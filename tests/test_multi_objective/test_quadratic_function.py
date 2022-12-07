@@ -123,6 +123,10 @@ def test_parego(facade, make_scenario, configspace):
         overwrite=True,
     )
     incumbents = smac.optimize()
+    
+    for incumbent in incumbents:
+        x_inc, _ = func(incumbent["x"])
+        print(x_inc)
 
     for incumbent in incumbents:
         x_inc, _ = func(incumbent["x"])

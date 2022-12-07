@@ -219,7 +219,6 @@ class ConfigSelector:
                         )
                         break
                 else:
-                    print("in processed configs")
                     failed_counter += 1
 
                     # We exit the loop if we have tried to add the same configuration too often
