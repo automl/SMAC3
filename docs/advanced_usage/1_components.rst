@@ -240,6 +240,10 @@ code shows how to iterate over the runhistory:
         # Get the cost of all trials of this config
         average_cost = smac.runhistory.average_cost(config)
 
+.. warning ::
+
+    The intensifier uses a callback to update the incumbent everytime a new trial is added to the runhistory.
+
 
 :ref:`RunHistory Encoder<smac.runhistory.encoder>`
 --------------------------------------------------
