@@ -28,9 +28,11 @@ Target Function
 ---------------
 
 The target function takes a configuration from the configuration space and returns a performance value.
-For example, you could use a Neural Network and predict the performance based on the learning rate. Every configuration
-would (most likely) return a different value. However, SMAC tries to find the best learning rate by trying 
-different and potentially improving configurations.
+For example, you could use a Neural Network to predict on your data and get some validation performance.
+If for instance you would tune the learning rate of the Network's optimizer, every learning rate will
+change the final validation performance of the network. This is the target function.
+SMAC tries to find the best performing learning rate by trying different values and evaluating the target function -
+in an efficient way.
 
 .. code-block:: python
     
@@ -85,11 +87,11 @@ Facade
 ------
 
 A :ref:`facade<smac.facade>` is the entry point to SMAC, which constructs a default optimization 
-pipeline for you. SMAC offers various facades, which satisfy many use cases and are crucial to 
-achieving peak performance. The idea behind the facades is to provide a simple interface to SMAC, 
-which is easy to use and understand without diving deep into the material. However, experts are 
-invited to change the components as they please to achieve even better performance potentially. The following 
-table (horizontal scrollable) shows you what is supported and reveals the default :ref:`components<Components>`:
+pipeline for you. SMAC offers various facades, which satisfy many common use cases and are crucial to
+achieving peak performance. The idea behind the facades is to provide a simple interface to all of SMAC's components,
+which is easy to use and understand and without the need of deep diving into the material. However, experts are
+invited to change the components to their specific hyperparameter optimization needs. The following
+table (horizontally scrollable) shows you what is supported and reveals the default :ref:`components<Components>`:
 
 
 .. csv-table::

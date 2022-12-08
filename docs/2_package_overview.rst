@@ -2,7 +2,7 @@ Package Overview
 ================
 
 SMAC supports you in determining well-performing hyperparameter configurations for your algorithms. By being a robust 
-and flexible framework for :term:`Bayesian Optimization<BO>`, SMAC can improve performance within few function 
+and flexible framework for :term:`Bayesian Optimization<BO>`, SMAC can improve performance within a few function
 evaluations. It offers several entry points and pre-sets for typical use cases, such as optimizing
 hyperparameters, solving low dimensional continuous (artificial) global optimization problems and configuring algorithms 
 to perform well across multiple problem :term:`instances<Instances>`.
@@ -11,7 +11,7 @@ to perform well across multiple problem :term:`instances<Instances>`.
 Features
 --------
 
-SMAC has following characteristics and capabilities:
+SMAC has the following characteristics and capabilities:
 
 Global Optimizer
     :term:`Bayesian Optimization` is used for sample-efficient optimization.
