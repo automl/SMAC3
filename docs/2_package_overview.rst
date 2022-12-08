@@ -28,7 +28,7 @@ Any Objectives
     Optimization with any :term:`objective<Objective>` (e.g., accuracy, runtime, cross-validation, ...) is possible.
 
 :ref:`Multi-Objective<Multi-Objective Optimization>`
-    Optimize arbitrary number of objectives using scalarized multi-ojective algorithms. Both ParEGO [Know06]_ and 
+    Optimize arbitrary number of objectives using scalarized multi-objective algorithms. Both ParEGO [Know06]_ and
     mean aggregation strategies are supported.
 
 :ref:`Multi-Fidelity<Multi-Fidelity Optimization>` Optimization
@@ -41,11 +41,11 @@ Any Objectives
     
 Command-Line Interface
     SMAC can not only be executed within a python file but also from the commandline. Consequently,
-    not only algorithms in python can be optimized but in other languages as well.
+    not only algorithms in python can be optimized, but implementations in other languages as well.
 
     .. note ::
 
-        Command-line interface has been temporarely disabled in v2.0. Please fall back to v1.4 if you need it.
+        Command-line interface has been temporarily disabled in v2.0. Please fall back to v1.4 if you need it.
 
 
 Comparison

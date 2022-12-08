@@ -1,7 +1,7 @@
 Getting Started
 ===============
 
-In the core, SMAC needs four components (configuration space, target function, scenario and a facade) to run an 
+SMAC needs four core components (configuration space, target function, scenario and a facade) to run an
 optimization process, all of which are explained on this page.
 
 
@@ -29,7 +29,7 @@ Target Function
 
 The target function takes a configuration from the configuration space and returns a performance value.
 For example, you could use a Neural Network to predict on your data and get some validation performance.
-If for instance you would tune the learning rate of the Network's optimizer, every learning rate will
+If, for instance, you would tune the learning rate of the Network's optimizer, every learning rate will
 change the final validation performance of the network. This is the target function.
 SMAC tries to find the best performing learning rate by trying different values and evaluating the target function -
 in an efficient way.
@@ -67,7 +67,7 @@ Scenario
 --------
 
 The :ref:`Scenario<smac.scenario>` is used to provide environment variables. For example, 
-you want to limit the optimization process by a time limit or want to specify where to save the results. 
+if you want to limit the optimization process by a time limit or want to specify where to save the results.
 
 .. code-block:: python
 
@@ -103,7 +103,7 @@ table (horizontally scrollable) shows you what is supported and reveals the defa
     "Initial Design", ":ref:`Sobol<smac.initial\\_design.sobol\\_design>`", ":ref:`Sobol<smac.initial\\_design.sobol\\_design>`", ":ref:`Random<smac.initial\\_design.random\\_design>`", ":ref:`Default<smac.initial\\_design.default\\_design>`", ":ref:`Default<smac.initial\\_design.default\\_design>`", ":ref:`Default<smac.initial\\_design.default\\_design>`"
     "Surrogate Model", ":ref:`Gaussian Process<smac.model.gaussian\\_process.gaussian\\_process>`", ":ref:`Random Forest<smac.model.random\\_forest.random\\_forest>`", ":ref:`Random Forest<smac.model.random\\_forest.random\\_forest>`", ":ref:`Random Forest<smac.model.random\\_forest.random\\_forest>`", "Not used", "Not used"
     "Acquisition Function", ":ref:`Expected Improvement<smac.acquisition.function.expected\\_improvement>`", ":ref:`Log Expected Improvement<smac.acquisition.function.expected\\_improvement>`", ":ref:`Log Expected Improvement<smac.acquisition.function.expected\\_improvement>`", ":ref:`Expected Improvement<smac.acquisition.function.expected\\_improvement>`", "Not used", "Not used"
-    "Acquisition Maximier", ":ref:`Local and Sorted Random Search<smac.acquisition.maximizer.local\\_and\\_random\\_search>`", ":ref:`Local and Sorted Random Search<smac.acquisition.maximizer.local\\_and\\_random\\_search>`", ":ref:`Local and Sorted Random Search<smac.acquisition.maximizer.local\\_and\\_random\\_search>`", ":ref:`Local and Sorted Random Search<smac.acquisition.maximizer.local\\_and\\_random\\_search>`", ":ref:`Local and Sorted Random Search<smac.acquisition.maximizer.random\\_search>`", ":ref:`Local and Sorted Random Search<smac.acquisition.maximizer.random\\_search>`"
+    "Acquisition Maximizer", ":ref:`Local and Sorted Random Search<smac.acquisition.maximizer.local\\_and\\_random\\_search>`", ":ref:`Local and Sorted Random Search<smac.acquisition.maximizer.local\\_and\\_random\\_search>`", ":ref:`Local and Sorted Random Search<smac.acquisition.maximizer.local\\_and\\_random\\_search>`", ":ref:`Local and Sorted Random Search<smac.acquisition.maximizer.local\\_and\\_random\\_search>`", ":ref:`Local and Sorted Random Search<smac.acquisition.maximizer.random\\_search>`", ":ref:`Local and Sorted Random Search<smac.acquisition.maximizer.random\\_search>`"
     "Intensifier", ":ref:`Default<smac.intensifier.intensifier>`", ":ref:`Default<smac.intensifier.intensifier>`", ":ref:`Hyperband<smac.intensifier.hyperband>`", ":ref:`Hyperband<smac.intensifier.hyperband>`", ":ref:`Default<smac.intensifier.intensifier>`", ":ref:`Hyperband<smac.intensifier.hyperband>`",
     "Runhistory Encoder", ":ref:`Default<smac.runhistory.encoder.encoder>`", ":ref:`Log<smac.runhistory.encoder.log\\_encoder>`", ":ref:`Log<smac.runhistory.encoder.log\\_encoder>`", ":ref:`Default<smac.runhistory.encoder.encoder>`", ":ref:`Default<smac.runhistory.encoder.encoder>`", ":ref:`Default<smac.runhistory.encoder.encoder>`"
     "Random Design Probability", "8.5%", "20%", "20%", "50%", "Not used", "Not used"
@@ -121,7 +121,7 @@ table (horizontally scrollable) shows you what is supported and reveals the defa
     to previous versions, instantiated objects are passed instead of *kwargs*.
 
 
-The facades can be imported directely from the ``smac`` module.
+The facades can be imported directly from the ``smac`` module.
 
 .. code-block:: python
 
