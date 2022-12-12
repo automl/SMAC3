@@ -6,6 +6,7 @@ multi-fidelity, multi-objective and multi-threading by nature now.
 - Continuing a run is now fully supported.
 - Added more examples.
 - Updated documentation based on new implementation.
+- Changed default xi of expected improvement to 0.01.
 
 
 # 2.0.0a2

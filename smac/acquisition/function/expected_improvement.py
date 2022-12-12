@@ -147,7 +147,7 @@ class EIPS(EI):
         Controls the balance between exploration and exploitation of the acquisition function.
     """
 
-    def __init__(self, xi: float = 0.0) -> None:
+    def __init__(self, xi: float = 0.01) -> None:
         super(EIPS, self).__init__(xi=xi)
 
     @property
