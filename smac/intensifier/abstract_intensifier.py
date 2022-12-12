@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Any, Iterator
+from typing import Any, Callable, Iterator
 
 import dataclasses
 import json
@@ -74,6 +74,7 @@ class AbstractIntensifier:
         self._n_seeds = n_seeds
         self._max_config_calls = max_config_calls
         self._max_incumbents = max_incumbents
+        self._used_walltime_func: Callable | None = None
 
         # Reset everything
         self.reset()
@@ -102,6 +103,11 @@ class AbstractIntensifier:
         }
 
     @property
+    def trajectory(self) -> list[TrajectoryItem]:
+        """Returns the trajectory (changes of incumbents) of the optimization run."""
+        return self._trajectory
+
+    @property
     def runhistory(self) -> RunHistory:
         """Runhistory of the intensifier."""
         assert self._runhistory is not None
@@ -109,12 +115,24 @@ class AbstractIntensifier:
 
     @runhistory.setter
     def runhistory(self, runhistory: RunHistory) -> None:
-        """Sets the runhistory and fills ``self._tf_seeds`` and ``self._tf_instances``. Moreover, the incumbents
-        are updated.
-        """
+        """Sets the runhistory."""
         self._runhistory = runhistory
 
+    @property
+    def used_walltime(self) -> float:
+        """Returns used wallclock time."""
+        if self._used_walltime_func is None:
+            return 0.0
+
+        return self._used_walltime_func()
+
+    @used_walltime.setter
+    def used_walltime(self, func: Callable) -> None:
+        """Sets the used wallclock time."""
+        self._used_walltime_func = func
+
     def __post_init__(self) -> None:
+        """Fills ``self._tf_seeds`` and ``self._tf_instances``. Moreover, the incumbents are updated."""
         rh = self.runhistory
 
         # Validate runhistory: Are seeds/instances/budgets used?
@@ -473,11 +491,8 @@ class AbstractIntensifier:
         # If there are no incumbents at all, we just use the new config as new incumbent
         # Problem: We can add running incumbents
         if len(incumbents) == 0:  # incumbent_isb_keys is None and len(incumbents) == 0:
-            self._incumbents = [config]
-            self._incumbents_changed += 1
-            self._trajectory.append(TrajectoryItem(config_ids=[config_id], finished_trials=rh.finished))
             logger.info(f"Added config {config_hash} as new incumbent because there are no incumbents yet.")
-            logger.debug("Updated trajectory.")
+            self._update_trajectory([config])
 
             # Nothing else to do
             return
@@ -575,7 +590,6 @@ class AbstractIntensifier:
         if len(new_incumbents) > self._max_incumbents:
             new_incumbents = sort_by_crowding_distance(rh, new_incumbents, all_incumbent_isb_keys)
             new_incumbents = new_incumbents[: self._max_incumbents]
-            new_incumbent_ids = [rh.get_config_id(c) for c in new_incumbents]
 
             # or random?
             # idx = self._rng.randint(0, len(new_incumbents))
@@ -587,10 +601,7 @@ class AbstractIntensifier:
                 "available."
             )
 
-        self._incumbents = new_incumbents
-        self._incumbents_changed += 1
-        self._trajectory.append(TrajectoryItem(config_ids=new_incumbent_ids, finished_trials=rh.finished))
-        logger.debug("Updated trajectory.")
+        self._update_trajectory(new_incumbents)
 
     @abstractmethod
     def __iter__(self) -> Iterator[TrialInfo]:
@@ -653,6 +664,15 @@ class AbstractIntensifier:
         self._rejected_config_ids = data["rejected_config_ids"]
         self._trajectory = [TrajectoryItem(**item) for item in data["trajectory"]]
         self.set_state(data["state"])
+
+    def _update_trajectory(self, configs: list[Configuration]) -> None:
+        rh = self.runhistory
+        config_ids = [rh.get_config_id(c) for c in configs]
+
+        self._incumbents = configs
+        self._incumbents_changed += 1
+        self._trajectory.append(TrajectoryItem(config_ids=config_ids, trial=rh.finished, walltime=self.used_walltime))
+        logger.debug("Updated trajectory.")
 
     def _add_rejected_config(self, config: Configuration | int) -> None:
         if isinstance(config, Configuration):

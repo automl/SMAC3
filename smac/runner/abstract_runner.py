@@ -114,9 +114,6 @@ class AbstractRunner(ABC):
 
         end = time.time()
 
-        # if trial_info.budget == 0 and status == StatusType.DONOTADVANCE:
-        #    raise ValueError("Cannot handle DONOTADVANCE state when using intensify or SH/HB on instances.")
-
         # Catch NaN or inf
         if not np.all(np.isfinite(cost)):
             logger.warning(
@@ -140,6 +137,7 @@ class AbstractRunner(ABC):
             starttime=start,
             endtime=end,
         )
+
         return trial_info, trial_value
 
     @property

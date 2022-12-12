@@ -140,18 +140,18 @@ class TrialInfo:
 
 @dataclass
 class TrajectoryItem:
-    """Item of a trajectory."""
+    """Item of a trajectory.
+
+    Parameters
+    ----------
+    config_ids : list[int]
+        Configuration ids of the current incumbents.
+    trial : int
+        How many trials have been evaluated so far.
+    walltime : float
+        How much walltime has been used so far.
+    """
 
     config_ids: list[int]
-    finished_trials: int
-
-    # incumbent: Configuration | dict[str, Any]
-    # cost: float | list[float]
-    # budget: float | None
-    # walltime_used: float
-    # num_trial: int
-
-    # def __post_init__(self) -> None:
-    #    # Transform configuration to dict
-    #    if isinstance(self.incumbent, Configuration):
-    #        self.incumbent = self.incumbent.get_dictionary()
+    trial: int
+    walltime: float
