@@ -1,3 +1,4 @@
+from __future__ import annotations
 import numpy as np
 from ConfigSpace import Categorical, Configuration, ConfigurationSpace, Float, Integer
 from ConfigSpace.conditions import InCondition
@@ -38,16 +39,26 @@ class SVMModel(Model):
 
         return cs
 
-    def train(self, config: Configuration, seed: int = 0) -> float:
+    def train(self, config: Configuration, instance: str | None, seed: int) -> float:
         """Creates a SVM based on a configuration and evaluates it on the
         iris-dataset using cross-validation."""
+        assert self.dataset is not None
         config_dict = config.get_dictionary()
         if "gamma" in config:
             config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
             config_dict.pop("gamma_value", None)
 
-        classifier = svm.SVC(**config_dict, random_state=seed)
-        scores = cross_val_score(classifier, self.dataset.data, self.dataset.target, cv=5)  # type: ignore
-        cost = 1 - np.mean(scores)
+        # Get instance
+        if instance is not None:
+            data, target = self.dataset.get_instance_data(instance)
+
+            classifier = svm.SVC(**config_dict, random_state=seed)
+            scores = cross_val_score(classifier, data, target, cv=5)  # type: ignore
+            cost = 1 - np.mean(scores)
+        else:
+            classifier = svm.SVC(**config_dict, random_state=seed)
+            classifier.fit(self.dataset.get_X(), self.dataset.get_Y())
+            accuracy = classifier.score(self.dataset.get_X(), self.dataset.get_Y())
+            cost = 1 - accuracy
 
         return cost

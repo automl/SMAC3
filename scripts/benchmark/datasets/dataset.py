@@ -13,16 +13,19 @@ class Dataset:
         assert self._data is not None
         return self._data
 
-
-class InstanceDataset:
-    @abstractmethod
-    def get_instances(self, n: int = 45) -> list[str]:
+    def get_instances(self, n: int = None) -> list[str]:
         raise NotImplementedError
 
-    @abstractmethod
-    def get_instance_features(self, n: int = 45) -> dict[str, list[int | float]]:
+    def get_instance_features(self, n: int = None) -> dict[str, list[int | float]]:
         raise NotImplementedError
 
-    @abstractmethod
     def get_instance_data(self, instance: str) -> tuple[np.ndarray, np.ndarray]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_X(self) -> np.ndarray:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_Y(self) -> np.ndarray:
         raise NotImplementedError

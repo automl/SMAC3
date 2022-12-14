@@ -6,15 +6,15 @@ from benchmark.datasets.dataset import Dataset
 
 
 class Model:
-    def __init__(self, dataset: Dataset):
+    def __init__(self, dataset: Dataset | None):
         self._dataset = dataset
-        
+
     @property
-    def dataset(self) -> Dataset:
+    def dataset(self) -> Dataset | None:
         return self._dataset
-        
-    @abstractmethod
+
     @property
+    @abstractmethod
     def configspace(self) -> ConfigurationSpace:
         raise NotImplementedError
 
