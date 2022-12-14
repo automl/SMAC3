@@ -4,6 +4,12 @@ Getting Started
 SMAC needs four core components (configuration space, target function, scenario and a facade) to run an
 optimization process, all of which are explained on this page.
 
+They interact in the following way:
+
+.. image:: ../../images/smac_components_interaction.jpg
+  :width: 400
+  :alt: Interaction of SMAC's components
+
 
 Configuration Space
 -------------------
