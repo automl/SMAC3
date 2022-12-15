@@ -62,6 +62,13 @@ class LCB(AbstractAcquisitionFunction):
         return meta
 
     def _update(self, **kwargs: Any) -> None:
+        """Update acsquisition function attributes
+
+        Parameters
+        ----------
+        num_data : int
+            Number of data points
+        """
         assert "num_data" in kwargs
         self._num_data = kwargs["num_data"]
 

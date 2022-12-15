@@ -70,6 +70,15 @@ class EI(AbstractAcquisitionFunction):
         return meta
 
     def _update(self, **kwargs: Any) -> None:
+        """Update acsquisition function attributes
+
+        Parameters
+        ----------
+        eta : float
+            Function value of current incumbent.
+        xi : float, optional
+            Exploration-exploitation trade-off parameter
+        """
         assert "eta" in kwargs
         self._eta = kwargs["eta"]
 
