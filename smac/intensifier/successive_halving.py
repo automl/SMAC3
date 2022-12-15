@@ -26,7 +26,7 @@ logger = get_logger(__name__)
 
 class SuccessiveHalving(AbstractIntensifier):
     """
-    Implementation of Succesive Halving supporting multi-fidelity, multi-objective, and multi-threading.
+    Implementation of Successive Halving supporting multi-fidelity, multi-objective, and multi-processing.
 
     Note
     ----
@@ -44,7 +44,7 @@ class SuccessiveHalving(AbstractIntensifier):
         * None: No shuffling at all and use the instance-seed order provided by the user.
         * "shuffle_once": Shuffle the instance-seed keys once and use the same order across all runs.
         * "shuffle": Shuffles the instance-seed keys for each bracket individually.
-    incumbent_selection : str, defaults to "any_budget"
+    incumbent_selection : str, defaults to "highest_observed_budget"
         How to select the incumbent when using budgets. Can be set to:
         * "any_budget": Incumbent is the best on any budget i.e., best performance regardless of budget.
         * "highest_observed_budget": Incumbent is the best in the highest budget run so far.
@@ -99,7 +99,7 @@ class SuccessiveHalving(AbstractIntensifier):
         self._tracker: dict[tuple[int, int], list[tuple[int | None, list[Configuration]]]] = defaultdict(list)
 
     def __post_init__(self) -> None:
-        """Post initilization steps after the runhistory has been set."""
+        """Post initialization steps after the runhistory has been set."""
         super().__post_init__()
 
         # We generate our instance seed pairs once
@@ -244,6 +244,8 @@ class SuccessiveHalving(AbstractIntensifier):
 
         Parameters
         ----------
+        config: Configuration
+            The Configuration to be queried
         compare : bool, defaults to False
             Get rid of the budget information for comparing if the configuration was evaluated on the same
             instance-seed keys.
@@ -399,7 +401,7 @@ class SuccessiveHalving(AbstractIntensifier):
         stage: int,
         seed: int | None = None,
     ) -> list[InstanceSeedBudgetKey]:
-        """Returns all instance-seed-budget keys for the given stage. Each stage
+        """Returns all instance-seed-budget keys (isb keys) for the given stage. Each stage
         is associated with a budget (N). Two possible options:
 
         1) Instance based: We return N isb keys. If a seed is specified, we shuffle the keys before
@@ -409,7 +411,7 @@ class SuccessiveHalving(AbstractIntensifier):
         budget: float | int | None = None
         is_keys = self.get_instance_seed_keys_of_interest()
 
-        # We have to differentiate between budgets and instance based here
+        # We have to differentiate between budgets and instances based here
         # If we are budget based, we always have one instance seed pair only
         # If we are in the instance setting, we have to return a specific number of instance seed pairs
 
