@@ -36,11 +36,17 @@ class LCB(AbstractAcquisitionFunction):
     ----------
     beta : float, defaults to 1.0
         Controls the balance between exploration and exploitation of the acquisition function.
+
+    Attributes
+    ----------
+    _beta : float
+        Exploration-exploitation trade-off parameter.
+    _num_data : int
+        Number of data points seen so far.
     """
 
     def __init__(self, beta: float = 1.0) -> None:
         super(LCB, self).__init__()
-        self._model: AbstractModel | None = None
         self._beta: float = beta
         self._num_data: int | None = None
 
@@ -60,7 +66,24 @@ class LCB(AbstractAcquisitionFunction):
         self._num_data = kwargs["num_data"]
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
-        """Computes the LCB value."""
+        """Compute LCB acquisition value
+
+        Parameters
+        ----------
+        X : np.ndarray [N, D]
+            The input points where the acquisition function should be evaluated. The dimensionality of X is (N, D),
+            with N as the number of points to evaluate at and D is the number of dimensions of one X.
+
+        Returns
+        -------
+        np.ndarray [N,1]
+            Acquisition function values wrt X.
+
+        Raises
+        ------
+        ValueError
+            If `update` has not been called before. Number of data points is unspecified in this case.
+        """
         assert self._model is not None
         if self._num_data is None:
             raise ValueError(
