@@ -12,14 +12,13 @@ def normalize_costs(
     ----------
     values : list[float]
         List of costs to be normalized.
-    bounds : list[tuple[float, float]] | None, optional
-        List of tuple of bounds. By default None. If no bounds are passed, the values are returned
-        unnormalized.
+    bounds : list[tuple[float, float]] | None, optional, defaults to None
+        List of tuple of bounds. If no bounds are passed, the input is returned.
 
     Returns
     -------
     normalized_costs : list[float]
-        Normalized costs based on the bounds. If no bounds are given, the values are returned unnormalized.
+        Normalized costs based on the bounds. If no bounds are given, the original values are returned.
         Also, if min and max bounds are the same, the value of the corresponding objective is set to 1.
     """
     if bounds is None:

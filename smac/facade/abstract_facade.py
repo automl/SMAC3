@@ -49,7 +49,7 @@ class AbstractFacade:
     With the exception to scenario and ``target_function``, which are expected of the user, the parameters ``model``,
     ``acquisition_function``, ``acquisition_maximizer``, ``initial_design``, ``random_design``, ``intensifier``,
     ``multi_objective_algorithm``, ``runhistory_encoder`` can either be explicitly specified in the subclasses'
-    ``get_*`` methods (defining a specific BO pipeline) or be instantiated by the user to overwrite a pipelines
+    ``get_*`` methods (defining a specific BO pipeline) or be instantiated by the user to overwrite a pipeline
     components explicitly.
 
     Parameters
@@ -69,14 +69,14 @@ class AbstractFacade:
     initial_design : InitialDesign | None, defaults to None
         The sampled configurations from the initial design are evaluated before the Bayesian optimization loop starts.
     random_design : RandomDesign | None, defaults to None
-        The random design is used in the acquisition maximier, deciding whether the next configuration should be drawn
+        The random design is used in the acquisition maximizer, deciding whether the next configuration should be drawn
         from the acquisition function or randomly.
     intensifier : AbstractIntensifier | None, defaults to None
         The intensifier decides which trial (combination of configuration, seed, budget and instance) should be run
         next.
     multi_objective_algorithm : AbstractMultiObjectiveAlgorithm | None, defaults to None
         In case of multiple objectives, the objectives need to be interpreted so that an optimization is possible.
-        The multi objective algorithm takes care of that.
+        The multi-objective algorithm takes care of that.
     runhistory_encoder : RunHistoryEncoder | None, defaults to None
         Based on the runhistory, the surrogate model is trained. However, the data first needs to be encoded, which
         is done by the runhistory encoder. For example, inactive hyperparameters need to be encoded or cost values
@@ -223,12 +223,12 @@ class AbstractFacade:
 
     @property
     def optimizer(self) -> SMBO:
-        """The optimizer which is responsible for the AutoML loop. Keeps track of useful information like status."""
+        """The optimizer which is responsible for the BO loop. Keeps track of useful information like status."""
         return self._optimizer
 
     @property
     def intensifier(self) -> AbstractIntensifier:
-        """The optimizer which is responsible for the AutoML loop. Keeps track of useful information like status."""
+        """The optimizer which is responsible for the BO loop. Keeps track of useful information like status."""
         return self._intensifier
 
     @property
@@ -277,7 +277,7 @@ class AbstractFacade:
 
     def optimize(self) -> Configuration | list[Configuration]:
         """
-        Optimizes the algorithm.
+        Optimizes the configuration of the algorithm.
 
         Returns
         -------
@@ -298,8 +298,8 @@ class AbstractFacade:
         *,
         seed: int | None = None,
     ) -> float | list[float]:
-        """Validates a configuration with different seeds than in the optimization process and on the highest
-        budget (if budget type is real-valued).
+        """Validates a configuration on seeds different from the ones used in the optimization process and on the
+        highest budget (if budget type is real-valued).
 
         Parameters
         ----------
@@ -307,7 +307,7 @@ class AbstractFacade:
             Configuration to validate
         instances : list[str] | None, defaults to None
             Which instances to validate. If None, all instances specified in the scenario are used.
-            In case that the budget type is real-valued budget, this argument is ignored.
+            In case that the budget type is real-valued, this argument is ignored.
         seed : int | None, defaults to None
             If None, the seed from the scenario is used.
 
@@ -368,7 +368,7 @@ class AbstractFacade:
     @staticmethod
     @abstractmethod
     def get_runhistory_encoder(scenario: Scenario) -> AbstractRunHistoryEncoder:
-        """Returns an instance of the runhistory encoder class to be used in the Bayesian optimization loop,
+        """Returns an instance of the runhistory encoder class to be used in the BO loop,
         specifying how the runhistory is to be prepared for the next surrogate model.
         """
         raise NotImplementedError
@@ -376,7 +376,7 @@ class AbstractFacade:
     @staticmethod
     @abstractmethod
     def get_multi_objective_algorithm(scenario: Scenario) -> AbstractMultiObjectiveAlgorithm:
-        """Returns the multi-objective algorithm instance to be used in the Bayesian optimization loop,
+        """Returns the multi-objective algorithm instance to be used in the BO loop,
         specifying the scalarization strategy for multiple objectives' costs.
         """
         raise NotImplementedError
@@ -426,7 +426,7 @@ class AbstractFacade:
         self._intensifier.runhistory = self._runhistory
 
     def _validate(self) -> None:
-        """Checks if the composition is correct if there are dependencies, not necessarily."""
+        """Checks if the composition is correct if there are dependencies."""
         # Make sure the same acquisition function is used
         assert self._acquisition_function == self._acquisition_maximizer._acquisition_function
 

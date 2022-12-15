@@ -21,22 +21,24 @@ logger = get_logger(__name__)
 
 
 class AbstractRunner(ABC):
-    """Interface class to handle the execution of SMAC configurations. This interface defines how to interact with the
-    SMBO loop. The complexity of running a configuration as well as handling the results is abstracted to the SMBO via
-    an AbstractRunner.
+    """Interface class to handle the execution of SMAC configurations.
+    This interface defines how to interact with the SMBO loop.
+    The complexity of running a configuration as well as handling the results is abstracted to the
+    SMBO via an AbstractRunner.
 
     From SMBO perspective, launching a configuration follows a
     submit/collect scheme as follows:
 
     1. A run is launched via ``submit_run()``
-        * ``submit_run`` internally calls ``run_wrapper()``, a method that contains common processing functions among
-          different unners.
-        * A class that implements AbstractRunner defines ``run()`` which is really the algorithm to translate a
-          ``TrialInfo`` to a ``TrialValue``, i.e. a configuration to an actual result.
-    2. A completed run is collected via ``iter_results()``, which iterates and consumes any finished runs, if any.
-    3. This interface also offers the method ``wait()`` as a mechanism to make sure we have enough data in the next
-       iteration to make a decision. For example, the intensifier might not be able to select the next challenger
-       until more results are available.
+        * ``submit_run`` internally calls ``run_wrapper()``, a method that contains common
+         processing functions among different runners.
+        * A class that implements AbstractRunner defines ``run()`` which is really the algorithm to
+        translate a ``TrialInfo`` to a ``TrialValue``, i.e. a configuration to an actual result.
+    2. A completed run is collected via ``iter_results()``, which iterates and consumes any finished
+        runs, if any.
+    3. This interface also offers the method ``wait()`` as a mechanism to make sure we have enough
+        data in the next iteration to make a decision. For example, the intensifier might not be
+        able to select the next challenger until more results are available.
 
     Parameters
     ----------
@@ -53,7 +55,7 @@ class AbstractRunner(ABC):
         self._scenario = scenario
         self._required_arguments = required_arguments
 
-        # The results is a FIFO structure, implemented via a list
+        # The results are a FIFO structure, implemented via a list
         # (because the Queue lock is not pickable). Finished runs are
         # put in this list and collected via _process_pending_runs
         self._results_queue: list[tuple[TrialInfo, TrialValue]] = []
@@ -75,7 +77,8 @@ class AbstractRunner(ABC):
                 self._crash_cost = [scenario.crash_cost for _ in range(self._n_objectives)]
 
     def run_wrapper(self, trial_info: TrialInfo) -> tuple[TrialInfo, TrialValue]:
-        """Wrapper around run() to execute and check the execution of a given config. This function encapsulates common
+        """Wrapper around run() to execute and check the execution of a given config.
+        This function encapsulates common
         handling/processing, so that run() implementation is simplified.
 
         Parameters
@@ -144,20 +147,23 @@ class AbstractRunner(ABC):
 
     @property
     def meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
+        """Returns the meta-data of the created object."""
         return {"name": self.__class__.__name__}
 
     @abstractmethod
     def submit_trial(self, trial_info: TrialInfo) -> None:
         """This function submits a configuration embedded in a TrialInfo object, and uses one of the
-        workers to produce a result (such result will eventually be available on the `self._results_queue`
+        workers to produce a result (such result will eventually be available on the
+        `self._results_queue`
         FIFO).
 
         This interface method will be called by SMBO, with the expectation
-        that a function will be executed by a worker. What will be executed is dictated by trial_info, and "how" will it
+        that a function will be executed by a worker. What will be executed is dictated by
+        trial_info, and "how" it will
         be executed is decided via the child class that implements a run() method.
 
-        Because config submission can be a serial/parallel endeavor, it is expected to be implemented by a child class.
+        Because config submission can be a serial/parallel endeavor, it is expected to be
+        implemented by a child class.
 
         Parameters
         ----------
@@ -174,7 +180,8 @@ class AbstractRunner(ABC):
         budget: float | None = None,
         seed: int | None = None,
     ) -> tuple[StatusType, float | list[float], float, dict]:
-        """Runs the target function with a configuration on a single instance-budget-seed combination (aka trial).
+        """Runs the target function with a configuration on a single instance-budget-seed
+        combination (aka trial).
 
         Parameters
         ----------
@@ -183,8 +190,8 @@ class AbstractRunner(ABC):
         instance : str | None, defaults to None
             The Problem instance.
         budget : float | None, defaults to None
-            A positive, real-valued number representing an arbitrary limit to the target function handled by the
-            target function internally.
+            A positive, real-valued number representing an arbitrary limit to the target function
+             handled by the target function internally.
         seed : int, defaults to None
 
         Returns
@@ -194,7 +201,7 @@ class AbstractRunner(ABC):
         cost : float | list[float]
             Resulting cost(s) of the trial.
         runtime : float
-            The time the target function function took to run.
+            The time the target function took to run.
         additional_info : dict
             All further additional trial information.
         """
@@ -203,7 +210,7 @@ class AbstractRunner(ABC):
     @abstractmethod
     def iter_results(self) -> Iterator[tuple[TrialInfo, TrialValue]]:
         """This method returns any finished configuration, and returns a list with the
-        results of exercising the configurations. This class keeps populating results
+        results of executing the configurations. This class keeps populating results
         to ``self._results_queue`` until a call to ``get_finished`` trials is done. In this case,
         the `self._results_queue` list is emptied and all trial values produced by running
         `run` are returned.
@@ -222,9 +229,9 @@ class AbstractRunner(ABC):
 
     @abstractmethod
     def is_running(self) -> bool:
-        """Whether or not there are trials still running.
+        """Whether there are trials still running.
 
-        Generally, if the runner is serial, launching a trial instantly returns it's result. On
+        Generally, if the runner is serial, launching a trial instantly returns its result. On
         parallel runners, there might be pending configurations to complete.
         """
         raise NotImplementedError

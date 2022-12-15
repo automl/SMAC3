@@ -68,7 +68,7 @@ class InstanceSeedBudgetKey:
         return False
 
     def get_instance_seed_key(self) -> InstanceSeedKey:
-        """Returns the instance-seed key. Basically, the budget is simply removed."""
+        """Returns the instance-seed key. The budget is omitted."""
         return InstanceSeedKey(instance=self.instance, seed=self.seed)
 
 
@@ -130,11 +130,11 @@ class TrialInfo:
     budget: float | None = None
 
     def get_instance_seed_key(self) -> InstanceSeedKey:
-        """Get instance-seed key"""
+        """Instantiates and returns an InstanceSeedKey object"""
         return InstanceSeedKey(instance=self.instance, seed=self.seed)
 
     def get_instance_seed_budget_key(self) -> InstanceSeedBudgetKey:
-        """Get instance-seed-budget key."""
+        """Instantiates and returns an InstanceSeedBudgetKey object."""
         return InstanceSeedBudgetKey(instance=self.instance, seed=self.seed, budget=self.budget)
 
 

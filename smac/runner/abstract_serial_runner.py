@@ -8,10 +8,11 @@ from smac.runner.abstract_runner import AbstractRunner
 
 class AbstractSerialRunner(AbstractRunner):
     def submit_trial(self, trial_info: TrialInfo) -> None:
-        """This function submits a trial_info object in a serial fashion. As there is a single worker for this task,
-        this interface can be considered a wrapper over the `run` method.
+        """This function submits a trial_info object in a serial fashion. As there is a single
+         worker for this task, this interface can be considered a wrapper over the `run` method.
 
-        Both result/exceptions can be completely determined in this step so both lists are properly filled.
+        Both result/exceptions can be completely determined in this step so both lists
+        are properly filled.
 
         Parameters
         ----------

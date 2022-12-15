@@ -111,7 +111,7 @@ class SMBO:
 
     @property
     def budget_exhausted(self) -> bool:
-        """Check whether the the remaining walltime, cputime or trials was exceeded."""
+        """Check whether the remaining walltime, cputime or trials were exceeded."""
         A = self.remaing_walltime <= 0
         B = self.remaining_cputime <= 0
         C = self.remaining_trials <= 0
@@ -164,7 +164,7 @@ class SMBO:
         value: TrialValue,
         save: bool = True,
     ) -> None:
-        """Adds the result of a trial to the runhistory. Also, the stats object is updated.
+        """Adds the result of a trial to the runhistory and updates the stats object.
 
         Parameters
         ----------
@@ -231,8 +231,8 @@ class SMBO:
             config_selector._acquisition_function.model = model
 
     def update_acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
-        """Updates acquisition function and assosiates the current model. Also, the acquisition
-        optimizer is updated.
+        """Updates the acquisition function including the associated model and the acquisition
+        optimizer.
         """
         if (config_selector := self._intensifier._config_selector) is not None:
             config_selector._acquisition_function = acquisition_function
@@ -337,7 +337,8 @@ class SMBO:
         self._intensifier.reset()
 
     def exists(self, filename: str | Path) -> bool:
-        """Checks if the run already exists. Checks all files that are created by the optimizer.
+        """Checks if the files associated with the run already exist.
+        Checks all files that are created by the optimizer.
 
         Parameters
         ----------
@@ -509,7 +510,7 @@ class SMBO:
         *,
         seed: int | None = None,
     ) -> float | list[float]:
-        """Validates a configuration with different seeds than in the optimization process and on the highest
+        """Validates a configuration on other seeds than the ones used in the optimization process and on the highest
         budget (if budget type is real-valued).
 
         Parameters

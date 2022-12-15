@@ -26,6 +26,7 @@ class CosineAnnealingRandomDesign(AbstractRandomDesign):
     restart_iteration : int
         Restart the annealing schedule every `restart_iteration` iterations.
     seed : int
+        Integer used to initialize random state.
     """
 
     def __init__(
@@ -33,7 +34,7 @@ class CosineAnnealingRandomDesign(AbstractRandomDesign):
         min_probability: float,
         max_probability: float,
         restart_iteration: int,
-        seed: int = 0,
+        seed: int = 0
     ):
         super().__init__(seed)
         assert 0 <= min_probability <= 1

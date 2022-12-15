@@ -10,7 +10,7 @@ from ConfigSpace import (
 
 import smac
 from smac.facade.blackbox_facade import BlackBoxFacade
-from smac.facade.boing_facade import BOinGFacade
+from smac.facade.old.boing_facade import BOinGFacade
 from smac.facade.hyperparameter_optimization_facade import (
     HyperparameterOptimizationFacade,
 )
