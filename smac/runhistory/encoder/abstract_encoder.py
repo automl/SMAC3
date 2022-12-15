@@ -24,8 +24,8 @@ class AbstractRunHistoryEncoder:
 
     Parameters
     ----------
-    scenario : Scenario
-    considered_states : list[StatusType], defaults to [StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMORYOUT, StatusType.DONOTADVANCE]  # noqa: E501
+    scenario : Scenario object.
+    considered_states : list[StatusType], defaults to [StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMORYOUT]  # noqa: E501
         Trials with the passed states are considered.
     lower_budget_states : list[StatusType], defaults to []
         Additionally consider all trials with these states for budget < current budget.
@@ -46,7 +46,6 @@ class AbstractRunHistoryEncoder:
             StatusType.SUCCESS,
             StatusType.CRASHED,
             StatusType.MEMORYOUT,
-            # StatusType.DONOTADVANCE,
         ],
         lower_budget_states: list[StatusType] = [],
         scale_percentage: int = 5,
@@ -89,7 +88,14 @@ class AbstractRunHistoryEncoder:
 
     @property
     def meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
+        """
+        Returns the meta-data of the created object.
+        
+        Returns
+        -------
+        dict[str, Any]: meta-data of the created object: name, considered states, lower budget 
+        states, scale_percentage, seed.
+        """
         return {
             "name": self.__class__.__name__,
             "considered_states": self._considered_states,
@@ -100,7 +106,7 @@ class AbstractRunHistoryEncoder:
 
     @property
     def runhistory(self) -> RunHistory:
-        """The runhistory used to transform the data."""
+        """The RunHistory used to transform the data."""
         assert self._runhistory is not None
         return self._runhistory
 
@@ -111,7 +117,7 @@ class AbstractRunHistoryEncoder:
 
     @property
     def multi_objective_algorithm(self) -> AbstractMultiObjectiveAlgorithm | None:
-        """The multi objecctive algorithm used to transform the data."""
+        """The multi objective algorithm used to transform the data."""
         return self._multi_objective_algorithm
 
     @multi_objective_algorithm.setter
@@ -125,7 +131,7 @@ class AbstractRunHistoryEncoder:
         trials: Mapping[TrialKey, TrialValue],
         store_statistics: bool = False,
     ) -> tuple[np.ndarray, np.ndarray]:
-        """Builds x and y matrixes from selected runs from the runhistory.
+        """Builds x and y matrices from selected runs of the RunHistory.
 
         Parameters
         ----------
@@ -145,6 +151,14 @@ class AbstractRunHistoryEncoder:
         self,
         budget_subset: list | None = None,
     ) -> dict[TrialKey, TrialValue]:
+        """
+        Returns all trials that are considered for the model.
+        Depends on the user's considered states and lower budget states.
+        
+        Parameters
+        ----------
+        budget_subset : list[int|float] | None, defaults to None.
+        """
         trials: dict[TrialKey, TrialValue] = {}
 
         if budget_subset is not None:
@@ -178,6 +192,9 @@ class AbstractRunHistoryEncoder:
         self,
         budget_subset: list | None = None,
     ) -> dict[TrialKey, TrialValue]:
+        """
+        Returns all trials that did timeout.
+        """
         if budget_subset is not None:
             trials = {
                 trial: self.runhistory[trial]
@@ -200,12 +217,16 @@ class AbstractRunHistoryEncoder:
         self,
         budget_subset: list | None = None,
     ) -> np.ndarray:
-        """Returns vector representation of the configurations. Instance features are not
+        """Returns vector representation of the configurations. 
+        
+        Warning
+        -------
+        Instance features are not
         appended and cost values are not taken into account.
 
         Parameters
         ----------
-        budget_subset : list | None, defaults to none
+        budget_subset : list[int|float] | None, defaults to none
             List of budgets to consider.
 
         Returns
@@ -226,11 +247,11 @@ class AbstractRunHistoryEncoder:
         self,
         budget_subset: list | None = None,
     ) -> tuple[np.ndarray, np.ndarray]:
-        """Returns a vector representation of the runhistory.
+        """Returns a vector representation of the RunHistory.
 
         Parameters
         ----------
-        budget_subset : list | None, defauls to none
+        budget_subset : list | None, defaults to none
             List of budgets to consider.
 
         Returns
@@ -240,7 +261,7 @@ class AbstractRunHistoryEncoder:
         Y : np.ndarray
             Cost values.
         """
-        logger.debug("Transforming runhistory into X, y format...")
+        logger.debug("Transforming RunHistory into X, y format...")
 
         considered_trials = self._get_considered_trials(budget_subset)
         X, Y = self._build_matrix(trials=considered_trials, store_statistics=True)
