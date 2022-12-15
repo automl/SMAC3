@@ -40,18 +40,18 @@ If you found a bug, please provide us the following information:
 ## Work on New Features
 
 To work on new features, create a fork of the original repository and implement the feature there. When you are happy with the final result you can create a pull request which we will review.
-A good tutorial on how to do this is in the Github Guide: [Fork a repo](https://help.github.com/articles/fork-a-repo/).
+A good tutorial on how to do this is in the GitHub Guide: [Fork a repo](https://help.github.com/articles/fork-a-repo/).
 
 ## <a name="pull-requests"></a> Pull Requests
 
-The target branch for your pull request has to be the development branch. If you have not worked with pull requests, please take a look at [how to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github) or read more about it in the official github documentation <https://help.github.com/articles/about-pull-requests/>
+The target branch for your pull request has to be the development branch. If you have not worked with pull requests, please take a look at [how to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github) or read more about it in the official GitHub documentation <https://help.github.com/articles/about-pull-requests/>
 
 If you know how to fix a bug or implement your own feature, follow this small guide:
 
 - Check the issue tracker if someone has already reported the same idea or found the same bug.
 - Create a pull request, after you have implemented your changes in your fork. Using a separate branch for the fix is required.
 - Pull request must include tests.
-- We are using the Google Style Python Docstrings. Take a look at this [example](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html). 
+- We are using the Numpy Style Python Docstrings. Take a look at this [example](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_numpy.html#example-numpy). 
 - The code should follow the PEP8 coding convention.
 
 We try to react as fast as possible to your pull request.
