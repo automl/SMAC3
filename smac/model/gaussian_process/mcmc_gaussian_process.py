@@ -46,10 +46,10 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
         The number of hyperparameter samples. This also determines the number of walker for MCMC sampling as each
         walker will return one hyperparameter sample.
     chain_length : int, defaults to 50
-        The length of the MCMC chain. We start `n_mcmc_walkers` walker for `chain_length` steps and we use the last
+        The length of the MCMC chain. We start `n_mcmc_walkers` walker for `chain_length` steps, and we use the last
         sample in the chain as a hyperparameter sample.
     burning_steps : int, defaults to 50
-        The number of burnin steps before the actual MCMC sampling starts.
+        The number of burning steps before the actual MCMC sampling starts.
     mcmc_sampler : str, defaults to "emcee"
         Choose a self-tuning MCMC sampler. Can be either ``emcee`` or ``nuts``.
     normalize_y : bool, defaults to True
@@ -100,7 +100,7 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
         self._n_ll_evals = 0
         self._burned = False
         self._is_trained = False
-        self._samples: Any = None  # TODO: What type does this variable hold?
+        self._samples: np.ndarray | None = None
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
@@ -134,12 +134,12 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
 
         Parameters
         ----------
-        X : np.ndarray [#samples, #hyperparameter + #features]
+        X : np.ndarray [#samples, #hyperparameters + #features]
             Input data points.
         Y : np.ndarray [#samples, #objectives]
             The corresponding target values.
         optimize_hyperparameters: boolean
-            If set to true we perform MCMC sampling. Otherwise, we just use the hyperparameter specified in the kernel.
+            If set to true, we perform MCMC sampling. Otherwise, we just use the hyperparameter specified in the kernel.
         """
         X = self._impute_inactive(X)
         if self._normalize_y:
@@ -147,7 +147,7 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
             # Scikit-learn uses a different "normalization" than we use in SMAC3. Scikit-learn normalizes the data to
             # have zero mean, while we normalize it to have zero mean unit variance. To make sure the scikit-learn GP
             # behaves the same when we use it directly or indirectly (through the gaussian_process.py file), we
-            # normalize the data here. Then, after the individual GPs are fit, we inject the statistics into them so
+            # normalize the data here. Then, after the individual GPs are fit, we inject the statistics into them, so
             # they unnormalize the data at prediction time.
             y = self._normalize(y)
 
@@ -303,12 +303,12 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
         Parameters
         ----------
         theta : np.ndarray
-            Hyperparameter vector. Note that all hyperparameter are on a log scale.
+            Hyperparameter vector. Note that all hyperparameters are on a log scale.
         """
         self._n_ll_evals += 1
 
-        # Bound the hyperparameter space to keep things sane. Note all
-        # hyperparameters live on a log scale
+        # Bound the hyperparameter space to keep things sane. Note that all
+        # hyperparameters live on a log scale.
         if (theta < -50).any():
             theta[theta < -50] = -50
         if (theta > 50).any():
@@ -340,7 +340,7 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
         """
         self._n_ll_evals += 1
 
-        # Bound the hyperparameter space to keep things sane. Note all hyperparameters live on a log scale
+        # Bound the hyperparameter space to keep things sane. Note that all hyperparameters live on a log scale.
         if (theta < -50).any():
             theta[theta < -50] = -50
         if (theta > 50).any():
@@ -379,7 +379,7 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
     ) -> tuple[np.ndarray, np.ndarray | None]:
         r"""
         Returns the predictive mean and variance of the objective function
-        at X average over all hyperparameter samples.
+        at X averaged over all hyperparameter samples.
 
         The mean is computed by:
         :math \mu(x) = \frac{1}{M}\sum_{i=1}^{M}\mu_m(x)
