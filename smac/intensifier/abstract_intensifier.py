@@ -35,7 +35,7 @@ logger = get_logger(__name__)
 
 
 class AbstractIntensifier:
-    """Abstract implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-threading.
+    """Abstract implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-processing.
     The abstract intensifier keeps track of the incumbent, which is updated everytime the runhistory changes.
 
     Parameters
@@ -166,7 +166,7 @@ class AbstractIntensifier:
             self.update_incumbents(config)
 
     @property
-    def config_generator(self) -> Iterator[ConfigSelector]:
+    def config_generator(self) -> Iterator[Configuration]:
         """Based on the configuration selector, an iterator is returned that generates configurations."""
         assert self._config_generator is not None
         return self._config_generator
@@ -203,7 +203,7 @@ class AbstractIntensifier:
 
     @property
     def incumbents_changed(self) -> int:
-        """How often the incumbents has changed."""
+        """How often the incumbents have changed."""
         return self._incumbents_changed
 
     def get_instance_seed_keys_of_interest(
@@ -223,7 +223,7 @@ class AbstractIntensifier:
         Parameters
         ----------
         validate : bool, defaults to False
-            Whether to get validation trials or training trials. The only difference lays in different seeds.
+            Whether to get validation trials or training trials. The only difference lies in different seeds.
         seed : int | None, defaults to None
             The seed used for the validation trials.
 
@@ -320,8 +320,7 @@ class AbstractIntensifier:
         validate: bool = False,
         seed: int | None = None,
     ) -> list[TrialInfo]:
-        """
-        Returns the trials of interest for a given configuration.
+        """Returns the trials of interest for a given configuration.
         Expands the keys from ``get_instance_seed_keys_of_interest`` with the config.
         """
         is_keys = self.get_instance_seed_keys_of_interest(validate=validate, seed=seed)
@@ -391,7 +390,7 @@ class AbstractIntensifier:
 
     def get_incumbent_instance_seed_budget_key_differences(self, compare: bool = False) -> list[InstanceSeedBudgetKey]:
         """There are situations in which incumbents are evaluated on more trials than others. This method returns the
-        instances which are not part of the lowest intersection of instances for all incumbents.
+        instances that are not part of the lowest intersection of instances for all incumbents.
         """
         incumbents = self.get_incumbents()
 
@@ -421,7 +420,7 @@ class AbstractIntensifier:
 
     def get_callback(self) -> Callback:
         """The intensifier makes use of a callback to efficiently update the incumbent based on the runhistory
-        (every time new information are available). Moreover, incorporating the callback here allows developers
+        (every time new information is available). Moreover, incorporating the callback here allows developers
         more options in the future.
         """
 
@@ -441,8 +440,8 @@ class AbstractIntensifier:
         """
         rh = self.runhistory
 
-        # What happens if a config was rejected but it appears again? Give it another try since it
-        # already was evaluated? Yes!
+        # What happens if a config was rejected, but it appears again? Give it another try even if it
+        # has already been evaluated? Yes!
 
         # Associated trials and id
         config_isb_keys = self.get_instance_seed_budget_keys(config)

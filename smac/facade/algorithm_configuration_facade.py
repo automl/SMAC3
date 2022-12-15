@@ -110,8 +110,8 @@ class AlgorithmConfigurationFacade(AbstractFacade):
         Parameters
         ----------
         max_config_calls : int, defaults to 3
-            Maximum number of configuration evaluations. Basically, how many instance-seed keys should be max evaluated
-            for a configuration.
+            Maximum number of configuration evaluations. Basically, how many instance-seed keys should be evaluated at
+            maximum for a configuration.
         max_incumbents : int, defaults to 10
             How many incumbents to keep track of in the case of multi-objective.
         """
@@ -166,7 +166,8 @@ class AlgorithmConfigurationFacade(AbstractFacade):
         ----------
         scenario : Scenario
         objective_weights : list[float] | None, defaults to None
-            Weights for an weighted average. Must be of the same length as the number of objectives.
+            Weights for averaging the objectives in a weighted manner. Must be of the same length as the number of
+            objectives.
         """
         return MeanAggregationStrategy(
             scenario=scenario,
