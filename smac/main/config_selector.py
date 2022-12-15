@@ -268,7 +268,9 @@ class ConfigSelector:
         # If we use a float value as a budget, we want to train the model only on the highest budget
         available_budgets = []
         for run_key in self._runhistory:
-            available_budgets.append(run_key.budget)
+            budget = run_key.budget
+            if budget not in available_budgets:
+                available_budgets.append(run_key.budget)
 
         # Sort available budgets from highest to lowest budget
         available_budgets = sorted(list(set(available_budgets)), reverse=True)  # type: ignore
