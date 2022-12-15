@@ -144,3 +144,6 @@ docker
 
 # Others
 src
+
+# Pycharm
+.idea/
