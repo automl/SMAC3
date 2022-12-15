@@ -24,17 +24,17 @@ logger = get_logger(__name__)
 
 
 class TargetFunctionRunner(AbstractSerialRunner):
-    """Class to execute target functions which are python functions. Evaluates functions for given configuration and
-    resource limit.
+    """Class to execute target functions which are python functions. Evaluates function for given
+    configuration and resource limit.
 
-    The target function can either return a float (the loss), or a tuple with the first element being a float and the
-    second being additional run information. In a multi-objective setting, the float value is replaced by a list of
-    floats.
+    The target function can either return a float (the loss), or a tuple with the first element
+     being a float and the second being additional run information. In a multi-objective
+     setting, the float value is replaced by a list of floats.
 
     Parameters
     ----------
     target_function : Callable
-        The target function function.
+        The target function.
     scenario : Scenario
     required_arguments : list[str]
         A list of required arguments, which are passed to the target function.
@@ -94,8 +94,8 @@ class TargetFunctionRunner(AbstractSerialRunner):
         budget: float | None = None,
         seed: int | None = None,
     ) -> tuple[StatusType, float | list[float], float, dict]:
-        """Calls the target function with pynisher if algorithm walltime limit or memory limit is set. Otherwise
-        the function is called directly.
+        """Calls the target function with pynisher if algorithm wall time limit or memory limit is
+        set. Otherwise, the function is called directly.
 
         Parameters
         ----------
@@ -104,8 +104,8 @@ class TargetFunctionRunner(AbstractSerialRunner):
         instance : str | None, defaults to None
             The Problem instance.
         budget : float | None, defaults to None
-            A positive, real-valued number representing an arbitrary limit to the target function handled by the
-            target function internally.
+            A positive, real-valued number representing an arbitrary limit to the target function
+             handled by the target function internally.
         seed : int, defaults to None
 
         Returns
@@ -115,7 +115,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
         cost : float | list[float]
             Resulting cost(s) of the trial.
         runtime : float
-            The time the target function function took to run.
+            The time the target function took to run.
         additional_info : dict
             All further additional trial information.
         """
