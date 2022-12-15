@@ -19,7 +19,7 @@ logger = get_logger(__name__)
 
 
 class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
-    r"""Marginalizes over model hyperparameters to compute the integrated acquisition function.
+    r"""Compute the integrated acquisition function by marginalizing over model hyperparameters 
 
     See "Practical Bayesian Optimization of Machine Learning Algorithms" by Jasper Snoek et al.
     (https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf)
@@ -28,7 +28,17 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
     Parameters
     ----------
     acquisition_function : AbstractAcquisitionFunction
-        The acquisition function, which should be integrated.
+        Acquisition function to be integrated.
+
+    Attributes
+    ----------
+    _acquisition_function : AbstractAcquisitionFunction
+        Acquisition function to be integrated.
+    _functions: list[AbstractAcquisitionFunction]
+        Holds n (n = number of models) copies of the acquisition function.
+    _eta : float
+        Current incumbent function value.
+
     """
 
     def __init__(self, acquisition_function: AbstractAcquisitionFunction) -> None:
@@ -49,7 +59,7 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
         return meta
 
     def _update(self, **kwargs: Any) -> None:
-        """Updates the acquisition functions values.
+        """Update the acquisition functions values.
 
         This method will be called if the model is updated. For example, entropy search uses it to update its
         approximation of P(x=x_min) and EI uses it to update the current fmin.
@@ -61,6 +71,11 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
         ----------
         kwargs : Any
             Keyword arguments for the model.
+
+        Raises
+        ------
+        ValueError
+            If the number of models is zero.
         """
         model = self.model
         models: list[AbstractModel] | None = None
@@ -77,7 +92,24 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
             func.update(model=submodel, **kwargs)
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
-        """Computess the EI value and its derivatives."""
+        """Compute integrated acquisition values
+
+        Parameters
+        ----------
+        X : np.ndarray [N, D]
+            The input points where the acquisition function should be evaluated. The dimensionality of X is (N, D),
+            with N as the number of points to evaluate at and D is the number of dimensions of one X.
+
+        Returns
+        -------
+        np.ndarray [N,1]
+            Acquisition function values wrt X.
+
+        Raises
+        ------
+        ValueError
+            If `update` has not been called first (`_functions` not up to date).
+        """
         if self._functions is None:
             raise ValueError("Need to call `update` first!")
 
