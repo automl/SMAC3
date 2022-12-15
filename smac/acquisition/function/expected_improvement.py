@@ -70,6 +70,7 @@ class EI(AbstractAcquisitionFunction):
         """Computess the EI value and its derivatives."""
         assert self._model is not None
         assert self._xi is not None
+        
         if self._eta is None:
             raise ValueError("No `eta` specified. Call `update` to inform the acqusition function.")
 
@@ -96,6 +97,7 @@ class EI(AbstractAcquisitionFunction):
                 f[s_copy == 0.0] = 0.0
             else:
                 f = calculate_f()
+                
             if (f < 0).any():
                 raise ValueError("Expected Improvement is smaller than 0 for at least one " "sample.")
 
@@ -147,7 +149,7 @@ class EIPS(EI):
         Controls the balance between exploration and exploitation of the acquisition function.
     """
 
-    def __init__(self, xi: float = 0.01) -> None:
+    def __init__(self, xi: float = 0.0) -> None:
         super(EIPS, self).__init__(xi=xi)
 
     @property
