@@ -44,7 +44,7 @@ class SuccessiveHalving(AbstractIntensifier):
         * None: No shuffling at all and use the instance-seed order provided by the user.
         * "shuffle_once": Shuffle the instance-seed keys once and use the same order across all runs.
         * "shuffle": Shuffles the instance-seed keys for each bracket individually.
-    incumbent_selection : str, defaults to "highest_observed_budget"
+    incumbent_selection : str, defaults to "any_budget"
         How to select the incumbent when using budgets. Can be set to:
         * "any_budget": Incumbent is the best on any budget i.e., best performance regardless of budget.
         * "highest_observed_budget": Incumbent is the best in the highest budget run so far.
@@ -326,7 +326,7 @@ class SuccessiveHalving(AbstractIntensifier):
             # TODO: Log how many configs are in each stage
             for (bracket, stage) in list(self._tracker.keys()):
                 pairs = self._tracker[(bracket, stage)].copy()
-                for seed, configs in pairs:
+                for i, (seed, configs) in enumerate(pairs):
                     isb_keys = self._get_instance_seed_budget_keys_by_stage(bracket=bracket, stage=stage, seed=seed)
 
                     # We iterate over the configs and yield trials which are not running/evaluated yet
@@ -352,7 +352,7 @@ class SuccessiveHalving(AbstractIntensifier):
 
                     # Update tracker
                     # Remove current shuffle index / config pair
-                    self._tracker[(bracket, stage)].remove((seed, configs))
+                    del self._tracker[(bracket, stage)][i]
 
                     # Add successful to the next stage
                     if stage < self._max_iterations[bracket] - 1:
