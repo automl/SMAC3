@@ -1058,6 +1058,7 @@
         <span class="sd">&quot;&quot;&quot;Computess the EI value and its derivatives.&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eta</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No `eta` specified. Call `update` to inform the acqusition function.&quot;</span><span class="p">)</span>
 
@@ -1084,6 +1085,7 @@
                 <span class="n">f</span><span class="p">[</span><span class="n">s_copy</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">f</span> <span class="o">=</span> <span class="n">calculate_f</span><span class="p">()</span>
+
             <span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected Improvement is smaller than 0 for at least one &quot;</span> <span class="s2">&quot;sample.&quot;</span><span class="p">)</span>
 

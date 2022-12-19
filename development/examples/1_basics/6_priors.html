@@ -1018,26 +1018,26 @@ but we stick with the hyperparameter optimization facade here. To incorporate us
 optimization, you have to change the acquisition function to <code class="docutils literal notranslate"><span class="pre">PriorAcquisitionFunction</span></code>.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:133] Using 4 initial design configurations and 1 additional configurations.
 [WARNING][prior_acqusition_function.py:107] Discretizing the prior for random forest models.
-[INFO][abstract_intensifier.py:479] Added config fec0cb as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:551] Added config 34b1eb and rejected config fec0cb as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:494] Added config fec0cb as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:566] Added config 34b1eb and rejected config fec0cb as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- activation: &#39;logistic&#39; -&gt; &#39;relu&#39;
 [INFO][configspace.py:175] --- batch_size: 324 -&gt; 128
 [INFO][configspace.py:175] --- learning_rate_init: 1.1134996369914405 -&gt; 0.0010000000000000002
 [INFO][configspace.py:175] --- n_layer: 2 -&gt; 3
 [INFO][configspace.py:175] --- n_neurons: 157 -&gt; 108
 [INFO][configspace.py:175] --- optimizer: &#39;sgd&#39; -&gt; &#39;adam&#39;
-[INFO][abstract_intensifier.py:551] Added config 4d7ef2 and rejected config 34b1eb as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:566] Added config 4d7ef2 and rejected config 34b1eb as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- batch_size: 128 -&gt; 131
 [INFO][configspace.py:175] --- n_layer: 3 -&gt; 5
-[INFO][abstract_intensifier.py:551] Added config 315abf and rejected config 4d7ef2 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:566] Added config 315abf and rejected config 4d7ef2 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- batch_size: 131 -&gt; 33
 [INFO][configspace.py:175] --- learning_rate_init: 0.0010000000000000002 -&gt; 0.0007179183139407974
 [INFO][configspace.py:175] --- n_layer: 5 -&gt; 3
 [INFO][configspace.py:175] --- n_neurons: 108 -&gt; 165
-[INFO][smbo.py:303] Configuration budget is exhausted:
-[INFO][smbo.py:304] --- Remaining wallclock time: inf
-[INFO][smbo.py:305] --- Remaining cpu time: inf
-[INFO][smbo.py:306] --- Remaining trials: 0
+[INFO][smbo.py:306] Configuration budget is exhausted:
+[INFO][smbo.py:307] --- Remaining wallclock time: inf
+[INFO][smbo.py:308] --- Remaining cpu time: inf
+[INFO][smbo.py:309] --- Remaining trials: 0
 Default cost: 0.038952336737852145
 Default cost: 0.026152893840916236
 </pre></div>
@@ -1206,7 +1206,7 @@ Default cost: 0.026152893840916236
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  34.308 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  34.087 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-6-priors-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/4ebef42c9f91d235a47f01427ed027a4/6_priors.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">6_priors.py</span></code></a></p>

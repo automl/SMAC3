@@ -49,39 +49,25 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
     [INFO][abstract_initial_design.py:133] Using 5 initial design configurations and 0 additional configurations.
     [INFO][successive_halving.py:146] Successive Halving uses budget type BUDGETS with eta 3, min budget 5, and max budget 25.
-    [INFO][abstract_intensifier.py:479] Added config 6b0504 as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:551] Added config 622bf8 and rejected config 6b0504 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:494] Added config 6b0504 as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:566] Added config 622bf8 and rejected config 6b0504 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- batch_size: None -> 155
     [INFO][configspace.py:175] --- learning_rate_init: None -> 0.006677306766018313
     [INFO][configspace.py:175] --- n_layer: 4 -> 5
     [INFO][configspace.py:175] --- n_neurons: 123 -> 56
     [INFO][configspace.py:175] --- solver: 'lbfgs' -> 'adam'
-    [INFO][abstract_intensifier.py:551] Added config 8db41e and rejected config 622bf8 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:566] Added config 8db41e and rejected config 622bf8 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- n_layer: 5 -> 2
     [INFO][configspace.py:175] --- n_neurons: 56 -> 75
     [INFO][configspace.py:175] --- solver: 'adam' -> 'lbfgs'
-    [INFO][abstract_intensifier.py:551] Added config 15101e and rejected config 8db41e as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- batch_size: None -> 182
-    [INFO][configspace.py:175] --- learning_rate_init: None -> 0.0016993391834713837
-    [INFO][configspace.py:175] --- n_layer: 2 -> 1
-    [INFO][configspace.py:175] --- solver: 'lbfgs' -> 'adam'
-    [INFO][abstract_intensifier.py:551] Added config 7bd1c9 and rejected config 15101e as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- activation: 'tanh' -> 'relu'
-    [INFO][configspace.py:175] --- n_layer: 1 -> 4
-    [INFO][configspace.py:175] --- n_neurons: 75 -> 255
-    [INFO][configspace.py:175] --- solver: 'adam' -> 'lbfgs'
-    [INFO][abstract_intensifier.py:551] Added config 5df970 and rejected config 7bd1c9 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- activation: 'relu' -> 'tanh'
-    [INFO][configspace.py:175] --- batch_size: None -> 261
-    [INFO][configspace.py:175] --- learning_rate_init: None -> 0.002753672312748228
-    [INFO][configspace.py:175] --- n_neurons: 255 -> 160
-    [INFO][configspace.py:175] --- solver: 'lbfgs' -> 'adam'
-    [INFO][smbo.py:303] Configuration budget is exhausted:
-    [INFO][smbo.py:304] --- Remaining wallclock time: -1.192328929901123
-    [INFO][smbo.py:305] --- Remaining cpu time: inf
-    [INFO][smbo.py:306] --- Remaining trials: 168
+    [INFO][abstract_intensifier.py:566] Added config 4ce3a0 and rejected config 8db41e as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- n_neurons: 75 -> 196
+    [INFO][smbo.py:306] Configuration budget is exhausted:
+    [INFO][smbo.py:307] --- Remaining wallclock time: -0.5902087688446045
+    [INFO][smbo.py:308] --- Remaining cpu time: inf
+    [INFO][smbo.py:309] --- Remaining trials: 174
     Default cost: 0.36672856700711853
-    Incumbent cost: 0.02282110801609405
+    Incumbent cost: 0.02671618693902822
 
 
 
@@ -217,7 +203,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  44.585 seconds)
+   **Total running time of the script:** ( 0 minutes  44.522 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_1_mlp_epochs.py:

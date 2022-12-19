@@ -1014,16 +1014,16 @@ hyperparameter optimization facade, which uses a random forest as its surrogate 
 scale to higher evaluation budgets and a higher number of dimensions. Also, you can use mixed data
 types as well as conditional hyperparameters.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:133] Using 5 initial design configurations and 0 additional configurations.
-[INFO][abstract_intensifier.py:479] Added config eb23b4 as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:551] Added config 60c7ff and rejected config eb23b4 as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][abstract_intensifier.py:494] Added config eb23b4 as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:566] Added config 60c7ff and rejected config eb23b4 as incumbent because it is not better than the incumbents on 2 instances:
 [INFO][configspace.py:175] --- C: 0.03992740880515713 -&gt; 1.2760639488343621
 [INFO][configspace.py:175] --- kernel: &#39;rbf&#39; -&gt; &#39;linear&#39;
 [INFO][configspace.py:175] --- shrinking: True -&gt; False
-[INFO][smbo.py:295] Finished 50 trials.
-[INFO][smbo.py:303] Configuration budget is exhausted:
-[INFO][smbo.py:304] --- Remaining wallclock time: inf
-[INFO][smbo.py:305] --- Remaining cpu time: inf
-[INFO][smbo.py:306] --- Remaining trials: 0
+[INFO][smbo.py:298] Finished 50 trials.
+[INFO][smbo.py:306] Configuration budget is exhausted:
+[INFO][smbo.py:307] --- Remaining wallclock time: inf
+[INFO][smbo.py:308] --- Remaining cpu time: inf
+[INFO][smbo.py:309] --- Remaining trials: 0
 Default cost: 0.03333333333333344
 Incumbent cost: 0.013333333333333308
 </pre></div>
@@ -1121,7 +1121,7 @@ Incumbent cost: 0.013333333333333308
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.031 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.179 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-2-svm-cv-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/7543c6c00a01b61aefff0a6414c7ac77/2_svm_cv.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_svm_cv.py</span></code></a></p>

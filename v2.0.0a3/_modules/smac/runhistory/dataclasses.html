@@ -1128,21 +1128,21 @@
 
 <div class="viewcode-block" id="TrajectoryItem"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.TrajectoryItem">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">TrajectoryItem</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Item of a trajectory.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Item of a trajectory.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config_ids : list[int]</span>
+<span class="sd">        Configuration ids of the current incumbents.</span>
+<span class="sd">    trial : int</span>
+<span class="sd">        How many trials have been evaluated so far.</span>
+<span class="sd">    walltime : float</span>
+<span class="sd">        How much walltime has been used so far.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">config_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="n">finished_trials</span><span class="p">:</span> <span class="nb">int</span></div>
-
-    <span class="c1"># incumbent: Configuration | dict[str, Any]</span>
-    <span class="c1"># cost: float | list[float]</span>
-    <span class="c1"># budget: float | None</span>
-    <span class="c1"># walltime_used: float</span>
-    <span class="c1"># num_trial: int</span>
-
-    <span class="c1"># def __post_init__(self) -&gt; None:</span>
-    <span class="c1">#    # Transform configuration to dict</span>
-    <span class="c1">#    if isinstance(self.incumbent, Configuration):</span>
-    <span class="c1">#        self.incumbent = self.incumbent.get_dictionary()</span>
+    <span class="n">trial</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">walltime</span><span class="p">:</span> <span class="nb">float</span></div>
 </pre></div>
 
               </div>

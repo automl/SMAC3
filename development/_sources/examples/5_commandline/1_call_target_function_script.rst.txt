@@ -56,17 +56,17 @@ This simple example shows how to call a script with the following content:
 
     [INFO][abstract_initial_design.py:81] Reducing the number of initial configurations from 10 to 3 (max_ratio == 0.1).
     [INFO][abstract_initial_design.py:133] Using 3 initial design configurations and 0 additional configurations.
-    [INFO][abstract_intensifier.py:288] Using only one seed for deterministic scenario.
-    [INFO][abstract_intensifier.py:479] Added config 33ba44 as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:551] Added config fb227e and rejected config 33ba44 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
+    [INFO][abstract_intensifier.py:494] Added config 33ba44 as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:566] Added config fb227e and rejected config 33ba44 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x0: 267 -> 116
-    [INFO][abstract_intensifier.py:551] Added config 6bd331 and rejected config fb227e as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:566] Added config 6bd331 and rejected config fb227e as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x0: 116 -> 0
-    [INFO][smbo.py:303] Configuration budget is exhausted:
-    [INFO][smbo.py:304] --- Remaining wallclock time: inf
-    [INFO][smbo.py:305] --- Remaining cpu time: inf
-    [INFO][smbo.py:306] --- Remaining trials: 0
-    [INFO][abstract_intensifier.py:288] Using only one seed for deterministic scenario.
+    [INFO][smbo.py:306] Configuration budget is exhausted:
+    [INFO][smbo.py:307] --- Remaining wallclock time: inf
+    [INFO][smbo.py:308] --- Remaining cpu time: inf
+    [INFO][smbo.py:309] --- Remaining trials: 0
+    [INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
     Default cost: 500.0
     Incumbent cost: 0.0
 
@@ -113,7 +113,7 @@ This simple example shows how to call a script with the following content:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.794 seconds)
+   **Total running time of the script:** ( 0 minutes  3.883 seconds)
 
 
 .. _sphx_glr_download_examples_5_commandline_1_call_target_function_script.py:

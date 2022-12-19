@@ -1067,6 +1067,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_used_target_function_walltime</span> <span class="o">=</span> <span class="mf">0.0</span>
 
+        <span class="c1"># Set walltime used method for intensifier</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">used_walltime</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">used_walltime</span>  <span class="c1"># type: ignore</span>
+
         <span class="c1"># We initialize the state based on previous data.</span>
         <span class="c1"># If no previous data is found then we take care of the initial design.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_state</span><span class="p">()</span>
@@ -1082,7 +1085,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">remaing_walltime</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">remaining_walltime</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Subtracts the runtime configuration budget with the used wallclock time.&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">walltime_limit</span> <span class="o">-</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span><span class="p">)</span>
@@ -1100,7 +1103,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">budget_exhausted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Check whether the the remaining walltime, cputime or trials was exceeded.&quot;&quot;&quot;</span>
-        <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remaing_walltime</span> <span class="o">&lt;=</span> <span class="mi">0</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remaining_walltime</span> <span class="o">&lt;=</span> <span class="mi">0</span>
         <span class="n">B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remaining_cputime</span> <span class="o">&lt;=</span> <span class="mi">0</span>
         <span class="n">C</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remaining_trials</span> <span class="o">&lt;=</span> <span class="mi">0</span>
 
@@ -1274,7 +1277,7 @@
 
             <span class="c1"># Some statistics</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Remaining wallclock time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">remaing_walltime</span><span class="si">}</span><span class="s2">; &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Remaining wallclock time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">remaining_walltime</span><span class="si">}</span><span class="s2">; &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;Remaining cpu time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">remaining_cputime</span><span class="si">}</span><span class="s2">; &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;Remaining trials: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">remaining_trials</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
@@ -1289,7 +1292,7 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_exhausted</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_exhausted</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Configuration budget is exhausted:&quot;</span><span class="p">)</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Remaining wallclock time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">remaing_walltime</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Remaining wallclock time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">remaining_walltime</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Remaining cpu time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">remaining_cputime</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Remaining trials: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">remaining_trials</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>

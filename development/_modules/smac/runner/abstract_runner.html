@@ -1102,9 +1102,6 @@
 
         <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
-        <span class="c1"># if trial_info.budget == 0 and status == StatusType.DONOTADVANCE:</span>
-        <span class="c1">#    raise ValueError(&quot;Cannot handle DONOTADVANCE state when using intensify or SH/HB on instances.&quot;)</span>
-
         <span class="c1"># Catch NaN or inf</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">cost</span><span class="p">)):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
@@ -1128,6 +1125,7 @@
             <span class="n">starttime</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
             <span class="n">endtime</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
         <span class="p">)</span>
+
         <span class="k">return</span> <span class="n">trial_info</span><span class="p">,</span> <span class="n">trial_value</span></div>
 
     <span class="nd">@property</span>

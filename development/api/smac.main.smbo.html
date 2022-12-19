@@ -1069,15 +1069,6 @@
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.main.smbo.SMBO.remaing_walltime">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         SMBO.remaing_walltime
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#smac.main.smbo.SMBO.remaining_cputime">
        <code class="docutils literal notranslate">
         <span class="pre">
@@ -1091,6 +1082,15 @@
        <code class="docutils literal notranslate">
         <span class="pre">
          SMBO.remaining_trials
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.main.smbo.SMBO.remaining_walltime">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         SMBO.remaining_walltime
         </span>
        </code>
       </a>
@@ -1325,17 +1325,6 @@ for the exact behaviour (overwrite completely, save old run, or use old results)
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="smac.main.smbo.SMBO.remaing_walltime">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remaing_walltime</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#smac.main.smbo.SMBO.remaing_walltime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Subtracts the runtime configuration budget with the used wallclock time.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
 <dt class="sig sig-object py" id="smac.main.smbo.SMBO.remaining_cputime">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remaining_cputime</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#smac.main.smbo.SMBO.remaining_cputime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subtracts the target function running budget with the used time.</p>
@@ -1353,6 +1342,17 @@ for the exact behaviour (overwrite completely, save old run, or use old results)
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="smac.main.smbo.SMBO.remaining_walltime">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remaining_walltime</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#smac.main.smbo.SMBO.remaining_walltime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subtracts the runtime configuration budget with the used wallclock time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
 </dd>
 </dl>
 </dd></dl>

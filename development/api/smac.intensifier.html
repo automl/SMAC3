@@ -1010,6 +1010,15 @@
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.intensifier.AbstractIntensifier.__post_init__">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         AbstractIntensifier.__post_init__()
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#smac.intensifier.AbstractIntensifier.config_generator">
        <code class="docutils literal notranslate">
         <span class="pre">
@@ -1181,10 +1190,28 @@
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.intensifier.AbstractIntensifier.trajectory">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         AbstractIntensifier.trajectory
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#smac.intensifier.AbstractIntensifier.update_incumbents">
        <code class="docutils literal notranslate">
         <span class="pre">
          AbstractIntensifier.update_incumbents()
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.intensifier.AbstractIntensifier.used_walltime">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         AbstractIntensifier.used_walltime
         </span>
        </code>
       </a>
@@ -1493,6 +1520,17 @@ intensifier to get more information.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.intensifier.AbstractIntensifier.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/abstract_intensifier.html#AbstractIntensifier.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.AbstractIntensifier.__post_init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fills <code class="docutils literal notranslate"><span class="pre">self._tf_seeds</span></code> and <code class="docutils literal notranslate"><span class="pre">self._tf_instances</span></code>. Moreover, the incumbents are updated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.intensifier.AbstractIntensifier.config_generator">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">config_generator</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.main.config_selector.html#smac.main.config_selector.ConfigSelector" title="smac.main.config_selector.ConfigSelector"><span class="pre">ConfigSelector</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.intensifier.AbstractIntensifier.config_generator" title="Permalink to this definition">¶</a></dt>
@@ -1733,6 +1771,17 @@ method also saves the incumbents and trajectory.</p>
 </dl>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="smac.intensifier.AbstractIntensifier.trajectory">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">trajectory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.TrajectoryItem" title="smac.runhistory.dataclasses.TrajectoryItem"><span class="pre">smac.runhistory.dataclasses.TrajectoryItem</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.intensifier.AbstractIntensifier.trajectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the trajectory (changes of incumbents) of the optimization run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.TrajectoryItem" title="smac.runhistory.dataclasses.TrajectoryItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrajectoryItem</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.intensifier.AbstractIntensifier.update_incumbents">
 <span class="sig-name descname"><span class="pre">update_incumbents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/abstract_intensifier.html#AbstractIntensifier.update_incumbents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.AbstractIntensifier.update_incumbents" title="Permalink to this definition">¶</a></dt>
@@ -1742,6 +1791,17 @@ configuration is only considered incumbent if it has a better performance on all
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="smac.intensifier.AbstractIntensifier.used_walltime">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">used_walltime</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#smac.intensifier.AbstractIntensifier.used_walltime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns used wallclock time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1824,7 +1884,7 @@ configuration is only considered incumbent if it has a better performance on all
 <dt class="sig sig-object py" id="smac.intensifier.Intensifier">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.intensifier.</span></span><span class="sig-name descname"><span class="pre">Intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_incumbents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/intensifier.html#Intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.Intensifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.intensifier.abstract_intensifier.html#smac.intensifier.abstract_intensifier.AbstractIntensifier" title="smac.intensifier.abstract_intensifier.AbstractIntensifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractIntensifier</span></code></a></p>
-<p>Implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-threading.
+<p>Implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-processing.
 Races challengers against current incumbents.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1944,7 +2004,7 @@ only one bracket is used.</p>
 * None: No shuffling at all and use the instance-seed order provided by the user.
 * “shuffle_once”: Shuffle the instance-seed keys once and use the same order across all runs.
 * “shuffle”: Shuffles the instance-seed keys for each bracket individually.</p></li>
-<li><p><strong>incumbent_selection</strong> (<em>str</em><em>, </em><em>defaults to &quot;any_budget&quot;</em>) – How to select the incumbent when using budgets. Can be set to:
+<li><p><strong>incumbent_selection</strong> (<em>str</em><em>, </em><em>defaults to &quot;highest_observed_budget&quot;</em>) – How to select the incumbent when using budgets. Can be set to:
 * “any_budget”: Incumbent is the best on any budget i.e., best performance regardless of budget.
 * “highest_observed_budget”: Incumbent is the best in the highest budget run so far.
 * “highest_budget”: Incumbent is selected only based on the highest budget.</p></li>

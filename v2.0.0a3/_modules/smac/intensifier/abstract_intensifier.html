@@ -989,7 +989,7 @@
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterator</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span>
 
 <span class="kn">import</span> <span class="nn">dataclasses</span>
 <span class="kn">import</span> <span class="nn">json</span>
@@ -1062,6 +1062,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_seeds</span> <span class="o">=</span> <span class="n">n_seeds</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_config_calls</span> <span class="o">=</span> <span class="n">max_config_calls</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_incumbents</span> <span class="o">=</span> <span class="n">max_incumbents</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_used_walltime_func</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># Reset everything</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
@@ -1090,6 +1091,11 @@
         <span class="p">}</span>
 
     <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TrajectoryItem</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the trajectory (changes of incumbents) of the optimization run.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span>
+
+    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistory</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Runhistory of the intensifier.&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -1097,12 +1103,24 @@
 
     <span class="nd">@runhistory</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Sets the runhistory and fills ``self._tf_seeds`` and ``self._tf_instances``. Moreover, the incumbents</span>
-<span class="sd">        are updated.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Sets the runhistory.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="o">=</span> <span class="n">runhistory</span>
 
-    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">used_walltime</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns used wallclock time.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_used_walltime_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_used_walltime_func</span><span class="p">()</span>
+
+    <span class="nd">@used_walltime</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">used_walltime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Sets the used wallclock time.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_used_walltime_func</span> <span class="o">=</span> <span class="n">func</span>
+
+<div class="viewcode-block" id="AbstractIntensifier.__post_init__"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.__post_init__">[docs]</a>    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Fills ``self._tf_seeds`` and ``self._tf_instances``. Moreover, the incumbents are updated.&quot;&quot;&quot;</span>
         <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
 
         <span class="c1"># Validate runhistory: Are seeds/instances/budgets used?</span>
@@ -1151,7 +1169,7 @@
 
         <span class="c1"># Update our incumbents here</span>
         <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">rh</span><span class="o">.</span><span class="n">get_configs</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">update_incumbents</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_incumbents</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">config_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">ConfigSelector</span><span class="p">]:</span>
@@ -1461,11 +1479,8 @@
         <span class="c1"># If there are no incumbents at all, we just use the new config as new incumbent</span>
         <span class="c1"># Problem: We can add running incumbents</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">incumbents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># incumbent_isb_keys is None and len(incumbents) == 0:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents</span> <span class="o">=</span> <span class="p">[</span><span class="n">config</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents_changed</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TrajectoryItem</span><span class="p">(</span><span class="n">config_ids</span><span class="o">=</span><span class="p">[</span><span class="n">config_id</span><span class="p">],</span> <span class="n">finished_trials</span><span class="o">=</span><span class="n">rh</span><span class="o">.</span><span class="n">finished</span><span class="p">))</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Added config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2"> as new incumbent because there are no incumbents yet.&quot;</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Updated trajectory.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_trajectory</span><span class="p">([</span><span class="n">config</span><span class="p">])</span>
 
             <span class="c1"># Nothing else to do</span>
             <span class="k">return</span>
@@ -1563,7 +1578,6 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_incumbents</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_incumbents</span><span class="p">:</span>
             <span class="n">new_incumbents</span> <span class="o">=</span> <span class="n">sort_by_crowding_distance</span><span class="p">(</span><span class="n">rh</span><span class="p">,</span> <span class="n">new_incumbents</span><span class="p">,</span> <span class="n">all_incumbent_isb_keys</span><span class="p">)</span>
             <span class="n">new_incumbents</span> <span class="o">=</span> <span class="n">new_incumbents</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_incumbents</span><span class="p">]</span>
-            <span class="n">new_incumbent_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">rh</span><span class="o">.</span><span class="n">get_config_id</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">new_incumbents</span><span class="p">]</span>
 
             <span class="c1"># or random?</span>
             <span class="c1"># idx = self._rng.randint(0, len(new_incumbents))</span>
@@ -1575,10 +1589,7 @@
                 <span class="s2">&quot;available.&quot;</span>
             <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents</span> <span class="o">=</span> <span class="n">new_incumbents</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents_changed</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TrajectoryItem</span><span class="p">(</span><span class="n">config_ids</span><span class="o">=</span><span class="n">new_incumbent_ids</span><span class="p">,</span> <span class="n">finished_trials</span><span class="o">=</span><span class="n">rh</span><span class="o">.</span><span class="n">finished</span><span class="p">))</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Updated trajectory.&quot;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_trajectory</span><span class="p">(</span><span class="n">new_incumbents</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AbstractIntensifier.__iter__"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.__iter__">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]:</span>
@@ -1641,6 +1652,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_rejected_config_ids</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;rejected_config_ids&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span> <span class="o">=</span> <span class="p">[</span><span class="n">TrajectoryItem</span><span class="p">(</span><span class="o">**</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;trajectory&quot;</span><span class="p">]]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">])</span></div>
+
+    <span class="k">def</span> <span class="nf">_update_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
+        <span class="n">config_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">rh</span><span class="o">.</span><span class="n">get_config_id</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents</span> <span class="o">=</span> <span class="n">configs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents_changed</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TrajectoryItem</span><span class="p">(</span><span class="n">config_ids</span><span class="o">=</span><span class="n">config_ids</span><span class="p">,</span> <span class="n">trial</span><span class="o">=</span><span class="n">rh</span><span class="o">.</span><span class="n">finished</span><span class="p">,</span> <span class="n">walltime</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">used_walltime</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Updated trajectory.&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_add_rejected_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">):</span>
