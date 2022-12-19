@@ -18,7 +18,7 @@ logger = get_logger(__name__)
 
 
 class Intensifier(AbstractIntensifier):
-    """Implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-threading.
+    """Implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-processing.
     Races challengers against current incumbents.
 
     Parameters

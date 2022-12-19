@@ -146,7 +146,7 @@ class GaussianProcess(AbstractGaussianProcess):
             kernel=self._kernel,
             normalize_y=False,  # We do not use scikit-learn's normalize routine
             optimizer=None,
-            n_restarts_optimizer=-1,  # We do not use scikit-learn's optimization routine
+            n_restarts_optimizer=0,  # We do not use scikit-learn's optimization routine
             alpha=0,  # Governed by the kernel
             random_state=self._rng,
         )

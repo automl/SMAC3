@@ -88,7 +88,7 @@ def test_mean_aggregation(facade, make_scenario, configspace):
     )
     incumbents = smac.optimize()
 
-    # We sort the incumbents by their x values and then make sure that the current y is 
+    # We sort the incumbents by their x values and then make sure that the current y is
     # smaller than the previous one.
     sorted_incumbents = []
     for incumbent in incumbents:

@@ -115,7 +115,7 @@ def test_continue_when_walltime_stopped(rosenbrock, facade):
             return
 
     LIMIT = 1
-    FINAL_LIMIT = 5
+    FINAL_LIMIT = 8
 
     # Same thing now but with walltime limit
     scenario = Scenario(rosenbrock.configspace, n_trials=99999, walltime_limit=FINAL_LIMIT, min_budget=1, max_budget=10)

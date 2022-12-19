@@ -24,11 +24,11 @@ exclude_lines = [
 ] # These are lines to exclude from coverage
 
 [tool.black]
-target-version = ['py38']
+target-version = ['py39']
 line-length = 120
 
 [tool.isort]
-py_version = "38"
+py_version = "39"
 profile = "black" # Play nicely with black
 src_paths = ["smac", "tests"]
 known_types = ["typing", "abc"] # We put these in their own section "types"
@@ -66,7 +66,7 @@ add-ignore = [ # http://www.pydocstyle.org/en/stable/error_codes.html
 ]
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 show_error_codes = true
 warn_unused_configs = true         # warn about unused [tool.mypy] lines
 follow_imports = "normal"          # Type check top level api code we use from imports
@@ -76,10 +76,7 @@ disallow_untyped_decorators = true # ... even decorators
 disallow_incomplete_defs = true    # ... all types
 
 [[tool.mypy.overrides]]
-module = [
-    "setuptools.*",
-    "yaml.*"
-]     # Add modules that give import errors here
+module = ["setuptools.*", "yaml.*"] # Add modules that give import errors here
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
