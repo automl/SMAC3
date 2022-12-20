@@ -28,7 +28,7 @@ class SuccessiveHalving(AbstractIntensifier):
     """
     Implementation of Succesive Halving supporting multi-fidelity, multi-objective, and multi-processing.
     Internally, a tracker keeps track of configurations and their bracket and stage.
-    
+
     The behaviour of this intensifier is as follows:
     - First, adds configurations from the runhistory to the tracker. The first stage is always filled-up. For example,
       the user provided 4 configs with the tell-method but the first stage requires 8 configs: 4 new configs are
