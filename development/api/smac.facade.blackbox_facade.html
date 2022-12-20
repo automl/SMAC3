@@ -40,7 +40,7 @@
     <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.facade.boing_facade" href="smac.facade.boing_facade.html" />
+    <link rel="next" title="smac.facade.hyperband_facade" href="smac.facade.hyperband_facade.html" />
     <link rel="prev" title="smac.facade.algorithm_configuration_facade" href="smac.facade.algorithm_configuration_facade.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3 current active">
       <a class="current reference internal" href="#">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1155,7 +1150,7 @@ acquisition function.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>challengers</strong> (<em>int</em><em>, </em><em>defaults to 1000</em>) – Number of challengers.</p></li>
-<li><p><strong>local_search_iterations</strong> (<em>int</em><em>, </em><em>defauts to 10</em>) – Number of local search iterations.</p></li>
+<li><p><strong>local_search_iterations</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – Number of local search iterations.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1195,8 +1190,8 @@ Additional configurations are not affected by this parameter.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
-<li><p><strong>max_config_calls</strong> (<em>int</em><em>, </em><em>defaults to 3</em>) – Maximum number of configuration evaluations. Basically, how many instance-seed keys should be max evaluated
-for a configuration.</p></li>
+<li><p><strong>max_config_calls</strong> (<em>int</em><em>, </em><em>defaults to 3</em>) – Maximum number of configuration evaluations. Basically, how many instance-seed keys should be evaluated at
+maximum for a configuration.</p></li>
 <li><p><strong>max_incumbents</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – How many incumbents to keep track of in the case of multi-objective.</p></li>
 </ul>
 </dd>
@@ -1227,7 +1222,7 @@ categorical (HammingKernel), continuous (Matern), and noise kernels (White).</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
-<li><p><strong>model_type</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Which gaussian process model should be chosen. Choose between <cite>vanilla</cite> and <cite>mcmc</cite>.</p></li>
+<li><p><strong>model_type</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Which Gaussian Process model should be chosen. Choose between <cite>vanilla</cite> and <cite>mcmc</cite>.</p></li>
 <li><p><strong>kernel</strong> (<em>kernels.Kernel</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The kernel used in the surrogate model.</p></li>
 </ul>
 </dd>
@@ -1243,12 +1238,13 @@ categorical (HammingKernel), continuous (Matern), and noise kernels (White).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.blackbox_facade.BlackBoxFacade.get_multi_objective_algorithm">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_multi_objective_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objective_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_multi_objective_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.blackbox_facade.BlackBoxFacade.get_multi_objective_algorithm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the mean aggregation strategy for the multi objective algorithm.</p>
+<dd><p>Returns the mean aggregation strategy for the multi-objective algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
-<li><p><strong>objective_weights</strong> (<em>list</em><em>[</em><em>float</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Weights for an weighted average. Must be of the same length as the number of objectives.</p></li>
+<li><p><strong>objective_weights</strong> (<em>list</em><em>[</em><em>float</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Weights for averaging the objectives in a weighted manner. Must be of the same length as the number of
+objectives.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1300,10 +1296,10 @@ categorical (HammingKernel), continuous (Matern), and noise kernels (White).</p>
             <p class="prev-next-title">smac.facade.algorithm_configuration_facade</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.facade.boing_facade.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.facade.hyperband_facade.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.facade.boing_facade</p>
+        <p class="prev-next-title">smac.facade.hyperband_facade</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

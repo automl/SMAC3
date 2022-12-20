@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1028,8 +1023,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_random_design</span> <span class="o">=</span> <span class="n">random_design</span>
 
     <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span><span class="p">:</span>
+        <span class="c1"># If we already returned the required number of challengers</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_challengers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_challengers</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">StopIteration</span>
+        <span class="c1"># If we do not want to have random configs, we just yield the next challenger</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_design</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_challengers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_challengers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_challengers_callback</span><span class="p">()</span>
@@ -1038,6 +1035,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">+=</span> <span class="mi">1</span>
 
             <span class="k">return</span> <span class="n">config</span>
+        <span class="c1"># If we want to interleave challengers with random configs, sample one</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_design</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_iteration</span><span class="p">):</span>
                 <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configspace</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">()</span>

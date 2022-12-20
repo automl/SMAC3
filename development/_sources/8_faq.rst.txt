@@ -21,7 +21,7 @@ pyrfr raises cryptic import errors.
 
 
 How can I use :term:`BOHB` and/or `HpBandSter <https://github.com/automl/HpBandSter>`_ with SMAC?
-  The facade MultiFidelityFacade is the closes implementation to :term:`BOHB` and/or `HpBandSter <https://github.com/automl/HpBandSter>`_.
+  The facade MultiFidelityFacade is the closest implementation to :term:`BOHB` and/or `HpBandSter <https://github.com/automl/HpBandSter>`_.
 
 
 I discovered a bug or SMAC does not behave as expected. Where should I report to?
@@ -35,7 +35,7 @@ I discovered a bug or SMAC does not behave as expected. Where should I report to
   * A description of the problem.
   * An example to reproduce the problem.
   * Any information about your setup that could be helpful to resolve the bug (such as installed python packages).
-  * Feel free, to add a screenshot showing the issue.
+  * Feel free to add a screenshot showing the issue.
 
 
 I want to contribute code or discuss a new idea. Where should I report to?

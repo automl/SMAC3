@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1021,14 +1016,14 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    max_config_calls : int, defaults to 3</span>
-<span class="sd">        Maximum number of configuration evaluations. Basically, how many instance-seed keys should be max evaluated</span>
+<span class="sd">        Maximum number of configuration evaluations. Basically, how many instance-seed keys should be maxed evaluated</span>
 <span class="sd">        for a configuration.</span>
 <span class="sd">    max_incumbents : int, defaults to 10</span>
 <span class="sd">        How many incumbents to keep track of in the case of multi-objective.</span>
 <span class="sd">    retries : int, defaults to 16</span>
-<span class="sd">        How many more iterations should be done in case of no new trial is found.</span>
+<span class="sd">        How many more iterations should be done in case no new trial is found.</span>
 <span class="sd">    seed : int, defaults to None</span>
-<span class="sd">        Internal seed used for random events like shuffle seeds.</span>
+<span class="sd">        Internal seed used for random events, like shuffle seeds.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -1043,7 +1038,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_retries</span> <span class="o">=</span> <span class="n">retries</span>
 
 <div class="viewcode-block" id="Intensifier.reset"><a class="viewcode-back" href="../../../api/smac.intensifier.intensifier.html#smac.intensifier.Intensifier.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Reset the internal variables of the intensifier including the queue.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Resets the internal variables of the intensifier including the queue.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
         <span class="c1"># Queue to keep track of the challengers</span>
@@ -1093,7 +1088,7 @@
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_config_calls</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="c1"># What if there are already trials in the runhistory? Should we queue them up?</span>
-        <span class="c1"># Because they are part of the runhistory, they might be selected as incumbent. However, they are not</span>
+        <span class="c1"># Because they are part of the runhistory, they might be selected as incumbents. However, they are not</span>
         <span class="c1"># intensified because they are not part of the queue. We could add them here to incorporate them in the</span>
         <span class="c1"># intensification process.</span>
         <span class="c1"># Idea: Add all configs to queue (if it is an incumbent it is removed automatically later on)</span>
@@ -1120,7 +1115,7 @@
             <span class="n">rejected_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_rejected_configs</span><span class="p">()</span>
 
             <span class="c1"># Now we get the incumbents sorted by number of trials</span>
-            <span class="c1"># Also, incorporate ``get_incumbent_instance_seed_budget_keys`` here because challenger are only allowed to</span>
+            <span class="c1"># Also, incorporate ``get_incumbent_instance_seed_budget_keys`` here because challengers are only allowed to</span>
             <span class="c1"># sample from the incumbent&#39;s instances</span>
             <span class="n">incumbents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incumbents</span><span class="p">(</span><span class="n">sort_by</span><span class="o">=</span><span class="s2">&quot;num_trials&quot;</span><span class="p">)</span>
             <span class="n">incumbent_isb_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incumbent_instance_seed_budget_keys</span><span class="p">()</span>
@@ -1257,7 +1252,7 @@
                     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Removed config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2"> with N=</span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2"> from queue.&quot;</span><span class="p">)</span>
 
                     <span class="c1"># Finally, we add the same config to the queue with a higher N</span>
-                    <span class="c1"># If the config was rejected by the runhistory, then it&#39;s be removed in the next iteration</span>
+                    <span class="c1"># If the config was rejected by the runhistory, then it&#39;s been removed in the next iteration</span>
                     <span class="k">if</span> <span class="n">N</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_config_calls</span><span class="p">:</span>
                         <span class="n">new_pair</span> <span class="o">=</span> <span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">N</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">new_pair</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">:</span>
@@ -1272,7 +1267,7 @@
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2"> with N=</span><span class="si">{</span><span class="n">N</span><span class="o">*</span><span class="mi">2</span><span class="si">}</span><span class="s2"> is already in the queue.&quot;</span><span class="p">)</span>
 
-                    <span class="c1"># If we are at this point, it really is important to break because otherwise we would intensify</span>
+                    <span class="c1"># If we are at this point, it really is important to break because otherwise, we would intensify</span>
                     <span class="c1"># all configs in the queue in one iteration</span>
                     <span class="k">break</span></div>
 
@@ -1285,7 +1280,7 @@
         <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Returns the next trials of the configuration based on ``get_trials_of_interest``. If N is specified,</span>
-<span class="sd">        maximum N trials are returned but not necessarely all of them (depending on evaluated already or still running).</span>
+<span class="sd">        maximum N trials are returned but not necessarily all of them (depending on evaluated already or still running).</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1295,7 +1290,7 @@
 <span class="sd">        from_keys : list[InstanceSeedBudgetKey], defaults to None</span>
 <span class="sd">            Only instances from the list are considered for the trials.</span>
 <span class="sd">        shuffle : bool, defaults to True</span>
-<span class="sd">            Shuffles the trials in groups. First all instances are shuffled, then all seeds.</span>
+<span class="sd">            Shuffles the trials in groups. First, all instances are shuffled, then all seeds.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
         <span class="n">is_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_seed_keys_of_interest</span><span class="p">()</span>
@@ -1315,7 +1310,7 @@
         <span class="c1"># Counter is important to actually subtract the number of trials that are already evaluated/running</span>
         <span class="c1"># Otherwise, evaluated/running trials are not considered</span>
         <span class="c1"># Example: max_config_calls=16, N=8, 2 trials are running, 2 trials are evaluated, 4 trials are pending</span>
-        <span class="c1"># Without counter, we would return 8 trials because there are still so many trials left open</span>
+        <span class="c1"># Without a counter, we would return 8 trials because there are still so many trials left open</span>
         <span class="c1"># With counter, we would return only 4 trials because 4 trials are already evaluated/running</span>
         <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
 

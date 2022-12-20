@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1007,7 +1002,7 @@
 
 
 <div class="viewcode-block" id="LocalAndSortedRandomSearch"><a class="viewcode-back" href="../../../../api/smac.acquisition.maximizer.local_and_random_search.html#smac.acquisition.maximizer.LocalAndSortedRandomSearch">[docs]</a><span class="k">class</span> <span class="nc">LocalAndSortedRandomSearch</span><span class="p">(</span><span class="n">AbstractAcquisitionMaximizer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Implements SMAC&#39;s default acquisition function optimization.</span>
+    <span class="sd">&quot;&quot;&quot;Implement SMAC&#39;s default acquisition function optimization.</span>
 
 <span class="sd">    This optimizer performs local search from the previous best points according, to the acquisition function, uses the</span>
 <span class="sd">    acquisition function to sort randomly sampled configurations. Random configurations are interleaved by the main SMAC</span>
@@ -1022,9 +1017,9 @@
 <span class="sd">    max_steps: int | None, defaults to None</span>
 <span class="sd">        [LocalSearch] Maximum number of steps that the local search will perform.</span>
 <span class="sd">    n_steps_plateau_walk: int, defaults to 10</span>
-<span class="sd">        [LocalSearch] number of steps during a plateau walk before local search terminates</span>
+<span class="sd">        [LocalSearch] number of steps during a plateau walk before local search terminates.</span>
 <span class="sd">    local_search_iterations: int, defauts to 10</span>
-<span class="sd">        [Local Search] number of local search iterations</span>
+<span class="sd">        [Local Search] number of local search iterations.</span>
 <span class="sd">    seed : int, defaults to 0</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 

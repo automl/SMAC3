@@ -95,7 +95,7 @@ Basics
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="SMAC offers the possibility to continue an optimization. In this example, an optimization of a ...">
+    <div class="sphx-glr-thumbcontainer" tooltip="SMAC can also be continued. In this example, an optimization of a simple quadratic function is ...">
 
 .. only:: html
 

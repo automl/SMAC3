@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1192,7 +1187,7 @@
 <p>This is a mixin for a kernel to override functions of the kernel. Because it overrides functions of the kernel,
 it needs to be placed first in the inheritance hierarchy. For this reason it is not possible to subclass the
 Mixin from the kernel class because this will prevent it from being instantiatable. Therefore, mypy won’t know about
-anything related to the superclass and some type:ignore statements has to be  added when accessing a member that is
+anything related to the superclass and some type:ignore statements has to be added when accessing a member that is
 declared in the superclass such as <cite>self.has_conditions</cite>, <cite>self._call</cite>, <cite>super().get_params</cite>, etc.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1312,9 +1307,9 @@ parameters of the kernel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y)</p></li>
-<li><p><strong>Y</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_Y</em><em>, </em><em>n_features</em><em>)</em><em>, </em><em>(</em><em>optional</em><em>, </em><em>default=None</em><em>)</em>) – Right argument of the returned kernel k(X, Y). If None, k(X, X)
-if evaluated instead.</p></li>
+<li><p><strong>X</strong> (<em>np.ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y).</p></li>
+<li><p><strong>Y</strong> (<em>np.ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_samples_Y</em><em>, </em><em>n_features</em><em>)</em><em>, </em><em>(</em><em>optional</em><em>, </em><em>default=None</em><em>)</em>) – Right argument of the returned kernel k(X, Y). If None, k(X, X)
+is evaluated instead.</p></li>
 <li><p><strong>eval_gradient</strong> (<em>bool</em><em> (</em><em>optional</em><em>, </em><em>default=False</em><em>)</em>) – Determines whether the gradient with respect to the kernel
 hyperparameter is determined. Only supported when Y is None.</p></li>
 <li><p><strong>active</strong> (<em>np.ndarray</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>) </em><em>(</em><em>optional</em><em>)</em>) – Boolean array specifying which hyperparameters are active.</p></li>
@@ -1325,8 +1320,8 @@ hyperparameter is determined. Only supported when Y is None.</p></li>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p><strong>K</strong> (<em>array, shape (n_samples_X, n_samples_Y)</em>) – Kernel k(X, Y)</p></li>
-<li><p><strong>K_gradient</strong> (<em>array (opt.), shape (n_samples_X, n_samples_X, n_dims)</em>) – The gradient of the kernel k(X, X) with respect to the
+<li><p><strong>K</strong> (<em>np.ndarray, shape (n_samples_X, n_samples_Y)</em>) – Kernel k(X, Y).</p></li>
+<li><p><strong>K_gradient</strong> (<em>np.ndarray (opt.), shape (n_samples_X, n_samples_X, n_dims)</em>) – The gradient of the kernel k(X, X) with respect to the
 hyperparameter of the kernel. Only returned when eval_gradient
 is True.</p></li>
 </ul>
@@ -1349,9 +1344,9 @@ is True.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y)</p></li>
-<li><p><strong>Y</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_Y</em><em>, </em><em>n_features</em><em>)</em><em>, </em><em>(</em><em>optional</em><em>, </em><em>default=None</em><em>)</em>) – Right argument of the returned kernel k(X, Y). If None, k(X, X)
-if evaluated instead.</p></li>
+<li><p><strong>X</strong> (<em>np.ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y).</p></li>
+<li><p><strong>Y</strong> (<em>np.ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_samples_Y</em><em>, </em><em>n_features</em><em>)</em><em>, </em><em>(</em><em>optional</em><em>, </em><em>default=None</em><em>)</em>) – Right argument of the returned kernel k(X, Y). If None, k(X, X)
+is evaluated instead.</p></li>
 <li><p><strong>eval_gradient</strong> (<em>bool</em><em> (</em><em>optional</em><em>, </em><em>default=False</em><em>)</em>) – Determines whether the gradient with respect to the kernel
 hyperparameter is determined.</p></li>
 <li><p><strong>active</strong> (<em>np.ndarray</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>) </em><em>(</em><em>optional</em><em>)</em>) – Boolean array specifying which hyperparameters are active.</p></li>
@@ -1362,8 +1357,8 @@ hyperparameter is determined.</p></li>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p><strong>K</strong> (<em>array, shape (n_samples_X, n_samples_Y)</em>) – Kernel k(X, Y)</p></li>
-<li><p><strong>K_gradient</strong> (<em>array (opt.), shape (n_samples_X, n_samples_X, n_dims)</em>) – The gradient of the kernel k(X, X) with respect to the
+<li><p><strong>K</strong> (<em>np.ndarray, shape (n_samples_X, n_samples_Y)</em>) – Kernel k(X, Y).</p></li>
+<li><p><strong>K_gradient</strong> (<em>np.ndarray (opt.), shape (n_samples_X, n_samples_X, n_dims)</em>) – The gradient of the kernel k(X, X) with respect to the
 hyperparameter of the kernel. Only returned when eval_gradient
 is True.</p></li>
 </ul>
@@ -1386,9 +1381,9 @@ is True.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y)</p></li>
-<li><p><strong>Y</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_Y</em><em>, </em><em>n_features</em><em>)</em><em>, </em><em>(</em><em>optional</em><em>, </em><em>default=None</em><em>)</em>) – Right argument of the returned kernel k(X, Y). If None, k(X, X)
-if evaluated instead.</p></li>
+<li><p><strong>X</strong> (<em>np.ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y).</p></li>
+<li><p><strong>Y</strong> (<em>np.ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_samples_Y</em><em>, </em><em>n_features</em><em>)</em><em>, </em><em>(</em><em>optional</em><em>, </em><em>default=None</em><em>)</em>) – Right argument of the returned kernel k(X, Y). If None, k(X, X)
+is evaluated instead.</p></li>
 <li><p><strong>eval_gradient</strong> (<em>bool</em><em> (</em><em>optional</em><em>, </em><em>default=False</em><em>)</em>) – Determines whether the gradient with respect to the kernel
 hyperparameter is determined.</p></li>
 <li><p><strong>active</strong> (<em>np.ndarray</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>) </em><em>(</em><em>optional</em><em>)</em>) – Boolean array specifying which hyperparameters are active.</p></li>
@@ -1399,8 +1394,8 @@ hyperparameter is determined.</p></li>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p><strong>K</strong> (<em>array, shape (n_samples_X, n_samples_Y)</em>) – Kernel k(X, Y)</p></li>
-<li><p><strong>K_gradient</strong> (<em>array (opt.), shape (n_samples_X, n_samples_X, n_dims)</em>) – The gradient of the kernel k(X, X) with respect to the
+<li><p><strong>K</strong> (<em>np.ndarray, shape (n_samples_X, n_samples_Y)</em>) – Kernel k(X, Y).</p></li>
+<li><p><strong>K_gradient</strong> (<em>np.ndarray (opt.), shape (n_samples_X, n_samples_X, n_dims)</em>) – The gradient of the kernel k(X, X) with respect to the
 hyperparameter of the kernel. Only returned when eval_gradient
 is True.</p></li>
 </ul>

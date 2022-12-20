@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1080,9 +1075,9 @@ In: NIPS 2017 Bayesian Optimization Workshop</p>
 <li><p><strong>kernel</strong> (<em>Kernel</em>) – Kernel which is used for the Gaussian process.</p></li>
 <li><p><strong>n_mcmc_walkers</strong> (<em>int</em><em>, </em><em>defaults to 20</em>) – The number of hyperparameter samples. This also determines the number of walker for MCMC sampling as each
 walker will return one hyperparameter sample.</p></li>
-<li><p><strong>chain_length</strong> (<em>int</em><em>, </em><em>defaults to 50</em>) – The length of the MCMC chain. We start <cite>n_mcmc_walkers</cite> walker for <cite>chain_length</cite> steps and we use the last
+<li><p><strong>chain_length</strong> (<em>int</em><em>, </em><em>defaults to 50</em>) – The length of the MCMC chain. We start <cite>n_mcmc_walkers</cite> walker for <cite>chain_length</cite> steps, and we use the last
 sample in the chain as a hyperparameter sample.</p></li>
-<li><p><strong>burning_steps</strong> (<em>int</em><em>, </em><em>defaults to 50</em>) – The number of burnin steps before the actual MCMC sampling starts.</p></li>
+<li><p><strong>burning_steps</strong> (<em>int</em><em>, </em><em>defaults to 50</em>) – The number of burning steps before the actual MCMC sampling starts.</p></li>
 <li><p><strong>mcmc_sampler</strong> (<em>str</em><em>, </em><em>defaults to &quot;emcee&quot;</em>) – Choose a self-tuning MCMC sampler. Can be either <code class="docutils literal notranslate"><span class="pre">emcee</span></code> or <code class="docutils literal notranslate"><span class="pre">nuts</span></code>.</p></li>
 <li><p><strong>normalize_y</strong> (<em>bool</em><em>, </em><em>defaults to True</em>) – Zero mean unit variance normalization of the output values.</p></li>
 <li><p><strong>instance_features</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>list</em><em>[</em><em>int</em><em> | </em><em>float</em><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Features (list of int or floats) of the instances (str). The features are incorporated into the X data,

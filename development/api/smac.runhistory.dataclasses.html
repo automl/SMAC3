@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1150,7 +1145,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.dataclasses.InstanceSeedBudgetKey.get_instance_seed_key">
 <span class="sig-name descname"><span class="pre">get_instance_seed_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/dataclasses.html#InstanceSeedBudgetKey.get_instance_seed_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.dataclasses.InstanceSeedBudgetKey.get_instance_seed_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the instance-seed key. Basically, the budget is simply removed.</p>
+<dd><p>Returns the instance-seed key. The budget is omitted.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#smac.runhistory.dataclasses.InstanceSeedKey" title="smac.runhistory.dataclasses.InstanceSeedKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">InstanceSeedKey</span></code></a></p>
@@ -1210,7 +1205,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.dataclasses.TrialInfo.get_instance_seed_budget_key">
 <span class="sig-name descname"><span class="pre">get_instance_seed_budget_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/dataclasses.html#TrialInfo.get_instance_seed_budget_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.dataclasses.TrialInfo.get_instance_seed_budget_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get instance-seed-budget key.</p>
+<dd><p>Instantiates and returns an InstanceSeedBudgetKey object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#smac.runhistory.dataclasses.InstanceSeedBudgetKey" title="smac.runhistory.dataclasses.InstanceSeedBudgetKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">InstanceSeedBudgetKey</span></code></a></p>
@@ -1221,7 +1216,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.dataclasses.TrialInfo.get_instance_seed_key">
 <span class="sig-name descname"><span class="pre">get_instance_seed_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/dataclasses.html#TrialInfo.get_instance_seed_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.dataclasses.TrialInfo.get_instance_seed_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get instance-seed key</p>
+<dd><p>Instantiates and returns an InstanceSeedKey object</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#smac.runhistory.dataclasses.InstanceSeedKey" title="smac.runhistory.dataclasses.InstanceSeedKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">InstanceSeedKey</span></code></a></p>

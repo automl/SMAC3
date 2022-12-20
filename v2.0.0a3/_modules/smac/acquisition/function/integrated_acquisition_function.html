@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1007,7 +1002,7 @@
 
 
 <div class="viewcode-block" id="IntegratedAcquisitionFunction"><a class="viewcode-back" href="../../../../api/smac.acquisition.function.integrated_acquisition_function.html#smac.acquisition.function.IntegratedAcquisitionFunction">[docs]</a><span class="k">class</span> <span class="nc">IntegratedAcquisitionFunction</span><span class="p">(</span><span class="n">AbstractAcquisitionFunction</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Marginalizes over model hyperparameters to compute the integrated acquisition function.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute the integrated acquisition function by marginalizing over model hyperparameters </span>
 
 <span class="sd">    See &quot;Practical Bayesian Optimization of Machine Learning Algorithms&quot; by Jasper Snoek et al.</span>
 <span class="sd">    (https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf)</span>
@@ -1016,7 +1011,17 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    acquisition_function : AbstractAcquisitionFunction</span>
-<span class="sd">        The acquisition function, which should be integrated.</span>
+<span class="sd">        Acquisition function to be integrated.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _acquisition_function : AbstractAcquisitionFunction</span>
+<span class="sd">        Acquisition function to be integrated.</span>
+<span class="sd">    _functions: list[AbstractAcquisitionFunction]</span>
+<span class="sd">        Holds n (n = number of models) copies of the acquisition function.</span>
+<span class="sd">    _eta : float</span>
+<span class="sd">        Current incumbent function value.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -1037,7 +1042,7 @@
         <span class="k">return</span> <span class="n">meta</span>
 
     <span class="k">def</span> <span class="nf">_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Updates the acquisition functions values.</span>
+        <span class="sd">&quot;&quot;&quot;Update the acquisition functions values.</span>
 
 <span class="sd">        This method will be called if the model is updated. For example, entropy search uses it to update its</span>
 <span class="sd">        approximation of P(x=x_min) and EI uses it to update the current fmin.</span>
@@ -1049,6 +1054,11 @@
 <span class="sd">        ----------</span>
 <span class="sd">        kwargs : Any</span>
 <span class="sd">            Keyword arguments for the model.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the number of models is zero.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
         <span class="n">models</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AbstractModel</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1065,7 +1075,24 @@
             <span class="n">func</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">submodel</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Computess the EI value and its derivatives.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Compute integrated acquisition values</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : np.ndarray [N, D]</span>
+<span class="sd">            The input points where the acquisition function should be evaluated. The dimensionality of X is (N, D),</span>
+<span class="sd">            with N as the number of points to evaluate at and D is the number of dimensions of one X.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray [N,1]</span>
+<span class="sd">            Acquisition function values wrt X.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If `update` has not been called first (`_functions` not up to date).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_functions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Need to call `update` first!&quot;</span><span class="p">)</span>
 

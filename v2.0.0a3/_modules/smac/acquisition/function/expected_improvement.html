@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1005,7 +1000,7 @@
 
 
 <div class="viewcode-block" id="EI"><a class="viewcode-back" href="../../../../api/smac.acquisition.function.expected_improvement.html#smac.acquisition.function.EI">[docs]</a><span class="k">class</span> <span class="nc">EI</span><span class="p">(</span><span class="n">AbstractAcquisitionFunction</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Computes the expected improvement for a given x.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Expected Improvement (with or without function values in log space) acquisition function</span>
 
 <span class="sd">    :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]`,</span>
 <span class="sd">    with :math:`f(X^+)` as the best location.</span>
@@ -1017,6 +1012,16 @@
 <span class="sd">        acquisition function.</span>
 <span class="sd">    log : bool, defaults to False</span>
 <span class="sd">        Whether the function values are in log-space.</span>
+
+<span class="sd">    </span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _xi : float</span>
+<span class="sd">        Exploration-exloitation trade-off parameter.</span>
+<span class="sd">    _log: bool</span>
+<span class="sd">        Function values in log-space or not.</span>
+<span class="sd">    _eta : float</span>
+<span class="sd">        Current incumbent function value (best value observed so far).</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1048,6 +1053,15 @@
         <span class="k">return</span> <span class="n">meta</span>
 
     <span class="k">def</span> <span class="nf">_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Update acsquisition function attributes</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        eta : float</span>
+<span class="sd">            Function value of current incumbent.</span>
+<span class="sd">        xi : float, optional</span>
+<span class="sd">            Exploration-exploitation trade-off parameter</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="s2">&quot;eta&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_eta</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;eta&quot;</span><span class="p">]</span>
 
@@ -1055,12 +1069,37 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_xi</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;xi&quot;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Computess the EI value and its derivatives.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Compute EI acquisition value</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : np.ndarray [N, D]</span>
+<span class="sd">            The input points where the acquisition function should be evaluated. The dimensionality of X is (N, D),</span>
+<span class="sd">            with N as the number of points to evaluate at and D is the number of dimensions of one X.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray [N,1]</span>
+<span class="sd">            Acquisition function values wrt X.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If `update` has not been called before (current incumbent value `eta` unspecified).</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If EI is &lt; 0 for at least one sample (normal function value space).</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If EI is &lt; 0 for at least one sample (log function value space).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eta</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No `eta` specified. Call `update` to inform the acqusition function.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;No current best specified. Call update(&quot;</span>
+                <span class="s2">&quot;eta=&lt;int&gt;) to inform the acquisition function &quot;</span>
+                <span class="s2">&quot;about the current best value.&quot;</span>
+            <span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -1126,7 +1165,7 @@
 
 
 <div class="viewcode-block" id="EIPS"><a class="viewcode-back" href="../../../../api/smac.acquisition.function.expected_improvement.html#smac.acquisition.function.EIPS">[docs]</a><span class="k">class</span> <span class="nc">EIPS</span><span class="p">(</span><span class="n">EI</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Computess for a given x the expected improvement as acquisition value.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Expected Improvement per Second acquisition function</span>
 
 <span class="sd">    :math:`EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}`,</span>
 <span class="sd">    with :math:`f(X^+)` as the best location and :math:`r(x)` as runtime.</span>
@@ -1145,16 +1184,39 @@
         <span class="k">return</span> <span class="s2">&quot;Expected Improvement per Second&quot;</span>
 
     <span class="k">def</span> <span class="nf">_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Computess the EIPS value.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Compute EI per second acquisition value</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : np.ndarray [N, D]</span>
+<span class="sd">            The input points where the acquisition function should be evaluated. The dimensionality of X is (N, D),</span>
+<span class="sd">            with N as the number of points to evaluate at and D is the number of dimensions of one X.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray [N,1]</span>
+<span class="sd">            Acquisition function values wrt X.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the mean has the wrong shape, should have shape (-1, 2).</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the variance has the wrong shape, should have shape (-1, 2).</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If `update` has not been called before (current incumbent value `eta` unspecified).</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If EIPS is &lt; 0 for at least one sample.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
 
         <span class="n">m</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">predict_marginalized</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;m has wrong shape: </span><span class="si">%s</span><span class="s2"> != (-1, 2)&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;m has wrong shape: </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> != (-1, 2)&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;v has wrong shape: </span><span class="si">%s</span><span class="s2"> != (-1, 2)&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;v has wrong shape: </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> != (-1, 2)&quot;</span><span class="p">)</span>
 
         <span class="n">m_cost</span> <span class="o">=</span> <span class="n">m</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="n">v_cost</span> <span class="o">=</span> <span class="n">v</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>

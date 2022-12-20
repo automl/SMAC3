@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1003,7 +998,7 @@
 
 <div class="viewcode-block" id="RunHistoryLogEncoder"><a class="viewcode-back" href="../../../../api/smac.runhistory.encoder.log_encoder.html#smac.runhistory.encoder.RunHistoryLogEncoder">[docs]</a><span class="k">class</span> <span class="nc">RunHistoryLogEncoder</span><span class="p">(</span><span class="n">RunHistoryEncoder</span><span class="p">):</span>
 <div class="viewcode-block" id="RunHistoryLogEncoder.transform_response_values"><a class="viewcode-back" href="../../../../api/smac.runhistory.encoder.log_encoder.html#smac.runhistory.encoder.RunHistoryLogEncoder.transform_response_values">[docs]</a>    <span class="k">def</span> <span class="nf">transform_response_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Transforms the response values by using a log.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Transforms the response values by using log.&quot;&quot;&quot;</span>
         <span class="c1"># ensure that minimal value is larger than 0</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">values</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>

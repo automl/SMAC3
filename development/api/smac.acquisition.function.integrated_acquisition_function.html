@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1006,6 +1001,33 @@
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction._acquisition_function">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         IntegratedAcquisitionFunction._acquisition_function
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction._functions">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         IntegratedAcquisitionFunction._functions
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction._eta">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         IntegratedAcquisitionFunction._eta
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction.meta">
        <code class="docutils literal notranslate">
         <span class="pre">
@@ -1055,7 +1077,7 @@
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction" title="smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IntegratedAcquisitionFunction</span></code></a>(...)</p></td>
-<td><p>Marginalizes over model hyperparameters to compute the integrated acquisition function.</p></td>
+<td><p>Compute the integrated acquisition function by marginalizing over model hyperparameters</p></td>
 </tr>
 </tbody>
 </table>
@@ -1066,15 +1088,48 @@
 <dt class="sig sig-object py" id="smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.function.integrated_acquisition_function.</span></span><span class="sig-name descname"><span class="pre">IntegratedAcquisitionFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/function/integrated_acquisition_function.html#IntegratedAcquisitionFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.function.abstract_acquisition_function.html#smac.acquisition.function.abstract_acquisition_function.AbstractAcquisitionFunction" title="smac.acquisition.function.abstract_acquisition_function.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a></p>
-<p>Marginalizes over model hyperparameters to compute the integrated acquisition function.</p>
+<p>Compute the integrated acquisition function by marginalizing over model hyperparameters</p>
 <p>See “Practical Bayesian Optimization of Machine Learning Algorithms” by Jasper Snoek et al.
 (<a class="reference external" href="https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf">https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf</a>)
 for further details.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.function.html#smac.acquisition.function.AbstractAcquisitionFunction" title="smac.acquisition.function.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – The acquisition function, which should be integrated.</p>
+<dd class="field-odd"><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.function.html#smac.acquisition.function.AbstractAcquisitionFunction" title="smac.acquisition.function.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – Acquisition function to be integrated.</p>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction._acquisition_function">
+<span class="sig-name descname"><span class="pre">_acquisition_function</span></span><a class="headerlink" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction._acquisition_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Acquisition function to be integrated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.function.html#smac.acquisition.function.AbstractAcquisitionFunction" title="smac.acquisition.function.AbstractAcquisitionFunction">AbstractAcquisitionFunction</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction._functions">
+<span class="sig-name descname"><span class="pre">_functions</span></span><a class="headerlink" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction._functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Holds n (n = number of models) copies of the acquisition function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="smac.acquisition.function.html#smac.acquisition.function.AbstractAcquisitionFunction" title="smac.acquisition.function.AbstractAcquisitionFunction">AbstractAcquisitionFunction</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction._eta">
+<span class="sig-name descname"><span class="pre">_eta</span></span><a class="headerlink" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction._eta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Current incumbent function value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction.meta">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction.meta" title="Permalink to this definition">¶</a></dt>

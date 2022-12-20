@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -997,15 +992,6 @@
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#smac.utils.logging.format_array">
-     <code class="docutils literal notranslate">
-      <span class="pre">
-       format_array()
-      </span>
-     </code>
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#smac.utils.logging.get_logger">
      <code class="docutils literal notranslate">
       <span class="pre">
@@ -1052,13 +1038,10 @@
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h2>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.utils.logging.format_array" title="smac.utils.logging.format_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_array</span></code></a>(inputs[, format_vals])</p></td>
-<td><p>Transform a numpy array to a list of format so that it can be printed by logger.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.utils.logging.get_logger" title="smac.utils.logging.get_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_logger</span></code></a>(logger_name)</p></td>
+<td><p>Get the logger by name.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#smac.utils.logging.get_logger" title="smac.utils.logging.get_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_logger</span></code></a>(logger_name)</p></td>
-<td><p>Get the logger by name</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.utils.logging.setup_logging" title="smac.utils.logging.setup_logging"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_logging</span></code></a>([level])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#smac.utils.logging.setup_logging" title="smac.utils.logging.setup_logging"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_logging</span></code></a>([level])</p></td>
 <td><p>Sets up the logging configuration for all modules.</p></td>
 </tr>
 </tbody>
@@ -1067,30 +1050,9 @@
 <section id="interfaces">
 <h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="smac.utils.logging.format_array">
-<span class="sig-prename descclassname"><span class="pre">smac.utils.logging.</span></span><span class="sig-name descname"><span class="pre">format_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_vals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/logging.html#format_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.logging.format_array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transform a numpy array to a list of format so that it can be printed by logger. If the list
-holds one element only, then a formatted string is returned.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>inputs</strong> (<em>np.ndarray</em><em> or </em><em>list.</em>) – inputs value, could be anything serializable or a np array</p></li>
-<li><p><strong>format_vals</strong> (<em>bool.</em>) – if the items in list are formatted values</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>result</strong></p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float or list of floats.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="smac.utils.logging.get_logger">
 <span class="sig-prename descclassname"><span class="pre">smac.utils.logging.</span></span><span class="sig-name descname"><span class="pre">get_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/logging.html#get_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.logging.get_logger" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the logger by name</p>
+<dd><p>Get the logger by name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Logger</span></code></p>
@@ -1104,7 +1066,7 @@ holds one element only, then a formatted string is returned.</p>
 <dd><p>Sets up the logging configuration for all modules.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>level</strong> (<em>int</em><em> | </em><em>Path</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – An integer representing the logging level. An own logging configuration can be used when passing a path.</p>
+<dd class="field-odd"><p><strong>level</strong> (<em>int</em><em> | </em><em>Path</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – An integer representing the logging level. An custom logging configuration can be used when passing a path.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>

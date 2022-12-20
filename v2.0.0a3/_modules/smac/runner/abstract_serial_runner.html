@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -996,10 +991,11 @@
 
 <div class="viewcode-block" id="AbstractSerialRunner"><a class="viewcode-back" href="../../../api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner">[docs]</a><span class="k">class</span> <span class="nc">AbstractSerialRunner</span><span class="p">(</span><span class="n">AbstractRunner</span><span class="p">):</span>
 <div class="viewcode-block" id="AbstractSerialRunner.submit_trial"><a class="viewcode-back" href="../../../api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner.submit_trial">[docs]</a>    <span class="k">def</span> <span class="nf">submit_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial_info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;This function submits a trial_info object in a serial fashion. As there is a single worker for this task,</span>
-<span class="sd">        this interface can be considered a wrapper over the `run` method.</span>
+        <span class="sd">&quot;&quot;&quot;This function submits a trial_info object in a serial fashion. As there is a single</span>
+<span class="sd">         worker for this task, this interface can be considered a wrapper over the `run` method.</span>
 
-<span class="sd">        Both result/exceptions can be completely determined in this step so both lists are properly filled.</span>
+<span class="sd">        Both result/exceptions can be completely determined in this step so both lists</span>
+<span class="sd">        are properly filled.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>

@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1255,7 +1250,7 @@ for the exact behaviour (overwrite completely, save old run, or use old results)
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.main.smbo.SMBO.budget_exhausted">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">budget_exhausted</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#smac.main.smbo.SMBO.budget_exhausted" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check whether the the remaining walltime, cputime or trials was exceeded.</p>
+<dd><p>Checks whether the the remaining walltime, cputime or trials was exceeded.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
@@ -1266,7 +1261,8 @@ for the exact behaviour (overwrite completely, save old run, or use old results)
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.main.smbo.SMBO.exists">
 <span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/smbo.html#SMBO.exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.smbo.SMBO.exists" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if the run already exists. Checks all files that are created by the optimizer.</p>
+<dd><p>Checks if the files associated with the run already exist.
+Checks all files that are created by the optimizer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> | </em><em>Path</em>) – The name of the folder of the SMAC run.</p>
@@ -1393,7 +1389,7 @@ for the exact behaviour (overwrite completely, save old run, or use old results)
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.main.smbo.SMBO.tell">
 <span class="sig-name descname"><span class="pre">tell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/smbo.html#SMBO.tell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.smbo.SMBO.tell" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the result of a trial to the runhistory. Also, the stats object is updated.</p>
+<dd><p>Adds the result of a trial to the runhistory and updates the stats object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1411,8 +1407,8 @@ for the exact behaviour (overwrite completely, save old run, or use old results)
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.main.smbo.SMBO.update_acquisition_function">
 <span class="sig-name descname"><span class="pre">update_acquisition_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/smbo.html#SMBO.update_acquisition_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.smbo.SMBO.update_acquisition_function" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates acquisition function and assosiates the current model. Also, the acquisition
-optimizer is updated.</p>
+<dd><p>Updates the acquisition function including the associated model and the acquisition
+optimizer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
@@ -1456,7 +1452,7 @@ optimizer is updated.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.main.smbo.SMBO.validate">
 <span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/smbo.html#SMBO.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.smbo.SMBO.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates a configuration with different seeds than in the optimization process and on the highest
+<dd><p>Validates a configuration on other seeds than the ones used in the optimization process and on the highest
 budget (if budget type is real-valued).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

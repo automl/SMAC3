@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1029,7 +1024,7 @@
 <span class="sd">        How often to retry receiving a new configuration before giving up.</span>
 <span class="sd">    min_trials: int, defaults to 1</span>
 <span class="sd">        How many samples are required to train the surrogate model. If budgets are involved,</span>
-<span class="sd">        the highest budgets are checked first. For example, if min_trials is three but we find only</span>
+<span class="sd">        the highest budgets are checked first. For example, if min_trials is three, but we find only</span>
 <span class="sd">        two trials in the runhistory for the highest budget, we will use trials of a lower budget</span>
 <span class="sd">        instead.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1104,12 +1099,12 @@
         <span class="p">}</span>
 
 <div class="viewcode-block" id="ConfigSelector.__iter__"><a class="viewcode-back" href="../../../api/smac.main.config_selector.html#smac.main.config_selector.ConfigSelector.__iter__">[docs]</a>    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;This method returns the next configuration to evaluate. It ignores already processed configs, i.e.,</span>
-<span class="sd">        the configs from the runhistory if the runhistory is not empty.</span>
+        <span class="sd">&quot;&quot;&quot;This method returns the next configuration to evaluate. It ignores already processed configurations, i.e.,</span>
+<span class="sd">        the configurations from the runhistory, if the runhistory is not empty.</span>
 <span class="sd">        The method (after yielding the initial design configurations) trains the surrogate model, maximizes the</span>
 <span class="sd">        acquisition function and yields ``n`` configurations. After the ``n`` configurations, the surrogate model is</span>
 <span class="sd">        trained again, etc. The program stops if ``retries`` was reached within each iteration. A configuration</span>
-<span class="sd">        is ignored if it was used already before.</span>
+<span class="sd">        is ignored, if it was used already before.</span>
 
 <span class="sd">        Note</span>
 <span class="sd">        ----</span>
@@ -1244,8 +1239,8 @@
             <span class="n">callback</span><span class="o">.</span><span class="n">on_next_configurations_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_collect_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Collects the data from the runhistory to train the surrogate model. The data collection strategy if budgets</span>
-<span class="sd">        are used is as follows: Looking from highest to lowest budget, return those observations</span>
+        <span class="sd">&quot;&quot;&quot;Collects the data from the runhistory to train the surrogate model. In the case of budgets, the data</span>
+<span class="sd">        collection strategy is as follows: Looking from highest to lowest budget, return those observations</span>
 <span class="sd">        that support at least ``self._min_trials`` points.</span>
 
 <span class="sd">        If no budgets are used, this is equivalent to returning all observations.</span>

@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1050,12 +1045,11 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – List of costs to be normalized.</p></li>
-<li><p><strong>bounds</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – List of tuple of bounds. By default None. If no bounds are passed, the values are returned
-unnormalized.</p></li>
+<li><p><strong>bounds</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em><em>, </em><em>defaults to None</em>) – List of tuple of bounds. If no bounds are passed, the input is returned.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>normalized_costs</strong> – Normalized costs based on the bounds. If no bounds are given, the values are returned unnormalized.
+<dd class="field-even"><p><strong>normalized_costs</strong> – Normalized costs based on the bounds. If no bounds are given, the original values are returned.
 Also, if min and max bounds are the same, the value of the corresponding objective is set to 1.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>

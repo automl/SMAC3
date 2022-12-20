@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1469,7 +1464,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.InstanceSeedBudgetKey.get_instance_seed_key">
 <span class="sig-name descname"><span class="pre">get_instance_seed_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/dataclasses.html#InstanceSeedBudgetKey.get_instance_seed_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.InstanceSeedBudgetKey.get_instance_seed_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the instance-seed key. Basically, the budget is simply removed.</p>
+<dd><p>Returns the instance-seed key. The budget is omitted.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.InstanceSeedKey" title="smac.runhistory.dataclasses.InstanceSeedKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">InstanceSeedKey</span></code></a></p>
@@ -2100,7 +2095,7 @@ and <cite>self._num_trials_per_config</cite> accordingly.</p>
 <dt class="sig sig-object py" id="smac.runhistory.StatusType">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.</span></span><span class="sig-name descname"><span class="pre">StatusType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/enumerations.html#StatusType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.StatusType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
-<p>Class to define numbers for status types.</p>
+<p>Class to define status types of configs.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -2121,7 +2116,7 @@ and <cite>self._num_trials_per_config</cite> accordingly.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.TrialInfo.get_instance_seed_budget_key">
 <span class="sig-name descname"><span class="pre">get_instance_seed_budget_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/dataclasses.html#TrialInfo.get_instance_seed_budget_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.TrialInfo.get_instance_seed_budget_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get instance-seed-budget key.</p>
+<dd><p>Instantiates and returns an InstanceSeedBudgetKey object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.InstanceSeedBudgetKey" title="smac.runhistory.dataclasses.InstanceSeedBudgetKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">InstanceSeedBudgetKey</span></code></a></p>
@@ -2132,7 +2127,7 @@ and <cite>self._num_trials_per_config</cite> accordingly.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.TrialInfo.get_instance_seed_key">
 <span class="sig-name descname"><span class="pre">get_instance_seed_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/dataclasses.html#TrialInfo.get_instance_seed_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.TrialInfo.get_instance_seed_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get instance-seed key</p>
+<dd><p>Instantiates and returns an InstanceSeedKey object</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.InstanceSeedKey" title="smac.runhistory.dataclasses.InstanceSeedKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">InstanceSeedKey</span></code></a></p>

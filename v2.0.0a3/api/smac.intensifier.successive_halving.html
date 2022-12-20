@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1177,7 +1172,7 @@ only one bracket is used.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.intensifier.successive_halving.SuccessiveHalving.__post_init__">
 <span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/successive_halving.html#SuccessiveHalving.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.successive_halving.SuccessiveHalving.__post_init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Post initilization steps after the runhistory has been set.</p>
+<dd><p>Post initialization steps after the runhistory has been set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
@@ -1193,8 +1188,11 @@ which only returns the instance-seed-budget keys for the highest budget (if spec
 incumbents in <code class="docutils literal notranslate"><span class="pre">update_incumbents</span></code> are only changed if the costs on the highest budget are lower.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>compare</strong> (<em>bool</em><em>, </em><em>defaults to False</em>) – Get rid of the budget information for comparing if the configuration was evaluated on the same
-instance-seed keys.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>Configuration</em>) – The Configuration to be queried</p></li>
+<li><p><strong>compare</strong> (<em>bool</em><em>, </em><em>defaults to False</em>) – Get rid of the budget information for comparing if the configuration was evaluated on the same
+instance-seed keys.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.InstanceSeedBudgetKey" title="smac.runhistory.dataclasses.InstanceSeedBudgetKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">InstanceSeedBudgetKey</span></code></a>]</p>

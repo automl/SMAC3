@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1133,11 +1128,11 @@ than the incumbents. If not, they are removed from the queue and rejected foreve
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>max_config_calls</strong> (<em>int</em><em>, </em><em>defaults to 3</em>) – Maximum number of configuration evaluations. Basically, how many instance-seed keys should be max evaluated
+<li><p><strong>max_config_calls</strong> (<em>int</em><em>, </em><em>defaults to 3</em>) – Maximum number of configuration evaluations. Basically, how many instance-seed keys should be maxed evaluated
 for a configuration.</p></li>
 <li><p><strong>max_incumbents</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – How many incumbents to keep track of in the case of multi-objective.</p></li>
-<li><p><strong>retries</strong> (<em>int</em><em>, </em><em>defaults to 16</em>) – How many more iterations should be done in case of no new trial is found.</p></li>
-<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – Internal seed used for random events like shuffle seeds.</p></li>
+<li><p><strong>retries</strong> (<em>int</em><em>, </em><em>defaults to 16</em>) – How many more iterations should be done in case no new trial is found.</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – Internal seed used for random events, like shuffle seeds.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1175,7 +1170,7 @@ queue.
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.intensifier.intensifier.Intensifier.reset">
 <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/intensifier.html#Intensifier.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.intensifier.Intensifier.reset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reset the internal variables of the intensifier including the queue.</p>
+<dd><p>Resets the internal variables of the intensifier including the queue.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>

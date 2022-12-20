@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1074,7 +1069,7 @@ configuration is selected.</p>
 <li><p><strong>retrain_after</strong> (<em>int</em><em>, </em><em>defaults to 8</em>) – How many configurations should be returned before the surrogate model is retrained.</p></li>
 <li><p><strong>retries</strong> (<em>int</em><em>, </em><em>defaults to 8</em>) – How often to retry receiving a new configuration before giving up.</p></li>
 <li><p><strong>min_trials</strong> (<em>int</em><em>, </em><em>defaults to 1</em>) – How many samples are required to train the surrogate model. If budgets are involved,
-the highest budgets are checked first. For example, if min_trials is three but we find only
+the highest budgets are checked first. For example, if min_trials is three, but we find only
 two trials in the runhistory for the highest budget, we will use trials of a lower budget
 instead.</p></li>
 </ul>
@@ -1083,12 +1078,12 @@ instead.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.main.config_selector.ConfigSelector.__iter__">
 <span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/config_selector.html#ConfigSelector.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.config_selector.ConfigSelector.__iter__" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method returns the next configuration to evaluate. It ignores already processed configs, i.e.,
-the configs from the runhistory if the runhistory is not empty.
+<dd><p>This method returns the next configuration to evaluate. It ignores already processed configurations, i.e.,
+the configurations from the runhistory, if the runhistory is not empty.
 The method (after yielding the initial design configurations) trains the surrogate model, maximizes the
 acquisition function and yields <code class="docutils literal notranslate"><span class="pre">n</span></code> configurations. After the <code class="docutils literal notranslate"><span class="pre">n</span></code> configurations, the surrogate model is
 trained again, etc. The program stops if <code class="docutils literal notranslate"><span class="pre">retries</span></code> was reached within each iteration. A configuration
-is ignored if it was used already before.</p>
+is ignored, if it was used already before.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>When SMAC continues a run, processed configurations from the runhistory are ignored. For example, if the

@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1216,7 +1211,7 @@ pipelines.</p>
 <p>With the exception to scenario and <code class="docutils literal notranslate"><span class="pre">target_function</span></code>, which are expected of the user, the parameters <code class="docutils literal notranslate"><span class="pre">model</span></code>,
 <code class="docutils literal notranslate"><span class="pre">acquisition_function</span></code>, <code class="docutils literal notranslate"><span class="pre">acquisition_maximizer</span></code>, <code class="docutils literal notranslate"><span class="pre">initial_design</span></code>, <code class="docutils literal notranslate"><span class="pre">random_design</span></code>, <code class="docutils literal notranslate"><span class="pre">intensifier</span></code>,
 <code class="docutils literal notranslate"><span class="pre">multi_objective_algorithm</span></code>, <code class="docutils literal notranslate"><span class="pre">runhistory_encoder</span></code> can either be explicitly specified in the subclasses’
-<code class="docutils literal notranslate"><span class="pre">get_*</span></code> methods (defining a specific BO pipeline) or be instantiated by the user to overwrite a pipelines
+<code class="docutils literal notranslate"><span class="pre">get_*</span></code> methods (defining a specific BO pipeline) or be instantiated by the user to overwrite a pipeline
 components explicitly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1229,12 +1224,12 @@ it is assumed to be a script. In this case, <code class="docutils literal notran
 <li><p><strong>acquisition_maximizer</strong> (<a class="reference internal" href="smac.acquisition.maximizer.html#smac.acquisition.maximizer.AbstractAcquisitionMaximizer" title="smac.acquisition.maximizer.AbstractAcquisitionMaximizer"><em>AbstractAcquisitionMaximizer</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The acquisition maximizer, deciding which configuration is most promising based on the surrogate model and
 acquisition function.</p></li>
 <li><p><strong>initial_design</strong> (<em>InitialDesign</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The sampled configurations from the initial design are evaluated before the Bayesian optimization loop starts.</p></li>
-<li><p><strong>random_design</strong> (<em>RandomDesign</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The random design is used in the acquisition maximier, deciding whether the next configuration should be drawn
+<li><p><strong>random_design</strong> (<em>RandomDesign</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The random design is used in the acquisition maximizer, deciding whether the next configuration should be drawn
 from the acquisition function or randomly.</p></li>
 <li><p><strong>intensifier</strong> (<a class="reference internal" href="smac.intensifier.html#smac.intensifier.AbstractIntensifier" title="smac.intensifier.AbstractIntensifier"><em>AbstractIntensifier</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The intensifier decides which trial (combination of configuration, seed, budget and instance) should be run
 next.</p></li>
 <li><p><strong>multi_objective_algorithm</strong> (<a class="reference internal" href="smac.multi_objective.html#smac.multi_objective.AbstractMultiObjectiveAlgorithm" title="smac.multi_objective.AbstractMultiObjectiveAlgorithm"><em>AbstractMultiObjectiveAlgorithm</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – In case of multiple objectives, the objectives need to be interpreted so that an optimization is possible.
-The multi objective algorithm takes care of that.</p></li>
+The multi-objective algorithm takes care of that.</p></li>
 <li><p><strong>runhistory_encoder</strong> (<a class="reference internal" href="smac.runhistory.encoder.html#smac.runhistory.encoder.RunHistoryEncoder" title="smac.runhistory.encoder.RunHistoryEncoder"><em>RunHistoryEncoder</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Based on the runhistory, the surrogate model is trained. However, the data first needs to be encoded, which
 is done by the runhistory encoder. For example, inactive hyperparameters need to be encoded or cost values
 can be log transformed.</p></li>
@@ -1331,7 +1326,7 @@ specifying how to challenge the incumbent configuration on other problem instanc
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.get_multi_objective_algorithm">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_multi_objective_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_multi_objective_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.get_multi_objective_algorithm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the multi-objective algorithm instance to be used in the Bayesian optimization loop,
+<dd><p>Returns the multi-objective algorithm instance to be used in the BO loop,
 specifying the scalarization strategy for multiple objectives’ costs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1355,7 +1350,7 @@ specifying how to interleave the BO iterations with randomly selected configurat
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.get_runhistory_encoder">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_runhistory_encoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_runhistory_encoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.get_runhistory_encoder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an instance of the runhistory encoder class to be used in the Bayesian optimization loop,
+<dd><p>Returns an instance of the runhistory encoder class to be used in the BO loop,
 specifying how the runhistory is to be prepared for the next surrogate model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1367,7 +1362,7 @@ specifying how the runhistory is to be prepared for the next surrogate model.</p
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.intensifier">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">intensifier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="smac.intensifier.abstract_intensifier.html#smac.intensifier.abstract_intensifier.AbstractIntensifier" title="smac.intensifier.abstract_intensifier.AbstractIntensifier"><span class="pre">AbstractIntensifier</span></a></em><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.intensifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>The optimizer which is responsible for the AutoML loop. Keeps track of useful information like status.</p>
+<dd><p>The optimizer which is responsible for the BO loop. Keeps track of useful information like status.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.intensifier.abstract_intensifier.html#smac.intensifier.abstract_intensifier.AbstractIntensifier" title="smac.intensifier.abstract_intensifier.AbstractIntensifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractIntensifier</span></code></a></p>
@@ -1390,7 +1385,7 @@ whether a run should be continued or not.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.optimize">
 <span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.optimize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optimizes the algorithm.</p>
+<dd><p>Optimizes the configuration of the algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>incumbent</strong> – Best found configuration.</p>
@@ -1404,7 +1399,7 @@ whether a run should be continued or not.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.optimizer">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">optimizer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="smac.main.smbo.html#smac.main.smbo.SMBO" title="smac.main.smbo.SMBO"><span class="pre">SMBO</span></a></em><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.optimizer" title="Permalink to this definition">¶</a></dt>
-<dd><p>The optimizer which is responsible for the AutoML loop. Keeps track of useful information like status.</p>
+<dd><p>The optimizer which is responsible for the BO loop. Keeps track of useful information like status.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.main.smbo.html#smac.main.smbo.SMBO" title="smac.main.smbo.SMBO"><code class="xref py py-class docutils literal notranslate"><span class="pre">SMBO</span></code></a></p>
@@ -1455,14 +1450,14 @@ whether a run should be continued or not.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.abstract_facade.AbstractFacade.validate">
 <span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.abstract_facade.AbstractFacade.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates a configuration with different seeds than in the optimization process and on the highest
-budget (if budget type is real-valued).</p>
+<dd><p>Validates a configuration on seeds different from the ones used in the optimization process and on the
+highest budget (if budget type is real-valued).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>Configuration</em>) – Configuration to validate</p></li>
 <li><p><strong>instances</strong> (<em>list</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Which instances to validate. If None, all instances specified in the scenario are used.
-In case that the budget type is real-valued budget, this argument is ignored.</p></li>
+In case that the budget type is real-valued, this argument is ignored.</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – If None, the seed from the scenario is used.</p></li>
 </ul>
 </dd>

@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1000,14 +995,13 @@
 <span class="sd">    ----------</span>
 <span class="sd">    values : list[float]</span>
 <span class="sd">        List of costs to be normalized.</span>
-<span class="sd">    bounds : list[tuple[float, float]] | None, optional</span>
-<span class="sd">        List of tuple of bounds. By default None. If no bounds are passed, the values are returned</span>
-<span class="sd">        unnormalized.</span>
+<span class="sd">    bounds : list[tuple[float, float]] | None, optional, defaults to None</span>
+<span class="sd">        List of tuple of bounds. If no bounds are passed, the input is returned.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    normalized_costs : list[float]</span>
-<span class="sd">        Normalized costs based on the bounds. If no bounds are given, the values are returned unnormalized.</span>
+<span class="sd">        Normalized costs based on the bounds. If no bounds are given, the original values are returned.</span>
 <span class="sd">        Also, if min and max bounds are the same, the value of the corresponding objective is set to 1.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">bounds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

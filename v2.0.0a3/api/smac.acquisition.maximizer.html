@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1141,14 +1136,17 @@
 <dt class="sig sig-object py" id="smac.acquisition.maximizer.AbstractAcquisitionMaximizer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.maximizer.</span></span><span class="sig-name descname"><span class="pre">AbstractAcquisitionMaximizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">challengers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/maximizer/abstract_acqusition_maximizer.html#AbstractAcquisitionMaximizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.maximizer.AbstractAcquisitionMaximizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Abstract class for the acquisition maximization. In order to use this class it has to be subclassed and the
+<p>Abstract class for the acquisition maximization.</p>
+<p>In order to use this class it has to be subclassed and the
 method <cite>_maximize</cite> must be implemented.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>configspace</strong> (<em>ConfigurationSpace</em>) – </p></li>
 <li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.function.html#smac.acquisition.function.AbstractAcquisitionFunction" title="smac.acquisition.function.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </p></li>
-<li><p><strong>challengers</strong> (<em>int</em><em>, </em><em>defaults to 5000</em>) – </p></li>
+<li><p><strong>challengers</strong> (<em>int</em><em>, </em><em>defaults to 5000</em>) – Number of configurations to sample from the configuration space to get
+the acquisition function value for, thus challenging the current
+incumbent and becoming a candidate for the next function evaluation.</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>) – </p></li>
 </ul>
 </dd>
@@ -1189,7 +1187,7 @@ the random design. The method <cite>random_design.next_iteration()</cite> is cal
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.acquisition.maximizer.AbstractAcquisitionMaximizer.meta">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.acquisition.maximizer.AbstractAcquisitionMaximizer.meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the meta data of the created object.</p>
+<dd><p>Return the meta data of the created object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
@@ -1239,7 +1237,7 @@ version.</p></li>
 <dt class="sig sig-object py" id="smac.acquisition.maximizer.LocalAndSortedRandomSearch">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.maximizer.</span></span><span class="sig-name descname"><span class="pre">LocalAndSortedRandomSearch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">challengers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps_plateau_walk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_search_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/maximizer/local_and_random_search.html#LocalAndSortedRandomSearch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.maximizer.LocalAndSortedRandomSearch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.maximizer.abstract_acqusition_maximizer.html#smac.acquisition.maximizer.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer" title="smac.acquisition.maximizer.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionMaximizer</span></code></a></p>
-<p>Implements SMAC’s default acquisition function optimization.</p>
+<p>Implement SMAC’s default acquisition function optimization.</p>
 <p>This optimizer performs local search from the previous best points according, to the acquisition function, uses the
 acquisition function to sort randomly sampled configurations. Random configurations are interleaved by the main SMAC
 code.</p>
@@ -1250,8 +1248,8 @@ code.</p>
 <li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.function.html#smac.acquisition.function.AbstractAcquisitionFunction" title="smac.acquisition.function.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – </p></li>
 <li><p><strong>challengers</strong> (<em>int</em><em>, </em><em>defaults to 5000</em>) – Number of challengers.</p></li>
 <li><p><strong>max_steps</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – [LocalSearch] Maximum number of steps that the local search will perform.</p></li>
-<li><p><strong>n_steps_plateau_walk</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – [LocalSearch] number of steps during a plateau walk before local search terminates</p></li>
-<li><p><strong>local_search_iterations</strong> (<em>int</em><em>, </em><em>defauts to 10</em>) – [Local Search] number of local search iterations</p></li>
+<li><p><strong>n_steps_plateau_walk</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – [LocalSearch] number of steps during a plateau walk before local search terminates.</p></li>
+<li><p><strong>local_search_iterations</strong> (<em>int</em><em>, </em><em>defauts to 10</em>) – [Local Search] number of local search iterations.</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>) – </p></li>
 </ul>
 </dd>
@@ -1270,7 +1268,7 @@ code.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.acquisition.maximizer.LocalAndSortedRandomSearch.meta">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.acquisition.maximizer.LocalAndSortedRandomSearch.meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the meta data of the created object.</p>
+<dd><p>Return the meta data of the created object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
@@ -1304,7 +1302,7 @@ reduce the overhead of SMAC.</p></li>
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.acquisition.maximizer.LocalSearch.meta">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.acquisition.maximizer.LocalSearch.meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the meta data of the created object.</p>
+<dd><p>Return the meta data of the created object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>

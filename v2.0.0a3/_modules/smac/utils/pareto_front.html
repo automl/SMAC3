@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1002,9 +997,19 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Returns the costs of the passed configurations.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    runhistory : RunHistory</span>
+<span class="sd">        The runhistory containing the passed configs.</span>
+<span class="sd">    configs : list[Configuration]</span>
+<span class="sd">        The configs for which the costs should be returned.</span>
+<span class="sd">    config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]]</span>
+<span class="sd">        The instance-seed budget keys for the configs for which the costs should be returned.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    costs : np.ndarray[n_points, n_objectives]</span>
+<span class="sd">        Costs of the given configs.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">configs</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">config_instance_seed_budget_keys</span><span class="p">)</span>
 
@@ -1028,7 +1033,22 @@
     <span class="n">configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
     <span class="n">config_instance_seed_budget_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Compares the passed configurations and returns only the ones one the pareto front.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Compares the passed configurations and returns only the ones on the pareto front.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    runhistory : RunHistory</span>
+<span class="sd">        The runhistory containing the given configurations.</span>
+<span class="sd">    configs : list[Configuration]</span>
+<span class="sd">        The configurations from which the Pareto front should be computed.</span>
+<span class="sd">    config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]]</span>
+<span class="sd">        The instance-seed budget keys for the configurations on the basis of which the Pareto front should be computed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pareto_front : list[Configuration]</span>
+<span class="sd">        The pareto front computed from the given configurations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">costs</span> <span class="o">=</span> <span class="n">_get_costs</span><span class="p">(</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">configs</span><span class="p">,</span> <span class="n">config_instance_seed_budget_keys</span><span class="p">)</span>
 
     <span class="c1"># The following code is an efficient pareto front implementation</span>
@@ -1052,6 +1072,21 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Sorts the passed configurations by their crowding distance. Taken from</span>
 <span class="sd">    https://github.com/anyoptimization/pymoo/blob/20abef1ade71915352217400c11ece4c2f35163e/pymoo/algorithms/nsga2.py</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    runhistory : RunHistory</span>
+<span class="sd">        The runhistory containing the given configurations.</span>
+<span class="sd">    configs : list[Configuration]</span>
+<span class="sd">        The configurations which should be sorted.</span>
+<span class="sd">    config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]]</span>
+<span class="sd">        The instance-seed budget keys for the configurations which should be sorted.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sorted_list : list[Configuration]</span>
+<span class="sd">        Configurations sorted by crowding distance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">F</span> <span class="o">=</span> <span class="n">_get_costs</span><span class="p">(</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">configs</span><span class="p">,</span> <span class="n">config_instance_seed_budget_keys</span><span class="p">)</span>
     <span class="n">infinity</span> <span class="o">=</span> <span class="mf">1e14</span>

@@ -15,7 +15,6 @@ smac.utils.logging
 
    .. autosummary::
    
-      format_array
       get_logger
       setup_logging
    

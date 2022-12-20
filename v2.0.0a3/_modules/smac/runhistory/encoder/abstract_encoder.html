@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1012,8 +1007,8 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    scenario : Scenario</span>
-<span class="sd">    considered_states : list[StatusType], defaults to [StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMORYOUT, StatusType.DONOTADVANCE]  # noqa: E501</span>
+<span class="sd">    scenario : Scenario object.</span>
+<span class="sd">    considered_states : list[StatusType], defaults to [StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMORYOUT]  # noqa: E501</span>
 <span class="sd">        Trials with the passed states are considered.</span>
 <span class="sd">    lower_budget_states : list[StatusType], defaults to []</span>
 <span class="sd">        Additionally consider all trials with these states for budget &lt; current budget.</span>
@@ -1034,7 +1029,6 @@
             <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span>
             <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">,</span>
             <span class="n">StatusType</span><span class="o">.</span><span class="n">MEMORYOUT</span><span class="p">,</span>
-            <span class="c1"># StatusType.DONOTADVANCE,</span>
         <span class="p">],</span>
         <span class="n">lower_budget_states</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StatusType</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
         <span class="n">scale_percentage</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
@@ -1077,7 +1071,14 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the meta-data of the created object.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict[str, Any]: meta-data of the created object: name, considered states, lower budget </span>
+<span class="sd">        states, scale_percentage, seed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
             <span class="s2">&quot;considered_states&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_considered_states</span><span class="p">,</span>
@@ -1088,7 +1089,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistory</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The runhistory used to transform the data.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;The RunHistory used to transform the data.&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span>
 
@@ -1099,7 +1100,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">multi_objective_algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractMultiObjectiveAlgorithm</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The multi objecctive algorithm used to transform the data.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;The multi objective algorithm used to transform the data.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multi_objective_algorithm</span>
 
     <span class="nd">@multi_objective_algorithm</span><span class="o">.</span><span class="n">setter</span>
@@ -1113,7 +1114,7 @@
         <span class="n">trials</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">TrialKey</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">],</span>
         <span class="n">store_statistics</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Builds x and y matrixes from selected runs from the runhistory.</span>
+        <span class="sd">&quot;&quot;&quot;Builds x and y matrices from selected runs of the RunHistory.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1133,6 +1134,14 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">budget_subset</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">TrialKey</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns all trials that are considered for the model.</span>
+<span class="sd">        Depends on the user&#39;s considered states and lower budget states.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        budget_subset : list[int|float] | None, defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">trials</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">TrialKey</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">if</span> <span class="n">budget_subset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1166,6 +1175,9 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">budget_subset</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">TrialKey</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns all trials that did timeout.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">budget_subset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">trials</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="n">trial</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">[</span><span class="n">trial</span><span class="p">]</span>
@@ -1188,12 +1200,16 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">budget_subset</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns vector representation of the configurations. Instance features are not</span>
+        <span class="sd">&quot;&quot;&quot;Returns vector representation of the configurations. </span>
+<span class="sd">        </span>
+<span class="sd">        Warning</span>
+<span class="sd">        -------</span>
+<span class="sd">        Instance features are not</span>
 <span class="sd">        appended and cost values are not taken into account.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        budget_subset : list | None, defaults to none</span>
+<span class="sd">        budget_subset : list[int|float] | None, defaults to none</span>
 <span class="sd">            List of budgets to consider.</span>
 
 <span class="sd">        Returns</span>
@@ -1214,11 +1230,11 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">budget_subset</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns a vector representation of the runhistory.</span>
+        <span class="sd">&quot;&quot;&quot;Returns a vector representation of the RunHistory.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        budget_subset : list | None, defauls to none</span>
+<span class="sd">        budget_subset : list | None, defaults to none</span>
 <span class="sd">            List of budgets to consider.</span>
 
 <span class="sd">        Returns</span>
@@ -1228,7 +1244,7 @@
 <span class="sd">        Y : np.ndarray</span>
 <span class="sd">            Cost values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Transforming runhistory into X, y format...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Transforming RunHistory into X, y format...&quot;</span><span class="p">)</span>
 
         <span class="n">considered_trials</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_considered_trials</span><span class="p">(</span><span class="n">budget_subset</span><span class="p">)</span>
         <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_matrix</span><span class="p">(</span><span class="n">trials</span><span class="o">=</span><span class="n">considered_trials</span><span class="p">,</span> <span class="n">store_statistics</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1115,7 +1110,7 @@
 <p>Abstract implementation of the surrogate model.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The input dimensionality of Y for training and the output dimensions of all predictions depends on the concrete
+<p>The input dimensionality of Y for training and the output dimensions of all predictions depend on the concrete
 implementation of this abstract class.</p>
 </div>
 <dl class="field-list simple">
@@ -1147,7 +1142,7 @@ on which the model is trained on.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#hyperparameter + #features</em><em>]</em>) – Input data points.</p></li>
+<li><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#hyperparameters + #features</em><em>]</em>) – Input data points.</p></li>
 <li><p><strong>covariance_type</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to &quot;diagonal&quot;</em>) – Specifies what to return along with the mean. Applied only to Gaussian Processes.
 Takes four valid inputs:
 * None: Only the mean is returned.
@@ -1179,7 +1174,7 @@ Takes four valid inputs:
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#hyperparameter</em><em>]</em>) – Input data points.</p>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#hyperparameters</em><em>]</em>) – Input data points.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
@@ -1201,7 +1196,7 @@ Takes four valid inputs:
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#hyperparameter + #features</em><em>]</em>) – Input data points.</p></li>
+<li><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#hyperparameters + #features</em><em>]</em>) – Input data points.</p></li>
 <li><p><strong>Y</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#objectives</em><em>]</em>) – The corresponding target values.</p></li>
 </ul>
 </dd>
@@ -1252,7 +1247,7 @@ If it is a single model only, the model is used for all objectives.</p></li>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#hyperparameter</em><em>]</em>) – Input data points.</p>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>#samples</em><em>, </em><em>#hyperparameters</em><em>]</em>) – Input data points.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>

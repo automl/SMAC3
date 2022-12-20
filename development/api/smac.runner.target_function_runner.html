@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1075,15 +1070,17 @@
 <dt class="sig sig-object py" id="smac.runner.target_function_runner.TargetFunctionRunner">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runner.target_function_runner.</span></span><span class="sig-name descname"><span class="pre">TargetFunctionRunner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required_arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/target_function_runner.html#TargetFunctionRunner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.target_function_runner.TargetFunctionRunner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner" title="smac.runner.abstract_serial_runner.AbstractSerialRunner"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractSerialRunner</span></code></a></p>
-<p>Class to execute target functions which are python functions. Evaluates functions for given configuration and
-resource limit.</p>
-<p>The target function can either return a float (the loss), or a tuple with the first element being a float and the
-second being additional run information. In a multi-objective setting, the float value is replaced by a list of
-floats.</p>
+<p>Class to execute target functions which are python functions. Evaluates function for given
+configuration and resource limit.</p>
+<dl class="simple">
+<dt>The target function can either return a float (the loss), or a tuple with the first element</dt><dd><p>being a float and the second being additional run information. In a multi-objective
+setting, the float value is replaced by a list of floats.</p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>target_function</strong> (<em>Callable</em>) – The target function function.</p></li>
+<li><p><strong>target_function</strong> (<em>Callable</em>) – The target function.</p></li>
 <li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
 <li><p><strong>required_arguments</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – A list of required arguments, which are passed to the target function.</p></li>
 </ul>
@@ -1103,7 +1100,7 @@ floats.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.runner.target_function_runner.TargetFunctionRunner.meta">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.runner.target_function_runner.TargetFunctionRunner.meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the meta data of the created object.</p>
+<dd><p>Returns the meta-data of the created object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
@@ -1114,15 +1111,18 @@ floats.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.target_function_runner.TargetFunctionRunner.run">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/target_function_runner.html#TargetFunctionRunner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.target_function_runner.TargetFunctionRunner.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the target function with pynisher if algorithm walltime limit or memory limit is set. Otherwise
-the function is called directly.</p>
+<dd><p>Calls the target function with pynisher if algorithm wall time limit or memory limit is
+set. Otherwise, the function is called directly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>Configuration</em>) – Configuration to be passed to the target function.</p></li>
 <li><p><strong>instance</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The Problem instance.</p></li>
-<li><p><strong>budget</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – A positive, real-valued number representing an arbitrary limit to the target function handled by the
-target function internally.</p></li>
+<li><p><strong>budget</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – <dl class="simple">
+<dt>A positive, real-valued number representing an arbitrary limit to the target function</dt><dd><p>handled by the target function internally.</p>
+</dd>
+</dl>
+</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – </p></li>
 </ul>
 </dd>
@@ -1133,7 +1133,7 @@ target function internally.</p></li>
 <dd class="field-odd"><p><ul class="simple">
 <li><p><strong>status</strong> (<em>StatusType</em>) – Status of the trial.</p></li>
 <li><p><strong>cost</strong> (<em>float | list[float]</em>) – Resulting cost(s) of the trial.</p></li>
-<li><p><strong>runtime</strong> (<em>float</em>) – The time the target function function took to run.</p></li>
+<li><p><strong>runtime</strong> (<em>float</em>) – The time the target function took to run.</p></li>
 <li><p><strong>additional_info</strong> (<em>dict</em>) – All further additional trial information.</p></li>
 </ul>
 </p>

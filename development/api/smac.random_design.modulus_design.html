@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1107,8 +1102,7 @@
 <dt class="sig sig-object py" id="smac.random_design.modulus_design.DynamicModulusRandomDesign">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.random_design.modulus_design.</span></span><span class="sig-name descname"><span class="pre">DynamicModulusRandomDesign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_modulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulus_increment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_modulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/random_design/modulus_design.html#DynamicModulusRandomDesign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.random_design.modulus_design.DynamicModulusRandomDesign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.random_design.abstract_random_design.html#smac.random_design.abstract_random_design.AbstractRandomDesign" title="smac.random_design.abstract_random_design.AbstractRandomDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractRandomDesign</span></code></a></p>
-<p>Interleave a random configuration, decreasing the fraction of random configurations over
-time.</p>
+<p>Interleave a random configuration, decreasing the fraction of random configurations over time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1117,17 +1111,17 @@ time.</p>
 <li><p><strong>end_modulus</strong> (<em>float</em><em>, </em><em>defaults to np.inf</em>) – The maximum modulus ever used. If the value is reached before the optimization
 is over, it is not further increased. If it is not reached before the optimization is over,
 there will be no adjustment to make sure that the <cite>end_modulus</cite> is reached.</p></li>
-<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>) – Integer used to initialize the random state (not used)</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>) – Integer used to initialize the random state. This class does not use the seed.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.random_design.modulus_design.DynamicModulusRandomDesign.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/random_design/modulus_design.html#DynamicModulusRandomDesign.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.random_design.modulus_design.DynamicModulusRandomDesign.check" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the next configuration should be random.</p>
+<dd><p>Check, if the next configuration should be random.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>iteration</strong> (<em>int</em>) – Number of the i-th configuration evaluated in a SMBO iteration.</p>
+<dd class="field-odd"><p><strong>iteration</strong> (<em>int</em>) – Number of the i-th configuration evaluated in an SMBO iteration.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Whether the next configuration should be random.</p>
@@ -1179,10 +1173,10 @@ Bayesian optimization.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.random_design.modulus_design.ModulusRandomDesign.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/random_design/modulus_design.html#ModulusRandomDesign.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.random_design.modulus_design.ModulusRandomDesign.check" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the next configuration should be random.</p>
+<dd><p>Check, if the next configuration should be random.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>iteration</strong> (<em>int</em>) – Number of the i-th configuration evaluated in a SMBO iteration.</p>
+<dd class="field-odd"><p><strong>iteration</strong> (<em>int</em>) – Number of the i-th configuration evaluated in an SMBO iteration.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Whether the next configuration should be random.</p>

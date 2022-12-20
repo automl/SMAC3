@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1075,20 +1070,19 @@
 <dt class="sig sig-object py" id="smac.random_design.abstract_random_design.AbstractRandomDesign">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.random_design.abstract_random_design.</span></span><span class="sig-name descname"><span class="pre">AbstractRandomDesign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/random_design/abstract_random_design.html#AbstractRandomDesign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.random_design.abstract_random_design.AbstractRandomDesign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Abstract base of helper classes to configure interleaving of random configurations in a list
-of challengers.</p>
+<p>Abstract base of helper classes to configure interleaving of random configurations in a list of challengers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – </p>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – The random seed initializing this design.</p>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.random_design.abstract_random_design.AbstractRandomDesign.check">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/random_design/abstract_random_design.html#AbstractRandomDesign.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.random_design.abstract_random_design.AbstractRandomDesign.check" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the next configuration should be random.</p>
+<dd><p>Check, if the next configuration should be random.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>iteration</strong> (<em>int</em>) – Number of the i-th configuration evaluated in a SMBO iteration.</p>
+<dd class="field-odd"><p><strong>iteration</strong> (<em>int</em>) – Number of the i-th configuration evaluated in an SMBO iteration.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Whether the next configuration should be random.</p>

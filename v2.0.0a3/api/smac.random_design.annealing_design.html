@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1083,17 +1078,17 @@ according to a cosine annealing schedule.</p>
 <li><p><strong>max_probability</strong> (<em>float</em>) – Initial (maximum) probability of a random configuration.</p></li>
 <li><p><strong>min_probability</strong> (<em>float</em>) – Final (minimal) probability of a random configuration used in iteration <cite>restart_iteration</cite>.</p></li>
 <li><p><strong>restart_iteration</strong> (<em>int</em>) – Restart the annealing schedule every <cite>restart_iteration</cite> iterations.</p></li>
-<li><p><strong>seed</strong> (<em>int</em>) – </p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Integer used to initialize random state.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.random_design.annealing_design.CosineAnnealingRandomDesign.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/random_design/annealing_design.html#CosineAnnealingRandomDesign.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.random_design.annealing_design.CosineAnnealingRandomDesign.check" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the next configuration should be random.</p>
+<dd><p>Check, if the next configuration should be random.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>iteration</strong> (<em>int</em>) – Number of the i-th configuration evaluated in a SMBO iteration.</p>
+<dd class="field-odd"><p><strong>iteration</strong> (<em>int</em>) – Number of the i-th configuration evaluated in an SMBO iteration.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Whether the next configuration should be random.</p>

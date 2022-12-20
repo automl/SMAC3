@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1002,12 +997,12 @@
 
 
 <div class="viewcode-block" id="AbstractRandomDesign"><a class="viewcode-back" href="../../../api/smac.random_design.abstract_random_design.html#smac.random_design.AbstractRandomDesign">[docs]</a><span class="k">class</span> <span class="nc">AbstractRandomDesign</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Abstract base of helper classes to configure interleaving of random configurations in a list</span>
-<span class="sd">    of challengers.</span>
+    <span class="sd">&quot;&quot;&quot;Abstract base of helper classes to configure interleaving of random configurations in a list of challengers.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    seed : int</span>
+<span class="sd">        The random seed initializing this design.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
@@ -1028,12 +1023,12 @@
 
 <div class="viewcode-block" id="AbstractRandomDesign.check"><a class="viewcode-back" href="../../../api/smac.random_design.abstract_random_design.html#smac.random_design.AbstractRandomDesign.check">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Check if the next configuration should be random.</span>
+        <span class="sd">&quot;&quot;&quot;Check, if the next configuration should be random.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        iteration : int</span>
-<span class="sd">            Number of the i-th configuration evaluated in a SMBO iteration.</span>
+<span class="sd">            Number of the i-th configuration evaluated in an SMBO iteration.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>

@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1086,13 +1081,13 @@
                 
   <section id="components">
 <h1>Components<a class="headerlink" href="#components" title="Permalink to this heading">¶</a></h1>
-<p>Additionally to the basic components mentioned in <a class="reference internal" href="../3_getting_started.html#getting-started"><span class="std std-ref">Getting Started</span></a>, all other components are
-explained in the following to get a better picture of SMAC. These components are all used to guide
+<p>In addition to the basic components mentioned in <a class="reference internal" href="../3_getting_started.html#getting-started"><span class="std std-ref">Getting Started</span></a>, all other components are
+explained in the following paragraphs to give a better picture of SMAC. These components are all used to guide
 the optimization process and simple changes can influence the results drastically.</p>
 <p>Before diving into the components, we shortly want to explain the main Bayesian optimization loop in SMAC.
-The <span class="xref std std-ref">SMBO</span> receives all instantiated components from the facade and the logic happens here.
+The <a class="reference internal" href="../7_glossary.html#term-SMBO"><span class="xref std std-term">SMBO</span></a> receives all instantiated components from the facade and the logic happens here.
 In general, a while loop is used to ask for the next trial, submit it to the runner, and wait for the runner to
-finish the evaluation. Since the runner and the SMBO
+finish the evaluation. Since the runner and the <a class="reference internal" href="../api/smac.main.smbo.html#module-smac.main.smbo"><span class="std std-ref">SMBO</span></a>
 object are decoupled, the while loop continues and asks for even
 more trials (e.g., in case of multi-threading), which also can be submitted to the runner. If all workers are
 occupied, SMAC will wait until a new worker is available again. Moreover, limitations like wallclock time and remaining
@@ -1100,11 +1095,11 @@ trials are checked in every iteration.</p>
 <section id="surrogate-model">
 <h2><a class="reference internal" href="../api/smac.model.abstract_model.html#module-smac.model.abstract_model"><span class="std std-ref">Surrogate Model</span></a><a class="headerlink" href="#surrogate-model" title="Permalink to this heading">¶</a></h2>
 <p>The surrogate model is used to approximate the objective function of configurations. In previous versions, the model was
-referred to Empirical Performance Model (EPM). Mostly, Bayesian optimization is used/associated with Gaussian
+referred to as the Empirical Performance Model (EPM). Mostly, Bayesian optimization is used/associated with Gaussian
 processes. However, SMAC also incorporates random forests as surrogate models, which makes it possible to optimize for
 higher dimensional and complex spaces.</p>
 <p>The data used to train the surrogate model is collected by the runhistory encoder (receives data from the runhistory
-and transforms them). If budgets are
+and transforms it). If budgets are
 involved, the highest budget which satisfies <code class="docutils literal notranslate"><span class="pre">min_trials</span></code> (defaults to 1) in <span class="xref std std-ref">smac.main.config_selector</span> is
 used. If no budgets are used, all observations are used.</p>
 <p>If you are using instances, it is recommended to use instance features. The model is trained on each instance
@@ -1169,19 +1164,19 @@ each instance with a feature, you would end-up with the following data points:</
 </tr>
 </tbody>
 </table>
-<p>Let me explain how the data are received in detail:</p>
-<ul class="simple">
-<li><p>Intensifier requests new configurations via <code class="docutils literal notranslate"><span class="pre">next(self.config_generator)</span></code>.</p></li>
-<li><p>Config selector collects the data via the runhistory encoder which iterates over the runhistory trials.</p></li>
+<p>The steps to receiving data are as follows:</p>
+<ol class="arabic simple">
+<li><p>The intensifier requests new configurations via <code class="docutils literal notranslate"><span class="pre">next(self.config_generator)</span></code>.</p></li>
+<li><p>The config selector collects the data via the runhistory encoder which iterates over the runhistory trials.</p></li>
 <li><p>The runhistory encoder only collects trials which are in <code class="docutils literal notranslate"><span class="pre">considered_states</span></code> and timeout trials. Also, only the
 highest budget is considered if budgets are used. In this step, multi-objective values are scalarized using the
 <code class="docutils literal notranslate"><span class="pre">normalize_costs</span></code> function (uses <code class="docutils literal notranslate"><span class="pre">objective_bounds</span></code> from the runhistory) and the multi-objective algorithm.
 For example, when ParEGO is used, the scalarization would be different in each training.</p></li>
-<li><p>In the next step, the selected trial objectives are transformed (e.g., log-transformed, depending on the selected
+<li><p>The selected trial objectives are transformed (e.g., log-transformed, depending on the selected
 encoder).</p></li>
 <li><p>The hyperparameters might still have inactive values. The model takes care of that after the collected data
 are passed to the model.</p></li>
-</ul>
+</ol>
 </section>
 <section id="acquisition-function">
 <h2><a class="reference internal" href="../api/smac.acquisition.function.html#module-smac.acquisition.function"><span class="std std-ref">Acquisition Function</span></a><a class="headerlink" href="#acquisition-function" title="Permalink to this heading">¶</a></h2>
@@ -1200,7 +1195,7 @@ the next configurations.</p>
 </section>
 <section id="acquisition-maximizer">
 <h2><a class="reference internal" href="../api/smac.acquisition.maximizer.html#module-smac.acquisition.maximizer"><span class="std std-ref">Acquisition Maximizer</span></a><a class="headerlink" href="#acquisition-maximizer" title="Permalink to this heading">¶</a></h2>
-<p>The acquisition maximizer is a wrapper upon the acquisition function and returns the next configurations. SMAC
+<p>The acquisition maximizer is a wrapper for the acquisition function. It returns the next configurations. SMAC
 supports local search, (sorted) random search, local and (sorted) random search, and differential evolution.
 While local search checks neighbours of the best configurations, random search makes sure to explore the configuration
 space. When using sorted random search, random configurations are sorted by the value of the acquisition function.</p>
@@ -1209,7 +1204,7 @@ space. When using sorted random search, random configurations are sorted by the 
 <p>Pay attention to the number of challengers: If you experience RAM issues or long computational times in the
 acquisition function, you might lower the number of challengers.</p>
 </div>
-<p>The acquisition maximizer also incorporates the random design. Please see the
+<p>The acquisition maximizer also incorporates the <a class="reference internal" href="#random-design">Random Design</a>. Please see the
 <a class="reference internal" href="../api/smac.acquisition.maximizer.helpers.html#module-smac.acquisition.maximizer.helpers"><span class="std std-ref">ChallengerList</span></a> for more information.</p>
 </section>
 <section id="initial-design">
@@ -1217,14 +1212,14 @@ acquisition function, you might lower the number of challengers.</p>
 <p>The surrogate model needs data to be trained. Therefore, the initial design is used to generate the initial data points.
 We provide random, latin hypercube, sobol, factorial and default initial designs. The default initial design uses
 the default configuration from the configuration space and with the factorial initial design, we generate corner
-points of the configuration space. The sobol sequences are an example of quasi-random low-disrepancy sequences and
+points of the configuration space. The sobol sequences are an example of quasi-random low-discrepancy sequences and
 the latin hypercube design is a statistical method for generating a near-random sample of parameter values from
 a multidimensional distribution.</p>
 <p>The initial design configurations are yielded by the config selector first. Moreover, the config selector keeps
 track of which configurations already have been returned to make sure a configuration is not returned twice.</p>
 </section>
 <section id="random-design">
-<h2><a class="reference internal" href="../api/smac.random_design.html#module-smac.random_design"><span class="std std-ref">Random Design</span></a><a class="headerlink" href="#random-design" title="Permalink to this heading">¶</a></h2>
+<span id="id1"></span><h2><a class="reference internal" href="../api/smac.random_design.html#module-smac.random_design"><span class="std std-ref">Random Design</span></a><a class="headerlink" href="#random-design" title="Permalink to this heading">¶</a></h2>
 <p>The random design is used in the acquisition maximizer to tell whether the next configuration should be
 random or sampled from the acquisition function. For example, if we use a random design with a probability of
 50%, we have a 50% chance to sample a random configuration and a 50% chance to sample a configuration from the
@@ -1236,7 +1231,7 @@ are <em>guaranteed</em> to find the best configuration over time.</p>
 <section id="intensifier">
 <h2><a class="reference internal" href="../api/smac.intensifier.html#module-smac.intensifier"><span class="std std-ref">Intensifier</span></a><a class="headerlink" href="#intensifier" title="Permalink to this heading">¶</a></h2>
 <p>The intensifier compares different configurations based on evaluated <a class="reference internal" href="../7_glossary.html#term-Trial"><span class="xref std std-term">trial</span></a> so far. It decides
-which configuration should be <cite>intensified`</cite> or in other words if a configuration is worth to spend more time on (e.g.,
+which configuration should be <cite>intensified</cite> or, in other words, if a configuration is worth to spend more time on (e.g.,
 evaluate another seed pair, evaluate on another instance, or evaluate on a higher budget).</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -1248,14 +1243,14 @@ are used throughout the optimization process. You can use the methods <code clas
 <code class="docutils literal notranslate"><span class="pre">uses_instances</span></code> (directly callable via the facade) to (sanity-)check whether the intensifier uses these arguments.</p>
 <p>Another important fact is that the intensifier keeps track of the current incumbent (a.k.a. the best configuration
 found so far). In case of multi-objective, multiple incumbents could be found.</p>
-<p>All intensifiers support multi-objective, multi-fidelity, and multi-threading:
-- Multi-Objective: Keeping track of multiple incumbents at once.
-- Multi-Fidelity: Incorporating instances or budgets.
-- Multi-Threading: Intensifier are implemented as generators so that calling <code class="docutils literal notranslate"><span class="pre">next</span></code> on the intensifier can be</p>
-<blockquote>
-<div><p>repeated as often as needed. Intensifier are not required to receive results as the results are directly taken from
-the runhistory.</p>
-</div></blockquote>
+<p>All intensifiers support multi-objective, multi-fidelity, and multi-threading:</p>
+<ul class="simple">
+<li><p>Multi-Objective: Keeping track of multiple incumbents at once.</p></li>
+<li><p>Multi-Fidelity: Incorporating instances or budgets.</p></li>
+<li><p>Multi-Threading: Intensifier are implemented as generators so that calling <code class="docutils literal notranslate"><span class="pre">next</span></code> on the intensifier can be
+repeated as often as needed. Intensifier are not required to receive results as the results are directly taken from
+the runhistory.</p></li>
+</ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>All intensifiers are working on the runhistory and recognize previous logged trials (e.g., if the user already
@@ -1269,11 +1264,13 @@ queue/tracker again so that they are integrated into the intensification process
 <p>The configuration selector uses the initial design, surrogate model, acquisition maximizer/function, runhistory,
 runhistory encoder, and random design to select the next configuration. The configuration selector is directly
 used by the intensifier and is called everytime a new configuration is requested.</p>
-<p>The idea behind the configuration selector is straight forward:
-1. Yield the initial design configurations.
-2. Train the surrogate model with the data from the runhistory encoder.
-3. Get the next <code class="docutils literal notranslate"><span class="pre">retrain_after</span></code> configurations from the acquisition function/maximizer and yield them.
-4. After all <code class="docutils literal notranslate"><span class="pre">retrain_after</span></code> configurations were yield, go back to step 2.</p>
+<p>The idea behind the configuration selector is straight forward:</p>
+<ol class="arabic simple">
+<li><p>Yield the initial design configurations.</p></li>
+<li><p>Train the surrogate model with the data from the runhistory encoder.</p></li>
+<li><p>Get the next <code class="docutils literal notranslate"><span class="pre">retrain_after</span></code> configurations from the acquisition function/maximizer and yield them.</p></li>
+<li><p>After all <code class="docutils literal notranslate"><span class="pre">retrain_after</span></code> configurations were yield, go back to step 2.</p></li>
+</ol>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The configuration selector is a generator and yields configurations. Therefore, the current state of the
@@ -1305,7 +1302,7 @@ of the multi-objective algorithm.</p>
 <section id="runhistory">
 <h2><a class="reference internal" href="../api/smac.runhistory.runhistory.html#module-smac.runhistory.runhistory"><span class="std std-ref">RunHistory</span></a><a class="headerlink" href="#runhistory" title="Permalink to this heading">¶</a></h2>
 <p>The runhistory holds all (un-)evaluated trials of the optimization run. You can use the runhistory to
-get (running) configs, (running) trials, trials of a specificconfig, and more.
+get (running) configs, (running) trials, trials of a specific config, and more.
 The runhistory encoder iterates over the runhistory to receive data for the surrogate model. The following
 code shows how to iterate over the runhistory:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">smac</span> <span class="o">=</span> <span class="n">HPOFacade</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>

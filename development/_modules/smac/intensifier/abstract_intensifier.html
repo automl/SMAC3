@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1023,7 +1018,7 @@
 
 
 <div class="viewcode-block" id="AbstractIntensifier"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier">[docs]</a><span class="k">class</span> <span class="nc">AbstractIntensifier</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Abstract implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-threading.</span>
+    <span class="sd">&quot;&quot;&quot;Abstract implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-processing.</span>
 <span class="sd">    The abstract intensifier keeps track of the incumbent, which is updated everytime the runhistory changes.</span>
 
 <span class="sd">    Parameters</span>
@@ -1172,7 +1167,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">update_incumbents</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">config_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">ConfigSelector</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">config_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Based on the configuration selector, an iterator is returned that generates configurations.&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_generator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_generator</span>
@@ -1209,7 +1204,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">incumbents_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;How often the incumbents has changed.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;How often the incumbents have changed.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents_changed</span>
 
 <div class="viewcode-block" id="AbstractIntensifier.get_instance_seed_keys_of_interest"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_instance_seed_keys_of_interest">[docs]</a>    <span class="k">def</span> <span class="nf">get_instance_seed_keys_of_interest</span><span class="p">(</span>
@@ -1229,7 +1224,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        validate : bool, defaults to False</span>
-<span class="sd">            Whether to get validation trials or training trials. The only difference lays in different seeds.</span>
+<span class="sd">            Whether to get validation trials or training trials. The only difference lies in different seeds.</span>
 <span class="sd">        seed : int | None, defaults to None</span>
 <span class="sd">            The seed used for the validation trials.</span>
 
@@ -1326,8 +1321,7 @@
         <span class="n">validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the trials of interest for a given configuration.</span>
+        <span class="sd">&quot;&quot;&quot;Returns the trials of interest for a given configuration.</span>
 <span class="sd">        Expands the keys from ``get_instance_seed_keys_of_interest`` with the config.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">is_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_seed_keys_of_interest</span><span class="p">(</span><span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
@@ -1397,7 +1391,7 @@
 
 <div class="viewcode-block" id="AbstractIntensifier.get_incumbent_instance_seed_budget_key_differences"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_incumbent_instance_seed_budget_key_differences">[docs]</a>    <span class="k">def</span> <span class="nf">get_incumbent_instance_seed_budget_key_differences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compare</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;There are situations in which incumbents are evaluated on more trials than others. This method returns the</span>
-<span class="sd">        instances which are not part of the lowest intersection of instances for all incumbents.</span>
+<span class="sd">        instances that are not part of the lowest intersection of instances for all incumbents.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">incumbents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incumbents</span><span class="p">()</span>
 
@@ -1427,7 +1421,7 @@
 
 <div class="viewcode-block" id="AbstractIntensifier.get_callback"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_callback">[docs]</a>    <span class="k">def</span> <span class="nf">get_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callback</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;The intensifier makes use of a callback to efficiently update the incumbent based on the runhistory</span>
-<span class="sd">        (every time new information are available). Moreover, incorporating the callback here allows developers</span>
+<span class="sd">        (every time new information is available). Moreover, incorporating the callback here allows developers</span>
 <span class="sd">        more options in the future.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1447,8 +1441,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
 
-        <span class="c1"># What happens if a config was rejected but it appears again? Give it another try since it</span>
-        <span class="c1"># already was evaluated? Yes!</span>
+        <span class="c1"># What happens if a config was rejected, but it appears again? Give it another try even if it</span>
+        <span class="c1"># has already been evaluated? Yes!</span>
 
         <span class="c1"># Associated trials and id</span>
         <span class="n">config_isb_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_seed_budget_keys</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>

@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1008,7 +1003,7 @@
 <span class="sd">    This is a mixin for a kernel to override functions of the kernel. Because it overrides functions of the kernel,</span>
 <span class="sd">    it needs to be placed first in the inheritance hierarchy. For this reason it is not possible to subclass the</span>
 <span class="sd">    Mixin from the kernel class because this will prevent it from being instantiatable. Therefore, mypy won&#39;t know about</span>
-<span class="sd">    anything related to the superclass and some type:ignore statements has to be  added when accessing a member that is</span>
+<span class="sd">    anything related to the superclass and some type:ignore statements has to be added when accessing a member that is</span>
 <span class="sd">    declared in the superclass such as `self.has_conditions`, `self._call`, `super().get_params`, etc.</span>
 
 <span class="sd">    Parameters</span>
@@ -1280,12 +1275,12 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : array, shape (n_samples_X, n_features)</span>
-<span class="sd">            Left argument of the returned kernel k(X, Y)</span>
+<span class="sd">        X : np.ndarray, shape (n_samples_X, n_features)</span>
+<span class="sd">            Left argument of the returned kernel k(X, Y).</span>
 
-<span class="sd">        Y : array, shape (n_samples_Y, n_features), (optional, default=None)</span>
+<span class="sd">        Y : np.ndarray, shape (n_samples_Y, n_features), (optional, default=None)</span>
 <span class="sd">            Right argument of the returned kernel k(X, Y). If None, k(X, X)</span>
-<span class="sd">            if evaluated instead.</span>
+<span class="sd">            is evaluated instead.</span>
 
 <span class="sd">        eval_gradient : bool (optional, default=False)</span>
 <span class="sd">            Determines whether the gradient with respect to the kernel</span>
@@ -1296,10 +1291,10 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        K : array, shape (n_samples_X, n_samples_Y)</span>
-<span class="sd">            Kernel k(X, Y)</span>
+<span class="sd">        K : np.ndarray, shape (n_samples_X, n_samples_Y)</span>
+<span class="sd">            Kernel k(X, Y).</span>
 
-<span class="sd">        K_gradient : array (opt.), shape (n_samples_X, n_samples_X, n_dims)</span>
+<span class="sd">        K_gradient : np.ndarray (opt.), shape (n_samples_X, n_samples_X, n_dims)</span>
 <span class="sd">            The gradient of the kernel k(X, X) with respect to the</span>
 <span class="sd">            hyperparameter of the kernel. Only returned when eval_gradient</span>
 <span class="sd">            is True.</span>
@@ -1341,12 +1336,12 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : array, shape (n_samples_X, n_features)</span>
-<span class="sd">            Left argument of the returned kernel k(X, Y)</span>
+<span class="sd">        X : np.ndarray, shape (n_samples_X, n_features)</span>
+<span class="sd">            Left argument of the returned kernel k(X, Y).</span>
 
-<span class="sd">        Y : array, shape (n_samples_Y, n_features), (optional, default=None)</span>
+<span class="sd">        Y : np.ndarray, shape (n_samples_Y, n_features), (optional, default=None)</span>
 <span class="sd">            Right argument of the returned kernel k(X, Y). If None, k(X, X)</span>
-<span class="sd">            if evaluated instead.</span>
+<span class="sd">            is evaluated instead.</span>
 
 <span class="sd">        eval_gradient : bool (optional, default=False)</span>
 <span class="sd">            Determines whether the gradient with respect to the kernel</span>
@@ -1357,10 +1352,10 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        K : array, shape (n_samples_X, n_samples_Y)</span>
-<span class="sd">            Kernel k(X, Y)</span>
+<span class="sd">        K : np.ndarray, shape (n_samples_X, n_samples_Y)</span>
+<span class="sd">            Kernel k(X, Y).</span>
 
-<span class="sd">        K_gradient : array (opt.), shape (n_samples_X, n_samples_X, n_dims)</span>
+<span class="sd">        K_gradient : np.ndarray (opt.), shape (n_samples_X, n_samples_X, n_dims)</span>
 <span class="sd">            The gradient of the kernel k(X, X) with respect to the</span>
 <span class="sd">            hyperparameter of the kernel. Only returned when eval_gradient</span>
 <span class="sd">            is True.</span>
@@ -1402,12 +1397,12 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : array, shape (n_samples_X, n_features)</span>
-<span class="sd">            Left argument of the returned kernel k(X, Y)</span>
+<span class="sd">        X : np.ndarray, shape (n_samples_X, n_features)</span>
+<span class="sd">            Left argument of the returned kernel k(X, Y).</span>
 
-<span class="sd">        Y : array, shape (n_samples_Y, n_features), (optional, default=None)</span>
+<span class="sd">        Y : np.ndarray, shape (n_samples_Y, n_features), (optional, default=None)</span>
 <span class="sd">            Right argument of the returned kernel k(X, Y). If None, k(X, X)</span>
-<span class="sd">            if evaluated instead.</span>
+<span class="sd">            is evaluated instead.</span>
 
 <span class="sd">        eval_gradient : bool (optional, default=False)</span>
 <span class="sd">            Determines whether the gradient with respect to the kernel</span>
@@ -1418,10 +1413,10 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        K : array, shape (n_samples_X, n_samples_Y)</span>
-<span class="sd">            Kernel k(X, Y)</span>
+<span class="sd">        K : np.ndarray, shape (n_samples_X, n_samples_Y)</span>
+<span class="sd">            Kernel k(X, Y).</span>
 
-<span class="sd">        K_gradient : array (opt.), shape (n_samples_X, n_samples_X, n_dims)</span>
+<span class="sd">        K_gradient : np.ndarray (opt.), shape (n_samples_X, n_samples_X, n_dims)</span>
 <span class="sd">            The gradient of the kernel k(X, X) with respect to the</span>
 <span class="sd">            hyperparameter of the kernel. Only returned when eval_gradient</span>
 <span class="sd">            is True.</span>

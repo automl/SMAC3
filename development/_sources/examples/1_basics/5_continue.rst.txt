@@ -21,8 +21,8 @@
 Continue an Optimization
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-SMAC offers the possibility to continue an optimization. In this example, an optimization of a simple quadratic function
-is continued. We use a custom callback, to artificially stop the first optimization.
+SMAC can also be continued. In this example, an optimization of a simple quadratic
+function is continued. We use a custom callback, to artificially stop the first optimization.
 
 .. GENERATED FROM PYTHON SOURCE LINES 8-93
 
@@ -35,34 +35,34 @@ is continued. We use a custom callback, to artificially stop the first optimizat
 
     [INFO][abstract_initial_design.py:133] Using 10 initial design configurations and 0 additional configurations.
     [INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
-    [INFO][abstract_intensifier.py:494] Added config 3ce33d as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:566] Added config c53710 and rejected config 3ce33d as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:493] Added config 3ce33d as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:565] Added config c53710 and rejected config 3ce33d as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x: -2.331214789301157 -> 2.1608731895685196
-    [INFO][abstract_intensifier.py:566] Added config 50b580 and rejected config c53710 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:565] Added config 50b580 and rejected config c53710 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x: 2.1608731895685196 -> 0.4316552169620991
-    [INFO][abstract_intensifier.py:566] Added config d16e41 and rejected config 50b580 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:565] Added config d16e41 and rejected config 50b580 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x: 0.4316552169620991 -> -0.3100988641381264
     [INFO][smbo.py:222] A callback returned False. Abort is requested.
     [INFO][smbo.py:311] Shutting down because the stop flag was set.
     [INFO][abstract_initial_design.py:133] Using 10 initial design configurations and 0 additional configurations.
-    [INFO][smbo.py:461] Continuing from previous run.
+    [INFO][smbo.py:462] Continuing from previous run.
     [INFO][abstract_intensifier.py:288] Added existing seed 209652396 from runhistory to the intensifier.
     [INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
-    [INFO][abstract_intensifier.py:566] Added config 4dcc97 and rejected config d16e41 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:565] Added config 4dcc97 and rejected config d16e41 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x: -0.3100988641381264 -> -0.22015188896172422
-    [INFO][abstract_intensifier.py:566] Added config 4d21be and rejected config 4dcc97 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:565] Added config 4d21be and rejected config 4dcc97 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x: -0.22015188896172422 -> -0.1481212818284119
-    [INFO][abstract_intensifier.py:566] Added config 348898 and rejected config 4d21be as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:565] Added config 348898 and rejected config 4d21be as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x: -0.1481212818284119 -> -0.13225703373856135
-    [INFO][abstract_intensifier.py:566] Added config c56201 and rejected config 348898 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:565] Added config c56201 and rejected config 348898 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x: -0.13225703373856135 -> -0.008886632260822758
-    [INFO][abstract_intensifier.py:566] Added config b6eee0 and rejected config c56201 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:565] Added config b6eee0 and rejected config c56201 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x: -0.008886632260822758 -> 0.00353744136744627
-    [INFO][abstract_intensifier.py:566] Added config 06e28a and rejected config b6eee0 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:565] Added config 06e28a and rejected config b6eee0 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x: 0.00353744136744627 -> 0.0029625967410442655
-    [INFO][abstract_intensifier.py:566] Added config 4026d1 and rejected config 06e28a as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:565] Added config 4026d1 and rejected config 06e28a as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x: 0.0029625967410442655 -> 0.0009114180407276962
-    [INFO][abstract_intensifier.py:566] Added config 025ea5 and rejected config 4026d1 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:565] Added config 025ea5 and rejected config 4026d1 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x: 0.0009114180407276962 -> -0.00032238773647641494
     [INFO][smbo.py:298] Finished 50 trials.
     [INFO][smbo.py:306] Configuration budget is exhausted:
@@ -173,7 +173,7 @@ is continued. We use a custom callback, to artificially stop the first optimizat
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.121 seconds)
+   **Total running time of the script:** ( 0 minutes  0.828 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_5_continue.py:

@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1016,51 +1011,23 @@ a Pareto front. The red cross indicates the best configuration selected by SMAC.
 mean accuracy and run-time of each configuration.</p>
 <img src="../../_images/sphx_glr_2_parego_001.png" srcset="../../_images/sphx_glr_2_parego_001.png" alt="Pareto-Front" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[WARNING][target_function_runner.py:71] The argument budget is not set by SMAC: Consider removing it from the target function.
 [INFO][abstract_initial_design.py:133] Using 5 initial design configurations and 0 additional configurations.
-[INFO][abstract_intensifier.py:494] Added config 97ef22 as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:574] Config f88a6b is a new incumbent. Total number of incumbents: 2.
-[INFO][abstract_intensifier.py:574] Config 8e1252 is a new incumbent. Total number of incumbents: 3.
-[INFO][abstract_intensifier.py:566] Added config d77b40 and rejected config f88a6b as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][configspace.py:175] --- activation: &#39;tanh&#39; -&gt; &#39;logistic&#39;
-[INFO][configspace.py:175] --- batch_size: 77 -&gt; 175
-[INFO][configspace.py:175] --- learning_rate_init: 0.000534923804864797 -&gt; 0.004156370184967407
-[INFO][configspace.py:175] --- n_layer: 1 -&gt; 2
-[INFO][configspace.py:175] --- n_neurons: 146 -&gt; 90
-[INFO][abstract_intensifier.py:566] Added config 735465 and rejected config 8e1252 as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][configspace.py:175] --- activation: &#39;relu&#39; -&gt; &#39;logistic&#39;
-[INFO][configspace.py:175] --- batch_size: 157 -&gt; 207
-[INFO][configspace.py:175] --- learning_rate_init: 0.08903539757637764 -&gt; 0.0017640190533051285
-[INFO][configspace.py:175] --- n_layer: 5 -&gt; 2
-[INFO][configspace.py:175] --- n_neurons: 43 -&gt; 52
-[INFO][configspace.py:175] --- solver: &#39;sgd&#39; -&gt; &#39;adam&#39;
-[INFO][abstract_intensifier.py:574] Config 000a19 is a new incumbent. Total number of incumbents: 4.
-[INFO][abstract_intensifier.py:566] Added config 9b7fc7 and rejected config 735465 as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][configspace.py:175] --- batch_size: 207 -&gt; 176
-[INFO][configspace.py:175] --- learning_rate_init: 0.0017640190533051285 -&gt; 0.07358040329899003
-[INFO][configspace.py:175] --- n_neurons: 52 -&gt; 42
-[INFO][abstract_intensifier.py:566] Added config 81e8af and rejected config 000a19 as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][configspace.py:175] --- batch_size: 83 -&gt; 200
-[INFO][configspace.py:175] --- learning_rate_init: 0.0014790630263113152 -&gt; 0.013080675009281588
-[INFO][configspace.py:175] --- n_neurons: 52 -&gt; 48
-[INFO][abstract_intensifier.py:566] Added config 3ef518 and rejected config d77b40 as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][configspace.py:175] --- batch_size: 175 -&gt; 213
-[INFO][configspace.py:175] --- learning_rate_init: 0.004156370184967407 -&gt; 0.009937026241717387
-[INFO][configspace.py:175] --- n_neurons: 90 -&gt; 91
-[INFO][abstract_intensifier.py:574] Config 70047e is a new incumbent. Total number of incumbents: 5.
-[INFO][abstract_intensifier.py:574] Config a06d9c is a new incumbent. Total number of incumbents: 6.
+[INFO][abstract_intensifier.py:493] Added config 97ef22 as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:573] Config f88a6b is a new incumbent. Total number of incumbents: 2.
+[INFO][abstract_intensifier.py:573] Config d77b40 is a new incumbent. Total number of incumbents: 3.
+[INFO][abstract_intensifier.py:573] Config 18181e is a new incumbent. Total number of incumbents: 3.
+[INFO][abstract_intensifier.py:573] Config 64e268 is a new incumbent. Total number of incumbents: 4.
 [INFO][smbo.py:306] Configuration budget is exhausted:
-[INFO][smbo.py:307] --- Remaining wallclock time: -0.13837933540344238
+[INFO][smbo.py:307] --- Remaining wallclock time: -0.33722519874572754
 [INFO][smbo.py:308] --- Remaining cpu time: inf
-[INFO][smbo.py:309] --- Remaining trials: 167
+[INFO][smbo.py:309] --- Remaining trials: 157
 Validated costs from default config:
---- [0.60155834 0.27911282]
+--- [0.60155834 0.16236448]
 
 Validated costs from the Pareto front (incumbents):
---- [0.88924791 0.27772808]
---- [0.13135484 0.56239712]
---- [0.04423553 0.56567323]
---- [0.03172392 0.82882082]
---- [0.49889431 0.39117599]
---- [0.04062519 0.67922175]
+--- [0.88924791 0.17119241]
+--- [0.02560198 0.40391111]
+--- [0.02894228 0.38412058]
+--- [0.03255803 0.30890214]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1234,7 +1201,7 @@ Validated costs from the Pareto front (incumbents):
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  37.475 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  33.325 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0422a2b52bca2c17c0ab975a6ae7e8db/2_parego.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_parego.py</span></code></a></p>

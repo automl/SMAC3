@@ -2,8 +2,8 @@
 Continue an Optimization
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-SMAC offers the possibility to continue an optimization. In this example, an optimization of a simple quadratic function
-is continued. We use a custom callback, to artificially stop the first optimization.
+SMAC can also be continued. In this example, an optimization of a simple quadratic
+function is continued. We use a custom callback, to artificially stop the first optimization.
 """
 
 from __future__ import annotations

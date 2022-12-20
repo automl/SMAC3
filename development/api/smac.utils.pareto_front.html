@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1044,7 +1039,7 @@
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.utils.pareto_front.calculate_pareto_front" title="smac.utils.pareto_front.calculate_pareto_front"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_pareto_front</span></code></a>(runhistory, configs, ...)</p></td>
-<td><p>Compares the passed configurations and returns only the ones one the pareto front.</p></td>
+<td><p>Compares the passed configurations and returns only the ones on the pareto front.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#smac.utils.pareto_front.sort_by_crowding_distance" title="smac.utils.pareto_front.sort_by_crowding_distance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sort_by_crowding_distance</span></code></a>(runhistory, ...)</p></td>
 <td><p>Sorts the passed configurations by their crowding distance.</p></td>
@@ -1057,10 +1052,20 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="smac.utils.pareto_front.calculate_pareto_front">
 <span class="sig-prename descclassname"><span class="pre">smac.utils.pareto_front.</span></span><span class="sig-name descname"><span class="pre">calculate_pareto_front</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runhistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_instance_seed_budget_keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/pareto_front.html#calculate_pareto_front"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.pareto_front.calculate_pareto_front" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compares the passed configurations and returns only the ones one the pareto front.</p>
+<dd><p>Compares the passed configurations and returns only the ones on the pareto front.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunHistory" title="smac.runhistory.RunHistory"><em>RunHistory</em></a>) – The runhistory containing the given configurations.</p></li>
+<li><p><strong>configs</strong> (<em>list</em><em>[</em><em>Configuration</em><em>]</em>) – The configurations from which the Pareto front should be computed.</p></li>
+<li><p><strong>config_instance_seed_budget_keys</strong> (<em>list</em><em>[</em><em>list</em><em>[</em><a class="reference internal" href="smac.runhistory.html#smac.runhistory.InstanceSeedBudgetKey" title="smac.runhistory.InstanceSeedBudgetKey"><em>InstanceSeedBudgetKey</em></a><em>]</em><em>]</em>) – The instance-seed budget keys for the configurations on the basis of which the Pareto front should be computed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>pareto_front</strong> – The pareto front computed from the given configurations.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>]</p>
+<dd class="field-odd"><p>list[Configuration]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1071,8 +1076,18 @@
 <dd><p>Sorts the passed configurations by their crowding distance. Taken from
 <a class="reference external" href="https://github.com/anyoptimization/pymoo/blob/20abef1ade71915352217400c11ece4c2f35163e/pymoo/algorithms/nsga2.py">https://github.com/anyoptimization/pymoo/blob/20abef1ade71915352217400c11ece4c2f35163e/pymoo/algorithms/nsga2.py</a></p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunHistory" title="smac.runhistory.RunHistory"><em>RunHistory</em></a>) – The runhistory containing the given configurations.</p></li>
+<li><p><strong>configs</strong> (<em>list</em><em>[</em><em>Configuration</em><em>]</em>) – The configurations which should be sorted.</p></li>
+<li><p><strong>config_instance_seed_budget_keys</strong> (<em>list</em><em>[</em><em>list</em><em>[</em><a class="reference internal" href="smac.runhistory.html#smac.runhistory.InstanceSeedBudgetKey" title="smac.runhistory.InstanceSeedBudgetKey"><em>InstanceSeedBudgetKey</em></a><em>]</em><em>]</em>) – The instance-seed budget keys for the configurations which should be sorted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>sorted_list</strong> – Configurations sorted by crowding distance.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>]</p>
+<dd class="field-odd"><p>list[Configuration]</p>
 </dd>
 </dl>
 </dd></dl>

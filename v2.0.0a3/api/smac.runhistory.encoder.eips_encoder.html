@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1046,7 +1041,7 @@
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.runhistory.encoder.eips_encoder.RunHistoryEIPSEncoder" title="smac.runhistory.encoder.eips_encoder.RunHistoryEIPSEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RunHistoryEIPSEncoder</span></code></a>(scenario[, ...])</p></td>
-<td><p>Encoder specifically for the EIPS acquisition function.</p></td>
+<td><p>Encoder specifically for the EIPS (expected improvement per second) acquisition function.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1057,15 +1052,12 @@
 <dt class="sig sig-object py" id="smac.runhistory.encoder.eips_encoder.RunHistoryEIPSEncoder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.eips_encoder.</span></span><span class="sig-name descname"><span class="pre">RunHistoryEIPSEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario,</span> <span class="pre">considered_states=[&lt;StatusType.SUCCESS:</span> <span class="pre">1&gt;,</span> <span class="pre">&lt;StatusType.CRASHED:</span> <span class="pre">2&gt;,</span> <span class="pre">&lt;StatusType.MEMORYOUT:</span> <span class="pre">4&gt;],</span> <span class="pre">lower_budget_states=[],</span> <span class="pre">scale_percentage=5,</span> <span class="pre">seed=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/eips_encoder.html#RunHistoryEIPSEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.eips_encoder.RunHistoryEIPSEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder" title="smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractRunHistoryEncoder</span></code></a></p>
-<p>Encoder specifically for the EIPS acquisition function.</p>
+<p>Encoder specifically for the EIPS (expected improvement per second) acquisition function.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.eips_encoder.RunHistoryEIPSEncoder.transform_response_values">
 <span class="sig-name descname"><span class="pre">transform_response_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/eips_encoder.html#RunHistoryEIPSEncoder.transform_response_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.eips_encoder.RunHistoryEIPSEncoder.transform_response_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform function response values. Transform the runtimes by a log transformation
-(log(1.</p>
-<ul class="simple">
-<li><p>runtime).</p></li>
-</ul>
+log(1. + runtime).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>values</strong> (<em>np.ndarray</em>) – Response values to be transformed.</p>

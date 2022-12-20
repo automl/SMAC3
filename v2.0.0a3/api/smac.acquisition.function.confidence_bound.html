@@ -330,8 +330,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -369,11 +369,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1007,6 +1002,24 @@
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.acquisition.function.confidence_bound.LCB._beta">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         LCB._beta
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.acquisition.function.confidence_bound.LCB._num_data">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         LCB._num_data
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#smac.acquisition.function.confidence_bound.LCB.meta">
        <code class="docutils literal notranslate">
         <span class="pre">
@@ -1081,6 +1094,28 @@
 <dd class="field-odd"><p><strong>beta</strong> (<em>float</em><em>, </em><em>defaults to 1.0</em>) – Controls the balance between exploration and exploitation of the acquisition function.</p>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.function.confidence_bound.LCB._beta">
+<span class="sig-name descname"><span class="pre">_beta</span></span><a class="headerlink" href="#smac.acquisition.function.confidence_bound.LCB._beta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exploration-exploitation trade-off parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.function.confidence_bound.LCB._num_data">
+<span class="sig-name descname"><span class="pre">_num_data</span></span><a class="headerlink" href="#smac.acquisition.function.confidence_bound.LCB._num_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of data points seen so far.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.acquisition.function.confidence_bound.LCB.meta">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.acquisition.function.confidence_bound.LCB.meta" title="Permalink to this definition">¶</a></dt>

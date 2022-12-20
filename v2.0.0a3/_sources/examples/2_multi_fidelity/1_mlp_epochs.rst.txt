@@ -49,24 +49,25 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
     [INFO][abstract_initial_design.py:133] Using 5 initial design configurations and 0 additional configurations.
     [INFO][successive_halving.py:155] Successive Halving uses budget type BUDGETS with eta 3, min budget 5, and max budget 25.
-    [INFO][abstract_intensifier.py:494] Added config 6b0504 as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:566] Added config 622bf8 and rejected config 6b0504 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:493] Added config 6b0504 as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:565] Added config 622bf8 and rejected config 6b0504 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- batch_size: None -> 155
     [INFO][configspace.py:175] --- learning_rate_init: None -> 0.006677306766018313
     [INFO][configspace.py:175] --- n_layer: 4 -> 5
     [INFO][configspace.py:175] --- n_neurons: 123 -> 56
     [INFO][configspace.py:175] --- solver: 'lbfgs' -> 'adam'
-    [INFO][abstract_intensifier.py:566] Added config 8a80a4 and rejected config 622bf8 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- batch_size: 155 -> 182
-    [INFO][configspace.py:175] --- learning_rate_init: 0.006677306766018313 -> 0.004930047219342135
-    [INFO][configspace.py:175] --- n_layer: 5 -> 1
-    [INFO][configspace.py:175] --- n_neurons: 56 -> 85
+    [INFO][abstract_intensifier.py:565] Added config 8db41e and rejected config 622bf8 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- n_layer: 5 -> 2
+    [INFO][configspace.py:175] --- n_neurons: 56 -> 75
+    [INFO][configspace.py:175] --- solver: 'adam' -> 'lbfgs'
+    [INFO][abstract_intensifier.py:565] Added config 4ce3a0 and rejected config 8db41e as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- n_neurons: 75 -> 196
     [INFO][smbo.py:306] Configuration budget is exhausted:
-    [INFO][smbo.py:307] --- Remaining wallclock time: -14.915673017501831
+    [INFO][smbo.py:307] --- Remaining wallclock time: -0.9378774166107178
     [INFO][smbo.py:308] --- Remaining cpu time: inf
-    [INFO][smbo.py:309] --- Remaining trials: 175
+    [INFO][smbo.py:309] --- Remaining trials: 174
     Default cost: 0.36672856700711853
-    Incumbent cost: 0.024487774682760866
+    Incumbent cost: 0.02671618693902822
 
 
 
@@ -123,7 +124,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
             cs.add_hyperparameters([n_layer, n_neurons, activation, solver, batch_size, learning_rate, learning_rate_init])
 
             # Adding conditions to restrict the hyperparameter space...
-            # ... since learning rate is used when solver is 'sgd'.
+            # ... since learning rate is only used when solver is 'sgd'.
             use_lr = EqualsCondition(child=learning_rate, parent=solver, value="sgd")
             # ... since learning rate initialization will only be accounted for when using 'sgd' or 'adam'.
             use_lr_init = InCondition(child=learning_rate_init, parent=solver, values=["sgd", "adam"])
@@ -202,7 +203,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  56.841 seconds)
+   **Total running time of the script:** ( 0 minutes  44.712 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_1_mlp_epochs.py:

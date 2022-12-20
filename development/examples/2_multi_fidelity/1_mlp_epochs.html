@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1026,24 +1021,25 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:133] Using 5 initial design configurations and 0 additional configurations.
 [INFO][successive_halving.py:155] Successive Halving uses budget type BUDGETS with eta 3, min budget 5, and max budget 25.
-[INFO][abstract_intensifier.py:494] Added config 6b0504 as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:566] Added config 622bf8 and rejected config 6b0504 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:493] Added config 6b0504 as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:565] Added config 622bf8 and rejected config 6b0504 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- batch_size: None -&gt; 155
 [INFO][configspace.py:175] --- learning_rate_init: None -&gt; 0.006677306766018313
 [INFO][configspace.py:175] --- n_layer: 4 -&gt; 5
 [INFO][configspace.py:175] --- n_neurons: 123 -&gt; 56
 [INFO][configspace.py:175] --- solver: &#39;lbfgs&#39; -&gt; &#39;adam&#39;
-[INFO][abstract_intensifier.py:566] Added config 8a80a4 and rejected config 622bf8 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- batch_size: 155 -&gt; 182
-[INFO][configspace.py:175] --- learning_rate_init: 0.006677306766018313 -&gt; 0.004930047219342135
-[INFO][configspace.py:175] --- n_layer: 5 -&gt; 1
-[INFO][configspace.py:175] --- n_neurons: 56 -&gt; 85
+[INFO][abstract_intensifier.py:565] Added config 8db41e and rejected config 622bf8 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- n_layer: 5 -&gt; 2
+[INFO][configspace.py:175] --- n_neurons: 56 -&gt; 75
+[INFO][configspace.py:175] --- solver: &#39;adam&#39; -&gt; &#39;lbfgs&#39;
+[INFO][abstract_intensifier.py:565] Added config 4ce3a0 and rejected config 8db41e as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- n_neurons: 75 -&gt; 196
 [INFO][smbo.py:306] Configuration budget is exhausted:
-[INFO][smbo.py:307] --- Remaining wallclock time: -14.915673017501831
+[INFO][smbo.py:307] --- Remaining wallclock time: -0.9378774166107178
 [INFO][smbo.py:308] --- Remaining cpu time: inf
-[INFO][smbo.py:309] --- Remaining trials: 175
+[INFO][smbo.py:309] --- Remaining trials: 174
 Default cost: 0.36672856700711853
-Incumbent cost: 0.024487774682760866
+Incumbent cost: 0.02671618693902822
 </pre></div>
 </div>
 <div class="line-block">
@@ -1094,7 +1090,7 @@ Incumbent cost: 0.024487774682760866
         <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">n_layer</span><span class="p">,</span> <span class="n">n_neurons</span><span class="p">,</span> <span class="n">activation</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="n">learning_rate_init</span><span class="p">])</span>
 
         <span class="c1"># Adding conditions to restrict the hyperparameter space...</span>
-        <span class="c1"># ... since learning rate is used when solver is &#39;sgd&#39;.</span>
+        <span class="c1"># ... since learning rate is only used when solver is &#39;sgd&#39;.</span>
         <span class="n">use_lr</span> <span class="o">=</span> <span class="n">EqualsCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;sgd&quot;</span><span class="p">)</span>
         <span class="c1"># ... since learning rate initialization will only be accounted for when using &#39;sgd&#39; or &#39;adam&#39;.</span>
         <span class="n">use_lr_init</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">learning_rate_init</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sgd&quot;</span><span class="p">,</span> <span class="s2">&quot;adam&quot;</span><span class="p">])</span>
@@ -1171,7 +1167,7 @@ Incumbent cost: 0.024487774682760866
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  56.841 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  44.712 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e36c26bb3a993c4641a06c811122b11e/1_mlp_epochs.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_mlp_epochs.py</span></code></a></p>

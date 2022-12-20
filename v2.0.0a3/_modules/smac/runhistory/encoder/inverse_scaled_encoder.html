@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1011,7 +1006,7 @@
 
 <div class="viewcode-block" id="RunHistoryInverseScaledEncoder.transform_response_values"><a class="viewcode-back" href="../../../../api/smac.runhistory.encoder.inverse_scaled_encoder.html#smac.runhistory.encoder.RunHistoryInverseScaledEncoder.transform_response_values">[docs]</a>    <span class="k">def</span> <span class="nf">transform_response_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Transform the response values by linearly scaling</span>
-<span class="sd">        them between zero and one and then using inverse scaling.</span>
+<span class="sd">        them between zero and one and then use inverse scaling.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">min_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_y</span> <span class="o">-</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_percentile</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_y</span>

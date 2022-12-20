@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1078,8 +1073,24 @@
         <span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">additional_start_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;Starts a local search from the given startpoint and quits if either the max number of</span>
-<span class="sd">        steps is reached or no neighbor with an higher improvement was found.</span>
+        <span class="sd">&quot;&quot;&quot;Start a local search from the given startpoint.</span>
+<span class="sd">        </span>
+<span class="sd">        Quit if either the max number of steps is reached or </span>
+<span class="sd">        no neighbor with an higher improvement was found.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        previous_configs : list[Configuration]</span>
+<span class="sd">            Previous configuration (e.g., from the runhistory).</span>
+<span class="sd">        n_points : int</span>
+<span class="sd">            Number of initial points to be generated.</span>
+<span class="sd">        additional_start_points : list[tuple[float, Configuration]] | None</span>
+<span class="sd">            Additional starting points.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[Configuration]</span>
+<span class="sd">            Final candidates.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">init_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_initial_points</span><span class="p">(</span><span class="n">previous_configs</span><span class="p">,</span> <span class="n">n_points</span><span class="p">,</span> <span class="n">additional_start_points</span><span class="p">)</span>
         <span class="n">configs_acq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_search</span><span class="p">(</span><span class="n">init_points</span><span class="p">)</span>
@@ -1100,6 +1111,22 @@
         <span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">additional_start_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Get initial points to start search from.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        previous_configs : list[Configuration]</span>
+<span class="sd">            Previous configuration (e.g., from the runhistory).</span>
+<span class="sd">        n_points : int</span>
+<span class="sd">            Number of initial points to be generated.</span>
+<span class="sd">        additional_start_points : list[tuple[float, Configuration]] | None</span>
+<span class="sd">            Additional starting points.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[Configuration]</span>
+<span class="sd">            A list of initial points/configurations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">previous_configs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">init_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configspace</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n_points</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1118,8 +1145,9 @@
         <span class="n">additional_start_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A function that generates a set of initial points from the previous configurations and additional points (if</span>
-<span class="sd">        applicable). The idea is to decouple runhistory from the local search model and replace it with a more genreal</span>
+<span class="sd">        Generate a set of initial points from the previous configurations and possibly additional points.</span>
+<span class="sd">        </span>
+<span class="sd">        The idea is to decouple runhistory from the local search model and replace it with a more general</span>
 <span class="sd">        form (list[Configuration]).</span>
 
 <span class="sd">        Parameters</span>
@@ -1129,7 +1157,7 @@
 <span class="sd">        n_points: int</span>
 <span class="sd">            Number of initial points to be generated.</span>
 <span class="sd">        additional_start_points: list[tuple[float, Configuration]] | None</span>
-<span class="sd">            if we want to specify another set of points as initial points</span>
+<span class="sd">            Additional starting points.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1191,6 +1219,18 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">start_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Optimize the acquisition function.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        start_points : list[Configuration]</span>
+<span class="sd">            Starting points for the search.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[tuple[float, Configuration]]</span>
+<span class="sd">            Candidates with their acquisition function value. (acq value, candidate)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="c1"># Gather data structure for starting points</span>

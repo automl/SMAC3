@@ -39,7 +39,6 @@ Modules
    smac.facade.abstract_facade
    smac.facade.algorithm_configuration_facade
    smac.facade.blackbox_facade
-   smac.facade.boing_facade
    smac.facade.hyperband_facade
    smac.facade.hyperparameter_optimization_facade
    smac.facade.multi_fidelity_facade

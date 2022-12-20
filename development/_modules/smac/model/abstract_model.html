@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1019,7 +1014,7 @@
 
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
-<span class="sd">    The input dimensionality of Y for training and the output dimensions of all predictions depends on the concrete</span>
+<span class="sd">    The input dimensionality of Y for training and the output dimensions of all predictions depend on the concrete</span>
 <span class="sd">    implementation of this abstract class.</span>
 
 <span class="sd">    Parameters</span>
@@ -1063,7 +1058,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_apply_pca</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1"># Never use a lower variance than this.</span>
-        <span class="c1"># If estimated variance &lt; var_threshold, the set to var_threshold</span>
+        <span class="c1"># If estimated variance &lt; var_threshold, set to var_threshold</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_var_threshold</span> <span class="o">=</span> <span class="n">VERY_SMALL_NUMBER</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_types</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bounds</span> <span class="o">=</span> <span class="n">get_types</span><span class="p">(</span><span class="n">configspace</span><span class="p">,</span> <span class="n">instance_features</span><span class="p">)</span>
 
@@ -1085,7 +1080,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : np.ndarray [#samples, #hyperparameter + #features]</span>
+<span class="sd">        X : np.ndarray [#samples, #hyperparameters + #features]</span>
 <span class="sd">            Input data points.</span>
 <span class="sd">        Y : np.ndarray [#samples, #objectives]</span>
 <span class="sd">            The corresponding target values.</span>
@@ -1106,7 +1101,7 @@
         <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;X.shape[0] (</span><span class="si">{}</span><span class="s2">) != y.shape[0] (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 
-        <span class="c1"># Reduce dimensionality of features of larger than PCA_DIM</span>
+        <span class="c1"># Reduce dimensionality of features if larger than PCA_DIM</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_pca_components</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
             <span class="ow">and</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pca</span><span class="o">.</span><span class="n">n_components</span>
@@ -1145,7 +1140,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : np.ndarray [#samples, #hyperparameter + #features]</span>
+<span class="sd">        X : np.ndarray [#samples, #hyperparameters + #features]</span>
 <span class="sd">            Input data points.</span>
 <span class="sd">        Y : np.ndarray [#samples, #objectives]</span>
 <span class="sd">            The corresponding target values.</span>
@@ -1165,7 +1160,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : np.ndarray [#samples, #hyperparameter + #features]</span>
+<span class="sd">        X : np.ndarray [#samples, #hyperparameters + #features]</span>
 <span class="sd">            Input data points.</span>
 <span class="sd">        covariance_type: str | None, defaults to &quot;diagonal&quot;</span>
 <span class="sd">            Specifies what to return along with the mean. Applied only to Gaussian Processes.</span>
@@ -1225,7 +1220,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : np.ndarray [#samples, #hyperparameter + #features]</span>
+<span class="sd">        X : np.ndarray [#samples, #hyperparameters + #features]</span>
 <span class="sd">            Input data points.</span>
 <span class="sd">        covariance_type : str | None, defaults to &quot;diagonal&quot;</span>
 <span class="sd">            Specifies what to return along with the mean. Applied only to Gaussian Processes.</span>
@@ -1253,7 +1248,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : np.ndarray [#samples, #hyperparameter]</span>
+<span class="sd">        X : np.ndarray [#samples, #hyperparameters]</span>
 <span class="sd">            Input data points.</span>
 
 <span class="sd">        Returns</span>

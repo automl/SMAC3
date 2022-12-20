@@ -41,7 +41,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.facade.hyperparameter_optimization_facade" href="smac.facade.hyperparameter_optimization_facade.html" />
-    <link rel="prev" title="smac.facade.boing_facade" href="smac.facade.boing_facade.html" />
+    <link rel="prev" title="smac.facade.blackbox_facade" href="smac.facade.blackbox_facade.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3 current active">
@@ -1072,7 +1067,7 @@ initial design and the Hyperband intensifier.</p>
 <dt>instance_seed_order<span class="classifier">str, defaults to “shuffle_once”</span></dt><dd><p>How to order the instance-seed pairs. Can be set to:
 * None: No shuffling at all and use the instance-seed order provided by the user.
 * “shuffle_once”: Shuffle the instance-seed keys once and use the same order across all runs.
-* “shuffle”: Shuffles the instance-seed keys for each bracket individually.</p>
+* “shuffle”: Shuffle the instance-seed keys for each bracket individually.</p>
 </dd>
 <dt>incumbent_selection<span class="classifier">str, defaults to “any_budget”</span></dt><dd><p>How to select the incumbent when using budgets. Can be set to:
 * “any_budget”: Incumbent is the best on any budget i.e., best performance regardless of budget.
@@ -1100,11 +1095,11 @@ initial design and the Hyperband intensifier.</p>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.facade.boing_facade.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.facade.blackbox_facade.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.facade.boing_facade</p>
+            <p class="prev-next-title">smac.facade.blackbox_facade</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="smac.facade.hyperparameter_optimization_facade.html" title="next page">

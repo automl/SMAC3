@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1120,26 +1115,38 @@
 <dt class="sig sig-object py" id="smac.runner.abstract_runner.AbstractRunner">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runner.abstract_runner.</span></span><span class="sig-name descname"><span class="pre">AbstractRunner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required_arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/abstract_runner.html#AbstractRunner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.abstract_runner.AbstractRunner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
-<p>Interface class to handle the execution of SMAC configurations. This interface defines how to interact with the
-SMBO loop. The complexity of running a configuration as well as handling the results is abstracted to the SMBO via
-an AbstractRunner.</p>
+<p>Interface class to handle the execution of SMAC configurations.
+This interface defines how to interact with the SMBO loop.
+The complexity of running a configuration as well as handling the results is abstracted to the
+SMBO via an AbstractRunner.</p>
 <p>From SMBO perspective, launching a configuration follows a
 submit/collect scheme as follows:</p>
-<ol class="arabic simple">
-<li><dl class="simple">
+<ol class="arabic">
+<li><dl>
 <dt>A run is launched via <code class="docutils literal notranslate"><span class="pre">submit_run()</span></code></dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">submit_run</span></code> internally calls <code class="docutils literal notranslate"><span class="pre">run_wrapper()</span></code>, a method that contains common processing functions among
-different unners.</p></li>
-<li><p>A class that implements AbstractRunner defines <code class="docutils literal notranslate"><span class="pre">run()</span></code> which is really the algorithm to translate a
-<code class="docutils literal notranslate"><span class="pre">TrialInfo</span></code> to a <code class="docutils literal notranslate"><span class="pre">TrialValue</span></code>, i.e. a configuration to an actual result.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">submit_run</span></code> internally calls <code class="docutils literal notranslate"><span class="pre">run_wrapper()</span></code>, a method that contains common</p></li>
 </ul>
+<blockquote>
+<div><p>processing functions among different runners.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>A class that implements AbstractRunner defines <code class="docutils literal notranslate"><span class="pre">run()</span></code> which is really the algorithm to</p></li>
+</ul>
+<p>translate a <code class="docutils literal notranslate"><span class="pre">TrialInfo</span></code> to a <code class="docutils literal notranslate"><span class="pre">TrialValue</span></code>, i.e. a configuration to an actual result.</p>
 </dd>
 </dl>
 </li>
-<li><p>A completed run is collected via <code class="docutils literal notranslate"><span class="pre">iter_results()</span></code>, which iterates and consumes any finished runs, if any.</p></li>
-<li><p>This interface also offers the method <code class="docutils literal notranslate"><span class="pre">wait()</span></code> as a mechanism to make sure we have enough data in the next
-iteration to make a decision. For example, the intensifier might not be able to select the next challenger
-until more results are available.</p></li>
+<li><dl class="simple">
+<dt>A completed run is collected via <code class="docutils literal notranslate"><span class="pre">iter_results()</span></code>, which iterates and consumes any finished</dt><dd><p>runs, if any.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>This interface also offers the method <code class="docutils literal notranslate"><span class="pre">wait()</span></code> as a mechanism to make sure we have enough</dt><dd><p>data in the next iteration to make a decision. For example, the intensifier might not be
+able to select the next challenger until more results are available.</p>
+</dd>
+</dl>
+</li>
 </ol>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1163,8 +1170,8 @@ until more results are available.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.abstract_runner.AbstractRunner.is_running">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/abstract_runner.html#AbstractRunner.is_running"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.abstract_runner.AbstractRunner.is_running" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether or not there are trials still running.</p>
-<p>Generally, if the runner is serial, launching a trial instantly returns it’s result. On
+<dd><p>Whether there are trials still running.</p>
+<p>Generally, if the runner is serial, launching a trial instantly returns its result. On
 parallel runners, there might be pending configurations to complete.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1177,7 +1184,7 @@ parallel runners, there might be pending configurations to complete.</p>
 <dt class="sig sig-object py" id="smac.runner.abstract_runner.AbstractRunner.iter_results">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">iter_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/abstract_runner.html#AbstractRunner.iter_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.abstract_runner.AbstractRunner.iter_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method returns any finished configuration, and returns a list with the
-results of exercising the configurations. This class keeps populating results
+results of executing the configurations. This class keeps populating results
 to <code class="docutils literal notranslate"><span class="pre">self._results_queue</span></code> until a call to <code class="docutils literal notranslate"><span class="pre">get_finished</span></code> trials is done. In this case,
 the <cite>self._results_queue</cite> list is emptied and all trial values produced by running
 <cite>run</cite> are returned.</p>
@@ -1194,7 +1201,7 @@ the <cite>self._results_queue</cite> list is emptied and all trial values produc
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.runner.abstract_runner.AbstractRunner.meta">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.runner.abstract_runner.AbstractRunner.meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the meta data of the created object.</p>
+<dd><p>Returns the meta-data of the created object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
@@ -1205,14 +1212,18 @@ the <cite>self._results_queue</cite> list is emptied and all trial values produc
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.abstract_runner.AbstractRunner.run">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/abstract_runner.html#AbstractRunner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.abstract_runner.AbstractRunner.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Runs the target function with a configuration on a single instance-budget-seed combination (aka trial).</p>
+<dd><p>Runs the target function with a configuration on a single instance-budget-seed
+combination (aka trial).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>Configuration</em>) – Configuration to be passed to the target function.</p></li>
 <li><p><strong>instance</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The Problem instance.</p></li>
-<li><p><strong>budget</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – A positive, real-valued number representing an arbitrary limit to the target function handled by the
-target function internally.</p></li>
+<li><p><strong>budget</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – <dl class="simple">
+<dt>A positive, real-valued number representing an arbitrary limit to the target function</dt><dd><p>handled by the target function internally.</p>
+</dd>
+</dl>
+</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – </p></li>
 </ul>
 </dd>
@@ -1223,7 +1234,7 @@ target function internally.</p></li>
 <dd class="field-odd"><p><ul class="simple">
 <li><p><strong>status</strong> (<em>StatusType</em>) – Status of the trial.</p></li>
 <li><p><strong>cost</strong> (<em>float | list[float]</em>) – Resulting cost(s) of the trial.</p></li>
-<li><p><strong>runtime</strong> (<em>float</em>) – The time the target function function took to run.</p></li>
+<li><p><strong>runtime</strong> (<em>float</em>) – The time the target function took to run.</p></li>
 <li><p><strong>additional_info</strong> (<em>dict</em>) – All further additional trial information.</p></li>
 </ul>
 </p>
@@ -1234,7 +1245,8 @@ target function internally.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.abstract_runner.AbstractRunner.run_wrapper">
 <span class="sig-name descname"><span class="pre">run_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/abstract_runner.html#AbstractRunner.run_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.abstract_runner.AbstractRunner.run_wrapper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper around run() to execute and check the execution of a given config. This function encapsulates common
+<dd><p>Wrapper around run() to execute and check the execution of a given config.
+This function encapsulates common
 handling/processing, so that run() implementation is simplified.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1257,12 +1269,15 @@ handling/processing, so that run() implementation is simplified.</p>
 <dt class="sig sig-object py" id="smac.runner.abstract_runner.AbstractRunner.submit_trial">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">submit_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/abstract_runner.html#AbstractRunner.submit_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.abstract_runner.AbstractRunner.submit_trial" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function submits a configuration embedded in a TrialInfo object, and uses one of the
-workers to produce a result (such result will eventually be available on the <cite>self._results_queue</cite>
+workers to produce a result (such result will eventually be available on the
+<cite>self._results_queue</cite>
 FIFO).</p>
 <p>This interface method will be called by SMBO, with the expectation
-that a function will be executed by a worker. What will be executed is dictated by trial_info, and “how” will it
+that a function will be executed by a worker. What will be executed is dictated by
+trial_info, and “how” it will
 be executed is decided via the child class that implements a run() method.</p>
-<p>Because config submission can be a serial/parallel endeavor, it is expected to be implemented by a child class.</p>
+<p>Because config submission can be a serial/parallel endeavor, it is expected to be
+implemented by a child class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>trial_info</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.TrialInfo" title="smac.runhistory.TrialInfo"><em>TrialInfo</em></a>) – An object containing the configuration launched.</p>

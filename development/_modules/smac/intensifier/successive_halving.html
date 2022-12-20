@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1096,7 +1091,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SuccessiveHalving.__post_init__"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving.__post_init__">[docs]</a>    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Post initilization steps after the runhistory has been set.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Post initialization steps after the runhistory has been set.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__post_init__</span><span class="p">()</span>
 
         <span class="c1"># We generate our instance seed pairs once</span>
@@ -1241,6 +1236,8 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
+<span class="sd">        config: Configuration</span>
+<span class="sd">            The Configuration to be queried</span>
 <span class="sd">        compare : bool, defaults to False</span>
 <span class="sd">            Get rid of the budget information for comparing if the configuration was evaluated on the same</span>
 <span class="sd">            instance-seed keys.</span>
@@ -1397,7 +1394,7 @@
         <span class="n">stage</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns all instance-seed-budget keys for the given stage. Each stage</span>
+        <span class="sd">&quot;&quot;&quot;Returns all instance-seed-budget keys (isb keys) for the given stage. Each stage</span>
 <span class="sd">        is associated with a budget (N). Two possible options:</span>
 
 <span class="sd">        1) Instance based: We return N isb keys. If a seed is specified, we shuffle the keys before</span>
@@ -1407,7 +1404,7 @@
         <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">is_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_seed_keys_of_interest</span><span class="p">()</span>
 
-        <span class="c1"># We have to differentiate between budgets and instance based here</span>
+        <span class="c1"># We have to differentiate between budgets and instances based here</span>
         <span class="c1"># If we are budget based, we always have one instance seed pair only</span>
         <span class="c1"># If we are in the instance setting, we have to return a specific number of instance seed pairs</span>
 

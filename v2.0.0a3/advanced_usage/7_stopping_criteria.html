@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1025,7 +1020,7 @@ more advanced criteria.</p>
 <h2>Termination Cost Threshold<a class="headerlink" href="#termination-cost-threshold" title="Permalink to this heading">¶</a></h2>
 <p>SMAC can stop the optimization process after a user-defined cost was reached. In each iteration, the average cost
 (using <code class="docutils literal notranslate"><span class="pre">average_cost</span></code> from the run history) from the incumbent is compared to the termination cost threshold. If one
-of the objective cost is below its associated termination cost threshold, the optimization process is stopped.
+of the objective costs is below its associated termination cost threshold, the optimization process is stopped.
 Note, since the <code class="docutils literal notranslate"><span class="pre">average_cost</span></code> method is used, all instance-seed-budget trials of the incumbent are considered so far.
 In other words, the process can be stopped even if the incumbent has not been evaluated on all instances, on the
 highest fidelity, or on all seeds.</p>

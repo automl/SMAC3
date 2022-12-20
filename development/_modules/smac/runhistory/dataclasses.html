@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1056,7 +1051,7 @@
         <span class="k">return</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="InstanceSeedBudgetKey.get_instance_seed_key"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.InstanceSeedBudgetKey.get_instance_seed_key">[docs]</a>    <span class="k">def</span> <span class="nf">get_instance_seed_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstanceSeedKey</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the instance-seed key. Basically, the budget is simply removed.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns the instance-seed key. The budget is omitted.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">InstanceSeedKey</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span></div></div>
 
 
@@ -1118,11 +1113,11 @@
     <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="TrialInfo.get_instance_seed_key"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.TrialInfo.get_instance_seed_key">[docs]</a>    <span class="k">def</span> <span class="nf">get_instance_seed_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstanceSeedKey</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Get instance-seed key&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Instantiates and returns an InstanceSeedKey object&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">InstanceSeedKey</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TrialInfo.get_instance_seed_budget_key"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.TrialInfo.get_instance_seed_budget_key">[docs]</a>    <span class="k">def</span> <span class="nf">get_instance_seed_budget_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstanceSeedBudgetKey</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Get instance-seed-budget key.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Instantiates and returns an InstanceSeedBudgetKey object.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">InstanceSeedBudgetKey</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span></div></div>
 
 

@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -995,23 +990,13 @@
 
 
 <div class="viewcode-block" id="StatusType"><a class="viewcode-back" href="../../../api/smac.runhistory.enumerations.html#smac.runhistory.StatusType">[docs]</a><span class="k">class</span> <span class="nc">StatusType</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Class to define numbers for status types.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Class to define status types of configs.&quot;&quot;&quot;</span>
 
-    <span class="n">RUNNING</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># In case a job was submited, but it has not finished.</span>
+    <span class="n">RUNNING</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># In case a job was submitted, but it has not finished.</span>
     <span class="n">SUCCESS</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">CRASHED</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">TIMEOUT</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="n">MEMORYOUT</span> <span class="o">=</span> <span class="mi">4</span></div>
-
-    <span class="c1"># ABORTED = 4</span>
-
-    <span class="c1"># Only relevant for SH/HB. Run might have a results, but should not be considered further.</span>
-    <span class="c1"># By default, these runs will always be considered for building the model. Potential use cases:</span>
-    <span class="c1"># 1) The run has converged and does not benefit from a higher budget</span>
-    <span class="c1"># 2) The run has exhausted given resources and will not benefit from higher budgets</span>
-    <span class="c1"># DONOTADVANCE = 6</span>
-
-    <span class="c1"># STOP = 7  # Gracefully exit SMAC and wait for currently executed runs to finish.</span>
 </pre></div>
 
               </div>

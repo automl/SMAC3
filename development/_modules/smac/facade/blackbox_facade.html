@@ -326,8 +326,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -365,11 +365,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1047,7 +1042,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        scenario : Scenario</span>
 <span class="sd">        model_type : str | None, defaults to None</span>
-<span class="sd">            Which gaussian process model should be chosen. Choose between `vanilla` and `mcmc`.</span>
+<span class="sd">            Which Gaussian Process model should be chosen. Choose between `vanilla` and `mcmc`.</span>
 <span class="sd">        kernel : kernels.Kernel | None, defaults to None</span>
 <span class="sd">            The kernel used in the surrogate model.</span>
 
@@ -1187,7 +1182,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        challengers : int, defaults to 1000</span>
 <span class="sd">            Number of challengers.</span>
-<span class="sd">        local_search_iterations: int, defauts to 10</span>
+<span class="sd">        local_search_iterations: int, defaults to 10</span>
 <span class="sd">            Number of local search iterations.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">LocalAndSortedRandomSearch</span><span class="p">(</span>
@@ -1210,8 +1205,8 @@
 <span class="sd">        ----------</span>
 <span class="sd">        scenario : Scenario</span>
 <span class="sd">        max_config_calls : int, defaults to 3</span>
-<span class="sd">            Maximum number of configuration evaluations. Basically, how many instance-seed keys should be max evaluated</span>
-<span class="sd">            for a configuration.</span>
+<span class="sd">            Maximum number of configuration evaluations. Basically, how many instance-seed keys should be evaluated at</span>
+<span class="sd">            maximum for a configuration.</span>
 <span class="sd">        max_incumbents : int, defaults to 10</span>
 <span class="sd">            How many incumbents to keep track of in the case of multi-objective.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1277,13 +1272,14 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">objective_weights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MeanAggregationStrategy</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the mean aggregation strategy for the multi objective algorithm.</span>
+        <span class="sd">&quot;&quot;&quot;Returns the mean aggregation strategy for the multi-objective algorithm.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        scenario : Scenario</span>
 <span class="sd">        objective_weights : list[float] | None, defaults to None</span>
-<span class="sd">            Weights for an weighted average. Must be of the same length as the number of objectives.</span>
+<span class="sd">            Weights for averaging the objectives in a weighted manner. Must be of the same length as the number of</span>
+<span class="sd">            objectives.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">MeanAggregationStrategy</span><span class="p">(</span>
             <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>

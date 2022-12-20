@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1009,38 +1004,38 @@ to download the full example code</p>
 </div>
 <section class="sphx-glr-example-title" id="continue-an-optimization">
 <span id="sphx-glr-examples-1-basics-5-continue-py"></span><h1>Continue an Optimization<a class="headerlink" href="#continue-an-optimization" title="Permalink to this heading">¶</a></h1>
-<p>SMAC offers the possibility to continue an optimization. In this example, an optimization of a simple quadratic function
-is continued. We use a custom callback, to artificially stop the first optimization.</p>
+<p>SMAC can also be continued. In this example, an optimization of a simple quadratic
+function is continued. We use a custom callback, to artificially stop the first optimization.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:133] Using 10 initial design configurations and 0 additional configurations.
 [INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
-[INFO][abstract_intensifier.py:494] Added config 3ce33d as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:566] Added config c53710 and rejected config 3ce33d as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:493] Added config 3ce33d as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:565] Added config c53710 and rejected config 3ce33d as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- x: -2.331214789301157 -&gt; 2.1608731895685196
-[INFO][abstract_intensifier.py:566] Added config 50b580 and rejected config c53710 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:565] Added config 50b580 and rejected config c53710 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- x: 2.1608731895685196 -&gt; 0.4316552169620991
-[INFO][abstract_intensifier.py:566] Added config d16e41 and rejected config 50b580 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:565] Added config d16e41 and rejected config 50b580 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- x: 0.4316552169620991 -&gt; -0.3100988641381264
 [INFO][smbo.py:222] A callback returned False. Abort is requested.
 [INFO][smbo.py:311] Shutting down because the stop flag was set.
 [INFO][abstract_initial_design.py:133] Using 10 initial design configurations and 0 additional configurations.
-[INFO][smbo.py:461] Continuing from previous run.
+[INFO][smbo.py:462] Continuing from previous run.
 [INFO][abstract_intensifier.py:288] Added existing seed 209652396 from runhistory to the intensifier.
 [INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
-[INFO][abstract_intensifier.py:566] Added config 4dcc97 and rejected config d16e41 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:565] Added config 4dcc97 and rejected config d16e41 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- x: -0.3100988641381264 -&gt; -0.22015188896172422
-[INFO][abstract_intensifier.py:566] Added config 4d21be and rejected config 4dcc97 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:565] Added config 4d21be and rejected config 4dcc97 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- x: -0.22015188896172422 -&gt; -0.1481212818284119
-[INFO][abstract_intensifier.py:566] Added config 348898 and rejected config 4d21be as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:565] Added config 348898 and rejected config 4d21be as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- x: -0.1481212818284119 -&gt; -0.13225703373856135
-[INFO][abstract_intensifier.py:566] Added config c56201 and rejected config 348898 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:565] Added config c56201 and rejected config 348898 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- x: -0.13225703373856135 -&gt; -0.008886632260822758
-[INFO][abstract_intensifier.py:566] Added config b6eee0 and rejected config c56201 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:565] Added config b6eee0 and rejected config c56201 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- x: -0.008886632260822758 -&gt; 0.00353744136744627
-[INFO][abstract_intensifier.py:566] Added config 06e28a and rejected config b6eee0 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:565] Added config 06e28a and rejected config b6eee0 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- x: 0.00353744136744627 -&gt; 0.0029625967410442655
-[INFO][abstract_intensifier.py:566] Added config 4026d1 and rejected config 06e28a as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:565] Added config 4026d1 and rejected config 06e28a as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- x: 0.0029625967410442655 -&gt; 0.0009114180407276962
-[INFO][abstract_intensifier.py:566] Added config 025ea5 and rejected config 4026d1 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:565] Added config 025ea5 and rejected config 4026d1 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- x: 0.0009114180407276962 -&gt; -0.00032238773647641494
 [INFO][smbo.py:298] Finished 50 trials.
 [INFO][smbo.py:306] Configuration budget is exhausted:
@@ -1143,7 +1138,7 @@ Incumbent cost of continued run: 1.0393385263038637e-07
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost of continued run: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.121 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.828 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-5-continue-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/422686ca3edb22afd49c1684c91a3eb9/5_continue.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">5_continue.py</span></code></a></p>

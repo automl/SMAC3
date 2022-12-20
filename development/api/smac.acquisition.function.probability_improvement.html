@@ -330,8 +330,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -369,11 +369,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1056,7 +1051,7 @@
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.acquisition.function.probability_improvement.PI" title="smac.acquisition.function.probability_improvement.PI"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PI</span></code></a>([xi])</p></td>
-<td><p>Computes the probability of improvement for a given x over the best so far value as acquisition value.</p></td>
+<td><p>Probability of Improvement</p></td>
 </tr>
 </tbody>
 </table>
@@ -1067,7 +1062,7 @@
 <dt class="sig sig-object py" id="smac.acquisition.function.probability_improvement.PI">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.function.probability_improvement.</span></span><span class="sig-name descname"><span class="pre">PI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/function/probability_improvement.html#PI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.function.probability_improvement.PI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.function.abstract_acquisition_function.html#smac.acquisition.function.abstract_acquisition_function.AbstractAcquisitionFunction" title="smac.acquisition.function.abstract_acquisition_function.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a></p>
-<p>Computes the probability of improvement for a given x over the best so far value as acquisition value.</p>
+<p>Probability of Improvement</p>
 <p><span class="math notranslate nohighlight">\(P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+}))\)</span> <span class="math notranslate nohighlight">\(:= \Phi(\\frac{ \mu(\mathbf{X})-f(\mathbf{X^+}) }
 { \sigma(\mathbf{X}) })\)</span> with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the incumbent and <span class="math notranslate nohighlight">\(\Phi\)</span> the cdf of the standard normal.</p>
 <dl class="field-list simple">

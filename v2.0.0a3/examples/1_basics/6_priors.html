@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1018,28 +1013,27 @@ but we stick with the hyperparameter optimization facade here. To incorporate us
 optimization, you have to change the acquisition function to <code class="docutils literal notranslate"><span class="pre">PriorAcquisitionFunction</span></code>.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:133] Using 10 initial design configurations and 1 additional configurations.
 [WARNING][prior_acqusition_function.py:107] Discretizing the prior for random forest models.
-[INFO][abstract_intensifier.py:494] Added config fec0cb as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:566] Added config 34b1eb and rejected config fec0cb as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:493] Added config fec0cb as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:565] Added config 34b1eb and rejected config fec0cb as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- activation: &#39;logistic&#39; -&gt; &#39;relu&#39;
 [INFO][configspace.py:175] --- batch_size: 324 -&gt; 128
 [INFO][configspace.py:175] --- learning_rate_init: 1.1134996369914405 -&gt; 0.0010000000000000002
 [INFO][configspace.py:175] --- n_layer: 2 -&gt; 3
 [INFO][configspace.py:175] --- n_neurons: 157 -&gt; 108
 [INFO][configspace.py:175] --- optimizer: &#39;sgd&#39; -&gt; &#39;adam&#39;
-[INFO][abstract_intensifier.py:566] Added config cea4bf and rejected config 34b1eb as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- batch_size: 128 -&gt; 32
+[INFO][abstract_intensifier.py:565] Added config a5447e and rejected config 34b1eb as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- batch_size: 128 -&gt; 29
+[INFO][configspace.py:175] --- n_layer: 3 -&gt; 5
+[INFO][abstract_intensifier.py:565] Added config 71520a and rejected config a5447e as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- batch_size: 29 -&gt; 25
 [INFO][configspace.py:175] --- learning_rate_init: 0.0010000000000000002 -&gt; 0.0008561309336666343
-[INFO][abstract_intensifier.py:566] Added config ca88cf and rejected config cea4bf as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- batch_size: 32 -&gt; 35
-[INFO][configspace.py:175] --- learning_rate_init: 0.0008561309336666343 -&gt; 0.0010000000000000002
-[INFO][abstract_intensifier.py:566] Added config c64fd6 and rejected config ca88cf as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- batch_size: 35 -&gt; 42
+[INFO][configspace.py:175] --- n_neurons: 108 -&gt; 104
 [INFO][smbo.py:306] Configuration budget is exhausted:
 [INFO][smbo.py:307] --- Remaining wallclock time: inf
 [INFO][smbo.py:308] --- Remaining cpu time: inf
 [INFO][smbo.py:309] --- Remaining trials: 0
 Default cost: 0.038952336737852145
-Default cost: 0.02727174249458364
+Default cost: 0.028935314144227897
 </pre></div>
 </div>
 <div class="line-block">
@@ -1206,7 +1200,7 @@ Default cost: 0.02727174249458364
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  53.098 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  36.608 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-6-priors-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/4ebef42c9f91d235a47f01427ed027a4/6_priors.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">6_priors.py</span></code></a></p>

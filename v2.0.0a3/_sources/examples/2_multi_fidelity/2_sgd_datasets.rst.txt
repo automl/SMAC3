@@ -43,18 +43,18 @@ the target function now is required to have an instance argument.
 
     [INFO][abstract_initial_design.py:133] Using 40 initial design configurations and 0 additional configurations.
     [INFO][successive_halving.py:155] Successive Halving uses budget type INSTANCES with eta 3, min budget 1, and max budget 45.
-    [INFO][abstract_intensifier.py:494] Added config 588a4c as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:566] Added config d431b1 and rejected config 588a4c as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:493] Added config 588a4c as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:565] Added config d431b1 and rejected config 588a4c as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- alpha: 0.5488135039273248 -> 0.6027633760716439
     [INFO][configspace.py:175] --- eta0: 0.0006273927602293597 -> 0.03077201812975574
     [INFO][configspace.py:175] --- l1_ratio: 0.317983179393976 -> 0.06414749634878436
-    [INFO][abstract_intensifier.py:566] Added config d7ee7e and rejected config d431b1 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:565] Added config d7ee7e and rejected config d431b1 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- alpha: 0.6027633760716439 -> 0.02021839744032572
     [INFO][configspace.py:175] --- eta0: 0.03077201812975574 -> 0.018430691395340162
     [INFO][configspace.py:175] --- l1_ratio: 0.06414749634878436 -> 0.5865129348100832
     [INFO][configspace.py:175] --- learning_rate: 'adaptive' -> 'invscaling'
     [INFO][smbo.py:298] Finished 50 trials.
-    [INFO][abstract_intensifier.py:566] Added config d431b1 and rejected config d7ee7e as incumbent because it is not better than the incumbents on 15 instances:
+    [INFO][abstract_intensifier.py:565] Added config d431b1 and rejected config d7ee7e as incumbent because it is not better than the incumbents on 15 instances:
     [INFO][configspace.py:175] --- alpha: 0.02021839744032572 -> 0.6027633760716439
     [INFO][configspace.py:175] --- eta0: 0.018430691395340162 -> 0.03077201812975574
     [INFO][configspace.py:175] --- l1_ratio: 0.5865129348100832 -> 0.06414749634878436
@@ -65,7 +65,7 @@ the target function now is required to have an instance argument.
     [INFO][smbo.py:298] Finished 250 trials.
     [INFO][smbo.py:298] Finished 300 trials.
     [INFO][smbo.py:306] Configuration budget is exhausted:
-    [INFO][smbo.py:307] --- Remaining wallclock time: -21.086062908172607
+    [INFO][smbo.py:307] --- Remaining wallclock time: -5.095701217651367
     [INFO][smbo.py:308] --- Remaining cpu time: inf
     [INFO][smbo.py:309] --- Remaining trials: 4651
     Default cost: 0.15489347419148672
@@ -209,7 +209,7 @@ the target function now is required to have an instance argument.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  58.390 seconds)
+   **Total running time of the script:** ( 0 minutes  39.536 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_2_sgd_datasets.py:

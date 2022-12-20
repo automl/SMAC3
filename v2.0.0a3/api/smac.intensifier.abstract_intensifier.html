@@ -329,8 +329,8 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
     </a>
    </li>
   </ul>
@@ -368,11 +368,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.blackbox_facade.html">
        smac.facade.blackbox_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
       </a>
      </li>
      <li class="toctree-l3">
@@ -1280,7 +1275,7 @@
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier" title="smac.intensifier.abstract_intensifier.AbstractIntensifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractIntensifier</span></code></a>(scenario[, n_seeds, ...])</p></td>
-<td><p>Abstract implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-threading.</p></td>
+<td><p>Abstract implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-processing.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1291,7 +1286,7 @@
 <dt class="sig sig-object py" id="smac.intensifier.abstract_intensifier.AbstractIntensifier">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.intensifier.abstract_intensifier.</span></span><span class="sig-name descname"><span class="pre">AbstractIntensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_incumbents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/abstract_intensifier.html#AbstractIntensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Abstract implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-threading.
+<p>Abstract implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-processing.
 The abstract intensifier keeps track of the incumbent, which is updated everytime the runhistory changes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1330,11 +1325,11 @@ intensifier to get more information.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.intensifier.abstract_intensifier.AbstractIntensifier.config_generator">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">config_generator</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.main.config_selector.html#smac.main.config_selector.ConfigSelector" title="smac.main.config_selector.ConfigSelector"><span class="pre">ConfigSelector</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier.config_generator" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">config_generator</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">Configuration</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier.config_generator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Based on the configuration selector, an iterator is returned that generates configurations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterator</span></code>[<a class="reference internal" href="smac.main.config_selector.html#smac.main.config_selector.ConfigSelector" title="smac.main.config_selector.ConfigSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigSelector</span></code></a>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterator</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1354,7 +1349,7 @@ intensifier to get more information.</p>
 <dt class="sig sig-object py" id="smac.intensifier.abstract_intensifier.AbstractIntensifier.get_callback">
 <span class="sig-name descname"><span class="pre">get_callback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/abstract_intensifier.html#AbstractIntensifier.get_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier.get_callback" title="Permalink to this definition">¶</a></dt>
 <dd><p>The intensifier makes use of a callback to efficiently update the incumbent based on the runhistory
-(every time new information are available). Moreover, incorporating the callback here allows developers
+(every time new information is available). Moreover, incorporating the callback here allows developers
 more options in the future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1378,7 +1373,7 @@ more options in the future.</p>
 <dt class="sig sig-object py" id="smac.intensifier.abstract_intensifier.AbstractIntensifier.get_incumbent_instance_seed_budget_key_differences">
 <span class="sig-name descname"><span class="pre">get_incumbent_instance_seed_budget_key_differences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compare</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/abstract_intensifier.html#AbstractIntensifier.get_incumbent_instance_seed_budget_key_differences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier.get_incumbent_instance_seed_budget_key_differences" title="Permalink to this definition">¶</a></dt>
 <dd><p>There are situations in which incumbents are evaluated on more trials than others. This method returns the
-instances which are not part of the lowest intersection of instances for all incumbents.</p>
+instances that are not part of the lowest intersection of instances for all incumbents.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.InstanceSeedBudgetKey" title="smac.runhistory.dataclasses.InstanceSeedBudgetKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">InstanceSeedBudgetKey</span></code></a>]</p>
@@ -1443,7 +1438,7 @@ seeds and instances are generated based on the global intensifier seed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>validate</strong> (<em>bool</em><em>, </em><em>defaults to False</em>) – Whether to get validation trials or training trials. The only difference lays in different seeds.</p></li>
+<li><p><strong>validate</strong> (<em>bool</em><em>, </em><em>defaults to False</em>) – Whether to get validation trials or training trials. The only difference lies in different seeds.</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The seed used for the validation trials.</p></li>
 </ul>
 </dd>
@@ -1493,7 +1488,7 @@ Expands the keys from <code class="docutils literal notranslate"><span class="pr
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.intensifier.abstract_intensifier.AbstractIntensifier.incumbents_changed">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">incumbents_changed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier.incumbents_changed" title="Permalink to this definition">¶</a></dt>
-<dd><p>How often the incumbents has changed.</p>
+<dd><p>How often the incumbents have changed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
