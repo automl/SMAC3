@@ -21,7 +21,7 @@ logger = get_logger(__name__)
 
 class AbstractAcquisitionMaximizer:
     """Abstract class for the acquisition maximization.
-    
+
     In order to use this class it has to be subclassed and the
     method `_maximize` must be implemented.
 
@@ -31,7 +31,7 @@ class AbstractAcquisitionMaximizer:
     acquisition_function : AbstractAcquisitionFunction
     challengers : int, defaults to 5000
         Number of configurations to sample from the configuration space to get
-        the acquisition function value for, thus challenging the current 
+        the acquisition function value for, thus challenging the current
         incumbent and becoming a candidate for the next function evaluation.
     seed : int, defaults to 0
     """

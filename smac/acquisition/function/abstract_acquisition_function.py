@@ -66,7 +66,7 @@ class AbstractAcquisitionFunction:
 
     def _update(self, **kwargs: Any) -> None:
         """Update acsquisition function attributes
-        
+
         Might be different for each child class.
         """
         pass

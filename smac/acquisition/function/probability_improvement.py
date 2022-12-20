@@ -77,7 +77,7 @@ class PI(AbstractAcquisitionFunction):
         ------
         ValueError
             If `update` has not been called before (current incumbent value `eta` unspecified).
- 
+
         """
         assert self._model is not None
         if self._eta is None:

@@ -91,8 +91,8 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         additional_start_points: list[tuple[float, Configuration]] | None = None,
     ) -> list[tuple[float, Configuration]]:
         """Start a local search from the given startpoint.
-        
-        Quit if either the max number of steps is reached or 
+
+        Quit if either the max number of steps is reached or
         no neighbor with an higher improvement was found.
 
         Parameters
@@ -163,7 +163,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
     ) -> list[Configuration]:
         """
         Generate a set of initial points from the previous configurations and possibly additional points.
-        
+
         The idea is to decouple runhistory from the local search model and replace it with a more general
         form (list[Configuration]).
 

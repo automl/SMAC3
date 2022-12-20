@@ -56,12 +56,7 @@ class DynamicProbabilityRandomDesign(AbstractRandomDesign):
         Integer used to initialize the random state.
     """
 
-    def __init__(
-        self,
-        probability: float,
-        factor: float,
-        seed: int = 0
-    ):
+    def __init__(self, probability: float, factor: float, seed: int = 0):
         super().__init__(seed)
         assert 0 <= probability <= 1
         assert factor > 0

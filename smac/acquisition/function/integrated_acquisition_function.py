@@ -19,7 +19,7 @@ logger = get_logger(__name__)
 
 
 class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
-    r"""Compute the integrated acquisition function by marginalizing over model hyperparameters 
+    r"""Compute the integrated acquisition function by marginalizing over model hyperparameters
 
     See "Practical Bayesian Optimization of Machine Learning Algorithms" by Jasper Snoek et al.
     (https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf)

@@ -90,10 +90,10 @@ class AbstractRunHistoryEncoder:
     def meta(self) -> dict[str, Any]:
         """
         Returns the meta-data of the created object.
-        
+
         Returns
         -------
-        dict[str, Any]: meta-data of the created object: name, considered states, lower budget 
+        dict[str, Any]: meta-data of the created object: name, considered states, lower budget
         states, scale_percentage, seed.
         """
         return {
@@ -154,7 +154,7 @@ class AbstractRunHistoryEncoder:
         """
         Returns all trials that are considered for the model.
         Depends on the user's considered states and lower budget states.
-        
+
         Parameters
         ----------
         budget_subset : list[int|float] | None, defaults to None.
@@ -217,8 +217,8 @@ class AbstractRunHistoryEncoder:
         self,
         budget_subset: list | None = None,
     ) -> np.ndarray:
-        """Returns vector representation of the configurations. 
-        
+        """Returns vector representation of the configurations.
+
         Warning
         -------
         Instance features are not

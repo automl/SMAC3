@@ -63,11 +63,7 @@ class DynamicModulusRandomDesign(AbstractRandomDesign):
     """
 
     def __init__(
-        self,
-        start_modulus: float = 2.0,
-        modulus_increment: float = 0.3,
-        end_modulus: float = np.inf,
-        seed: int = 0
+        self, start_modulus: float = 2.0, modulus_increment: float = 0.3, end_modulus: float = np.inf, seed: int = 0
     ):
         super().__init__(seed)
         assert start_modulus > 0

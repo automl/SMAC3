@@ -33,7 +33,7 @@ class QuadraticFunction:
     def train(self, config: Configuration, seed: int = 0) -> float:
         """Returns the y value of a quadratic function with a minimum we know to be at x=0."""
         x = config["x"]
-        return x ** 2
+        return x**2
 
 
 def plot(runhistory: RunHistory, incumbent: Configuration) -> None:

@@ -30,7 +30,7 @@ class EI(AbstractAcquisitionFunction):
     log : bool, defaults to False
         Whether the function values are in log-space.
 
-    
+
     Attributes
     ----------
     _xi : float
