@@ -46,21 +46,60 @@ mean accuracy and run-time of each configuration.
     [INFO][abstract_initial_design.py:133] Using 5 initial design configurations and 0 additional configurations.
     [INFO][abstract_intensifier.py:493] Added config 97ef22 as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:573] Config f88a6b is a new incumbent. Total number of incumbents: 2.
-    [INFO][abstract_intensifier.py:573] Config d77b40 is a new incumbent. Total number of incumbents: 3.
-    [INFO][abstract_intensifier.py:573] Config 18181e is a new incumbent. Total number of incumbents: 3.
-    [INFO][abstract_intensifier.py:573] Config 64e268 is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:573] Config 8e1252 is a new incumbent. Total number of incumbents: 3.
+    [INFO][abstract_intensifier.py:573] Config d77b40 is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:565] Added config 18936b and rejected config 8e1252 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][configspace.py:175] --- activation: 'relu' -> 'tanh'
+    [INFO][configspace.py:175] --- batch_size: 157 -> 188
+    [INFO][configspace.py:175] --- learning_rate_init: 0.08903539757637764 -> 0.0005308784036921434
+    [INFO][configspace.py:175] --- n_layer: 5 -> 1
+    [INFO][configspace.py:175] --- n_neurons: 43 -> 191
+    [INFO][configspace.py:175] --- solver: 'sgd' -> 'adam'
+    [INFO][abstract_intensifier.py:573] Config a8dc67 is a new incumbent. Total number of incumbents: 5.
+    [INFO][abstract_intensifier.py:565] Added config 09eab3 and rejected config a8dc67 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][configspace.py:175] --- batch_size: 273 -> 224
+    [INFO][configspace.py:175] --- learning_rate_init: 0.000534340234626495 -> 0.0007389488315982835
+    [INFO][configspace.py:175] --- n_neurons: 143 -> 125
+    [INFO][abstract_intensifier.py:573] Config b1bf52 is a new incumbent. Total number of incumbents: 6.
+    [INFO][abstract_intensifier.py:573] Config 2b0bdf is a new incumbent. Total number of incumbents: 7.
+    [INFO][abstract_intensifier.py:573] Config 86144a is a new incumbent. Total number of incumbents: 8.
+    [INFO][abstract_intensifier.py:565] Added config 0bad37 and rejected config 97ef22 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][configspace.py:175] --- batch_size: None -> 206
+    [INFO][configspace.py:175] --- learning_rate_init: None -> 0.0013478190087776176
+    [INFO][configspace.py:175] --- n_layer: 4 -> 1
+    [INFO][configspace.py:175] --- n_neurons: 11 -> 9
+    [INFO][configspace.py:175] --- solver: 'lbfgs' -> 'adam'
+    [INFO][abstract_intensifier.py:573] Config 4c2221 is a new incumbent. Total number of incumbents: 6.
+    [INFO][abstract_intensifier.py:565] Added config db0251 and rejected config d77b40 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][configspace.py:175] --- activation: 'logistic' -> 'relu'
+    [INFO][configspace.py:175] --- batch_size: 175 -> 260
+    [INFO][configspace.py:175] --- learning_rate_init: 0.004156370184967407 -> 0.012775821301656673
+    [INFO][configspace.py:175] --- n_layer: 2 -> 1
+    [INFO][configspace.py:175] --- n_neurons: 90 -> 139
+    [INFO][smbo.py:298] Finished 50 trials.
+    [INFO][abstract_intensifier.py:573] Config a62a39 is a new incumbent. Total number of incumbents: 6.
+    [INFO][abstract_intensifier.py:573] Config f1fc37 is a new incumbent. Total number of incumbents: 7.
+    [INFO][abstract_intensifier.py:565] Added config 0fc823 and rejected config 0bad37 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][configspace.py:175] --- n_layer: 1 -> 2
+    [INFO][configspace.py:175] --- n_neurons: 9 -> 16
+    [INFO][configspace.py:175] --- solver: 'adam' -> 'lbfgs'
+    [INFO][abstract_intensifier.py:573] Config 59de73 is a new incumbent. Total number of incumbents: 8.
     [INFO][smbo.py:306] Configuration budget is exhausted:
-    [INFO][smbo.py:307] --- Remaining wallclock time: -0.33722519874572754
+    [INFO][smbo.py:307] --- Remaining wallclock time: -2.9014241695404053
     [INFO][smbo.py:308] --- Remaining cpu time: inf
-    [INFO][smbo.py:309] --- Remaining trials: 157
+    [INFO][smbo.py:309] --- Remaining trials: 137
     Validated costs from default config: 
-    --- [0.60155834 0.16236448]
+    --- [0.60155834 0.16810763]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.88924791 0.17119241]
-    --- [0.02560198 0.40391111]
-    --- [0.02894228 0.38412058]
-    --- [0.03255803 0.30890214]
+    --- [0.04313061 0.27726161]
+    --- [0.24873723 0.15805924]
+    --- [0.03534432 0.29619062]
+    --- [0.08096565 0.17184055]
+    --- [0.03228335 0.78482449]
+    --- [0.02698932 0.90243733]
+    --- [0.4245783  0.17597687]
+    --- [0.15858867 0.16767788]
 
 
 
@@ -241,7 +280,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  33.325 seconds)
+   **Total running time of the script:** ( 0 minutes  39.247 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:
