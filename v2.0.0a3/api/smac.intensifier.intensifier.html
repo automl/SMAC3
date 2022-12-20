@@ -1113,6 +1113,23 @@
 <dd><p>Bases: <a class="reference internal" href="smac.intensifier.abstract_intensifier.html#smac.intensifier.abstract_intensifier.AbstractIntensifier" title="smac.intensifier.abstract_intensifier.AbstractIntensifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractIntensifier</span></code></a></p>
 <p>Implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-processing.
 Races challengers against current incumbents.</p>
+<p>The behaviour of this intensifier is as follows:
+- First, adds configs from the runhistory to the queue with N=1 (they will be ignored if they are already</p>
+<blockquote>
+<div><p>evaluated).</p>
+</div></blockquote>
+<ul>
+<li><p>While loop:
+- If queue is empty: Intensifies exactly one more instance of one incumbent and samples a new configuration</p>
+<blockquote>
+<div><p>afterwards.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>If queue is not empty: Configs in the queue are evaluated on N=(N*2) instances if they might be better
+than the incumbents. If not, they are removed from the queue and rejected forever.</p></li>
+</ul>
+</li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

@@ -1656,10 +1656,18 @@
     <span class="k">def</span> <span class="nf">_update_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
         <span class="n">config_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">rh</span><span class="o">.</span><span class="n">get_config_id</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">]</span>
+        <span class="n">costs</span> <span class="o">=</span> <span class="p">[</span><span class="n">rh</span><span class="o">.</span><span class="n">average_cost</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents</span> <span class="o">=</span> <span class="n">configs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents_changed</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TrajectoryItem</span><span class="p">(</span><span class="n">config_ids</span><span class="o">=</span><span class="n">config_ids</span><span class="p">,</span> <span class="n">trial</span><span class="o">=</span><span class="n">rh</span><span class="o">.</span><span class="n">finished</span><span class="p">,</span> <span class="n">walltime</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">used_walltime</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">TrajectoryItem</span><span class="p">(</span>
+                <span class="n">config_ids</span><span class="o">=</span><span class="n">config_ids</span><span class="p">,</span>
+                <span class="n">costs</span><span class="o">=</span><span class="n">costs</span><span class="p">,</span>
+                <span class="n">trial</span><span class="o">=</span><span class="n">rh</span><span class="o">.</span><span class="n">finished</span><span class="p">,</span>
+                <span class="n">walltime</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">used_walltime</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Updated trajectory.&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_add_rejected_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>

@@ -38,7 +38,7 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
 
  .. code-block:: none
 
-    [INFO][abstract_initial_design.py:133] Using 4 initial design configurations and 1 additional configurations.
+    [INFO][abstract_initial_design.py:133] Using 10 initial design configurations and 1 additional configurations.
     [WARNING][prior_acqusition_function.py:107] Discretizing the prior for random forest models.
     [INFO][abstract_intensifier.py:494] Added config fec0cb as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:566] Added config 34b1eb and rejected config fec0cb as incumbent because it is not better than the incumbents on 1 instances:
@@ -48,20 +48,19 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
     [INFO][configspace.py:175] --- n_layer: 2 -> 3
     [INFO][configspace.py:175] --- n_neurons: 157 -> 108
     [INFO][configspace.py:175] --- optimizer: 'sgd' -> 'adam'
-    [INFO][abstract_intensifier.py:566] Added config 4d7ef2 and rejected config 34b1eb as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- batch_size: 128 -> 131
+    [INFO][abstract_intensifier.py:566] Added config a5447e and rejected config 34b1eb as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- batch_size: 128 -> 29
     [INFO][configspace.py:175] --- n_layer: 3 -> 5
-    [INFO][abstract_intensifier.py:566] Added config 315abf and rejected config 4d7ef2 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- batch_size: 131 -> 33
-    [INFO][configspace.py:175] --- learning_rate_init: 0.0010000000000000002 -> 0.0007179183139407974
-    [INFO][configspace.py:175] --- n_layer: 5 -> 3
-    [INFO][configspace.py:175] --- n_neurons: 108 -> 165
+    [INFO][abstract_intensifier.py:566] Added config 71520a and rejected config a5447e as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- batch_size: 29 -> 25
+    [INFO][configspace.py:175] --- learning_rate_init: 0.0010000000000000002 -> 0.0008561309336666343
+    [INFO][configspace.py:175] --- n_neurons: 108 -> 104
     [INFO][smbo.py:306] Configuration budget is exhausted:
     [INFO][smbo.py:307] --- Remaining wallclock time: inf
     [INFO][smbo.py:308] --- Remaining cpu time: inf
     [INFO][smbo.py:309] --- Remaining trials: 0
     Default cost: 0.038952336737852145
-    Default cost: 0.026152893840916236
+    Default cost: 0.028935314144227897
 
 
 
@@ -236,7 +235,7 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  34.087 seconds)
+   **Total running time of the script:** ( 0 minutes  37.036 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_6_priors.py:

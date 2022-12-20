@@ -1014,7 +1014,16 @@
 
 <div class="viewcode-block" id="SuccessiveHalving"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving">[docs]</a><span class="k">class</span> <span class="nc">SuccessiveHalving</span><span class="p">(</span><span class="n">AbstractIntensifier</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Implementation of Succesive Halving supporting multi-fidelity, multi-objective, and multi-threading.</span>
+<span class="sd">    Implementation of Succesive Halving supporting multi-fidelity, multi-objective, and multi-processing.</span>
+<span class="sd">    Internally, a tracker keeps track of configurations and their bracket and stage.</span>
+<span class="sd">    </span>
+<span class="sd">    The behaviour of this intensifier is as follows:</span>
+<span class="sd">    - First, adds configurations from the runhistory to the tracker. The first stage is always filled-up. For example,</span>
+<span class="sd">      the user provided 4 configs with the tell-method but the first stage requires 8 configs: 4 new configs are</span>
+<span class="sd">      sampled and added together with the provided configs as a group to the tracker.</span>
+<span class="sd">    - While loop:</span>
+<span class="sd">      - If a trial in the tracker has not been yielded yet, yield it.</span>
+<span class="sd">      - If we are running out of trials, we simply add a new batch of configurations to the first stage.</span>
 
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
@@ -1356,6 +1365,7 @@
                             <span class="sa">f</span><span class="s2">&quot;--- Removed </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">successful_configs</span><span class="p">)</span><span class="si">}</span><span class="s2"> configs to last stage in bracket </span><span class="si">{</span><span class="n">bracket</span><span class="si">}</span><span class="s2">.&quot;</span>
                         <span class="p">)</span>
 
+            <span class="c1"># Since we yielded something before, we want to go back as long as we do not find any trials anymore</span>
             <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
                 <span class="k">continue</span>
 

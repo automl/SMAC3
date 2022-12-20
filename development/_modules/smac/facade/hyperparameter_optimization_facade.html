@@ -1125,7 +1125,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">n_configs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">n_configs_per_hyperparamter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-        <span class="n">max_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">max_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.25</span><span class="p">,</span>
         <span class="n">additional_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SobolInitialDesign</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Returns a Sobol design instance.</span>
@@ -1139,7 +1139,7 @@
 <span class="sd">            Number of initial configurations per hyperparameter. For example, if my configuration space covers five</span>
 <span class="sd">            hyperparameters and ``n_configs_per_hyperparameter`` is set to 10, then 50 initial configurations will be</span>
 <span class="sd">            samples.</span>
-<span class="sd">        max_ratio: float, defaults to 0.1</span>
+<span class="sd">        max_ratio: float, defaults to 0.25</span>
 <span class="sd">            Use at most ``scenario.n_trials`` * ``max_ratio`` number of configurations in the initial design.</span>
 <span class="sd">            Additional configurations are not affected by this parameter.</span>
 <span class="sd">        additional_configs: list[Configuration], defaults to []</span>

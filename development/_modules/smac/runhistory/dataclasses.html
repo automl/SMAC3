@@ -1134,6 +1134,8 @@
 <span class="sd">    ----------</span>
 <span class="sd">    config_ids : list[int]</span>
 <span class="sd">        Configuration ids of the current incumbents.</span>
+<span class="sd">    costs : list[float | list[float]]</span>
+<span class="sd">        Costs of the current incumbents. In case of multi-objective, this is a list of lists.</span>
 <span class="sd">    trial : int</span>
 <span class="sd">        How many trials have been evaluated so far.</span>
 <span class="sd">    walltime : float</span>
@@ -1141,6 +1143,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">config_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">costs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span>
     <span class="n">trial</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">walltime</span><span class="p">:</span> <span class="nb">float</span></div>
 </pre></div>

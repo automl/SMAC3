@@ -1008,6 +1008,15 @@
 <div class="viewcode-block" id="Intensifier"><a class="viewcode-back" href="../../../api/smac.intensifier.intensifier.html#smac.intensifier.Intensifier">[docs]</a><span class="k">class</span> <span class="nc">Intensifier</span><span class="p">(</span><span class="n">AbstractIntensifier</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-processing.</span>
 <span class="sd">    Races challengers against current incumbents.</span>
+<span class="sd">    </span>
+<span class="sd">    The behaviour of this intensifier is as follows:</span>
+<span class="sd">    - First, adds configs from the runhistory to the queue with N=1 (they will be ignored if they are already </span>
+<span class="sd">      evaluated).</span>
+<span class="sd">    - While loop:</span>
+<span class="sd">      - If queue is empty: Intensifies exactly one more instance of one incumbent and samples a new configuration </span>
+<span class="sd">        afterwards.</span>
+<span class="sd">      - If queue is not empty: Configs in the queue are evaluated on N=(N*2) instances if they might be better</span>
+<span class="sd">        than the incumbents. If not, they are removed from the queue and rejected forever.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>

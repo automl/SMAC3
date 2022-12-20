@@ -1116,7 +1116,7 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#smac.runhistory.dataclasses.InstanceSeedKey" title="smac.runhistory.dataclasses.InstanceSeedKey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InstanceSeedKey</span></code></a>([instance, seed])</p></td>
 <td><p>Key for instance and seed.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.runhistory.dataclasses.TrajectoryItem" title="smac.runhistory.dataclasses.TrajectoryItem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TrajectoryItem</span></code></a>(config_ids, trial, walltime)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.runhistory.dataclasses.TrajectoryItem" title="smac.runhistory.dataclasses.TrajectoryItem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TrajectoryItem</span></code></a>(config_ids, costs, trial, ...)</p></td>
 <td><p>Item of a trajectory.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#smac.runhistory.dataclasses.TrialInfo" title="smac.runhistory.dataclasses.TrialInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TrialInfo</span></code></a>(config[, instance, seed, budget])</p></td>
@@ -1177,13 +1177,14 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runhistory.dataclasses.TrajectoryItem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.dataclasses.</span></span><span class="sig-name descname"><span class="pre">TrajectoryItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">walltime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/dataclasses.html#TrajectoryItem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.dataclasses.TrajectoryItem" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.dataclasses.</span></span><span class="sig-name descname"><span class="pre">TrajectoryItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">costs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">walltime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/dataclasses.html#TrajectoryItem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.dataclasses.TrajectoryItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Item of a trajectory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config_ids</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – Configuration ids of the current incumbents.</p></li>
+<li><p><strong>costs</strong> (<em>list</em><em>[</em><em>float</em><em> | </em><em>list</em><em>[</em><em>float</em><em>]</em><em>]</em>) – Costs of the current incumbents. In case of multi-objective, this is a list of lists.</p></li>
 <li><p><strong>trial</strong> (<em>int</em>) – How many trials have been evaluated so far.</p></li>
 <li><p><strong>walltime</strong> (<em>float</em>) – How much walltime has been used so far.</p></li>
 </ul>

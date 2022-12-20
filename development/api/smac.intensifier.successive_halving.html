@@ -1127,7 +1127,7 @@
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.intensifier.successive_halving.SuccessiveHalving" title="smac.intensifier.successive_halving.SuccessiveHalving"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SuccessiveHalving</span></code></a>(scenario[, eta, n_seeds, ...])</p></td>
-<td><p>Implementation of Succesive Halving supporting multi-fidelity, multi-objective, and multi-threading.</p></td>
+<td><p>Implementation of Succesive Halving supporting multi-fidelity, multi-objective, and multi-processing.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1138,7 +1138,19 @@
 <dt class="sig sig-object py" id="smac.intensifier.successive_halving.SuccessiveHalving">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.intensifier.successive_halving.</span></span><span class="sig-name descname"><span class="pre">SuccessiveHalving</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'shuffle_once'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_incumbents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'highest_observed_budget'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/successive_halving.html#SuccessiveHalving"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.successive_halving.SuccessiveHalving" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.intensifier.abstract_intensifier.html#smac.intensifier.abstract_intensifier.AbstractIntensifier" title="smac.intensifier.abstract_intensifier.AbstractIntensifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractIntensifier</span></code></a></p>
-<p>Implementation of Succesive Halving supporting multi-fidelity, multi-objective, and multi-threading.</p>
+<p>Implementation of Succesive Halving supporting multi-fidelity, multi-objective, and multi-processing.
+Internally, a tracker keeps track of configurations and their bracket and stage.</p>
+<p>The behaviour of this intensifier is as follows:
+- First, adds configurations from the runhistory to the tracker. The first stage is always filled-up. For example,</p>
+<blockquote>
+<div><p>the user provided 4 configs with the tell-method but the first stage requires 8 configs: 4 new configs are
+sampled and added together with the provided configs as a group to the tracker.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>While loop:
+- If a trial in the tracker has not been yielded yet, yield it.
+- If we are running out of trials, we simply add a new batch of configurations to the first stage.</p></li>
+</ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The implementation natively supports brackets from Hyperband. However, in the case of Successive Halving,

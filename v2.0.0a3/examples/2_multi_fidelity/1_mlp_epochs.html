@@ -1025,7 +1025,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 <a class="reference external" href="https://github.com/automl/HpBandSter">BOHB</a>.</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:133] Using 5 initial design configurations and 0 additional configurations.
-[INFO][successive_halving.py:146] Successive Halving uses budget type BUDGETS with eta 3, min budget 5, and max budget 25.
+[INFO][successive_halving.py:155] Successive Halving uses budget type BUDGETS with eta 3, min budget 5, and max budget 25.
 [INFO][abstract_intensifier.py:494] Added config 6b0504 as new incumbent because there are no incumbents yet.
 [INFO][abstract_intensifier.py:566] Added config 622bf8 and rejected config 6b0504 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- batch_size: None -&gt; 155
@@ -1040,7 +1040,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][abstract_intensifier.py:566] Added config 4ce3a0 and rejected config 8db41e as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- n_neurons: 75 -&gt; 196
 [INFO][smbo.py:306] Configuration budget is exhausted:
-[INFO][smbo.py:307] --- Remaining wallclock time: -0.5902087688446045
+[INFO][smbo.py:307] --- Remaining wallclock time: -1.3312764167785645
 [INFO][smbo.py:308] --- Remaining cpu time: inf
 [INFO][smbo.py:309] --- Remaining trials: 174
 Default cost: 0.36672856700711853
@@ -1172,7 +1172,7 @@ Incumbent cost: 0.02671618693902822
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  44.522 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  45.169 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e36c26bb3a993c4641a06c811122b11e/1_mlp_epochs.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_mlp_epochs.py</span></code></a></p>
