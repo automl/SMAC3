@@ -292,6 +292,45 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         else:
             logger.info("Entry was not added to the runhistory because existing trials will not be overwritten.")
 
+    def add_trial(self, info: TrialInfo, value: TrialValue) -> None:
+        """Adds a trial to the runhistory.
+
+        Parameters
+        ----------
+        trial : TrialInfo
+            The ``TrialInfo`` object of the running trial.
+        """
+        self.add(
+            config=info.config,
+            cost=value.cost,
+            time=value.time,
+            status=value.status,
+            instance=info.instance,
+            seed=info.seed,
+            budget=info.budget,
+            starttime=value.starttime,
+            endtime=value.endtime,
+            additional_info=value.additional_info,
+        )
+
+    def add_running_trial(self, trial: TrialInfo) -> None:
+        """Adds a running trial to the runhistory.
+
+        Parameters
+        ----------
+        trial : TrialInfo
+            The ``TrialInfo`` object of the running trial.
+        """
+        self.add(
+            config=trial.config,
+            cost=float(MAXINT),
+            time=0.0,
+            status=StatusType.RUNNING,
+            instance=trial.instance,
+            seed=trial.seed,
+            budget=trial.budget,
+        )
+
     def update_cost(self, config: Configuration) -> None:
         """Stores the performance of a configuration across the instances in `self._cost_per_config`
         and also updates `self._num_trials_per_config`.
@@ -542,106 +581,63 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         return np.nan
 
-    def get_trials(
-        self,
-        config: Configuration,
-        highest_observed_budget_only: bool = True,
-    ) -> list[TrialInfo]:
-        """Return all trials for a configuration.
+    def get_config(self, config_id: int) -> Configuration:
+        """Returns the configuration from the configuration id."""
+        return self._ids_config[config_id]
 
-        Warning
-        -------
-        Does not return running trials. Please use ``get_running_trials`` to receive running trials.
+    def get_config_id(self, config: Configuration) -> int:
+        """Returns the configuration id from a configuration."""
+        return self._config_ids[config]
+
+    def get_configs(self, sort_by: str | None = None) -> list[Configuration]:
+        """Return all configurations in this RunHistory object.
 
         Parameters
         ----------
-        config : Configuration
-            Parameter configuration
-        highest_observed_budget_only : bool
-            Select only the maximally observed budget run for this configuration
+        sort_by : str | None, defaults to None
+            Sort the configs by ``cost`` (lowest cost first) or ``num_trials`` (config with lowest number of trials
+            first).
 
         Returns
         -------
-        trials : list[InstanceSeedBudgetKey]
+        configurations : list
+            All configurations in the runhistory.
         """
-        config_id = self._config_ids.get(config)
-        trials = {}
-        if config_id in self._config_id_to_isk_to_budget:
-            trials = self._config_id_to_isk_to_budget[config_id].copy()
+        configs = list(self._config_ids.keys())
 
-        # Select only the max budget run if specified
-        if highest_observed_budget_only:
-            for k, v in trials.items():
-                if None in v:
-                    trials[k] = [None]
-                else:
-                    trials[k] = [max([v_ for v_ in v if v_ is not None])]
-
-        return [TrialInfo(config, k.instance, k.seed, budget) for k, v in trials.items() for budget in v]
-
-    def get_instance_seed_budget_keys(
-        self,
-        config: Configuration,
-        highest_observed_budget_only: bool = True,
-    ) -> list[InstanceSeedBudgetKey]:
-        """
-
-        Warning
-        -------
-        Does not return running instances.
-
-        Parameters
-        ----------
-        config : Configuration
-            _description_
-        highest_observed_budget_only : bool, optional
-            _description_, by default True
-
-        Returns
-        -------
-        list[InstanceSeedBudgetKey]
-        """
-        trials = self.get_trials(config, highest_observed_budget_only)
-
-        # Convert to instance-seed-budget key
-        return [InstanceSeedBudgetKey(t.instance, t.seed, t.budget) for t in trials]
-
-    def add_running_trial(self, trial: TrialInfo) -> None:
-        """Adds a running trial to the runhistory.
-
-        Parameters
-        ----------
-        trial : TrialInfo
-            The ``TrialInfo`` object of the running trial.
-        """
-        self.add(
-            config=trial.config,
-            cost=float(MAXINT),
-            time=0.0,
-            status=StatusType.RUNNING,
-            instance=trial.instance,
-            seed=trial.seed,
-            budget=trial.budget,
-        )
-
-    def get_running_trials(self, config: Configuration | None = None) -> list[TrialInfo]:
-        """Returns all running trials for the passed configuration.
-
-        Parameters
-        ----------
-        config : Configuration | None, defaults to None
-            Return only running trials from the passed configuration. If None, all configs are considered.
-
-        Returns
-        -------
-        list[TrialInfo]
-            List of trials, all of which are still running.
-        """
-        # Always work on copies
-        if config is None:
-            return [trial for trial in self._running_trials]
+        if sort_by == "cost":
+            return sorted(configs, key=lambda config: self._cost_per_config[self._config_ids[config]])
+        elif sort_by == "num_trials":
+            return sorted(configs, key=lambda config: len(self.get_trials(config)))
+        elif sort_by is None:
+            return configs
         else:
-            return [trial for trial in self._running_trials if trial.config == config]
+            raise ValueError(f"Unknown sort_by value: {sort_by}.")
+
+    def get_configs_per_budget(
+        self,
+        budget_subset: list[float | int] | None = None,
+    ) -> list[Configuration]:
+        """Return all configs in this runhistory that have been run on one of these budgets.
+
+        Parameters
+        ----------
+        budget_subset: list[float | int] | None, defaults to None
+
+        Returns
+        -------
+        configurations : list
+            List of configurations that have been run on the budgets in ``budget_subset``.
+        """
+        if budget_subset is None:
+            return self.get_configs()
+
+        configs = []
+        for key in self._data.keys():
+            if key.budget in budget_subset:
+                configs.append(self._ids_config[key.config_id])
+
+        return configs
 
     def get_running_configs(self) -> list[Configuration]:
         """Returns all configurations which have at least one running trial.
@@ -658,66 +654,95 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         return configs
 
-    def get_config(self, config_id: int) -> Configuration:
-        """Returns the configuration from the configuration id."""
-        return self._ids_config[config_id]
-
-    def get_config_id(self, config: Configuration) -> int:
-        """Returns the configuration id from a configuration."""
-        return self._config_ids[config]
-
-    def get_configs(self, sort_by: str | None = None) -> list[Configuration]:
-        """Return all configurations in this RunHistory object.
-
-        Returns
-        -------
-        parameter configurations: list
-        sort_by : str, defaults to None
-            Sort the configs by ``cost`` (lowest cost first) or ``num_trials`` (config with lowest number of trials
-            first).
-        """
-        configs = list(self._config_ids.keys())
-
-        if sort_by == "cost":
-            return sorted(configs, key=lambda config: self._cost_per_config[self._config_ids[config]])
-        elif sort_by == "num_trials":
-            return sorted(configs, key=lambda config: len(self.get_trials(config)))
-        elif sort_by is None:
-            return configs
-        else:
-            raise ValueError(f"Unknown sort_by value: {sort_by}.")
-
-    def get_configs_per_budget(
+    def get_trials(
         self,
-        budget_subset: list | None = None,
-    ) -> list[Configuration]:
-        """Return all configs in this RunHistory object that have been run on one of these budgets.
+        config: Configuration,
+        highest_observed_budget_only: bool = True,
+    ) -> list[TrialInfo]:
+        """Returns all trials for a configuration.
+
+        Warning
+        -------
+        Does not return running trials. Please use ``get_running_trials`` to receive running trials.
 
         Parameters
         ----------
-        budget_subset: list
+        config : Configuration
+        highest_observed_budget_only : bool
+            Select only the highest observed budget run for this configuration.
 
         Returns
         -------
-        parameter configurations: list
+        trials : list[InstanceSeedBudgetKey]
+            List of trials for the passed configuration.
         """
-        if budget_subset is None:
-            return self.get_configs()
+        config_id = self._config_ids.get(config)
+        trials = {}
+        if config_id in self._config_id_to_isk_to_budget:
+            trials = self._config_id_to_isk_to_budget[config_id].copy()
 
-        configs = []
-        for key in self._data.keys():
-            if key.budget in budget_subset:
-                configs.append(self._ids_config[key.config_id])
+        # Select only the max budget run if specified
+        if highest_observed_budget_only:
+            for k, v in trials.items():
+                if None in v:
+                    trials[k] = [None]
+                else:
+                    trials[k] = [max([v_ for v_ in v if v_ is not None])]
 
-        return configs
+        return [TrialInfo(config, k.instance, k.seed, budget) for k, v in trials.items() for budget in v]
+
+    def get_running_trials(self, config: Configuration | None = None) -> list[TrialInfo]:
+        """Returns all running trials for the passed configuration.
+
+        Parameters
+        ----------
+        config : Configuration | None, defaults to None
+            Return only running trials from the passed configuration. If None, all configs are considered.
+
+        Returns
+        -------
+        trials : list[TrialInfo]
+            List of trials, all of which are still running.
+        """
+        # Always work on copies
+        if config is None:
+            return [trial for trial in self._running_trials]
+        else:
+            return [trial for trial in self._running_trials if trial.config == config]
+
+    def get_instance_seed_budget_keys(
+        self,
+        config: Configuration,
+        highest_observed_budget_only: bool = True,
+    ) -> list[InstanceSeedBudgetKey]:
+        """
+        Uses ``get_trials`` to return a list of instance-seed-budget keys.
+
+        Warning
+        -------
+        Does not return running instances.
+
+        Parameters
+        ----------
+        config : Configuration
+        highest_observed_budget_only : bool, defaults to True
+            Select only the highest observed budget run for this configuration.
+
+        Returns
+        -------
+        list[InstanceSeedBudgetKey]
+        """
+        trials = self.get_trials(config, highest_observed_budget_only)
+
+        # Convert to instance-seed-budget key
+        return [InstanceSeedBudgetKey(t.instance, t.seed, t.budget) for t in trials]
 
     def save(self, filename: str | Path = "runhistory.json") -> None:
         """Saves runhistory on disk.
 
         Parameters
         ----------
-        filename : str
-            file name.
+        filename : str | Path, defaults to "runhistory.json"
         """
         data = []
         for k, v in self._data.items():
@@ -765,18 +790,16 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             )
 
     def load(self, filename: str | Path, configspace: ConfigurationSpace) -> None:
-        """Load and runhistory in json representation from disk.
+        """Loads the runhistory from disk.
 
         Warning
         -------
-        Overwrites current runhistory!
+        Overwrites the current runhistory.
 
         Parameters
         ----------
-        filename : str
-            file name to load from
+        filename : str | Path
         configspace : ConfigSpace
-            instance of configuration space
         """
         if isinstance(filename, str):
             filename = Path(filename)
