@@ -20,7 +20,7 @@ class AbstractKernel:
     This is a mixin for a kernel to override functions of the kernel. Because it overrides functions of the kernel,
     it needs to be placed first in the inheritance hierarchy. For this reason it is not possible to subclass the
     Mixin from the kernel class because this will prevent it from being instantiatable. Therefore, mypy won't know about
-    anything related to the superclass and some type:ignore statements has to be  added when accessing a member that is
+    anything related to the superclass and some type:ignore statements has to be added when accessing a member that is
     declared in the superclass such as `self.has_conditions`, `self._call`, `super().get_params`, etc.
 
     Parameters
@@ -292,12 +292,12 @@ class SumKernel(AbstractKernel, kernels.Sum):
 
         Parameters
         ----------
-        X : array, shape (n_samples_X, n_features)
-            Left argument of the returned kernel k(X, Y)
+        X : np.ndarray, shape (n_samples_X, n_features)
+            Left argument of the returned kernel k(X, Y).
 
-        Y : array, shape (n_samples_Y, n_features), (optional, default=None)
+        Y : np.ndarray, shape (n_samples_Y, n_features), (optional, default=None)
             Right argument of the returned kernel k(X, Y). If None, k(X, X)
-            if evaluated instead.
+            is evaluated instead.
 
         eval_gradient : bool (optional, default=False)
             Determines whether the gradient with respect to the kernel
@@ -308,10 +308,10 @@ class SumKernel(AbstractKernel, kernels.Sum):
 
         Returns
         -------
-        K : array, shape (n_samples_X, n_samples_Y)
-            Kernel k(X, Y)
+        K : np.ndarray, shape (n_samples_X, n_samples_Y)
+            Kernel k(X, Y).
 
-        K_gradient : array (opt.), shape (n_samples_X, n_samples_X, n_dims)
+        K_gradient : np.ndarray (opt.), shape (n_samples_X, n_samples_X, n_dims)
             The gradient of the kernel k(X, X) with respect to the
             hyperparameter of the kernel. Only returned when eval_gradient
             is True.
@@ -353,12 +353,12 @@ class ProductKernel(AbstractKernel, kernels.Product):
 
         Parameters
         ----------
-        X : array, shape (n_samples_X, n_features)
-            Left argument of the returned kernel k(X, Y)
+        X : np.ndarray, shape (n_samples_X, n_features)
+            Left argument of the returned kernel k(X, Y).
 
-        Y : array, shape (n_samples_Y, n_features), (optional, default=None)
+        Y : np.ndarray, shape (n_samples_Y, n_features), (optional, default=None)
             Right argument of the returned kernel k(X, Y). If None, k(X, X)
-            if evaluated instead.
+            is evaluated instead.
 
         eval_gradient : bool (optional, default=False)
             Determines whether the gradient with respect to the kernel
@@ -369,10 +369,10 @@ class ProductKernel(AbstractKernel, kernels.Product):
 
         Returns
         -------
-        K : array, shape (n_samples_X, n_samples_Y)
-            Kernel k(X, Y)
+        K : np.ndarray, shape (n_samples_X, n_samples_Y)
+            Kernel k(X, Y).
 
-        K_gradient : array (opt.), shape (n_samples_X, n_samples_X, n_dims)
+        K_gradient : np.ndarray (opt.), shape (n_samples_X, n_samples_X, n_dims)
             The gradient of the kernel k(X, X) with respect to the
             hyperparameter of the kernel. Only returned when eval_gradient
             is True.
@@ -414,12 +414,12 @@ class ConstantKernel(AbstractKernel, kernels.ConstantKernel):
 
         Parameters
         ----------
-        X : array, shape (n_samples_X, n_features)
-            Left argument of the returned kernel k(X, Y)
+        X : np.ndarray, shape (n_samples_X, n_features)
+            Left argument of the returned kernel k(X, Y).
 
-        Y : array, shape (n_samples_Y, n_features), (optional, default=None)
+        Y : np.ndarray, shape (n_samples_Y, n_features), (optional, default=None)
             Right argument of the returned kernel k(X, Y). If None, k(X, X)
-            if evaluated instead.
+            is evaluated instead.
 
         eval_gradient : bool (optional, default=False)
             Determines whether the gradient with respect to the kernel
@@ -430,10 +430,10 @@ class ConstantKernel(AbstractKernel, kernels.ConstantKernel):
 
         Returns
         -------
-        K : array, shape (n_samples_X, n_samples_Y)
-            Kernel k(X, Y)
+        K : np.ndarray, shape (n_samples_X, n_samples_Y)
+            Kernel k(X, Y).
 
-        K_gradient : array (opt.), shape (n_samples_X, n_samples_X, n_dims)
+        K_gradient : np.ndarray (opt.), shape (n_samples_X, n_samples_X, n_dims)
             The gradient of the kernel k(X, X) with respect to the
             hyperparameter of the kernel. Only returned when eval_gradient
             is True.

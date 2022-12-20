@@ -18,7 +18,7 @@ logger = get_logger(__name__)
 
 
 class RunHistoryEIPSEncoder(AbstractRunHistoryEncoder):
-    """Encoder specifically for the EIPS acquisition function."""
+    """Encoder specifically for the EIPS (expected improvement per second) acquisition function."""
 
     def _build_matrix(
         self,
@@ -67,9 +67,7 @@ class RunHistoryEIPSEncoder(AbstractRunHistoryEncoder):
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
         """Transform function response values. Transform the runtimes by a log transformation
-        (log(1.
-
-        + runtime).
+        log(1. + runtime).
 
         Parameters
         ----------

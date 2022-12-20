@@ -59,7 +59,7 @@ class BlackBoxFacade(AbstractFacade):
         ----------
         scenario : Scenario
         model_type : str | None, defaults to None
-            Which gaussian process model should be chosen. Choose between `vanilla` and `mcmc`.
+            Which Gaussian Process model should be chosen. Choose between `vanilla` and `mcmc`.
         kernel : kernels.Kernel | None, defaults to None
             The kernel used in the surrogate model.
 
@@ -199,7 +199,7 @@ class BlackBoxFacade(AbstractFacade):
         ----------
         challengers : int, defaults to 1000
             Number of challengers.
-        local_search_iterations: int, defauts to 10
+        local_search_iterations: int, defaults to 10
             Number of local search iterations.
         """
         return LocalAndSortedRandomSearch(
@@ -222,8 +222,8 @@ class BlackBoxFacade(AbstractFacade):
         ----------
         scenario : Scenario
         max_config_calls : int, defaults to 3
-            Maximum number of configuration evaluations. Basically, how many instance-seed keys should be max evaluated
-            for a configuration.
+            Maximum number of configuration evaluations. Basically, how many instance-seed keys should be evaluated at
+            maximum for a configuration.
         max_incumbents : int, defaults to 10
             How many incumbents to keep track of in the case of multi-objective.
         """
@@ -289,13 +289,14 @@ class BlackBoxFacade(AbstractFacade):
         *,
         objective_weights: list[float] | None = None,
     ) -> MeanAggregationStrategy:
-        """Returns the mean aggregation strategy for the multi objective algorithm.
+        """Returns the mean aggregation strategy for the multi-objective algorithm.
 
         Parameters
         ----------
         scenario : Scenario
         objective_weights : list[float] | None, defaults to None
-            Weights for an weighted average. Must be of the same length as the number of objectives.
+            Weights for averaging the objectives in a weighted manner. Must be of the same length as the number of
+            objectives.
         """
         return MeanAggregationStrategy(
             scenario=scenario,

@@ -41,7 +41,7 @@ class ConfigSelector:
         How often to retry receiving a new configuration before giving up.
     min_trials: int, defaults to 1
         How many samples are required to train the surrogate model. If budgets are involved,
-        the highest budgets are checked first. For example, if min_trials is three but we find only
+        the highest budgets are checked first. For example, if min_trials is three, but we find only
         two trials in the runhistory for the highest budget, we will use trials of a lower budget
         instead.
     """
@@ -116,12 +116,12 @@ class ConfigSelector:
         }
 
     def __iter__(self) -> Iterator[Configuration]:
-        """This method returns the next configuration to evaluate. It ignores already processed configs, i.e.,
-        the configs from the runhistory if the runhistory is not empty.
+        """This method returns the next configuration to evaluate. It ignores already processed configurations, i.e.,
+        the configurations from the runhistory, if the runhistory is not empty.
         The method (after yielding the initial design configurations) trains the surrogate model, maximizes the
         acquisition function and yields ``n`` configurations. After the ``n`` configurations, the surrogate model is
         trained again, etc. The program stops if ``retries`` was reached within each iteration. A configuration
-        is ignored if it was used already before.
+        is ignored, if it was used already before.
 
         Note
         ----
@@ -256,8 +256,8 @@ class ConfigSelector:
             callback.on_next_configurations_end(self, config)
 
     def _collect_data(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-        """Collects the data from the runhistory to train the surrogate model. The data collection strategy if budgets
-        are used is as follows: Looking from highest to lowest budget, return those observations
+        """Collects the data from the runhistory to train the surrogate model. In the case of budgets, the data
+        collection strategy is as follows: Looking from highest to lowest budget, return those observations
         that support at least ``self._min_trials`` points.
 
         If no budgets are used, this is equivalent to returning all observations.

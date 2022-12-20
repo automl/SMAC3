@@ -65,7 +65,7 @@ class MLP:
         cs.add_hyperparameters([n_layer, n_neurons, activation, solver, batch_size, learning_rate, learning_rate_init])
 
         # Adding conditions to restrict the hyperparameter space...
-        # ... since learning rate is used when solver is 'sgd'.
+        # ... since learning rate is only used when solver is 'sgd'.
         use_lr = EqualsCondition(child=learning_rate, parent=solver, value="sgd")
         # ... since learning rate initialization will only be accounted for when using 'sgd' or 'adam'.
         use_lr_init = InCondition(child=learning_rate_init, parent=solver, values=["sgd", "adam"])

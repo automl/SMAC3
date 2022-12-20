@@ -14,7 +14,7 @@ logger = get_logger(__name__)
 
 
 class TS(AbstractAcquisitionFunction):
-    r"""Do a Thompson Sampling for a given x over the best so far value as acquisition value.
+    r"""Thompson Sampling
 
     Warning
     -------

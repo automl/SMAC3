@@ -33,14 +33,14 @@ class Intensifier(AbstractIntensifier):
     Parameters
     ----------
     max_config_calls : int, defaults to 3
-        Maximum number of configuration evaluations. Basically, how many instance-seed keys should be max evaluated
+        Maximum number of configuration evaluations. Basically, how many instance-seed keys should be maxed evaluated
         for a configuration.
     max_incumbents : int, defaults to 10
         How many incumbents to keep track of in the case of multi-objective.
     retries : int, defaults to 16
-        How many more iterations should be done in case of no new trial is found.
+        How many more iterations should be done in case no new trial is found.
     seed : int, defaults to None
-        Internal seed used for random events like shuffle seeds.
+        Internal seed used for random events, like shuffle seeds.
     """
 
     def __init__(
@@ -55,7 +55,7 @@ class Intensifier(AbstractIntensifier):
         self._retries = retries
 
     def reset(self) -> None:
-        """Reset the internal variables of the intensifier including the queue."""
+        """Resets the internal variables of the intensifier including the queue."""
         super().reset()
 
         # Queue to keep track of the challengers
@@ -105,7 +105,7 @@ class Intensifier(AbstractIntensifier):
         assert self._max_config_calls is not None
 
         # What if there are already trials in the runhistory? Should we queue them up?
-        # Because they are part of the runhistory, they might be selected as incumbent. However, they are not
+        # Because they are part of the runhistory, they might be selected as incumbents. However, they are not
         # intensified because they are not part of the queue. We could add them here to incorporate them in the
         # intensification process.
         # Idea: Add all configs to queue (if it is an incumbent it is removed automatically later on)
@@ -132,7 +132,7 @@ class Intensifier(AbstractIntensifier):
             rejected_configs = self.get_rejected_configs()
 
             # Now we get the incumbents sorted by number of trials
-            # Also, incorporate ``get_incumbent_instance_seed_budget_keys`` here because challenger are only allowed to
+            # Also, incorporate ``get_incumbent_instance_seed_budget_keys`` here because challengers are only allowed to
             # sample from the incumbent's instances
             incumbents = self.get_incumbents(sort_by="num_trials")
             incumbent_isb_keys = self.get_incumbent_instance_seed_budget_keys()
@@ -269,7 +269,7 @@ class Intensifier(AbstractIntensifier):
                     logger.debug(f"--- Removed config {config_hash} with N={N} from queue.")
 
                     # Finally, we add the same config to the queue with a higher N
-                    # If the config was rejected by the runhistory, then it's be removed in the next iteration
+                    # If the config was rejected by the runhistory, then it's been removed in the next iteration
                     if N < self._max_config_calls:
                         new_pair = (config, N * 2)
                         if new_pair not in self._queue:
@@ -284,7 +284,7 @@ class Intensifier(AbstractIntensifier):
                         else:
                             logger.debug(f"--- Config {config_hash} with N={N*2} is already in the queue.")
 
-                    # If we are at this point, it really is important to break because otherwise we would intensify
+                    # If we are at this point, it really is important to break because otherwise, we would intensify
                     # all configs in the queue in one iteration
                     break
 
@@ -297,7 +297,7 @@ class Intensifier(AbstractIntensifier):
         shuffle: bool = True,
     ) -> list[TrialInfo]:
         """Returns the next trials of the configuration based on ``get_trials_of_interest``. If N is specified,
-        maximum N trials are returned but not necessarely all of them (depending on evaluated already or still running).
+        maximum N trials are returned but not necessarily all of them (depending on evaluated already or still running).
 
         Parameters
         ----------
@@ -307,7 +307,7 @@ class Intensifier(AbstractIntensifier):
         from_keys : list[InstanceSeedBudgetKey], defaults to None
             Only instances from the list are considered for the trials.
         shuffle : bool, defaults to True
-            Shuffles the trials in groups. First all instances are shuffled, then all seeds.
+            Shuffles the trials in groups. First, all instances are shuffled, then all seeds.
         """
         rh = self.runhistory
         is_keys = self.get_instance_seed_keys_of_interest()
@@ -327,7 +327,7 @@ class Intensifier(AbstractIntensifier):
         # Counter is important to actually subtract the number of trials that are already evaluated/running
         # Otherwise, evaluated/running trials are not considered
         # Example: max_config_calls=16, N=8, 2 trials are running, 2 trials are evaluated, 4 trials are pending
-        # Without counter, we would return 8 trials because there are still so many trials left open
+        # Without a counter, we would return 8 trials because there are still so many trials left open
         # With counter, we would return only 4 trials because 4 trials are already evaluated/running
         counter = 0
 

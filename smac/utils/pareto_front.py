@@ -14,9 +14,19 @@ def _get_costs(
 ) -> np.ndarray:
     """Returns the costs of the passed configurations.
 
+    Parameters
+    ----------
+    runhistory : RunHistory
+        The runhistory containing the passed configs.
+    configs : list[Configuration]
+        The configs for which the costs should be returned.
+    config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]]
+        The instance-seed budget keys for the configs for which the costs should be returned.
+
     Returns
     -------
     costs : np.ndarray[n_points, n_objectives]
+        Costs of the given configs.
     """
     assert len(configs) == len(config_instance_seed_budget_keys)
 
@@ -40,7 +50,22 @@ def calculate_pareto_front(
     configs: list[Configuration],
     config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]],
 ) -> list[Configuration]:
-    """Compares the passed configurations and returns only the ones one the pareto front."""
+    """Compares the passed configurations and returns only the ones on the pareto front.
+
+    Parameters
+    ----------
+    runhistory : RunHistory
+        The runhistory containing the given configurations.
+    configs : list[Configuration]
+        The configurations from which the Pareto front should be computed.
+    config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]]
+        The instance-seed budget keys for the configurations on the basis of which the Pareto front should be computed.
+
+    Returns
+    -------
+    pareto_front : list[Configuration]
+        The pareto front computed from the given configurations.
+    """
     costs = _get_costs(runhistory, configs, config_instance_seed_budget_keys)
 
     # The following code is an efficient pareto front implementation
@@ -64,6 +89,21 @@ def sort_by_crowding_distance(
 ) -> list[Configuration]:
     """Sorts the passed configurations by their crowding distance. Taken from
     https://github.com/anyoptimization/pymoo/blob/20abef1ade71915352217400c11ece4c2f35163e/pymoo/algorithms/nsga2.py
+
+
+    Parameters
+    ----------
+    runhistory : RunHistory
+        The runhistory containing the given configurations.
+    configs : list[Configuration]
+        The configurations which should be sorted.
+    config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]]
+        The instance-seed budget keys for the configurations which should be sorted.
+
+    Returns
+    -------
+    sorted_list : list[Configuration]
+        Configurations sorted by crowding distance.
     """
     F = _get_costs(runhistory, configs, config_instance_seed_budget_keys)
     infinity = 1e14

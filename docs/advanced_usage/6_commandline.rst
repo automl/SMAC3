@@ -25,7 +25,7 @@ However, as for the python target function, the arguments like instance or budge
 components are used. The hyperparameters are depending on the configuration space. The variable ``filename`` could be 
 something like ``./path/to/your/script.sh``.
 
-We recommend using following code to receive the arguments in a bash script. Please note, that the user is not limited
+We recommend using the following code to receive the arguments in a bash script. Please note that the user is not limited
 to bash scripts but can also use executables, python scripts or anything else.
 
 .. note ::

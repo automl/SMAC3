@@ -95,7 +95,7 @@ class HyperparameterOptimizationFacade(AbstractFacade):
         ----------
         challengers : int, defaults to 10000
             Number of challengers.
-        local_search_iterations: int, defauts to 10
+        local_search_iterations: int, defaults to 10
             Number of local search iterations.
         """
         optimizer = LocalAndSortedRandomSearch(
@@ -186,13 +186,14 @@ class HyperparameterOptimizationFacade(AbstractFacade):
         *,
         objective_weights: list[float] | None = None,
     ) -> MeanAggregationStrategy:
-        """Returns the mean aggregation strategy for the multi objective algorithm.
+        """Returns the mean aggregation strategy for the multi-objective algorithm.
 
         Parameters
         ----------
         scenario : Scenario
         objective_weights : list[float] | None, defaults to None
-            Weights for an weighted average. Must be of the same length as the number of objectives.
+            Weights for averaging the objectives in a weighted manner. Must be of the same length as the number of
+            objectives.
         """
         return MeanAggregationStrategy(
             scenario=scenario,

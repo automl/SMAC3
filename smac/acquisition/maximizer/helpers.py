@@ -40,8 +40,10 @@ class ChallengerList(Iterator):
         self._random_design = random_design
 
     def __next__(self) -> Configuration:
+        # If we already returned the required number of challengers
         if self._challengers is not None and self._index == len(self._challengers):
             raise StopIteration
+        # If we do not want to have random configs, we just yield the next challenger
         elif self._random_design is None:
             if self._challengers is None:
                 self._challengers = self._challengers_callback()
@@ -50,6 +52,7 @@ class ChallengerList(Iterator):
             self._index += 1
 
             return config
+        # If we want to interleave challengers with random configs, sample one
         else:
             if self._random_design.check(self._iteration):
                 config = self._configspace.sample_configuration()

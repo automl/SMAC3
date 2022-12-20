@@ -19,7 +19,7 @@ logger = get_logger(__name__)
 
 
 class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
-    """Implements SMAC's default acquisition function optimization.
+    """Implement SMAC's default acquisition function optimization.
 
     This optimizer performs local search from the previous best points according, to the acquisition function, uses the
     acquisition function to sort randomly sampled configurations. Random configurations are interleaved by the main SMAC
@@ -34,9 +34,9 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
     max_steps: int | None, defaults to None
         [LocalSearch] Maximum number of steps that the local search will perform.
     n_steps_plateau_walk: int, defaults to 10
-        [LocalSearch] number of steps during a plateau walk before local search terminates
+        [LocalSearch] number of steps during a plateau walk before local search terminates.
     local_search_iterations: int, defauts to 10
-        [Local Search] number of local search iterations
+        [Local Search] number of local search iterations.
     seed : int, defaults to 0
     """
 
