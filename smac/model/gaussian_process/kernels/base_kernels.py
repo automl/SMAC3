@@ -271,7 +271,7 @@ class SumKernel(AbstractKernel, kernels.Sum):
         self,
         k1: kernels.Kernel,
         k2: kernels.Kernel,
-        operate_on: np.ndarray = None,
+        operate_on: np.ndarray | None = None,
         has_conditions: bool = False,
     ) -> None:
         super().__init__(
@@ -332,7 +332,7 @@ class ProductKernel(AbstractKernel, kernels.Product):
         self,
         k1: kernels.Kernel,
         k2: kernels.Kernel,
-        operate_on: np.ndarray = None,
+        operate_on: np.ndarray | None = None,
         has_conditions: bool = False,
     ) -> None:
         super().__init__(

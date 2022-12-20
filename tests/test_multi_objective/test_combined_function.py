@@ -11,6 +11,7 @@ from smac import HyperparameterOptimizationFacade as HPOFacade
 from smac import MultiFidelityFacade as MFFacade
 from smac import RandomFacade as RFacade
 from smac import Scenario
+from smac.initial_design.random_design import RandomInitialDesign
 from smac.intensifier.intensifier import Intensifier
 from smac.main.config_selector import ConfigSelector
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
@@ -77,6 +78,7 @@ def test_mean_aggregation(facade, make_scenario, configspace):
     multi_objective_algorithm = WrapStrategy(MeanAggregationStrategy, scenario=scenario)
     intensifier = Intensifier(scenario, max_config_calls=1, max_incumbents=10)
     config_selector = ConfigSelector(scenario, retrain_after=RETRAIN_AFTER)
+    initial_design = RandomInitialDesign(scenario, n_configs=1)
 
     smac = facade(
         scenario=scenario,
@@ -84,11 +86,12 @@ def test_mean_aggregation(facade, make_scenario, configspace):
         multi_objective_algorithm=multi_objective_algorithm,
         intensifier=intensifier,
         config_selector=config_selector,
+        initial_design=initial_design,
         overwrite=True,
     )
     incumbents = smac.optimize()
 
-    # We sort the incumbents by their x values and then make sure that the current y is 
+    # We sort the incumbents by their x values and then make sure that the current y is
     # smaller than the previous one.
     sorted_incumbents = []
     for incumbent in incumbents:
@@ -115,6 +118,7 @@ def test_parego(facade, make_scenario, configspace):
     multi_objective_algorithm = WrapStrategy(ParEGO, scenario=scenario)
     intensifier = Intensifier(scenario, max_config_calls=1, max_incumbents=10)
     config_selector = ConfigSelector(scenario, retrain_after=RETRAIN_AFTER)
+    initial_design = RandomInitialDesign(scenario, n_configs=1)
 
     smac = facade(
         scenario=scenario,
@@ -122,6 +126,7 @@ def test_parego(facade, make_scenario, configspace):
         multi_objective_algorithm=multi_objective_algorithm,
         intensifier=intensifier,
         config_selector=config_selector,
+        initial_design=initial_design,
         overwrite=True,
     )
     incumbents = smac.optimize()

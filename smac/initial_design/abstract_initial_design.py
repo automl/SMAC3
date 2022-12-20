@@ -49,7 +49,7 @@ class AbstractInitialDesign:
         scenario: Scenario,
         n_configs: int | None = None,
         n_configs_per_hyperparameter: int | None = 10,
-        max_ratio: float = 0.1,
+        max_ratio: float = 0.25,
         additional_configs: list[Configuration] = [],
         seed: int | None = None,
     ):

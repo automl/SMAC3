@@ -110,6 +110,7 @@ class EI(AbstractAcquisitionFunction):
         """
         assert self._model is not None
         assert self._xi is not None
+
         if self._eta is None:
             raise ValueError(
                 "No current best specified. Call update("
@@ -140,6 +141,7 @@ class EI(AbstractAcquisitionFunction):
                 f[s_copy == 0.0] = 0.0
             else:
                 f = calculate_f()
+
             if (f < 0).any():
                 raise ValueError("Expected Improvement is smaller than 0 for at least one " "sample.")
 

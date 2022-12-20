@@ -1,6 +1,5 @@
 from sklearn import datasets
-
-from benchmark.datasets.dataset import Dataset
+from src.datasets.dataset import Dataset
 
 
 class IrisDataset(Dataset):

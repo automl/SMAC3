@@ -26,7 +26,16 @@ logger = get_logger(__name__)
 
 class SuccessiveHalving(AbstractIntensifier):
     """
-    Implementation of Successive Halving supporting multi-fidelity, multi-objective, and multi-processing.
+    Implementation of Succesive Halving supporting multi-fidelity, multi-objective, and multi-processing.
+    Internally, a tracker keeps track of configurations and their bracket and stage.
+
+    The behaviour of this intensifier is as follows:
+    - First, adds configurations from the runhistory to the tracker. The first stage is always filled-up. For example,
+      the user provided 4 configs with the tell-method but the first stage requires 8 configs: 4 new configs are
+      sampled and added together with the provided configs as a group to the tracker.
+    - While loop:
+      - If a trial in the tracker has not been yielded yet, yield it.
+      - If we are running out of trials, we simply add a new batch of configurations to the first stage.
 
     Note
     ----
@@ -328,7 +337,7 @@ class SuccessiveHalving(AbstractIntensifier):
             # TODO: Log how many configs are in each stage
             for (bracket, stage) in list(self._tracker.keys()):
                 pairs = self._tracker[(bracket, stage)].copy()
-                for i, (seed, configs) in enumerate(pairs):
+                for seed, configs in pairs:
                     isb_keys = self._get_instance_seed_budget_keys_by_stage(bracket=bracket, stage=stage, seed=seed)
 
                     # We iterate over the configs and yield trials which are not running/evaluated yet
@@ -354,7 +363,7 @@ class SuccessiveHalving(AbstractIntensifier):
 
                     # Update tracker
                     # Remove current shuffle index / config pair
-                    del self._tracker[(bracket, stage)][i]
+                    self._tracker[(bracket, stage)].remove((seed, configs))
 
                     # Add successful to the next stage
                     if stage < self._max_iterations[bracket] - 1:
@@ -370,6 +379,7 @@ class SuccessiveHalving(AbstractIntensifier):
                             f"--- Removed {len(successful_configs)} configs to last stage in bracket {bracket}."
                         )
 
+            # Since we yielded something before, we want to go back as long as we do not find any trials anymore
             if update:
                 continue
 

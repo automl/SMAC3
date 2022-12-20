@@ -333,26 +333,26 @@ def test_predict_with_actual_values():
     assert pytest.approx(var_sd[0][0] ** 2) == var_hat[0][0]
 
 
-def test_gp_on_sklearn_data():
-    X, y = sklearn.datasets.load_boston(return_X_y=True)
-    # Normalize such that the bounds in get_gp (10) hold
-    X = X / X.max(axis=0)
-    seed = 1
-    rs = np.random.RandomState(seed)
-    model = get_gp(X.shape[1], seed)
-    cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
+# def test_gp_on_sklearn_data():
+#     X, y = sklearn.datasets.load_boston(return_X_y=True)
+#     # Normalize such that the bounds in get_gp (10) hold
+#     X = X / X.max(axis=0)
+#     seed = 1
+#     rs = np.random.RandomState(seed)
+#     model = get_gp(X.shape[1], seed)
+#     cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-    maes = [8.886514052493349145, 8.868823494592284107]
+#     maes = [8.886514052493349145, 8.868823494592284107]
 
-    for i, (train_split, test_split) in enumerate(cv.split(X, y)):
-        X_train = X[train_split]
-        y_train = y[train_split]
-        X_test = X[test_split]
-        y_test = y[test_split]
-        model.train(X_train, y_train)
-        y_hat, mu_hat = model.predict(X_test)
-        mae = np.mean(np.abs(y_hat - y_test), dtype=float)
-        assert pytest.approx(mae) == maes[i]
+#     for i, (train_split, test_split) in enumerate(cv.split(X, y)):
+#         X_train = X[train_split]
+#         y_train = y[train_split]
+#         X_test = X[test_split]
+#         y_test = y[test_split]
+#         model.train(X_train, y_train)
+#         y_hat, mu_hat = model.predict(X_test)
+#         mae = np.mean(np.abs(y_hat - y_test), dtype=float)
+#         assert pytest.approx(mae) == maes[i]
 
 
 def test_nll():

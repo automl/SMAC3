@@ -61,7 +61,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
             if argument not in signature.keys():
                 raise RuntimeError(
                     f"Target function needs to have the arguments {required_arguments} "
-                    f"but could not found {argument}."
+                    f"but could not find {argument}."
                 )
 
         # Now we check for additional arguments which are not used by SMAC

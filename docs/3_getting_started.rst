@@ -143,5 +143,3 @@ The facades can be imported directly from the ``smac`` module.
     smac = ACFacade(scenario=scenario, target_function=train)
     smac = RFacade(scenario=scenario, target_function=train)
     smac = HBFacade(scenario=scenario, target_function=train)
-
-

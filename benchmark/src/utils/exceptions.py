@@ -1,0 +1,2 @@
+class NotSupportedError(Exception):
+    pass

@@ -1,0 +1,13 @@
+tasks,n_trials,walltime,instances,2.0.0a3 (cost / time),1.4.0 (cost / time)
+Branin (Blackbox),150,60,False,N/A,N/A
+Branin (HPO),150,60,False,N/A,N/A
+"Branin (HPO, retrain after 8 trials)",150,60,False,N/A,N/A
+Himmelblau (Blackbox),300,60,False,N/A,N/A
+Himmelblau (HPO),300,60,False,N/A,N/A
+"Himmelblau (HPO, retrain after 8 trials)",300,60,False,N/A,N/A
+SVM-Digits,500,inf,True,N/A,N/A
+SVM-Digits (HB),500,inf,True,N/A,N/A
+"SVM-Digits (HB, retrain after 8 trials)",500,inf,True,N/A,N/A
+MLP-BreastCancer (HB),1000,360,False,N/A,N/A
+"MLP-BreastCancer (HB, retrain after 8 trials)",1000,360,False,N/A,N/A
+"MLP-BreastCancer (HB, 8 workers)",1000,360,False,N/A,N/A

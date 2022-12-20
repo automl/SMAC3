@@ -79,6 +79,9 @@ class SMBO:
         self._start_time: float | None = None
         self._used_target_function_walltime = 0.0
 
+        # Set walltime used method for intensifier
+        self._intensifier.used_walltime = lambda: self.used_walltime  # type: ignore
+
         # We initialize the state based on previous data.
         # If no previous data is found then we take care of the initial design.
         self._initialize_state()
@@ -94,7 +97,7 @@ class SMBO:
         return self._intensifier
 
     @property
-    def remaing_walltime(self) -> float:
+    def remaining_walltime(self) -> float:
         """Subtracts the runtime configuration budget with the used wallclock time."""
         assert self._start_time is not None
         return self._scenario.walltime_limit - (time.time() - self._start_time)
@@ -111,8 +114,8 @@ class SMBO:
 
     @property
     def budget_exhausted(self) -> bool:
-        """Check whether the remaining walltime, cputime or trials were exceeded."""
-        A = self.remaing_walltime <= 0
+        """Checks whether the the remaining walltime, cputime or trials was exceeded."""
+        A = self.remaining_walltime <= 0
         B = self.remaining_cputime <= 0
         C = self.remaining_trials <= 0
 
@@ -286,7 +289,7 @@ class SMBO:
 
             # Some statistics
             logger.debug(
-                f"Remaining wallclock time: {self.remaing_walltime}; "
+                f"Remaining wallclock time: {self.remaining_walltime}; "
                 f"Remaining cpu time: {self.remaining_cputime}; "
                 f"Remaining trials: {self.remaining_trials}"
             )
@@ -301,7 +304,7 @@ class SMBO:
             if self.budget_exhausted or self._stop:
                 if self.budget_exhausted:
                     logger.info("Configuration budget is exhausted:")
-                    logger.info(f"--- Remaining wallclock time: {self.remaing_walltime}")
+                    logger.info(f"--- Remaining wallclock time: {self.remaining_walltime}")
                     logger.info(f"--- Remaining cpu time: {self.remaining_cputime}")
                     logger.info(f"--- Remaining trials: {self.remaining_trials}")
                 else:
