@@ -50,7 +50,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
     Parameters
     ----------
     multi_objective_algorithm : AbstractMultiObjectiveAlgorithm | None, defaults to None
-        The multi-objective algorithm is required to scaralize the costs in case of multi-objective.
+        The multi-objective algorithm is required to scalarize the costs in case of multi-objective.
     overwrite_existing_trials : bool, defaults to false
         Overwrites a trial (combination of configuration, instance, budget and seed) if it already exists.
     """
@@ -81,7 +81,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
     @property
     def multi_objective_algorithm(self) -> AbstractMultiObjectiveAlgorithm | None:
-        """The multi-objective algorithm is required to scaralize the costs in case of multi-objective."""
+        """The multi-objective algorithm required to scaralize the costs in case of multi-objective."""
         return self._multi_objective_algorithm
 
     @multi_objective_algorithm.setter
@@ -105,9 +105,9 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         return self._objective_bounds
 
     def reset(self) -> None:
-        """Resets this runhistory to it's default state."""
+        """Resets this runhistory to its default state."""
         # By having the data in a deterministic order we can do useful tests when we
-        # serialize the data and can assume it's still in the same order as it was added.
+        # serialize the data and can assume it is still in the same order as it was added.
         self._data: dict[TrialKey, TrialValue] = OrderedDict()
 
         # Keep track of trials
@@ -158,7 +158,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         return self._data == other._data
 
     def empty(self) -> bool:
-        """Check whether or not the RunHistory is empty.
+        """Check whether the RunHistory is empty.
 
         Returns
         -------
@@ -181,7 +181,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         additional_info: dict[str, Any] = {},
         force_update: bool = False,
     ) -> None:
-        """Adds a new trial.
+        """Adds a new trial to the RunHistory.
 
         Parameters
         ----------
@@ -460,9 +460,10 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             List of tuples of instance-seeds-budget keys. If None, the runhistory is
             queried for all trials of the given configuration.
         normalize : bool, optional (default=False)
-            Normalizes the costs wrt objective bounds in the multi-objective setting.
+            Normalizes the costs wrt. objective bounds in the multi-objective setting.
             Only a float is returned if normalize is True. Warning: The value can change
-            over time because the objective bounds are changing. Also, the objective weights are incorporated.
+            over time because the objective bounds are changing. Also, the objective weights are
+             incorporated.
 
         Returns
         -------
@@ -507,7 +508,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         normalize : bool, optional (default=False)
             Normalizes the costs wrt objective bounds in the multi-objective setting.
             Only a float is returned if normalize is True. Warning: The value can change
-            over time because the objective bounds are changing. Also, the objective weights are incorporated.
+            over time because the objective bounds are changing. Also, the objective weights are
+            incorporated.
 
         Returns
         -------
@@ -538,7 +540,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         instance_seed_budget_keys: list[InstanceSeedBudgetKey] | None = None,
         normalize: bool = False,
     ) -> float | list[float]:
-        """Return the minimum cost of a configuration. This is the minimum cost of all instance-seed pairs.
+        """Return the minimum cost of a configuration. This is the minimum cost of all instance-seed
+         pairs.
 
         Warning
         -------
@@ -554,7 +557,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         normalize : bool, optional (default=False)
             Normalizes the costs wrt objective bounds in the multi-objective setting.
             Only a float is returned if normalize is True. Warning: The value can change
-            over time because the objective bounds are changing. Also, the objective weights are incorporated.
+            over time because the objective bounds are changing. Also, the objective weights are
+             incorporated.
 
         Returns
         -------
@@ -697,7 +701,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         Parameters
         ----------
         config : Configuration | None, defaults to None
-            Return only running trials from the passed configuration. If None, all configs are considered.
+            Return only running trials from the passed configuration. If None, all configs are
+            considered.
 
         Returns
         -------
@@ -738,7 +743,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         return [InstanceSeedBudgetKey(t.instance, t.seed, t.budget) for t in trials]
 
     def save(self, filename: str | Path = "runhistory.json") -> None:
-        """Saves runhistory on disk.
+        """Saves RunHistory to disk.
 
         Parameters
         ----------
@@ -804,7 +809,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         if isinstance(filename, str):
             filename = Path(filename)
 
-        # We reset the runhistory first to avoid any inconsistencies
+        # We reset the RunHistory first to avoid any inconsistencies
         self.reset()
 
         try:
@@ -812,7 +817,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 data = json.load(fp)
         except Exception as e:
             logger.warning(
-                f"Encountered exception {e} while reading runhistory from {filename}. Not adding any trials!"
+                f"Encountered exception {e} while reading RunHistory from {filename}. Not adding any trials!"
             )
             return
 
@@ -869,7 +874,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         filename: str,
         configspace: ConfigurationSpace,
     ) -> None:
-        """Updates the current runhistory by adding new trials from a json file.
+        """Updates the current RunHistory by adding new trials from a json file.
 
         Parameters
         ----------
@@ -882,12 +887,12 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         self.update(runhistory=new_runhistory)
 
     def update(self, runhistory: RunHistory) -> None:
-        """Updates the current runhistory by adding new trials from a RunHistory.
+        """Updates the current RunHistory by adding new trials from another RunHistory.
 
         Parameters
         ----------
         runhistory : RunHistory
-            Runhistory with additional data to be added to self
+            RunHistory with additional data to be added to self
         """
         # Configurations might be already known, but by a different ID. This
         # does not matter here because the add() method handles this
@@ -948,7 +953,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             ) from e
 
     def _update_objective_bounds(self) -> None:
-        """Update the objective bounds based on the data in the runhistory."""
+        """Update the objective bounds based on the data in the RunHistory."""
         all_costs = []
         for run_value in self._data.values():
             costs = run_value.cost
@@ -1050,14 +1055,14 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         instance_seed_budget_keys: list[InstanceSeedBudgetKey] | None = None,
     ) -> list[float | list[float]]:
         """Returns a list of all costs for the given config for further calculations.
-        The costs are directly taken from the runhistory data.
+        The costs are directly taken from the RunHistory data.
 
         Parameters
         ----------
         config : Configuration
             Configuration to calculate objective for.
         instance_seed_budget_keys : list, defaults to None
-            List of tuples of instance-seeds-budget keys. If None, the runhistory is
+            List of tuples of instance-seeds-budget keys. If None, the RunHistory is
             queried for all trials of the given configuration.
 
         Returns
