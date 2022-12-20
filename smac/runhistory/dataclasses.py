@@ -146,6 +146,8 @@ class TrajectoryItem:
     ----------
     config_ids : list[int]
         Configuration ids of the current incumbents.
+    costs : list[float | list[float]]
+        Costs of the current incumbents. In case of multi-objective, this is a list of lists.
     trial : int
         How many trials have been evaluated so far.
     walltime : float
@@ -153,5 +155,6 @@ class TrajectoryItem:
     """
 
     config_ids: list[int]
+    costs: list[float | list[float]]
     trial: int
     walltime: float

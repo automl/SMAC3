@@ -668,10 +668,11 @@ class AbstractIntensifier:
     def _update_trajectory(self, configs: list[Configuration]) -> None:
         rh = self.runhistory
         config_ids = [rh.get_config_id(c) for c in configs]
+        costs = [rh.average_cost(c, normalize=False) for c in configs]
 
         self._incumbents = configs
         self._incumbents_changed += 1
-        self._trajectory.append(TrajectoryItem(config_ids=config_ids, trial=rh.finished, walltime=self.used_walltime))
+        self._trajectory.append(TrajectoryItem(config_ids=config_ids, costs=costs, trial=rh.finished, walltime=self.used_walltime))
         logger.debug("Updated trajectory.")
 
     def _add_rejected_config(self, config: Configuration | int) -> None:
