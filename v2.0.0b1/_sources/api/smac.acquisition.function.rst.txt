@@ -1,0 +1,46 @@
+smac.acquisition.function
+=========================
+
+.. automodule:: smac.acquisition.function
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
+
+Modules
+^^^^^^^
+
+.. autosummary::
+   :template: module.rst
+   :toctree:
+   :recursive:
+
+   smac.acquisition.function.abstract_acquisition_function
+   smac.acquisition.function.confidence_bound
+   smac.acquisition.function.expected_improvement
+   smac.acquisition.function.integrated_acquisition_function
+   smac.acquisition.function.prior_acqusition_function
+   smac.acquisition.function.probability_improvement
+   smac.acquisition.function.thompson
+
