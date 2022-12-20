@@ -1069,6 +1069,15 @@
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.runhistory.runhistory.RunHistory.add_trial">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         RunHistory.add_trial()
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#smac.runhistory.runhistory.RunHistory.average_cost">
        <code class="docutils literal notranslate">
         <span class="pre">
@@ -1490,6 +1499,20 @@ neither used nor tested.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.add_trial">
+<span class="sig-name descname"><span class="pre">add_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.add_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.add_trial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a trial to the runhistory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>trial</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.TrialInfo" title="smac.runhistory.TrialInfo"><em>TrialInfo</em></a>) – The <code class="docutils literal notranslate"><span class="pre">TrialInfo</span></code> object of the running trial.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.average_cost">
 <span class="sig-name descname"><span class="pre">average_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.average_cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.average_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the average cost of a configuration. This is the mean of costs of all instance-
@@ -1577,16 +1600,15 @@ over time because the objective bounds are changing. Also, the objective weights
 <span class="sig-name descname"><span class="pre">get_configs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sort_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_configs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_configs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all configurations in this RunHistory object.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>]</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sort_by</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Sort the configs by <code class="docutils literal notranslate"><span class="pre">cost</span></code> (lowest cost first) or <code class="docutils literal notranslate"><span class="pre">num_trials</span></code> (config with lowest number of trials
+first).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>parameter configurations</strong> (<em>list</em>)</p></li>
-<li><p><strong>sort_by</strong> (<em>str, defaults to None</em>) – Sort the configs by <code class="docutils literal notranslate"><span class="pre">cost</span></code> (lowest cost first) or <code class="docutils literal notranslate"><span class="pre">num_trials</span></code> (config with lowest number of trials
-first).</p></li>
-</ul>
-</p>
+<dd class="field-even"><p><strong>configurations</strong> – All configurations in the runhistory.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1594,13 +1616,13 @@ first).</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.get_configs_per_budget">
 <span class="sig-name descname"><span class="pre">get_configs_per_budget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">budget_subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_configs_per_budget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_configs_per_budget" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return all configs in this RunHistory object that have been run on one of these budgets.</p>
+<dd><p>Return all configs in this runhistory that have been run on one of these budgets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>budget_subset</strong> (<em>list</em>) – </p>
+<dd class="field-odd"><p><strong>budget_subset</strong> (<em>list</em><em>[</em><em>float</em><em> | </em><em>int</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – </p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>parameter configurations</strong></p>
+<dd class="field-even"><p><strong>configurations</strong> – List of configurations that have been run on the budgets in <code class="docutils literal notranslate"><span class="pre">budget_subset</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list</p>
@@ -1629,15 +1651,16 @@ computed. The costs are not re-computed, but are read from cache.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.get_instance_seed_budget_keys">
 <span class="sig-name descname"><span class="pre">get_instance_seed_budget_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highest_observed_budget_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_instance_seed_budget_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_instance_seed_budget_keys" title="Permalink to this definition">¶</a></dt>
-<dd><div class="admonition warning">
+<dd><p>Uses <code class="docutils literal notranslate"><span class="pre">get_trials</span></code> to return a list of instance-seed-budget keys.</p>
+<div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Does not return running instances.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>config</strong> (<em>Configuration</em>) – _description_</p></li>
-<li><p><strong>highest_observed_budget_only</strong> (<em>bool</em><em>, </em><em>optional</em>) – _description_, by default True</p></li>
+<li><p><strong>config</strong> (<em>Configuration</em>) – </p></li>
+<li><p><strong>highest_observed_budget_only</strong> (<em>bool</em><em>, </em><em>defaults to True</em>) – Select only the highest observed budget run for this configuration.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1688,7 +1711,7 @@ but are read from cache.</p>
 <dd class="field-odd"><p><strong>config</strong> (<em>Configuration</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Return only running trials from the passed configuration. If None, all configs are considered.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of trials, all of which are still running.</p>
+<dd class="field-even"><p><strong>trials</strong> – List of trials, all of which are still running.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list[<a class="reference internal" href="smac.runhistory.html#smac.runhistory.TrialInfo" title="smac.runhistory.TrialInfo">TrialInfo</a>]</p>
@@ -1699,7 +1722,7 @@ but are read from cache.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.get_trials">
 <span class="sig-name descname"><span class="pre">get_trials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highest_observed_budget_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_trials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_trials" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return all trials for a configuration.</p>
+<dd><p>Returns all trials for a configuration.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Does not return running trials. Please use <code class="docutils literal notranslate"><span class="pre">get_running_trials</span></code> to receive running trials.</p>
@@ -1707,12 +1730,12 @@ but are read from cache.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>config</strong> (<em>Configuration</em>) – Parameter configuration</p></li>
-<li><p><strong>highest_observed_budget_only</strong> (<em>bool</em>) – Select only the maximally observed budget run for this configuration</p></li>
+<li><p><strong>config</strong> (<em>Configuration</em>) – </p></li>
+<li><p><strong>highest_observed_budget_only</strong> (<em>bool</em>) – Select only the highest observed budget run for this configuration.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>trials</strong></p>
+<dd class="field-even"><p><strong>trials</strong> – List of trials for the passed configuration.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list[<a class="reference internal" href="smac.runhistory.html#smac.runhistory.InstanceSeedBudgetKey" title="smac.runhistory.InstanceSeedBudgetKey">InstanceSeedBudgetKey</a>]</p>
@@ -1751,16 +1774,16 @@ but are read from cache.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.load">
 <span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load and runhistory in json representation from disk.</p>
+<dd><p>Loads the runhistory from disk.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Overwrites current runhistory!</p>
+<p>Overwrites the current runhistory.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>str</em>) – file name to load from</p></li>
-<li><p><strong>configspace</strong> (<em>ConfigSpace</em>) – instance of configuration space</p></li>
+<li><p><strong>filename</strong> (<em>str</em><em> | </em><em>Path</em>) – </p></li>
+<li><p><strong>configspace</strong> (<em>ConfigSpace</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1848,7 +1871,7 @@ is returned.</p>
 <dd><p>Saves runhistory on disk.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – file name.</p>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> | </em><em>Path</em><em>, </em><em>defaults to &quot;runhistory.json&quot;</em>) – </p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>

@@ -63,7 +63,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     [INFO][abstract_intensifier.py:566] Added config 4ce3a0 and rejected config 8db41e as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- n_neurons: 75 -> 196
     [INFO][smbo.py:306] Configuration budget is exhausted:
-    [INFO][smbo.py:307] --- Remaining wallclock time: -9.116419315338135
+    [INFO][smbo.py:307] --- Remaining wallclock time: -5.27268385887146
     [INFO][smbo.py:308] --- Remaining cpu time: inf
     [INFO][smbo.py:309] --- Remaining trials: 175
     Default cost: 0.36672856700711853
@@ -203,7 +203,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  54.228 seconds)
+   **Total running time of the script:** ( 0 minutes  50.015 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_1_mlp_epochs.py:
