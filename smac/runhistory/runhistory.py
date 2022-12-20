@@ -620,13 +620,13 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
     def get_configs_per_budget(
         self,
-        budget_subset: list[float | int] | None = None,
+        budget_subset: list[float | int | None] | None = None,
     ) -> list[Configuration]:
         """Return all configs in this runhistory that have been run on one of these budgets.
 
         Parameters
         ----------
-        budget_subset: list[float | int] | None, defaults to None
+        budget_subset: list[float | int | None] | None, defaults to None
 
         Returns
         -------

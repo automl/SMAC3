@@ -229,18 +229,23 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
                 )
                 indices = [int(np.rint(ind)) for ind in np.linspace(start=0, stop=len(samples) - 1, num=10)]
                 self._samples = samples[indices]
+
+                assert self._samples is not None
                 self.p0 = self._samples.mean(axis=0)
             else:
                 raise ValueError(self._mcmc_sampler)
 
             if self._average_samples:
-                self._samples = [self._samples.mean(axis=0)]
+                assert self._samples is not None
+                self._samples = [self._samples.mean(axis=0)]  # type: ignore
 
         else:
             self._samples = self._gp.kernel.theta
-            self._samples = [self._samples]
+            self._samples = [self._samples]  # type: ignore
 
         self._models = []
+
+        assert self._samples is not None
         for sample in self._samples:
 
             if (sample < -50).any():

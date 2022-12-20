@@ -73,7 +73,7 @@ class ConfigSelector:
         self._previous_entries = -1
         self._predict_x_best = True
         self._min_trials = min_trials
-        self._considered_budgets: list[float | None] = [None]
+        self._considered_budgets: list[float | int | None] = [None]
 
         # How often to retry receiving a new configuration
         # (counter increases if the received config was already returned before)
