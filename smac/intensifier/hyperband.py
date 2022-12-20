@@ -8,6 +8,8 @@ from smac.intensifier.successive_halving import SuccessiveHalving
 
 
 class Hyperband(SuccessiveHalving):
+    """See ``SuccessiveHalving`` for documentation."""
+
     def reset(self) -> None:
         """Reset the internal variables of the intensifier including the tracker and the next bracket."""
         super().reset()

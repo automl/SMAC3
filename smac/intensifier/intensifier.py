@@ -20,6 +20,15 @@ logger = get_logger(__name__)
 class Intensifier(AbstractIntensifier):
     """Implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-processing.
     Races challengers against current incumbents.
+    
+    The behaviour of this intensifier is as follows:
+    - First, adds configs from the runhistory to the queue with N=1 (they will be ignored if they are already 
+      evaluated).
+    - While loop:
+      - If queue is empty: Intensifies exactly one more instance of one incumbent and samples a new configuration 
+        afterwards.
+      - If queue is not empty: Configs in the queue are evaluated on N=(N*2) instances if they might be better
+        than the incumbents. If not, they are removed from the queue and rejected forever.
 
     Parameters
     ----------
