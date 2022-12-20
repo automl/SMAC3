@@ -672,7 +672,14 @@ class AbstractIntensifier:
 
         self._incumbents = configs
         self._incumbents_changed += 1
-        self._trajectory.append(TrajectoryItem(config_ids=config_ids, costs=costs, trial=rh.finished, walltime=self.used_walltime))
+        self._trajectory.append(
+            TrajectoryItem(
+                config_ids=config_ids,
+                costs=costs,
+                trial=rh.finished,
+                walltime=self.used_walltime,
+            )
+        )
         logger.debug("Updated trajectory.")
 
     def _add_rejected_config(self, config: Configuration | int) -> None:
