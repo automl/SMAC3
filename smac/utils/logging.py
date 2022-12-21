@@ -1,12 +1,9 @@
 from __future__ import annotations
 
-from typing import Iterable
-
 import logging
 import logging.config
 from pathlib import Path
 
-import numpy as np
 import yaml
 
 import smac
