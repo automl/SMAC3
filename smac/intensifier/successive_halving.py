@@ -224,6 +224,24 @@ class SuccessiveHalving(AbstractIntensifier):
 
         return True
 
+    def print_tracker(self) -> None:
+        """Prints the number of configurations in each bracket/stage."""
+
+        messages = []
+        for (bracket, stage), others in self._tracker.items():
+            counter = 0
+            for _, config_ids in others:
+                counter += len(config_ids)
+
+            if counter > 0:
+                messages.append(f"--- Bracket {bracket} / Stage {stage}: {counter} configs")
+
+        if len(messages) > 0:
+            logger.debug(f"{self.__class__.__name__} statistics:")
+
+        for message in messages:
+            logger.debug(message)
+
     def get_trials_of_interest(
         self,
         config: Configuration,
@@ -277,6 +295,15 @@ class SuccessiveHalving(AbstractIntensifier):
 
     def __iter__(self) -> Iterator[TrialInfo]:  # noqa: D102
         self.__post_init__()
+
+        # Log brackets/stages
+        logger.info("Number of configs in stage:")
+        for bracket, n in self._n_configs_in_stage.items():
+            logger.info(f"--- Bracket {bracket}: {n}")
+
+        logger.info("Budgets in stage:")
+        for bracket, budgets in self._budgets_in_stage.items():
+            logger.info(f"--- Bracket {bracket}: {budgets}")
 
         rh = self.runhistory
 
@@ -334,7 +361,6 @@ class SuccessiveHalving(AbstractIntensifier):
             logger.debug("Updating tracker:")
 
             # TODO: Process stages ascending or descending?
-            # TODO: Log how many configs are in each stage
             for (bracket, stage) in list(self._tracker.keys()):
                 pairs = self._tracker[(bracket, stage)].copy()
                 for seed, configs in pairs:
@@ -355,7 +381,7 @@ class SuccessiveHalving(AbstractIntensifier):
 
                     # If all configs were evaluated on ``n_configs_required``, we finally can compare
                     try:
-                        successful_configs = self._get_best_configs(configs, bracket, stage, from_keys=isb_keys)
+                        successful_configs = self._get_best_configs(configs, bracket, stage, isb_keys)
                     except NotEvaluatedError:
                         # We can't compare anything, so we just continue with the next pairs
                         logger.debug("--- Could not compare configs because not all trials have been evaluated yet.")
@@ -378,6 +404,9 @@ class SuccessiveHalving(AbstractIntensifier):
                         logger.debug(
                             f"--- Removed {len(successful_configs)} configs to last stage in bracket {bracket}."
                         )
+
+                    # Log how many configs are in each stage
+                    self.print_tracker()
 
             # Since we yielded something before, we want to go back as long as we do not find any trials anymore
             if update:
@@ -476,7 +505,9 @@ class SuccessiveHalving(AbstractIntensifier):
         stage: int,
         from_keys: list[InstanceSeedBudgetKey],
     ) -> list[Configuration]:
-        """Returns the best configurations. The number of configurations is depending on the stage."""
+        """Returns the best configurations. The number of configurations is depending on the stage. Raises
+        ``NotEvaluatedError`` if not all trials have been evaluated.
+        """
         try:
             n_configs = self._n_configs_in_stage[bracket][stage + 1]
         except IndexError:
@@ -485,9 +516,8 @@ class SuccessiveHalving(AbstractIntensifier):
         rh = self.runhistory
         configs = configs.copy()
 
-        # TODO: Make it more efficient?
         for config in configs:
-            isb_keys = self.get_instance_seed_budget_keys(config)
+            isb_keys = rh.get_instance_seed_budget_keys(config)
             if not all(isb_key in isb_keys for isb_key in from_keys):
                 raise NotEvaluatedError
 
