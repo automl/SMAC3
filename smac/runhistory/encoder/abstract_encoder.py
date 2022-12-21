@@ -192,9 +192,7 @@ class AbstractRunHistoryEncoder:
         self,
         budget_subset: list | None = None,
     ) -> dict[TrialKey, TrialValue]:
-        """
-        Returns all trials that did timeout.
-        """
+        """Returns all trials that did have a timeout."""
         if budget_subset is not None:
             trials = {
                 trial: self.runhistory[trial]
