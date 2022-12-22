@@ -5,8 +5,8 @@ from src.utils.exceptions import NotSupportedError
 from src.wrappers.wrapper import Wrapper
 
 
-class Version200a3(Wrapper):
-    supported_versions: list[str] = ["2.0.0a3"]
+class Version20(Wrapper):
+    supported_versions: list[str] = ["2.0.0b1"]
 
     def __init__(self, task: Task, seed: int) -> None:
         super().__init__(task, seed)
@@ -61,7 +61,16 @@ class Version200a3(Wrapper):
         else:
             raise RuntimeError("Unknown optimization type.")
 
-        intensifier = facade_object.get_intensifier(scenario, **intensifier_kwargs)
+        if self.task.intensifier is None:
+            intensifier = facade_object.get_intensifier(scenario, **intensifier_kwargs)
+        else:
+            if self.task.intensifier == "successive_halving":
+                from smac.intensifier.successive_halving import SuccessiveHalving
+
+                intensifier = SuccessiveHalving(scenario, **intensifier_kwargs)
+            else:
+                raise RuntimeError("Unsupported intensifier.")
+
         config_selector = facade_object.get_config_selector(scenario, retrain_after=self.task.retrain_after)
 
         smac = facade_object(
@@ -93,7 +102,7 @@ class Version200a3(Wrapper):
 
             cost = rh.get_cost(config)
             if cost > 1e6:
-                continue 
+                continue
 
             if sort_by == "trials":
                 X.append(traj.trial)

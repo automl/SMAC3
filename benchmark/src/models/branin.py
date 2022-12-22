@@ -33,6 +33,8 @@ class Branin(Model):
         r = 6.0
         s = 10.0
         t = 1.0 / (8.0 * np.pi)
-        
-        return a * (x2 - b * x1**2 + c * x1 - r) ** 2 + s * (1 - t) * np.cos(x1) + s
 
+        cost = a * (x2 - b * x1**2 + c * x1 - r) ** 2 + s * (1 - t) * np.cos(x1) + s
+        regret = cost - 0.397887
+
+        return regret

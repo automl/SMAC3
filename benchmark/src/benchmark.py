@@ -21,12 +21,12 @@ import pandas as pd
 from src.tasks import TASKS  # noqa: E402
 from src.utils.exceptions import NotSupportedError  # noqa: E402
 from src.utils.styled_plot import plt  # noqa: E402
-from src.wrappers.v140 import Version140  # noqa: E402
-from src.wrappers.v200a3 import Version200a3  # noqa: E402
+from src.wrappers.v14 import Version14  # noqa: E402
+from src.wrappers.v20 import Version20  # noqa: E402
 from src.wrappers.wrapper import Wrapper  # noqa: E402
 
-SEEDS = [0, 50, 100, 150, 200]
-WRAPPERS = [Version140, Version200a3]
+SEEDS = [0, 50, 100, 150]
+WRAPPERS = [Version14, Version20]
 RAW_FILENAME = Path("report/raw.json")
 
 
@@ -121,7 +121,7 @@ class Benchmark:
 
         # Let's sort the x values
         X.sort()
-        
+
         if len(X) == 0:
             return np.array([]), np.array([]), np.array([])
 
@@ -235,19 +235,9 @@ class Benchmark:
 
                 if task.y_log_scale:
                     plt.yscale("log")
-                    pass
-                else:
-                    if task.y_limit is not None:
-                        plt.ylim(task.y_limit[0], task.y_limit[1])
 
                 if task.x_log_scale:
                     plt.xscale("log")
-                else:
-                    if sort_by == "trials" and task.n_trials < 1000:
-                        plt.xlim(0, task.n_trials)
-
-                    if sort_by == "walltime" and task.walltime_limit < 1000:
-                        plt.xlim(0, task.walltime_limit)
 
                 if i == len_tasks - 1:
                     plt.xlabel(sort_by)

@@ -25,10 +25,10 @@ class Task:
     n_seeds: int | None = None  # For SH/HB intensifier
     use_instances: bool = False
     incumbent_selection: str | None = None  # For SH/HB intensifier
+    intensifier: str | None = None  # None == default intensifier
     n_workers: int = 1
 
     # Plotting options
-    y_limit: tuple[float, float] | None = None
     x_log_scale: bool = True
     y_log_scale: bool = True
 
@@ -40,7 +40,6 @@ class Task:
             data["dataset"] = data["model"].dataset.__class__.__name__
         data["model"] = data["model"].__class__.__name__
 
-        del data["y_limit"]
         del data["x_log_scale"]
         del data["y_log_scale"]
 
