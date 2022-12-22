@@ -1207,6 +1207,24 @@
 
         <span class="k">return</span> <span class="kc">True</span>
 
+<div class="viewcode-block" id="SuccessiveHalving.print_tracker"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving.print_tracker">[docs]</a>    <span class="k">def</span> <span class="nf">print_tracker</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Prints the number of configurations in each bracket/stage.&quot;&quot;&quot;</span>
+
+        <span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span><span class="p">),</span> <span class="n">others</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">config_ids</span> <span class="ow">in</span> <span class="n">others</span><span class="p">:</span>
+                <span class="n">counter</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">config_ids</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">counter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Bracket </span><span class="si">{</span><span class="n">bracket</span><span class="si">}</span><span class="s2"> / Stage </span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">counter</span><span class="si">}</span><span class="s2"> configs&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> statistics:&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">messages</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="SuccessiveHalving.get_trials_of_interest"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving.get_trials_of_interest">[docs]</a>    <span class="k">def</span> <span class="nf">get_trials_of_interest</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
@@ -1260,6 +1278,15 @@
 
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__post_init__</span><span class="p">()</span>
+
+        <span class="c1"># Log brackets/stages</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Number of configs in stage:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">bracket</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_configs_in_stage</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Bracket </span><span class="si">{</span><span class="n">bracket</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Budgets in stage:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">bracket</span><span class="p">,</span> <span class="n">budgets</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_budgets_in_stage</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Bracket </span><span class="si">{</span><span class="n">bracket</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">budgets</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
 
@@ -1317,7 +1344,6 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Updating tracker:&quot;</span><span class="p">)</span>
 
             <span class="c1"># TODO: Process stages ascending or descending?</span>
-            <span class="c1"># TODO: Log how many configs are in each stage</span>
             <span class="k">for</span> <span class="p">(</span><span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
                 <span class="n">pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="p">[(</span><span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
                 <span class="k">for</span> <span class="n">seed</span><span class="p">,</span> <span class="n">configs</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
@@ -1338,7 +1364,7 @@
 
                     <span class="c1"># If all configs were evaluated on ``n_configs_required``, we finally can compare</span>
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="n">successful_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_best_configs</span><span class="p">(</span><span class="n">configs</span><span class="p">,</span> <span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">from_keys</span><span class="o">=</span><span class="n">isb_keys</span><span class="p">)</span>
+                        <span class="n">successful_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_best_configs</span><span class="p">(</span><span class="n">configs</span><span class="p">,</span> <span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">isb_keys</span><span class="p">)</span>
                     <span class="k">except</span> <span class="n">NotEvaluatedError</span><span class="p">:</span>
                         <span class="c1"># We can&#39;t compare anything, so we just continue with the next pairs</span>
                         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;--- Could not compare configs because not all trials have been evaluated yet.&quot;</span><span class="p">)</span>
@@ -1361,6 +1387,9 @@
                         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                             <span class="sa">f</span><span class="s2">&quot;--- Removed </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">successful_configs</span><span class="p">)</span><span class="si">}</span><span class="s2"> configs to last stage in bracket </span><span class="si">{</span><span class="n">bracket</span><span class="si">}</span><span class="s2">.&quot;</span>
                         <span class="p">)</span>
+
+                    <span class="c1"># Log how many configs are in each stage</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">print_tracker</span><span class="p">()</span>
 
             <span class="c1"># Since we yielded something before, we want to go back as long as we do not find any trials anymore</span>
             <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
@@ -1459,7 +1488,9 @@
         <span class="n">stage</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">from_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the best configurations. The number of configurations is depending on the stage.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns the best configurations. The number of configurations is depending on the stage. Raises</span>
+<span class="sd">        ``NotEvaluatedError`` if not all trials have been evaluated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">n_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_configs_in_stage</span><span class="p">[</span><span class="n">bracket</span><span class="p">][</span><span class="n">stage</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
@@ -1468,9 +1499,8 @@
         <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
         <span class="n">configs</span> <span class="o">=</span> <span class="n">configs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-        <span class="c1"># TODO: Make it more efficient?</span>
         <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
-            <span class="n">isb_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_seed_budget_keys</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+            <span class="n">isb_keys</span> <span class="o">=</span> <span class="n">rh</span><span class="o">.</span><span class="n">get_instance_seed_budget_keys</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">isb_key</span> <span class="ow">in</span> <span class="n">isb_keys</span> <span class="k">for</span> <span class="n">isb_key</span> <span class="ow">in</span> <span class="n">from_keys</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="n">NotEvaluatedError</span>
 

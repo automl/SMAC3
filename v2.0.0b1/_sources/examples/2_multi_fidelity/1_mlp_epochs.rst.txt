@@ -24,10 +24,9 @@ Multi-Layer Perceptron Using Multiple Epochs
 Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets.
 Since we want to take advantage of multi-fidelity, the ``MultiFidelityFacade`` is a good choice. By default,
 ``MultiFidelityFacade`` internally runs with `hyperband <https://arxiv.org/abs/1603.06560>`_ as
-intensification, which is a combination of an
-aggressive racing mechanism and Successive Halving. Crucially, the target function function
-must accept a budget variable, detailing how much fidelity smac wants to allocate to this
-configuration.
+intensification, which is a combination of an aggressive racing mechanism and Successive Halving. Crucially, the target 
+function function must accept a budget variable, detailing how much fidelity smac wants to allocate to this
+configuration. In this example, we use both ``SuccessiveHalving`` and ``Hyperband`` to compare the results.
 
 MLP is a deep neural network, and therefore, we choose epochs as fidelity type. This implies,
 that ``budget`` specifies the number of epochs smac wants to allocate. The digits dataset
@@ -38,36 +37,173 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     This example uses the ``MultiFidelityFacade`` facade, which is the closest implementation to
     `BOHB <https://github.com/automl/HpBandSter>`_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-143
+.. GENERATED FROM PYTHON SOURCE LINES 21-185
 
 
+
+.. image-sg:: /examples/2_multi_fidelity/images/sphx_glr_1_mlp_epochs_001.png
+   :alt: Trajectory
+   :srcset: /examples/2_multi_fidelity/images/sphx_glr_1_mlp_epochs_001.png
+   :class: sphx-glr-single-img
 
 
 .. rst-class:: sphx-glr-script-out
 
  .. code-block:: none
 
+    [INFO][abstract_facade.py:184] Workers are reduced to 8.
+    [INFO][proxy.py:71] To route to workers diagnostics web server please install jupyter-server-proxy: python -m pip install jupyter-server-proxy
+    [INFO][scheduler.py:1619] State start
+    [INFO][scheduler.py:3864]   Scheduler at:     tcp://127.0.0.1:33355
+    [INFO][scheduler.py:3866]   dashboard at:            127.0.0.1:8787
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:36095'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:33037'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:40171'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:44517'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:40291'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:38965'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:38365'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:39573'
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:45749', name: 2, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:45749
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:42200
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:36597', name: 0, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:36597
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:42226
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:44609', name: 1, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:44609
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:42212
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:36305', name: 5, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:36305
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:42238
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:33001', name: 4, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:33001
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:42282
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:44373', name: 6, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:44373
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:42266
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:33213', name: 3, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:33213
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:42250
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:43777', name: 7, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:43777
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:42272
+    [INFO][scheduler.py:5195] Receive client connection: Client-653a48d3-81e6-11ed-87b6-e1462183c332
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:42294
     [INFO][abstract_initial_design.py:133] Using 5 initial design configurations and 0 additional configurations.
-    [INFO][successive_halving.py:155] Successive Halving uses budget type BUDGETS with eta 3, min budget 5, and max budget 25.
-    [INFO][abstract_intensifier.py:493] Added config 6b0504 as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:565] Added config 622bf8 and rejected config 6b0504 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- batch_size: None -> 155
-    [INFO][configspace.py:175] --- learning_rate_init: None -> 0.006677306766018313
-    [INFO][configspace.py:175] --- n_layer: 4 -> 5
-    [INFO][configspace.py:175] --- n_neurons: 123 -> 56
-    [INFO][configspace.py:175] --- solver: 'lbfgs' -> 'adam'
-    [INFO][abstract_intensifier.py:565] Added config 8db41e and rejected config 622bf8 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- n_layer: 5 -> 2
-    [INFO][configspace.py:175] --- n_neurons: 56 -> 75
-    [INFO][configspace.py:175] --- solver: 'adam' -> 'lbfgs'
-    [INFO][abstract_intensifier.py:565] Added config 4ce3a0 and rejected config 8db41e as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- n_neurons: 75 -> 196
+    [INFO][successive_halving.py:155] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
+    [INFO][successive_halving.py:300] Number of configs in stage:
+    [INFO][successive_halving.py:302] --- Bracket 0: [9, 3, 1]
+    [INFO][successive_halving.py:304] Budgets in stage:
+    [INFO][successive_halving.py:306] --- Bracket 0: [2.7777777777777777, 8.333333333333332, 25.0]
+    [INFO][smbo.py:298] Finished 0 trials.
+    [INFO][smbo.py:298] Finished 0 trials.
+    [INFO][smbo.py:298] Finished 0 trials.
+    [INFO][smbo.py:298] Finished 0 trials.
+    [INFO][smbo.py:298] Finished 0 trials.
+    [INFO][smbo.py:298] Finished 0 trials.
+    [INFO][smbo.py:298] Finished 0 trials.
+    [INFO][smbo.py:298] Finished 0 trials.
+    [INFO][abstract_intensifier.py:493] Added config 8ea495 as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:565] Added config 113782 and rejected config 8ea495 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- activation: 'tanh' -> 'relu'
+    [INFO][configspace.py:175] --- batch_size: 214 -> 129
+    [INFO][configspace.py:175] --- learning_rate_init: 0.005599223654063347 -> 0.00570576288441978
+    [INFO][configspace.py:175] --- n_layer: 4 -> 1
+    [INFO][configspace.py:175] --- n_neurons: 66 -> 64
+    [INFO][smbo.py:298] Finished 100 trials.
     [INFO][smbo.py:306] Configuration budget is exhausted:
-    [INFO][smbo.py:307] --- Remaining wallclock time: -1.715620994567871
+    [INFO][smbo.py:307] --- Remaining wallclock time: -1.0640153884887695
     [INFO][smbo.py:308] --- Remaining cpu time: inf
-    [INFO][smbo.py:309] --- Remaining trials: 174
-    Default cost: 0.36672856700711853
-    Incumbent cost: 0.02671618693902822
+    [INFO][smbo.py:309] --- Remaining trials: 370
+    [INFO][abstract_intensifier.py:565] Added config 67740e and rejected config 113782 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- activation: 'relu' -> 'logistic'
+    [INFO][configspace.py:175] --- batch_size: 129 -> 252
+    [INFO][configspace.py:175] --- learning_rate: None -> 'adaptive'
+    [INFO][configspace.py:175] --- learning_rate_init: 0.00570576288441978 -> 0.07986885470785313
+    [INFO][configspace.py:175] --- n_neurons: 64 -> 209
+    [INFO][configspace.py:175] --- solver: 'adam' -> 'sgd'
+    Default cost (SuccessiveHalving): 0.36672856700711853
+    Incumbent cost (SuccessiveHalving): 0.02170380687093787
+    [INFO][abstract_initial_design.py:68] Using `n_configs` and ignoring `n_configs_per_hyperparameter`.
+    [INFO][abstract_facade.py:184] Workers are reduced to 8.
+    /opt/hostedtoolcache/Python/3.10.9/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
+    Perhaps you already have a cluster running?
+    Hosting the HTTP server on port 34823 instead
+      warnings.warn(
+    [INFO][scheduler.py:1619] State start
+    [INFO][scheduler.py:3864]   Scheduler at:     tcp://127.0.0.1:33909
+    [INFO][scheduler.py:3866]   dashboard at:           127.0.0.1:34823
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:32985'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:35331'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:34641'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:42725'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:46467'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:39755'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:38119'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:37881'
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:33381', name: 0, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:33381
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:47278
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:43665', name: 7, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:43665
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:47294
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:44143', name: 1, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:44143
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:47274
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:44475', name: 5, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:44475
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:47290
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:41481', name: 4, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:41481
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:47298
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:37853', name: 3, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:37853
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:47310
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:33123', name: 2, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:33123
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:47304
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:35029', name: 6, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:35029
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:47316
+    [INFO][scheduler.py:5195] Receive client connection: Client-8f1c4bca-81e6-11ed-87b6-e1462183c332
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:47324
+    [INFO][abstract_initial_design.py:133] Using 5 initial design configurations and 0 additional configurations.
+    [INFO][successive_halving.py:155] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
+    [INFO][successive_halving.py:300] Number of configs in stage:
+    [INFO][successive_halving.py:302] --- Bracket 0: [9, 3, 1]
+    [INFO][successive_halving.py:302] --- Bracket 1: [3, 1]
+    [INFO][successive_halving.py:302] --- Bracket 2: [1]
+    [INFO][successive_halving.py:304] Budgets in stage:
+    [INFO][successive_halving.py:306] --- Bracket 0: [2.7777777777777777, 8.333333333333332, 25.0]
+    [INFO][successive_halving.py:306] --- Bracket 1: [8.333333333333332, 25.0]
+    [INFO][successive_halving.py:306] --- Bracket 2: [25.0]
+    [INFO][smbo.py:298] Finished 0 trials.
+    [INFO][smbo.py:298] Finished 0 trials.
+    [INFO][smbo.py:298] Finished 0 trials.
+    [INFO][smbo.py:298] Finished 0 trials.
+    [INFO][smbo.py:298] Finished 0 trials.
+    [INFO][smbo.py:298] Finished 0 trials.
+    [INFO][smbo.py:298] Finished 0 trials.
+    [INFO][smbo.py:298] Finished 0 trials.
+    [INFO][abstract_intensifier.py:493] Added config b7c49b as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:565] Added config e27357 and rejected config b7c49b as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- batch_size: 217 -> 103
+    [INFO][configspace.py:175] --- learning_rate_init: 0.0006375156575383219 -> 0.02113934324402315
+    [INFO][configspace.py:175] --- n_neurons: 156 -> 19
+    [INFO][abstract_intensifier.py:565] Added config 8ea495 and rejected config e27357 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- activation: 'logistic' -> 'tanh'
+    [INFO][configspace.py:175] --- batch_size: 103 -> 214
+    [INFO][configspace.py:175] --- learning_rate_init: 0.02113934324402315 -> 0.005599223654063347
+    [INFO][configspace.py:175] --- n_layer: 1 -> 4
+    [INFO][configspace.py:175] --- n_neurons: 19 -> 66
+    [INFO][smbo.py:298] Finished 50 trials.
+    [INFO][smbo.py:306] Configuration budget is exhausted:
+    [INFO][smbo.py:307] --- Remaining wallclock time: -0.42739343643188477
+    [INFO][smbo.py:308] --- Remaining cpu time: inf
+    [INFO][smbo.py:309] --- Remaining trials: 404
+    Default cost (Hyperband): 0.36672856700711853
+    Incumbent cost (Hyperband): 0.030055710306406747
 
 
 
@@ -81,6 +217,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
     import warnings
 
+    import matplotlib.pyplot as plt
     import numpy as np
     from ConfigSpace import (
         Categorical,
@@ -97,12 +234,15 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
     from smac import MultiFidelityFacade as MFFacade
     from smac import Scenario
+    from smac.facade import AbstractFacade
+    from smac.intensifier.hyperband import Hyperband
+    from smac.intensifier.successive_halving import SuccessiveHalving
 
     __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
     __license__ = "3-clause BSD"
 
 
-    digits = load_digits()
+    dataset = load_digits()
 
 
     class MLP:
@@ -160,50 +300,89 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
                 # Returns the 5-fold cross validation accuracy
                 cv = StratifiedKFold(n_splits=5, random_state=seed, shuffle=True)  # to make CV splits consistent
-                score = cross_val_score(classifier, digits.data, digits.target, cv=cv, error_score="raise")
+                score = cross_val_score(classifier, dataset.data, dataset.target, cv=cv, error_score="raise")
 
             return 1 - np.mean(score)
+
+
+    def plot_trajectory(facades: list[AbstractFacade]) -> None:
+        """Plots the trajectory (incumbents) of the optimization process."""
+        plt.figure()
+        plt.title("Trajectory")
+        plt.xlabel("Wallclock time [s]")
+        plt.ylabel(facades[0].scenario.objectives)
+        plt.ylim(0, 0.4)
+
+        for facade in facades:
+            X, Y = [], []
+            for item in facade.intensifier.trajectory:
+                # Single-objective optimization
+                assert len(item.config_ids) == 1
+                assert len(item.costs) == 1
+
+                y = item.costs[0]
+                x = item.walltime
+
+                X.append(x)
+                Y.append(y)
+
+            plt.plot(X, Y, label=facade.intensifier.__class__.__name__)
+            plt.scatter(X, Y, marker="x")
+
+        plt.legend()
+        plt.show()
 
 
     if __name__ == "__main__":
         mlp = MLP()
 
-        # Define our environment variables
-        scenario = Scenario(
-            mlp.configspace,
-            walltime_limit=40,  # After 40 seconds, we stop the hyperparameter optimization
-            n_trials=200,  # Evaluate max 200 different trials
-            min_budget=5,  # Train the MLP using a hyperparameter configuration for at least 5 epochs
-            max_budget=25,  # Train the MLP using a hyperparameter configuration for at most 25 epochs
-            n_workers=1,
-        )
+        facades: list[AbstractFacade] = []
+        for intensifier_object in [SuccessiveHalving, Hyperband]:
+            # Define our environment variables
+            scenario = Scenario(
+                mlp.configspace,
+                walltime_limit=60,  # After 60 seconds, we stop the hyperparameter optimization
+                n_trials=500,  # Evaluate max 500 different trials
+                min_budget=1,  # Train the MLP using a hyperparameter configuration for at least 5 epochs
+                max_budget=25,  # Train the MLP using a hyperparameter configuration for at most 25 epochs
+                n_workers=8,
+            )
 
-        # We want to run five random configurations before starting the optimization.
-        initial_design = MFFacade.get_initial_design(scenario, n_configs=5)
+            # We want to run five random configurations before starting the optimization.
+            initial_design = MFFacade.get_initial_design(scenario, n_configs=5)
 
-        # Create our SMAC object and pass the scenario and the train method
-        smac = MFFacade(
-            scenario,
-            mlp.train,
-            initial_design=initial_design,
-            overwrite=True,
-        )
+            # Create our intensifier
+            intensifier = intensifier_object(scenario, incumbent_selection="highest_budget")
 
-        # Let's optimize
-        incumbent = smac.optimize()
+            # Create our SMAC object and pass the scenario and the train method
+            smac = MFFacade(
+                scenario,
+                mlp.train,
+                initial_design=initial_design,
+                intensifier=intensifier,
+                overwrite=True,
+            )
 
-        # Get cost of default configuration
-        default_cost = smac.validate(mlp.configspace.get_default_configuration())
-        print(f"Default cost: {default_cost}")
+            # Let's optimize
+            incumbent = smac.optimize()
 
-        # Let's calculate the cost of the incumbent
-        incumbent_cost = smac.validate(incumbent)
-        print(f"Incumbent cost: {incumbent_cost}")
+            # Get cost of default configuration
+            default_cost = smac.validate(mlp.configspace.get_default_configuration())
+            print(f"Default cost ({intensifier.__class__.__name__}): {default_cost}")
+
+            # Let's calculate the cost of the incumbent
+            incumbent_cost = smac.validate(incumbent)
+            print(f"Incumbent cost ({intensifier.__class__.__name__}): {incumbent_cost}")
+
+            facades.append(smac)
+
+        # Let's plot it
+        plot_trajectory(facades)
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  46.023 seconds)
+   **Total running time of the script:** ( 2 minutes  23.133 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_1_mlp_epochs.py:
