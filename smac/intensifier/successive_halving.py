@@ -226,7 +226,6 @@ class SuccessiveHalving(AbstractIntensifier):
 
     def print_tracker(self) -> None:
         """Prints the number of configurations in each bracket/stage."""
-
         messages = []
         for (bracket, stage), others in self._tracker.items():
             counter = 0
