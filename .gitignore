@@ -146,4 +146,5 @@ docker
 src
 
 # Pycharm
-.idea/
+.idea
+.vscode
