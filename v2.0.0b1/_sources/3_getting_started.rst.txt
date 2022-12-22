@@ -6,7 +6,7 @@ optimization process, all of which are explained on this page.
 
 They interact in the following way:
 
-.. image:: ../../images/smac_components_interaction.jpg
+.. image:: images/smac_components_interaction.jpg
   :width: 400
   :alt: Interaction of SMAC's components
 
