@@ -330,6 +330,11 @@
      Reproducibility
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/12_optimizations.html">
+     Optimizations
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
@@ -992,7 +997,7 @@
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">import</span> <span class="nn">ConfigSpace</span>
+<span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace.read_and_write</span> <span class="kn">import</span> <span class="n">json</span> <span class="k">as</span> <span class="n">cs_json</span>
 
@@ -1008,7 +1013,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    configspace : ConfigSpace</span>
+<span class="sd">    configspace : ConfigurationSpace</span>
 <span class="sd">        The configuration space from which to sample the configurations.</span>
 <span class="sd">    name : str | None, defaults to None</span>
 <span class="sd">        The name of the run. If no name is passed, SMAC generates a hash from the meta data.</span>
@@ -1019,7 +1024,7 @@
 <span class="sd">        If deterministic is set to true, only one seed is passed to the target function.</span>
 <span class="sd">        Otherwise, multiple seeds (if n_seeds of the intensifier is greater than 1) are passed</span>
 <span class="sd">        to the target function to ensure generalization.</span>
-<span class="sd">    objective : str | list[str] | None, defaults to &quot;cost&quot;</span>
+<span class="sd">    objectives : str | list[str] | None, defaults to &quot;cost&quot;</span>
 <span class="sd">        The objective(s) to optimize. This argument is required for multi-objective optimization.</span>
 <span class="sd">    crash_cost : float | list[float], defaults to np.inf</span>
 <span class="sd">        Defines the cost for a failed trial. In case of multi-objective, each objective can be associated with</span>
@@ -1060,7 +1065,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># General</span>
-    <span class="n">configspace</span><span class="p">:</span> <span class="n">ConfigSpace</span>
+    <span class="n">configspace</span><span class="p">:</span> <span class="n">ConfigurationSpace</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">output_directory</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;smac3_output&quot;</span><span class="p">)</span>
     <span class="n">deterministic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>

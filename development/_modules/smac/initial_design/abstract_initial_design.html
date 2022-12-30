@@ -330,6 +330,11 @@
      Reproducibility
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/12_optimizations.html">
+     Optimizations
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
@@ -1019,7 +1024,7 @@
 <span class="sd">        Number of initial configurations per hyperparameter. For example, if my configuration space covers five</span>
 <span class="sd">        hyperparameters and ``n_configs_per_hyperparameter`` is set to 10, then 50 initial configurations will be</span>
 <span class="sd">        samples.</span>
-<span class="sd">    max_ratio: float, defaults to 0.1</span>
+<span class="sd">    max_ratio: float, defaults to 0.25</span>
 <span class="sd">        Use at most ``scenario.n_trials`` * ``max_ratio`` number of configurations in the initial design.</span>
 <span class="sd">        Additional configurations are not affected by this parameter.</span>
 <span class="sd">    additional_configs: list[Configuration], defaults to []</span>

@@ -54,48 +54,48 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     [INFO][abstract_facade.py:184] Workers are reduced to 8.
     [INFO][proxy.py:71] To route to workers diagnostics web server please install jupyter-server-proxy: python -m pip install jupyter-server-proxy
     [INFO][scheduler.py:1619] State start
-    [INFO][scheduler.py:3864]   Scheduler at:     tcp://127.0.0.1:38817
+    [INFO][scheduler.py:3864]   Scheduler at:     tcp://127.0.0.1:42183
     [INFO][scheduler.py:3866]   dashboard at:            127.0.0.1:8787
-    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:44311'
-    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:46717'
-    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:36695'
-    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:33617'
-    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:34913'
-    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:34255'
-    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:43667'
-    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:33927'
-    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:37847', name: 2, status: init, memory: 0, processing: 0>
-    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:37847
-    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:46006
-    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:44859', name: 0, status: init, memory: 0, processing: 0>
-    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:44859
-    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:46000
-    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:43843', name: 1, status: init, memory: 0, processing: 0>
-    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:43843
-    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:46020
-    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:45227', name: 5, status: init, memory: 0, processing: 0>
-    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:45227
-    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:46028
-    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:39773', name: 3, status: init, memory: 0, processing: 0>
-    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:39773
-    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:46052
-    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:37879', name: 4, status: init, memory: 0, processing: 0>
-    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:37879
-    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:46038
-    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:36273', name: 6, status: init, memory: 0, processing: 0>
-    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:36273
-    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:46058
-    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:36645', name: 7, status: init, memory: 0, processing: 0>
-    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:36645
-    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:46046
-    [INFO][scheduler.py:5195] Receive client connection: Client-4c1e11b4-81e9-11ed-87d9-1fd9ce1135c2
-    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:46074
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:33899'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:43957'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:45645'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:43411'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:46701'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:42731'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:46501'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:46413'
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:38933', name: 0, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:38933
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:46230
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:46687', name: 4, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:46687
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:46252
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:36861', name: 1, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:36861
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:46240
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:46717', name: 6, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:46717
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:46274
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:43865', name: 5, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:43865
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:46258
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:45489', name: 2, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:45489
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:46300
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:33545', name: 7, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:33545
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:46242
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:34293', name: 3, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:34293
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:46286
+    [INFO][scheduler.py:5195] Receive client connection: Client-51175233-8832-11ed-8803-1bd0baecdc9e
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:46314
     [INFO][abstract_initial_design.py:133] Using 5 initial design configurations and 0 additional configurations.
-    [INFO][successive_halving.py:155] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
-    [INFO][successive_halving.py:299] Number of configs in stage:
-    [INFO][successive_halving.py:301] --- Bracket 0: [9, 3, 1]
-    [INFO][successive_halving.py:303] Budgets in stage:
-    [INFO][successive_halving.py:305] --- Bracket 0: [2.7777777777777777, 8.333333333333332, 25.0]
+    [INFO][successive_halving.py:159] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
+    [INFO][successive_halving.py:303] Number of configs in stage:
+    [INFO][successive_halving.py:305] --- Bracket 0: [9, 3, 1]
+    [INFO][successive_halving.py:307] Budgets in stage:
+    [INFO][successive_halving.py:309] --- Bracket 0: [2.7777777777777777, 8.333333333333332, 25.0]
     [INFO][smbo.py:298] Finished 0 trials.
     [INFO][smbo.py:298] Finished 0 trials.
     [INFO][smbo.py:298] Finished 0 trials.
@@ -104,84 +104,73 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     [INFO][smbo.py:298] Finished 0 trials.
     [INFO][smbo.py:298] Finished 0 trials.
     [INFO][smbo.py:298] Finished 0 trials.
-    [INFO][abstract_intensifier.py:493] Added config f9b8c2 as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:565] Added config 8ea495 and rejected config f9b8c2 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- batch_size: None -> 214
-    [INFO][configspace.py:175] --- learning_rate_init: None -> 0.005599223654063347
-    [INFO][configspace.py:175] --- n_layer: 2 -> 4
-    [INFO][configspace.py:175] --- n_neurons: 59 -> 66
-    [INFO][configspace.py:175] --- solver: 'lbfgs' -> 'adam'
-    [INFO][abstract_intensifier.py:565] Added config 064d48 and rejected config 8ea495 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- activation: 'tanh' -> 'relu'
-    [INFO][configspace.py:175] --- batch_size: 214 -> 168
-    [INFO][configspace.py:175] --- learning_rate_init: 0.005599223654063347 -> 0.0018268942281532308
-    [INFO][configspace.py:175] --- n_layer: 4 -> 3
-    [INFO][configspace.py:175] --- n_neurons: 66 -> 79
+    [INFO][abstract_intensifier.py:493] Added config 8ea495 as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:565] Added config adcf92 and rejected config 8ea495 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- activation: 'tanh' -> 'logistic'
+    [INFO][configspace.py:175] --- batch_size: 214 -> 282
+    [INFO][configspace.py:175] --- learning_rate_init: 0.005599223654063347 -> 0.003947134850923183
+    [INFO][configspace.py:175] --- n_layer: 4 -> 1
+    [INFO][configspace.py:175] --- n_neurons: 66 -> 183
+    [INFO][smbo.py:298] Finished 100 trials.
     [INFO][smbo.py:306] Configuration budget is exhausted:
-    [INFO][smbo.py:307] --- Remaining wallclock time: -1.539931297302246
+    [INFO][smbo.py:307] --- Remaining wallclock time: -0.06582260131835938
     [INFO][smbo.py:308] --- Remaining cpu time: inf
-    [INFO][smbo.py:309] --- Remaining trials: 349
-    [INFO][abstract_intensifier.py:565] Added config 3d0a22 and rejected config 064d48 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- activation: 'relu' -> 'tanh'
-    [INFO][configspace.py:175] --- batch_size: 168 -> 216
-    [INFO][configspace.py:175] --- learning_rate_init: 0.0018268942281532308 -> 0.008446194346806444
-    [INFO][configspace.py:175] --- n_layer: 3 -> 1
-    [INFO][configspace.py:175] --- n_neurons: 79 -> 214
+    [INFO][smbo.py:309] --- Remaining trials: 378
     Default cost (SuccessiveHalving): 0.36672856700711853
-    Incumbent cost (SuccessiveHalving): 0.021145156298359558
+    Incumbent cost (SuccessiveHalving): 0.020037140204271053
     [INFO][abstract_initial_design.py:68] Using `n_configs` and ignoring `n_configs_per_hyperparameter`.
     [INFO][abstract_facade.py:184] Workers are reduced to 8.
     /opt/hostedtoolcache/Python/3.10.9/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
     Perhaps you already have a cluster running?
-    Hosting the HTTP server on port 38761 instead
+    Hosting the HTTP server on port 46613 instead
       warnings.warn(
     [INFO][scheduler.py:1619] State start
-    [INFO][scheduler.py:3864]   Scheduler at:     tcp://127.0.0.1:39791
-    [INFO][scheduler.py:3866]   dashboard at:           127.0.0.1:38761
-    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:38833'
-    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:39513'
-    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:36575'
-    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:44493'
-    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:43485'
-    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:35703'
-    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:40065'
-    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:39855'
-    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:41113', name: 1, status: init, memory: 0, processing: 0>
-    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:41113
-    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:43540
-    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:34445', name: 6, status: init, memory: 0, processing: 0>
-    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:34445
-    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:43556
-    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:39997', name: 5, status: init, memory: 0, processing: 0>
-    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:39997
-    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:43568
-    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:44505', name: 3, status: init, memory: 0, processing: 0>
-    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:44505
-    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:43574
-    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:44355', name: 2, status: init, memory: 0, processing: 0>
-    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:44355
-    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:43588
-    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:37565', name: 0, status: init, memory: 0, processing: 0>
-    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:37565
-    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:43586
-    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:46859', name: 7, status: init, memory: 0, processing: 0>
-    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:46859
-    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:43616
-    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:46483', name: 4, status: init, memory: 0, processing: 0>
-    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:46483
-    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:43604
-    [INFO][scheduler.py:5195] Receive client connection: Client-75e8a60b-81e9-11ed-87d9-1fd9ce1135c2
-    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:43626
+    [INFO][scheduler.py:3864]   Scheduler at:     tcp://127.0.0.1:35713
+    [INFO][scheduler.py:3866]   dashboard at:           127.0.0.1:46613
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:33765'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:36105'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:35479'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:41409'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:42341'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:42639'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:39057'
+    [INFO][nanny.py:365]         Start Nanny at: 'tcp://127.0.0.1:40513'
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:37829', name: 0, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:37829
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:58010
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:46145', name: 3, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:46145
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:58040
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:38125', name: 6, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:38125
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:58064
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:34735', name: 7, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:34735
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:58088
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:42789', name: 1, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:42789
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:58026
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:36683', name: 2, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:36683
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:58056
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:43805', name: 4, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:43805
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:58074
+    [INFO][scheduler.py:4216] Register worker <WorkerState 'tcp://127.0.0.1:36521', name: 5, status: init, memory: 0, processing: 0>
+    [INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:36521
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:58102
+    [INFO][scheduler.py:5195] Receive client connection: Client-7b8941fa-8832-11ed-8803-1bd0baecdc9e
+    [INFO][core.py:867] Starting established connection to tcp://127.0.0.1:58112
     [INFO][abstract_initial_design.py:133] Using 5 initial design configurations and 0 additional configurations.
-    [INFO][successive_halving.py:155] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
-    [INFO][successive_halving.py:299] Number of configs in stage:
-    [INFO][successive_halving.py:301] --- Bracket 0: [9, 3, 1]
-    [INFO][successive_halving.py:301] --- Bracket 1: [3, 1]
-    [INFO][successive_halving.py:301] --- Bracket 2: [1]
-    [INFO][successive_halving.py:303] Budgets in stage:
-    [INFO][successive_halving.py:305] --- Bracket 0: [2.7777777777777777, 8.333333333333332, 25.0]
-    [INFO][successive_halving.py:305] --- Bracket 1: [8.333333333333332, 25.0]
-    [INFO][successive_halving.py:305] --- Bracket 2: [25.0]
+    [INFO][successive_halving.py:159] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
+    [INFO][successive_halving.py:303] Number of configs in stage:
+    [INFO][successive_halving.py:305] --- Bracket 0: [9, 3, 1]
+    [INFO][successive_halving.py:305] --- Bracket 1: [3, 1]
+    [INFO][successive_halving.py:305] --- Bracket 2: [1]
+    [INFO][successive_halving.py:307] Budgets in stage:
+    [INFO][successive_halving.py:309] --- Bracket 0: [2.7777777777777777, 8.333333333333332, 25.0]
+    [INFO][successive_halving.py:309] --- Bracket 1: [8.333333333333332, 25.0]
+    [INFO][successive_halving.py:309] --- Bracket 2: [25.0]
     [INFO][smbo.py:298] Finished 0 trials.
     [INFO][smbo.py:298] Finished 0 trials.
     [INFO][smbo.py:298] Finished 0 trials.
@@ -191,42 +180,34 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     [INFO][smbo.py:298] Finished 0 trials.
     [INFO][smbo.py:298] Finished 0 trials.
     [INFO][abstract_intensifier.py:493] Added config 0fc823 as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:565] Added config 2e0d32 and rejected config 0fc823 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- activation: 'logistic' -> 'tanh'
-    [INFO][configspace.py:175] --- batch_size: None -> 77
-    [INFO][configspace.py:175] --- learning_rate: None -> 'constant'
-    [INFO][configspace.py:175] --- learning_rate_init: None -> 0.002698593078638062
-    [INFO][configspace.py:175] --- n_layer: 2 -> 5
-    [INFO][configspace.py:175] --- n_neurons: 16 -> 77
-    [INFO][configspace.py:175] --- solver: 'lbfgs' -> 'sgd'
-    [INFO][abstract_intensifier.py:565] Added config 8ea495 and rejected config 2e0d32 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- batch_size: 77 -> 214
-    [INFO][configspace.py:175] --- learning_rate_init: 0.002698593078638062 -> 0.005599223654063347
-    [INFO][configspace.py:175] --- n_layer: 5 -> 4
-    [INFO][configspace.py:175] --- n_neurons: 77 -> 66
-    [INFO][configspace.py:175] --- solver: 'sgd' -> 'adam'
-    [INFO][abstract_intensifier.py:565] Added config aafe40 and rejected config 8ea495 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- activation: 'tanh' -> 'relu'
-    [INFO][configspace.py:175] --- batch_size: 214 -> 276
-    [INFO][configspace.py:175] --- learning_rate_init: 0.005599223654063347 -> 0.0072231025701623335
-    [INFO][configspace.py:175] --- n_layer: 4 -> 5
-    [INFO][configspace.py:175] --- n_neurons: 66 -> 56
+    [INFO][abstract_intensifier.py:565] Added config 06bb76 and rejected config 0fc823 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- activation: 'logistic' -> 'relu'
+    [INFO][configspace.py:175] --- n_neurons: 16 -> 48
+    [INFO][abstract_intensifier.py:565] Added config ebb6be and rejected config 06bb76 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- activation: 'relu' -> 'tanh'
+    [INFO][configspace.py:175] --- batch_size: None -> 35
+    [INFO][configspace.py:175] --- learning_rate_init: None -> 0.001547917475869209
+    [INFO][configspace.py:175] --- n_layer: 2 -> 4
+    [INFO][configspace.py:175] --- n_neurons: 48 -> 32
+    [INFO][configspace.py:175] --- solver: 'lbfgs' -> 'adam'
+    [INFO][abstract_intensifier.py:565] Added config 8ea495 and rejected config ebb6be as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- batch_size: 35 -> 214
+    [INFO][configspace.py:175] --- learning_rate_init: 0.001547917475869209 -> 0.005599223654063347
+    [INFO][configspace.py:175] --- n_neurons: 32 -> 66
     [INFO][smbo.py:298] Finished 50 trials.
     [INFO][smbo.py:298] Finished 50 trials.
-    [INFO][abstract_intensifier.py:565] Added config 67740e and rejected config aafe40 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- activation: 'relu' -> 'logistic'
-    [INFO][configspace.py:175] --- batch_size: 276 -> 252
-    [INFO][configspace.py:175] --- learning_rate: None -> 'adaptive'
-    [INFO][configspace.py:175] --- learning_rate_init: 0.0072231025701623335 -> 0.07986885470785313
-    [INFO][configspace.py:175] --- n_layer: 5 -> 1
-    [INFO][configspace.py:175] --- n_neurons: 56 -> 209
-    [INFO][configspace.py:175] --- solver: 'adam' -> 'sgd'
+    [INFO][abstract_intensifier.py:565] Added config 704d44 and rejected config 8ea495 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- activation: 'tanh' -> 'logistic'
+    [INFO][configspace.py:175] --- batch_size: 214 -> 31
+    [INFO][configspace.py:175] --- learning_rate_init: 0.005599223654063347 -> 0.0038549874043245355
+    [INFO][configspace.py:175] --- n_layer: 4 -> 1
+    [INFO][configspace.py:175] --- n_neurons: 66 -> 87
     [INFO][smbo.py:306] Configuration budget is exhausted:
-    [INFO][smbo.py:307] --- Remaining wallclock time: -2.691133975982666
+    [INFO][smbo.py:307] --- Remaining wallclock time: -0.29127001762390137
     [INFO][smbo.py:308] --- Remaining cpu time: inf
-    [INFO][smbo.py:309] --- Remaining trials: 416
+    [INFO][smbo.py:309] --- Remaining trials: 426
     Default cost (Hyperband): 0.36672856700711853
-    Incumbent cost (Hyperband): 0.02170380687093787
+    Incumbent cost (Hyperband): 0.0178087279480037
 
 
 
@@ -405,7 +386,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 2 minutes  31.635 seconds)
+   **Total running time of the script:** ( 2 minutes  37.287 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_1_mlp_epochs.py:

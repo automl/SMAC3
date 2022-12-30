@@ -333,6 +333,11 @@
      Reproducibility
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/12_optimizations.html">
+     Optimizations
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 current active has-children">
@@ -1108,18 +1113,14 @@
 <dd><p>Bases: <a class="reference internal" href="smac.intensifier.abstract_intensifier.html#smac.intensifier.abstract_intensifier.AbstractIntensifier" title="smac.intensifier.abstract_intensifier.AbstractIntensifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractIntensifier</span></code></a></p>
 <p>Implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-processing.
 Races challengers against current incumbents.</p>
-<p>The behaviour of this intensifier is as follows:
-- First, adds configs from the runhistory to the queue with N=1 (they will be ignored if they are already</p>
-<blockquote>
-<div><p>evaluated).</p>
-</div></blockquote>
-<ul>
-<li><p>While loop:
-- If queue is empty: Intensifies exactly one more instance of one incumbent and samples a new configuration</p>
-<blockquote>
-<div><p>afterwards.</p>
-</div></blockquote>
+<p>The behaviour of this intensifier is as follows:</p>
 <ul class="simple">
+<li><p>First, adds configs from the runhistory to the queue with N=1 (they will be ignored if they are already
+evaluated).</p></li>
+<li><p>While loop:</p>
+<ul>
+<li><p>If queue is empty: Intensifies exactly one more instance of one incumbent and samples a new configuration
+afterwards.</p></li>
 <li><p>If queue is not empty: Configs in the queue are evaluated on N=(N*2) instances if they might be better
 than the incumbents. If not, they are removed from the queue and rejected forever.</p></li>
 </ul>
@@ -1140,12 +1141,14 @@ for a configuration.</p></li>
 <dt class="sig sig-object py" id="smac.intensifier.intensifier.Intensifier.__iter__">
 <span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/intensifier.html#Intensifier.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.intensifier.Intensifier.__iter__" title="Permalink to this definition">¶</a></dt>
 <dd><p>This iter method holds the logic for the intensification loop.
-Some facts about the loop:
-- Adds existing configurations from the runhistory to the queue (that means it supports user-inputs).
-- Everytime an incumbent (with the lowest amount of trials) is intensified, a new challenger is added to the
-queue.
-- If all incumbents are evaluated on the same trials, a new trial is added to one of the incumbents.
-- Only challengers which are not rejected/running/incumbent are intensified by N*2.</p>
+Some facts about the loop:</p>
+<ul class="simple">
+<li><p>Adds existing configurations from the runhistory to the queue (that means it supports user-inputs).</p></li>
+<li><p>Everytime an incumbent (with the lowest amount of trials) is intensified, a new challenger is added to the
+queue.</p></li>
+<li><p>If all incumbents are evaluated on the same trials, a new trial is added to one of the incumbents.</p></li>
+<li><p>Only challengers which are not rejected/running/incumbent are intensified by N*2.</p></li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>trials</strong> – Iterator over the trials.</p>

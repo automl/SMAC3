@@ -330,6 +330,11 @@
      Reproducibility
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/12_optimizations.html">
+     Optimizations
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
@@ -1013,10 +1018,12 @@
 <span class="sd">    Internally, a tracker keeps track of configurations and their bracket and stage.</span>
 
 <span class="sd">    The behaviour of this intensifier is as follows:</span>
+
 <span class="sd">    - First, adds configurations from the runhistory to the tracker. The first stage is always filled-up. For example,</span>
 <span class="sd">      the user provided 4 configs with the tell-method but the first stage requires 8 configs: 4 new configs are</span>
 <span class="sd">      sampled and added together with the provided configs as a group to the tracker.</span>
 <span class="sd">    - While loop:</span>
+
 <span class="sd">      - If a trial in the tracker has not been yielded yet, yield it.</span>
 <span class="sd">      - If we are running out of trials, we simply add a new batch of configurations to the first stage.</span>
 
@@ -1033,14 +1040,16 @@
 <span class="sd">        How many seeds to use for each instance.</span>
 <span class="sd">    instance_seed_order : str, defaults to &quot;shuffle_once&quot;</span>
 <span class="sd">        How to order the instance-seed pairs. Can be set to:</span>
-<span class="sd">        * None: No shuffling at all and use the instance-seed order provided by the user.</span>
-<span class="sd">        * &quot;shuffle_once&quot;: Shuffle the instance-seed keys once and use the same order across all runs.</span>
-<span class="sd">        * &quot;shuffle&quot;: Shuffles the instance-seed keys for each bracket individually.</span>
+
+<span class="sd">        - `None`: No shuffling at all and use the instance-seed order provided by the user.</span>
+<span class="sd">        - `shuffle_once`: Shuffle the instance-seed keys once and use the same order across all runs.</span>
+<span class="sd">        - `shuffle`: Shuffles the instance-seed keys for each bracket individually.</span>
 <span class="sd">    incumbent_selection : str, defaults to &quot;highest_observed_budget&quot;</span>
 <span class="sd">        How to select the incumbent when using budgets. Can be set to:</span>
-<span class="sd">        * &quot;any_budget&quot;: Incumbent is the best on any budget i.e., best performance regardless of budget.</span>
-<span class="sd">        * &quot;highest_observed_budget&quot;: Incumbent is the best in the highest budget run so far.</span>
-<span class="sd">        * &quot;highest_budget&quot;: Incumbent is selected only based on the highest budget.</span>
+
+<span class="sd">        - `any_budget`: Incumbent is the best on any budget i.e., best performance regardless of budget.</span>
+<span class="sd">        - `highest_observed_budget`: Incumbent is the best in the highest budget run so far.</span>
+<span class="sd">        - `highest_budget`: Incumbent is selected only based on the highest budget.</span>
 <span class="sd">    max_incumbents : int, defaults to 10</span>
 <span class="sd">        How many incumbents to keep track of in the case of multi-objective.</span>
 <span class="sd">    seed : int, defaults to None</span>

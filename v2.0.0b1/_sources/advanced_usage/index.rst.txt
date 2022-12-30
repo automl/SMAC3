@@ -24,4 +24,5 @@ Navigation
     9_parallelism
     10_continue
     11_reproducibility
+    12_optimizations
 

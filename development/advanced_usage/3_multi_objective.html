@@ -333,6 +333,11 @@
      Reproducibility
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="12_optimizations.html">
+     Optimizations
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
@@ -1005,7 +1010,7 @@ ParEGO <a class="reference internal" href="../6_references.html#know06" id="id1"
 optimized by SMAC. However, the run history still keeps the original objectives.</p>
 <p>The basic recipe is as follows:</p>
 <ul class="simple">
-<li><p>Specify the objectives in the scenario object as list. For example, <code class="docutils literal notranslate"><span class="pre">Scenario(objectives=[&quot;obj1&quot;,</span> <span class="pre">&quot;obj2&quot;])</span></code>.)</p></li>
+<li><p>Specify the objectives in the scenario object as list. For example, <code class="docutils literal notranslate"><span class="pre">Scenario(objectives=[&quot;obj1&quot;,</span> <span class="pre">&quot;obj2&quot;])</span></code>.</p></li>
 <li><p>Make sure that your target function returns a cost <em>dictionary</em> containing the objective names as keys
 and the objective values as values, e.g. <code class="docutils literal notranslate"><span class="pre">{'obj1':</span> <span class="pre">0.3,</span> <span class="pre">'obj2':</span> <span class="pre">200}</span></code>. Alternatively, you can simply
 return a list, e.g., <code class="docutils literal notranslate"><span class="pre">[0.3,</span> <span class="pre">200]</span></code>.</p></li>

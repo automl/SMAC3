@@ -333,6 +333,11 @@
      Reproducibility
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/12_optimizations.html">
+     Optimizations
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 current active has-children">
@@ -1123,20 +1128,15 @@ is then executed in parallel on <cite>n_workers</cite>.</p>
 a <cite>run</cite> method, and is capable of doing so in a serial fashion. Next,
 this wrapper class uses dask to initialize <cite>N</cite> number of AbstractRunner that actively wait of a
 TrialInfo to produce a RunInfo object.</p>
-<p>To be more precise, the work model is then:
-1. The intensifier dictates “what” to run (a configuration/instance/seed) via a TrialInfo object.
-2. An abstract runner takes this TrialInfo object and launches the task via</p>
-<blockquote>
-<div><p><cite>submit_run</cite>. In the case of DaskParallelRunner, <cite>n_workers</cite> receive a pickle-object of
+<p>To be more precise, the work model is then:</p>
+<ol class="arabic simple">
+<li><p>The intensifier dictates “what” to run (a configuration/instance/seed) via a TrialInfo object.</p></li>
+<li><p>An abstract runner takes this TrialInfo object and launches the task via
+<cite>submit_run</cite>. In the case of DaskParallelRunner, <cite>n_workers</cite> receive a pickle-object of
 <cite>DaskParallelRunner.single_worker</cite>, each with a <cite>run</cite> method coming from
-<cite>DaskParallelRunner.single_worker.run()</cite></p>
-</div></blockquote>
-<p>3. TrialInfo objects are run in a distributed fashion, and their results are available
-locally to each worker.</p>
-<blockquote>
-<div><p>The result is collected by <cite>iter_results</cite> and then passed to SMBO.</p>
-</div></blockquote>
-<ol class="arabic simple" start="4">
+<cite>DaskParallelRunner.single_worker.run()</cite></p></li>
+<li><p>TrialInfo objects are run in a distributed fashion, and their results are available locally to each worker. The
+result is collected by <cite>iter_results</cite> and then passed to SMBO.</p></li>
 <li><p>Exceptions are also locally available to each worker and need to be collected.</p></li>
 </ol>
 <p>Dask works with <cite>Future</cite> object which are managed via the DaskParallelRunner.client.</p>
@@ -1145,13 +1145,9 @@ locally to each worker.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>single_worker</strong> (<a class="reference internal" href="smac.runner.html#smac.runner.AbstractRunner" title="smac.runner.AbstractRunner"><em>AbstractRunner</em></a>) – A runner to run in a distributed fashion. Will be distributed using <cite>n_workers</cite>.</p></li>
 <li><p><strong>patience</strong> (<em>int</em><em>, </em><em>default to 5</em>) – How much to wait for workers (seconds) to be available if one fails.</p></li>
-<li><p><strong>dask_client</strong> (<em>Client</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – <p>User-created dask client, which can be used to start a dask cluster and then attach
-SMAC to it. This will not be closed automatically and will have to be closed manually if</p>
-<blockquote>
-<div><p>provided explicitly.</p>
-</div></blockquote>
-<p>If none is provided (default), a local one will be created for you and closed upon completion.</p>
-</p></li>
+<li><p><strong>dask_client</strong> (<em>Client</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – User-created dask client, which can be used to start a dask cluster and then attach SMAC to it. This will not
+be closed automatically and will have to be closed manually if provided explicitly. If none is provided
+(default), a local one will be created for you and closed upon completion.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1231,11 +1227,8 @@ combination (aka trial).</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>Configuration</em>) – Configuration to be passed to the target function.</p></li>
 <li><p><strong>instance</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The Problem instance.</p></li>
-<li><p><strong>budget</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – <dl class="simple">
-<dt>A positive, real-valued number representing an arbitrary limit to the target function</dt><dd><p>handled by the target function internally.</p>
-</dd>
-</dl>
-</p></li>
+<li><p><strong>budget</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – A positive, real-valued number representing an arbitrary limit to the target function
+handled by the target function internally.</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – </p></li>
 </ul>
 </dd>
@@ -1257,19 +1250,16 @@ combination (aka trial).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.dask_runner.DaskParallelRunner.submit_trial">
 <span class="sig-name descname"><span class="pre">submit_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.submit_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.submit_trial" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>This function submits a configuration embedded in a <cite>trial_info</cite> object, and uses one of</dt><dd><p>the workers to produce a result locally to each worker.</p>
-</dd>
-</dl>
-<p>The execution of a configuration follows this procedure:
-1. The SMBO/intensifier generates a <cite>TrialInfo</cite>.
-2. SMBO calls <cite>submit_trial</cite> so that a worker launches the <cite>trial_info</cite>.
-3. <cite>submit_trial</cite> internally calls self.run(). It does so via a call to <cite>run_wrapper</cite> which
-contains common code that any <cite>run</cite> method will otherwise have to implement.</p>
-<dl class="simple">
-<dt>All results will be only available locally to each worker, so the main node needs to collect</dt><dd><p>them.</p>
-</dd>
-</dl>
+<dd><p>This function submits a configuration embedded in a <code class="docutils literal notranslate"><span class="pre">trial_info</span></code> object, and uses one of
+the workers to produce a result locally to each worker.</p>
+<p>The execution of a configuration follows this procedure:</p>
+<ol class="arabic simple">
+<li><p>The SMBO/intensifier generates a <cite>TrialInfo</cite>.</p></li>
+<li><p>SMBO calls <cite>submit_trial</cite> so that a worker launches the <cite>trial_info</cite>.</p></li>
+<li><p><cite>submit_trial</cite> internally calls <code class="docutils literal notranslate"><span class="pre">self.run()</span></code>. It does so via a call to <cite>run_wrapper</cite> which contains common
+code that any <cite>run</cite> method will otherwise have to implement.</p></li>
+</ol>
+<p>All results will be only available locally to each worker, so the main node needs to collect them.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>trial_info</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.TrialInfo" title="smac.runhistory.TrialInfo"><em>TrialInfo</em></a>) – An object containing the configuration launched.</p>

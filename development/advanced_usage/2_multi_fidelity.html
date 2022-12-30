@@ -333,6 +333,11 @@
      Reproducibility
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="12_optimizations.html">
+     Optimizations
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
@@ -1008,7 +1013,7 @@ when using <a class="reference internal" href="../api/smac.intensifier.successiv
 <p>In general, multi-fidelity works for both real-valued and instance budgets. In the real-valued case,
 the budget is directly passed to the target function. In the instance case, the budget is not passed to the
 target function but <code class="docutils literal notranslate"><span class="pre">min_budget</span></code> and <code class="docutils literal notranslate"><span class="pre">max_budget</span></code> are used internally to determine the number of instances of
-each stage. That’s also the reason why <code class="docutils literal notranslate"><span class="pre">min_budget</span></code> and <code class="docutils literal notranslate"><span class="pre">max_budget</span></code> are <em>not</em> required when using instances:
+each stage. That’s also the reason why <code class="docutils literal notranslate"><span class="pre">min_budget</span></code> and <code class="docutils literal notranslate"><span class="pre">max_budget</span></code> are <em>not required</em> when using instances:
 The <code class="docutils literal notranslate"><span class="pre">max_budget</span></code> is simply the max number of instances, whereas the <code class="docutils literal notranslate"><span class="pre">min_budget</span></code> is simply 1.</p>
 <p>Please have a look into our <a class="reference internal" href="../examples/2_multi_fidelity/index.html#multi-fidelity-and-multi-instances"><span class="std std-ref">multi-fidelity examples</span></a> to see how to use
 multi-fidelity optimization in real-world applications.</p>

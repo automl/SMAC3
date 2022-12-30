@@ -333,6 +333,11 @@
      Reproducibility
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/12_optimizations.html">
+     Optimizations
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 current active has-children">
@@ -1072,17 +1077,15 @@
 <dd><p>Bases: <a class="reference internal" href="smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner" title="smac.runner.abstract_serial_runner.AbstractSerialRunner"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractSerialRunner</span></code></a></p>
 <p>Class to execute target functions which are python functions. Evaluates function for given
 configuration and resource limit.</p>
-<dl class="simple">
-<dt>The target function can either return a float (the loss), or a tuple with the first element</dt><dd><p>being a float and the second being additional run information. In a multi-objective
+<p>The target function can either return a float (the loss), or a tuple with the first element
+being a float and the second being additional run information. In a multi-objective
 setting, the float value is replaced by a list of floats.</p>
-</dd>
-</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>target_function</strong> (<em>Callable</em>) – The target function.</p></li>
 <li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
-<li><p><strong>required_arguments</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – A list of required arguments, which are passed to the target function.</p></li>
+<li><p><strong>required_arguments</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>defaults to</em><em> [</em><em>]</em>) – A list of required arguments, which are passed to the target function.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1118,11 +1121,8 @@ set. Otherwise, the function is called directly.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>Configuration</em>) – Configuration to be passed to the target function.</p></li>
 <li><p><strong>instance</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The Problem instance.</p></li>
-<li><p><strong>budget</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – <dl class="simple">
-<dt>A positive, real-valued number representing an arbitrary limit to the target function</dt><dd><p>handled by the target function internally.</p>
-</dd>
-</dl>
-</p></li>
+<li><p><strong>budget</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – A positive, real-valued number representing an arbitrary limit to the target function
+handled by the target function internally.</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – </p></li>
 </ul>
 </dd>

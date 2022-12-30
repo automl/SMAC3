@@ -330,6 +330,11 @@
      Reproducibility
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/12_optimizations.html">
+     Optimizations
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
@@ -1013,15 +1018,15 @@
 <span class="sd">    submit/collect scheme as follows:</span>
 
 <span class="sd">    1. A run is launched via ``submit_run()``</span>
-<span class="sd">        * ``submit_run`` internally calls ``run_wrapper()``, a method that contains common</span>
-<span class="sd">         processing functions among different runners.</span>
-<span class="sd">        * A class that implements AbstractRunner defines ``run()`` which is really the algorithm to</span>
-<span class="sd">        translate a ``TrialInfo`` to a ``TrialValue``, i.e. a configuration to an actual result.</span>
-<span class="sd">    2. A completed run is collected via ``iter_results()``, which iterates and consumes any finished</span>
-<span class="sd">        runs, if any.</span>
+
+<span class="sd">       - ``submit_run`` internally calls ``run_wrapper()``, a method that contains common processing functions among</span>
+<span class="sd">         different runners.</span>
+<span class="sd">       - A class that implements AbstractRunner defines ``run()`` which is really the algorithm to</span>
+<span class="sd">         translate a ``TrialInfo`` to a ``TrialValue``, i.e. a configuration to an actual result.</span>
+<span class="sd">    2. A completed run is collected via ``iter_results()``, which iterates and consumes any finished runs, if any.</span>
 <span class="sd">    3. This interface also offers the method ``wait()`` as a mechanism to make sure we have enough</span>
-<span class="sd">        data in the next iteration to make a decision. For example, the intensifier might not be</span>
-<span class="sd">        able to select the next challenger until more results are available.</span>
+<span class="sd">       data in the next iteration to make a decision. For example, the intensifier might not be</span>
+<span class="sd">       able to select the next challenger until more results are available.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1133,18 +1138,14 @@
 
 <div class="viewcode-block" id="AbstractRunner.submit_trial"><a class="viewcode-back" href="../../../api/smac.runner.abstract_runner.html#smac.runner.AbstractRunner.submit_trial">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">submit_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial_info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;This function submits a configuration embedded in a TrialInfo object, and uses one of the</span>
-<span class="sd">        workers to produce a result (such result will eventually be available on the</span>
-<span class="sd">        `self._results_queue`</span>
-<span class="sd">        FIFO).</span>
+        <span class="sd">&quot;&quot;&quot;This function submits a configuration embedded in a TrialInfo object, and uses one of the workers to produce</span>
+<span class="sd">        a result (such result will eventually be available on the ``self._results_queue`` FIFO).</span>
 
-<span class="sd">        This interface method will be called by SMBO, with the expectation</span>
-<span class="sd">        that a function will be executed by a worker. What will be executed is dictated by</span>
-<span class="sd">        trial_info, and &quot;how&quot; it will</span>
-<span class="sd">        be executed is decided via the child class that implements a run() method.</span>
+<span class="sd">        This interface method will be called by SMBO, with the expectation that a function will be executed by a worker.</span>
+<span class="sd">        What will be executed is dictated by ``trial_info``, and `how` it will be executed is decided via the child</span>
+<span class="sd">        class that implements a ``run`` method.</span>
 
-<span class="sd">        Because config submission can be a serial/parallel endeavor, it is expected to be</span>
-<span class="sd">        implemented by a child class.</span>
+<span class="sd">        Because config submission can be a serial/parallel endeavor, it is expected to be implemented by a child class.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1172,7 +1173,7 @@
 <span class="sd">            The Problem instance.</span>
 <span class="sd">        budget : float | None, defaults to None</span>
 <span class="sd">            A positive, real-valued number representing an arbitrary limit to the target function</span>
-<span class="sd">             handled by the target function internally.</span>
+<span class="sd">            handled by the target function internally.</span>
 <span class="sd">        seed : int, defaults to None</span>
 
 <span class="sd">        Returns</span>

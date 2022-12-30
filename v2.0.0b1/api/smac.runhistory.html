@@ -333,6 +333,11 @@
      Reproducibility
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/12_optimizations.html">
+     Optimizations
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 current active has-children">
@@ -1635,13 +1640,10 @@ seed pairs.</p>
 <li><p><strong>config</strong> (<em>Configuration</em>) – Configuration to calculate objective for.</p></li>
 <li><p><strong>instance_seed_budget_keys</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds-budget keys. If None, the runhistory is
 queried for all trials of the given configuration.</p></li>
-<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=False</em><em>)</em>) – <p>Normalizes the costs wrt. objective bounds in the multi-objective setting.
+<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=False</em><em>)</em>) – Normalizes the costs wrt. objective bounds in the multi-objective setting.
 Only a float is returned if normalize is True. Warning: The value can change
-over time because the objective bounds are changing. Also, the objective weights are</p>
-<blockquote>
-<div><p>incorporated.</p>
-</div></blockquote>
-</p></li>
+over time because the objective bounds are changing. Also, the objective weights are
+incorporated.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1926,13 +1928,10 @@ considered.</p>
 <li><p><strong>config</strong> (<em>Configuration</em>) – Configuration to calculate objective for.</p></li>
 <li><p><strong>instance_seed_budget_keys</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds-budget keys. If None, the runhistory is
 queried for all trials of the given configuration.</p></li>
-<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=False</em><em>)</em>) – <p>Normalizes the costs wrt objective bounds in the multi-objective setting.
+<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=False</em><em>)</em>) – Normalizes the costs wrt objective bounds in the multi-objective setting.
 Only a float is returned if normalize is True. Warning: The value can change
-over time because the objective bounds are changing. Also, the objective weights are</p>
-<blockquote>
-<div><p>incorporated.</p>
-</div></blockquote>
-</p></li>
+over time because the objective bounds are changing. Also, the objective weights are
+incorporated.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

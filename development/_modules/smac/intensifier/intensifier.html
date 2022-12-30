@@ -330,6 +330,11 @@
      Reproducibility
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/12_optimizations.html">
+     Optimizations
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
@@ -1005,9 +1010,11 @@
 <span class="sd">    Races challengers against current incumbents.</span>
 
 <span class="sd">    The behaviour of this intensifier is as follows:</span>
+
 <span class="sd">    - First, adds configs from the runhistory to the queue with N=1 (they will be ignored if they are already</span>
 <span class="sd">      evaluated).</span>
 <span class="sd">    - While loop:</span>
+
 <span class="sd">      - If queue is empty: Intensifies exactly one more instance of one incumbent and samples a new configuration</span>
 <span class="sd">        afterwards.</span>
 <span class="sd">      - If queue is not empty: Configs in the queue are evaluated on N=(N*2) instances if they might be better</span>
@@ -1071,9 +1078,10 @@
 <div class="viewcode-block" id="Intensifier.__iter__"><a class="viewcode-back" href="../../../api/smac.intensifier.intensifier.html#smac.intensifier.Intensifier.__iter__">[docs]</a>    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;This iter method holds the logic for the intensification loop.</span>
 <span class="sd">        Some facts about the loop:</span>
+
 <span class="sd">        - Adds existing configurations from the runhistory to the queue (that means it supports user-inputs).</span>
 <span class="sd">        - Everytime an incumbent (with the lowest amount of trials) is intensified, a new challenger is added to the</span>
-<span class="sd">        queue.</span>
+<span class="sd">          queue.</span>
 <span class="sd">        - If all incumbents are evaluated on the same trials, a new trial is added to one of the incumbents.</span>
 <span class="sd">        - Only challengers which are not rejected/running/incumbent are intensified by N*2.</span>
 

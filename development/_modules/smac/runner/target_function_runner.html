@@ -330,6 +330,11 @@
      Reproducibility
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/12_optimizations.html">
+     Optimizations
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
@@ -1011,15 +1016,15 @@
 <span class="sd">    configuration and resource limit.</span>
 
 <span class="sd">    The target function can either return a float (the loss), or a tuple with the first element</span>
-<span class="sd">     being a float and the second being additional run information. In a multi-objective</span>
-<span class="sd">     setting, the float value is replaced by a list of floats.</span>
+<span class="sd">    being a float and the second being additional run information. In a multi-objective</span>
+<span class="sd">    setting, the float value is replaced by a list of floats.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    target_function : Callable</span>
 <span class="sd">        The target function.</span>
 <span class="sd">    scenario : Scenario</span>
-<span class="sd">    required_arguments : list[str]</span>
+<span class="sd">    required_arguments : list[str], defaults to []</span>
 <span class="sd">        A list of required arguments, which are passed to the target function.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1088,7 +1093,7 @@
 <span class="sd">            The Problem instance.</span>
 <span class="sd">        budget : float | None, defaults to None</span>
 <span class="sd">            A positive, real-valued number representing an arbitrary limit to the target function</span>
-<span class="sd">             handled by the target function internally.</span>
+<span class="sd">            handled by the target function internally.</span>
 <span class="sd">        seed : int, defaults to None</span>
 
 <span class="sd">        Returns</span>

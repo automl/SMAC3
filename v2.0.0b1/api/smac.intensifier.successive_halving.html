@@ -333,6 +333,11 @@
      Reproducibility
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/12_optimizations.html">
+     Optimizations
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 current active has-children">
@@ -1144,16 +1149,17 @@
 <dd><p>Bases: <a class="reference internal" href="smac.intensifier.abstract_intensifier.html#smac.intensifier.abstract_intensifier.AbstractIntensifier" title="smac.intensifier.abstract_intensifier.AbstractIntensifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractIntensifier</span></code></a></p>
 <p>Implementation of Succesive Halving supporting multi-fidelity, multi-objective, and multi-processing.
 Internally, a tracker keeps track of configurations and their bracket and stage.</p>
-<p>The behaviour of this intensifier is as follows:
-- First, adds configurations from the runhistory to the tracker. The first stage is always filled-up. For example,</p>
-<blockquote>
-<div><p>the user provided 4 configs with the tell-method but the first stage requires 8 configs: 4 new configs are
-sampled and added together with the provided configs as a group to the tracker.</p>
-</div></blockquote>
+<p>The behaviour of this intensifier is as follows:</p>
 <ul class="simple">
-<li><p>While loop:
-- If a trial in the tracker has not been yielded yet, yield it.
-- If we are running out of trials, we simply add a new batch of configurations to the first stage.</p></li>
+<li><p>First, adds configurations from the runhistory to the tracker. The first stage is always filled-up. For example,
+the user provided 4 configs with the tell-method but the first stage requires 8 configs: 4 new configs are
+sampled and added together with the provided configs as a group to the tracker.</p></li>
+<li><p>While loop:</p>
+<ul>
+<li><p>If a trial in the tracker has not been yielded yet, yield it.</p></li>
+<li><p>If we are running out of trials, we simply add a new batch of configurations to the first stage.</p></li>
+</ul>
+</li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -1165,14 +1171,20 @@ only one bracket is used.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>eta</strong> (<em>int</em><em>, </em><em>defaults to 3</em>) – Input that controls the proportion of configurations discarded in each round of Successive Halving.</p></li>
 <li><p><strong>n_seeds</strong> (<em>int</em><em>, </em><em>defaults to 1</em>) – How many seeds to use for each instance.</p></li>
-<li><p><strong>instance_seed_order</strong> (<em>str</em><em>, </em><em>defaults to &quot;shuffle_once&quot;</em>) – How to order the instance-seed pairs. Can be set to:
-* None: No shuffling at all and use the instance-seed order provided by the user.
-* “shuffle_once”: Shuffle the instance-seed keys once and use the same order across all runs.
-* “shuffle”: Shuffles the instance-seed keys for each bracket individually.</p></li>
-<li><p><strong>incumbent_selection</strong> (<em>str</em><em>, </em><em>defaults to &quot;highest_observed_budget&quot;</em>) – How to select the incumbent when using budgets. Can be set to:
-* “any_budget”: Incumbent is the best on any budget i.e., best performance regardless of budget.
-* “highest_observed_budget”: Incumbent is the best in the highest budget run so far.
-* “highest_budget”: Incumbent is selected only based on the highest budget.</p></li>
+<li><p><strong>instance_seed_order</strong> (<em>str</em><em>, </em><em>defaults to &quot;shuffle_once&quot;</em>) – <p>How to order the instance-seed pairs. Can be set to:</p>
+<ul>
+<li><p><cite>None</cite>: No shuffling at all and use the instance-seed order provided by the user.</p></li>
+<li><p><cite>shuffle_once</cite>: Shuffle the instance-seed keys once and use the same order across all runs.</p></li>
+<li><p><cite>shuffle</cite>: Shuffles the instance-seed keys for each bracket individually.</p></li>
+</ul>
+</p></li>
+<li><p><strong>incumbent_selection</strong> (<em>str</em><em>, </em><em>defaults to &quot;highest_observed_budget&quot;</em>) – <p>How to select the incumbent when using budgets. Can be set to:</p>
+<ul>
+<li><p><cite>any_budget</cite>: Incumbent is the best on any budget i.e., best performance regardless of budget.</p></li>
+<li><p><cite>highest_observed_budget</cite>: Incumbent is the best in the highest budget run so far.</p></li>
+<li><p><cite>highest_budget</cite>: Incumbent is selected only based on the highest budget.</p></li>
+</ul>
+</p></li>
 <li><p><strong>max_incumbents</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – How many incumbents to keep track of in the case of multi-objective.</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – Internal seed used for random events like shuffle seeds.</p></li>
 </ul>

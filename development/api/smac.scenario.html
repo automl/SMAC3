@@ -333,6 +333,11 @@
      Reproducibility
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/12_optimizations.html">
+     Optimizations
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 current active has-children">
@@ -1110,14 +1115,14 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>configspace</strong> (<em>ConfigSpace</em>) – The configuration space from which to sample the configurations.</p></li>
+<li><p><strong>configspace</strong> (<em>ConfigurationSpace</em>) – The configuration space from which to sample the configurations.</p></li>
 <li><p><strong>name</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The name of the run. If no name is passed, SMAC generates a hash from the meta data.
 Specify this argument to identify your run easily.</p></li>
 <li><p><strong>output_directory</strong> (<em>Path</em><em>, </em><em>defaults to Path</em><em>(</em><em>&quot;smac3_output&quot;</em><em>)</em>) – The directory in which to save the output. The files are saved in <cite>./output_directory/name/seed</cite>.</p></li>
 <li><p><strong>deterministic</strong> (<em>bool</em><em>, </em><em>defaults to False</em>) – If deterministic is set to true, only one seed is passed to the target function.
 Otherwise, multiple seeds (if n_seeds of the intensifier is greater than 1) are passed
 to the target function to ensure generalization.</p></li>
-<li><p><strong>objective</strong> (<em>str</em><em> | </em><em>list</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to &quot;cost&quot;</em>) – The objective(s) to optimize. This argument is required for multi-objective optimization.</p></li>
+<li><p><strong>objectives</strong> (<em>str</em><em> | </em><em>list</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to &quot;cost&quot;</em>) – The objective(s) to optimize. This argument is required for multi-objective optimization.</p></li>
 <li><p><strong>crash_cost</strong> (<em>float</em><em> | </em><em>list</em><em>[</em><em>float</em><em>]</em><em>, </em><em>defaults to np.inf</em>) – Defines the cost for a failed trial. In case of multi-objective, each objective can be associated with
 a different cost.</p></li>
 <li><p><strong>termination_cost_threshold</strong> (<em>float</em><em> | </em><em>list</em><em>[</em><em>float</em><em>]</em><em>, </em><em>defaults to np.inf</em>) – Defines a cost threshold when the optimization should stop. In case of multi-objective, each objective <em>must</em> be

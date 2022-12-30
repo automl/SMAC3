@@ -333,6 +333,11 @@
      Reproducibility
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/12_optimizations.html">
+     Optimizations
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 current active has-children">
@@ -1275,7 +1280,7 @@
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier" title="smac.intensifier.abstract_intensifier.AbstractIntensifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractIntensifier</span></code></a>(scenario[, n_seeds, ...])</p></td>
-<td><p>Abstract implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-processing.</p></td>
+<td><p>Abstract implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-threading.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1286,7 +1291,7 @@
 <dt class="sig sig-object py" id="smac.intensifier.abstract_intensifier.AbstractIntensifier">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.intensifier.abstract_intensifier.</span></span><span class="sig-name descname"><span class="pre">AbstractIntensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_incumbents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/abstract_intensifier.html#AbstractIntensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Abstract implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-processing.
+<p>Abstract implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-threading.
 The abstract intensifier keeps track of the incumbent, which is updated everytime the runhistory changes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

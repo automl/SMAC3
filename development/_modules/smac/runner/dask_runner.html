@@ -330,6 +330,11 @@
      Reproducibility
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/12_optimizations.html">
+     Optimizations
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
@@ -1015,14 +1020,14 @@
 <span class="sd">    TrialInfo to produce a RunInfo object.</span>
 
 <span class="sd">    To be more precise, the work model is then:</span>
+
 <span class="sd">    1. The intensifier dictates &quot;what&quot; to run (a configuration/instance/seed) via a TrialInfo object.</span>
 <span class="sd">    2. An abstract runner takes this TrialInfo object and launches the task via</span>
 <span class="sd">       `submit_run`. In the case of DaskParallelRunner, `n_workers` receive a pickle-object of</span>
 <span class="sd">       `DaskParallelRunner.single_worker`, each with a `run` method coming from</span>
 <span class="sd">       `DaskParallelRunner.single_worker.run()`</span>
-<span class="sd">    3. TrialInfo objects are run in a distributed fashion, and their results are available</span>
-<span class="sd">    locally to each worker.</span>
-<span class="sd">       The result is collected by `iter_results` and then passed to SMBO.</span>
+<span class="sd">    3. TrialInfo objects are run in a distributed fashion, and their results are available locally to each worker. The</span>
+<span class="sd">       result is collected by `iter_results` and then passed to SMBO.</span>
 <span class="sd">    4. Exceptions are also locally available to each worker and need to be collected.</span>
 
 <span class="sd">    Dask works with `Future` object which are managed via the DaskParallelRunner.client.</span>
@@ -1034,10 +1039,9 @@
 <span class="sd">    patience: int, default to 5</span>
 <span class="sd">        How much to wait for workers (seconds) to be available if one fails.</span>
 <span class="sd">    dask_client: Client | None, defaults to None</span>
-<span class="sd">        User-created dask client, which can be used to start a dask cluster and then attach</span>
-<span class="sd">        SMAC to it. This will not be closed automatically and will have to be closed manually if</span>
-<span class="sd">         provided explicitly.</span>
-<span class="sd">        If none is provided (default), a local one will be created for you and closed upon completion.</span>
+<span class="sd">        User-created dask client, which can be used to start a dask cluster and then attach SMAC to it. This will not</span>
+<span class="sd">        be closed automatically and will have to be closed manually if provided explicitly. If none is provided</span>
+<span class="sd">        (default), a local one will be created for you and closed upon completion.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -1083,17 +1087,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_close_client_at_del</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="DaskParallelRunner.submit_trial"><a class="viewcode-back" href="../../../api/smac.runner.dask_runner.html#smac.runner.DaskParallelRunner.submit_trial">[docs]</a>    <span class="k">def</span> <span class="nf">submit_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial_info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;This function submits a configuration embedded in a `trial_info` object, and uses one of</span>
-<span class="sd">         the workers to produce a result locally to each worker.</span>
+        <span class="sd">&quot;&quot;&quot;This function submits a configuration embedded in a ``trial_info`` object, and uses one of</span>
+<span class="sd">        the workers to produce a result locally to each worker.</span>
 
 <span class="sd">        The execution of a configuration follows this procedure:</span>
-<span class="sd">        1. The SMBO/intensifier generates a `TrialInfo`.</span>
-<span class="sd">        2. SMBO calls `submit_trial` so that a worker launches the `trial_info`.</span>
-<span class="sd">        3. `submit_trial` internally calls self.run(). It does so via a call to `run_wrapper` which</span>
-<span class="sd">        contains common code that any `run` method will otherwise have to implement.</span>
 
-<span class="sd">        All results will be only available locally to each worker, so the main node needs to collect</span>
-<span class="sd">         them.</span>
+<span class="sd">        #. The SMBO/intensifier generates a `TrialInfo`.</span>
+<span class="sd">        #. SMBO calls `submit_trial` so that a worker launches the `trial_info`.</span>
+<span class="sd">        #. `submit_trial` internally calls ``self.run()``. It does so via a call to `run_wrapper` which contains common</span>
+<span class="sd">           code that any `run` method will otherwise have to implement.</span>
+
+<span class="sd">        All results will be only available locally to each worker, so the main node needs to collect them.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>

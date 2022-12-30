@@ -333,6 +333,11 @@
      Reproducibility
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/12_optimizations.html">
+     Optimizations
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 current active has-children">
@@ -1121,32 +1126,19 @@ The complexity of running a configuration as well as handling the results is abs
 SMBO via an AbstractRunner.</p>
 <p>From SMBO perspective, launching a configuration follows a
 submit/collect scheme as follows:</p>
-<ol class="arabic">
-<li><dl>
-<dt>A run is launched via <code class="docutils literal notranslate"><span class="pre">submit_run()</span></code></dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">submit_run</span></code> internally calls <code class="docutils literal notranslate"><span class="pre">run_wrapper()</span></code>, a method that contains common</p></li>
-</ul>
-<blockquote>
-<div><p>processing functions among different runners.</p>
-</div></blockquote>
+<ol class="arabic simple">
+<li><p>A run is launched via <code class="docutils literal notranslate"><span class="pre">submit_run()</span></code></p>
 <ul class="simple">
-<li><p>A class that implements AbstractRunner defines <code class="docutils literal notranslate"><span class="pre">run()</span></code> which is really the algorithm to</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">submit_run</span></code> internally calls <code class="docutils literal notranslate"><span class="pre">run_wrapper()</span></code>, a method that contains common processing functions among
+different runners.</p></li>
+<li><p>A class that implements AbstractRunner defines <code class="docutils literal notranslate"><span class="pre">run()</span></code> which is really the algorithm to
+translate a <code class="docutils literal notranslate"><span class="pre">TrialInfo</span></code> to a <code class="docutils literal notranslate"><span class="pre">TrialValue</span></code>, i.e. a configuration to an actual result.</p></li>
 </ul>
-<p>translate a <code class="docutils literal notranslate"><span class="pre">TrialInfo</span></code> to a <code class="docutils literal notranslate"><span class="pre">TrialValue</span></code>, i.e. a configuration to an actual result.</p>
-</dd>
-</dl>
 </li>
-<li><dl class="simple">
-<dt>A completed run is collected via <code class="docutils literal notranslate"><span class="pre">iter_results()</span></code>, which iterates and consumes any finished</dt><dd><p>runs, if any.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>This interface also offers the method <code class="docutils literal notranslate"><span class="pre">wait()</span></code> as a mechanism to make sure we have enough</dt><dd><p>data in the next iteration to make a decision. For example, the intensifier might not be
-able to select the next challenger until more results are available.</p>
-</dd>
-</dl>
-</li>
+<li><p>A completed run is collected via <code class="docutils literal notranslate"><span class="pre">iter_results()</span></code>, which iterates and consumes any finished runs, if any.</p></li>
+<li><p>This interface also offers the method <code class="docutils literal notranslate"><span class="pre">wait()</span></code> as a mechanism to make sure we have enough
+data in the next iteration to make a decision. For example, the intensifier might not be
+able to select the next challenger until more results are available.</p></li>
 </ol>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1219,11 +1211,8 @@ combination (aka trial).</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>Configuration</em>) – Configuration to be passed to the target function.</p></li>
 <li><p><strong>instance</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The Problem instance.</p></li>
-<li><p><strong>budget</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – <dl class="simple">
-<dt>A positive, real-valued number representing an arbitrary limit to the target function</dt><dd><p>handled by the target function internally.</p>
-</dd>
-</dl>
-</p></li>
+<li><p><strong>budget</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – A positive, real-valued number representing an arbitrary limit to the target function
+handled by the target function internally.</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – </p></li>
 </ul>
 </dd>
@@ -1268,16 +1257,12 @@ handling/processing, so that run() implementation is simplified.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.abstract_runner.AbstractRunner.submit_trial">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">submit_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/abstract_runner.html#AbstractRunner.submit_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.abstract_runner.AbstractRunner.submit_trial" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function submits a configuration embedded in a TrialInfo object, and uses one of the
-workers to produce a result (such result will eventually be available on the
-<cite>self._results_queue</cite>
-FIFO).</p>
-<p>This interface method will be called by SMBO, with the expectation
-that a function will be executed by a worker. What will be executed is dictated by
-trial_info, and “how” it will
-be executed is decided via the child class that implements a run() method.</p>
-<p>Because config submission can be a serial/parallel endeavor, it is expected to be
-implemented by a child class.</p>
+<dd><p>This function submits a configuration embedded in a TrialInfo object, and uses one of the workers to produce
+a result (such result will eventually be available on the <code class="docutils literal notranslate"><span class="pre">self._results_queue</span></code> FIFO).</p>
+<p>This interface method will be called by SMBO, with the expectation that a function will be executed by a worker.
+What will be executed is dictated by <code class="docutils literal notranslate"><span class="pre">trial_info</span></code>, and <cite>how</cite> it will be executed is decided via the child
+class that implements a <code class="docutils literal notranslate"><span class="pre">run</span></code> method.</p>
+<p>Because config submission can be a serial/parallel endeavor, it is expected to be implemented by a child class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>trial_info</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.TrialInfo" title="smac.runhistory.TrialInfo"><em>TrialInfo</em></a>) – An object containing the configuration launched.</p>
