@@ -1,4 +1,4 @@
-# 2.0.0a3
+# 2.0.0b1
 
 - Completely reimplemented the intensifiers (including Successive Halving and Hyperband): All intensifiers support 
 multi-fidelity, multi-objective and multi-threading by nature now.
@@ -6,6 +6,7 @@ multi-fidelity, multi-objective and multi-threading by nature now.
 - Continuing a run is now fully supported.
 - Added more examples.
 - Updated documentation based on new implementation.
+- Added benchmark to compare different versions.
 
 
 # 2.0.0a2
