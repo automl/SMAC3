@@ -9,7 +9,7 @@ import random
 from dataclasses import dataclass
 from pathlib import Path
 
-import ConfigSpace
+from ConfigSpace import ConfigurationSpace
 import numpy as np
 from ConfigSpace.read_and_write import json as cs_json
 
@@ -25,7 +25,7 @@ class Scenario:
 
     Parameters
     ----------
-    configspace : ConfigSpace
+    configspace : ConfigurationSpace
         The configuration space from which to sample the configurations.
     name : str | None, defaults to None
         The name of the run. If no name is passed, SMAC generates a hash from the meta data.
@@ -36,7 +36,7 @@ class Scenario:
         If deterministic is set to true, only one seed is passed to the target function.
         Otherwise, multiple seeds (if n_seeds of the intensifier is greater than 1) are passed
         to the target function to ensure generalization.
-    objective : str | list[str] | None, defaults to "cost"
+    objectives : str | list[str] | None, defaults to "cost"
         The objective(s) to optimize. This argument is required for multi-objective optimization.
     crash_cost : float | list[float], defaults to np.inf
         Defines the cost for a failed trial. In case of multi-objective, each objective can be associated with
@@ -77,7 +77,7 @@ class Scenario:
     """
 
     # General
-    configspace: ConfigSpace
+    configspace: ConfigurationSpace
     name: str | None = None
     output_directory: Path = Path("smac3_output")
     deterministic: bool = False
