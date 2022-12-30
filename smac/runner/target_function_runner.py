@@ -28,15 +28,15 @@ class TargetFunctionRunner(AbstractSerialRunner):
     configuration and resource limit.
 
     The target function can either return a float (the loss), or a tuple with the first element
-     being a float and the second being additional run information. In a multi-objective
-     setting, the float value is replaced by a list of floats.
+    being a float and the second being additional run information. In a multi-objective
+    setting, the float value is replaced by a list of floats.
 
     Parameters
     ----------
     target_function : Callable
         The target function.
     scenario : Scenario
-    required_arguments : list[str]
+    required_arguments : list[str], defaults to []
         A list of required arguments, which are passed to the target function.
     """
 
@@ -105,7 +105,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
             The Problem instance.
         budget : float | None, defaults to None
             A positive, real-valued number representing an arbitrary limit to the target function
-             handled by the target function internally.
+            handled by the target function internally.
         seed : int, defaults to None
 
         Returns

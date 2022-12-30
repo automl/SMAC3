@@ -10,4 +10,5 @@ files (derived from scenario's name, output_directory and seed) and sets the com
     delete the old run completely. If you did not specify a name, SMAC generates a new name and the old run is
     not affected.
 
+
 Please have a look at our :ref:`continue example<Continue an Optimization>`.

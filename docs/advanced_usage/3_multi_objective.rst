@@ -9,7 +9,7 @@ optimized by SMAC. However, the run history still keeps the original objectives.
 
 The basic recipe is as follows:
 
-- Specify the objectives in the scenario object as list. For example, ``Scenario(objectives=["obj1", "obj2"])``.)
+- Specify the objectives in the scenario object as list. For example, ``Scenario(objectives=["obj1", "obj2"])``.
 - Make sure that your target function returns a cost *dictionary* containing the objective names as keys
   and the objective values as values, e.g. ``{'obj1': 0.3, 'obj2': 200}``. Alternatively, you can simply
   return a list, e.g., ``[0.3, 200]``.

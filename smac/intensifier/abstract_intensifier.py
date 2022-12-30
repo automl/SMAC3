@@ -35,7 +35,7 @@ logger = get_logger(__name__)
 
 
 class AbstractIntensifier:
-    """Abstract implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-processing.
+    """Abstract implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-threading.
     The abstract intensifier keeps track of the incumbent, which is updated everytime the runhistory changes.
 
     Parameters

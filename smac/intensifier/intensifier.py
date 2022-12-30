@@ -22,9 +22,11 @@ class Intensifier(AbstractIntensifier):
     Races challengers against current incumbents.
 
     The behaviour of this intensifier is as follows:
+
     - First, adds configs from the runhistory to the queue with N=1 (they will be ignored if they are already
       evaluated).
     - While loop:
+
       - If queue is empty: Intensifies exactly one more instance of one incumbent and samples a new configuration
         afterwards.
       - If queue is not empty: Configs in the queue are evaluated on N=(N*2) instances if they might be better
@@ -88,9 +90,10 @@ class Intensifier(AbstractIntensifier):
     def __iter__(self) -> Iterator[TrialInfo]:
         """This iter method holds the logic for the intensification loop.
         Some facts about the loop:
+
         - Adds existing configurations from the runhistory to the queue (that means it supports user-inputs).
         - Everytime an incumbent (with the lowest amount of trials) is intensified, a new challenger is added to the
-        queue.
+          queue.
         - If all incumbents are evaluated on the same trials, a new trial is added to one of the incumbents.
         - Only challengers which are not rejected/running/incumbent are intensified by N*2.
 

@@ -197,17 +197,13 @@ The idea behind the configuration selector is straight forward:
 The multi-objective algorithm is used to scalarize multi-objective values. The multi-objective algorithm 
 gets normalized objective values passed and returns a single value. The resulting value (called by the 
 runhistory encoder) is then used to train the surrogate model.
-The runhistory has access to the multi-objective algorithm as well which plays a role in the method ``get_cost``.
-The method ``get_cost`` is used to compare configurations in the intensifier and therefore to determine the 
-incumbent.
 
 .. warning ::
 
-    Depending on the multi-objective algorithm, the incumbent might be ambiguous because there might be multiple 
-    incumbents on the Pareto front. Let's take ParEGO for example:
-    Everytime a new configuration is sampled, the objective weights are updated (see runhistory encoder). Therefore, 
-    calling the ``get_incumbent`` method in the runhistory might return a different configuration based on the internal state 
-    of the multi-objective algorithm. 
+    Depending on the multi-objective algorithm, the values for the runhistory encoder might differ each time 
+    the surrogate model is trained. Let's take ParEGO for example:
+    Everytime a new configuration is sampled (see ConfigSelector), the objective weights are updated). Therefore, 
+    the scaralized values are different and the acquisition maximizer might return completely different configurations.
 
 
 :ref:`RunHistory<smac.runhistory.runhistory>`

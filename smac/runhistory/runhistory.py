@@ -463,7 +463,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             Normalizes the costs wrt. objective bounds in the multi-objective setting.
             Only a float is returned if normalize is True. Warning: The value can change
             over time because the objective bounds are changing. Also, the objective weights are
-             incorporated.
+            incorporated.
 
         Returns
         -------
@@ -558,7 +558,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             Normalizes the costs wrt objective bounds in the multi-objective setting.
             Only a float is returned if normalize is True. Warning: The value can change
             over time because the objective bounds are changing. Also, the objective weights are
-             incorporated.
+            incorporated.
 
         Returns
         -------

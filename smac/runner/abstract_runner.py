@@ -30,15 +30,15 @@ class AbstractRunner(ABC):
     submit/collect scheme as follows:
 
     1. A run is launched via ``submit_run()``
-        * ``submit_run`` internally calls ``run_wrapper()``, a method that contains common
-         processing functions among different runners.
-        * A class that implements AbstractRunner defines ``run()`` which is really the algorithm to
-        translate a ``TrialInfo`` to a ``TrialValue``, i.e. a configuration to an actual result.
-    2. A completed run is collected via ``iter_results()``, which iterates and consumes any finished
-        runs, if any.
+
+       - ``submit_run`` internally calls ``run_wrapper()``, a method that contains common processing functions among
+         different runners.
+       - A class that implements AbstractRunner defines ``run()`` which is really the algorithm to
+         translate a ``TrialInfo`` to a ``TrialValue``, i.e. a configuration to an actual result.
+    2. A completed run is collected via ``iter_results()``, which iterates and consumes any finished runs, if any.
     3. This interface also offers the method ``wait()`` as a mechanism to make sure we have enough
-        data in the next iteration to make a decision. For example, the intensifier might not be
-        able to select the next challenger until more results are available.
+       data in the next iteration to make a decision. For example, the intensifier might not be
+       able to select the next challenger until more results are available.
 
     Parameters
     ----------
@@ -150,18 +150,14 @@ class AbstractRunner(ABC):
 
     @abstractmethod
     def submit_trial(self, trial_info: TrialInfo) -> None:
-        """This function submits a configuration embedded in a TrialInfo object, and uses one of the
-        workers to produce a result (such result will eventually be available on the
-        `self._results_queue`
-        FIFO).
+        """This function submits a configuration embedded in a TrialInfo object, and uses one of the workers to produce
+        a result (such result will eventually be available on the ``self._results_queue`` FIFO).
 
-        This interface method will be called by SMBO, with the expectation
-        that a function will be executed by a worker. What will be executed is dictated by
-        trial_info, and "how" it will
-        be executed is decided via the child class that implements a run() method.
+        This interface method will be called by SMBO, with the expectation that a function will be executed by a worker.
+        What will be executed is dictated by ``trial_info``, and `how` it will be executed is decided via the child
+        class that implements a ``run`` method.
 
-        Because config submission can be a serial/parallel endeavor, it is expected to be
-        implemented by a child class.
+        Because config submission can be a serial/parallel endeavor, it is expected to be implemented by a child class.
 
         Parameters
         ----------
@@ -189,7 +185,7 @@ class AbstractRunner(ABC):
             The Problem instance.
         budget : float | None, defaults to None
             A positive, real-valued number representing an arbitrary limit to the target function
-             handled by the target function internally.
+            handled by the target function internally.
         seed : int, defaults to None
 
         Returns

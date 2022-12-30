@@ -30,10 +30,12 @@ class SuccessiveHalving(AbstractIntensifier):
     Internally, a tracker keeps track of configurations and their bracket and stage.
 
     The behaviour of this intensifier is as follows:
+
     - First, adds configurations from the runhistory to the tracker. The first stage is always filled-up. For example,
       the user provided 4 configs with the tell-method but the first stage requires 8 configs: 4 new configs are
       sampled and added together with the provided configs as a group to the tracker.
     - While loop:
+
       - If a trial in the tracker has not been yielded yet, yield it.
       - If we are running out of trials, we simply add a new batch of configurations to the first stage.
 
@@ -50,14 +52,16 @@ class SuccessiveHalving(AbstractIntensifier):
         How many seeds to use for each instance.
     instance_seed_order : str, defaults to "shuffle_once"
         How to order the instance-seed pairs. Can be set to:
-        * None: No shuffling at all and use the instance-seed order provided by the user.
-        * "shuffle_once": Shuffle the instance-seed keys once and use the same order across all runs.
-        * "shuffle": Shuffles the instance-seed keys for each bracket individually.
+
+        - `None`: No shuffling at all and use the instance-seed order provided by the user.
+        - `shuffle_once`: Shuffle the instance-seed keys once and use the same order across all runs.
+        - `shuffle`: Shuffles the instance-seed keys for each bracket individually.
     incumbent_selection : str, defaults to "highest_observed_budget"
         How to select the incumbent when using budgets. Can be set to:
-        * "any_budget": Incumbent is the best on any budget i.e., best performance regardless of budget.
-        * "highest_observed_budget": Incumbent is the best in the highest budget run so far.
-        * "highest_budget": Incumbent is selected only based on the highest budget.
+
+        - `any_budget`: Incumbent is the best on any budget i.e., best performance regardless of budget.
+        - `highest_observed_budget`: Incumbent is the best in the highest budget run so far.
+        - `highest_budget`: Incumbent is selected only based on the highest budget.
     max_incumbents : int, defaults to 10
         How many incumbents to keep track of in the case of multi-objective.
     seed : int, defaults to None
