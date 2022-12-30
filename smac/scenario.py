@@ -9,8 +9,8 @@ import random
 from dataclasses import dataclass
 from pathlib import Path
 
-from ConfigSpace import ConfigurationSpace
 import numpy as np
+from ConfigSpace import ConfigurationSpace
 from ConfigSpace.read_and_write import json as cs_json
 
 from smac.utils.logging import get_logger
