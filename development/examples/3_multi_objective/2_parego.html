@@ -1018,20 +1018,22 @@ mean accuracy and run-time of each configuration.</p>
 [INFO][abstract_initial_design.py:133] Using 5 initial design configurations and 0 additional configurations.
 [INFO][abstract_intensifier.py:493] Added config 97ef22 as new incumbent because there are no incumbents yet.
 [INFO][abstract_intensifier.py:573] Config f88a6b is a new incumbent. Total number of incumbents: 2.
-[INFO][abstract_intensifier.py:573] Config d77b40 is a new incumbent. Total number of incumbents: 3.
-[INFO][abstract_intensifier.py:573] Config bea18e is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:565] Added config d77b40 and rejected config f88a6b as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][configspace.py:175] --- activation: &#39;tanh&#39; -&gt; &#39;logistic&#39;
+[INFO][configspace.py:175] --- batch_size: 77 -&gt; 175
+[INFO][configspace.py:175] --- learning_rate_init: 0.000534923804864797 -&gt; 0.004156370184967407
+[INFO][configspace.py:175] --- n_layer: 1 -&gt; 2
+[INFO][configspace.py:175] --- n_neurons: 146 -&gt; 90
 [INFO][smbo.py:306] Configuration budget is exhausted:
-[INFO][smbo.py:307] --- Remaining wallclock time: -0.18238067626953125
+[INFO][smbo.py:307] --- Remaining wallclock time: -0.4862384796142578
 [INFO][smbo.py:308] --- Remaining cpu time: inf
-[INFO][smbo.py:309] --- Remaining trials: 186
+[INFO][smbo.py:309] --- Remaining trials: 189
 Validated costs from default config:
---- [0.60155834 0.24881947]
+--- [0.60155834 0.43924046]
 
 Validated costs from the Pareto front (incumbents):
---- [0.88924791 0.26135004]
---- [0.04813757 0.79470217]
---- [0.03561281 0.97953308]
---- [0.02170845 6.16207147]
+--- [0.88924791 0.60792005]
+--- [0.03561281 1.92937481]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1205,7 +1207,7 @@ Validated costs from the Pareto front (incumbents):
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  47.255 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  36.760 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0422a2b52bca2c17c0ab975a6ae7e8db/2_parego.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_parego.py</span></code></a></p>
