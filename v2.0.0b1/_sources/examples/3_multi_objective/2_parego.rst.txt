@@ -46,22 +46,41 @@ mean accuracy and run-time of each configuration.
     [INFO][abstract_initial_design.py:133] Using 5 initial design configurations and 0 additional configurations.
     [INFO][abstract_intensifier.py:493] Added config 97ef22 as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:573] Config f88a6b is a new incumbent. Total number of incumbents: 2.
-    [INFO][abstract_intensifier.py:565] Added config d77b40 and rejected config f88a6b as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][configspace.py:175] --- activation: 'tanh' -> 'logistic'
-    [INFO][configspace.py:175] --- batch_size: 77 -> 175
-    [INFO][configspace.py:175] --- learning_rate_init: 0.000534923804864797 -> 0.004156370184967407
-    [INFO][configspace.py:175] --- n_layer: 1 -> 2
-    [INFO][configspace.py:175] --- n_neurons: 146 -> 90
+    [INFO][abstract_intensifier.py:573] Config d77b40 is a new incumbent. Total number of incumbents: 3.
+    [INFO][abstract_intensifier.py:573] Config 16c249 is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:565] Added config 5a9792 and rejected config beb48e as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][configspace.py:175] --- batch_size: 90 -> 123
+    [INFO][configspace.py:175] --- learning_rate_init: 0.002145730940669028 -> 0.005242233605993352
+    [INFO][configspace.py:175] --- n_neurons: 111 -> 101
+    [INFO][abstract_intensifier.py:573] Config abc8ab is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:565] Added config 088908 and rejected config 16c249 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][configspace.py:175] --- batch_size: 136 -> 164
+    [INFO][configspace.py:175] --- learning_rate_init: 0.19184959458797657 -> 0.00032863619856985467
+    [INFO][configspace.py:175] --- n_neurons: 64 -> 84
+    [INFO][abstract_intensifier.py:565] Added config 29ae23 and rejected config abc8ab as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][configspace.py:175] --- batch_size: 137 -> 150
+    [INFO][configspace.py:175] --- learning_rate_init: 0.0014499768263651134 -> 0.005080923038311405
+    [INFO][configspace.py:175] --- n_neurons: 198 -> 162
+    [INFO][abstract_intensifier.py:565] Added config 5db3fb and rejected config 088908 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][configspace.py:175] --- batch_size: 164 -> 249
+    [INFO][configspace.py:175] --- learning_rate_init: 0.00032863619856985467 -> 0.0008292821735528475
+    [INFO][configspace.py:175] --- n_neurons: 84 -> 74
+    [INFO][abstract_intensifier.py:573] Config fb076c is a new incumbent. Total number of incumbents: 5.
+    [INFO][abstract_intensifier.py:573] Config 50849f is a new incumbent. Total number of incumbents: 6.
     [INFO][smbo.py:306] Configuration budget is exhausted:
-    [INFO][smbo.py:307] --- Remaining wallclock time: -0.4862384796142578
+    [INFO][smbo.py:307] --- Remaining wallclock time: -0.5200400352478027
     [INFO][smbo.py:308] --- Remaining cpu time: inf
-    [INFO][smbo.py:309] --- Remaining trials: 189
+    [INFO][smbo.py:309] --- Remaining trials: 168
     Validated costs from default config: 
-    --- [0.60155834 0.43924046]
+    --- [0.60155834 0.21782792]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.88924791 0.60792005]
-    --- [0.03561281 1.92937481]
+    --- [0.88924791 0.23701203]
+    --- [0.02894305 0.41120052]
+    --- [0.02309579 1.25117397]
+    --- [0.19255107 0.32798326]
+    --- [0.03200557 0.42754793]
+    --- [0.02615831 0.51017284]
 
 
 
@@ -242,7 +261,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  36.760 seconds)
+   **Total running time of the script:** ( 0 minutes  37.478 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:

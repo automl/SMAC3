@@ -996,10 +996,10 @@
 
 
 <div class="viewcode-block" id="Hyperband"><a class="viewcode-back" href="../../../api/smac.intensifier.hyperband.html#smac.intensifier.Hyperband">[docs]</a><span class="k">class</span> <span class="nc">Hyperband</span><span class="p">(</span><span class="n">SuccessiveHalving</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;See ``SuccessiveHalving`` for documentation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;See ``SuccessiveHalving`` for documentation.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Hyperband.reset"><a class="viewcode-back" href="../../../api/smac.intensifier.hyperband.html#smac.intensifier.Hyperband.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Resets the internal variables of the intensifier, including the tracker and the next bracket.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resets the internal variables of the intensifier, including the tracker and the next bracket.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
         <span class="c1"># Reset current bracket</span>
@@ -1052,7 +1052,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_next_bracket</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;next_bracket&quot;</span><span class="p">]</span></div>
 
     <span class="k">def</span> <span class="nf">_get_next_bracket</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;In contrast to Successive Halving, Hyperband uses multiple brackets. Each time a new batch</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;In contrast to Successive Halving, Hyperband uses multiple brackets. Each time a new batch</span>
 <span class="sd">        is added to the tracker, the bracket is increased.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">current_bracket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_bracket</span>
@@ -1086,7 +1086,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

@@ -1013,7 +1013,7 @@
 
 
 <div class="viewcode-block" id="SuccessiveHalving"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving">[docs]</a><span class="k">class</span> <span class="nc">SuccessiveHalving</span><span class="p">(</span><span class="n">AbstractIntensifier</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Implementation of Succesive Halving supporting multi-fidelity, multi-objective, and multi-processing.</span>
 <span class="sd">    Internally, a tracker keeps track of configurations and their bracket and stage.</span>
 
@@ -1092,7 +1092,7 @@
         <span class="k">return</span> <span class="n">meta</span>
 
 <div class="viewcode-block" id="SuccessiveHalving.reset"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Reset the internal variables of the intensifier including the tracker.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the internal variables of the intensifier including the tracker.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
         <span class="c1"># States</span>
@@ -1100,7 +1100,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SuccessiveHalving.__post_init__"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving.__post_init__">[docs]</a>    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Post initialization steps after the runhistory has been set.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Post initialization steps after the runhistory has been set.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__post_init__</span><span class="p">()</span>
 
         <span class="c1"># We generate our instance seed pairs once</span>
@@ -1217,7 +1217,7 @@
         <span class="k">return</span> <span class="kc">True</span>
 
 <div class="viewcode-block" id="SuccessiveHalving.print_tracker"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving.print_tracker">[docs]</a>    <span class="k">def</span> <span class="nf">print_tracker</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Prints the number of configurations in each bracket/stage.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints the number of configurations in each bracket/stage.&quot;&quot;&quot;</span>
         <span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span><span class="p">),</span> <span class="n">others</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1256,7 +1256,7 @@
 <div class="viewcode-block" id="SuccessiveHalving.get_instance_seed_budget_keys"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving.get_instance_seed_budget_keys">[docs]</a>    <span class="k">def</span> <span class="nf">get_instance_seed_budget_keys</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">compare</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the instance-seed-budget keys for a given configuration. This method supports ``highest_budget``,</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the instance-seed-budget keys for a given configuration. This method supports ``highest_budget``,</span>
 <span class="sd">        which only returns the instance-seed-budget keys for the highest budget (if specified). In this case, the</span>
 <span class="sd">        incumbents in ``update_incumbents`` are only changed if the costs on the highest budget are lower.</span>
 
@@ -1336,7 +1336,7 @@
                 <span class="n">seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_order_seed</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="p">[(</span><span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">seed</span><span class="p">,</span> <span class="n">configs</span><span class="p">))</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Added </span><span class="si">{</span><span class="n">n_rh_configs</span><span class="si">}</span><span class="s2"> configs from runhistory and </span><span class="si">{</span><span class="n">n_configs</span> <span class="o">-</span> <span class="n">n_rh_configs</span><span class="si">}</span><span class="s2"> new configs to &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Added </span><span class="si">{</span><span class="n">n_rh_configs</span><span class="si">}</span><span class="s2"> configs from runhistory and </span><span class="si">{</span><span class="n">n_configs</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">n_rh_configs</span><span class="si">}</span><span class="s2"> new configs to &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;Successive Halving&#39;s first bracket and first stage with order seed </span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s2">.&quot;</span>
                 <span class="p">)</span>
 
@@ -1388,7 +1388,7 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="p">[(</span><span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">seed</span><span class="p">,</span> <span class="n">successful_configs</span><span class="p">))</span>
 
                         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                            <span class="sa">f</span><span class="s2">&quot;--- Promoted </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">config_ids</span><span class="p">)</span><span class="si">}</span><span class="s2"> configs from stage </span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2"> to stage </span><span class="si">{</span><span class="n">stage</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s2"> in &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;--- Promoted </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">config_ids</span><span class="p">)</span><span class="si">}</span><span class="s2"> configs from stage </span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2"> to stage </span><span class="si">{</span><span class="n">stage</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> in &quot;</span>
                             <span class="sa">f</span><span class="s2">&quot;bracket </span><span class="si">{</span><span class="n">bracket</span><span class="si">}</span><span class="s2">.&quot;</span>
                         <span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
@@ -1431,7 +1431,7 @@
         <span class="n">stage</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns all instance-seed-budget keys (isb keys) for the given stage. Each stage</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns all instance-seed-budget keys (isb keys) for the given stage. Each stage</span>
 <span class="sd">        is associated with a budget (N). Two possible options:</span>
 
 <span class="sd">        1) Instance based: We return N isb keys. If a seed is specified, we shuffle the keys before</span>
@@ -1471,7 +1471,7 @@
         <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
         <span class="n">from_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns trials for a given config from a list of instances (instance-seed-budget keys). The returned trials</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns trials for a given config from a list of instances (instance-seed-budget keys). The returned trials</span>
 <span class="sd">        have not run or evaluated yet.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
@@ -1496,7 +1496,7 @@
         <span class="n">stage</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">from_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the best configurations. The number of configurations is depending on the stage. Raises</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the best configurations. The number of configurations is depending on the stage. Raises</span>
 <span class="sd">        ``NotEvaluatedError`` if not all trials have been evaluated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
@@ -1532,7 +1532,7 @@
         <span class="k">return</span> <span class="n">selected_configs</span>
 
     <span class="k">def</span> <span class="nf">_get_next_order_seed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Next instances shuffle seed to use.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Next instances shuffle seed to use.&quot;&quot;&quot;</span>
         <span class="c1"># Here we have the option to shuffle the trials when specified by the user</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_order</span> <span class="o">==</span> <span class="s2">&quot;shuffle&quot;</span><span class="p">:</span>
             <span class="n">seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">MAXINT</span><span class="p">)</span>
@@ -1544,7 +1544,7 @@
         <span class="k">return</span> <span class="n">seed</span>
 
     <span class="k">def</span> <span class="nf">_get_next_bracket</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Successive Halving only uses one bracket. Therefore, we always return 0 here.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Successive Halving only uses one bracket. Therefore, we always return 0 here.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mi">0</span></div>
 </pre></div>
 
@@ -1568,7 +1568,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

@@ -1023,7 +1023,7 @@
 
 <div class="viewcode-block" id="BlackBoxFacade"><a class="viewcode-back" href="../../../api/smac.facade.blackbox_facade.html#smac.facade.BlackBoxFacade">[docs]</a><span class="k">class</span> <span class="nc">BlackBoxFacade</span><span class="p">(</span><span class="n">AbstractFacade</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Ensure that the SMBO configuration with all its (updated) dependencies is valid.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure that the SMBO configuration with all its (updated) dependencies is valid.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_validate</span><span class="p">()</span>
         <span class="c1"># Activate predict incumbent</span>
         <span class="c1"># self.solver.epm_chooser.predict_x_best = True</span>
@@ -1041,7 +1041,7 @@
         <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">kernel</span><span class="p">:</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractGaussianProcess</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns a Gaussian Process surrogate model.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a Gaussian Process surrogate model.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1090,7 +1090,7 @@
 
 <div class="viewcode-block" id="BlackBoxFacade.get_kernel"><a class="viewcode-back" href="../../../api/smac.facade.blackbox_facade.html#smac.facade.BlackBoxFacade.get_kernel">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_kernel</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns a kernel for the Gaussian Process surrogate model.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a kernel for the Gaussian Process surrogate model.</span>
 
 <span class="sd">        The kernel is a composite of kernels depending on the type of hyperparameters:</span>
 <span class="sd">        categorical (HammingKernel), continuous (Matern), and noise kernels (White).</span>
@@ -1103,7 +1103,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;The inferred number of continuous and categorical hyperparameters &quot;</span>
                 <span class="s2">&quot;must equal the total number of hyperparameters. Got &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_dims</span><span class="p">))</span><span class="si">}</span><span class="s2"> != </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">cat_dims</span><span class="p">))</span><span class="si">}</span><span class="s2"> != </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span><span class="si">}</span><span class="s2">.&quot;</span>
             <span class="p">)</span>
 
         <span class="c1"># Constant Kernel</span>
@@ -1163,7 +1163,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">xi</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EI</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns an Expected Improvement acquisition function.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an Expected Improvement acquisition function.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1181,7 +1181,7 @@
         <span class="n">challengers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
         <span class="n">local_search_iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LocalAndSortedRandomSearch</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns local and sorted random search as acquisition maximizer.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns local and sorted random search as acquisition maximizer.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1204,7 +1204,7 @@
         <span class="n">max_config_calls</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
         <span class="n">max_incumbents</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Intensifier</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns ``Intensifier`` as intensifier. Uses the default configuration for ``race_against``.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns ``Intensifier`` as intensifier. Uses the default configuration for ``race_against``.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1230,7 +1230,7 @@
         <span class="n">max_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.25</span><span class="p">,</span>
         <span class="n">additional_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SobolInitialDesign</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns a Sobol design instance.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a Sobol design instance.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1262,7 +1262,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">probability</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.08447232371720552</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProbabilityRandomDesign</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns ``ProbabilityRandomDesign`` for interleaving configurations.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns ``ProbabilityRandomDesign`` for interleaving configurations.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1277,7 +1277,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">objective_weights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MeanAggregationStrategy</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the mean aggregation strategy for the multi-objective algorithm.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the mean aggregation strategy for the multi-objective algorithm.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1295,7 +1295,7 @@
     <span class="k">def</span> <span class="nf">get_runhistory_encoder</span><span class="p">(</span>
         <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistoryEncoder</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the default runhistory encoder.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the default runhistory encoder.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">RunHistoryEncoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">)</span></div></div>
 </pre></div>
 
@@ -1319,7 +1319,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

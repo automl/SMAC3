@@ -1007,7 +1007,7 @@
 
 
 <div class="viewcode-block" id="TargetFunctionScriptRunner"><a class="viewcode-back" href="../../../api/smac.runner.target_function_script_runner.html#smac.runner.target_function_script_runner.TargetFunctionScriptRunner">[docs]</a><span class="k">class</span> <span class="nc">TargetFunctionScriptRunner</span><span class="p">(</span><span class="n">AbstractSerialRunner</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Class to execute target functions from scripts. Uses `Popen` to execute the script in a</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to execute target functions from scripts. Uses `Popen` to execute the script in a</span>
 <span class="sd">     subprocess.</span>
 
 <span class="sd">    The following example shows how the script is called:</span>
@@ -1070,7 +1070,7 @@
         <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">StatusType</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Calls the target function.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls the target function.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1186,7 +1186,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">algorithm_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Calls the algorithm, which is processed in the ``run`` method.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls the algorithm, which is processed in the ``run`` method.&quot;&quot;&quot;</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_target_function</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">algorithm_kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">v</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
@@ -1227,7 +1227,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

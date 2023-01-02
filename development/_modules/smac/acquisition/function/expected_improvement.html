@@ -1005,7 +1005,7 @@
 
 
 <div class="viewcode-block" id="EI"><a class="viewcode-back" href="../../../../api/smac.acquisition.function.expected_improvement.html#smac.acquisition.function.EI">[docs]</a><span class="k">class</span> <span class="nc">EI</span><span class="p">(</span><span class="n">AbstractAcquisitionFunction</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Expected Improvement (with or without function values in log space) acquisition function</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Expected Improvement (with or without function values in log space) acquisition function</span>
 
 <span class="sd">    :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]`,</span>
 <span class="sd">    with :math:`f(X^+)` as the best location.</span>
@@ -1058,7 +1058,7 @@
         <span class="k">return</span> <span class="n">meta</span>
 
     <span class="k">def</span> <span class="nf">_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Update acsquisition function attributes</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update acsquisition function attributes</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1074,7 +1074,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_xi</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;xi&quot;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Compute EI acquisition value</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute EI acquisition value</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1170,7 +1170,7 @@
 
 
 <div class="viewcode-block" id="EIPS"><a class="viewcode-back" href="../../../../api/smac.acquisition.function.expected_improvement.html#smac.acquisition.function.EIPS">[docs]</a><span class="k">class</span> <span class="nc">EIPS</span><span class="p">(</span><span class="n">EI</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Expected Improvement per Second acquisition function</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Expected Improvement per Second acquisition function</span>
 
 <span class="sd">    :math:`EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}`,</span>
 <span class="sd">    with :math:`f(X^+)` as the best location and :math:`r(x)` as runtime.</span>
@@ -1189,7 +1189,7 @@
         <span class="k">return</span> <span class="s2">&quot;Expected Improvement per Second&quot;</span>
 
     <span class="k">def</span> <span class="nf">_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Compute EI per second acquisition value</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute EI per second acquisition value</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1283,7 +1283,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

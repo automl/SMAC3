@@ -1004,7 +1004,7 @@
 
 
 <div class="viewcode-block" id="AbstractKernel"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.AbstractKernel">[docs]</a><span class="k">class</span> <span class="nc">AbstractKernel</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is a mixin for a kernel to override functions of the kernel. Because it overrides functions of the kernel,</span>
 <span class="sd">    it needs to be placed first in the inheritance hierarchy. For this reason it is not possible to subclass the</span>
 <span class="sd">    Mixin from the kernel class because this will prevent it from being instantiatable. Therefore, mypy won&#39;t know about</span>
@@ -1054,7 +1054,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the meta data of the created object. This method calls the `get_params` method to collect the</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the meta data of the created object. This method calls the `get_params` method to collect the</span>
 <span class="sd">        parameters of the kernel.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">meta</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">}</span>
@@ -1076,16 +1076,16 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">kernels</span><span class="o">.</span><span class="n">Hyperparameter</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns a list of all hyperparameter specifications.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of all hyperparameter specifications.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">n_dims</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the number of non-fixed hyperparameters of the kernel.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the number of non-fixed hyperparameters of the kernel.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dims</span>
 
 <div class="viewcode-block" id="AbstractKernel.get_params"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.AbstractKernel.get_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Get parameters of this kernel.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get parameters of this kernel.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1122,7 +1122,7 @@
         <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">active</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Call the kernel function. Internally, `self._call` is called, which must be specified by a subclass.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call the kernel function. Internally, `self._call` is called, which must be specified by a subclass.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">active</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">active</span> <span class="o">=</span> <span class="n">get_conditional_hyperparameters</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
@@ -1190,7 +1190,7 @@
         <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">active</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
 
 <span class="sd">        Note</span>
 <span class="sd">        ----</span>
@@ -1237,7 +1237,7 @@
             <span class="k">return</span> <span class="n">sig_</span>
 
     <span class="k">def</span> <span class="nf">_set_active_dims</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operate_on</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Sets dimensions this kernel should work on.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets dimensions this kernel should work on.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">operate_on</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">operate_on</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;The argument `operate_on` needs to be of type np.ndarray but is </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">operate_on</span><span class="p">))</span>
@@ -1253,7 +1253,7 @@
 
 
 <div class="viewcode-block" id="SumKernel"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.SumKernel">[docs]</a><span class="k">class</span> <span class="nc">SumKernel</span><span class="p">(</span><span class="n">AbstractKernel</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Sum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Sum kernel implementation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sum kernel implementation.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1276,7 +1276,7 @@
         <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">active</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1314,7 +1314,7 @@
 
 
 <div class="viewcode-block" id="ProductKernel"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.ProductKernel">[docs]</a><span class="k">class</span> <span class="nc">ProductKernel</span><span class="p">(</span><span class="n">AbstractKernel</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Product</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Product kernel implementation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Product kernel implementation.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1337,7 +1337,7 @@
         <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">active</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1398,7 +1398,7 @@
         <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">active</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1473,7 +1473,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

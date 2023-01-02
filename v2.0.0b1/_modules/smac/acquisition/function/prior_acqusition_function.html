@@ -1013,7 +1013,7 @@
 
 
 <div class="viewcode-block" id="PriorAcquisitionFunction"><a class="viewcode-back" href="../../../../api/smac.acquisition.function.prior_acqusition_function.html#smac.acquisition.function.PriorAcquisitionFunction">[docs]</a><span class="k">class</span> <span class="nc">PriorAcquisitionFunction</span><span class="p">(</span><span class="n">AbstractAcquisitionFunction</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Weight the acquisition function with a user-defined prior over the optimum.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Weight the acquisition function with a user-defined prior over the optimum.</span>
 
 <span class="sd">    See &quot;piBO: Augmenting Acquisition Functions with User Beliefs for Bayesian Optimization&quot; by Carl</span>
 <span class="sd">    Hvarfner et al. [HSSL22]_ for further details.</span>
@@ -1096,7 +1096,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_discretize</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Update the acquisition function attributes required for calculation.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the acquisition function attributes required for calculation.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1111,7 +1111,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_compute_prior</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Compute the prior-weighted acquisition function values, where the prior on each</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the prior-weighted acquisition function values, where the prior on each</span>
 <span class="sd">        parameter is multiplied by a decay factor controlled by the parameter decay_beta and</span>
 <span class="sd">        the iteration number. Multivariate priors are not supported, for now.</span>
 
@@ -1147,7 +1147,7 @@
         <span class="n">X_col</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">number_of_bins</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Discretize (bins) prior values on continous a specific continous parameter</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Discretize (bins) prior values on continous a specific continous parameter</span>
 <span class="sd">        to an increasingly coarse discretization determined by the prior decay parameter.</span>
 
 <span class="sd">        Parameters</span>
@@ -1185,7 +1185,7 @@
         <span class="k">return</span> <span class="n">prior_values</span>
 
     <span class="k">def</span> <span class="nf">_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Compute the prior-weighted acquisition function values, where the prior on each</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the prior-weighted acquisition function values, where the prior on each</span>
 <span class="sd">        parameter is multiplied by a decay factor controlled by the parameter decay_beta and</span>
 <span class="sd">        the iteration number. Multivariate priors are not supported, for now.</span>
 
@@ -1234,7 +1234,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

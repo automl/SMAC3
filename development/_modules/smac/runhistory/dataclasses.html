@@ -1002,7 +1002,7 @@
 
 <div class="viewcode-block" id="InstanceSeedKey"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.InstanceSeedKey">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">InstanceSeedKey</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Key for instance and seed.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Key for instance and seed.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1023,7 +1023,7 @@
 
 <div class="viewcode-block" id="InstanceSeedBudgetKey"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.InstanceSeedBudgetKey">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">InstanceSeedBudgetKey</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Key for instance, seed and budget.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Key for instance, seed and budget.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1056,13 +1056,13 @@
         <span class="k">return</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="InstanceSeedBudgetKey.get_instance_seed_key"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.InstanceSeedBudgetKey.get_instance_seed_key">[docs]</a>    <span class="k">def</span> <span class="nf">get_instance_seed_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstanceSeedKey</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the instance-seed key. The budget is omitted.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the instance-seed key. The budget is omitted.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">InstanceSeedKey</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="TrialKey"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.TrialKey">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">TrialKey</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Key of a trial.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Key of a trial.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1080,7 +1080,7 @@
 
 <div class="viewcode-block" id="TrialValue"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.TrialValue">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">TrialValue</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Values of a trial.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Values of a trial.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1102,7 +1102,7 @@
 
 <div class="viewcode-block" id="TrialInfo"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.TrialInfo">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">TrialInfo</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Information about a trial.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Information about a trial.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1118,17 +1118,17 @@
     <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="TrialInfo.get_instance_seed_key"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.TrialInfo.get_instance_seed_key">[docs]</a>    <span class="k">def</span> <span class="nf">get_instance_seed_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstanceSeedKey</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Instantiates and returns an InstanceSeedKey object&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiates and returns an InstanceSeedKey object&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">InstanceSeedKey</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TrialInfo.get_instance_seed_budget_key"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.TrialInfo.get_instance_seed_budget_key">[docs]</a>    <span class="k">def</span> <span class="nf">get_instance_seed_budget_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstanceSeedBudgetKey</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Instantiates and returns an InstanceSeedBudgetKey object.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiates and returns an InstanceSeedBudgetKey object.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">InstanceSeedBudgetKey</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="TrajectoryItem"><a class="viewcode-back" href="../../../api/smac.runhistory.dataclasses.html#smac.runhistory.TrajectoryItem">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">TrajectoryItem</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Item of a trajectory.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Item of a trajectory.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1168,7 +1168,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

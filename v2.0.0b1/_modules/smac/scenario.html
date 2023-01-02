@@ -1008,7 +1008,7 @@
 
 <div class="viewcode-block" id="Scenario"><a class="viewcode-back" href="../../api/smac.scenario.html#smac.scenario.Scenario">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Scenario</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The scenario manages environment variables and therefore gives context in which frame the optimization is performed.</span>
 
 <span class="sd">    Parameters</span>
@@ -1095,7 +1095,7 @@
     <span class="n">n_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
 
 <div class="viewcode-block" id="Scenario.__post_init__"><a class="viewcode-back" href="../../api/smac.scenario.html#smac.scenario.Scenario.__post_init__">[docs]</a>    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks whether the config is valid.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether the config is valid.&quot;&quot;&quot;</span>
         <span class="c1"># Use random seed if seed is -1</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
             <span class="n">seed</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">999999</span><span class="p">)</span>
@@ -1118,7 +1118,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the meta data of the SMAC run.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the meta data of the SMAC run.</span>
 
 <span class="sd">        Note</span>
 <span class="sd">        ----</span>
@@ -1127,14 +1127,14 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span>  <span class="c1"># type: ignore</span>
 
 <div class="viewcode-block" id="Scenario.count_objectives"><a class="viewcode-back" href="../../api/smac.scenario.html#smac.scenario.Scenario.count_objectives">[docs]</a>    <span class="k">def</span> <span class="nf">count_objectives</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Counts the number of objectives.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Counts the number of objectives.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">objectives</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">objectives</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="mi">1</span></div>
 
 <div class="viewcode-block" id="Scenario.count_instance_features"><a class="viewcode-back" href="../../api/smac.scenario.html#smac.scenario.Scenario.count_instance_features">[docs]</a>    <span class="k">def</span> <span class="nf">count_instance_features</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Counts the number of instance features.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Counts the number of instance features.&quot;&quot;&quot;</span>
         <span class="c1"># Check whether key of instance features exist</span>
         <span class="n">n_features</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1151,7 +1151,7 @@
         <span class="k">return</span> <span class="n">n_features</span></div>
 
 <div class="viewcode-block" id="Scenario.save"><a class="viewcode-back" href="../../api/smac.scenario.html#smac.scenario.Scenario.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Saves internal variables and the configuration space to a file.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves internal variables and the configuration space to a file.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">meta</span> <span class="o">==</span> <span class="p">{}:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Scenario will saved without meta data. Please call the facade first to set meta data.&quot;</span><span class="p">)</span>
 
@@ -1184,7 +1184,7 @@
 
 <div class="viewcode-block" id="Scenario.load"><a class="viewcode-back" href="../../api/smac.scenario.html#smac.scenario.Scenario.load">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Scenario</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Loads a scenario and the configuration space from a file.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads a scenario and the configuration space from a file.&quot;&quot;&quot;</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;scenario.json&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
@@ -1209,7 +1209,7 @@
 
 <div class="viewcode-block" id="Scenario.make_serializable"><a class="viewcode-back" href="../../api/smac.scenario.html#smac.scenario.Scenario.make_serializable">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">make_serializable</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Makes the scenario serializable.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Makes the scenario serializable.&quot;&quot;&quot;</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
         <span class="k">del</span> <span class="n">s</span><span class="p">[</span><span class="s2">&quot;configspace&quot;</span><span class="p">]</span>
         <span class="n">s</span><span class="p">[</span><span class="s2">&quot;output_directory&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">&quot;output_directory&quot;</span><span class="p">])</span>
@@ -1224,7 +1224,7 @@
                 <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;output_directory&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span> <span class="o">/</span> <span class="n">new</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_set_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Sets the meta data of the SMAC run.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the meta data of the SMAC run.&quot;&quot;&quot;</span>
         <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_meta&quot;</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
 
         <span class="c1"># We overwrite name with the hash of the meta (if no name is passed)</span>
@@ -1254,7 +1254,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

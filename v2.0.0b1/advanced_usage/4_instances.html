@@ -1019,19 +1019,19 @@ In the following example, we want to use five different subsets, identified by i
 <p>Additionally to the instances, there is the option to define <code class="docutils literal notranslate"><span class="pre">instance_features</span></code>. Those instance features are
 used to expand the internal X matrix and thus play a role in training the underlying surrogate model. For example, if I
 want to add the number of samples and the mean of each subset, I can do as follows:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">instance_features</span> <span class="o">=</span> <span class="o">{</span>
-  <span class="s2">&quot;d0&quot;</span>: <span class="o">[</span><span class="m">121</span>, <span class="m">0</span>.6<span class="o">]</span>,
-  <span class="s2">&quot;d1&quot;</span>: <span class="o">[</span><span class="m">140</span>, <span class="m">0</span>.65<span class="o">]</span>,
-  <span class="s2">&quot;d2&quot;</span>: <span class="o">[</span><span class="m">99</span>, <span class="m">0</span>.45<span class="o">]</span>,
-  <span class="s2">&quot;d3&quot;</span>: <span class="o">[</span><span class="m">102</span>, <span class="m">0</span>.59<span class="o">]</span>,
-  <span class="s2">&quot;d4&quot;</span>: <span class="o">[</span><span class="m">132</span>, <span class="m">0</span>.48<span class="o">]</span>,
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">instance_features</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="s2">&quot;d0&quot;</span>:<span class="w"> </span><span class="o">[</span><span class="m">121</span>,<span class="w"> </span><span class="m">0</span>.6<span class="o">]</span>,
+<span class="w">  </span><span class="s2">&quot;d1&quot;</span>:<span class="w"> </span><span class="o">[</span><span class="m">140</span>,<span class="w"> </span><span class="m">0</span>.65<span class="o">]</span>,
+<span class="w">  </span><span class="s2">&quot;d2&quot;</span>:<span class="w"> </span><span class="o">[</span><span class="m">99</span>,<span class="w"> </span><span class="m">0</span>.45<span class="o">]</span>,
+<span class="w">  </span><span class="s2">&quot;d3&quot;</span>:<span class="w"> </span><span class="o">[</span><span class="m">102</span>,<span class="w"> </span><span class="m">0</span>.59<span class="o">]</span>,
+<span class="w">  </span><span class="s2">&quot;d4&quot;</span>:<span class="w"> </span><span class="o">[</span><span class="m">132</span>,<span class="w"> </span><span class="m">0</span>.48<span class="o">]</span>,
 <span class="o">}</span>
 
-<span class="nv">scenario</span> <span class="o">=</span> Scenario<span class="o">(</span>
-  ...
-  <span class="s2">&quot;instances&quot;</span>: instances,
-  <span class="s2">&quot;instance_features&quot;</span>: instance_features
-  ...
+<span class="nv">scenario</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Scenario<span class="o">(</span>
+<span class="w">  </span>...
+<span class="w">  </span><span class="s2">&quot;instances&quot;</span>:<span class="w"> </span>instances,
+<span class="w">  </span><span class="s2">&quot;instance_features&quot;</span>:<span class="w"> </span>instance_features
+<span class="w">  </span>...
 <span class="o">)</span>
 </pre></div>
 </div>
@@ -1072,7 +1072,7 @@ want to add the number of samples and the mean of each subset, I can do as follo
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

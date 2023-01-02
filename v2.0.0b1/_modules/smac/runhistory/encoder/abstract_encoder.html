@@ -1008,7 +1008,7 @@
 
 
 <div class="viewcode-block" id="AbstractRunHistoryEncoder"><a class="viewcode-back" href="../../../../api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder">[docs]</a><span class="k">class</span> <span class="nc">AbstractRunHistoryEncoder</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Abstract class for preparing data in order to train a surrogate model.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract class for preparing data in order to train a surrogate model.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1076,7 +1076,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the meta-data of the created object.</span>
 
 <span class="sd">        Returns</span>
@@ -1094,23 +1094,23 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistory</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The RunHistory used to transform the data.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The RunHistory used to transform the data.&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span>
 
     <span class="nd">@runhistory</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Sets the multi objective algorithm.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the multi objective algorithm.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="o">=</span> <span class="n">runhistory</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">multi_objective_algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractMultiObjectiveAlgorithm</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The multi objective algorithm used to transform the data.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The multi objective algorithm used to transform the data.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multi_objective_algorithm</span>
 
     <span class="nd">@multi_objective_algorithm</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">multi_objective_algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">:</span> <span class="n">AbstractMultiObjectiveAlgorithm</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Sets the multi objective algorithm.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the multi objective algorithm.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_multi_objective_algorithm</span> <span class="o">=</span> <span class="n">algorithm</span>
 
     <span class="nd">@abstractmethod</span>
@@ -1119,7 +1119,7 @@
         <span class="n">trials</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">TrialKey</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">],</span>
         <span class="n">store_statistics</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Builds x and y matrices from selected runs of the RunHistory.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Builds x and y matrices from selected runs of the RunHistory.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1139,7 +1139,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">budget_subset</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">TrialKey</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns all trials that are considered for the model.</span>
 <span class="sd">        Depends on the user&#39;s considered states and lower budget states.</span>
 
@@ -1180,7 +1180,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">budget_subset</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">TrialKey</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns all trials that did have a timeout.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns all trials that did have a timeout.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">budget_subset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">trials</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="n">trial</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">[</span><span class="n">trial</span><span class="p">]</span>
@@ -1203,7 +1203,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">budget_subset</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns vector representation of the configurations.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns vector representation of the configurations.</span>
 
 <span class="sd">        Warning</span>
 <span class="sd">        -------</span>
@@ -1233,7 +1233,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">budget_subset</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns a vector representation of the RunHistory.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a vector representation of the RunHistory.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1275,7 +1275,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Transform function response values.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform function response values.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1309,7 +1309,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

@@ -1009,7 +1009,7 @@
 
 
 <div class="viewcode-block" id="AbstractRunner"><a class="viewcode-back" href="../../../api/smac.runner.abstract_runner.html#smac.runner.AbstractRunner">[docs]</a><span class="k">class</span> <span class="nc">AbstractRunner</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Interface class to handle the execution of SMAC configurations.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface class to handle the execution of SMAC configurations.</span>
 <span class="sd">    This interface defines how to interact with the SMBO loop.</span>
 <span class="sd">    The complexity of running a configuration as well as handling the results is abstracted to the</span>
 <span class="sd">    SMBO via an AbstractRunner.</span>
@@ -1065,7 +1065,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_crash_cost</span> <span class="o">=</span> <span class="p">[</span><span class="n">scenario</span><span class="o">.</span><span class="n">crash_cost</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span><span class="p">)]</span>
 
 <div class="viewcode-block" id="AbstractRunner.run_wrapper"><a class="viewcode-back" href="../../../api/smac.runner.abstract_runner.html#smac.runner.AbstractRunner.run_wrapper">[docs]</a>    <span class="k">def</span> <span class="nf">run_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial_info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Wrapper around run() to execute and check the execution of a given config.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrapper around run() to execute and check the execution of a given config.</span>
 <span class="sd">        This function encapsulates common</span>
 <span class="sd">        handling/processing, so that run() implementation is simplified.</span>
 
@@ -1133,12 +1133,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the meta-data of the created object.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the meta-data of the created object.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">}</span>
 
 <div class="viewcode-block" id="AbstractRunner.submit_trial"><a class="viewcode-back" href="../../../api/smac.runner.abstract_runner.html#smac.runner.AbstractRunner.submit_trial">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">submit_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial_info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;This function submits a configuration embedded in a TrialInfo object, and uses one of the workers to produce</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function submits a configuration embedded in a TrialInfo object, and uses one of the workers to produce</span>
 <span class="sd">        a result (such result will eventually be available on the ``self._results_queue`` FIFO).</span>
 
 <span class="sd">        This interface method will be called by SMBO, with the expectation that a function will be executed by a worker.</span>
@@ -1162,7 +1162,7 @@
         <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">StatusType</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Runs the target function with a configuration on a single instance-budget-seed</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs the target function with a configuration on a single instance-budget-seed</span>
 <span class="sd">        combination (aka trial).</span>
 
 <span class="sd">        Parameters</span>
@@ -1191,7 +1191,7 @@
 
 <div class="viewcode-block" id="AbstractRunner.iter_results"><a class="viewcode-back" href="../../../api/smac.runner.abstract_runner.html#smac.runner.AbstractRunner.iter_results">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">iter_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;This method returns any finished configuration, and returns a list with the</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method returns any finished configuration, and returns a list with the</span>
 <span class="sd">        results of executing the configurations. This class keeps populating results</span>
 <span class="sd">        to ``self._results_queue`` until a call to ``get_finished`` trials is done. In this case,</span>
 <span class="sd">        the `self._results_queue` list is emptied and all trial values produced by running</span>
@@ -1206,12 +1206,12 @@
 
 <div class="viewcode-block" id="AbstractRunner.wait"><a class="viewcode-back" href="../../../api/smac.runner.abstract_runner.html#smac.runner.AbstractRunner.wait">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The SMBO/intensifier might need to wait for trials to finish before making a decision.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The SMBO/intensifier might need to wait for trials to finish before making a decision.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="AbstractRunner.is_running"><a class="viewcode-back" href="../../../api/smac.runner.abstract_runner.html#smac.runner.AbstractRunner.is_running">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">is_running</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Whether there are trials still running.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether there are trials still running.</span>
 
 <span class="sd">        Generally, if the runner is serial, launching a trial instantly returns its result. On</span>
 <span class="sd">        parallel runners, there might be pending configurations to complete.</span>
@@ -1220,7 +1220,7 @@
 
 <div class="viewcode-block" id="AbstractRunner.count_available_workers"><a class="viewcode-back" href="../../../api/smac.runner.abstract_runner.html#smac.runner.AbstractRunner.count_available_workers">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">count_available_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the number of available workers.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the number of available workers.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
 </pre></div>
 
@@ -1244,7 +1244,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

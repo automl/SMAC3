@@ -1019,7 +1019,7 @@
 
 
 <div class="viewcode-block" id="SMBO"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO">[docs]</a><span class="k">class</span> <span class="nc">SMBO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Implementation that contains the main Bayesian optimization loop.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation that contains the main Bayesian optimization loop.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1076,33 +1076,33 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistory</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The run history, which is filled with all information during the optimization process.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The run history, which is filled with all information during the optimization process.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">intensifier</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractIntensifier</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The run history, which is filled with all information during the optimization process.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The run history, which is filled with all information during the optimization process.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">remaining_walltime</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Subtracts the runtime configuration budget with the used wallclock time.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Subtracts the runtime configuration budget with the used wallclock time.&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">walltime_limit</span> <span class="o">-</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">remaining_cputime</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Subtracts the target function running budget with the used time.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Subtracts the target function running budget with the used time.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">cputime_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_used_target_function_walltime</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">remaining_trials</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Subtract the target function runs in the scenario with the used ta runs.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Subtract the target function runs in the scenario with the used ta runs.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">n_trials</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">submitted</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">budget_exhausted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks whether the the remaining walltime, cputime or trials was exceeded.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether the the remaining walltime, cputime or trials was exceeded.&quot;&quot;&quot;</span>
         <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remaining_walltime</span> <span class="o">&lt;=</span> <span class="mi">0</span>
         <span class="n">B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remaining_cputime</span> <span class="o">&lt;=</span> <span class="mi">0</span>
         <span class="n">C</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remaining_trials</span> <span class="o">&lt;=</span> <span class="mi">0</span>
@@ -1111,7 +1111,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">used_walltime</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns used wallclock time.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns used wallclock time.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="mf">0.0</span>
 
@@ -1119,11 +1119,11 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">used_target_function_walltime</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns how much walltime the target function spend so far.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns how much walltime the target function spend so far.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_used_target_function_walltime</span>
 
 <div class="viewcode-block" id="SMBO.ask"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrialInfo</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Asks the intensifier for the next trial.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Asks the intensifier for the next trial.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1155,7 +1155,7 @@
         <span class="n">value</span><span class="p">:</span> <span class="n">TrialValue</span><span class="p">,</span>
         <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Adds the result of a trial to the runhistory and updates the stats object.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds the result of a trial to the runhistory and updates the stats object.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1214,7 +1214,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="SMBO.update_model"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.update_model">[docs]</a>    <span class="k">def</span> <span class="nf">update_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Updates the model and updates the acquisition function.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the model and updates the acquisition function.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">config_selector</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">_config_selector</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">config_selector</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span>
 
@@ -1222,7 +1222,7 @@
             <span class="n">config_selector</span><span class="o">.</span><span class="n">_acquisition_function</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span></div>
 
 <div class="viewcode-block" id="SMBO.update_acquisition_function"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.update_acquisition_function">[docs]</a>    <span class="k">def</span> <span class="nf">update_acquisition_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Updates the acquisition function including the associated model and the acquisition</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the acquisition function including the associated model and the acquisition</span>
 <span class="sd">        optimizer.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">config_selector</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">_config_selector</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1233,7 +1233,7 @@
             <span class="n">config_selector</span><span class="o">.</span><span class="n">_acquisition_maximizer</span><span class="o">.</span><span class="n">acquisition_function</span> <span class="o">=</span> <span class="n">acquisition_function</span></div>
 
 <div class="viewcode-block" id="SMBO.optimize"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Runs the Bayesian optimization loop.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs the Bayesian optimization loop.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1319,7 +1319,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">get_incumbents</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="SMBO.reset"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Resets the internal variables of the optimizer, intensifier, and runhistory.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resets the internal variables of the optimizer, intensifier, and runhistory.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_used_target_function_walltime</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -1328,7 +1328,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="SMBO.exists"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.exists">[docs]</a>    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if the files associated with the run already exist.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the files associated with the run already exist.</span>
 <span class="sd">        Checks all files that are created by the optimizer.</span>
 
 <span class="sd">        Parameters</span>
@@ -1349,7 +1349,7 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="SMBO.load"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Loads the optimizer, intensifier, and runhistory from the output directory specified in the scenario.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads the optimizer, intensifier, and runhistory from the output directory specified in the scenario.&quot;&quot;&quot;</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">output_directory</span>
 
         <span class="n">optimization_fn</span> <span class="o">=</span> <span class="n">filename</span> <span class="o">/</span> <span class="s2">&quot;optimization.json&quot;</span>
@@ -1368,7 +1368,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;used_walltime&quot;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="SMBO.save"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Saves the current stats, runhistory, and intensifier.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves the current stats, runhistory, and intensifier.&quot;&quot;&quot;</span>
         <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">output_directory</span>
 
         <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1388,7 +1388,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;intensifier.json&quot;</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_add_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Adds results from the runner to the runhistory. Although most of the functionality could be written</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds results from the runner to the runhistory. Although most of the functionality could be written</span>
 <span class="sd">        in the tell method, we separate it here to make it accessible for the automatic optimization procedure only.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check if there is any result</span>
@@ -1429,11 +1429,11 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">_register_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callback</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Registers a callback to be called before, in between, and after the Bayesian optimization loop.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Registers a callback to be called before, in between, and after the Bayesian optimization loop.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span> <span class="o">+=</span> <span class="p">[</span><span class="n">callback</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_initialize_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Detects whether the optimization is restored from a previous state.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detects whether the optimization is restored from a previous state.&quot;&quot;&quot;</span>
         <span class="c1"># Here we actually check whether the run should be continued or not.</span>
         <span class="c1"># More precisely, we update our smbo/runhistory/intensifier object if all component arguments</span>
         <span class="c1"># and scenario object are the same. For doing so, we create a specific hash.</span>
@@ -1501,7 +1501,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Validates a configuration on other seeds than the ones used in the optimization process and on the highest</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates a configuration on other seeds than the ones used in the optimization process and on the highest</span>
 <span class="sd">        budget (if budget type is real-valued).</span>
 
 <span class="sd">        Parameters</span>
@@ -1542,7 +1542,7 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np_costs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SMBO.print_stats"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.print_stats">[docs]</a>    <span class="k">def</span> <span class="nf">print_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Prints all statistics.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints all statistics.&quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;--- STATISTICS -------------------------------------</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -1552,7 +1552,7 @@
             <span class="sa">f</span><span class="s2">&quot;--- Configurations: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">_n_id</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;--- Used wallclock time: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">used_walltime</span><span class="p">)</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">walltime_limit</span><span class="si">}</span><span class="s2"> sec</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="s2">&quot;--- Used target function runtime: &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">used_target_function_walltime</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">cputime_limit</span><span class="si">}</span><span class="s2"> sec</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">used_target_function_walltime</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">cputime_limit</span><span class="si">}</span><span class="s2"> sec</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;----------------------------------------------------&quot;</span>
         <span class="p">)</span></div></div>
 </pre></div>
@@ -1577,7 +1577,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

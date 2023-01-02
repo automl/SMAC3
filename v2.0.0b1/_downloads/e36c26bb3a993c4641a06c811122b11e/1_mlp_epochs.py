@@ -6,7 +6,7 @@ Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets.
 Since we want to take advantage of multi-fidelity, the ``MultiFidelityFacade`` is a good choice. By default,
 ``MultiFidelityFacade`` internally runs with `hyperband <https://arxiv.org/abs/1603.06560>`_ as
 intensification, which is a combination of an aggressive racing mechanism and Successive Halving. Crucially, the target 
-function function must accept a budget variable, detailing how much fidelity smac wants to allocate to this
+function must accept a budget variable, detailing how much fidelity smac wants to allocate to this
 configuration. In this example, we use both ``SuccessiveHalving`` and ``Hyperband`` to compare the results.
 
 MLP is a deep neural network, and therefore, we choose epochs as fidelity type. This implies,

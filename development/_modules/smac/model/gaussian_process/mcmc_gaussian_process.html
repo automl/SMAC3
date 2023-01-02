@@ -1015,7 +1015,7 @@
 
 
 <div class="viewcode-block" id="MCMCGaussianProcess"><a class="viewcode-back" href="../../../../api/smac.model.gaussian_process.mcmc_gaussian_process.html#smac.model.gaussian_process.MCMCGaussianProcess">[docs]</a><span class="k">class</span> <span class="nc">MCMCGaussianProcess</span><span class="p">(</span><span class="n">AbstractGaussianProcess</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Implementation of a Gaussian process model which out-integrates its hyperparameters by</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation of a Gaussian process model which out-integrates its hyperparameters by</span>
 <span class="sd">    Markow-Chain-Monte-Carlo (MCMC). If you use this class make sure that you also use an integrated acquisition</span>
 <span class="sd">    function to integrate over the GP&#39;s hyperparameter as proposed by Snoek et al.</span>
 
@@ -1108,7 +1108,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">models</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">GaussianProcess</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the internally used gaussian processes.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the internally used gaussian processes.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_models</span>
 
     <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span>
@@ -1117,7 +1117,7 @@
         <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">optimize_hyperparameters</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Performs MCMC sampling to sample hyperparameter configurations from the likelihood and</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Performs MCMC sampling to sample hyperparameter configurations from the likelihood and</span>
 <span class="sd">        trains for each sample a Gaussian process on X and y.</span>
 
 <span class="sd">        Parameters</span>
@@ -1290,7 +1290,7 @@
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_ll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the marginal log likelihood (+ the prior) for a hyperparameter configuration</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the marginal log likelihood (+ the prior) for a hyperparameter configuration</span>
 <span class="sd">        theta.</span>
 
 <span class="sd">        Parameters</span>
@@ -1323,7 +1323,7 @@
             <span class="k">return</span> <span class="n">lml</span>
 
     <span class="k">def</span> <span class="nf">_ll_w_grad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the marginal log likelihood (+ the prior) for a hyperparameter configuration</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the marginal log likelihood (+ the prior) for a hyperparameter configuration</span>
 <span class="sd">        theta.</span>
 
 <span class="sd">        Parameters</span>
@@ -1370,7 +1370,7 @@
         <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">covariance_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;diagonal&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the predictive mean and variance of the objective function</span>
 <span class="sd">        at X averaged over all hyperparameter samples.</span>
 
@@ -1433,7 +1433,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

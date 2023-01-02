@@ -1008,7 +1008,7 @@
 
 
 <div class="viewcode-block" id="AbstractAcquisitionMaximizer"><a class="viewcode-back" href="../../../../api/smac.acquisition.maximizer.abstract_acqusition_maximizer.html#smac.acquisition.maximizer.AbstractAcquisitionMaximizer">[docs]</a><span class="k">class</span> <span class="nc">AbstractAcquisitionMaximizer</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Abstract class for the acquisition maximization.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract class for the acquisition maximization.</span>
 
 <span class="sd">    In order to use this class it has to be subclassed and the</span>
 <span class="sd">    method `_maximize` must be implemented.</span>
@@ -1039,7 +1039,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">acquisition_function</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractAcquisitionFunction</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The acquisition function used for maximization.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The acquisition function used for maximization.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span>
 
     <span class="nd">@acquisition_function</span><span class="o">.</span><span class="n">setter</span>
@@ -1048,7 +1048,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Return the meta data of the created object.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the meta data of the created object.&quot;&quot;&quot;</span>
         <span class="n">acquisition_function_meta</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acquisition_function_meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span><span class="o">.</span><span class="n">meta</span>
@@ -1066,7 +1066,7 @@
         <span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">random_design</span><span class="p">:</span> <span class="n">AbstractRandomDesign</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Maximize acquisition function using `_maximize`, implemented by a subclass.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Maximize acquisition function using `_maximize`, implemented by a subclass.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1107,7 +1107,7 @@
         <span class="n">previous_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
         <span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;Implement acquisition function maximization.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implement acquisition function maximization.</span>
 
 <span class="sd">        In contrast to `maximize`, this method returns an iterable of tuples, consisting of the acquisition function</span>
 <span class="sd">        value and the configuration. This allows to plug together different acquisition function maximizers.</span>
@@ -1127,7 +1127,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_sort_by_acquisition_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;Sort the given configurations by the acquisition value.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sort the given configurations by the acquisition value.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1173,7 +1173,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

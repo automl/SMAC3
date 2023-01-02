@@ -1074,24 +1074,24 @@ file to the facade instead.</p>
 </div>
 <p>The following file shows you how to display only error messages from the intensifier
 but keep the level of everything else on INFO:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="nt">disable_existing_loggers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
-<span class="nt">formatters</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">simple</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;[%(levelname)s][%(filename)s:%(lineno)d]</span><span class="nv"> </span><span class="s">%(message)s&#39;</span><span class="w"></span>
-<span class="nt">handlers</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">console</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.StreamHandler</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span><span class="w"></span>
-<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">simple</span><span class="w"></span>
-<span class="w">        </span><span class="nt">stream</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ext://sys.stdout</span><span class="w"></span>
-<span class="nt">loggers</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">smac.intensifier</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ERROR</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">console</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="nt">root</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span><span class="w"></span>
-<span class="w">    </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">console</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="nt">disable_existing_loggers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="nt">formatters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">simple</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;[%(levelname)s][%(filename)s:%(lineno)d]</span><span class="nv"> </span><span class="s">%(message)s&#39;</span>
+<span class="nt">handlers</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">console</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.StreamHandler</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span>
+<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">simple</span>
+<span class="w">        </span><span class="nt">stream</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ext://sys.stdout</span>
+<span class="nt">loggers</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">smac.intensifier</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ERROR</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">console</span><span class="p p-Indicator">]</span>
+<span class="nt">root</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span>
+<span class="w">    </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">console</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 </section>
@@ -1132,7 +1132,7 @@ but keep the level of everything else on INFO:</p>
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

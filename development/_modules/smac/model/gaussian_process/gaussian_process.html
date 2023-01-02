@@ -1015,7 +1015,7 @@
 
 
 <div class="viewcode-block" id="GaussianProcess"><a class="viewcode-back" href="../../../../api/smac.model.gaussian_process.gaussian_process.html#smac.model.gaussian_process.GaussianProcess">[docs]</a><span class="k">class</span> <span class="nc">GaussianProcess</span><span class="p">(</span><span class="n">AbstractGaussianProcess</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Implementation of Gaussian process model. The Gaussian process hyperparameters are obtained by optimizing</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation of Gaussian process model. The Gaussian process hyperparameters are obtained by optimizing</span>
 <span class="sd">    the marginal log likelihood.</span>
 
 <span class="sd">    This code is based on the implementation of RoBO:</span>
@@ -1081,7 +1081,7 @@
         <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">optimize_hyperparameters</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Computes the Cholesky decomposition of the covariance of X and estimates the GP</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the Cholesky decomposition of the covariance of X and estimates the GP</span>
 <span class="sd">        hyperparameters by optimizing the marginal log likelihood. The prior mean of the GP is set to</span>
 <span class="sd">        the empirical mean of X.</span>
 
@@ -1140,7 +1140,7 @@
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_nll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the negative marginal log likelihood (+ the prior) for a hyperparameter</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the negative marginal log likelihood (+ the prior) for a hyperparameter</span>
 <span class="sd">        configuration theta. Negative because we use scipy minimize for optimization.</span>
 
 <span class="sd">        Parameters</span>
@@ -1167,7 +1167,7 @@
             <span class="k">return</span> <span class="o">-</span><span class="n">lml</span><span class="p">,</span> <span class="o">-</span><span class="n">grad</span>
 
     <span class="k">def</span> <span class="nf">_optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Optimizes the marginal log likelihood and returns the best found hyperparameter</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Optimizes the marginal log likelihood and returns the best found hyperparameter</span>
 <span class="sd">        configuration theta.</span>
 
 <span class="sd">        Returns</span>
@@ -1260,7 +1260,7 @@
         <span class="k">return</span> <span class="n">mu</span><span class="p">,</span> <span class="n">var</span>
 
 <div class="viewcode-block" id="GaussianProcess.sample_functions"><a class="viewcode-back" href="../../../../api/smac.model.gaussian_process.gaussian_process.html#smac.model.gaussian_process.GaussianProcess.sample_functions">[docs]</a>    <span class="k">def</span> <span class="nf">sample_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_test</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">n_funcs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Samples F function values from the current posterior at the N specified test points.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Samples F function values from the current posterior at the N specified test points.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1309,7 +1309,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

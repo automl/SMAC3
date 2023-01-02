@@ -1009,7 +1009,7 @@
 
 
 <div class="viewcode-block" id="RandomFacade"><a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade">[docs]</a><span class="k">class</span> <span class="nc">RandomFacade</span><span class="p">(</span><span class="n">AbstractFacade</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Facade to use Random Online Aggressive Racing (ROAR).</span>
 
 <span class="sd">    *Aggressive Racing:*</span>
@@ -1037,7 +1037,7 @@
 
 <div class="viewcode-block" id="RandomFacade.get_acquisition_function"><a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade.get_acquisition_function">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_acquisition_function</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The random facade is not using an acquisition function. Therefore, we simply return a dummy function.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The random facade is not using an acquisition function. Therefore, we simply return a dummy function.&quot;&quot;&quot;</span>
 
         <span class="k">class</span> <span class="nc">DummyAcquisitionFunction</span><span class="p">(</span><span class="n">AbstractAcquisitionFunction</span><span class="p">):</span>
             <span class="k">def</span> <span class="nf">_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -1052,7 +1052,7 @@
         <span class="n">max_config_calls</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
         <span class="n">max_incumbents</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Intensifier</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns ``Intensifier`` as intensifier.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns ``Intensifier`` as intensifier.</span>
 
 <span class="sd">        Note</span>
 <span class="sd">        ----</span>
@@ -1082,7 +1082,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">additional_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefaultInitialDesign</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns an initial design, which returns the default configuration.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an initial design, which returns the default configuration.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1096,7 +1096,7 @@
 
 <div class="viewcode-block" id="RandomFacade.get_random_design"><a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade.get_random_design">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_random_design</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractRandomDesign</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Just like the acquisition function, we do not use a random design. Therefore, we return a dummy design.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Just like the acquisition function, we do not use a random design. Therefore, we return a dummy design.&quot;&quot;&quot;</span>
 
         <span class="k">class</span> <span class="nc">DummyRandomDesign</span><span class="p">(</span><span class="n">AbstractRandomDesign</span><span class="p">):</span>
             <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -1106,7 +1106,7 @@
 
 <div class="viewcode-block" id="RandomFacade.get_model"><a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade.get_model">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RandomModel</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The model is used in the acquisition function. Since we do not use an acquisition function, we return a</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The model is used in the acquisition function. Since we do not use an acquisition function, we return a</span>
 <span class="sd">        dummy model (returning random values in this case).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">RandomModel</span><span class="p">(</span>
@@ -1117,7 +1117,7 @@
 
 <div class="viewcode-block" id="RandomFacade.get_acquisition_maximizer"><a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade.get_acquisition_maximizer">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_acquisition_maximizer</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RandomSearch</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;We return ``RandomSearch`` as maximizer which samples configurations randomly from the configuration</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;We return ``RandomSearch`` as maximizer which samples configurations randomly from the configuration</span>
 <span class="sd">        space and therefore neither uses the acquisition function nor the model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">RandomSearch</span><span class="p">(</span>
@@ -1131,7 +1131,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">objective_weights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MeanAggregationStrategy</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the mean aggregation strategy for the multi-objective algorithm.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the mean aggregation strategy for the multi-objective algorithm.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1147,7 +1147,7 @@
 
 <div class="viewcode-block" id="RandomFacade.get_runhistory_encoder"><a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade.get_runhistory_encoder">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_runhistory_encoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistoryEncoder</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the default runhistory encoder.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the default runhistory encoder.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">RunHistoryEncoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">)</span></div></div>
 </pre></div>
 
@@ -1171,7 +1171,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

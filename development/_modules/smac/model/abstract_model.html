@@ -1015,7 +1015,7 @@
 
 
 <div class="viewcode-block" id="AbstractModel"><a class="viewcode-back" href="../../../api/smac.model.abstract_model.html#smac.model.AbstractModel">[docs]</a><span class="k">class</span> <span class="nc">AbstractModel</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Abstract implementation of the surrogate model.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract implementation of the surrogate model.</span>
 
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
@@ -1072,7 +1072,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
             <span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_types</span><span class="p">,</span>
@@ -1081,7 +1081,7 @@
         <span class="p">}</span>
 
 <div class="viewcode-block" id="AbstractModel.train"><a class="viewcode-back" href="../../../api/smac.model.abstract_model.html#smac.model.AbstractModel.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Trains the random forest on X and Y. Internally, calls the method `_train`.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Trains the random forest on X and Y. Internally, calls the method `_train`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1141,7 +1141,7 @@
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Trains the random forest on X and Y.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Trains the random forest on X and Y.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1161,7 +1161,7 @@
         <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">covariance_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;diagonal&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Predicts mean and variance for a given X. Internally, calls the method `_predict`.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Predicts mean and variance for a given X. Internally, calls the method `_predict`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1221,7 +1221,7 @@
         <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">covariance_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;diagonal&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Predicts mean and variance for a given X.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Predicts mean and variance for a given X.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1245,7 +1245,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
 <div class="viewcode-block" id="AbstractModel.predict_marginalized"><a class="viewcode-back" href="../../../api/smac.model.abstract_model.html#smac.model.AbstractModel.predict_marginalized">[docs]</a>    <span class="k">def</span> <span class="nf">predict_marginalized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Predicts mean and variance marginalized over all instances.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Predicts mean and variance marginalized over all instances.</span>
 
 <span class="sd">        Warning</span>
 <span class="sd">        -------</span>
@@ -1332,7 +1332,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

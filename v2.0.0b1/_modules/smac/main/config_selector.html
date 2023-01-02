@@ -1018,7 +1018,7 @@
 
 
 <div class="viewcode-block" id="ConfigSelector"><a class="viewcode-back" href="../../../api/smac.main.config_selector.html#smac.main.config_selector.ConfigSelector">[docs]</a><span class="k">class</span> <span class="nc">ConfigSelector</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;The config selector handles the surrogate model and the acquisition function. Based on both components, the next</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The config selector handles the surrogate model and the acquisition function. Based on both components, the next</span>
 <span class="sd">    configuration is selected.</span>
 
 <span class="sd">    Parameters</span>
@@ -1095,7 +1095,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
             <span class="s2">&quot;retrain_after&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retrain_after</span><span class="p">,</span>
@@ -1104,7 +1104,7 @@
         <span class="p">}</span>
 
 <div class="viewcode-block" id="ConfigSelector.__iter__"><a class="viewcode-back" href="../../../api/smac.main.config_selector.html#smac.main.config_selector.ConfigSelector.__iter__">[docs]</a>    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;This method returns the next configuration to evaluate. It ignores already processed configurations, i.e.,</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method returns the next configuration to evaluate. It ignores already processed configurations, i.e.,</span>
 <span class="sd">        the configurations from the runhistory, if the runhistory is not empty.</span>
 <span class="sd">        The method (after yielding the initial design configurations) trains the surrogate model, maximizes the</span>
 <span class="sd">        acquisition function and yields ``n`` configurations. After the ``n`` configurations, the surrogate model is</span>
@@ -1235,7 +1235,7 @@
             <span class="n">callback</span><span class="o">.</span><span class="n">on_next_configurations_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_call_callbacks_on_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Calls ``on_next_configurations_end`` of the registered callbacks.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls ``on_next_configurations_end`` of the registered callbacks.&quot;&quot;&quot;</span>
         <span class="c1"># For safety reasons: Return a copy of the config</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
@@ -1244,7 +1244,7 @@
             <span class="n">callback</span><span class="o">.</span><span class="n">on_next_configurations_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_collect_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Collects the data from the runhistory to train the surrogate model. In the case of budgets, the data</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Collects the data from the runhistory to train the surrogate model. In the case of budgets, the data</span>
 <span class="sd">        collection strategy is as follows: Looking from highest to lowest budget, return those observations</span>
 <span class="sd">        that support at least ``self._min_trials`` points.</span>
 
@@ -1290,7 +1290,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="o">.</span><span class="n">get_configs_per_budget</span><span class="p">(</span><span class="n">budget_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_considered_budgets</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_x_best</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Get value, configuration, and array representation of the *best* configuration.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get value, configuration, and array representation of the *best* configuration.</span>
 
 <span class="sd">        The definition of best varies depending on the argument ``predict``. If set to `True`,</span>
 <span class="sd">        this function will return the stats of the best configuration as predicted by the model,</span>
@@ -1357,7 +1357,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

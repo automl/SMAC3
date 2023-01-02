@@ -1013,22 +1013,22 @@ to download the full example code</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
 
 <span class="c1"># Set arguments first</span>
-<span class="k">for</span> argument <span class="k">in</span> <span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+<span class="k">for</span><span class="w"> </span>argument<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
 <span class="k">do</span>
-    <span class="nv">key</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nv">$argument</span> <span class="p">|</span> cut -f1 -d<span class="o">=</span><span class="k">)</span>
-    <span class="nv">value</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nv">$argument</span> <span class="p">|</span> cut -f2 -d<span class="o">=</span><span class="k">)</span>
+<span class="w">    </span><span class="nv">key</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="nv">$argument</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-f1<span class="w"> </span>-d<span class="o">=</span><span class="k">)</span>
+<span class="w">    </span><span class="nv">value</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="nv">$argument</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-f2<span class="w"> </span>-d<span class="o">=</span><span class="k">)</span>
 
-    <span class="k">if</span> <span class="o">[[</span> <span class="nv">$key</span> <span class="o">==</span> *<span class="s2">&quot;--&quot;</span>* <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
-        <span class="nv">v</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">key</span><span class="p">/--/</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="nb">declare</span> <span class="nv">$v</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">value</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="k">fi</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$key</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;--&quot;</span>*<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="nv">v</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">key</span><span class="p">/--/</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="nb">declare</span><span class="w"> </span><span class="nv">$v</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">value</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">fi</span>
 <span class="k">done</span>
 
 <span class="c1"># We simply set the cost to our parameter</span>
 <span class="nv">cost</span><span class="o">=</span><span class="nv">$x0</span>
 
 <span class="c1"># Return everything</span>
-<span class="nb">echo</span> <span class="s2">&quot;cost=</span><span class="nv">$cost</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;cost=</span><span class="nv">$cost</span><span class="s2">&quot;</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:81] Reducing the number of initial configurations from 8 to 7 (max_ratio == 0.25).
@@ -1084,7 +1084,7 @@ Incumbent cost: 0.0
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  6.561 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.507 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-5-commandline-1-call-target-function-script-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/d801707bbc5f61e2f2bfb399928b31aa/1_call_target_function_script.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_call_target_function_script.py</span></code></a></p>
@@ -1130,7 +1130,7 @@ Incumbent cost: 0.0
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

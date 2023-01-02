@@ -1047,10 +1047,13 @@ the target function now is required to have an instance argument.</p>
 [INFO][configspace.py:175] --- learning_rate: &#39;invscaling&#39; -&gt; &#39;adaptive&#39;
 [INFO][smbo.py:298] Finished 100 trials.
 [INFO][smbo.py:298] Finished 150 trials.
+[INFO][smbo.py:298] Finished 200 trials.
+[INFO][smbo.py:298] Finished 250 trials.
+[INFO][smbo.py:298] Finished 300 trials.
 [INFO][smbo.py:306] Configuration budget is exhausted:
-[INFO][smbo.py:307] --- Remaining wallclock time: -0.05534768104553223
+[INFO][smbo.py:307] --- Remaining wallclock time: -30.727540731430054
 [INFO][smbo.py:308] --- Remaining cpu time: inf
-[INFO][smbo.py:309] --- Remaining trials: 4805
+[INFO][smbo.py:309] --- Remaining trials: 4651
 Default cost: 0.15489347419148672
 Incumbent cost: 0.006249006102246613
 </pre></div>
@@ -1081,11 +1084,11 @@ Incumbent cost: 0.006249006102246613
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_digits</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">get_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Create instances from the dataset which include two classes only.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create instances from the dataset which include two classes only.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">classA</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">classB</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">classA</span><span class="p">,</span> <span class="n">classB</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">target_names</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
 
     <span class="k">def</span> <span class="nf">get_instance_features</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the mean and variance of all instances as features.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the mean and variance of all instances as features.&quot;&quot;&quot;</span>
         <span class="n">features</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instances</span><span class="p">():</span>
             <span class="n">data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_data</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
@@ -1094,7 +1097,7 @@ Incumbent cost: 0.006249006102246613
         <span class="k">return</span> <span class="n">features</span>
 
     <span class="k">def</span> <span class="nf">get_instance_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Retrieve data from the passed instance.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve data from the passed instance.&quot;&quot;&quot;</span>
         <span class="c1"># We split the dataset into two classes</span>
         <span class="n">classA</span><span class="p">,</span> <span class="n">classB</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
         <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">classA</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">classB</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">target</span><span class="p">))</span>
@@ -1111,7 +1114,7 @@ Incumbent cost: 0.006249006102246613
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">configspace</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConfigurationSpace</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Build the configuration space which defines all parameters and their ranges for the SGD classifier.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build the configuration space which defines all parameters and their ranges for the SGD classifier.&quot;&quot;&quot;</span>
         <span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigurationSpace</span><span class="p">()</span>
 
         <span class="c1"># We define a few possible parameters for the SGD classifier</span>
@@ -1125,7 +1128,7 @@ Incumbent cost: 0.006249006102246613
         <span class="k">return</span> <span class="n">cs</span>
 
     <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Creates a SGD classifier based on a configuration and evaluates it on the</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a SGD classifier based on a configuration and evaluates it on the</span>
 <span class="sd">        digits dataset using cross-validation.&quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
@@ -1184,7 +1187,7 @@ Incumbent cost: 0.006249006102246613
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  44.099 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  7.363 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-2-sgd-datasets-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/88e1c1ee9fc33236ebfa159898782a73/2_sgd_datasets.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_sgd_datasets.py</span></code></a></p>
@@ -1230,7 +1233,7 @@ Incumbent cost: 0.006249006102246613
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

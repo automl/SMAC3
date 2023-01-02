@@ -1006,7 +1006,7 @@
 
 
 <div class="viewcode-block" id="Intensifier"><a class="viewcode-back" href="../../../api/smac.intensifier.intensifier.html#smac.intensifier.Intensifier">[docs]</a><span class="k">class</span> <span class="nc">Intensifier</span><span class="p">(</span><span class="n">AbstractIntensifier</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-processing.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-processing.</span>
 <span class="sd">    Races challengers against current incumbents.</span>
 
 <span class="sd">    The behaviour of this intensifier is as follows:</span>
@@ -1045,7 +1045,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_retries</span> <span class="o">=</span> <span class="n">retries</span>
 
 <div class="viewcode-block" id="Intensifier.reset"><a class="viewcode-back" href="../../../api/smac.intensifier.intensifier.html#smac.intensifier.Intensifier.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Resets the internal variables of the intensifier including the queue.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resets the internal variables of the intensifier including the queue.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
         <span class="c1"># Queue to keep track of the challengers</span>
@@ -1076,7 +1076,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span> <span class="o">=</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_config</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;queue&quot;</span><span class="p">]]</span></div>
 
 <div class="viewcode-block" id="Intensifier.__iter__"><a class="viewcode-back" href="../../../api/smac.intensifier.intensifier.html#smac.intensifier.Intensifier.__iter__">[docs]</a>    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;This iter method holds the logic for the intensification loop.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This iter method holds the logic for the intensification loop.</span>
 <span class="sd">        Some facts about the loop:</span>
 
 <span class="sd">        - Adds existing configurations from the runhistory to the queue (that means it supports user-inputs).</span>
@@ -1287,7 +1287,7 @@
         <span class="n">from_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the next trials of the configuration based on ``get_trials_of_interest``. If N is specified,</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the next trials of the configuration based on ``get_trials_of_interest``. If N is specified,</span>
 <span class="sd">        maximum N trials are returned but not necessarily all of them (depending on evaluated already or still running).</span>
 
 <span class="sd">        Parameters</span>
@@ -1375,7 +1375,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

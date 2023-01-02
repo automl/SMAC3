@@ -1006,7 +1006,7 @@
 
 
 <div class="viewcode-block" id="AbstractGaussianProcess"><a class="viewcode-back" href="../../../../api/smac.model.gaussian_process.abstract_gaussian_process.html#smac.model.gaussian_process.AbstractGaussianProcess">[docs]</a><span class="k">class</span> <span class="nc">AbstractGaussianProcess</span><span class="p">(</span><span class="n">AbstractModel</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Abstract base class for all Gaussian process models.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract base class for all Gaussian process models.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1048,11 +1048,11 @@
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">_get_gaussian_process</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GaussianProcessRegressor</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Generates a Gaussian process.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates a Gaussian process.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Normalize data to zero mean unit standard deviation.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Normalize data to zero mean unit standard deviation.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1077,7 +1077,7 @@
         <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">var</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Transform zero mean unit standard deviation data into the regular space.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform zero mean unit standard deviation data into the regular space.</span>
 
 <span class="sd">        Warning</span>
 <span class="sd">        -------</span>
@@ -1107,7 +1107,7 @@
         <span class="n">add_bound_priors</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">add_soft_bounds</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">AbstractPrior</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns all priors.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns all priors.&quot;&quot;&quot;</span>
         <span class="c1"># Obtain a list of all priors for each tunable hyperparameter of the kernel</span>
         <span class="n">all_priors</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">to_visit</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1158,7 +1158,7 @@
         <span class="k">return</span> <span class="n">all_priors</span>
 
     <span class="k">def</span> <span class="nf">_set_has_conditions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Sets `has_conditions` on `current_param`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets `has_conditions` on `current_param`.&quot;&quot;&quot;</span>
         <span class="n">has_conditions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_configspace</span><span class="o">.</span><span class="n">get_conditions</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="n">to_visit</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">to_visit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_kernel</span><span class="p">)</span>
@@ -1175,7 +1175,7 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">current_param</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_impute_inactive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Imputes inactives.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Imputes inactives.&quot;&quot;&quot;</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">X</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">X</span><span class="p">)]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 
@@ -1202,7 +1202,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

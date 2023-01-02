@@ -1,7 +1,7 @@
 Optimizations
 =============
 
-Depending on the user settings, SMAC might run faster or slower depending on the user specifications. In general it 
+SMAC might run faster or slower depending on the user specifications. In general it
 applies that the more you know about the underlying target function, the better you can optimize the optimization
 process.
 

@@ -1002,7 +1002,7 @@
 
 
 <div class="viewcode-block" id="AbstractRandomDesign"><a class="viewcode-back" href="../../../api/smac.random_design.abstract_random_design.html#smac.random_design.AbstractRandomDesign">[docs]</a><span class="k">class</span> <span class="nc">AbstractRandomDesign</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Abstract base of helper classes to configure interleaving of random configurations in a list of challengers.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract base of helper classes to configure interleaving of random configurations in a list of challengers.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1016,19 +1016,19 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
             <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed</span><span class="p">,</span>
         <span class="p">}</span>
 
 <div class="viewcode-block" id="AbstractRandomDesign.next_iteration"><a class="viewcode-back" href="../../../api/smac.random_design.abstract_random_design.html#smac.random_design.AbstractRandomDesign.next_iteration">[docs]</a>    <span class="k">def</span> <span class="nf">next_iteration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Indicates the beginning of the next SMBO iteration.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Indicates the beginning of the next SMBO iteration.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="AbstractRandomDesign.check"><a class="viewcode-back" href="../../../api/smac.random_design.abstract_random_design.html#smac.random_design.AbstractRandomDesign.check">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Check, if the next configuration should be random.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check, if the next configuration should be random.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1063,7 +1063,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

@@ -1018,29 +1018,35 @@ to download the full example code</p>
 [INFO][abstract_intensifier.py:565] Added config 94b2fe and rejected config 94dccd as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- x0: 0.03135360777378082 -&gt; 1.8422549832482282
 [INFO][configspace.py:175] --- x1: -0.21179260686039925 -&gt; 3.526509233029728
-[INFO][abstract_intensifier.py:565] Added config a4c09f and rejected config 94b2fe as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x0: 1.8422549832482282 -&gt; 1.980770819590341
-[INFO][configspace.py:175] --- x1: 3.526509233029728 -&gt; 4.03432249924802
+[INFO][abstract_intensifier.py:565] Added config 026b73 and rejected config 94b2fe as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: 1.8422549832482282 -&gt; 0.10203668300079549
+[INFO][configspace.py:175] --- x1: 3.526509233029728 -&gt; 0.1151862278387501
+[INFO][abstract_intensifier.py:565] Added config 5db1de and rejected config 026b73 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: 0.10203668300079549 -&gt; 0.10138875906166067
+[INFO][configspace.py:175] --- x1: 0.1151862278387501 -&gt; 0.10325090860241648
+[INFO][abstract_intensifier.py:565] Added config c89070 and rejected config 5db1de as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: 0.10138875906166067 -&gt; 0.08653325483166885
+[INFO][configspace.py:175] --- x1: 0.10325090860241648 -&gt; 0.08549815086526724
 [INFO][smbo.py:298] Finished 50 trials.
-[INFO][abstract_intensifier.py:565] Added config 3cde7a and rejected config a4c09f as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x0: 1.980770819590341 -&gt; 2.05576260053446
-[INFO][configspace.py:175] --- x1: 4.03432249924802 -&gt; 4.189734587316279
-[INFO][abstract_intensifier.py:565] Added config e7c1a8 and rejected config 3cde7a as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x0: 2.05576260053446 -&gt; 2.056514790777225
-[INFO][configspace.py:175] --- x1: 4.189734587316279 -&gt; 4.2444281430933675
-[INFO][abstract_intensifier.py:565] Added config 7ab1b1 and rejected config e7c1a8 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x0: 2.056514790777225 -&gt; 2.057439307959182
-[INFO][configspace.py:175] --- x1: 4.2444281430933675 -&gt; 4.219978780196948
-[INFO][abstract_intensifier.py:565] Added config 75934b and rejected config 7ab1b1 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x0: 2.057439307959182 -&gt; 2.0561106976838825
-[INFO][configspace.py:175] --- x1: 4.219978780196948 -&gt; 4.233093984919787
+[INFO][abstract_intensifier.py:565] Added config f3174e and rejected config c89070 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: 0.08653325483166885 -&gt; 0.05367820946404134
+[INFO][configspace.py:175] --- x1: 0.08549815086526724 -&gt; 0.07009655254860192
+[INFO][abstract_intensifier.py:565] Added config 458538 and rejected config f3174e as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: 0.05367820946404134 -&gt; 0.08292029094844988
+[INFO][configspace.py:175] --- x1: 0.07009655254860192 -&gt; 0.06495875484764024
+[INFO][abstract_intensifier.py:565] Added config d95598 and rejected config 458538 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: 0.08292029094844988 -&gt; 0.08393076270018529
+[INFO][configspace.py:175] --- x1: 0.06495875484764024 -&gt; 0.034451435520161944
+[INFO][abstract_intensifier.py:565] Added config 2b7962 and rejected config d95598 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: 0.08393076270018529 -&gt; 0.07805927091208886
+[INFO][configspace.py:175] --- x1: 0.034451435520161944 -&gt; 0.0059357711510132916
 [INFO][smbo.py:298] Finished 100 trials.
 [INFO][smbo.py:306] Configuration budget is exhausted:
 [INFO][smbo.py:307] --- Remaining wallclock time: inf
 [INFO][smbo.py:308] --- Remaining cpu time: inf
 [INFO][smbo.py:309] --- Remaining trials: 0
 Default cost: 16916.0
-Incumbent cost: 1.1183978687059386
+Incumbent cost: 0.8499771879028607
 </pre></div>
 </div>
 <div class="line-block">
@@ -1066,7 +1072,7 @@ Incumbent cost: 1.1183978687059386
         <span class="k">return</span> <span class="n">cs</span>
 
     <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The 2-dimensional Rosenbrock function as a toy model.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The 2-dimensional Rosenbrock function as a toy model.</span>
 <span class="sd">        The Rosenbrock function is well know in the optimization community and</span>
 <span class="sd">        often serves as a toy problem. It can be defined for arbitrary</span>
 <span class="sd">        dimensions. The minimium is always at x_i = 1 with a function value of</span>
@@ -1122,7 +1128,7 @@ Incumbent cost: 1.1183978687059386
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.078 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.083 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-3-ask-and-tell-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/a1828630146a41acf93ee176b4deac58/3_ask_and_tell.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">3_ask_and_tell.py</span></code></a></p>
@@ -1168,7 +1174,7 @@ Incumbent cost: 1.1183978687059386
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

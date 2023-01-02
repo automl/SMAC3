@@ -1009,7 +1009,7 @@
 
 
 <div class="viewcode-block" id="DaskParallelRunner"><a class="viewcode-back" href="../../../api/smac.runner.dask_runner.html#smac.runner.DaskParallelRunner">[docs]</a><span class="k">class</span> <span class="nc">DaskParallelRunner</span><span class="p">(</span><span class="n">AbstractRunner</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Interface to submit and collect a job in a distributed fashion. DaskParallelRunner is</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface to submit and collect a job in a distributed fashion. DaskParallelRunner is</span>
 <span class="sd">    intended to comply with the bridge design pattern. Nevertheless, to reduce the amount of code</span>
 <span class="sd">    within single-vs-parallel implementations, DaskParallelRunner wraps a BaseRunner object which</span>
 <span class="sd">    is then executed in parallel on `n_workers`.</span>
@@ -1087,7 +1087,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_close_client_at_del</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="DaskParallelRunner.submit_trial"><a class="viewcode-back" href="../../../api/smac.runner.dask_runner.html#smac.runner.DaskParallelRunner.submit_trial">[docs]</a>    <span class="k">def</span> <span class="nf">submit_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial_info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;This function submits a configuration embedded in a ``trial_info`` object, and uses one of</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function submits a configuration embedded in a ``trial_info`` object, and uses one of</span>
 <span class="sd">        the workers to produce a result locally to each worker.</span>
 
 <span class="sd">        The execution of a configuration follows this procedure:</span>
@@ -1146,18 +1146,18 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_single_worker</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="n">budget</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DaskParallelRunner.count_available_workers"><a class="viewcode-back" href="../../../api/smac.runner.dask_runner.html#smac.runner.DaskParallelRunner.count_available_workers">[docs]</a>    <span class="k">def</span> <span class="nf">count_available_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Total number of workers available. This number is dynamic as more resources</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Total number of workers available. This number is dynamic as more resources</span>
 <span class="sd">        can be allocated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">nthreads</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pending_trials</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DaskParallelRunner.close"><a class="viewcode-back" href="../../../api/smac.runner.dask_runner.html#smac.runner.DaskParallelRunner.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Closes the client.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Closes the client.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_close_client_at_del</span> <span class="ow">or</span> <span class="n">force</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
     <span class="k">def</span> <span class="nf">_process_pending_trials</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The completed trials are moved from ``self._pending_trials`` to ``self._results_queue``.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The completed trials are moved from ``self._pending_trials`` to ``self._results_queue``.</span>
 <span class="sd">        We make sure pending trials never exceed the capacity of the scheduler.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># In code check to make sure we don&#39;t exceed resource allocation</span>
@@ -1176,7 +1176,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_pending_trials</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">trial</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DaskParallelRunner.__del__"><a class="viewcode-back" href="../../../api/smac.runner.dask_runner.html#smac.runner.DaskParallelRunner.__del__">[docs]</a>    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Makes sure that when this object gets deleted, the client is terminated. This</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Makes sure that when this object gets deleted, the client is terminated. This</span>
 <span class="sd">        is only done if the client was created by the dask runner.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_close_client_at_del</span><span class="p">:</span>
@@ -1203,7 +1203,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

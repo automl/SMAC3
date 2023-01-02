@@ -1030,7 +1030,7 @@
 
 
 <div class="viewcode-block" id="AbstractFacade"><a class="viewcode-back" href="../../../api/smac.facade.abstract_facade.html#smac.facade.AbstractFacade">[docs]</a><span class="k">class</span> <span class="nc">AbstractFacade</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Facade is an abstraction on top of the SMBO backend to organize the components of a Bayesian Optimization loop</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Facade is an abstraction on top of the SMBO backend to organize the components of a Bayesian Optimization loop</span>
 <span class="sd">    in a configurable and separable manner to suit the various needs of different (hyperparameter) optimization</span>
 <span class="sd">    pipelines.</span>
 
@@ -1201,27 +1201,27 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">scenario</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Scenario</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The scenario object which holds all environment information.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The scenario object which holds all environment information.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistory</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The runhistory which is filled with all trials during the optimization process.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The runhistory which is filled with all trials during the optimization process.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="o">.</span><span class="n">_runhistory</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SMBO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The optimizer which is responsible for the BO loop. Keeps track of useful information like status.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The optimizer which is responsible for the BO loop. Keeps track of useful information like status.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">intensifier</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractIntensifier</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The optimizer which is responsible for the BO loop. Keeps track of useful information like status.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The optimizer which is responsible for the BO loop. Keeps track of useful information like status.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Generates a hash based on all components of the facade. This is used for the run name or to determine</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates a hash based on all components of the facade. This is used for the run name or to determine</span>
 <span class="sd">        whether a run should be continued or not.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">multi_objective_algorithm_meta</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1246,11 +1246,11 @@
         <span class="k">return</span> <span class="n">meta</span>
 
 <div class="viewcode-block" id="AbstractFacade.ask"><a class="viewcode-back" href="../../../api/smac.facade.abstract_facade.html#smac.facade.AbstractFacade.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrialInfo</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Asks the intensifier for the next trial.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Asks the intensifier for the next trial.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="o">.</span><span class="n">ask</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AbstractFacade.tell"><a class="viewcode-back" href="../../../api/smac.facade.abstract_facade.html#smac.facade.AbstractFacade.tell">[docs]</a>    <span class="k">def</span> <span class="nf">tell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">TrialValue</span><span class="p">,</span> <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Adds the result of a trial to the runhistory and updates the intensifier.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds the result of a trial to the runhistory and updates the intensifier.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1264,7 +1264,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="n">save</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AbstractFacade.optimize"><a class="viewcode-back" href="../../../api/smac.facade.abstract_facade.html#smac.facade.AbstractFacade.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Optimizes the configuration of the algorithm.</span>
 
 <span class="sd">        Returns</span>
@@ -1286,7 +1286,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Validates a configuration on seeds different from the ones used in the optimization process and on the</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates a configuration on seeds different from the ones used in the optimization process and on the</span>
 <span class="sd">        highest budget (if budget type is real-valued).</span>
 
 <span class="sd">        Parameters</span>
@@ -1310,13 +1310,13 @@
 <div class="viewcode-block" id="AbstractFacade.get_model"><a class="viewcode-back" href="../../../api/smac.facade.abstract_facade.html#smac.facade.AbstractFacade.get_model">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractModel</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the surrogate cost model instance used in the BO loop.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the surrogate cost model instance used in the BO loop.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="AbstractFacade.get_acquisition_function"><a class="viewcode-back" href="../../../api/smac.facade.abstract_facade.html#smac.facade.AbstractFacade.get_acquisition_function">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">get_acquisition_function</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the acquisition function instance used in the BO loop,</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the acquisition function instance used in the BO loop,</span>
 <span class="sd">        defining the exploration/exploitation trade-off.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
@@ -1324,7 +1324,7 @@
 <div class="viewcode-block" id="AbstractFacade.get_acquisition_maximizer"><a class="viewcode-back" href="../../../api/smac.facade.abstract_facade.html#smac.facade.AbstractFacade.get_acquisition_maximizer">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">get_acquisition_maximizer</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractAcquisitionMaximizer</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the acquisition optimizer instance to be used in the BO loop,</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the acquisition optimizer instance to be used in the BO loop,</span>
 <span class="sd">        specifying how the acquisition function instance is optimized.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
@@ -1332,7 +1332,7 @@
 <div class="viewcode-block" id="AbstractFacade.get_intensifier"><a class="viewcode-back" href="../../../api/smac.facade.abstract_facade.html#smac.facade.AbstractFacade.get_intensifier">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">get_intensifier</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractIntensifier</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the intensifier instance to be used in the BO loop,</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the intensifier instance to be used in the BO loop,</span>
 <span class="sd">        specifying how to challenge the incumbent configuration on other problem instances.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
@@ -1340,7 +1340,7 @@
 <div class="viewcode-block" id="AbstractFacade.get_initial_design"><a class="viewcode-back" href="../../../api/smac.facade.abstract_facade.html#smac.facade.AbstractFacade.get_initial_design">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">get_initial_design</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractInitialDesign</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns an instance of the initial design class to be used in the BO loop,</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an instance of the initial design class to be used in the BO loop,</span>
 <span class="sd">        specifying how the configurations the BO loop is &#39;warm-started&#39; with are selected.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
@@ -1348,7 +1348,7 @@
 <div class="viewcode-block" id="AbstractFacade.get_random_design"><a class="viewcode-back" href="../../../api/smac.facade.abstract_facade.html#smac.facade.AbstractFacade.get_random_design">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">get_random_design</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractRandomDesign</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns an instance of the random design class to be used in the BO loop,</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an instance of the random design class to be used in the BO loop,</span>
 <span class="sd">        specifying how to interleave the BO iterations with randomly selected configurations.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
@@ -1356,7 +1356,7 @@
 <div class="viewcode-block" id="AbstractFacade.get_runhistory_encoder"><a class="viewcode-back" href="../../../api/smac.facade.abstract_facade.html#smac.facade.AbstractFacade.get_runhistory_encoder">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">get_runhistory_encoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractRunHistoryEncoder</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns an instance of the runhistory encoder class to be used in the BO loop,</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an instance of the runhistory encoder class to be used in the BO loop,</span>
 <span class="sd">        specifying how the runhistory is to be prepared for the next surrogate model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
@@ -1364,7 +1364,7 @@
 <div class="viewcode-block" id="AbstractFacade.get_multi_objective_algorithm"><a class="viewcode-back" href="../../../api/smac.facade.abstract_facade.html#smac.facade.AbstractFacade.get_multi_objective_algorithm">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">get_multi_objective_algorithm</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractMultiObjectiveAlgorithm</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the multi-objective algorithm instance to be used in the BO loop,</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the multi-objective algorithm instance to be used in the BO loop,</span>
 <span class="sd">        specifying the scalarization strategy for multiple objectives&#39; costs.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
@@ -1376,11 +1376,11 @@
         <span class="n">retrain_after</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
         <span class="n">retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConfigSelector</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the default configuration selector.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the default configuration selector.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">ConfigSelector</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">retrain_after</span><span class="o">=</span><span class="n">retrain_after</span><span class="p">,</span> <span class="n">retries</span><span class="o">=</span><span class="n">retries</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_get_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SMBO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Fills the SMBO with all the pre-initialized components.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fills the SMBO with all the pre-initialized components.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">SMBO</span><span class="p">(</span>
             <span class="n">scenario</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="p">,</span>
             <span class="n">runner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="p">,</span>
@@ -1390,7 +1390,7 @@
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_update_dependencies</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Convenience method to add some more dependencies. And ensure separable instantiation of</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convenience method to add some more dependencies. And ensure separable instantiation of</span>
 <span class="sd">        the components. This is the easiest way to incorporate dependencies, although</span>
 <span class="sd">        it might be a bit hacky.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1414,12 +1414,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">runhistory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span>
 
     <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if the composition is correct if there are dependencies.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the composition is correct if there are dependencies.&quot;&quot;&quot;</span>
         <span class="c1"># Make sure the same acquisition function is used</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_maximizer</span><span class="o">.</span><span class="n">_acquisition_function</span>
 
     <span class="k">def</span> <span class="nf">_get_signature_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns signature arguments, which are required by the intensifier.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns signature arguments, which are required by the intensifier.&quot;&quot;&quot;</span>
         <span class="n">arguments</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">uses_seeds</span><span class="p">:</span>
@@ -1454,7 +1454,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

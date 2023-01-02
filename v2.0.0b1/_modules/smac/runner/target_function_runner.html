@@ -1012,7 +1012,7 @@
 
 
 <div class="viewcode-block" id="TargetFunctionRunner"><a class="viewcode-back" href="../../../api/smac.runner.target_function_runner.html#smac.runner.TargetFunctionRunner">[docs]</a><span class="k">class</span> <span class="nc">TargetFunctionRunner</span><span class="p">(</span><span class="n">AbstractSerialRunner</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Class to execute target functions which are python functions. Evaluates function for given</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to execute target functions which are python functions. Evaluates function for given</span>
 <span class="sd">    configuration and resource limit.</span>
 
 <span class="sd">    The target function can either return a float (the loss), or a tuple with the first element</span>
@@ -1082,7 +1082,7 @@
         <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">StatusType</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Calls the target function with pynisher if algorithm wall time limit or memory limit is</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls the target function with pynisher if algorithm wall time limit or memory limit is</span>
 <span class="sd">        set. Otherwise, the function is called directly.</span>
 
 <span class="sd">        Parameters</span>
@@ -1215,7 +1215,7 @@
         <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">dict</span><span class="p">]</span>
         <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">dict</span><span class="p">]</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Calls the algorithm, which is processed in the ``run`` method.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls the algorithm, which is processed in the ``run`` method.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">algorithm</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">algorithm_kwargs</span><span class="p">)</span></div></div>
 </pre></div>
 
@@ -1239,7 +1239,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>
