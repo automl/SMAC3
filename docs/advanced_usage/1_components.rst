@@ -202,8 +202,8 @@ runhistory encoder) is then used to train the surrogate model.
 
     Depending on the multi-objective algorithm, the values for the runhistory encoder might differ each time 
     the surrogate model is trained. Let's take ParEGO for example:
-    Everytime a new configuration is sampled (see ConfigSelector), the objective weights are updated). Therefore, 
-    the scaralized values are different and the acquisition maximizer might return completely different configurations.
+    Everytime a new configuration is sampled (see ConfigSelector), the objective weights are updated. Therefore,
+    the scalarized values are different and the acquisition maximizer might return completely different configurations.
 
 
 :ref:`RunHistory<smac.runhistory.runhistory>`
