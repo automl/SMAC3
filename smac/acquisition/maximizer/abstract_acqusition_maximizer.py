@@ -20,7 +20,9 @@ logger = get_logger(__name__)
 
 
 class AbstractAcquisitionMaximizer:
-    """Abstract class for the acquisition maximization. In order to use this class it has to be subclassed and the
+    """Abstract class for the acquisition maximization.
+
+    In order to use this class it has to be subclassed and the
     method `_maximize` must be implemented.
 
     Parameters
@@ -28,6 +30,9 @@ class AbstractAcquisitionMaximizer:
     configspace : ConfigurationSpace
     acquisition_function : AbstractAcquisitionFunction
     challengers : int, defaults to 5000
+        Number of configurations to sample from the configuration space to get
+        the acquisition function value for, thus challenging the current
+        incumbent and becoming a candidate for the next function evaluation.
     seed : int, defaults to 0
     """
 
@@ -55,7 +60,7 @@ class AbstractAcquisitionMaximizer:
 
     @property
     def meta(self) -> dict[str, Any]:
-        """Returns the meta data of the created object."""
+        """Return the meta data of the created object."""
         acquisition_function_meta = None
         if self._acquisition_function is not None:
             acquisition_function_meta = self._acquisition_function.meta
@@ -114,7 +119,7 @@ class AbstractAcquisitionMaximizer:
         previous_configs: list[Configuration],
         n_points: int,
     ) -> list[tuple[float, Configuration]]:
-        """Implements acquisition function maximization.
+        """Implement acquisition function maximization.
 
         In contrast to `maximize`, this method returns an iterable of tuples, consisting of the acquisition function
         value and the configuration. This allows to plug together different acquisition function maximizers.
@@ -143,7 +148,7 @@ class AbstractAcquisitionMaximizer:
         Returns
         -------
         challengers : list[tuple[float, Configuration]]
-            Candidates ordered by their acquisition value.
+            Candidates ordered by their acquisition value (descending).
         """
         assert self._acquisition_function is not None
         acq_values = self._acquisition_function(configs)

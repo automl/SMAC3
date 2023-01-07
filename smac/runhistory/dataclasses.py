@@ -25,6 +25,13 @@ class InstanceSeedKey:
     instance: str | None = None
     seed: int | None = None
 
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, InstanceSeedKey):
+            if self.instance == other.instance and self.seed == other.seed:
+                return True
+
+        return False
+
 
 @dataclass(frozen=True)
 class InstanceSeedBudgetKey:
@@ -52,6 +59,17 @@ class InstanceSeedBudgetKey:
             return self.seed < other.seed
 
         raise RuntimeError("Could not compare InstanceSeedBudgetKey.")
+
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, InstanceSeedBudgetKey):
+            if self.instance == other.instance and self.seed == other.seed and self.budget == other.budget:
+                return True
+
+        return False
+
+    def get_instance_seed_key(self) -> InstanceSeedKey:
+        """Returns the instance-seed key. The budget is omitted."""
+        return InstanceSeedKey(instance=self.instance, seed=self.seed)
 
 
 @dataclass(frozen=True)
@@ -104,28 +122,39 @@ class TrialInfo:
     instance : str | None, defaults to None
     seed : int | None, defaults to None
     budget : float | None, defaults to None
-    source : int | None, defaults to 0
-        Source is used in the intensifier to indicate from which worker the trial was coming from.
     """
 
     config: Configuration
     instance: str | None = None
     seed: int | None = None
     budget: float | None = None
-    source: int = 0
+
+    def get_instance_seed_key(self) -> InstanceSeedKey:
+        """Instantiates and returns an InstanceSeedKey object"""
+        return InstanceSeedKey(instance=self.instance, seed=self.seed)
+
+    def get_instance_seed_budget_key(self) -> InstanceSeedBudgetKey:
+        """Instantiates and returns an InstanceSeedBudgetKey object."""
+        return InstanceSeedBudgetKey(instance=self.instance, seed=self.seed, budget=self.budget)
 
 
 @dataclass
 class TrajectoryItem:
-    """Item of a trajectory."""
+    """Item of a trajectory.
 
-    incumbent: Configuration | dict[str, Any]
-    cost: float | list[float]
-    budget: float | None
-    walltime_used: float
-    num_trial: int
+    Parameters
+    ----------
+    config_ids : list[int]
+        Configuration ids of the current incumbents.
+    costs : list[float | list[float]]
+        Costs of the current incumbents. In case of multi-objective, this is a list of lists.
+    trial : int
+        How many trials have been evaluated so far.
+    walltime : float
+        How much walltime has been used so far.
+    """
 
-    def __post_init__(self) -> None:
-        # Transform configuration to dict
-        if isinstance(self.incumbent, Configuration):
-            self.incumbent = self.incumbent.get_dictionary()
+    config_ids: list[int]
+    costs: list[float | list[float]]
+    trial: int
+    walltime: float

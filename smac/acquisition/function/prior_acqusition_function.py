@@ -25,7 +25,7 @@ logger = get_logger(__name__)
 
 
 class PriorAcquisitionFunction(AbstractAcquisitionFunction):
-    r"""Weights the acquisition function with a user-defined prior over the optimum.
+    r"""Weight the acquisition function with a user-defined prior over the optimum.
 
     See "piBO: Augmenting Acquisition Functions with User Beliefs for Bayesian Optimization" by Carl
     Hvarfner et al. [HSSL22]_ for further details.
@@ -123,7 +123,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         self._acquisition_function.update(model=self.model, **kwargs)
 
     def _compute_prior(self, X: np.ndarray) -> np.ndarray:
-        """Computes the prior-weighted acquisition function values, where the prior on each
+        """Compute the prior-weighted acquisition function values, where the prior on each
         parameter is multiplied by a decay factor controlled by the parameter decay_beta and
         the iteration number. Multivariate priors are not supported, for now.
 
@@ -159,7 +159,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         X_col: np.ndarray,
         number_of_bins: int,
     ) -> np.ndarray:
-        """Discretizes (bins) prior values on continous a specific continous parameter
+        """Discretize (bins) prior values on continous a specific continous parameter
         to an increasingly coarse discretization determined by the prior decay parameter.
 
         Parameters
@@ -197,7 +197,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         return prior_values
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
-        """Computes the prior-weighted acquisition function values, where the prior on each
+        """Compute the prior-weighted acquisition function values, where the prior on each
         parameter is multiplied by a decay factor controlled by the parameter decay_beta and
         the iteration number. Multivariate priors are not supported, for now.
 

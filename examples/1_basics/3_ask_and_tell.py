@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
     intensifier = HyperparameterOptimizationFacade.get_intensifier(
         scenario,
-        max_config_calls=1,  # We basically use one seed only
+        max_config_calls=1,  # We basically use one seed per config only
     )
 
     # Now we use SMAC to find the best hyperparameters
@@ -69,8 +69,8 @@ if __name__ == "__main__":
         smac.tell(info, value)
 
     # After calling ask+tell, we can still optimize
+    # Note: SMAC will optimize the next 90 trials because 10 trials already have been evaluated
     incumbent = smac.optimize()
-    assert smac.stats.finished == 100
 
     # Get cost of default configuration
     default_cost = smac.validate(model.configspace.get_default_configuration())
@@ -78,4 +78,4 @@ if __name__ == "__main__":
 
     # Let's calculate the cost of the incumbent
     incumbent_cost = smac.validate(incumbent)
-    print(f"Default cost: {incumbent_cost}")
+    print(f"Incumbent cost: {incumbent_cost}")

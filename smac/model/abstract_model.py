@@ -31,7 +31,7 @@ class AbstractModel:
 
     Note
     ----
-    The input dimensionality of Y for training and the output dimensions of all predictions depends on the concrete
+    The input dimensionality of Y for training and the output dimensions of all predictions depend on the concrete
     implementation of this abstract class.
 
     Parameters
@@ -75,7 +75,7 @@ class AbstractModel:
         self._apply_pca = False
 
         # Never use a lower variance than this.
-        # If estimated variance < var_threshold, the set to var_threshold
+        # If estimated variance < var_threshold, set to var_threshold
         self._var_threshold = VERY_SMALL_NUMBER
         self._types, self._bounds = get_types(configspace, instance_features)
 
@@ -97,7 +97,7 @@ class AbstractModel:
 
         Parameters
         ----------
-        X : np.ndarray [#samples, #hyperparameter + #features]
+        X : np.ndarray [#samples, #hyperparameters + #features]
             Input data points.
         Y : np.ndarray [#samples, #objectives]
             The corresponding target values.
@@ -118,7 +118,7 @@ class AbstractModel:
         if X.shape[0] != Y.shape[0]:
             raise ValueError("X.shape[0] ({}) != y.shape[0] ({})".format(X.shape[0], Y.shape[0]))
 
-        # Reduce dimensionality of features of larger than PCA_DIM
+        # Reduce dimensionality of features if larger than PCA_DIM
         if (
             self._pca_components is not None
             and X.shape[0] > self._pca.n_components
@@ -157,7 +157,7 @@ class AbstractModel:
 
         Parameters
         ----------
-        X : np.ndarray [#samples, #hyperparameter + #features]
+        X : np.ndarray [#samples, #hyperparameters + #features]
             Input data points.
         Y : np.ndarray [#samples, #objectives]
             The corresponding target values.
@@ -177,7 +177,7 @@ class AbstractModel:
 
         Parameters
         ----------
-        X : np.ndarray [#samples, #hyperparameter + #features]
+        X : np.ndarray [#samples, #hyperparameters + #features]
             Input data points.
         covariance_type: str | None, defaults to "diagonal"
             Specifies what to return along with the mean. Applied only to Gaussian Processes.
@@ -237,7 +237,7 @@ class AbstractModel:
 
         Parameters
         ----------
-        X : np.ndarray [#samples, #hyperparameter + #features]
+        X : np.ndarray [#samples, #hyperparameters + #features]
             Input data points.
         covariance_type : str | None, defaults to "diagonal"
             Specifies what to return along with the mean. Applied only to Gaussian Processes.
@@ -265,7 +265,7 @@ class AbstractModel:
 
         Parameters
         ----------
-        X : np.ndarray [#samples, #hyperparameter]
+        X : np.ndarray [#samples, #hyperparameters]
             Input data points.
 
         Returns

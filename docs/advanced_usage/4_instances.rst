@@ -37,9 +37,3 @@ want to add the number of samples and the mean of each subset, I can do as follo
       "instance_features": instance_features
       ...
     )
-
-
-.. warning ::
-
-    If you use the multi-fidelity facade, instances are used as budget type. Therefore, the target function is
-    called with an instance instead of a budget.

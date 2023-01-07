@@ -14,12 +14,12 @@ logger = get_logger(__name__)
 
 
 class AbstractRandomDesign:
-    """Abstract base of helper classes to configure interleaving of random configurations in a list
-    of challengers.
+    """Abstract base of helper classes to configure interleaving of random configurations in a list of challengers.
 
     Parameters
     ----------
     seed : int
+        The random seed initializing this design.
     """
 
     def __init__(self, seed: int = 0):
@@ -40,12 +40,12 @@ class AbstractRandomDesign:
 
     @abstractmethod
     def check(self, iteration: int) -> bool:
-        """Check if the next configuration should be random.
+        """Check, if the next configuration should be random.
 
         Parameters
         ----------
         iteration : int
-            Number of the i-th configuration evaluated in a SMBO iteration.
+            Number of the i-th configuration evaluated in an SMBO iteration.
 
         Returns
         -------

@@ -11,7 +11,9 @@ __license__ = "3-clause BSD"
 
 
 class LatinHypercubeInitialDesign(AbstractInitialDesign):
-    """Latin Hypercube design."""
+    """Latin Hypercube initial design. See
+    https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.qmc.LatinHypercube.html for further information.
+    """
 
     def _select_configurations(self) -> list[Configuration]:
         params = self._configspace.get_hyperparameters()

@@ -1,18 +1,26 @@
 from __future__ import annotations
 
-from typing import Any, Iterator
+from typing import Any
+
+import json
+import time
+from pathlib import Path
 
 import numpy as np
 from ConfigSpace import Configuration
 
-from smac.main.base_smbo import BaseSMBO
-from smac.runhistory import StatusType, TrialInfo, TrialValue
-from smac.runhistory.enumerations import TrialInfoIntent
-from smac.runner.exceptions import (
-    FirstRunCrashedException,
-    TargetAlgorithmAbortException,
+from smac.acquisition.function.abstract_acquisition_function import (
+    AbstractAcquisitionFunction,
 )
-from smac.utils.configspace import convert_configurations_to_array
+from smac.callback import Callback
+from smac.intensifier.abstract_intensifier import AbstractIntensifier
+from smac.model.abstract_model import AbstractModel
+from smac.runhistory import StatusType, TrialInfo, TrialValue
+from smac.runhistory.runhistory import RunHistory
+from smac.runner import FirstRunCrashedException
+from smac.runner.abstract_runner import AbstractRunner
+from smac.scenario import Scenario
+from smac.utils.data_structures import recursively_compare_dicts
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -22,145 +30,172 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class SMBO(BaseSMBO):
-    """Implements ``get_next_configurations``, ``ask``, and ``tell``."""
+class SMBO:
+    """Implementation that contains the main Bayesian optimization loop.
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super().__init__(*args, **kwargs)
+    Parameters
+    ----------
+    scenario : Scenario
+        The scenario object, holding all environmental information.
+    runner : AbstractRunner
+        The runner (containing the target function) is called internally to judge a trial's performance.
+    runhistory : Runhistory
+        The runhistory stores all trials.
+    intensifier : AbstractIntensifier
+        The intensifier decides which trial (combination of configuration, seed, budget and instance) should be run
+        next.
+    overwrite: bool, defaults to False
+        When True, overwrites the run results if a previous run is found that is
+        inconsistent in the meta data with the current setup. If ``overwrite`` is set to False, the user is asked
+        for the exact behaviour (overwrite completely, save old run, or use old results).
 
-        self._predict_x_best = True
-        self._min_samples = 1
-        self._considered_budgets: list[float | None] = [None]
+    Warning
+    -------
+    This model should be initialized by a facade only.
+    """
 
-    def get_next_configurations(self, n: int | None = None) -> Iterator[Configuration]:  # noqa: D102
-        # TODO: Let's return the initial configurations from this method too
+    def __init__(
+        self,
+        scenario: Scenario,
+        runner: AbstractRunner,
+        runhistory: RunHistory,
+        intensifier: AbstractIntensifier,
+        overwrite: bool = False,
+    ):
+        self._scenario = scenario
+        self._configspace = scenario.configspace
+        self._runhistory = runhistory
+        self._intensifier = intensifier
+        self._trial_generator = iter(intensifier)
+        self._runner = runner
+        self._overwrite = overwrite
 
-        for callback in self._callbacks:
-            callback.on_next_configurations_start(self)
+        # Internal variables
+        self._finished = False
+        self._stop = False  # Gracefully stop SMAC
+        self._callbacks: list[Callback] = []
 
-        # Cost value of incumbent configuration (required for acquisition function).
-        # If not given, it will be inferred from runhistory or predicted.
-        # If not given and runhistory is empty, it will raise a ValueError.
-        incumbent_value: float | None = None
+        # Stats variables
+        self._start_time: float | None = None
+        self._used_target_function_walltime = 0.0
 
-        logger.debug("Search for next configuration...")
-        X, Y, X_configurations = self._collect_data()
-        previous_configs = self._runhistory.get_configs()
+        # Set walltime used method for intensifier
+        self._intensifier.used_walltime = lambda: self.used_walltime  # type: ignore
 
-        if X.shape[0] == 0:
-            # Only return a single point to avoid an overly high number of random search iterations.
-            # We got rid of random search here and replaced it with a simple configuration sampling from
-            # the configspace.
-            return iter([self._scenario.configspace.sample_configuration(1)])
+        # We initialize the state based on previous data.
+        # If no previous data is found then we take care of the initial design.
+        self._initialize_state()
 
-        # TODO: Check if X/Y differs from the last run, otherwise use cached results
-        self._model.train(X, Y)
+    @property
+    def runhistory(self) -> RunHistory:
+        """The run history, which is filled with all information during the optimization process."""
+        return self._runhistory
 
-        x_best_array: np.ndarray | None = None
-        if incumbent_value is not None:
-            best_observation = incumbent_value
-        else:
-            if self._runhistory.empty():
-                raise ValueError("Runhistory is empty and the cost value of the incumbent is unknown.")
+    @property
+    def intensifier(self) -> AbstractIntensifier:
+        """The run history, which is filled with all information during the optimization process."""
+        return self._intensifier
 
-            x_best_array, best_observation = self._get_x_best(self._predict_x_best, X_configurations)
+    @property
+    def remaining_walltime(self) -> float:
+        """Subtracts the runtime configuration budget with the used wallclock time."""
+        assert self._start_time is not None
+        return self._scenario.walltime_limit - (time.time() - self._start_time)
 
-        self._acquisition_function.update(
-            model=self._model,
-            eta=best_observation,
-            incumbent_array=x_best_array,
-            num_data=len(self._get_evaluated_configs()),
-            X=X_configurations,
-        )
+    @property
+    def remaining_cputime(self) -> float:
+        """Subtracts the target function running budget with the used time."""
+        return self._scenario.cputime_limit - self._used_target_function_walltime
 
-        challengers = self._acquisition_maximizer.maximize(
-            previous_configs,
-            n_points=n,
-            random_design=self._random_design,
-        )
+    @property
+    def remaining_trials(self) -> int:
+        """Subtract the target function runs in the scenario with the used ta runs."""
+        return self._scenario.n_trials - self.runhistory.submitted
 
-        for callback in self._callbacks:
-            callback.on_next_configurations_end(self)
+    @property
+    def budget_exhausted(self) -> bool:
+        """Checks whether the the remaining walltime, cputime or trials was exceeded."""
+        A = self.remaining_walltime <= 0
+        B = self.remaining_cputime <= 0
+        C = self.remaining_trials <= 0
 
-        return challengers
+        return A or B or C
 
-    def ask(self) -> tuple[TrialInfoIntent, TrialInfo]:  # noqa: D102
+    @property
+    def used_walltime(self) -> float:
+        """Returns used wallclock time."""
+        if self._start_time is None:
+            return 0.0
+
+        return time.time() - self._start_time
+
+    @property
+    def used_target_function_walltime(self) -> float:
+        """Returns how much walltime the target function spend so far."""
+        return self._used_target_function_walltime
+
+    def ask(self) -> TrialInfo:
+        """Asks the intensifier for the next trial.
+
+        Returns
+        -------
+        info : TrialInfo
+            Information about the trial (config, instance, seed, budget).
+        """
+        logger.debug("Calling ask...")
+
         for callback in self._callbacks:
             callback.on_ask_start(self)
 
-        if self._runhistory_encoder.multi_objective_algorithm is not None:
-            self._runhistory_encoder.multi_objective_algorithm.update_on_iteration_start()
+        # Now we use our generator to get the next trial info
+        trial_info = next(self._trial_generator)
 
-        intent, trial_info = self._intensifier.get_next_trial(
-            challengers=self._initial_design_configs,
-            incumbent=self._incumbent,
-            get_next_configurations=self.get_next_configurations,
-            runhistory=self._runhistory,
-            repeat_configs=self._intensifier.repeat_configs,
-            n_workers=self._runner.count_available_workers(),
-        )
-
-        if intent == TrialInfoIntent.RUN:
-            # There are 2 criteria that the stats object uses to know if the budged was exhausted.
-            # The budget time, which can only be known when the run finishes,
-            # And the number of ta executions. Because we submit the job at this point,
-            # we count this submission as a run. This prevent for using more
-            # runner runs than what the config allows.
-            self._stats._submitted += 1
-
-        # Remove config from initial design challengers to not repeat it again
-        self._initial_design_configs = [c for c in self._initial_design_configs if c != trial_info.config]
+        # Track the fact that the trial was returned
+        # This is really important because otherwise the intensifier would most likly sample the same trial again
+        self._runhistory.add_running_trial(trial_info)
 
         for callback in self._callbacks:
-            callback.on_ask_end(self, intent, trial_info)
+            callback.on_ask_end(self, trial_info)
 
-        return intent, trial_info
+        logger.debug("...and received a new trial.")
+
+        return trial_info
 
     def tell(
         self,
         info: TrialInfo,
         value: TrialValue,
-        time_left: float | None = None,
         save: bool = True,
-    ) -> None:  # noqa: D102
-        # We first check if budget/instance/seed is supported by the intensifier
-        if info.seed not in (seeds := self._intensifier.get_target_function_seeds()):
-            raise ValueError(f"Seed {info.seed} is not supported by the intensifier. Consider using one of {seeds}.")
-        elif info.budget not in (budgets := self._intensifier.get_target_function_budgets()):
-            raise ValueError(
-                f"Budget {info.budget} is not supported by the intensifier. Consider using one of {budgets}."
-            )
-        elif info.instance not in (instances := self._intensifier.get_target_function_instances()):
-            raise ValueError(
-                f"Instance {info.instance} is not supported by the intensifier. Consider using one of {instances}."
-            )
+    ) -> None:
+        """Adds the result of a trial to the runhistory and updates the stats object.
 
+        Parameters
+        ----------
+        info : TrialInfo
+            Describes the trial from which to process the results.
+        value : TrialValue
+            Contains relevant information regarding the execution of a trial.
+        save : bool, optional to True
+            Whether the runhistory should be saved.
+        """
         if info.config.origin is None:
             info.config.origin = "Custom"
 
         for callback in self._callbacks:
             response = callback.on_tell_start(self, info, value)
+
             # If a callback returns False, the optimization loop should be interrupted
             # the other callbacks are still being called.
             if response is False:
-                logger.info("An callback returned False. Abort is requested.")
+                logger.info("A callback returned False. Abort is requested.")
                 self._stop = True
 
-        # We expect the first run to always succeed.
-        if self._stats.finished == 0 and value.status == StatusType.CRASHED:
-            additional_info = ""
-            if "traceback" in value.additional_info:
-                additional_info = "\n\n" + value.additional_info["traceback"]
+        # Some sanity checks here
+        if self._intensifier.uses_instances and info.instance is None:
+            raise ValueError("Passed instance is None but intensifier requires instances.")
 
-            raise FirstRunCrashedException("The first run crashed. Please check your setup again." + additional_info)
-
-        # Update SMAC stats
-        self._stats._target_function_walltime_used += float(value.time)
-        self._stats._finished += 1
-
-        logger.debug(
-            f"Status: {value.status}, cost: {value.cost}, time: {value.time}, " f"Additional: {value.additional_info}"
-        )
+        if self._intensifier.uses_budgets and info.budget is None:
+            raise ValueError("Passed budget is None but intensifier requires budgets.")
 
         self._runhistory.add(
             config=info.config,
@@ -172,145 +207,363 @@ class SMBO(BaseSMBO):
             budget=info.budget,
             starttime=value.starttime,
             endtime=value.endtime,
-            force_update=True,
             additional_info=value.additional_info,
-        )
-        self._stats._n_configs = len(self._runhistory._config_ids)
-
-        if value.status == StatusType.ABORT:
-            raise TargetAlgorithmAbortException(
-                "The target function was aborted. The last incumbent can be found in the trajectory file."
-            )
-        elif value.status == StatusType.STOP:
-            logger.debug("Value holds the status stop. Abort is requested.")
-            self._stop = True
-
-        if time_left is None:
-            time_left = np.inf
-
-        # Update the intensifier with the result of the runs
-        self._incumbent, _ = self._intensifier.process_results(
-            trial_info=info,
-            trial_value=value,
-            incumbent=self._incumbent,
-            runhistory=self._runhistory,
-            time_bound=max(self._min_time, time_left),
+            force_update=True,  # Important to overwrite the status RUNNING
         )
 
-        # Gracefully end optimization if termination cost is reached
-        if self._scenario.termination_cost_threshold != np.inf:
-
-            cost = self.runhistory.average_cost(info.config)
-
-            if not isinstance(cost, list):
-                cost = [cost]
-
-            if not isinstance(self._scenario.termination_cost_threshold, list):
-                cost_threshold = [self._scenario.termination_cost_threshold]
-            else:
-                cost_threshold = self._scenario.termination_cost_threshold
-
-            if len(cost) != len(cost_threshold):
-                raise RuntimeError("You must specify a termination cost threshold for each objective.")
-
-            if all(cost[i] < cost_threshold[i] for i in range(len(cost))):
-                logger.info("Cost threshold was reached. Abort is requested.")
-                self._stop = True
+        logger.debug(f"Tell method was called with cost {value.cost} ({StatusType(value.status).name}).")
 
         for callback in self._callbacks:
             response = callback.on_tell_end(self, info, value)
+
             # If a callback returns False, the optimization loop should be interrupted
             # the other callbacks are still being called.
             if response is False:
-                logger.info("An callback returned False. Abort is requested.")
+                logger.info("A callback returned False. Abort is requested.")
                 self._stop = True
 
         if save:
             self.save()
 
-    def _collect_data(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-        """Collects the data from the runhistory to train the surrogate model. The data collection strategy if budgets
-        are used is as follows: Looking from highest to lowest budget, return those observations
-        that support at least ``self._min_samples`` points.
+    def update_model(self, model: AbstractModel) -> None:
+        """Updates the model and updates the acquisition function."""
+        if (config_selector := self._intensifier._config_selector) is not None:
+            config_selector._model = model
 
-        If no budgets are used, this is equivalent to returning all observations.
+            assert config_selector._acquisition_function is not None
+            config_selector._acquisition_function.model = model
+
+    def update_acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
+        """Updates the acquisition function including the associated model and the acquisition
+        optimizer.
         """
-        # if we use a float value as a budget, we want to train the model only on the highest budget
-        available_budgets = []
-        for run_key in self._runhistory:
-            available_budgets.append(run_key.budget)
+        if (config_selector := self._intensifier._config_selector) is not None:
+            config_selector._acquisition_function = acquisition_function
+            config_selector._acquisition_function.model = config_selector._model
 
-        # Sort available budgets from highest to lowest budget
-        available_budgets = sorted(list(set(available_budgets)), reverse=True)  # type: ignore
+            assert config_selector._acquisition_maximizer is not None
+            config_selector._acquisition_maximizer.acquisition_function = acquisition_function
 
-        # Get #points per budget and if there are enough samples, then build a model
-        for b in available_budgets:
-            X, Y = self._runhistory_encoder.transform(self._runhistory, budget_subset=[b])
-
-            if X.shape[0] >= self._min_samples:
-                self._considered_budgets = [b]
-                configs_array = self._runhistory_encoder.get_configurations(
-                    self._runhistory, budget_subset=self._considered_budgets
-                )
-
-                return X, Y, configs_array
-
-        return (
-            np.empty(shape=[0, 0]),
-            np.empty(
-                shape=[
-                    0,
-                ]
-            ),
-            np.empty(shape=[0, 0]),
-        )
-
-    def _get_evaluated_configs(self) -> list[Configuration]:
-        return self._runhistory.get_configs_per_budget(budget_subset=self._considered_budgets)
-
-    def _get_x_best(self, predict: bool, X: np.ndarray) -> tuple[np.ndarray, float]:
-        """Get value, configuration, and array representation of the *best* configuration.
-
-        The definition of best varies depending on the argument ``predict``. If set to `True`,
-        this function will return the stats of the best configuration as predicted by the model,
-        otherwise it will return the stats for the best observed configuration.
-
-        Parameters
-        ----------
-        predict : bool
-            Whether to use the predicted or observed best.
+    def optimize(self) -> Configuration | list[Configuration]:
+        """Runs the Bayesian optimization loop.
 
         Returns
         -------
-        float
-        np.ndarry
-        Configuration
+        incumbent : Configuration
+            The best found configuration.
         """
-        if predict:
-            model = self._model
-            costs = list(
-                map(
-                    lambda x: (
-                        model.predict_marginalized(x.reshape((1, -1)))[0][0][0],  # type: ignore
-                        x,
-                    ),
-                    X,
-                )
+        # We return the incumbent if we already finished the a process (we don't want to allow to call
+        # optimize more than once).
+        if self._finished:
+            logger.info("Optimization process was already finished. Returning incumbent...")
+            if self._scenario.count_objectives() == 1:
+                return self.intensifier.get_incumbent()
+            else:
+                return self.intensifier.get_incumbents()
+
+        # Start the timer before we do anything
+        # If we continue the optimization, the starting time is set by the load method
+        if self._start_time is None:
+            self._start_time = time.time()
+
+        for callback in self._callbacks:
+            callback.on_start(self)
+
+        # Main BO loop
+        while True:
+            for callback in self._callbacks:
+                callback.on_iteration_start(self)
+
+            try:
+                # Sample next trial from the intensification
+                trial_info = self.ask()
+
+                # We submit the trial to the runner
+                # In multi-worker mode, SMAC waits till a new worker is available here
+                self._runner.submit_trial(trial_info=trial_info)
+            except StopIteration:
+                self._stop = True
+
+            # We add results from the runner if results are available
+            self._add_results()
+
+            # Some statistics
+            logger.debug(
+                f"Remaining wallclock time: {self.remaining_walltime}; "
+                f"Remaining cpu time: {self.remaining_cputime}; "
+                f"Remaining trials: {self.remaining_trials}"
             )
-            costs = sorted(costs, key=lambda t: t[0])
-            x_best_array = costs[0][1]
-            best_observation = costs[0][0]
-            # won't need log(y) if EPM was already trained on log(y)
+
+            if self.runhistory.finished % 50 == 0:
+                logger.info(f"Finished {self.runhistory.finished} trials.")
+
+            for callback in self._callbacks:
+                callback.on_iteration_end(self)
+
+            # Now we check whether we have to stop the optimization
+            if self.budget_exhausted or self._stop:
+                if self.budget_exhausted:
+                    logger.info("Configuration budget is exhausted:")
+                    logger.info(f"--- Remaining wallclock time: {self.remaining_walltime}")
+                    logger.info(f"--- Remaining cpu time: {self.remaining_cputime}")
+                    logger.info(f"--- Remaining trials: {self.remaining_trials}")
+                else:
+                    logger.info("Shutting down because the stop flag was set.")
+
+                # Wait for the trials to finish
+                while self._runner.is_running():
+                    self._runner.wait()
+                    self._add_results()
+
+                # Break from the intensification loop, as there are no more resources
+                break
+
+        for callback in self._callbacks:
+            callback.on_end(self)
+
+        # We only set the finished flag if the budget really was exhausted
+        if self.budget_exhausted:
+            self._finished = True
+
+        if self._scenario.count_objectives() == 1:
+            return self.intensifier.get_incumbent()
         else:
-            all_configs = self._runhistory.get_configs_per_budget(budget_subset=self._considered_budgets)
-            x_best = self._incumbent
-            x_best_array = convert_configurations_to_array(all_configs)
-            best_observation = self._runhistory.get_cost(x_best)
-            best_observation_as_array = np.array(best_observation).reshape((1, 1))
+            return self.intensifier.get_incumbents()
 
-            # It's unclear how to do this for inv scaling and potential future scaling.
-            # This line should be changed if necessary
-            best_observation = self._runhistory_encoder.transform_response_values(best_observation_as_array)
-            best_observation = best_observation[0][0]
+    def reset(self) -> None:
+        """Resets the internal variables of the optimizer, intensifier, and runhistory."""
+        self._used_target_function_walltime = 0
+        self._finished = False
 
-        return x_best_array, best_observation
+        # We also reset runhistory and intensifier here
+        self._runhistory.reset()
+        self._intensifier.reset()
+
+    def exists(self, filename: str | Path) -> bool:
+        """Checks if the files associated with the run already exist.
+        Checks all files that are created by the optimizer.
+
+        Parameters
+        ----------
+        filename : str | Path
+            The name of the folder of the SMAC run.
+        """
+        if isinstance(filename, str):
+            filename = Path(filename)
+
+        optimization_fn = filename / "optimization.json"
+        runhistory_fn = filename / "runhistory.json"
+        intensifier_fn = filename / "intensifier.json"
+
+        if optimization_fn.exists() and runhistory_fn.exists() and intensifier_fn.exists():
+            return True
+
+        return False
+
+    def load(self) -> None:
+        """Loads the optimizer, intensifier, and runhistory from the output directory specified in the scenario."""
+        filename = self._scenario.output_directory
+
+        optimization_fn = filename / "optimization.json"
+        runhistory_fn = filename / "runhistory.json"
+        intensifier_fn = filename / "intensifier.json"
+
+        if filename is not None:
+            with open(optimization_fn) as fp:
+                data = json.load(fp)
+
+            self._runhistory.load(runhistory_fn, configspace=self._scenario.configspace)
+            self._intensifier.load(intensifier_fn)
+
+            self._used_target_function_walltime = data["used_target_function_walltime"]
+            self._finished = data["finished"]
+            self._start_time = time.time() - data["used_walltime"]
+
+    def save(self) -> None:
+        """Saves the current stats, runhistory, and intensifier."""
+        path = self._scenario.output_directory
+
+        if path is not None:
+            data = {
+                "used_walltime": self.used_walltime,
+                "used_target_function_walltime": self.used_target_function_walltime,
+                "last_update": time.time(),
+                "finished": self._finished,
+            }
+
+            # Save optimization data
+            with open(str(path / "optimization.json"), "w") as file:
+                json.dump(data, file, indent=2)
+
+            # And save runhistory and intensifier
+            self._runhistory.save(path / "runhistory.json")
+            self._intensifier.save(path / "intensifier.json")
+
+    def _add_results(self) -> None:
+        """Adds results from the runner to the runhistory. Although most of the functionality could be written
+        in the tell method, we separate it here to make it accessible for the automatic optimization procedure only.
+        """
+        # Check if there is any result
+        for trial_info, trial_value in self._runner.iter_results():
+            # Add the results of the run to the run history
+            self.tell(trial_info, trial_value)
+
+            # We expect the first run to always succeed.
+            if self.runhistory.finished == 0 and trial_value.status == StatusType.CRASHED:
+                additional_info = ""
+                if "traceback" in trial_value.additional_info:
+                    additional_info = "\n\n" + trial_value.additional_info["traceback"]
+
+                raise FirstRunCrashedException(
+                    "The first run crashed. Please check your setup again." + additional_info
+                )
+
+            # Update SMAC stats
+            self._used_target_function_walltime += float(trial_value.time)
+
+            # Gracefully end optimization if termination cost is reached
+            if self._scenario.termination_cost_threshold != np.inf:
+                cost = self.runhistory.average_cost(trial_info.config)
+
+                if not isinstance(cost, list):
+                    cost = [cost]
+
+                if not isinstance(self._scenario.termination_cost_threshold, list):
+                    cost_threshold = [self._scenario.termination_cost_threshold]
+                else:
+                    cost_threshold = self._scenario.termination_cost_threshold
+
+                if len(cost) != len(cost_threshold):
+                    raise RuntimeError("You must specify a termination cost threshold for each objective.")
+
+                if all(cost[i] < cost_threshold[i] for i in range(len(cost))):
+                    logger.info("Cost threshold was reached. Abort is requested.")
+                    self._stop = True
+
+    def _register_callback(self, callback: Callback) -> None:
+        """Registers a callback to be called before, in between, and after the Bayesian optimization loop."""
+        self._callbacks += [callback]
+
+    def _initialize_state(self) -> None:
+        """Detects whether the optimization is restored from a previous state."""
+        # Here we actually check whether the run should be continued or not.
+        # More precisely, we update our smbo/runhistory/intensifier object if all component arguments
+        # and scenario object are the same. For doing so, we create a specific hash.
+        # The SMBO object recognizes that stats (based on runhistory) is not empty and hence does not the run initial
+        # design anymore.
+        # Since the runhistory is already updated, the model uses previous data directly.
+
+        if not self._overwrite:
+            old_output_directory = self._scenario.output_directory
+            if self.exists(old_output_directory):
+                old_scenario = Scenario.load(old_output_directory)
+
+                if self._scenario == old_scenario:
+                    logger.info("Continuing from previous run.")
+
+                    # First we reset everything and then we load the old states
+                    self.reset()
+                    self.load()
+
+                    # If the last run was not successful, we reset everything again
+                    if self._runhistory.submitted <= 1 and self._runhistory.finished == 0:
+                        logger.info("Since the previous run was not successful, SMAC will start from scratch again.")
+                        self.reset()
+                else:
+                    # Here, we run into differen scenarios
+                    diff = recursively_compare_dicts(
+                        Scenario.make_serializable(self._scenario),
+                        Scenario.make_serializable(old_scenario),
+                        level="scenario",
+                    )
+                    logger.info(
+                        f"Found old run in `{self._scenario.output_directory}` but it is not the same as the current "
+                        f"one:\n{diff}"
+                    )
+
+                    feedback = input(
+                        "\nPress one of the following numbers to continue or any other key to abort:\n"
+                        "(1) Overwrite old run completely and start a new run.\n"
+                        "(2) Rename the old run (append an '-old') and start a new run.\n"
+                    )
+
+                    if feedback == "1":
+                        # We don't have to do anything here, since we work with a clean runhistory and stats object
+                        pass
+                    elif feedback == "2":
+                        # Rename old run
+                        new_dir = str(old_scenario.output_directory.parent)
+                        while True:
+                            new_dir += "-old"
+                            try:
+                                old_scenario.output_directory.parent.rename(new_dir)
+                                break
+                            except OSError:
+                                pass
+                    else:
+                        raise RuntimeError("SMAC run was stopped by the user.")
+
+        # And now we save everything
+        self._scenario.save()
+        self.save()
+
+    def validate(
+        self,
+        config: Configuration,
+        *,
+        seed: int | None = None,
+    ) -> float | list[float]:
+        """Validates a configuration on other seeds than the ones used in the optimization process and on the highest
+        budget (if budget type is real-valued).
+
+        Parameters
+        ----------
+        config : Configuration
+            Configuration to validate
+        instances : list[str] | None, defaults to None
+            Which instances to validate. If None, all instances specified in the scenario are used.
+            In case that the budget type is real-valued budget, this argument is ignored.
+        seed : int | None, defaults to None
+            If None, the seed from the scenario is used.
+
+        Returns
+        -------
+        cost : float | list[float]
+            The averaged cost of the configuration. In case of multi-fidelity, the cost of each objective is
+            averaged.
+        """
+        if seed is None:
+            seed = 0
+
+        costs = []
+        for trial in self._intensifier.get_trials_of_interest(config, validate=True, seed=seed):
+            kwargs: dict[str, Any] = {}
+            if trial.seed is not None:
+                kwargs["seed"] = trial.seed
+            if trial.budget is not None:
+                kwargs["budget"] = trial.budget
+            if trial.instance is not None:
+                kwargs["instance"] = trial.instance
+
+            # TODO: Use submit run for faster evaluation
+            # self._runner.submit_trial(trial_info=trial)
+            _, cost, _, _ = self._runner.run(config, **kwargs)
+            costs += [cost]
+
+        np_costs = np.array(costs)
+        return np.mean(np_costs, axis=0)
+
+    def print_stats(self) -> None:
+        """Prints all statistics."""
+        logger.info(
+            "\n"
+            f"--- STATISTICS -------------------------------------\n"
+            f"--- Incumbent changed: {self.intensifier.incumbents_changed}\n"
+            f"--- Submitted trials: {self.runhistory.submitted} / {self._scenario.n_trials}\n"
+            f"--- Finished trials: {self.runhistory.finished} / {self._scenario.n_trials}\n"
+            f"--- Configurations: {self.runhistory._n_id}\n"
+            f"--- Used wallclock time: {round(self.used_walltime)} / {self._scenario.walltime_limit} sec\n"
+            "--- Used target function runtime: "
+            f"{round(self.used_target_function_walltime, 2)} / {self._scenario.cputime_limit} sec\n"
+            f"----------------------------------------------------"
+        )

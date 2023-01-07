@@ -15,7 +15,7 @@ logger = get_logger(__name__)
 
 class RunHistoryLogEncoder(RunHistoryEncoder):
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transforms the response values by using a log."""
+        """Transforms the response values by using log."""
         # ensure that minimal value is larger than 0
         if np.any(values <= 0):
             logger.warning(

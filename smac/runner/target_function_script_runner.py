@@ -19,7 +19,8 @@ logger = get_logger(__name__)
 
 
 class TargetFunctionScriptRunner(AbstractSerialRunner):
-    """Class to execute target functions from scripts. Uses `Popen` to execute the script in a subprocess.
+    """Class to execute target functions from scripts. Uses `Popen` to execute the script in a
+     subprocess.
 
     The following example shows how the script is called:
     ``target_function --instance=test --instance_features=test --seed=0 --hyperparameter1=5323``
@@ -28,18 +29,19 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
     ``cost=0.5; runtime=0.01; status=SUCCESS; additional_info=test`` (single-objective)
     ``cost=0.5, 0.4; runtime=0.01; status=SUCCESS; additional_info=test`` (multi-objective)
 
-    The status must be a string and must be one of the ``StatusType`` values. However, ``runtime``, ``status`` and
-    ``additional_info`` are optional.
+    The status must be a string and must be one of the ``StatusType`` values. However, ``runtime``,
+    ``status`` and ``additional_info`` are optional.
 
     Note
     ----
-    Everytime an instance is passed, also an instance feature in form of a comma-separated list (no spaces) of floats is
-    passed. If no instance feature for the instance is given, an empty list is passed.
+    Everytime an instance is passed, also an instance feature in form of a comma-separated list
+    (no spaces) of floats is passed. If no instance feature for the instance is given,
+    an empty list is passed.
 
     Parameters
     ----------
     target_function : Callable
-        The target function function.
+        The target function.
     scenario : Scenario
     required_arguments : list[str]
         A list of required arguments, which are passed to the target function.
@@ -89,8 +91,8 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
         instance : str | None, defaults to None
             The Problem instance.
         budget : float | None, defaults to None
-            A positive, real-valued number representing an arbitrary limit to the target function handled by the
-            target function internally.
+            A positive, real-valued number representing an arbitrary limit to the target function
+            handled by the target function internally.
         seed : int, defaults to None
 
         Returns
@@ -100,7 +102,7 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
         cost : float | list[float]
             Resulting cost(s) of the trial.
         runtime : float
-            The time the target function function took to run.
+            The time the target function took to run.
         additional_info : dict
             All further additional trial information.
         """

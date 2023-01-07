@@ -20,18 +20,36 @@ class HyperbandFacade(RandomFacade):
     def get_intensifier(  # type: ignore
         scenario: Scenario,
         *,
-        min_challenger: int = 1,
         eta: int = 3,
+        n_seeds: int = 1,
+        instance_seed_order: str | None = "shuffle_once",
+        max_incumbents: int = 10,
+        incumbent_selection: str = "highest_observed_budget",
     ) -> Hyperband:
-        """Returns a Hyperband intensifier instance. That means that budgets are supported.
+        """Returns a Hyperband intensifier instance. Budgets are supported.
 
-        min_challenger : int, defaults to 1
-            Minimal number of challengers to be considered (even if time_bound is exhausted earlier).
-        eta : float, defaults to 3
-            The "halving" factor after each iteration in a Successive Halving run.
+        eta : int, defaults to 3
+            Input that controls the proportion of configurations discarded in each round of Successive Halving.
+        n_seeds : int, defaults to 1
+            How many seeds to use for each instance.
+        instance_seed_order : str, defaults to "shuffle_once"
+            How to order the instance-seed pairs. Can be set to:
+            * None: No shuffling at all and use the instance-seed order provided by the user.
+            * "shuffle_once": Shuffle the instance-seed keys once and use the same order across all runs.
+            * "shuffle": Shuffle the instance-seed keys for each bracket individually.
+        incumbent_selection : str, defaults to "any_budget"
+            How to select the incumbent when using budgets. Can be set to:
+            * "any_budget": Incumbent is the best on any budget i.e., best performance regardless of budget.
+            * "highest_observed_budget": Incumbent is the best in the highest budget run so far.
+            * "highest_budget": Incumbent is selected only based on the highest budget.
+        max_incumbents : int, defaults to 10
+            How many incumbents to keep track of in the case of multi-objective.
         """
         return Hyperband(
             scenario=scenario,
-            min_challenger=min_challenger,
             eta=eta,
+            n_seeds=n_seeds,
+            instance_seed_order=instance_seed_order,
+            max_incumbents=max_incumbents,
+            incumbent_selection=incumbent_selection,
         )

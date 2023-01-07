@@ -8,8 +8,6 @@ from ConfigSpace import Categorical, Configuration, ConfigurationSpace, Float
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 
-from tests.fixtures.datasets import Dataset
-
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
@@ -45,7 +43,7 @@ def rosenbrock() -> Rosenbrock2D:
 
 
 class SGD:
-    def __init__(self, dataset: Dataset) -> None:
+    def __init__(self, dataset: "Dataset") -> None:
         self.dataset = dataset
 
     @property
@@ -95,7 +93,7 @@ class SGD:
 
 @pytest.fixture
 def make_sgd():
-    def create(dataset: Dataset) -> SGD:
+    def create(dataset: "Dataset") -> SGD:
         return SGD(dataset)
 
     return create
