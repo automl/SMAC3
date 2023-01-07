@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.intensifier.hyperband &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>smac.intensifier.hyperband &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -40,8 +40,8 @@
     <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.intensifier.hyperband_worker" href="smac.intensifier.hyperband_worker.html" />
-    <link rel="prev" title="smac.intensifier.abstract_parallel_intensifier" href="smac.intensifier.abstract_parallel_intensifier.html" />
+    <link rel="next" title="smac.intensifier.intensifier" href="smac.intensifier.intensifier.html" />
+    <link rel="prev" title="smac.intensifier.abstract_intensifier" href="smac.intensifier.abstract_intensifier.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -99,11 +99,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -174,8 +174,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="../examples/1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -194,7 +194,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/5_priors.html">
+      <a class="reference internal" href="../examples/1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -320,12 +325,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -366,11 +376,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -403,23 +408,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -631,19 +626,9 @@
        smac.intensifier.abstract_intensifier
       </a>
      </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
      <li class="toctree-l3 current active">
       <a class="current reference internal" href="#">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -652,18 +637,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -862,6 +837,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -923,6 +903,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1019,6 +1004,35 @@
       </span>
      </code>
     </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.intensifier.hyperband.Hyperband.get_state">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         Hyperband.get_state()
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.intensifier.hyperband.Hyperband.reset">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         Hyperband.reset()
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.intensifier.hyperband.Hyperband.set_state">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         Hyperband.set_state()
+        </span>
+       </code>
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -1049,8 +1063,8 @@
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.intensifier.hyperband.Hyperband" title="smac.intensifier.hyperband.Hyperband"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Hyperband</span></code></a>(scenario[, instance_seed_pairs, ...])</p></td>
-<td><p>Races multiple challengers against an incumbent using Hyperband method.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.intensifier.hyperband.Hyperband" title="smac.intensifier.hyperband.Hyperband"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Hyperband</span></code></a>(scenario[, eta, n_seeds, ...])</p></td>
+<td><p>See <code class="docutils literal notranslate"><span class="pre">SuccessiveHalving</span></code> for documentation.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1059,36 +1073,42 @@
 <h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.intensifier.hyperband.Hyperband">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.intensifier.hyperband.</span></span><span class="sig-name descname"><span class="pre">Hyperband</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_pairs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'shuffle_once'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'highest_executed_budget'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_initial_challengers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_challenger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/hyperband.html#Hyperband"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.hyperband.Hyperband" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.intensifier.hyperband.</span></span><span class="sig-name descname"><span class="pre">Hyperband</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'shuffle_once'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_incumbents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'highest_observed_budget'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/hyperband.html#Hyperband"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.hyperband.Hyperband" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.intensifier.successive_halving.html#smac.intensifier.successive_halving.SuccessiveHalving" title="smac.intensifier.successive_halving.SuccessiveHalving"><code class="xref py py-class docutils literal notranslate"><span class="pre">SuccessiveHalving</span></code></a></p>
-<p>Races multiple challengers against an incumbent using Hyperband method.</p>
-<p>Implementation from “BOHB: Robust and Efficient Hyperparameter Optimization at Scale” (Falkner et al. 2018)</p>
-<p>Hyperband is an extension of the Successive Halving intensifier. Please refer to <cite>SuccessiveHalving</cite> documentation
-for more detailed information about the different types of budgets possible and the way instances are handled.</p>
-<p>Internally, this class uses the <cite>HyperbandWorker</cite> class which actually implements the hyperband logic.
-To allow for parallelism, Hyperband can create multiple <cite>HyperbandWorker</cite> instances, based on the number
-of idle workers available.</p>
+<p>See <code class="docutils literal notranslate"><span class="pre">SuccessiveHalving</span></code> for documentation.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.intensifier.hyperband.Hyperband.get_state">
+<span class="sig-name descname"><span class="pre">get_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/hyperband.html#Hyperband.get_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.hyperband.Hyperband.get_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>The current state of the intensifier. Used to restore the state of the intensifier when continuing a run.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
-<li><p><strong>instance_seed_pairs</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>str</em><em>  |  </em><em>None</em><em>, </em><em>int</em><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – This argument is used by Hyperband.</p></li>
-<li><p><strong>instance_order</strong> (str | None, defaults to <cite>shuffle_once</cite>) – How to order the instances. Can be set to:
-* None: Use as is given by the user.
-* shuffle_once: Shuffle once and use across all Successive Halving run .
-* shuffle: Shuffle before every Successive Halving run</p></li>
-<li><p><strong>incumbent_selection</strong> (str, defaults to <cite>highest_executed_budget</cite>) – How to select the incumbent in Successive Halving. Only active for (real-valued) budgets. Can be set to:
-* highest_executed_budget: Incumbent is the best in the highest budget run so far.
-* highest_budget: Incumbent is selected only based on the highest budget.
-* any_budget: Incumbent is the best on any budget i.e., best performance regardless of budget.</p></li>
-<li><p><strong>n_initial_challengers</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Number of challengers to consider for the initial budget. If not specified, it is calculated internally.</p></li>
-<li><p><strong>min_challenger</strong> (<em>int</em><em>, </em><em>defaults to 1</em>) – Minimal number of challengers to be considered (even if time_bound is exhausted earlier).</p></li>
-<li><p><strong>eta</strong> (<em>float</em><em>, </em><em>defaults to 3</em>) – The “halving” factor after each iteration in a Successive Halving run.</p></li>
-<li><p><strong>seed</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – </p></li>
-<li><p><strong>n_seeds</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The number of seeds to use if the target function is non-deterministic.</p></li>
-</ul>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.intensifier.hyperband.Hyperband.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/hyperband.html#Hyperband.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.hyperband.Hyperband.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the internal variables of the intensifier, including the tracker and the next bracket.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.intensifier.hyperband.Hyperband.set_state">
+<span class="sig-name descname"><span class="pre">set_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/hyperband.html#Hyperband.set_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.hyperband.Hyperband.set_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the state of the intensifier. Used to restore the state of the intensifier when continuing a run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -1100,17 +1120,17 @@ of idle workers available.</p>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.intensifier.abstract_parallel_intensifier.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.intensifier.abstract_intensifier.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.intensifier.abstract_parallel_intensifier</p>
+            <p class="prev-next-title">smac.intensifier.abstract_intensifier</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.intensifier.hyperband_worker.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.intensifier.intensifier.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.intensifier.hyperband_worker</p>
+        <p class="prev-next-title">smac.intensifier.intensifier</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
@@ -1129,7 +1149,7 @@ of idle workers available.</p>
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

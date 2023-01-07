@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.acquisition.function.expected_improvement &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>smac.acquisition.function.expected_improvement &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -100,11 +100,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -131,7 +131,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -175,8 +175,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="../examples/1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -195,7 +195,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/5_priors.html">
+      <a class="reference internal" href="../examples/1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -321,12 +326,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -367,11 +377,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -404,23 +409,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -633,18 +628,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -653,18 +638,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -863,6 +838,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -924,6 +904,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1022,6 +1007,33 @@
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.acquisition.function.expected_improvement.EI._xi">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         EI._xi
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.acquisition.function.expected_improvement.EI._log">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         EI._log
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.acquisition.function.expected_improvement.EI._eta">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         EI._eta
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#smac.acquisition.function.expected_improvement.EI.meta">
        <code class="docutils literal notranslate">
         <span class="pre">
@@ -1091,10 +1103,10 @@
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.acquisition.function.expected_improvement.EI" title="smac.acquisition.function.expected_improvement.EI"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EI</span></code></a>([xi, log])</p></td>
-<td><p>Computes the expected improvement for a given x.</p></td>
+<td><p>Expected Improvement (with or without function values in log space) acquisition function</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#smac.acquisition.function.expected_improvement.EIPS" title="smac.acquisition.function.expected_improvement.EIPS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EIPS</span></code></a>([xi])</p></td>
-<td><p>Computess for a given x the expected improvement as acquisition value.</p></td>
+<td><p>Expected Improvement per Second acquisition function</p></td>
 </tr>
 </tbody>
 </table>
@@ -1105,7 +1117,7 @@
 <dt class="sig sig-object py" id="smac.acquisition.function.expected_improvement.EI">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.function.expected_improvement.</span></span><span class="sig-name descname"><span class="pre">EI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/function/expected_improvement.html#EI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.function.expected_improvement.EI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.function.abstract_acquisition_function.html#smac.acquisition.function.abstract_acquisition_function.AbstractAcquisitionFunction" title="smac.acquisition.function.abstract_acquisition_function.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a></p>
-<p>Computes the expected improvement for a given x.</p>
+<p>Expected Improvement (with or without function values in log space) acquisition function</p>
 <p><span class="math notranslate nohighlight">\(EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]\)</span>,
 with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the best location.</p>
 <dl class="field-list simple">
@@ -1117,6 +1129,39 @@ acquisition function.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.function.expected_improvement.EI._xi">
+<span class="sig-name descname"><span class="pre">_xi</span></span><a class="headerlink" href="#smac.acquisition.function.expected_improvement.EI._xi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exploration-exloitation trade-off parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.function.expected_improvement.EI._log">
+<span class="sig-name descname"><span class="pre">_log</span></span><a class="headerlink" href="#smac.acquisition.function.expected_improvement.EI._log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function values in log-space or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.acquisition.function.expected_improvement.EI._eta">
+<span class="sig-name descname"><span class="pre">_eta</span></span><a class="headerlink" href="#smac.acquisition.function.expected_improvement.EI._eta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Current incumbent function value (best value observed so far).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.acquisition.function.expected_improvement.EI.meta">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.acquisition.function.expected_improvement.EI.meta" title="Permalink to this definition">¶</a></dt>
@@ -1145,7 +1190,7 @@ acquisition function.</p></li>
 <dt class="sig sig-object py" id="smac.acquisition.function.expected_improvement.EIPS">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.function.expected_improvement.</span></span><span class="sig-name descname"><span class="pre">EIPS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/function/expected_improvement.html#EIPS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.function.expected_improvement.EIPS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.acquisition.function.expected_improvement.EI" title="smac.acquisition.function.expected_improvement.EI"><code class="xref py py-class docutils literal notranslate"><span class="pre">EI</span></code></a></p>
-<p>Computess for a given x the expected improvement as acquisition value.</p>
+<p>Expected Improvement per Second acquisition function</p>
 <p><span class="math notranslate nohighlight">\(EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}\)</span>,
 with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the best location and <span class="math notranslate nohighlight">\(r(x)\)</span> as runtime.</p>
 <dl class="field-list simple">
@@ -1204,7 +1249,7 @@ with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the best lo
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

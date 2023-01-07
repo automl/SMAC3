@@ -32,7 +32,7 @@ If we use instance as our fidelity, we need to initialize scenario with argument
 budget is no longer required by the target function. But due to the scenario instance argument,
 the target function now is required to have an instance argument.
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-140
+.. GENERATED FROM PYTHON SOURCE LINES 16-141
 
 
 
@@ -41,32 +41,45 @@ the target function now is required to have an instance argument.
 
  .. code-block:: none
 
-    [WARNING][successive_halving.py:123] The target function is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider increasing `n_seeds` from the intensifier.
-    [INFO][successive_halving.py:197] Using successive halving with budget type INSTANCES, min budget 1, max budget 45 and eta 3.
-    [INFO][successive_halving.py:217] The argument `incumbent_selection` is ignored because instances are used as budget type.
-    [INFO][abstract_initial_design.py:133] Using 40 initial design and 0 additional configurations.
-    [WARNING][abstract_parallel_intensifier.py:93] Hyperband is executed with 1 worker(s) only. However, your system supports up to 2 workers. Consider increasing the workers in the scenario.
-    [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 1-1 with initial budget 1.
-    [INFO][successive_halving_worker.py:396] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-    [INFO][abstract_intensifier.py:340] Challenger (0.0137) is better than incumbent (0.0164) on 1 trials.
-    [INFO][abstract_intensifier.py:364] Changes in incumbent:
-    [INFO][abstract_intensifier.py:367] --- alpha: 0.5488135039273248 -> 0.11827442586893322
-    [INFO][abstract_intensifier.py:367] --- eta0: 0.0006273927602293597 -> 9.614170248896958e-05
-    [INFO][abstract_intensifier.py:367] --- l1_ratio: 0.317983179393976 -> 0.24875314351995803
-    [INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-1 with budget [1.67 / 45] and 27 evaluated challenger(s).
-    [INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-2 with budget [5.00 / 45] and 9 evaluated challenger(s).
-    [INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-3 with budget [15.00 / 45] and 3 evaluated challenger(s).
-    [INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-4 with budget [45.00 / 45] and 1 evaluated challenger(s).
-    [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 1-2 with initial budget 5.
-    [INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-1 with budget [5.00 / 45] and 9 evaluated challenger(s).
-    [INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-2 with budget [15.00 / 45] and 3 evaluated challenger(s).
-    [INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-3 with budget [45.00 / 45] and 1 evaluated challenger(s).
-    [INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 1-3 with initial budget 15.
-    [INFO][base_smbo.py:260] Configuration budget is exhausted.
-    [INFO][abstract_facade.py:325] Final Incumbent: {'alpha': 0.11827442586893322, 'eta0': 9.614170248896958e-05, 'l1_ratio': 0.24875314351995803, 'learning_rate': 'adaptive'}
-    [INFO][abstract_facade.py:326] Estimated cost: 0.008231389269086701
-    Default cost: 0.13423167867113728
-    Incumbent cost: 0.007983889335257179
+    [INFO][abstract_initial_design.py:133] Using 40 initial design configurations and 0 additional configurations.
+    [INFO][successive_halving.py:159] Successive Halving uses budget type INSTANCES with eta 3, min budget 1, and max budget 45.
+    [INFO][successive_halving.py:303] Number of configs in stage:
+    [INFO][successive_halving.py:305] --- Bracket 0: [27, 9, 3, 1]
+    [INFO][successive_halving.py:305] --- Bracket 1: [9, 3, 1]
+    [INFO][successive_halving.py:305] --- Bracket 2: [3, 1]
+    [INFO][successive_halving.py:305] --- Bracket 3: [1]
+    [INFO][successive_halving.py:307] Budgets in stage:
+    [INFO][successive_halving.py:309] --- Bracket 0: [1.6666666666666665, 5.0, 15.0, 45.0]
+    [INFO][successive_halving.py:309] --- Bracket 1: [5.0, 15.0, 45.0]
+    [INFO][successive_halving.py:309] --- Bracket 2: [15.0, 45.0]
+    [INFO][successive_halving.py:309] --- Bracket 3: [45.0]
+    [INFO][abstract_intensifier.py:493] Added config 588a4c as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:565] Added config d431b1 and rejected config 588a4c as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- alpha: 0.5488135039273248 -> 0.6027633760716439
+    [INFO][configspace.py:175] --- eta0: 0.0006273927602293597 -> 0.03077201812975574
+    [INFO][configspace.py:175] --- l1_ratio: 0.317983179393976 -> 0.06414749634878436
+    [INFO][abstract_intensifier.py:565] Added config d7ee7e and rejected config d431b1 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- alpha: 0.6027633760716439 -> 0.02021839744032572
+    [INFO][configspace.py:175] --- eta0: 0.03077201812975574 -> 0.018430691395340162
+    [INFO][configspace.py:175] --- l1_ratio: 0.06414749634878436 -> 0.5865129348100832
+    [INFO][configspace.py:175] --- learning_rate: 'adaptive' -> 'invscaling'
+    [INFO][smbo.py:298] Finished 50 trials.
+    [INFO][abstract_intensifier.py:565] Added config d431b1 and rejected config d7ee7e as incumbent because it is not better than the incumbents on 15 instances:
+    [INFO][configspace.py:175] --- alpha: 0.02021839744032572 -> 0.6027633760716439
+    [INFO][configspace.py:175] --- eta0: 0.018430691395340162 -> 0.03077201812975574
+    [INFO][configspace.py:175] --- l1_ratio: 0.5865129348100832 -> 0.06414749634878436
+    [INFO][configspace.py:175] --- learning_rate: 'invscaling' -> 'adaptive'
+    [INFO][smbo.py:298] Finished 100 trials.
+    [INFO][smbo.py:298] Finished 150 trials.
+    [INFO][smbo.py:298] Finished 200 trials.
+    [INFO][smbo.py:298] Finished 250 trials.
+    [INFO][smbo.py:298] Finished 300 trials.
+    [INFO][smbo.py:306] Configuration budget is exhausted:
+    [INFO][smbo.py:307] --- Remaining wallclock time: -29.544703483581543
+    [INFO][smbo.py:308] --- Remaining cpu time: inf
+    [INFO][smbo.py:309] --- Remaining trials: 4651
+    Default cost: 0.15489347419148672
+    Incumbent cost: 0.006249006102246613
 
 
 
@@ -89,7 +102,8 @@ the target function now is required to have an instance argument.
     from sklearn.linear_model import SGDClassifier
     from sklearn.model_selection import StratifiedKFold, cross_val_score
 
-    from smac import MultiFidelityFacade, Scenario
+    from smac import MultiFidelityFacade as MFFacade
+    from smac import Scenario
 
     __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
     __license__ = "3-clause BSD"
@@ -187,7 +201,7 @@ the target function now is required to have an instance argument.
         )
 
         # Create our SMAC object and pass the scenario and the train method
-        smac = MultiFidelityFacade(
+        smac = MFFacade(
             scenario,
             model.train,
             overwrite=True,
@@ -205,7 +219,7 @@ the target function now is required to have an instance argument.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  43.695 seconds)
+   **Total running time of the script:** ( 1 minutes  5.878 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_2_sgd_datasets.py:

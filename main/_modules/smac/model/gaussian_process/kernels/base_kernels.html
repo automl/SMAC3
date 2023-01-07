@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.model.gaussian_process.kernels.base_kernels &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>smac.model.gaussian_process.kernels.base_kernels &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../../../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -96,11 +96,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -127,7 +127,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1">
@@ -171,8 +171,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../../../examples/1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="../../../../../examples/1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -191,7 +191,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../../../examples/1_basics/5_priors.html">
+      <a class="reference internal" href="../../../../../examples/1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../../examples/1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -317,12 +322,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../../../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -363,11 +373,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../../../api/smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -400,23 +405,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../../../api/smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../../api/smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="../../../../../api/smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../../../../api/smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../../api/smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -629,18 +624,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../../../api/smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../../../api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../../api/smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -649,18 +634,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../../../api/smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../../../api/smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../../api/smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -859,6 +834,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../../../../api/smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../../../../api/smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -920,6 +900,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../../../api/smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../../api/smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1019,11 +1004,11 @@
 
 
 <div class="viewcode-block" id="AbstractKernel"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.AbstractKernel">[docs]</a><span class="k">class</span> <span class="nc">AbstractKernel</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is a mixin for a kernel to override functions of the kernel. Because it overrides functions of the kernel,</span>
 <span class="sd">    it needs to be placed first in the inheritance hierarchy. For this reason it is not possible to subclass the</span>
 <span class="sd">    Mixin from the kernel class because this will prevent it from being instantiatable. Therefore, mypy won&#39;t know about</span>
-<span class="sd">    anything related to the superclass and some type:ignore statements has to be  added when accessing a member that is</span>
+<span class="sd">    anything related to the superclass and some type:ignore statements has to be added when accessing a member that is</span>
 <span class="sd">    declared in the superclass such as `self.has_conditions`, `self._call`, `super().get_params`, etc.</span>
 
 <span class="sd">    Parameters</span>
@@ -1069,7 +1054,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the meta data of the created object. This method calls the `get_params` method to collect the</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the meta data of the created object. This method calls the `get_params` method to collect the</span>
 <span class="sd">        parameters of the kernel.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">meta</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">}</span>
@@ -1091,16 +1076,16 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">kernels</span><span class="o">.</span><span class="n">Hyperparameter</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns a list of all hyperparameter specifications.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of all hyperparameter specifications.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">n_dims</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the number of non-fixed hyperparameters of the kernel.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the number of non-fixed hyperparameters of the kernel.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dims</span>
 
 <div class="viewcode-block" id="AbstractKernel.get_params"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.AbstractKernel.get_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Get parameters of this kernel.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get parameters of this kernel.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1137,7 +1122,7 @@
         <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">active</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Call the kernel function. Internally, `self._call` is called, which must be specified by a subclass.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call the kernel function. Internally, `self._call` is called, which must be specified by a subclass.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">active</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">active</span> <span class="o">=</span> <span class="n">get_conditional_hyperparameters</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
@@ -1205,7 +1190,7 @@
         <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">active</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
 
 <span class="sd">        Note</span>
 <span class="sd">        ----</span>
@@ -1252,7 +1237,7 @@
             <span class="k">return</span> <span class="n">sig_</span>
 
     <span class="k">def</span> <span class="nf">_set_active_dims</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operate_on</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Sets dimensions this kernel should work on.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets dimensions this kernel should work on.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">operate_on</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">operate_on</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;The argument `operate_on` needs to be of type np.ndarray but is </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">operate_on</span><span class="p">))</span>
@@ -1268,13 +1253,13 @@
 
 
 <div class="viewcode-block" id="SumKernel"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.SumKernel">[docs]</a><span class="k">class</span> <span class="nc">SumKernel</span><span class="p">(</span><span class="n">AbstractKernel</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Sum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Sum kernel implementation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sum kernel implementation.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">k1</span><span class="p">:</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span>
         <span class="n">k2</span><span class="p">:</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span>
-        <span class="n">operate_on</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">operate_on</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">has_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -1291,16 +1276,16 @@
         <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">active</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : array, shape (n_samples_X, n_features)</span>
-<span class="sd">            Left argument of the returned kernel k(X, Y)</span>
+<span class="sd">        X : np.ndarray, shape (n_samples_X, n_features)</span>
+<span class="sd">            Left argument of the returned kernel k(X, Y).</span>
 
-<span class="sd">        Y : array, shape (n_samples_Y, n_features), (optional, default=None)</span>
+<span class="sd">        Y : np.ndarray, shape (n_samples_Y, n_features), (optional, default=None)</span>
 <span class="sd">            Right argument of the returned kernel k(X, Y). If None, k(X, X)</span>
-<span class="sd">            if evaluated instead.</span>
+<span class="sd">            is evaluated instead.</span>
 
 <span class="sd">        eval_gradient : bool (optional, default=False)</span>
 <span class="sd">            Determines whether the gradient with respect to the kernel</span>
@@ -1311,10 +1296,10 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        K : array, shape (n_samples_X, n_samples_Y)</span>
-<span class="sd">            Kernel k(X, Y)</span>
+<span class="sd">        K : np.ndarray, shape (n_samples_X, n_samples_Y)</span>
+<span class="sd">            Kernel k(X, Y).</span>
 
-<span class="sd">        K_gradient : array (opt.), shape (n_samples_X, n_samples_X, n_dims)</span>
+<span class="sd">        K_gradient : np.ndarray (opt.), shape (n_samples_X, n_samples_X, n_dims)</span>
 <span class="sd">            The gradient of the kernel k(X, X) with respect to the</span>
 <span class="sd">            hyperparameter of the kernel. Only returned when eval_gradient</span>
 <span class="sd">            is True.</span>
@@ -1329,13 +1314,13 @@
 
 
 <div class="viewcode-block" id="ProductKernel"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.ProductKernel">[docs]</a><span class="k">class</span> <span class="nc">ProductKernel</span><span class="p">(</span><span class="n">AbstractKernel</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Product</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Product kernel implementation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Product kernel implementation.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">k1</span><span class="p">:</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span>
         <span class="n">k2</span><span class="p">:</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span>
-        <span class="n">operate_on</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">operate_on</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">has_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -1352,16 +1337,16 @@
         <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">active</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : array, shape (n_samples_X, n_features)</span>
-<span class="sd">            Left argument of the returned kernel k(X, Y)</span>
+<span class="sd">        X : np.ndarray, shape (n_samples_X, n_features)</span>
+<span class="sd">            Left argument of the returned kernel k(X, Y).</span>
 
-<span class="sd">        Y : array, shape (n_samples_Y, n_features), (optional, default=None)</span>
+<span class="sd">        Y : np.ndarray, shape (n_samples_Y, n_features), (optional, default=None)</span>
 <span class="sd">            Right argument of the returned kernel k(X, Y). If None, k(X, X)</span>
-<span class="sd">            if evaluated instead.</span>
+<span class="sd">            is evaluated instead.</span>
 
 <span class="sd">        eval_gradient : bool (optional, default=False)</span>
 <span class="sd">            Determines whether the gradient with respect to the kernel</span>
@@ -1372,10 +1357,10 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        K : array, shape (n_samples_X, n_samples_Y)</span>
-<span class="sd">            Kernel k(X, Y)</span>
+<span class="sd">        K : np.ndarray, shape (n_samples_X, n_samples_Y)</span>
+<span class="sd">            Kernel k(X, Y).</span>
 
-<span class="sd">        K_gradient : array (opt.), shape (n_samples_X, n_samples_X, n_dims)</span>
+<span class="sd">        K_gradient : np.ndarray (opt.), shape (n_samples_X, n_samples_X, n_dims)</span>
 <span class="sd">            The gradient of the kernel k(X, X) with respect to the</span>
 <span class="sd">            hyperparameter of the kernel. Only returned when eval_gradient</span>
 <span class="sd">            is True.</span>
@@ -1413,16 +1398,16 @@
         <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">active</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : array, shape (n_samples_X, n_features)</span>
-<span class="sd">            Left argument of the returned kernel k(X, Y)</span>
+<span class="sd">        X : np.ndarray, shape (n_samples_X, n_features)</span>
+<span class="sd">            Left argument of the returned kernel k(X, Y).</span>
 
-<span class="sd">        Y : array, shape (n_samples_Y, n_features), (optional, default=None)</span>
+<span class="sd">        Y : np.ndarray, shape (n_samples_Y, n_features), (optional, default=None)</span>
 <span class="sd">            Right argument of the returned kernel k(X, Y). If None, k(X, X)</span>
-<span class="sd">            if evaluated instead.</span>
+<span class="sd">            is evaluated instead.</span>
 
 <span class="sd">        eval_gradient : bool (optional, default=False)</span>
 <span class="sd">            Determines whether the gradient with respect to the kernel</span>
@@ -1433,10 +1418,10 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        K : array, shape (n_samples_X, n_samples_Y)</span>
-<span class="sd">            Kernel k(X, Y)</span>
+<span class="sd">        K : np.ndarray, shape (n_samples_X, n_samples_Y)</span>
+<span class="sd">            Kernel k(X, Y).</span>
 
-<span class="sd">        K_gradient : array (opt.), shape (n_samples_X, n_samples_X, n_dims)</span>
+<span class="sd">        K_gradient : np.ndarray (opt.), shape (n_samples_X, n_samples_X, n_dims)</span>
 <span class="sd">            The gradient of the kernel k(X, X) with respect to the</span>
 <span class="sd">            hyperparameter of the kernel. Only returned when eval_gradient</span>
 <span class="sd">            is True.</span>
@@ -1488,7 +1473,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Glossary &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>Glossary &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -99,11 +99,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -174,8 +174,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="examples/1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="examples/1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -194,7 +194,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="examples/1_basics/5_priors.html">
+      <a class="reference internal" href="examples/1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="examples/1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -320,12 +325,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -366,11 +376,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="api/smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -403,23 +408,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="api/smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="api/smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -632,18 +627,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -652,18 +637,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="api/smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -862,6 +837,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="api/smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="api/smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -923,6 +903,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="api/smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="api/smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1020,73 +1005,75 @@
   <section id="glossary">
 <h1>Glossary<a class="headerlink" href="#glossary" title="Permalink to this heading">¶</a></h1>
 <dl class="simple glossary">
-<dt id="term-SMAC">SMAC<a class="headerlink" href="#term-SMAC" title="Permalink to this term">¶</a></dt><dd><p>Sequential Model-Based Algorithm Configuration.</p>
+<dt id="term-BB">BB<a class="headerlink" href="#term-BB" title="Permalink to this term">¶</a></dt><dd><p>See <a class="reference internal" href="#term-Black-Box"><span class="xref std std-term">Black-Box</span></a>.</p>
 </dd>
 <dt id="term-BO">BO<a class="headerlink" href="#term-BO" title="Permalink to this term">¶</a></dt><dd><p>See <a class="reference internal" href="#term-Bayesian-Optimization"><span class="xref std std-term">Bayesian Optimization</span></a>.</p>
 </dd>
-<dt id="term-HB">HB<a class="headerlink" href="#term-HB" title="Permalink to this term">¶</a></dt><dd><p>See <a class="reference internal" href="#term-Hyperband"><span class="xref std std-term">Hyperband</span></a>.</p>
-</dd>
 <dt id="term-BOHB">BOHB<a class="headerlink" href="#term-BOHB" title="Permalink to this term">¶</a></dt><dd><p><a class="reference external" href="https://arxiv.org/abs/1807.01774">Bayesian optimization and Hyperband</a>.</p>
 </dd>
-<dt id="term-ROAR">ROAR<a class="headerlink" href="#term-ROAR" title="Permalink to this term">¶</a></dt><dd><p>See <a class="reference internal" href="#term-Random-Online-Adaptive-Racing"><span class="xref std std-term">Random Online Adaptive Racing</span></a>.</p>
+<dt id="term-CLI">CLI<a class="headerlink" href="#term-CLI" title="Permalink to this term">¶</a></dt><dd><p>Command-Line Interface.</p>
 </dd>
-<dt id="term-BB">BB<a class="headerlink" href="#term-BB" title="Permalink to this term">¶</a></dt><dd><p>See <a class="reference internal" href="#term-Black-Box"><span class="xref std std-term">Black-Box</span></a>.</p>
-</dd>
-<dt id="term-MF">MF<a class="headerlink" href="#term-MF" title="Permalink to this term">¶</a></dt><dd><p>See <a class="reference internal" href="#term-Multi-Fidelity"><span class="xref std std-term">Multi-Fidelity</span></a>.</p>
-</dd>
-<dt id="term-RF">RF<a class="headerlink" href="#term-RF" title="Permalink to this term">¶</a></dt><dd><p>Random Forest.</p>
+<dt id="term-CV">CV<a class="headerlink" href="#term-CV" title="Permalink to this term">¶</a></dt><dd><p>Cross-Validation.</p>
 </dd>
 <dt id="term-GP">GP<a class="headerlink" href="#term-GP" title="Permalink to this term">¶</a></dt><dd><p>Gaussian Process.</p>
 </dd>
 <dt id="term-GP-MCMC">GP-MCMC<a class="headerlink" href="#term-GP-MCMC" title="Permalink to this term">¶</a></dt><dd><p>Gaussian Process with Markov-Chain Monte-Carlo.</p>
 </dd>
-<dt id="term-CV">CV<a class="headerlink" href="#term-CV" title="Permalink to this term">¶</a></dt><dd><p>Cross-Validation.</p>
-</dd>
-<dt id="term-CLI">CLI<a class="headerlink" href="#term-CLI" title="Permalink to this term">¶</a></dt><dd><p>Command-Line Interface.</p>
+<dt id="term-HB">HB<a class="headerlink" href="#term-HB" title="Permalink to this term">¶</a></dt><dd><p>See <a class="reference internal" href="#term-Hyperband"><span class="xref std std-term">Hyperband</span></a>.</p>
 </dd>
 <dt id="term-HP">HP<a class="headerlink" href="#term-HP" title="Permalink to this term">¶</a></dt><dd><p>Hyperparameter.</p>
+</dd>
+<dt id="term-MF">MF<a class="headerlink" href="#term-MF" title="Permalink to this term">¶</a></dt><dd><p>See <a class="reference internal" href="#term-Multi-Fidelity"><span class="xref std std-term">Multi-Fidelity</span></a>.</p>
+</dd>
+<dt id="term-RF">RF<a class="headerlink" href="#term-RF" title="Permalink to this term">¶</a></dt><dd><p>Random Forest.</p>
+</dd>
+<dt id="term-ROAR">ROAR<a class="headerlink" href="#term-ROAR" title="Permalink to this term">¶</a></dt><dd><p>See <a class="reference internal" href="#term-Random-Online-Adaptive-Racing"><span class="xref std std-term">Random Online Adaptive Racing</span></a>.</p>
+</dd>
+<dt id="term-SMAC">SMAC<a class="headerlink" href="#term-SMAC" title="Permalink to this term">¶</a></dt><dd><p>Sequential Model-Based Algorithm Configuration.</p>
+</dd>
+<dt id="term-SMBO">SMBO<a class="headerlink" href="#term-SMBO" title="Permalink to this term">¶</a></dt><dd><p>Sequential Mode-Based Optimization.</p>
 </dd>
 <dt id="term-Bayesian-Optimization">Bayesian Optimization<a class="headerlink" href="#term-Bayesian-Optimization" title="Permalink to this term">¶</a></dt><dd><p>Bayesian optimization is a sequential design strategy for global optimization of black-box functions that does
 not assume any functional forms. It is usually employed to optimize expensive-to-evaluate functions.
 A Bayesian optimization weights exploration and exploitation to find the minimum of its objective.</p>
 </dd>
-<dt id="term-Hyperband">Hyperband<a class="headerlink" href="#term-Hyperband" title="Permalink to this term">¶</a></dt><dd><p><a class="reference external" href="https://arxiv.org/abs/1603.06560">Hyperband</a>. A novel bandit-based algorithm for hyperparameter
-optimization. Hyperband is an extension of successive halving and therefore works with
-multi-fidelities.</p>
-</dd>
-<dt id="term-Random-Online-Adaptive-Racing">Random Online Adaptive Racing<a class="headerlink" href="#term-Random-Online-Adaptive-Racing" title="Permalink to this term">¶</a></dt><dd><p>Random Online Adaptive Racing. A simple model-free instantiation of the general SMBO framework.
-It selects configurations uniformly random and iteratively compares them against the current incumbent
-using the intensification mechanism. See <a class="reference external" href="https://ai.dmi.unibas.ch/research/reading_group/hutter-et-al-tr2010.pdf">SMAC extended</a>
-chapter 3.2 for details.</p>
-</dd>
 <dt id="term-Black-Box">Black-Box<a class="headerlink" href="#term-Black-Box" title="Permalink to this term">¶</a></dt><dd><p>Refers to an algorithm being optimized, where only input and output are observable.</p>
-</dd>
-<dt id="term-Target-Function">Target Function<a class="headerlink" href="#term-Target-Function" title="Permalink to this term">¶</a></dt><dd><p>Your model, which returns a cost based on the given config, seed, budget, and/or instance.</p>
-</dd>
-<dt id="term-Trial">Trial<a class="headerlink" href="#term-Trial" title="Permalink to this term">¶</a></dt><dd><p>Trial is a single run of a target function on a combination of configuration, seed, budget and/or instance.</p>
-</dd>
-<dt id="term-Objective">Objective<a class="headerlink" href="#term-Objective" title="Permalink to this term">¶</a></dt><dd><p>An objective is a metric to evaluate the quality or performance of an algorithm.</p>
-</dd>
-<dt id="term-Multi-Objective">Multi-Objective<a class="headerlink" href="#term-Multi-Objective" title="Permalink to this term">¶</a></dt><dd><p>A multi-objective optimization problem is a problem with more than one objective.
-The goal is to find a solution that is optimal or at least a good compromise in all objectives.</p>
 </dd>
 <dt id="term-Budget">Budget<a class="headerlink" href="#term-Budget" title="Permalink to this term">¶</a></dt><dd><p>Budget is another word for fidelity. Examples are the number of training epochs or the size of
 the data subset the algorithm is trained on. However, budget can also be used in the context of
 instances. For example, if you have 100 instances (let’s say we optimize across datasets) and you want to run
 your algorithm on 10 of them, then the budget is 10.</p>
 </dd>
-<dt id="term-Multi-Fidelity">Multi-Fidelity<a class="headerlink" href="#term-Multi-Fidelity" title="Permalink to this term">¶</a></dt><dd><p>Multi-fidelity refers to running an algorithm on multiple budgets (such as number of epochs or
-subsets of data) and thereby evaluating the performance prematurely.</p>
+<dt id="term-Hyperband">Hyperband<a class="headerlink" href="#term-Hyperband" title="Permalink to this term">¶</a></dt><dd><p><a class="reference external" href="https://arxiv.org/abs/1603.06560">Hyperband</a>. A novel bandit-based algorithm for hyperparameter
+optimization. Hyperband is an extension of successive halving and therefore works with
+multi-fidelities.</p>
+</dd>
+<dt id="term-Incumbent">Incumbent<a class="headerlink" href="#term-Incumbent" title="Permalink to this term">¶</a></dt><dd><p>The incumbent is the current best known configuration.</p>
 </dd>
 <dt id="term-Instances">Instances<a class="headerlink" href="#term-Instances" title="Permalink to this term">¶</a></dt><dd><p>Often you want to optimize across different datasets, subsets, or even different transformations (e.g.
 augmentation). In general, each of these is called an instance. Configurations are evaluated on multiple
-instances so that a configuration found which performs superior on all instances instead of only
+instances so that a configuration is found which performs superior on all instances instead of only
 a few.</p>
 </dd>
-<dt id="term-Intensification">Intensification<a class="headerlink" href="#term-Intensification" title="Permalink to this term">¶</a></dt><dd><p>A mechanism, that governs how many evaluations to perform with each configuration and when to trust a
+<dt id="term-Intensification">Intensification<a class="headerlink" href="#term-Intensification" title="Permalink to this term">¶</a></dt><dd><p>A mechanism that governs how many evaluations to perform with each configuration and when to trust a
 configuration enough to make it the new current best known configuration (the incumbent).</p>
 </dd>
-<dt id="term-Incumbent">Incumbent<a class="headerlink" href="#term-Incumbent" title="Permalink to this term">¶</a></dt><dd><p>The incumbent is the current best known configuration.</p>
+<dt id="term-Multi-Fidelity">Multi-Fidelity<a class="headerlink" href="#term-Multi-Fidelity" title="Permalink to this term">¶</a></dt><dd><p>Multi-fidelity refers to running an algorithm on multiple budgets (such as number of epochs or
+subsets of data) and thereby evaluating the performance prematurely.</p>
+</dd>
+<dt id="term-Multi-Objective">Multi-Objective<a class="headerlink" href="#term-Multi-Objective" title="Permalink to this term">¶</a></dt><dd><p>A multi-objective optimization problem is a problem with more than one objective.
+The goal is to find a solution that is optimal or at least a good compromise in all objectives.</p>
+</dd>
+<dt id="term-Objective">Objective<a class="headerlink" href="#term-Objective" title="Permalink to this term">¶</a></dt><dd><p>An objective is a metric to evaluate the quality or performance of an algorithm.</p>
+</dd>
+<dt id="term-Random-Online-Adaptive-Racing">Random Online Adaptive Racing<a class="headerlink" href="#term-Random-Online-Adaptive-Racing" title="Permalink to this term">¶</a></dt><dd><p>Random Online Adaptive Racing. A simple model-free instantiation of the general <a class="reference internal" href="#term-SMBO"><span class="xref std std-term">SMBO</span></a> framework.
+It selects configurations uniformly at random and iteratively compares them against the current incumbent
+using the intensification mechanism. See <a class="reference external" href="https://ai.dmi.unibas.ch/research/reading_group/hutter-et-al-tr2010.pdf">SMAC extended</a>
+chapter 3.2 for details.</p>
+</dd>
+<dt id="term-Target-Function">Target Function<a class="headerlink" href="#term-Target-Function" title="Permalink to this term">¶</a></dt><dd><p>Your model, which returns a cost based on the given config, seed, budget, and/or instance.</p>
+</dd>
+<dt id="term-Trial">Trial<a class="headerlink" href="#term-Trial" title="Permalink to this term">¶</a></dt><dd><p>Trial is a single run of a target function on a combination of configuration, seed, budget and/or instance.</p>
 </dd>
 </dl>
 </section>
@@ -1126,7 +1113,7 @@ configuration enough to make it the new current best known configuration (the in
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

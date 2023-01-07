@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.facade.algorithm_configuration_facade &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>smac.facade.algorithm_configuration_facade &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -96,11 +96,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -127,7 +127,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1">
@@ -171,8 +171,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="../../../examples/1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -191,7 +191,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/5_priors.html">
+      <a class="reference internal" href="../../../examples/1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../examples/1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -317,12 +322,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -363,11 +373,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -400,23 +405,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="../../../api/smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -629,18 +624,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -649,18 +634,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -859,6 +834,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -920,6 +900,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1039,7 +1024,7 @@
         <span class="n">bootstrapping</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">pca_components</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RandomForest</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns a random forest as surrogate model.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a random forest as surrogate model.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1078,7 +1063,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">xi</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EI</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns an Expected Improvement acquisition function.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an Expected Improvement acquisition function.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1093,7 +1078,7 @@
     <span class="k">def</span> <span class="nf">get_acquisition_maximizer</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LocalAndSortedRandomSearch</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns local and sorted random search as acquisition maximizer.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns local and sorted random search as acquisition maximizer.&quot;&quot;&quot;</span>
         <span class="n">optimizer</span> <span class="o">=</span> <span class="n">LocalAndSortedRandomSearch</span><span class="p">(</span>
             <span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span>
             <span class="n">seed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
@@ -1102,39 +1087,27 @@
         <span class="k">return</span> <span class="n">optimizer</span></div>
 
 <div class="viewcode-block" id="AlgorithmConfigurationFacade.get_intensifier"><a class="viewcode-back" href="../../../api/smac.facade.algorithm_configuration_facade.html#smac.facade.AlgorithmConfigurationFacade.get_intensifier">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_intensifier</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+    <span class="k">def</span> <span class="nf">get_intensifier</span><span class="p">(</span>
         <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">min_config_calls</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">max_config_calls</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
-        <span class="n">min_challenger</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">intensify_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">max_config_calls</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
+        <span class="n">max_incumbents</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Intensifier</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns ``Intensifier`` as intensifier. Uses the default configuration for ``race_against``.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns ``Intensifier`` as intensifier. Supports budgets.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        scenario : Scenario</span>
-<span class="sd">        min_config_calls : int, defaults to 1</span>
-<span class="sd">            Minimum number of trials per config (summed over all calls to intensify).</span>
-<span class="sd">        max_config_calls : int, defaults to 2000</span>
-<span class="sd">            Maximum number of trials per config (summed over all calls to intensify).</span>
-<span class="sd">        min_challenger : int, defaults to 2</span>
-<span class="sd">            Minimal number of challengers to be considered (even if time_bound is exhausted earlier).</span>
-<span class="sd">        intensify_percentage : float, defaults to 0.5</span>
-<span class="sd">            How much percentage of the time should configurations be intensified (evaluated on higher budgets or</span>
-<span class="sd">            more instances). This parameter is accessed in the SMBO class.</span>
+<span class="sd">        max_config_calls : int, defaults to 3</span>
+<span class="sd">            Maximum number of configuration evaluations. Basically, how many instance-seed keys should be evaluated at</span>
+<span class="sd">            maximum for a configuration.</span>
+<span class="sd">        max_incumbents : int, defaults to 10</span>
+<span class="sd">            How many incumbents to keep track of in the case of multi-objective.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">intensifier</span> <span class="o">=</span> <span class="n">Intensifier</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">Intensifier</span><span class="p">(</span>
             <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
-            <span class="n">min_challenger</span><span class="o">=</span><span class="n">min_challenger</span><span class="p">,</span>
-            <span class="n">race_against</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">(),</span>
-            <span class="n">min_config_calls</span><span class="o">=</span><span class="n">min_config_calls</span><span class="p">,</span>
             <span class="n">max_config_calls</span><span class="o">=</span><span class="n">max_config_calls</span><span class="p">,</span>
-            <span class="n">intensify_percentage</span><span class="o">=</span><span class="n">intensify_percentage</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">intensifier</span></div>
+            <span class="n">max_incumbents</span><span class="o">=</span><span class="n">max_incumbents</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="AlgorithmConfigurationFacade.get_initial_design"><a class="viewcode-back" href="../../../api/smac.facade.algorithm_configuration_facade.html#smac.facade.AlgorithmConfigurationFacade.get_initial_design">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_initial_design</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
@@ -1142,7 +1115,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">additional_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefaultInitialDesign</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns an initial design, which returns the default configuration.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an initial design, which returns the default configuration.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1160,7 +1133,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">probability</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProbabilityRandomDesign</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns ``ProbabilityRandomDesign`` for interleaving configurations.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns ``ProbabilityRandomDesign`` for interleaving configurations.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1175,13 +1148,14 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">objective_weights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MeanAggregationStrategy</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the mean aggregation strategy for the multi objective algorithm.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the mean aggregation strategy for the multi objective algorithm.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        scenario : Scenario</span>
 <span class="sd">        objective_weights : list[float] | None, defaults to None</span>
-<span class="sd">            Weights for an weighted average. Must be of the same length as the number of objectives.</span>
+<span class="sd">            Weights for averaging the objectives in a weighted manner. Must be of the same length as the number of</span>
+<span class="sd">            objectives.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">MeanAggregationStrategy</span><span class="p">(</span>
             <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
@@ -1190,7 +1164,7 @@
 
 <div class="viewcode-block" id="AlgorithmConfigurationFacade.get_runhistory_encoder"><a class="viewcode-back" href="../../../api/smac.facade.algorithm_configuration_facade.html#smac.facade.AlgorithmConfigurationFacade.get_runhistory_encoder">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_runhistory_encoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistoryEncoder</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the default runhistory encoder.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the default runhistory encoder.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">RunHistoryEncoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">)</span></div></div>
 </pre></div>
 
@@ -1214,7 +1188,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

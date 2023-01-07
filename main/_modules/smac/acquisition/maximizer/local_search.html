@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.acquisition.maximizer.local_search &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>smac.acquisition.maximizer.local_search &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -96,11 +96,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -127,7 +127,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1">
@@ -171,8 +171,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../../examples/1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="../../../../examples/1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -191,7 +191,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../../examples/1_basics/5_priors.html">
+      <a class="reference internal" href="../../../../examples/1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../examples/1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -317,12 +322,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -363,11 +373,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -400,23 +405,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="../../../../api/smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -629,18 +624,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -649,18 +634,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -859,6 +834,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../../../api/smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -920,6 +900,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../api/smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1029,7 +1014,7 @@
 
 
 <div class="viewcode-block" id="LocalSearch"><a class="viewcode-back" href="../../../../api/smac.acquisition.maximizer.local_search.html#smac.acquisition.maximizer.LocalSearch">[docs]</a><span class="k">class</span> <span class="nc">LocalSearch</span><span class="p">(</span><span class="n">AbstractAcquisitionMaximizer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Implementation of SMAC&#39;s local search.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation of SMAC&#39;s local search.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1093,8 +1078,24 @@
         <span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">additional_start_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;Starts a local search from the given startpoint and quits if either the max number of</span>
-<span class="sd">        steps is reached or no neighbor with an higher improvement was found.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start a local search from the given startpoint.</span>
+
+<span class="sd">        Quit if either the max number of steps is reached or</span>
+<span class="sd">        no neighbor with an higher improvement was found.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        previous_configs : list[Configuration]</span>
+<span class="sd">            Previous configuration (e.g., from the runhistory).</span>
+<span class="sd">        n_points : int</span>
+<span class="sd">            Number of initial points to be generated.</span>
+<span class="sd">        additional_start_points : list[tuple[float, Configuration]] | None</span>
+<span class="sd">            Additional starting points.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[Configuration]</span>
+<span class="sd">            Final candidates.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">init_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_initial_points</span><span class="p">(</span><span class="n">previous_configs</span><span class="p">,</span> <span class="n">n_points</span><span class="p">,</span> <span class="n">additional_start_points</span><span class="p">)</span>
         <span class="n">configs_acq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_search</span><span class="p">(</span><span class="n">init_points</span><span class="p">)</span>
@@ -1115,6 +1116,22 @@
         <span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">additional_start_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get initial points to start search from.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        previous_configs : list[Configuration]</span>
+<span class="sd">            Previous configuration (e.g., from the runhistory).</span>
+<span class="sd">        n_points : int</span>
+<span class="sd">            Number of initial points to be generated.</span>
+<span class="sd">        additional_start_points : list[tuple[float, Configuration]] | None</span>
+<span class="sd">            Additional starting points.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[Configuration]</span>
+<span class="sd">            A list of initial points/configurations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">previous_configs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">init_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configspace</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n_points</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1132,9 +1149,10 @@
         <span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">additional_start_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A function that generates a set of initial points from the previous configurations and additional points (if</span>
-<span class="sd">        applicable). The idea is to decouple runhistory from the local search model and replace it with a more genreal</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a set of initial points from the previous configurations and possibly additional points.</span>
+
+<span class="sd">        The idea is to decouple runhistory from the local search model and replace it with a more general</span>
 <span class="sd">        form (list[Configuration]).</span>
 
 <span class="sd">        Parameters</span>
@@ -1144,7 +1162,7 @@
 <span class="sd">        n_points: int</span>
 <span class="sd">            Number of initial points to be generated.</span>
 <span class="sd">        additional_start_points: list[tuple[float, Configuration]] | None</span>
-<span class="sd">            if we want to specify another set of points as initial points</span>
+<span class="sd">            Additional starting points.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1206,6 +1224,18 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">start_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Optimize the acquisition function.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        start_points : list[Configuration]</span>
+<span class="sd">            Starting points for the search.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[tuple[float, Configuration]]</span>
+<span class="sd">            Candidates with their acquisition function value. (acq value, candidate)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="c1"># Gather data structure for starting points</span>
@@ -1393,7 +1423,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

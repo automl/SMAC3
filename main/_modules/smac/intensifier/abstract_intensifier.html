@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.intensifier.abstract_intensifier &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>smac.intensifier.abstract_intensifier &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -96,11 +96,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -127,7 +127,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1">
@@ -171,8 +171,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="../../../examples/1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -191,7 +191,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/5_priors.html">
+      <a class="reference internal" href="../../../examples/1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../examples/1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -317,12 +322,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -363,11 +373,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -400,23 +405,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="../../../api/smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -629,18 +624,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -649,18 +634,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -859,6 +834,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -920,6 +900,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1004,18 +989,32 @@
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span>
 
-<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">dataclasses</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 
-<span class="kn">from</span> <span class="nn">smac.runhistory</span> <span class="kn">import</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="n">TrialInfoIntent</span><span class="p">,</span> <span class="n">TrialValue</span>
+<span class="kn">import</span> <span class="nn">smac</span>
+<span class="kn">from</span> <span class="nn">smac.callback</span> <span class="kn">import</span> <span class="n">Callback</span>
+<span class="kn">from</span> <span class="nn">smac.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
+<span class="kn">from</span> <span class="nn">smac.main.config_selector</span> <span class="kn">import</span> <span class="n">ConfigSelector</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory</span> <span class="kn">import</span> <span class="n">TrialInfo</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.dataclasses</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">InstanceSeedBudgetKey</span><span class="p">,</span>
+    <span class="n">InstanceSeedKey</span><span class="p">,</span>
+    <span class="n">TrajectoryItem</span><span class="p">,</span>
+    <span class="n">TrialValue</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
-<span class="kn">from</span> <span class="nn">smac.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
-<span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">format_array</span><span class="p">,</span> <span class="n">get_logger</span>
+<span class="kn">from</span> <span class="nn">smac.utils.configspace</span> <span class="kn">import</span> <span class="n">get_config_hash</span><span class="p">,</span> <span class="n">print_config_changes</span>
+<span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span> <span class="nn">smac.utils.pareto_front</span> <span class="kn">import</span> <span class="n">calculate_pareto_front</span><span class="p">,</span> <span class="n">sort_by_crowding_distance</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2022, automl.org&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
@@ -1024,352 +1023,703 @@
 
 
 <div class="viewcode-block" id="AbstractIntensifier"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier">[docs]</a><span class="k">class</span> <span class="nc">AbstractIntensifier</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Base class for all racing methods.</span>
-
-<span class="sd">    The intensification is designed to output a TrialInfo object with enough information</span>
-<span class="sd">    to run a given configuration (for example, the trial info contains the instance/seed</span>
-<span class="sd">    pair, as well as the associated resources).</span>
-
-<span class="sd">    A worker can execute this TrialInfo object and produce a TrialValue object with the</span>
-<span class="sd">    execution results. Each intensifier process the TrialValue object and updates its</span>
-<span class="sd">    internal state in preparation for the next iteration.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-threading.</span>
+<span class="sd">    The abstract intensifier keeps track of the incumbent, which is updated everytime the runhistory changes.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    scenario : Scenario</span>
-<span class="sd">    min_config_calls : int, defaults to 1</span>
-<span class="sd">        Minimum number of trials per config (summed over all calls to intensify).</span>
-<span class="sd">    max_config_calls : int, defaults to 2000</span>
-<span class="sd">        Maximum number of trials per config (summed over all calls to intensify).</span>
-<span class="sd">    min_challenger : int, defaults to 1</span>
-<span class="sd">        Minimal number of challengers to be considered (even if time_bound is exhausted earlier).</span>
-<span class="sd">    seed : int | None, defaults to none</span>
+<span class="sd">    n_seeds : int | None, defaults to None</span>
+<span class="sd">        How many seeds to use for each instance. It is used in the abstract intensifier to determine validation trials.</span>
+<span class="sd">    max_config_calls : int, defaults to None</span>
+<span class="sd">        Maximum number of configuration evaluations. Basically, how many instance-seed keys should be max evaluated</span>
+<span class="sd">        for a configuration. It is used in the abstract intensifier to determine validation trials.</span>
+<span class="sd">    max_incumbents : int, defaults to 10</span>
+<span class="sd">        How many incumbents to keep track of in the case of multi-objective.</span>
+<span class="sd">    seed : int, defaults to None</span>
+<span class="sd">        Internal seed used for random events like shuffle seeds.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
-        <span class="n">min_config_calls</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="n">max_config_calls</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
-        <span class="n">min_challenger</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">n_seeds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_config_calls</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_incumbents</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span> <span class="o">=</span> <span class="n">scenario</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config_selector</span><span class="p">:</span> <span class="n">ConfigSelector</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config_generator</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">ConfigSelector</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="p">:</span> <span class="n">RunHistory</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">seed</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">seed</span>
+            <span class="n">seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">seed</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span> <span class="o">=</span> <span class="n">scenario</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_seed</span> <span class="o">=</span> <span class="n">seed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_deterministic</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_min_config_calls</span> <span class="o">=</span> <span class="n">min_config_calls</span>
+
+        <span class="c1"># Internal variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_seeds</span> <span class="o">=</span> <span class="n">n_seeds</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_config_calls</span> <span class="o">=</span> <span class="n">max_config_calls</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_min_challenger</span> <span class="o">=</span> <span class="n">min_challenger</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_stats</span><span class="p">:</span> <span class="n">Stats</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_incumbents</span> <span class="o">=</span> <span class="n">max_incumbents</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_used_walltime_func</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="c1"># Set the instances</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">instances</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># We need to include None here to tell whether None instance was evaluated or not</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Removing duplicates here</span>
-            <span class="c1"># Fun fact: When using a set here, it always includes randomness</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">instances</span><span class="p">))</span>
+        <span class="c1"># Reset everything</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
-        <span class="c1"># General attributes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_num_trials</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Number of trials done in an iteration so far</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_challenger_id</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_repeat_configs</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Repeating configurations is discouraged for parallel trials.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_iteration_done</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Marks the end of an iteration.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_target_function_time</span> <span class="o">=</span> <span class="mf">0.0</span>
+<div class="viewcode-block" id="AbstractIntensifier.reset"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the internal variables of the intensifier.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tf_seeds</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tf_instances</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tf_budgets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedKey</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_keys_validation</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedKey</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">repeat_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Whether configs should be repeated or not.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repeat_configs</span>
+        <span class="c1"># Incumbent variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents_changed</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rejected_config_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TrajectoryItem</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">iteration_done</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Whether an iteration is done or not.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iteration_done</span>
+    <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="s2">&quot;max_incumbents&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_incumbents</span><span class="p">,</span>
+            <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed</span><span class="p">,</span>
+        <span class="p">}</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">num_trials</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;How many trials have been done in an iteration so far.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_trials</span>
+    <span class="k">def</span> <span class="nf">trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TrajectoryItem</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the trajectory (changes of incumbents) of the optimization run.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistory</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runhistory of the intensifier.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span>
+
+    <span class="nd">@runhistory</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the runhistory.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="o">=</span> <span class="n">runhistory</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">used_walltime</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns used wallclock time.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_used_walltime_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_used_walltime_func</span><span class="p">()</span>
+
+    <span class="nd">@used_walltime</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">used_walltime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the used wallclock time.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_used_walltime_func</span> <span class="o">=</span> <span class="n">func</span>
+
+<div class="viewcode-block" id="AbstractIntensifier.__post_init__"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.__post_init__">[docs]</a>    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fills ``self._tf_seeds`` and ``self._tf_instances``. Moreover, the incumbents are updated.&quot;&quot;&quot;</span>
+        <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
+
+        <span class="c1"># Validate runhistory: Are seeds/instances/budgets used?</span>
+        <span class="c1"># Add seed/instance/budget to the cache</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">rh</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uses_seeds</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Trial contains no seed information but intensifier expects seeds to be used.&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">seed</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tf_seeds</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_tf_seeds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uses_instances</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">instances</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">k</span><span class="o">.</span><span class="n">instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;Scenario does not specify any instances but found instance information in runhistory.&quot;</span>
+                    <span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">instances</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">k</span><span class="o">.</span><span class="n">instance</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">instances</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;Instance information in runhistory is not part of the defined instances in scenario.&quot;</span>
+                    <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">instance</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tf_instances</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_tf_instances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uses_budgets</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">budget</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Trial contains no budget information but intensifier expects budgets to be used.&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">budget</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tf_budgets</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_tf_budgets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
+
+        <span class="c1"># Add all other instances to ``_tf_instances``</span>
+        <span class="c1"># Behind idea: Prioritize instances that are found in the runhistory</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">instances</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">instances</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">inst</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tf_instances</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_tf_instances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inst</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tf_instances</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tf_instances</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tf_budgets</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tf_budgets</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+
+        <span class="c1"># Update our incumbents here</span>
+        <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">rh</span><span class="o">.</span><span class="n">get_configs</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_incumbents</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">config_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Based on the configuration selector, an iterator is returned that generates configurations.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_generator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_generator</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">config_selector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConfigSelector</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The configuration selector for the intensifier.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_selector</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_selector</span>
+
+    <span class="nd">@config_selector</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">config_selector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_selector</span><span class="p">:</span> <span class="n">ConfigSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Set it global</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config_selector</span> <span class="o">=</span> <span class="n">config_selector</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config_generator</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">config_selector</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">uses_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;If the intensifier needs to make use of seeds.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;If the intensifier needs to make use of seeds.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">uses_budgets</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;If the intensifier needs to make use of budgets.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;If the intensifier needs to make use of budgets.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">uses_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;If the intensifier needs to make use of instances.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;If the intensifier needs to make use of instances.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-<div class="viewcode-block" id="AbstractIntensifier.get_target_function_seeds"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_target_function_seeds">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">get_target_function_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Which seeds are used to call the target function.&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-
-<div class="viewcode-block" id="AbstractIntensifier.get_target_function_budgets"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_target_function_budgets">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">get_target_function_budgets</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Which budgets are used to call the target function.&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-
-<div class="viewcode-block" id="AbstractIntensifier.get_target_function_instances"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_target_function_instances">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">get_target_function_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Which instances are used to call the target function.&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-            <span class="s2">&quot;min_config_calls&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_config_calls</span><span class="p">,</span>
-            <span class="s2">&quot;max_config_calls&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_config_calls</span><span class="p">,</span>
-            <span class="s2">&quot;min_challenger&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_challenger</span><span class="p">,</span>
-            <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed</span><span class="p">,</span>
-        <span class="p">}</span>
+    <span class="k">def</span> <span class="nf">incumbents_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;How often the incumbents have changed.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents_changed</span>
 
-<div class="viewcode-block" id="AbstractIntensifier.get_next_trial"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_next_trial">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_trial</span><span class="p">(</span>
+<div class="viewcode-block" id="AbstractIntensifier.get_instance_seed_keys_of_interest"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_instance_seed_keys_of_interest">[docs]</a>    <span class="k">def</span> <span class="nf">get_instance_seed_keys_of_interest</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">challengers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
-        <span class="n">get_next_configurations</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
-        <span class="n">repeat_configs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">n_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">TrialInfoIntent</span><span class="p">,</span> <span class="n">TrialInfo</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Abstract method for choosing the next challenger. If no more challengers are available, the method should</span>
-<span class="sd">        issue a SKIP via RunInfoIntent.SKIP, so that a new iteration can sample new configurations.</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedKey</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of instance-seed keys. Considers seeds and instances from the</span>
+<span class="sd">        runhistory (``self._tf_seeds`` and ``self._tf_instances``). If no seeds or instances were found, new</span>
+<span class="sd">        seeds and instances are generated based on the global intensifier seed.</span>
+
+<span class="sd">        Warning</span>
+<span class="sd">        -------</span>
+<span class="sd">        The passed seed is only used for validation. For training, the global intensifier seed is used.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        challengers : list[Configuration] | None</span>
-<span class="sd">            Promising configurations.</span>
-<span class="sd">        incumbent : Configuration</span>
-<span class="sd">            Incumbent configuration.</span>
-<span class="sd">        get_next_configurations : Callable[[], Iterator[Configuration]] | None, defaults to none</span>
-<span class="sd">            Function that generates next configurations to use for racing.</span>
-<span class="sd">        runhistory : RunHistory</span>
-<span class="sd">        repeat_configs : bool, defaults to true</span>
-<span class="sd">            If false, an evaluated configuration will not be generated again.</span>
-<span class="sd">        n_workers : int, optional, defaults to 1</span>
-<span class="sd">            The maximum number of workers available.</span>
+<span class="sd">        validate : bool, defaults to False</span>
+<span class="sd">            Whether to get validation trials or training trials. The only difference lies in different seeds.</span>
+<span class="sd">        seed : int | None, defaults to None</span>
+<span class="sd">            The seed used for the validation trials.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        TrialInfoIntent</span>
-<span class="sd">            Indicator of how to consume the TrialInfo object.</span>
-<span class="sd">        TrialInfo</span>
-<span class="sd">            An object that encapsulates necessary information of the trial.</span>
+<span class="sd">        instance_seed_keys : list[InstanceSeedKey]</span>
+<span class="sd">            Instance-seed keys of interest.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Please set the runhistory before calling this method.&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="AbstractIntensifier.process_results"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.process_results">[docs]</a>    <span class="k">def</span> <span class="nf">process_results</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">trial_info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">,</span>
-        <span class="n">trial_value</span><span class="p">:</span> <span class="n">TrialValue</span><span class="p">,</span>
-        <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
-        <span class="n">time_bound</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">log_trajectory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;The intensifier stage will be updated based on the results/status of a configuration</span>
-<span class="sd">        execution. Also, a incumbent will be determined.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tf_instances</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Please call __post_init__ before calling this method.&quot;</span><span class="p">)</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        trial_info : TrialInfo</span>
-<span class="sd">        trial_value: TrialValue</span>
-<span class="sd">        incumbent : Configuration | None</span>
-<span class="sd">            Best configuration seen so far.</span>
-<span class="sd">        runhistory : RunHistory</span>
-<span class="sd">        time_bound : float</span>
-<span class="sd">            Time [sec] available to perform intensify.</span>
-<span class="sd">        log_trajectory: bool</span>
-<span class="sd">            Whether to log changes of incumbents in the trajectory.</span>
+        <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">seed</span> <span class="o">=</span> <span class="mi">0</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        incumbent: Configuration</span>
-<span class="sd">            Current (maybe new) incumbent configuration.</span>
-<span class="sd">        incumbent_costs: float | list[float]</span>
-<span class="sd">            Empirical cost(s) of the incumbent configuration.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+        <span class="c1"># We cache the instance-seed keys for efficiency and consistency reasons</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_keys</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">validate</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_keys_validation</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">validate</span>
+        <span class="p">):</span>
+            <span class="n">instance_seed_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedKey</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">validate</span><span class="p">:</span>
+                <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">rng</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span>
 
-    <span class="k">def</span> <span class="nf">_next_challenger</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">challengers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">get_next_configurations</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
-        <span class="n">repeat_configs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Retuns the next challenger to use in intensification. If challenger is none, then the</span>
-<span class="sd">        optimizer will be used to generate the next challenger.</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="c1"># We have two conditions to stop the loop:</span>
+                <span class="c1"># A) We found enough configs</span>
+                <span class="c1"># B) We used enough seeds</span>
+                <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_config_calls</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">instance_seed_keys</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_config_calls</span>
+                <span class="n">B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_seeds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_seeds</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        challengers : list[Configuration] | None</span>
-<span class="sd">            Promising configurations to evaluate next.</span>
-<span class="sd">        get_next_configurations : Callable[[], Iterator[Configuration]] | None, defaults to none</span>
-<span class="sd">            Function that generates next configurations to use for racing.</span>
-<span class="sd">        runhistory : RunHistory</span>
-<span class="sd">        repeat_configs : bool, defaults to true</span>
-<span class="sd">            If false, an evaluated configuration will not be generated again.</span>
+                <span class="k">if</span> <span class="n">A</span> <span class="ow">or</span> <span class="n">B</span><span class="p">:</span>
+                    <span class="k">break</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        configuration : Configuration | None</span>
-<span class="sd">            Next challenger to use. If no challenger was found, none is returned.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">validate</span><span class="p">:</span>
+                    <span class="n">next_seed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">MAXINT</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">next_seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tf_seeds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Added existing seed </span><span class="si">{</span><span class="n">next_seed</span><span class="si">}</span><span class="s2"> from runhistory to the intensifier.&quot;</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                        <span class="c1"># Use global random generator for a new seed and mark it so it will be reused for another config</span>
+                        <span class="n">next_seed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">MAXINT</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 
-        <span class="n">chall_gen</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]</span>
-        <span class="k">if</span> <span class="n">challengers</span><span class="p">:</span>
-            <span class="c1"># iterate over challengers provided</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Using provied challengers.&quot;</span><span class="p">)</span>
-            <span class="n">chall_gen</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">challengers</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">get_next_configurations</span><span class="p">:</span>
-            <span class="c1"># generating challengers on-the-fly if optimizer is given</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Generating new challenger from optimizer.&quot;</span><span class="p">)</span>
-            <span class="n">chall_gen</span> <span class="o">=</span> <span class="n">get_next_configurations</span><span class="p">()</span>
+                        <span class="c1"># This line here is really important because we don&#39;t want to add the same seed twice</span>
+                        <span class="k">if</span> <span class="n">next_seed</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tf_seeds</span><span class="p">:</span>
+                            <span class="k">continue</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_tf_seeds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_seed</span><span class="p">)</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Added a new random seed </span><span class="si">{</span><span class="n">next_seed</span><span class="si">}</span><span class="s2"> to the intensifier.&quot;</span><span class="p">)</span>
+
+                <span class="c1"># If no instances are used, tf_instances includes None</span>
+                <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tf_instances</span><span class="p">:</span>
+                    <span class="n">instance_seed_keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InstanceSeedKey</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">next_seed</span><span class="p">))</span>
+
+                <span class="c1"># Only use one seed in deterministic case</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">deterministic</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using only one seed for deterministic scenario.&quot;</span><span class="p">)</span>
+                    <span class="k">break</span>
+
+                <span class="c1"># Seed counter</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># Now we cut so that we only have max_config_calls instance_seed_keys</span>
+            <span class="c1"># We favor instances over seeds here: That makes sure we always work with the same instance/seed pairs</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_config_calls</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">instance_seed_keys</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_config_calls</span><span class="p">:</span>
+                    <span class="n">instance_seed_keys</span> <span class="o">=</span> <span class="n">instance_seed_keys</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_config_calls</span><span class="p">]</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cut instance-seed keys to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_config_calls</span><span class="si">}</span><span class="s2"> entries.&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Set it globally</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">validate</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_keys</span> <span class="o">=</span> <span class="n">instance_seed_keys</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_keys_validation</span> <span class="o">=</span> <span class="n">instance_seed_keys</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">validate</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_keys</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">instance_seed_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_keys</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No configurations (function) provided. Can not generate challenger!&quot;</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_keys_validation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">instance_seed_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_keys_validation</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Time spend to select next challenger: </span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">instance_seed_keys</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
 
-        <span class="c1"># Select challenger from the generators</span>
-        <span class="k">assert</span> <span class="n">chall_gen</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="k">for</span> <span class="n">challenger</span> <span class="ow">in</span> <span class="n">chall_gen</span><span class="p">:</span>
-            <span class="c1"># Repetitions allowed</span>
-            <span class="k">if</span> <span class="n">repeat_configs</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">challenger</span>
-
-            <span class="n">used_configs</span> <span class="o">=</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">get_configs</span><span class="p">()</span>  <span class="c1"># set(runhistory.get_configs())</span>
-
-            <span class="c1"># Otherwise, select only a unique challenger</span>
-            <span class="k">if</span> <span class="n">challenger</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">used_configs</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">challenger</span>
-
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No valid challenger was generated!&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">None</span>
-
-    <span class="k">def</span> <span class="nf">_compare_configs</span><span class="p">(</span>
+<div class="viewcode-block" id="AbstractIntensifier.get_trials_of_interest"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_trials_of_interest">[docs]</a>    <span class="k">def</span> <span class="nf">get_trials_of_interest</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
-        <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
-        <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
-        <span class="n">log_trajectory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Compare two configuration wrt the runhistory and return the one which performs better (or</span>
-<span class="sd">        None if the decision is not safe).</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the trials of interest for a given configuration.</span>
+<span class="sd">        Expands the keys from ``get_instance_seed_keys_of_interest`` with the config.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">is_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_seed_keys_of_interest</span><span class="p">(</span><span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
 
-<span class="sd">        Decision strategy to return x as being better than y:</span>
-<span class="sd">        * x has at least as many trials as y.</span>
-<span class="sd">        * x performs better than y on the intersection of trials on x and y.</span>
+        <span class="n">trials</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">is_keys</span><span class="p">:</span>
+            <span class="n">trials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TrialInfo</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">key</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">key</span><span class="o">.</span><span class="n">seed</span><span class="p">))</span>
 
-<span class="sd">        Note</span>
-<span class="sd">        ----</span>
-<span class="sd">        Implicit assumption: Challenger was evaluated on the same instance-seed pairs as incumbent.</span>
+        <span class="k">return</span> <span class="n">trials</span></div>
+
+<div class="viewcode-block" id="AbstractIntensifier.get_incumbent"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_incumbent">[docs]</a>    <span class="k">def</span> <span class="nf">get_incumbent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the current incumbent in a single-objective setting.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">count_objectives</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot get a single incumbent for multi-objective optimization.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_incumbents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_incumbents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="AbstractIntensifier.get_incumbents"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_incumbents">[docs]</a>    <span class="k">def</span> <span class="nf">get_incumbents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sort_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the incumbents (points on the pareto front) of the runhistory as copy. In case of a single-objective</span>
+<span class="sd">        optimization, only one incumbent (if is) is returned.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        configuration : Configuration | None</span>
-<span class="sd">            The better configuration. If the decision is not sure, none is returned.</span>
+<span class="sd">        configs : list[Configuration]</span>
+<span class="sd">            The configs of the Pareto front.</span>
+<span class="sd">        sort_by : str, defaults to None</span>
+<span class="sd">            Sort the trials by ``cost`` (lowest cost first) or ``num_trials`` (config with lowest number of trials</span>
+<span class="sd">            first).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">inc_trials</span> <span class="o">=</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">get_trials</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">chall_trials</span> <span class="o">=</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">get_trials</span><span class="p">(</span><span class="n">challenger</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">to_compare_trials</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">inc_trials</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">chall_trials</span><span class="p">)</span>
+        <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
 
-        <span class="c1"># Performance on challenger trials, the challenger only becomes incumbent</span>
-        <span class="c1"># if it dominates the incumbent</span>
-        <span class="n">chal_perf</span> <span class="o">=</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">average_cost</span><span class="p">(</span><span class="n">challenger</span><span class="p">,</span> <span class="n">to_compare_trials</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">inc_perf</span> <span class="o">=</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">average_cost</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">to_compare_trials</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;cost&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_incumbents</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">config</span><span class="p">:</span> <span class="n">rh</span><span class="o">.</span><span class="n">_cost_per_config</span><span class="p">[</span><span class="n">rh</span><span class="o">.</span><span class="n">get_config_id</span><span class="p">(</span><span class="n">config</span><span class="p">)]))</span>
+        <span class="k">elif</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;num_trials&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_incumbents</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">config</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">rh</span><span class="o">.</span><span class="n">get_trials</span><span class="p">(</span><span class="n">config</span><span class="p">))))</span>
+        <span class="k">elif</span> <span class="n">sort_by</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_incumbents</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown sort_by value: </span><span class="si">{</span><span class="n">sort_by</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
 
-        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">chal_perf</span><span class="p">)</span> <span class="o">==</span> <span class="nb">float</span>
-        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">inc_perf</span><span class="p">)</span> <span class="o">==</span> <span class="nb">float</span>
+<div class="viewcode-block" id="AbstractIntensifier.get_instance_seed_budget_keys"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_instance_seed_budget_keys">[docs]</a>    <span class="k">def</span> <span class="nf">get_instance_seed_budget_keys</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">compare</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the instance-seed-budget keys for a given configuration. This method is *used for</span>
+<span class="sd">        updating the incumbents* and might differ for different intensifiers. For example, if incumbents should only</span>
+<span class="sd">        be compared on the highest observed budgets.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_instance_seed_budget_keys</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">highest_observed_budget_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
-        <span class="c1"># Line 15</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">chal_perf</span> <span class="o">&gt;</span> <span class="n">inc_perf</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">chall_trials</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_config_calls</span><span class="p">:</span>
-            <span class="n">chal_perf_format</span> <span class="o">=</span> <span class="n">format_array</span><span class="p">(</span><span class="n">chal_perf</span><span class="p">)</span>
-            <span class="n">inc_perf_format</span> <span class="o">=</span> <span class="n">format_array</span><span class="p">(</span><span class="n">inc_perf</span><span class="p">)</span>
+<div class="viewcode-block" id="AbstractIntensifier.get_incumbent_instance_seed_budget_keys"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_incumbent_instance_seed_budget_keys">[docs]</a>    <span class="k">def</span> <span class="nf">get_incumbent_instance_seed_budget_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compare</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find the lowest intersection of instance-seed-budget keys for all incumbents.&quot;&quot;&quot;</span>
+        <span class="n">incumbents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incumbents</span><span class="p">()</span>
 
-            <span class="c1"># Incumbent beats challenger</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Incumbent (</span><span class="si">{</span><span class="n">inc_perf_format</span><span class="si">}</span><span class="s2">) is better than challenger &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">chal_perf_format</span><span class="si">}</span><span class="s2">) on </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">chall_trials</span><span class="p">)</span><span class="si">}</span><span class="s2"> trials.&quot;</span>
-            <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">incumbents</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># We want to calculate the smallest set of trials that is used by all incumbents</span>
+            <span class="c1"># Reason: We can not fairly compare otherwise</span>
+            <span class="n">incumbent_isb_keys</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_instance_seed_budget_keys</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">compare</span><span class="p">)</span> <span class="k">for</span> <span class="n">incumbent</span> <span class="ow">in</span> <span class="n">incumbents</span><span class="p">]</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">set</span><span class="p">,</span> <span class="n">incumbent_isb_keys</span><span class="p">)))</span>  <span class="c1"># type: ignore</span>
 
-            <span class="k">return</span> <span class="n">incumbent</span>
+            <span class="k">return</span> <span class="n">instances</span>  <span class="c1"># type: ignore</span>
 
-        <span class="c1"># Line 16</span>
-        <span class="c1"># This statement is true if both incumbent trials and challenger trials are the same</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">inc_trials</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">chall_trials</span><span class="p">):</span>
-            <span class="c1"># No plateau walks</span>
-            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">chal_perf</span> <span class="o">&gt;=</span> <span class="n">inc_perf</span><span class="p">):</span>
-                <span class="n">chal_perf_format</span> <span class="o">=</span> <span class="n">format_array</span><span class="p">(</span><span class="n">chal_perf</span><span class="p">)</span>
-                <span class="n">inc_perf_format</span> <span class="o">=</span> <span class="n">format_array</span><span class="p">(</span><span class="n">inc_perf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
 
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Incumbent (</span><span class="si">{</span><span class="n">inc_perf_format</span><span class="si">}</span><span class="s2">) is at least as good as the &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;challenger (</span><span class="si">{</span><span class="n">chal_perf_format</span><span class="si">}</span><span class="s2">) on </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">chall_trials</span><span class="p">)</span><span class="si">}</span><span class="s2"> trials.&quot;</span>
-                <span class="p">)</span>
-                <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stats</span>
-                <span class="k">if</span> <span class="n">log_trajectory</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stats</span><span class="o">.</span><span class="n">incumbent_changed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_stats</span><span class="o">.</span><span class="n">add_incumbent</span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="n">chal_perf</span><span class="p">,</span> <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">)</span>
+<div class="viewcode-block" id="AbstractIntensifier.get_incumbent_instance_seed_budget_key_differences"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_incumbent_instance_seed_budget_key_differences">[docs]</a>    <span class="k">def</span> <span class="nf">get_incumbent_instance_seed_budget_key_differences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compare</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;There are situations in which incumbents are evaluated on more trials than others. This method returns the</span>
+<span class="sd">        instances that are not part of the lowest intersection of instances for all incumbents.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">incumbents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incumbents</span><span class="p">()</span>
 
-                <span class="k">return</span> <span class="n">incumbent</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">incumbents</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># We want to calculate the differences so that we can evaluate the other incumbents on the same instances</span>
+            <span class="n">incumbent_isb_keys</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_instance_seed_budget_keys</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">compare</span><span class="p">)</span> <span class="k">for</span> <span class="n">incumbent</span> <span class="ow">in</span> <span class="n">incumbents</span><span class="p">]</span>
 
-            <span class="c1"># Challenger is better than incumbent and has at least the same trials as incumbent.</span>
-            <span class="c1"># -&gt; Change incumbent</span>
-            <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chall_trials</span><span class="p">)</span>
-            <span class="n">chal_perf_format</span> <span class="o">=</span> <span class="n">format_array</span><span class="p">(</span><span class="n">chal_perf</span><span class="p">)</span>
-            <span class="n">inc_perf_format</span> <span class="o">=</span> <span class="n">format_array</span><span class="p">(</span><span class="n">inc_perf</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">incumbent_isb_keys</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[]</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Challenger (</span><span class="si">{</span><span class="n">chal_perf_format</span><span class="si">}</span><span class="s2">) is better than incumbent (</span><span class="si">{</span><span class="n">inc_perf_format</span><span class="si">}</span><span class="s2">) &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;on </span><span class="si">{</span><span class="n">n_samples</span><span class="si">}</span><span class="s2"> trials.&quot;</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_log_incumbent_changes</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">challenger</span><span class="p">)</span>
+            <span class="n">incumbent_isb_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">set</span><span class="p">,</span> <span class="n">incumbent_isb_keys</span><span class="p">)))</span>  <span class="c1"># type: ignore</span>
 
-            <span class="k">if</span> <span class="n">log_trajectory</span><span class="p">:</span>
-                <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stats</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_stats</span><span class="o">.</span><span class="n">add_incumbent</span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="n">chal_perf</span><span class="p">,</span> <span class="n">incumbent</span><span class="o">=</span><span class="n">challenger</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">incumbent_isb_keys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[]</span>
 
-            <span class="k">return</span> <span class="n">challenger</span>
+            <span class="k">return</span> <span class="n">incumbent_isb_keys</span>  <span class="c1"># type: ignore</span>
 
-        <span class="c1"># Undecided</span>
-        <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
 
-    <span class="k">def</span> <span class="nf">_log_incumbent_changes</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">incumbent</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">challenger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractIntensifier.get_rejected_configs"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_rejected_configs">[docs]</a>    <span class="k">def</span> <span class="nf">get_rejected_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns rejected configurations when racing against the incumbent failed.&quot;&quot;&quot;</span>
+        <span class="n">configs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">rejected_config_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rejected_config_ids</span><span class="p">:</span>
+            <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">_ids_config</span><span class="p">[</span><span class="n">rejected_config_id</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">configs</span></div>
+
+<div class="viewcode-block" id="AbstractIntensifier.get_callback"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_callback">[docs]</a>    <span class="k">def</span> <span class="nf">get_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callback</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The intensifier makes use of a callback to efficiently update the incumbent based on the runhistory</span>
+<span class="sd">        (every time new information is available). Moreover, incorporating the callback here allows developers</span>
+<span class="sd">        more options in the future.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">class</span> <span class="nc">RunHistoryCallback</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">intensifier</span><span class="p">:</span> <span class="n">AbstractIntensifier</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span> <span class="o">=</span> <span class="n">intensifier</span>
+
+            <span class="k">def</span> <span class="nf">on_tell_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">smbo</span><span class="o">.</span><span class="n">SMBO</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">TrialValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">update_incumbents</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">RunHistoryCallback</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractIntensifier.update_incumbents"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.update_incumbents">[docs]</a>    <span class="k">def</span> <span class="nf">update_incumbents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the incumbents. This method is called everytime a trial is added to the runhistory. Since only</span>
+<span class="sd">        the affected config and the current incumbents are used, this method is very efficient. Furthermore, a</span>
+<span class="sd">        configuration is only considered incumbent if it has a better performance on all incumbent instances.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
+
+        <span class="c1"># What happens if a config was rejected, but it appears again? Give it another try even if it</span>
+        <span class="c1"># has already been evaluated? Yes!</span>
+
+        <span class="c1"># Associated trials and id</span>
+        <span class="n">config_isb_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_seed_budget_keys</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">config_id</span> <span class="o">=</span> <span class="n">rh</span><span class="o">.</span><span class="n">get_config_id</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">config_hash</span> <span class="o">=</span> <span class="n">get_config_hash</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="c1"># We skip updating incumbents if no instances are available</span>
+        <span class="c1"># Note: This is especially the case if trials of a config are still running</span>
+        <span class="c1"># because if trials are running, the runhistory does not update the trials in the fast data structure</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">config_isb_keys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No relevant instances evaluated for config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2">. Updating incumbents is skipped.&quot;</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="n">params</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([(</span><span class="n">param</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">[</span><span class="n">param</span><span class="p">],</span> <span class="n">challenger</span><span class="p">[</span><span class="n">param</span><span class="p">])</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">challenger</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Changes in incumbent:&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">param</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;--- </span><span class="si">%s</span><span class="s2">: </span><span class="si">%r</span><span class="s2"> -&gt; </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">param</span><span class="p">)</span>
+        <span class="c1"># Now we get the incumbents and see which trials have been used</span>
+        <span class="n">incumbents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incumbents</span><span class="p">()</span>
+        <span class="n">incumbent_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">rh</span><span class="o">.</span><span class="n">get_config_id</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">incumbents</span><span class="p">]</span>
+        <span class="n">incumbent_isb_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incumbent_instance_seed_budget_keys</span><span class="p">()</span>
+
+        <span class="c1"># Save for later</span>
+        <span class="n">previous_incumbents</span> <span class="o">=</span> <span class="n">incumbents</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">previous_incumbent_ids</span> <span class="o">=</span> <span class="n">incumbent_ids</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># Little sanity check here for consistency</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">incumbents</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">incumbent_isb_keys</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">incumbent_isb_keys</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+        <span class="c1"># If there are no incumbents at all, we just use the new config as new incumbent</span>
+        <span class="c1"># Problem: We can add running incumbents</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">incumbents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># incumbent_isb_keys is None and len(incumbents) == 0:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Added config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2"> as new incumbent because there are no incumbents yet.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_trajectory</span><span class="p">([</span><span class="n">config</span><span class="p">])</span>
+
+            <span class="c1"># Nothing else to do</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Comparison keys</span>
+        <span class="c1"># This one is a bit tricky: We would have problems if we compare with budgets because we might have different</span>
+        <span class="c1"># scenarios (depending on the incumbent selection specified in Successive Halving).</span>
+        <span class="c1"># 1) Any budget/highest observed budget: We want to get rid of the budgets because if we know it is calculated</span>
+        <span class="c1"># on the same instance-seed already then we are ready to go. Imagine we would check for the same budgets,</span>
+        <span class="c1"># then the configs can not be compared although the user does not care on which budgets configurations have</span>
+        <span class="c1"># been evaluated.</span>
+        <span class="c1"># 2) Highest budget: We only want to compare the configs if they are evaluated on the highest budget.</span>
+        <span class="c1"># Here we do actually care about the budgets. Please see the ``get_instance_seed_budget_keys`` method from</span>
+        <span class="c1"># Successive Halving to get more information.</span>
+        <span class="n">config_isb_comparison_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_seed_budget_keys</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">compare</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">config_incumbent_isb_comparison_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incumbent_instance_seed_budget_keys</span><span class="p">(</span><span class="n">compare</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Now we have to check if the new config has been evaluated on the same keys as the incumbents</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">key</span> <span class="ow">in</span> <span class="n">config_isb_comparison_keys</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config_incumbent_isb_comparison_keys</span><span class="p">]):</span>
+            <span class="c1"># We can not tell if the new config is better/worse than the incumbents because it has not been</span>
+            <span class="c1"># evaluated on the necessary trials</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Could not compare config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2"> with incumbents because it&#39;s evaluated on &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;different trials.&quot;</span>
+            <span class="p">)</span>
+
+            <span class="c1"># The config has to go to a queue now as it is a challenger and a potential incumbent</span>
+            <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># If all instances are available and the config is incumbent and even evaluated on more trials</span>
+            <span class="c1"># then there&#39;s nothing we can do</span>
+            <span class="k">if</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">incumbents</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">config_isb_keys</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">incumbent_isb_keys</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="s2">&quot;Config is already an incumbent but can not be compared to other incumbents because &quot;</span>
+                    <span class="s2">&quot;the others are missing trials.&quot;</span>
+                <span class="p">)</span>
+                <span class="k">return</span>
+
+        <span class="c1"># Add config to incumbents so that we compare only the new config and existing incumbents</span>
+        <span class="k">if</span> <span class="n">config</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">incumbents</span><span class="p">:</span>
+            <span class="n">incumbents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+            <span class="n">incumbent_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config_id</span><span class="p">)</span>
+
+        <span class="c1"># Now we get all instance-seed-budget keys for each incumbent (they might be different when using budgets)</span>
+        <span class="n">all_incumbent_isb_keys</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">incumbent</span> <span class="ow">in</span> <span class="n">incumbents</span><span class="p">:</span>
+            <span class="n">all_incumbent_isb_keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_instance_seed_budget_keys</span><span class="p">(</span><span class="n">incumbent</span><span class="p">))</span>
+
+        <span class="c1"># We compare the incumbents now and only return the ones on the pareto front</span>
+        <span class="n">new_incumbents</span> <span class="o">=</span> <span class="n">calculate_pareto_front</span><span class="p">(</span><span class="n">rh</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">,</span> <span class="n">all_incumbent_isb_keys</span><span class="p">)</span>
+        <span class="n">new_incumbent_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">rh</span><span class="o">.</span><span class="n">get_config_id</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">new_incumbents</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">previous_incumbents</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_incumbents</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">previous_incumbents</span> <span class="o">==</span> <span class="n">new_incumbents</span><span class="p">:</span>
+                <span class="c1"># No changes in the incumbents</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_remove_rejected_config</span><span class="p">(</span><span class="n">config_id</span><span class="p">)</span>
+                <span class="k">return</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;--- </span><span class="si">%s</span><span class="s2"> remains unchanged: </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">param</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
+                <span class="c1"># In this case, we have to determine which config replaced which incumbent and reject it</span>
+                <span class="n">removed_incumbent_id</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">previous_incumbent_ids</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_incumbent_ids</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">removed_incumbent_hash</span> <span class="o">=</span> <span class="n">get_config_hash</span><span class="p">(</span><span class="n">rh</span><span class="o">.</span><span class="n">get_config</span><span class="p">(</span><span class="n">removed_incumbent_id</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_add_rejected_config</span><span class="p">(</span><span class="n">removed_incumbent_id</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">removed_incumbent_id</span> <span class="o">==</span> <span class="n">config_id</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Rejected config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2"> because it is not better than the incumbents on &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">config_isb_keys</span><span class="p">)</span><span class="si">}</span><span class="s2"> instances.&quot;</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_remove_rejected_config</span><span class="p">(</span><span class="n">config_id</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Added config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2"> and rejected config </span><span class="si">{</span><span class="n">removed_incumbent_hash</span><span class="si">}</span><span class="s2"> as incumbent because &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;it is not better than the incumbents on </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">config_isb_keys</span><span class="p">)</span><span class="si">}</span><span class="s2"> instances:&quot;</span>
+                    <span class="p">)</span>
+                    <span class="n">print_config_changes</span><span class="p">(</span><span class="n">rh</span><span class="o">.</span><span class="n">get_config</span><span class="p">(</span><span class="n">removed_incumbent_id</span><span class="p">),</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">previous_incumbents</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_incumbents</span><span class="p">):</span>
+            <span class="c1"># Config becomes a new incumbent; nothing is rejected in this case</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_remove_rejected_config</span><span class="p">(</span><span class="n">config_id</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2"> is a new incumbent. &quot;</span> <span class="sa">f</span><span class="s2">&quot;Total number of incumbents: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">new_incumbents</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># There might be situations that the incumbents might be removed because of updated cost information of</span>
+            <span class="c1"># config</span>
+            <span class="k">for</span> <span class="n">incumbent</span> <span class="ow">in</span> <span class="n">previous_incumbents</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">incumbent</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_incumbents</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_add_rejected_config</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Removed incumbent </span><span class="si">{</span><span class="n">get_config_hash</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span><span class="si">}</span><span class="s2"> because of the updated costs from config &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2">.&quot;</span>
+                    <span class="p">)</span>
+
+        <span class="c1"># Cut incumbents: We only want to keep a specific number of incumbents</span>
+        <span class="c1"># We use the crowding distance for that</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_incumbents</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_incumbents</span><span class="p">:</span>
+            <span class="n">new_incumbents</span> <span class="o">=</span> <span class="n">sort_by_crowding_distance</span><span class="p">(</span><span class="n">rh</span><span class="p">,</span> <span class="n">new_incumbents</span><span class="p">,</span> <span class="n">all_incumbent_isb_keys</span><span class="p">)</span>
+            <span class="n">new_incumbents</span> <span class="o">=</span> <span class="n">new_incumbents</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_incumbents</span><span class="p">]</span>
+
+            <span class="c1"># or random?</span>
+            <span class="c1"># idx = self._rng.randint(0, len(new_incumbents))</span>
+            <span class="c1"># del new_incumbents[idx]</span>
+            <span class="c1"># del new_incumbent_ids[idx]</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Removed one incumbent using crowding distance because more than </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_incumbents</span><span class="si">}</span><span class="s2"> are &quot;</span>
+                <span class="s2">&quot;available.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_trajectory</span><span class="p">(</span><span class="n">new_incumbents</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractIntensifier.__iter__"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.__iter__">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Main loop of the intensifier. This method always returns a TrialInfo object, although the intensifier</span>
+<span class="sd">        algorithm may need to wait for the result of the trial. Please refer to a specific</span>
+<span class="sd">        intensifier to get more information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="AbstractIntensifier.get_state"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The current state of the intensifier. Used to restore the state of the intensifier when continuing a run.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{}</span></div>
+
+<div class="viewcode-block" id="AbstractIntensifier.set_state"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.set_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the state of the intensifier. Used to restore the state of the intensifier when continuing a run.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="AbstractIntensifier.save"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves the current state of the intensifier. In addition to the state (retrieved by ``get_state``), this</span>
+<span class="sd">        method also saves the incumbents and trajectory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.json&quot;</span><span class="p">)</span>
+        <span class="n">filename</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;incumbent_ids&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_config_id</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents</span><span class="p">],</span>
+            <span class="s2">&quot;rejected_config_ids&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rejected_config_ids</span><span class="p">,</span>
+            <span class="s2">&quot;incumbents_changed&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents_changed</span><span class="p">,</span>
+            <span class="s2">&quot;trajectory&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">dataclasses</span><span class="o">.</span><span class="n">asdict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="p">],</span>
+            <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_state</span><span class="p">(),</span>
+        <span class="p">}</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractIntensifier.load"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads the latest state of the intensifier including the incumbents and trajectory.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Encountered exception </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2"> while reading runhistory from </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">. Not adding any trials!&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># We reset the intensifier and then reset the runhistory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_config</span><span class="p">(</span><span class="n">config_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">config_id</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;incumbent_ids&quot;</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents_changed</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;incumbents_changed&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rejected_config_ids</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;rejected_config_ids&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span> <span class="o">=</span> <span class="p">[</span><span class="n">TrajectoryItem</span><span class="p">(</span><span class="o">**</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;trajectory&quot;</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">])</span></div>
+
+    <span class="k">def</span> <span class="nf">_update_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
+        <span class="n">config_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">rh</span><span class="o">.</span><span class="n">get_config_id</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">]</span>
+        <span class="n">costs</span> <span class="o">=</span> <span class="p">[</span><span class="n">rh</span><span class="o">.</span><span class="n">average_cost</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents</span> <span class="o">=</span> <span class="n">configs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents_changed</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">TrajectoryItem</span><span class="p">(</span>
+                <span class="n">config_ids</span><span class="o">=</span><span class="n">config_ids</span><span class="p">,</span>
+                <span class="n">costs</span><span class="o">=</span><span class="n">costs</span><span class="p">,</span>
+                <span class="n">trial</span><span class="o">=</span><span class="n">rh</span><span class="o">.</span><span class="n">finished</span><span class="p">,</span>
+                <span class="n">walltime</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">used_walltime</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Updated trajectory.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_add_rejected_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">):</span>
+            <span class="n">config_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_config_id</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config_id</span> <span class="o">=</span> <span class="n">config</span>
+
+        <span class="k">if</span> <span class="n">config_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rejected_config_ids</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rejected_config_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config_id</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_remove_rejected_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">):</span>
+            <span class="n">config_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_config_id</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config_id</span> <span class="o">=</span> <span class="n">config</span>
+
+        <span class="k">if</span> <span class="n">config_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rejected_config_ids</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rejected_config_ids</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">config_id</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_reorder_instance_seed_keys</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">instance_seed_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedKey</span><span class="p">],</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedKey</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Shuffles the instance-seed keys by groups (first all instances, then all seeds). The following is done:</span>
+<span class="sd">        - Group by seeds</span>
+<span class="sd">        - Shuffle instances in the group of seeds</span>
+<span class="sd">        - Attach groups together</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rng</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+        <span class="n">groups</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">instance_seed_keys</span><span class="p">:</span>
+            <span class="n">groups</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">seed</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">key</span><span class="o">.</span><span class="n">seed</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tf_seeds</span>
+
+        <span class="c1"># Shuffle groups + attach groups together</span>
+        <span class="n">shuffled_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedKey</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tf_seeds</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">seed</span> <span class="ow">in</span> <span class="n">groups</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">groups</span><span class="p">[</span><span class="n">seed</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Shuffle pairs in the group and add to shuffled pairs</span>
+                <span class="n">shuffled</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">groups</span><span class="p">[</span><span class="n">seed</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">groups</span><span class="p">[</span><span class="n">seed</span><span class="p">]),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+                <span class="n">shuffled_keys</span> <span class="o">+=</span> <span class="p">[</span><span class="n">pair</span> <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">shuffled</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
+
+        <span class="c1"># Small sanity check</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">shuffled_keys</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">instance_seed_keys</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">shuffled_keys</span></div>
 </pre></div>
 
               </div>
@@ -1392,7 +1742,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

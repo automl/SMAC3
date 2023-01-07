@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Multi-Layer Perceptron Using Multiple Epochs &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>Multi-Layer Perceptron Using Multiple Epochs &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -99,11 +99,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -174,8 +174,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="../1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -194,7 +194,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../1_basics/5_priors.html">
+      <a class="reference internal" href="../1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -320,12 +325,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -366,11 +376,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -403,23 +408,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="../../api/smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -632,18 +627,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -652,18 +637,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -862,6 +837,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -923,6 +903,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1025,12 +1010,11 @@ to download the full example code</p>
 <section class="sphx-glr-example-title" id="multi-layer-perceptron-using-multiple-epochs">
 <span id="sphx-glr-examples-2-multi-fidelity-1-mlp-epochs-py"></span><h1>Multi-Layer Perceptron Using Multiple Epochs<a class="headerlink" href="#multi-layer-perceptron-using-multiple-epochs" title="Permalink to this heading">¶</a></h1>
 <p>Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets.
-Since we want to take advantage of Multi-Fidelity, the <code class="docutils literal notranslate"><span class="pre">MultiFidelityFacade</span></code> is a good choice. By default,
+Since we want to take advantage of multi-fidelity, the <code class="docutils literal notranslate"><span class="pre">MultiFidelityFacade</span></code> is a good choice. By default,
 <code class="docutils literal notranslate"><span class="pre">MultiFidelityFacade</span></code> internally runs with <a class="reference external" href="https://arxiv.org/abs/1603.06560">hyperband</a> as
-intensification, which is a combination of an
-aggressive racing mechanism and successive halving. Crucially, the target function function
-must accept a budget variable, detailing how much fidelity smac wants to allocate to this
-configuration.</p>
+intensification, which is a combination of an aggressive racing mechanism and Successive Halving. Crucially, the target
+function must accept a budget variable, detailing how much fidelity smac wants to allocate to this
+configuration. In this example, we use both <code class="docutils literal notranslate"><span class="pre">SuccessiveHalving</span></code> and <code class="docutils literal notranslate"><span class="pre">Hyperband</span></code> to compare the results.</p>
 <p>MLP is a deep neural network, and therefore, we choose epochs as fidelity type. This implies,
 that <code class="docutils literal notranslate"><span class="pre">budget</span></code> specifies the number of epochs smac wants to allocate. The digits dataset
 is chosen to optimize the average accuracy on 5-fold cross validation.</p>
@@ -1039,42 +1023,166 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 <p>This example uses the <code class="docutils literal notranslate"><span class="pre">MultiFidelityFacade</span></code> facade, which is the closest implementation to
 <a class="reference external" href="https://github.com/automl/HpBandSter">BOHB</a>.</p>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[WARNING][successive_halving.py:123] The target function is specified to be non-deterministic, but number of seeds to evaluate are set to 1. Consider increasing `n_seeds` from the intensifier.
-[INFO][successive_halving.py:197] Using successive halving with budget type BUDGETS, min budget 5, max budget 25 and eta 3.
-[INFO][abstract_initial_design.py:133] Using 5 initial design and 0 additional configurations.
-[WARNING][abstract_parallel_intensifier.py:93] Hyperband is executed with 1 worker(s) only. However, your system supports up to 2 workers. Consider increasing the workers in the scenario.
-[INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 1-1 with initial budget 8.
-[INFO][successive_halving_worker.py:396] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-[INFO][successive_halving_worker.py:613] Challenger (0.0495) is better than incumbent (0.0568) on budget 8.3333.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- batch_size: None -&gt; 155
-[INFO][abstract_intensifier.py:367] --- learning_rate_init: None -&gt; 0.006677306766018313
-[INFO][abstract_intensifier.py:367] --- n_layer: 4 -&gt; 5
-[INFO][abstract_intensifier.py:367] --- n_neurons: 123 -&gt; 56
-[INFO][abstract_intensifier.py:367] --- solver: &#39;lbfgs&#39; -&gt; &#39;adam&#39;
-[INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
-[INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
-[INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 1-2 with initial budget 25.
-[INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
-[INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 2-1 with initial budget 8.
-[INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-1 with budget [8.33 / 25] and 3 evaluated challenger(s).
-[INFO][successive_halving_worker.py:613] Challenger (0.0345) is better than incumbent (0.0384) on budget 25.0000.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- activation: &#39;tanh&#39; -&gt; &#39;relu&#39;
-[INFO][abstract_intensifier.py:367] --- batch_size: 155 -&gt; 117
-[INFO][abstract_intensifier.py:367] --- learning_rate: None -&gt; &#39;adaptive&#39;
-[INFO][abstract_intensifier.py:367] --- learning_rate_init: 0.006677306766018313 -&gt; 0.008282754423021153
-[INFO][abstract_intensifier.py:367] --- n_neurons: 56 -&gt; 52
-[INFO][abstract_intensifier.py:367] --- solver: &#39;adam&#39; -&gt; &#39;sgd&#39;
-[INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-2 with budget [25.00 / 25] and 1 evaluated challenger(s).
-[INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 2-2 with initial budget 25.
-[INFO][successive_halving_worker.py:245] Finished Successive Halving iteration-step 1-1 with budget [25.00 / 25] and 2 evaluated challenger(s).
-[INFO][hyperband_worker.py:165] Finished Hyperband iteration-step 3-1 with initial budget 8.
-[INFO][base_smbo.py:260] Configuration budget is exhausted.
-[INFO][abstract_facade.py:325] Final Incumbent: {&#39;activation&#39;: &#39;relu&#39;, &#39;n_layer&#39;: 5, &#39;n_neurons&#39;: 52, &#39;solver&#39;: &#39;sgd&#39;, &#39;batch_size&#39;: 117, &#39;learning_rate&#39;: &#39;adaptive&#39;, &#39;learning_rate_init&#39;: 0.008282754423021153}
-[INFO][abstract_facade.py:326] Estimated cost: 0.03450789229340745
-Default cost: 0.4307319715258433
-Incumbent cost: 0.03450789229340767
+<img src="../../_images/sphx_glr_1_mlp_epochs_001.png" srcset="../../_images/sphx_glr_1_mlp_epochs_001.png" alt="Trajectory" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_facade.py:184] Workers are reduced to 8.
+[INFO][proxy.py:71] To route to workers diagnostics web server please install jupyter-server-proxy: python -m pip install jupyter-server-proxy
+[INFO][scheduler.py:1619] State start
+[INFO][scheduler.py:3864]   Scheduler at:     tcp://127.0.0.1:33151
+[INFO][scheduler.py:3866]   dashboard at:            127.0.0.1:8787
+[INFO][nanny.py:365]         Start Nanny at: &#39;tcp://127.0.0.1:33413&#39;
+[INFO][nanny.py:365]         Start Nanny at: &#39;tcp://127.0.0.1:38063&#39;
+[INFO][nanny.py:365]         Start Nanny at: &#39;tcp://127.0.0.1:35107&#39;
+[INFO][nanny.py:365]         Start Nanny at: &#39;tcp://127.0.0.1:44013&#39;
+[INFO][nanny.py:365]         Start Nanny at: &#39;tcp://127.0.0.1:36629&#39;
+[INFO][nanny.py:365]         Start Nanny at: &#39;tcp://127.0.0.1:38977&#39;
+[INFO][nanny.py:365]         Start Nanny at: &#39;tcp://127.0.0.1:36677&#39;
+[INFO][nanny.py:365]         Start Nanny at: &#39;tcp://127.0.0.1:46857&#39;
+[INFO][scheduler.py:4216] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:34499&#39;, name: 5, status: init, memory: 0, processing: 0&gt;
+[INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:34499
+[INFO][core.py:867] Starting established connection to tcp://127.0.0.1:52266
+[INFO][scheduler.py:4216] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:34199&#39;, name: 2, status: init, memory: 0, processing: 0&gt;
+[INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:34199
+[INFO][core.py:867] Starting established connection to tcp://127.0.0.1:52252
+[INFO][scheduler.py:4216] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:44525&#39;, name: 3, status: init, memory: 0, processing: 0&gt;
+[INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:44525
+[INFO][core.py:867] Starting established connection to tcp://127.0.0.1:52260
+[INFO][scheduler.py:4216] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:43721&#39;, name: 1, status: init, memory: 0, processing: 0&gt;
+[INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:43721
+[INFO][core.py:867] Starting established connection to tcp://127.0.0.1:52236
+[INFO][scheduler.py:4216] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:41905&#39;, name: 4, status: init, memory: 0, processing: 0&gt;
+[INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:41905
+[INFO][core.py:867] Starting established connection to tcp://127.0.0.1:52296
+[INFO][scheduler.py:4216] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:36101&#39;, name: 0, status: init, memory: 0, processing: 0&gt;
+[INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:36101
+[INFO][core.py:867] Starting established connection to tcp://127.0.0.1:52280
+[INFO][scheduler.py:4216] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:45593&#39;, name: 7, status: init, memory: 0, processing: 0&gt;
+[INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:45593
+[INFO][core.py:867] Starting established connection to tcp://127.0.0.1:52312
+[INFO][scheduler.py:4216] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:43739&#39;, name: 6, status: init, memory: 0, processing: 0&gt;
+[INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:43739
+[INFO][core.py:867] Starting established connection to tcp://127.0.0.1:52304
+[INFO][scheduler.py:5195] Receive client connection: Client-7a772ca4-8e78-11ed-87dd-65c1888e27eb
+[INFO][core.py:867] Starting established connection to tcp://127.0.0.1:52322
+[INFO][abstract_initial_design.py:133] Using 5 initial design configurations and 0 additional configurations.
+[INFO][successive_halving.py:159] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
+[INFO][successive_halving.py:303] Number of configs in stage:
+[INFO][successive_halving.py:305] --- Bracket 0: [9, 3, 1]
+[INFO][successive_halving.py:307] Budgets in stage:
+[INFO][successive_halving.py:309] --- Bracket 0: [2.7777777777777777, 8.333333333333332, 25.0]
+[INFO][smbo.py:298] Finished 0 trials.
+[INFO][smbo.py:298] Finished 0 trials.
+[INFO][smbo.py:298] Finished 0 trials.
+[INFO][smbo.py:298] Finished 0 trials.
+[INFO][smbo.py:298] Finished 0 trials.
+[INFO][smbo.py:298] Finished 0 trials.
+[INFO][smbo.py:298] Finished 0 trials.
+[INFO][smbo.py:298] Finished 0 trials.
+[INFO][smbo.py:298] Finished 50 trials.
+[INFO][abstract_intensifier.py:493] Added config 8ea495 as new incumbent because there are no incumbents yet.
+[INFO][smbo.py:298] Finished 100 trials.
+[INFO][smbo.py:298] Finished 100 trials.
+[INFO][abstract_intensifier.py:565] Added config 4f78d3 and rejected config 8ea495 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- activation: &#39;tanh&#39; -&gt; &#39;logistic&#39;
+[INFO][configspace.py:175] --- batch_size: 214 -&gt; 215
+[INFO][configspace.py:175] --- learning_rate_init: 0.005599223654063347 -&gt; 0.014038393028902101
+[INFO][configspace.py:175] --- n_layer: 4 -&gt; 2
+[INFO][configspace.py:175] --- n_neurons: 66 -&gt; 250
+[INFO][smbo.py:306] Configuration budget is exhausted:
+[INFO][smbo.py:307] --- Remaining wallclock time: -0.1689012050628662
+[INFO][smbo.py:308] --- Remaining cpu time: inf
+[INFO][smbo.py:309] --- Remaining trials: 356
+[INFO][abstract_intensifier.py:565] Added config b69a5c and rejected config 4f78d3 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- activation: &#39;logistic&#39; -&gt; &#39;relu&#39;
+[INFO][configspace.py:175] --- batch_size: 215 -&gt; 238
+[INFO][configspace.py:175] --- learning_rate: None -&gt; &#39;constant&#39;
+[INFO][configspace.py:175] --- solver: &#39;adam&#39; -&gt; &#39;sgd&#39;
+Default cost (SuccessiveHalving): 0.36672856700711853
+Incumbent cost (SuccessiveHalving): 0.020591148251315472
+[INFO][abstract_initial_design.py:68] Using `n_configs` and ignoring `n_configs_per_hyperparameter`.
+[INFO][abstract_facade.py:184] Workers are reduced to 8.
+/opt/hostedtoolcache/Python/3.10.9/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
+Perhaps you already have a cluster running?
+Hosting the HTTP server on port 33473 instead
+  warnings.warn(
+[INFO][scheduler.py:1619] State start
+[INFO][scheduler.py:3864]   Scheduler at:     tcp://127.0.0.1:42597
+[INFO][scheduler.py:3866]   dashboard at:           127.0.0.1:33473
+[INFO][nanny.py:365]         Start Nanny at: &#39;tcp://127.0.0.1:33953&#39;
+[INFO][nanny.py:365]         Start Nanny at: &#39;tcp://127.0.0.1:42331&#39;
+[INFO][nanny.py:365]         Start Nanny at: &#39;tcp://127.0.0.1:39961&#39;
+[INFO][nanny.py:365]         Start Nanny at: &#39;tcp://127.0.0.1:45369&#39;
+[INFO][nanny.py:365]         Start Nanny at: &#39;tcp://127.0.0.1:35547&#39;
+[INFO][nanny.py:365]         Start Nanny at: &#39;tcp://127.0.0.1:36521&#39;
+[INFO][nanny.py:365]         Start Nanny at: &#39;tcp://127.0.0.1:33923&#39;
+[INFO][nanny.py:365]         Start Nanny at: &#39;tcp://127.0.0.1:44579&#39;
+[INFO][scheduler.py:4216] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:42463&#39;, name: 3, status: init, memory: 0, processing: 0&gt;
+[INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:42463
+[INFO][core.py:867] Starting established connection to tcp://127.0.0.1:58608
+[INFO][scheduler.py:4216] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:42749&#39;, name: 7, status: init, memory: 0, processing: 0&gt;
+[INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:42749
+[INFO][core.py:867] Starting established connection to tcp://127.0.0.1:58630
+[INFO][scheduler.py:4216] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:37737&#39;, name: 2, status: init, memory: 0, processing: 0&gt;
+[INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:37737
+[INFO][core.py:867] Starting established connection to tcp://127.0.0.1:58642
+[INFO][scheduler.py:4216] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:36401&#39;, name: 6, status: init, memory: 0, processing: 0&gt;
+[INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:36401
+[INFO][core.py:867] Starting established connection to tcp://127.0.0.1:58650
+[INFO][scheduler.py:4216] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:34041&#39;, name: 1, status: init, memory: 0, processing: 0&gt;
+[INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:34041
+[INFO][core.py:867] Starting established connection to tcp://127.0.0.1:58624
+[INFO][scheduler.py:4216] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:45669&#39;, name: 0, status: init, memory: 0, processing: 0&gt;
+[INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:45669
+[INFO][core.py:867] Starting established connection to tcp://127.0.0.1:58632
+[INFO][scheduler.py:4216] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:46167&#39;, name: 4, status: init, memory: 0, processing: 0&gt;
+[INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:46167
+[INFO][core.py:867] Starting established connection to tcp://127.0.0.1:58636
+[INFO][scheduler.py:4216] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:43861&#39;, name: 5, status: init, memory: 0, processing: 0&gt;
+[INFO][scheduler.py:5434] Starting worker compute stream, tcp://127.0.0.1:43861
+[INFO][core.py:867] Starting established connection to tcp://127.0.0.1:58666
+[INFO][scheduler.py:5195] Receive client connection: Client-a55f0a96-8e78-11ed-87dd-65c1888e27eb
+[INFO][core.py:867] Starting established connection to tcp://127.0.0.1:58668
+[INFO][abstract_initial_design.py:133] Using 5 initial design configurations and 0 additional configurations.
+[INFO][successive_halving.py:159] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
+[INFO][successive_halving.py:303] Number of configs in stage:
+[INFO][successive_halving.py:305] --- Bracket 0: [9, 3, 1]
+[INFO][successive_halving.py:305] --- Bracket 1: [3, 1]
+[INFO][successive_halving.py:305] --- Bracket 2: [1]
+[INFO][successive_halving.py:307] Budgets in stage:
+[INFO][successive_halving.py:309] --- Bracket 0: [2.7777777777777777, 8.333333333333332, 25.0]
+[INFO][successive_halving.py:309] --- Bracket 1: [8.333333333333332, 25.0]
+[INFO][successive_halving.py:309] --- Bracket 2: [25.0]
+[INFO][smbo.py:298] Finished 0 trials.
+[INFO][smbo.py:298] Finished 0 trials.
+[INFO][smbo.py:298] Finished 0 trials.
+[INFO][smbo.py:298] Finished 0 trials.
+[INFO][smbo.py:298] Finished 0 trials.
+[INFO][smbo.py:298] Finished 0 trials.
+[INFO][smbo.py:298] Finished 0 trials.
+[INFO][smbo.py:298] Finished 0 trials.
+[INFO][abstract_intensifier.py:493] Added config 06bb76 as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:565] Added config ebb6be and rejected config 06bb76 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- activation: &#39;relu&#39; -&gt; &#39;tanh&#39;
+[INFO][configspace.py:175] --- batch_size: None -&gt; 35
+[INFO][configspace.py:175] --- learning_rate_init: None -&gt; 0.001547917475869209
+[INFO][configspace.py:175] --- n_layer: 2 -&gt; 4
+[INFO][configspace.py:175] --- n_neurons: 48 -&gt; 32
+[INFO][configspace.py:175] --- solver: &#39;lbfgs&#39; -&gt; &#39;adam&#39;
+[INFO][abstract_intensifier.py:565] Added config 8ea495 and rejected config ebb6be as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- batch_size: 35 -&gt; 214
+[INFO][configspace.py:175] --- learning_rate_init: 0.001547917475869209 -&gt; 0.005599223654063347
+[INFO][configspace.py:175] --- n_neurons: 32 -&gt; 66
+[INFO][smbo.py:298] Finished 50 trials.
+[INFO][abstract_intensifier.py:565] Added config 704d44 and rejected config 8ea495 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- activation: &#39;tanh&#39; -&gt; &#39;logistic&#39;
+[INFO][configspace.py:175] --- batch_size: 214 -&gt; 31
+[INFO][configspace.py:175] --- learning_rate_init: 0.005599223654063347 -&gt; 0.0038549874043245355
+[INFO][configspace.py:175] --- n_layer: 4 -&gt; 1
+[INFO][configspace.py:175] --- n_neurons: 66 -&gt; 87
+[INFO][smbo.py:306] Configuration budget is exhausted:
+[INFO][smbo.py:307] --- Remaining wallclock time: -0.03168964385986328
+[INFO][smbo.py:308] --- Remaining cpu time: inf
+[INFO][smbo.py:309] --- Remaining trials: 426
+Default cost (Hyperband): 0.36672856700711853
+Incumbent cost (Hyperband): 0.0178087279480037
 </pre></div>
 </div>
 <div class="line-block">
@@ -1082,6 +1190,7 @@ Incumbent cost: 0.03450789229340767
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
 
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Categorical</span><span class="p">,</span>
@@ -1096,13 +1205,17 @@ Incumbent cost: 0.03450789229340767
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">cross_val_score</span>
 <span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPClassifier</span>
 
-<span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">MultiFidelityFacade</span><span class="p">,</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">MultiFidelityFacade</span> <span class="k">as</span> <span class="n">MFFacade</span>
+<span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac.facade</span> <span class="kn">import</span> <span class="n">AbstractFacade</span>
+<span class="kn">from</span> <span class="nn">smac.intensifier.hyperband</span> <span class="kn">import</span> <span class="n">Hyperband</span>
+<span class="kn">from</span> <span class="nn">smac.intensifier.successive_halving</span> <span class="kn">import</span> <span class="n">SuccessiveHalving</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2021, AutoML.org Freiburg-Hannover&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<span class="n">digits</span> <span class="o">=</span> <span class="n">load_digits</span><span class="p">()</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_digits</span><span class="p">()</span>
 
 
 <span class="k">class</span> <span class="nc">MLP</span><span class="p">:</span>
@@ -1124,7 +1237,7 @@ Incumbent cost: 0.03450789229340767
         <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">n_layer</span><span class="p">,</span> <span class="n">n_neurons</span><span class="p">,</span> <span class="n">activation</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="n">learning_rate_init</span><span class="p">])</span>
 
         <span class="c1"># Adding conditions to restrict the hyperparameter space...</span>
-        <span class="c1"># ... since learning rate is used when solver is &#39;sgd&#39;.</span>
+        <span class="c1"># ... since learning rate is only used when solver is &#39;sgd&#39;.</span>
         <span class="n">use_lr</span> <span class="o">=</span> <span class="n">EqualsCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;sgd&quot;</span><span class="p">)</span>
         <span class="c1"># ... since learning rate initialization will only be accounted for when using &#39;sgd&#39; or &#39;adam&#39;.</span>
         <span class="n">use_lr_init</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">learning_rate_init</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sgd&quot;</span><span class="p">,</span> <span class="s2">&quot;adam&quot;</span><span class="p">])</span>
@@ -1160,48 +1273,87 @@ Incumbent cost: 0.03450789229340767
 
             <span class="c1"># Returns the 5-fold cross validation accuracy</span>
             <span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># to make CV splits consistent</span>
-            <span class="n">score</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">classifier</span><span class="p">,</span> <span class="n">digits</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">digits</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">error_score</span><span class="o">=</span><span class="s2">&quot;raise&quot;</span><span class="p">)</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">classifier</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">error_score</span><span class="o">=</span><span class="s2">&quot;raise&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">plot_trajectory</span><span class="p">(</span><span class="n">facades</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AbstractFacade</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plots the trajectory (incumbents) of the optimization process.&quot;&quot;&quot;</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Trajectory&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Wallclock time [s]&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">facades</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">objectives</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">facade</span> <span class="ow">in</span> <span class="n">facades</span><span class="p">:</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">facade</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">trajectory</span><span class="p">:</span>
+            <span class="c1"># Single-objective optimization</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">config_ids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">costs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+
+            <span class="n">y</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">walltime</span>
+
+            <span class="n">X</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">Y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">facade</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">mlp</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">()</span>
 
-    <span class="c1"># Define our environment variables</span>
-    <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span>
-        <span class="n">mlp</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span>
-        <span class="n">walltime_limit</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>  <span class="c1"># After 40 seconds, we stop the hyperparameter optimization</span>
-        <span class="n">n_trials</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>  <span class="c1"># Evaluate max 200 different trials</span>
-        <span class="n">min_budget</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>  <span class="c1"># Train the MLP using a hyperparameter configuration for at least 5 epochs</span>
-        <span class="n">max_budget</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>  <span class="c1"># Train the MLP using a hyperparameter configuration for at most 25 epochs</span>
-        <span class="n">n_workers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="n">facades</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AbstractFacade</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">intensifier_object</span> <span class="ow">in</span> <span class="p">[</span><span class="n">SuccessiveHalving</span><span class="p">,</span> <span class="n">Hyperband</span><span class="p">]:</span>
+        <span class="c1"># Define our environment variables</span>
+        <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span>
+            <span class="n">mlp</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span>
+            <span class="n">walltime_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># After 60 seconds, we stop the hyperparameter optimization</span>
+            <span class="n">n_trials</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>  <span class="c1"># Evaluate max 500 different trials</span>
+            <span class="n">min_budget</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># Train the MLP using a hyperparameter configuration for at least 5 epochs</span>
+            <span class="n">max_budget</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>  <span class="c1"># Train the MLP using a hyperparameter configuration for at most 25 epochs</span>
+            <span class="n">n_workers</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+        <span class="p">)</span>
 
-    <span class="c1"># We want to run five random configurations before starting the optimization.</span>
-    <span class="n">initial_design</span> <span class="o">=</span> <span class="n">MultiFidelityFacade</span><span class="o">.</span><span class="n">get_initial_design</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">n_configs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="c1"># We want to run five random configurations before starting the optimization.</span>
+        <span class="n">initial_design</span> <span class="o">=</span> <span class="n">MFFacade</span><span class="o">.</span><span class="n">get_initial_design</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">n_configs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
-    <span class="c1"># Create our SMAC object and pass the scenario and the train method</span>
-    <span class="n">smac</span> <span class="o">=</span> <span class="n">MultiFidelityFacade</span><span class="p">(</span>
-        <span class="n">scenario</span><span class="p">,</span>
-        <span class="n">mlp</span><span class="o">.</span><span class="n">train</span><span class="p">,</span>
-        <span class="n">initial_design</span><span class="o">=</span><span class="n">initial_design</span><span class="p">,</span>
-        <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span>
+        <span class="c1"># Create our intensifier</span>
+        <span class="n">intensifier</span> <span class="o">=</span> <span class="n">intensifier_object</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">incumbent_selection</span><span class="o">=</span><span class="s2">&quot;highest_budget&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Let&#39;s optimize</span>
-    <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+        <span class="c1"># Create our SMAC object and pass the scenario and the train method</span>
+        <span class="n">smac</span> <span class="o">=</span> <span class="n">MFFacade</span><span class="p">(</span>
+            <span class="n">scenario</span><span class="p">,</span>
+            <span class="n">mlp</span><span class="o">.</span><span class="n">train</span><span class="p">,</span>
+            <span class="n">initial_design</span><span class="o">=</span><span class="n">initial_design</span><span class="p">,</span>
+            <span class="n">intensifier</span><span class="o">=</span><span class="n">intensifier</span><span class="p">,</span>
+            <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
 
-    <span class="c1"># Get cost of default configuration</span>
-    <span class="n">default_cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">mlp</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">())</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">default_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Let&#39;s optimize</span>
+        <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
 
-    <span class="c1"># Let&#39;s calculate the cost of the incumbent</span>
-    <span class="n">incumbent_cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Get cost of default configuration</span>
+        <span class="n">default_cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">mlp</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">())</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost (</span><span class="si">{</span><span class="n">intensifier</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">default_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Let&#39;s calculate the cost of the incumbent</span>
+        <span class="n">incumbent_cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost (</span><span class="si">{</span><span class="n">intensifier</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">facades</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">smac</span><span class="p">)</span>
+
+    <span class="c1"># Let&#39;s plot it</span>
+    <span class="n">plot_trajectory</span><span class="p">(</span><span class="n">facades</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  43.650 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 2 minutes  35.303 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e36c26bb3a993c4641a06c811122b11e/1_mlp_epochs.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_mlp_epochs.py</span></code></a></p>
@@ -1247,7 +1399,7 @@ Incumbent cost: 0.03450789229340767
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

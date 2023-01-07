@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>2D Schaffer Function with Objective Weights &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>2D Schaffer Function with Objective Weights &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -99,11 +99,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -174,8 +174,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="../1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -194,7 +194,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../1_basics/5_priors.html">
+      <a class="reference internal" href="../1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -320,12 +325,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -366,11 +376,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -403,23 +408,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="../../api/smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -632,18 +627,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -652,18 +637,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -862,6 +837,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -923,6 +903,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1024,127 +1009,323 @@ to download the full example code</p>
 </div>
 <section class="sphx-glr-example-title" id="d-schaffer-function-with-objective-weights">
 <span id="sphx-glr-examples-3-multi-objective-1-schaffer-py"></span><h1>2D Schaffer Function with Objective Weights<a class="headerlink" href="#d-schaffer-function-with-objective-weights" title="Permalink to this heading">¶</a></h1>
-<p>A simple example on how to use multi-objective optimization is shown. The <cite>schaffer</cite> function is used.</p>
-<img src="../../_images/sphx_glr_1_schaffer_001.png" srcset="../../_images/sphx_glr_1_schaffer_001.png" alt="1 schaffer" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:133] Using 10 initial design and 0 additional configurations.
-[INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
-[INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-[INFO][intensifier.py:566] Updated estimated cost of incumbent on 1 trials: 1.0
-[INFO][abstract_intensifier.py:340] Challenger (0.3333) is better than incumbent (0.5888) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -0.9324859157204628 -&gt; 1.3451112993061543
-[INFO][abstract_intensifier.py:340] Challenger (0.2725) is better than incumbent (0.2725) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: 1.3451112993061543 -&gt; 1.3448614852608838
-[INFO][abstract_intensifier.py:340] Challenger (0.2724) is better than incumbent (0.2725) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: 1.3448614852608838 -&gt; 1.3442250183165956
-[INFO][abstract_intensifier.py:340] Challenger (0.2724) is better than incumbent (0.2724) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: 1.3442250183165956 -&gt; 1.344081913330525
-[INFO][abstract_intensifier.py:340] Challenger (0.2724) is better than incumbent (0.2724) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: 1.344081913330525 -&gt; 1.3439457083376847
-[INFO][abstract_intensifier.py:340] Challenger (0.2723) is better than incumbent (0.2724) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: 1.3439457083376847 -&gt; 1.3436009486299065
-[INFO][abstract_intensifier.py:340] Challenger (0.2723) is better than incumbent (0.2723) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: 1.3436009486299065 -&gt; 1.343062445203584
-[INFO][abstract_intensifier.py:340] Challenger (0.2723) is better than incumbent (0.2723) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: 1.343062445203584 -&gt; 1.3430038657074754
-[INFO][abstract_intensifier.py:340] Challenger (0.2722) is better than incumbent (0.2723) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: 1.3430038657074754 -&gt; 1.3423393633152223
-[INFO][abstract_intensifier.py:340] Challenger (0.2722) is better than incumbent (0.2722) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: 1.3423393633152223 -&gt; 1.3423268024390436
-[INFO][abstract_intensifier.py:340] Challenger (0.2721) is better than incumbent (0.2722) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: 1.3423268024390436 -&gt; 1.3411748493907347
-[INFO][abstract_intensifier.py:340] Challenger (0.2721) is better than incumbent (0.2721) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: 1.3411748493907347 -&gt; 1.3408257098322904
-[INFO][abstract_intensifier.py:340] Challenger (0.264) is better than incumbent (0.2721) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: 1.3408257098322904 -&gt; -1.154695986884652
-[INFO][abstract_intensifier.py:340] Challenger (0.264) is better than incumbent (0.264) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.154695986884652 -&gt; -1.1581912672166585
-[INFO][abstract_intensifier.py:340] Challenger (0.2639) is better than incumbent (0.264) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.1581912672166585 -&gt; -1.1828007982514523
-[INFO][abstract_intensifier.py:340] Challenger (0.2639) is better than incumbent (0.2639) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.1828007982514523 -&gt; -1.1749832250073124
-[INFO][abstract_intensifier.py:340] Challenger (0.2639) is better than incumbent (0.2639) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.1749832250073124 -&gt; -1.1748448120914996
-[INFO][abstract_intensifier.py:340] Challenger (0.2639) is better than incumbent (0.2639) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.1748448120914996 -&gt; -1.1727127330103513
-[INFO][abstract_intensifier.py:340] Challenger (0.2639) is better than incumbent (0.2639) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.1727127330103513 -&gt; -1.1727241873269154
-[INFO][abstract_intensifier.py:340] Challenger (0.2639) is better than incumbent (0.2639) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.1727241873269154 -&gt; -1.1730755740919152
-[INFO][abstract_intensifier.py:340] Challenger (0.2639) is better than incumbent (0.2639) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.1730755740919152 -&gt; -1.1731571705331119
-[INFO][abstract_intensifier.py:340] Challenger (0.2639) is better than incumbent (0.2639) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.1731571705331119 -&gt; -1.173596954335133
-[INFO][abstract_intensifier.py:340] Challenger (0.2491) is better than incumbent (0.2502) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.173596954335133 -&gt; -1.246831324420453
-[INFO][abstract_intensifier.py:340] Challenger (0.249) is better than incumbent (0.2491) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.246831324420453 -&gt; -1.2449620779189017
-[INFO][abstract_intensifier.py:340] Challenger (0.2402) is better than incumbent (0.2404) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.2449620779189017 -&gt; -1.2844793813252284
-[INFO][abstract_intensifier.py:340] Challenger (0.2402) is better than incumbent (0.2402) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.2844793813252284 -&gt; -1.2844462259462253
-[INFO][abstract_intensifier.py:340] Challenger (0.2402) is better than incumbent (0.2402) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.2844462259462253 -&gt; -1.283467969854264
-[INFO][abstract_intensifier.py:340] Challenger (0.2402) is better than incumbent (0.2402) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.283467969854264 -&gt; -1.282275260385982
-[INFO][abstract_intensifier.py:340] Challenger (0.2402) is better than incumbent (0.2402) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.282275260385982 -&gt; -1.273756633456062
-[INFO][abstract_intensifier.py:340] Challenger (0.2402) is better than incumbent (0.2402) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.273756633456062 -&gt; -1.2738847990089424
-[INFO][abstract_intensifier.py:340] Challenger (0.2402) is better than incumbent (0.2402) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.2738847990089424 -&gt; -1.273934858702745
-[INFO][abstract_intensifier.py:340] Challenger (0.2308) is better than incumbent (0.2309) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.273934858702745 -&gt; 1.2837994656468243
-[INFO][abstract_intensifier.py:340] Challenger (0.2307) is better than incumbent (0.2308) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: 1.2837994656468243 -&gt; -1.3252147956587637
-[INFO][abstract_intensifier.py:340] Challenger (0.2307) is better than incumbent (0.2307) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.3252147956587637 -&gt; -1.317594589544663
-[INFO][abstract_intensifier.py:340] Challenger (0.2307) is better than incumbent (0.2307) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: -1.317594589544663 -&gt; 1.309332009537401
-[INFO][abstract_intensifier.py:340] Challenger (0.2307) is better than incumbent (0.2307) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: 1.309332009537401 -&gt; 1.3083895672738888
-[INFO][abstract_intensifier.py:340] Challenger (0.2306) is better than incumbent (0.2307) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x: 1.3083895672738888 -&gt; 1.3070641795200197
-[INFO][base_smbo.py:260] Configuration budget is exhausted.
-[INFO][abstract_facade.py:325] Final Incumbent: {&#39;x&#39;: 1.3070641795200197}
-[INFO][abstract_facade.py:326] Estimated cost: 0.23064995052356516
-Default costs: [0. 4.]
-Incumbent costs: [1.70841677 0.48016005]
+<p>A simple example on how to use multi-objective optimization is shown. The 2D Schaffer function is used. In the plot
+you can see that all points are on the Pareto front. However, since we set the objective weights, you can notice that
+SMAC prioritizes the second objective over the first one.</p>
+<img src="../../_images/sphx_glr_1_schaffer_001.png" srcset="../../_images/sphx_glr_1_schaffer_001.png" alt="Schaffer 2D" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:133] Using 10 initial design configurations and 0 additional configurations.
+[INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
+[INFO][abstract_intensifier.py:493] Added config 8a8909 as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:573] Config 3a64dd is a new incumbent. Total number of incumbents: 2.
+[INFO][abstract_intensifier.py:573] Config c865cf is a new incumbent. Total number of incumbents: 3.
+[INFO][abstract_intensifier.py:573] Config 9c7523 is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:573] Config 1c02c1 is a new incumbent. Total number of incumbents: 5.
+[INFO][abstract_intensifier.py:573] Config 555ee4 is a new incumbent. Total number of incumbents: 6.
+[INFO][abstract_intensifier.py:573] Config a21a9d is a new incumbent. Total number of incumbents: 7.
+[INFO][abstract_intensifier.py:573] Config 726247 is a new incumbent. Total number of incumbents: 8.
+[INFO][abstract_intensifier.py:573] Config 15d504 is a new incumbent. Total number of incumbents: 9.
+[INFO][abstract_intensifier.py:573] Config 2b6ad4 is a new incumbent. Total number of incumbents: 10.
+[INFO][abstract_intensifier.py:573] Config 914391 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config bf8bea is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config d05e80 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config df4cbd is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 8ba166 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config a50db0 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 346c91 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config c40dc1 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 003ffb is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 54cbf0 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 478ad0 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 74f0dd is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config ab860b is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 460755 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config d94cdf is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 178c1b is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config e7e8b7 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 85de3f is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config e837bf is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 2c9ff3 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config df9292 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config b3f2de is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 7d5595 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config b9185b is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config b90a99 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config e4a69b is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 4816bf is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 4558f3 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config b50fcc is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 1dc67b is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 74d2ac is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 6955fb is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 977060 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config b0a618 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 4e6b25 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config ce64ab is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 85f2cf is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 003f9a is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config af0c3f is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 36e58e is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][smbo.py:298] Finished 50 trials.
+[INFO][abstract_intensifier.py:573] Config 993356 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 094fd4 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 3ff59b is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 36ae0d is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config ecb618 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 0f8a3a is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 6962d0 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 782459 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 80e42c is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 1869d6 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 456310 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 0021ff is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config ea381b is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 41b92b is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 57f079 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 25cbd8 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 95052f is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 70707c is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config f6e131 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config e1cf58 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 584c42 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 047685 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config b67a4d is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 1e8dd4 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 05127f is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 7a4361 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config e7fcea is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config f8de06 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 549803 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 71481f is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 232333 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 5cb077 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 6e86f8 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config b55ebe is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config ce7af0 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 9718a3 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 981229 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 191e0a is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 59c51b is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 0ffdff is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 35d45b is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config a7ed9e is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 1bf099 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 4925ae is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 445f11 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 181e78 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config f660f5 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 8cb608 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 25257b is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 0c8f8e is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][smbo.py:298] Finished 100 trials.
+[INFO][abstract_intensifier.py:573] Config d8ea27 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config fceb3d is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 20d65b is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config cbca1d is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config f5155a is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config accc3c is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config ce9297 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 81b9ac is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 0c11a6 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 5706ae is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config c81c9a is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config d14060 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 481bd6 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config d74a3e is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config b80c96 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 4e664e is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config cbcc66 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 5dc22c is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 98c70e is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 206fc8 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config cedbe5 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 5ce981 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 3bfad0 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 3b1777 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config bd5424 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config d710c6 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 8f0869 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 2715ad is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 3bb3a3 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 18173d is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config a3edd7 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 3132a2 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 86b17f is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 9f4f72 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 63b5d0 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 8c6c08 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config ed3fe5 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config f741ba is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 860fa6 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 9c786d is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config c75780 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config c5167c is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 33cfef is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 854545 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 97176f is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config ccdc50 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 33c795 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config f33294 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 82d292 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][abstract_intensifier.py:573] Config 70f1b6 is a new incumbent. Total number of incumbents: 11.
+[INFO][abstract_intensifier.py:598] Removed one incumbent using crowding distance because more than 10 are available.
+[INFO][smbo.py:298] Finished 150 trials.
+[INFO][smbo.py:306] Configuration budget is exhausted:
+[INFO][smbo.py:307] --- Remaining wallclock time: inf
+[INFO][smbo.py:308] --- Remaining cpu time: inf
+[INFO][smbo.py:309] --- Remaining trials: 0
+[INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
+Validated costs from default config:
+--- [0. 4.]
+
+Validated costs from the Pareto front (incumbents):
+--- [0.01538581 3.51922763]
+--- [3.81477017e+00 2.19551629e-03]
+--- [0.66494111 1.40318427]
+--- [0.28063773 2.16162765]
+--- [1.21948125 0.80227625]
+--- [0.09228592 2.87714199]
+--- [3.16368713 0.04898446]
+--- [2.51598724 0.17124171]
+--- [1.60303937 0.53859173]
+--- [2.0255363  0.33268282]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1178,26 +1359,38 @@ Incumbent costs: [1.70841677 0.48016005]
     <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;metric1&quot;</span><span class="p">:</span> <span class="n">f1</span><span class="p">,</span> <span class="s2">&quot;metric2&quot;</span><span class="p">:</span> <span class="n">f2</span><span class="p">}</span>
 
 
-<span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">all_x</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">plot_from_smac</span><span class="p">(</span><span class="n">smac</span><span class="p">:</span> <span class="n">AbstractFacade</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">all_x</span><span class="p">:</span>
-        <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span> <span class="o">=</span> <span class="n">schaffer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3000</span><span class="p">)</span>
+    <span class="n">configs</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_configs</span><span class="p">()</span>
+    <span class="n">incumbents</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">get_incumbents</span><span class="p">()</span>
 
-    <span class="c1"># plt.vlines([1], 0, 4, linestyles=&quot;dashed&quot;, colors=[&quot;red&quot;])</span>
-    <span class="c1"># plt.hlines([1], 0, 4, linestyles=&quot;dashed&quot;, colors=[&quot;red&quot;])</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">configs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">incumbents</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">label</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Configuration&quot;</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span>
+        <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span> <span class="o">=</span> <span class="n">schaffer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">incumbents</span><span class="p">):</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Incumbent&quot;</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span>
+        <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span> <span class="o">=</span> <span class="n">schaffer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;f1&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;f2&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Schaffer 2D&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-
-<span class="k">def</span> <span class="nf">plot_from_smac</span><span class="p">(</span><span class="n">smac</span><span class="p">:</span> <span class="n">AbstractFacade</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">rh</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">runhistory</span>
-    <span class="n">all_x</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">trial_key</span> <span class="ow">in</span> <span class="n">rh</span><span class="p">:</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">rh</span><span class="o">.</span><span class="n">ids_config</span><span class="p">[</span><span class="n">trial_key</span><span class="o">.</span><span class="n">config_id</span><span class="p">]</span>
-        <span class="n">all_x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
-
-    <span class="n">plot</span><span class="p">(</span><span class="n">all_x</span><span class="p">)</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
@@ -1221,19 +1414,22 @@ Incumbent costs: [1.70841677 0.48016005]
         <span class="p">),</span>
         <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+    <span class="n">incumbents</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
 
+    <span class="c1"># Get cost of default configuration</span>
     <span class="n">default_cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">())</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default costs: </span><span class="si">{</span><span class="n">default_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validated costs from default config: </span><span class="se">\n</span><span class="s2">--- </span><span class="si">{</span><span class="n">default_cost</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="n">incumbent_cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent costs: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Validated costs from the Pareto front (incumbents):&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">incumbent</span> <span class="ow">in</span> <span class="n">incumbents</span><span class="p">:</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---&quot;</span><span class="p">,</span> <span class="n">cost</span><span class="p">)</span>
 
     <span class="c1"># Plot the evaluated points</span>
     <span class="n">plot_from_smac</span><span class="p">(</span><span class="n">smac</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  42.164 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  8.919 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-1-schaffer-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/248d8963fe8c1a6aa3910244607b3049/1_schaffer.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_schaffer.py</span></code></a></p>
@@ -1279,7 +1475,7 @@ Incumbent costs: [1.70841677 0.48016005]
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

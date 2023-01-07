@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.scenario &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>smac.scenario &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -99,11 +99,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -174,8 +174,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="../examples/1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -194,7 +194,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/5_priors.html">
+      <a class="reference internal" href="../examples/1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -320,12 +325,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -366,11 +376,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -403,23 +408,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -632,18 +627,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -652,18 +637,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -862,6 +837,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -923,6 +903,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1130,14 +1115,14 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>configspace</strong> (<em>ConfigSpace</em>) – The configuration space from which to sample the configurations.</p></li>
+<li><p><strong>configspace</strong> (<em>ConfigurationSpace</em>) – The configuration space from which to sample the configurations.</p></li>
 <li><p><strong>name</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The name of the run. If no name is passed, SMAC generates a hash from the meta data.
 Specify this argument to identify your run easily.</p></li>
 <li><p><strong>output_directory</strong> (<em>Path</em><em>, </em><em>defaults to Path</em><em>(</em><em>&quot;smac3_output&quot;</em><em>)</em>) – The directory in which to save the output. The files are saved in <cite>./output_directory/name/seed</cite>.</p></li>
 <li><p><strong>deterministic</strong> (<em>bool</em><em>, </em><em>defaults to False</em>) – If deterministic is set to true, only one seed is passed to the target function.
 Otherwise, multiple seeds (if n_seeds of the intensifier is greater than 1) are passed
 to the target function to ensure generalization.</p></li>
-<li><p><strong>objective</strong> (<em>str</em><em> | </em><em>list</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to &quot;cost&quot;</em>) – The objective(s) to optimize. This argument is required for multi-objective optimization.</p></li>
+<li><p><strong>objectives</strong> (<em>str</em><em> | </em><em>list</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to &quot;cost&quot;</em>) – The objective(s) to optimize. This argument is required for multi-objective optimization.</p></li>
 <li><p><strong>crash_cost</strong> (<em>float</em><em> | </em><em>list</em><em>[</em><em>float</em><em>]</em><em>, </em><em>defaults to np.inf</em>) – Defines the cost for a failed trial. In case of multi-objective, each objective can be associated with
 a different cost.</p></li>
 <li><p><strong>termination_cost_threshold</strong> (<em>float</em><em> | </em><em>list</em><em>[</em><em>float</em><em>]</em><em>, </em><em>defaults to np.inf</em>) – Defines a cost threshold when the optimization should stop. In case of multi-objective, each objective <em>must</em> be
@@ -1154,11 +1139,9 @@ to run.</p></li>
 Instances could be dataset names, seeds, subsets, etc.</p></li>
 <li><p><strong>instance_features</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>list</em><em>[</em><em>float</em><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Instances can be associated with features. For example, meta data of the dataset (mean, var, …) can be
 incorporated which are then further used to expand the training data of the surrogate model.</p></li>
-<li><p><strong>instance_order</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to &quot;shuffle_once&quot;</em>) – How to order the instances. Possible values are “shuffle” and “shuffle_once”. You can disable this feature by
-setting the argument to None.</p></li>
-<li><p><strong>min_budget</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The minimum budget (epochs, subset size, number of instances, …) that is used for the optimization.
+<li><p><strong>min_budget</strong> (<em>float</em><em> | </em><em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The minimum budget (epochs, subset size, number of instances, …) that is used for the optimization.
 Use this argument if you use multi-fidelity or instance optimization.</p></li>
-<li><p><strong>max_budget</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The maximum budget (epochs, subset size, number of instances, …) that is used for the optimization.
+<li><p><strong>max_budget</strong> (<em>float</em><em> | </em><em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The maximum budget (epochs, subset size, number of instances, …) that is used for the optimization.
 Use this argument if you use multi-fidelity or instance optimization.</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>) – The seed is used to make results reproducible. If seed is -1, SMAC will generate a random seed.</p></li>
 <li><p><strong>n_workers</strong> (<em>int</em><em>, </em><em>defaults to 1</em>) – The number of workers to use for parallelization. If <cite>n_workers</cite> is greather than 1, SMAC will use
@@ -1287,7 +1270,7 @@ Dask to parallelize the optimization.</p></li>
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

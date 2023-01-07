@@ -1,7 +1,7 @@
 Logging
 =======
 
-Logging is a crucical part of the optimization, which should be customizable by the user. This page gives you the 
+Logging is a crucial part of the optimization, which should be customizable by the user. This page gives you the
 overview how to customize the logging experience with SMAC.
 
 Level
@@ -35,7 +35,7 @@ The table shows you the specific levels:
 Custom File
 -----------
 
-Sometimes, the user wants to disable or highlight specifiy modules. You can do that by passing a custom yaml 
+Sometimes, the user wants to disable or highlight specify modules. You can do that by passing a custom yaml
 file to the facade instead.
 
 .. code-block:: python 

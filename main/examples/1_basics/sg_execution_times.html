@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Computation times &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>Computation times &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -97,11 +97,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -128,7 +128,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1">
@@ -172,8 +172,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -192,7 +192,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="5_priors.html">
+      <a class="reference internal" href="5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -318,12 +323,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -364,11 +374,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -401,23 +406,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="../../api/smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -630,18 +625,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -650,18 +635,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -860,6 +835,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -921,6 +901,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1017,27 +1002,31 @@
                 
   <section id="computation-times">
 <span id="sphx-glr-examples-1-basics-sg-execution-times"></span><h1>Computation times<a class="headerlink" href="#computation-times" title="Permalink to this heading">¶</a></h1>
-<p><strong>02:19.308</strong> total execution time for <strong>examples_1_basics</strong> files:</p>
+<p><strong>00:44.780</strong> total execution time for <strong>examples_1_basics</strong> files:</p>
 <table class="table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="5_priors.html#sphx-glr-examples-1-basics-5-priors-py"><span class="std std-ref">User Priors over the Optimum</span></a> (<code class="docutils literal notranslate"><span class="pre">5_priors.py</span></code>)</p></td>
-<td><p>01:21.374</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="6_priors.html#sphx-glr-examples-1-basics-6-priors-py"><span class="std std-ref">User Priors over the Optimum</span></a> (<code class="docutils literal notranslate"><span class="pre">6_priors.py</span></code>)</p></td>
+<td><p>00:37.060</p></td>
 <td><p>0.0 MB</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="3_ask_and_tell.html#sphx-glr-examples-1-basics-3-ask-and-tell-py"><span class="std std-ref">Ask-and-Tell</span></a> (<code class="docutils literal notranslate"><span class="pre">3_ask_and_tell.py</span></code>)</p></td>
-<td><p>00:31.270</p></td>
+<td><p>00:03.036</p></td>
 <td><p>0.0 MB</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="2_svm_cv.html#sphx-glr-examples-1-basics-2-svm-cv-py"><span class="std std-ref">Support Vector Machine with Cross-Validation</span></a> (<code class="docutils literal notranslate"><span class="pre">2_svm_cv.py</span></code>)</p></td>
-<td><p>00:15.298</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="1_quadratic_function.html#sphx-glr-examples-1-basics-1-quadratic-function-py"><span class="std std-ref">Quadratic Function</span></a> (<code class="docutils literal notranslate"><span class="pre">1_quadratic_function.py</span></code>)</p></td>
+<td><p>00:02.544</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="2_svm_cv.html#sphx-glr-examples-1-basics-2-svm-cv-py"><span class="std std-ref">Support Vector Machine with Cross-Validation</span></a> (<code class="docutils literal notranslate"><span class="pre">2_svm_cv.py</span></code>)</p></td>
+<td><p>00:01.163</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="5_continue.html#sphx-glr-examples-1-basics-5-continue-py"><span class="std std-ref">Continue an Optimization</span></a> (<code class="docutils literal notranslate"><span class="pre">5_continue.py</span></code>)</p></td>
+<td><p>00:00.840</p></td>
 <td><p>0.0 MB</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="4_callback.html#sphx-glr-examples-1-basics-4-callback-py"><span class="std std-ref">Custom Callback</span></a> (<code class="docutils literal notranslate"><span class="pre">4_callback.py</span></code>)</p></td>
-<td><p>00:06.765</p></td>
-<td><p>0.0 MB</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="1_synthetic_function.html#sphx-glr-examples-1-basics-1-synthetic-function-py"><span class="std std-ref">Synthetic Function</span></a> (<code class="docutils literal notranslate"><span class="pre">1_synthetic_function.py</span></code>)</p></td>
-<td><p>00:04.601</p></td>
+<td><p>00:00.137</p></td>
 <td><p>0.0 MB</p></td>
 </tr>
 </tbody>
@@ -1065,7 +1054,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

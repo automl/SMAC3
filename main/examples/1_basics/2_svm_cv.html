@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Support Vector Machine with Cross-Validation &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>Support Vector Machine with Cross-Validation &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -41,7 +41,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Ask-and-Tell" href="3_ask_and_tell.html" />
-    <link rel="prev" title="Synthetic Function" href="1_synthetic_function.html" />
+    <link rel="prev" title="Quadratic Function" href="1_quadratic_function.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -99,11 +99,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -174,8 +174,8 @@
     </label>
     <ul class="current">
      <li class="toctree-l3">
-      <a class="reference internal" href="1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3 current active">
@@ -194,7 +194,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="5_priors.html">
+      <a class="reference internal" href="5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -320,12 +325,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -366,11 +376,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -403,23 +408,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="../../api/smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -632,18 +627,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -652,18 +637,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -862,6 +837,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -923,6 +903,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1028,22 +1013,19 @@ to download the full example code</p>
 hyperparameter optimization facade, which uses a random forest as its surrogate model. It is able to
 scale to higher evaluation budgets and a higher number of dimensions. Also, you can use mixed data
 types as well as conditional hyperparameters.</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:133] Using 5 initial design and 0 additional configurations.
-[INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
-[INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-[INFO][intensifier.py:566] Updated estimated cost of incumbent on 1 trials: 0.0667
-[INFO][intensifier.py:566] Updated estimated cost of incumbent on 2 trials: 0.0667
-[INFO][abstract_intensifier.py:340] Challenger (0.0133) is better than incumbent (0.0667) on 2 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- C: 0.03992740880515713 -&gt; 1.2760639488343621
-[INFO][abstract_intensifier.py:367] --- kernel: &#39;rbf&#39; -&gt; &#39;linear&#39;
-[INFO][abstract_intensifier.py:367] --- shrinking: True -&gt; False
-[INFO][intensifier.py:566] Updated estimated cost of incumbent on 3 trials: 0.0133
-[INFO][base_smbo.py:260] Configuration budget is exhausted.
-[INFO][abstract_facade.py:325] Final Incumbent: {&#39;C&#39;: 1.2760639488343621, &#39;kernel&#39;: &#39;linear&#39;, &#39;shrinking&#39;: False}
-[INFO][abstract_facade.py:326] Estimated cost: 0.013333333333333308
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:133] Using 5 initial design configurations and 0 additional configurations.
+[INFO][abstract_intensifier.py:493] Added config eb23b4 as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:565] Added config 60c7ff and rejected config eb23b4 as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][configspace.py:175] --- C: 0.03992740880515713 -&gt; 1.2760639488343621
+[INFO][configspace.py:175] --- kernel: &#39;rbf&#39; -&gt; &#39;linear&#39;
+[INFO][configspace.py:175] --- shrinking: True -&gt; False
+[INFO][smbo.py:298] Finished 50 trials.
+[INFO][smbo.py:306] Configuration budget is exhausted:
+[INFO][smbo.py:307] --- Remaining wallclock time: inf
+[INFO][smbo.py:308] --- Remaining cpu time: inf
+[INFO][smbo.py:309] --- Remaining trials: 0
 Default cost: 0.03333333333333344
-Default cost: 0.013333333333333308
+Incumbent cost: 0.013333333333333308
 </pre></div>
 </div>
 <div class="line-block">
@@ -1056,7 +1038,6 @@ Default cost: 0.013333333333333308
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
 
 <span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">HyperparameterOptimizationFacade</span><span class="p">,</span> <span class="n">Scenario</span>
-<span class="kn">from</span> <span class="nn">smac.initial_design</span> <span class="kn">import</span> <span class="n">SobolInitialDesign</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2021, AutoML.org Freiburg-Hannover&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
@@ -1094,7 +1075,7 @@ Default cost: 0.013333333333333308
         <span class="k">return</span> <span class="n">cs</span>
 
     <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Creates a SVM based on a configuration and evaluates it on the</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a SVM based on a configuration and evaluates it on the</span>
 <span class="sd">        iris-dataset using cross-validation.&quot;&quot;&quot;</span>
         <span class="n">config_dict</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_dictionary</span><span class="p">()</span>
         <span class="k">if</span> <span class="s2">&quot;gamma&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
@@ -1117,13 +1098,9 @@ Default cost: 0.013333333333333308
         <span class="n">n_trials</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>  <span class="c1"># We want to run max 50 trials (combination of config and seed)</span>
     <span class="p">)</span>
 
-    <span class="c1"># We want to run the facade&#39;s default initial design, but we want to alter the number</span>
-    <span class="c1"># of initial configs to be 5.</span>
-    <span class="n">initial_design</span> <span class="o">=</span> <span class="n">HyperparameterOptimizationFacade</span><span class="o">.</span><span class="n">get_initial_design</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">n_configs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-
-    <span class="c1"># You can also override the initial design completely, by providing another</span>
-    <span class="c1"># initial design class.</span>
-    <span class="n">initial_design</span> <span class="o">=</span> <span class="n">SobolInitialDesign</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">n_configs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="c1"># We want to run the facade&#39;s default initial design, but we want to change the number</span>
+    <span class="c1"># of initial configs to 5.</span>
+    <span class="n">initial_design</span> <span class="o">=</span> <span class="n">HyperparameterOptimizationFacade</span><span class="o">.</span><span class="n">get_initial_design</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">n_configs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
     <span class="c1"># Now we use SMAC to find the best hyperparameters</span>
     <span class="n">smac</span> <span class="o">=</span> <span class="n">HyperparameterOptimizationFacade</span><span class="p">(</span>
@@ -1141,10 +1118,10 @@ Default cost: 0.013333333333333308
 
     <span class="c1"># Let&#39;s calculate the cost of the incumbent</span>
     <span class="n">incumbent_cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  15.298 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.163 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-2-svm-cv-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/7543c6c00a01b61aefff0a6414c7ac77/2_svm_cv.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_svm_cv.py</span></code></a></p>
@@ -1161,11 +1138,11 @@ Default cost: 0.013333333333333308
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="1_synthetic_function.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="1_quadratic_function.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Synthetic Function</p>
+            <p class="prev-next-title">Quadratic Function</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="3_ask_and_tell.html" title="next page">
@@ -1190,7 +1167,7 @@ Default cost: 0.013333333333333308
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

@@ -14,15 +14,6 @@ smac.runhistory.encoder.boing\_encoder
    
    
    
-   Classes
-   ^^^^^^^
-
-   .. autosummary::
-   
-      RunHistoryRawEncoder
-      RunHistoryRawScaledEncoder
-   
-   
 
    
    

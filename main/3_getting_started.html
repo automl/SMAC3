@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Getting Started &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>Getting Started &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -99,11 +99,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -174,8 +174,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="examples/1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="examples/1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -194,7 +194,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="examples/1_basics/5_priors.html">
+      <a class="reference internal" href="examples/1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="examples/1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -320,12 +325,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -366,11 +376,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="api/smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -403,23 +408,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="api/smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="api/smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -632,18 +627,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -652,18 +637,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="api/smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="api/smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -862,6 +837,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="api/smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="api/smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -923,6 +903,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="api/smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="api/smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1044,8 +1029,10 @@
                 
   <section id="getting-started">
 <h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h1>
-<p>In the core, SMAC needs four components (configuration space, target function, scenario and a facade) to run an
+<p>SMAC needs four core components (configuration space, target function, scenario and a facade) to run an
 optimization process, all of which are explained on this page.</p>
+<p>They interact in the following way:</p>
+<a class="reference internal image-reference" href="_images/smac_components_interaction.jpg"><img alt="Interaction of SMAC's components" src="_images/smac_components_interaction.jpg" style="width: 400px;" /></a>
 <section id="configuration-space">
 <h2>Configuration Space<a class="headerlink" href="#configuration-space" title="Permalink to this heading">¶</a></h2>
 <p>The configuration space defines the search space of the hyperparameters and, therefore, the tunable parameters’ legal
@@ -1064,9 +1051,11 @@ ranges and default values.</p>
 <section id="target-function">
 <h2>Target Function<a class="headerlink" href="#target-function" title="Permalink to this heading">¶</a></h2>
 <p>The target function takes a configuration from the configuration space and returns a performance value.
-For example, you could use a Neural Network and predict the performance based on the learning rate. Every configuration
-would (most likely) return a different value. However, SMAC tries to find the best learning rate by trying
-different and potentially improving configurations.</p>
+For example, you could use a Neural Network to predict on your data and get some validation performance.
+If, for instance, you would tune the learning rate of the Network’s optimizer, every learning rate will
+change the final validation performance of the network. This is the target function.
+SMAC tries to find the best performing learning rate by trying different values and evaluating the target function -
+in an efficient way.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">MultiLayerPerceptron</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">])</span>
     <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
@@ -1096,7 +1085,7 @@ used.</p>
 <section id="scenario">
 <h2>Scenario<a class="headerlink" href="#scenario" title="Permalink to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="api/smac.scenario.html#module-smac.scenario"><span class="std std-ref">Scenario</span></a> is used to provide environment variables. For example,
-you want to limit the optimization process by a time limit or want to specify where to save the results.</p>
+if you want to limit the optimization process by a time limit or want to specify where to save the results.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">Scenario</span>
 
 <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span>
@@ -1113,11 +1102,11 @@ you want to limit the optimization process by a time limit or want to specify wh
 <section id="facade">
 <h2>Facade<a class="headerlink" href="#facade" title="Permalink to this heading">¶</a></h2>
 <p>A <a class="reference internal" href="api/smac.facade.html#module-smac.facade"><span class="std std-ref">facade</span></a> is the entry point to SMAC, which constructs a default optimization
-pipeline for you. SMAC offers various facades, which satisfy many use cases and are crucial to
-achieving peak performance. The idea behind the facades is to provide a simple interface to SMAC,
-which is easy to use and understand without diving deep into the material. However, experts are
-invited to change the components as they please to achieve even better performance potentially. The following
-table (horizontal scrollable) shows you what is supported and reveals the default <a class="reference internal" href="advanced_usage/1_components.html#components"><span class="std std-ref">components</span></a>:</p>
+pipeline for you. SMAC offers various facades, which satisfy many common use cases and are crucial to
+achieving peak performance. The idea behind the facades is to provide a simple interface to all of SMAC’s components,
+which is easy to use and understand and without the need of deep diving into the material. However, experts are
+invited to change the components to their specific hyperparameter optimization needs. The following
+table (horizontally scrollable) shows you what is supported and reveals the default <a class="reference internal" href="advanced_usage/1_components.html#components"><span class="std std-ref">components</span></a>:</p>
 <table class="table">
 <thead>
 <tr class="row-odd"><th class="head"></th>
@@ -1185,7 +1174,7 @@ table (horizontal scrollable) shows you what is supported and reveals the defaul
 <td><p>Not used</p></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><p>Acquisition Maximier</p></td>
+<tr class="row-even"><td><p>Acquisition Maximizer</p></td>
 <td><p><a class="reference internal" href="api/smac.acquisition.maximizer.local_and_random_search.html#module-smac.acquisition.maximizer.local_and_random_search"><span class="std std-ref">Local and Sorted Random Search</span></a></p></td>
 <td><p><a class="reference internal" href="api/smac.acquisition.maximizer.local_and_random_search.html#module-smac.acquisition.maximizer.local_and_random_search"><span class="std std-ref">Local and Sorted Random Search</span></a></p></td>
 <td><p><a class="reference internal" href="api/smac.acquisition.maximizer.local_and_random_search.html#module-smac.acquisition.maximizer.local_and_random_search"><span class="std std-ref">Local and Sorted Random Search</span></a></p></td>
@@ -1233,7 +1222,7 @@ table (horizontal scrollable) shows you what is supported and reveals the defaul
 The facade accepts many arguments to specify components of the pipeline. Please also note, that in contrast
 to previous versions, instantiated objects are passed instead of <em>kwargs</em>.</p>
 </div>
-<p>The facades can be imported directely from the <code class="docutils literal notranslate"><span class="pre">smac</span></code> module.</p>
+<p>The facades can be imported directly from the <code class="docutils literal notranslate"><span class="pre">smac</span></code> module.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">BlackBoxFacade</span> <span class="k">as</span> <span class="n">BBFacade</span>
 <span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">HyperparameterOptimizationFacade</span> <span class="k">as</span> <span class="n">HPOFacade</span>
 <span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">MultiFidelityFacade</span> <span class="k">as</span> <span class="n">MFFacade</span>
@@ -1286,7 +1275,7 @@ to previous versions, instantiated objects are passed instead of <em>kwargs</em>
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

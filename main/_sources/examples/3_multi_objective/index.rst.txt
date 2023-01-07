@@ -15,7 +15,7 @@ Multi-Objective
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="A simple example on how to use multi-objective optimization is shown. The schaffer function is ...">
+    <div class="sphx-glr-thumbcontainer" tooltip="A simple example on how to use multi-objective optimization is shown. The 2D Schaffer function ...">
 
 .. only:: html
 

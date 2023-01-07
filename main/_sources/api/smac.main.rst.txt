@@ -36,8 +36,6 @@ Modules
    :toctree:
    :recursive:
 
-   smac.main.base_smbo
-   smac.main.boing
+   smac.main.config_selector
    smac.main.smbo
-   smac.main.turbo
 

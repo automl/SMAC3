@@ -25,7 +25,7 @@ Using callbacks is the easieast way to integrate custom code inside the Bayesian
 In this example, we disable SMAC's default logging option and use the custom callback to log the evaluated trials.
 Furthermore, we print some stages of the optimization process.
 
-.. GENERATED FROM PYTHON SOURCE LINES 9-85
+.. GENERATED FROM PYTHON SOURCE LINES 9-82
 
 
 
@@ -41,20 +41,20 @@ Furthermore, we print some stages of the optimization process.
     Current incumbent value: 1102.7877872130716
 
     Evaluated 20 trials so far.
-    Current incumbent: {'x0': 0.03135360777378082, 'x1': -0.21179260686039925}
-    Current incumbent value: 5.465623793958126
+    Current incumbent: {'x0': -0.9968221839517355, 'x1': 4.30847043171525}
+    Current incumbent value: 1102.7877872130716
 
     Evaluated 30 trials so far.
-    Current incumbent: {'x0': 0.03104708574713655, 'x1': -0.034678518343637776}
-    Current incumbent value: 1.0659081020778713
+    Current incumbent: {'x0': -0.9968221839517355, 'x1': 4.30847043171525}
+    Current incumbent value: 1102.7877872130716
 
     Evaluated 40 trials so far.
-    Current incumbent: {'x0': 0.03104708574713655, 'x1': 0.016330022764775798}
-    Current incumbent value: 0.9624814567444364
+    Current incumbent: {'x0': -0.9968221839517355, 'x1': 4.30847043171525}
+    Current incumbent value: 1102.7877872130716
 
     Evaluated 50 trials so far.
-    Current incumbent: {'x0': 0.029508593566554886, 'x1': -0.011213346364975507}
-    Current incumbent value: 0.956456125602556
+    Current incumbent: {'x0': 0.03135360777378082, 'x1': -0.21179260686039925}
+    Current incumbent value: 5.465623793958126
 
     We just triggered to stop the optimization after 50 finished trials.
 
@@ -104,23 +104,23 @@ Furthermore, we print some stages of the optimization process.
         def __init__(self) -> None:
             self.trials_counter = 0
 
-        def on_start(self, smbo: smac.main.BaseSMBO) -> None:
+        def on_start(self, smbo: smac.main.smbo.SMBO) -> None:
             print("Let's start!")
             print("")
 
-        def on_tell_end(self, smbo: smac.main.BaseSMBO, info: TrialInfo, value: TrialValue) -> bool | None:
+        def on_tell_end(self, smbo: smac.main.smbo.SMBO, info: TrialInfo, value: TrialValue) -> bool | None:
             self.trials_counter += 1
             if self.trials_counter % 10 == 0:
                 print(f"Evaluated {self.trials_counter} trials so far.")
 
-                incumbent = smbo.incumbent
+                incumbent = smbo.intensifier.get_incumbent()
                 assert incumbent is not None
                 print(f"Current incumbent: {incumbent.get_dictionary()}")
                 print(f"Current incumbent value: {smbo.runhistory.get_cost(incumbent)}")
                 print("")
 
             if self.trials_counter == 50:
-                print(f"We just triggered to stop the optimization after {smbo.stats.finished} finished trials.")
+                print(f"We just triggered to stop the optimization after {smbo.runhistory.finished} finished trials.")
                 return False
 
             return None
@@ -133,21 +133,18 @@ Furthermore, we print some stages of the optimization process.
         scenario = Scenario(model.configspace, n_trials=200)
 
         # Now we use SMAC to find the best hyperparameters
-        smac = HPOFacade(
+        HPOFacade(
             scenario,
             model.train,
             overwrite=True,
             callbacks=[CustomCallback()],
             logging_level=999999,
-        )
-
-        # Let's optimize
-        smac.optimize()
+        ).optimize()
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  6.765 seconds)
+   **Total running time of the script:** ( 0 minutes  0.137 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_4_callback.py:

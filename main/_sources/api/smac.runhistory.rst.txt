@@ -39,5 +39,6 @@ Modules
    smac.runhistory.dataclasses
    smac.runhistory.encoder
    smac.runhistory.enumerations
+   smac.runhistory.errors
    smac.runhistory.runhistory
 

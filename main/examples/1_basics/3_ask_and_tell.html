@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Ask-and-Tell &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>Ask-and-Tell &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -99,11 +99,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -174,8 +174,8 @@
     </label>
     <ul class="current">
      <li class="toctree-l3">
-      <a class="reference internal" href="1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -194,7 +194,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="5_priors.html">
+      <a class="reference internal" href="5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -320,12 +325,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -366,11 +376,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -403,23 +408,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="../../api/smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -632,18 +627,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -652,18 +637,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -862,6 +837,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -923,6 +903,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1025,80 +1010,43 @@ to download the full example code</p>
 <section class="sphx-glr-example-title" id="ask-and-tell">
 <span id="sphx-glr-examples-1-basics-3-ask-and-tell-py"></span><h1>Ask-and-Tell<a class="headerlink" href="#ask-and-tell" title="Permalink to this heading">¶</a></h1>
 <p>This examples show how to use the Ask-and-Tell interface.</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:81] Reducing the number of initial configurations from 20 to 10 (max_ratio == 0.1).
-[INFO][abstract_initial_design.py:133] Using 10 initial design and 0 additional configurations.
-[INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
-[INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-[INFO][intensifier.py:566] Updated estimated cost of incumbent on 1 trials: 1102.7878
-[INFO][abstract_intensifier.py:340] Challenger (700.6438) is better than incumbent (1102.7878) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: -0.9968221839517355 -&gt; -0.0801787059894652
-[INFO][abstract_intensifier.py:367] --- x1: 4.30847043171525 -&gt; 2.6511913893559456
-[INFO][abstract_intensifier.py:340] Challenger (534.1655) is better than incumbent (700.6438) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: -0.0801787059894652 -&gt; -0.3416789574692718
-[INFO][abstract_intensifier.py:367] --- x1: 2.6511913893559456 -&gt; 2.42404890638365
-[INFO][abstract_intensifier.py:340] Challenger (496.3762) is better than incumbent (534.1655) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: -0.3416789574692718 -&gt; -0.28608844463719496
-[INFO][abstract_intensifier.py:367] --- x1: 2.42404890638365 -&gt; 2.3060816617693796
-[INFO][abstract_intensifier.py:340] Challenger (298.9921) is better than incumbent (496.3762) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: -0.28608844463719496 -&gt; -0.3271574222093152
-[INFO][abstract_intensifier.py:367] --- x1: 2.3060816617693796 -&gt; 1.8310701115610293
-[INFO][abstract_intensifier.py:340] Challenger (52.6661) is better than incumbent (298.9921) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: -0.3271574222093152 -&gt; -1.0574101478292501
-[INFO][abstract_intensifier.py:367] --- x1: 1.8310701115610293 -&gt; 1.81405586187556
-[INFO][abstract_intensifier.py:340] Challenger (47.5261) is better than incumbent (52.6661) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: -1.0574101478292501 -&gt; -1.091071128530627
-[INFO][abstract_intensifier.py:367] --- x1: 1.81405586187556 -&gt; 1.8473492763822659
-[INFO][abstract_intensifier.py:340] Challenger (37.5225) is better than incumbent (47.5261) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: -1.091071128530627 -&gt; -0.14485910843402294
-[INFO][abstract_intensifier.py:367] --- x1: 1.8473492763822659 -&gt; 0.6227465597142388
-[INFO][abstract_intensifier.py:340] Challenger (2.2969) is better than incumbent (37.5225) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: -0.14485910843402294 -&gt; 0.8571083577023701
-[INFO][abstract_intensifier.py:367] --- x1: 0.6227465597142388 -&gt; 0.5837542285833779
-[INFO][abstract_intensifier.py:340] Challenger (2.0091) is better than incumbent (2.2969) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: 0.8571083577023701 -&gt; 0.8523808632155205
-[INFO][abstract_intensifier.py:367] --- x1: 0.5837542285833779 -&gt; 0.5855804370715116
-[INFO][abstract_intensifier.py:340] Challenger (0.8805) is better than incumbent (2.0091) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: 0.8523808632155205 -&gt; 0.8282799604292617
-[INFO][abstract_intensifier.py:367] --- x1: 0.5855804370715116 -&gt; 0.5937954884699321
-[INFO][abstract_intensifier.py:340] Challenger (0.7962) is better than incumbent (0.8805) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: 0.8282799604292617 -&gt; 0.8239155099649702
-[INFO][abstract_intensifier.py:367] --- x1: 0.5937954884699321 -&gt; 0.5913614425663436
-[INFO][abstract_intensifier.py:340] Challenger (0.0966) is better than incumbent (0.7962) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: 0.8239155099649702 -&gt; 0.8164779430332674
-[INFO][abstract_intensifier.py:367] --- x1: 0.5913614425663436 -&gt; 0.6917259355509353
-[INFO][abstract_intensifier.py:340] Challenger (0.0676) is better than incumbent (0.0966) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: 0.8164779430332674 -&gt; 0.8102084746659814
-[INFO][abstract_intensifier.py:367] --- x1: 0.6917259355509353 -&gt; 0.6742171439313385
-[INFO][abstract_intensifier.py:340] Challenger (0.066) is better than incumbent (0.0676) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: 0.8102084746659814 -&gt; 0.8110532622741715
-[INFO][abstract_intensifier.py:367] --- x1: 0.6742171439313385 -&gt; 0.6403994181685118
-[INFO][abstract_intensifier.py:340] Challenger (0.039) is better than incumbent (0.066) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: 0.8110532622741715 -&gt; 0.8111806798224528
-[INFO][abstract_intensifier.py:367] --- x1: 0.6403994181685118 -&gt; 0.6522627014998603
-[INFO][abstract_intensifier.py:340] Challenger (0.0363) is better than incumbent (0.039) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: 0.8111806798224528 -&gt; 0.8102084746659814
-[INFO][abstract_intensifier.py:367] --- x1: 0.6522627014998603 -&gt; 0.6548387613800859
-[INFO][base_smbo.py:260] Configuration budget is exhausted.
-[INFO][abstract_facade.py:325] Final Incumbent: {&#39;x0&#39;: 0.8102084746659814, &#39;x1&#39;: 0.6548387613800859}
-[INFO][abstract_facade.py:326] Estimated cost: 0.036276506719374435
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:133] Using 20 initial design configurations and 0 additional configurations.
+[INFO][abstract_intensifier.py:493] Added config 98ccec as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:565] Added config 94dccd and rejected config 98ccec as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: -0.9968221839517355 -&gt; 0.03135360777378082
+[INFO][configspace.py:175] --- x1: 4.30847043171525 -&gt; -0.21179260686039925
+[INFO][abstract_intensifier.py:565] Added config 94b2fe and rejected config 94dccd as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: 0.03135360777378082 -&gt; 1.8422549832482282
+[INFO][configspace.py:175] --- x1: -0.21179260686039925 -&gt; 3.526509233029728
+[INFO][abstract_intensifier.py:565] Added config 026b73 and rejected config 94b2fe as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: 1.8422549832482282 -&gt; 0.10203668300079549
+[INFO][configspace.py:175] --- x1: 3.526509233029728 -&gt; 0.1151862278387501
+[INFO][abstract_intensifier.py:565] Added config 5db1de and rejected config 026b73 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: 0.10203668300079549 -&gt; 0.10138875906166067
+[INFO][configspace.py:175] --- x1: 0.1151862278387501 -&gt; 0.10325090860241648
+[INFO][abstract_intensifier.py:565] Added config c89070 and rejected config 5db1de as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: 0.10138875906166067 -&gt; 0.08653325483166885
+[INFO][configspace.py:175] --- x1: 0.10325090860241648 -&gt; 0.08549815086526724
+[INFO][smbo.py:298] Finished 50 trials.
+[INFO][abstract_intensifier.py:565] Added config f3174e and rejected config c89070 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: 0.08653325483166885 -&gt; 0.05367820946404134
+[INFO][configspace.py:175] --- x1: 0.08549815086526724 -&gt; 0.07009655254860192
+[INFO][abstract_intensifier.py:565] Added config 458538 and rejected config f3174e as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: 0.05367820946404134 -&gt; 0.08292029094844988
+[INFO][configspace.py:175] --- x1: 0.07009655254860192 -&gt; 0.06495875484764024
+[INFO][abstract_intensifier.py:565] Added config d95598 and rejected config 458538 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: 0.08292029094844988 -&gt; 0.08393076270018529
+[INFO][configspace.py:175] --- x1: 0.06495875484764024 -&gt; 0.034451435520161944
+[INFO][abstract_intensifier.py:565] Added config 2b7962 and rejected config d95598 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: 0.08393076270018529 -&gt; 0.07805927091208886
+[INFO][configspace.py:175] --- x1: 0.034451435520161944 -&gt; 0.0059357711510132916
+[INFO][smbo.py:298] Finished 100 trials.
+[INFO][smbo.py:306] Configuration budget is exhausted:
+[INFO][smbo.py:307] --- Remaining wallclock time: inf
+[INFO][smbo.py:308] --- Remaining cpu time: inf
+[INFO][smbo.py:309] --- Remaining trials: 0
 Default cost: 16916.0
-Default cost: 0.036276506719374435
+Incumbent cost: 0.8499771879028607
 </pre></div>
 </div>
 <div class="line-block">
@@ -1124,7 +1072,7 @@ Default cost: 0.036276506719374435
         <span class="k">return</span> <span class="n">cs</span>
 
     <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The 2-dimensional Rosenbrock function as a toy model.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The 2-dimensional Rosenbrock function as a toy model.</span>
 <span class="sd">        The Rosenbrock function is well know in the optimization community and</span>
 <span class="sd">        often serves as a toy problem. It can be defined for arbitrary</span>
 <span class="sd">        dimensions. The minimium is always at x_i = 1 with a function value of</span>
@@ -1146,7 +1094,7 @@ Default cost: 0.036276506719374435
 
     <span class="n">intensifier</span> <span class="o">=</span> <span class="n">HyperparameterOptimizationFacade</span><span class="o">.</span><span class="n">get_intensifier</span><span class="p">(</span>
         <span class="n">scenario</span><span class="p">,</span>
-        <span class="n">max_config_calls</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># We basically use one seed only</span>
+        <span class="n">max_config_calls</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># We basically use one seed per config only</span>
     <span class="p">)</span>
 
     <span class="c1"># Now we use SMAC to find the best hyperparameters</span>
@@ -1168,8 +1116,8 @@ Default cost: 0.036276506719374435
         <span class="n">smac</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
     <span class="c1"># After calling ask+tell, we can still optimize</span>
+    <span class="c1"># Note: SMAC will optimize the next 90 trials because 10 trials already have been evaluated</span>
     <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
-    <span class="k">assert</span> <span class="n">smac</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">finished</span> <span class="o">==</span> <span class="mi">100</span>
 
     <span class="c1"># Get cost of default configuration</span>
     <span class="n">default_cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">())</span>
@@ -1177,10 +1125,10 @@ Default cost: 0.036276506719374435
 
     <span class="c1"># Let&#39;s calculate the cost of the incumbent</span>
     <span class="n">incumbent_cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  31.270 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.036 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-3-ask-and-tell-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/a1828630146a41acf93ee176b4deac58/3_ask_and_tell.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">3_ask_and_tell.py</span></code></a></p>
@@ -1226,7 +1174,7 @@ Default cost: 0.036276506719374435
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

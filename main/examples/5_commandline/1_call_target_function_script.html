@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Call Target Function From Script &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>Call Target Function From Script &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -99,11 +99,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -174,8 +174,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="../1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -194,7 +194,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../1_basics/5_priors.html">
+      <a class="reference internal" href="../1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -320,12 +325,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -366,11 +376,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -403,23 +408,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="../../api/smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -632,18 +627,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -652,18 +637,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -862,6 +837,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -923,6 +903,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1028,43 +1013,41 @@ to download the full example code</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
 
 <span class="c1"># Set arguments first</span>
-<span class="k">for</span> argument <span class="k">in</span> <span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+<span class="k">for</span><span class="w"> </span>argument<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
 <span class="k">do</span>
-    <span class="nv">key</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nv">$argument</span> <span class="p">|</span> cut -f1 -d<span class="o">=</span><span class="k">)</span>
-    <span class="nv">value</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nv">$argument</span> <span class="p">|</span> cut -f2 -d<span class="o">=</span><span class="k">)</span>
+<span class="w">    </span><span class="nv">key</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="nv">$argument</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-f1<span class="w"> </span>-d<span class="o">=</span><span class="k">)</span>
+<span class="w">    </span><span class="nv">value</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="nv">$argument</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-f2<span class="w"> </span>-d<span class="o">=</span><span class="k">)</span>
 
-    <span class="k">if</span> <span class="o">[[</span> <span class="nv">$key</span> <span class="o">==</span> *<span class="s2">&quot;--&quot;</span>* <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
-        <span class="nv">v</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">key</span><span class="p">/--/</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="nb">declare</span> <span class="nv">$v</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">value</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="k">fi</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$key</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;--&quot;</span>*<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="nv">v</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">key</span><span class="p">/--/</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="nb">declare</span><span class="w"> </span><span class="nv">$v</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">value</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">fi</span>
 <span class="k">done</span>
 
 <span class="c1"># We simply set the cost to our parameter</span>
 <span class="nv">cost</span><span class="o">=</span><span class="nv">$x0</span>
 
 <span class="c1"># Return everything</span>
-<span class="nb">echo</span> <span class="s2">&quot;cost=</span><span class="nv">$cost</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;cost=</span><span class="nv">$cost</span><span class="s2">&quot;</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:81] Reducing the number of initial configurations from 10 to 3 (max_ratio == 0.1).
-[INFO][abstract_initial_design.py:133] Using 3 initial design and 0 additional configurations.
-[INFO][intensifier.py:275] No incumbent provided in the first run. Sampling a new challenger...
-[INFO][intensifier.py:446] First run and no incumbent provided. Challenger is assumed to be the incumbent.
-[INFO][intensifier.py:566] Updated estimated cost of incumbent on 1 trials: 267.0
-[INFO][abstract_intensifier.py:340] Challenger (116.0) is better than incumbent (267.0) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: 267 -&gt; 116
-[INFO][abstract_intensifier.py:340] Challenger (115.0) is better than incumbent (116.0) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: 116 -&gt; 115
-[INFO][abstract_intensifier.py:340] Challenger (10.0) is better than incumbent (115.0) on 1 trials.
-[INFO][abstract_intensifier.py:364] Changes in incumbent:
-[INFO][abstract_intensifier.py:367] --- x0: 115 -&gt; 10
-[INFO][base_smbo.py:260] Configuration budget is exhausted.
-[INFO][abstract_facade.py:325] Final Incumbent: {&#39;x0&#39;: 10}
-[INFO][abstract_facade.py:326] Estimated cost: 10.0
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:81] Reducing the number of initial configurations from 8 to 7 (max_ratio == 0.25).
+[INFO][abstract_initial_design.py:133] Using 7 initial design configurations and 0 additional configurations.
+[INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
+[INFO][abstract_intensifier.py:493] Added config 33ba44 as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:565] Added config 249a5c and rejected config 33ba44 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: 267 -&gt; 144
+[INFO][abstract_intensifier.py:565] Added config 17babd and rejected config 249a5c as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: 144 -&gt; 98
+[INFO][abstract_intensifier.py:565] Added config 6bd331 and rejected config 17babd as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- x0: 98 -&gt; 0
+[INFO][smbo.py:306] Configuration budget is exhausted:
+[INFO][smbo.py:307] --- Remaining wallclock time: inf
+[INFO][smbo.py:308] --- Remaining cpu time: inf
+[INFO][smbo.py:309] --- Remaining trials: 0
+[INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
 Default cost: 500.0
-Incumbent cost: 10.0
+Incumbent cost: 0.0
 </pre></div>
 </div>
 <div class="line-block">
@@ -1101,7 +1084,7 @@ Incumbent cost: 10.0
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.129 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.239 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-5-commandline-1-call-target-function-script-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/d801707bbc5f61e2f2bfb399928b31aa/1_call_target_function_script.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_call_target_function_script.py</span></code></a></p>
@@ -1147,7 +1130,7 @@ Incumbent cost: 10.0
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

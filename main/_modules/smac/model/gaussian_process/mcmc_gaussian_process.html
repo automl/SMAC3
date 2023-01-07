@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.model.gaussian_process.mcmc_gaussian_process &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>smac.model.gaussian_process.mcmc_gaussian_process &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -96,11 +96,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -127,7 +127,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1">
@@ -171,8 +171,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../../examples/1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="../../../../examples/1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -191,7 +191,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../../examples/1_basics/5_priors.html">
+      <a class="reference internal" href="../../../../examples/1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../examples/1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -317,12 +322,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -363,11 +373,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -400,23 +405,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="../../../../api/smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -629,18 +624,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -649,18 +634,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../api/smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -859,6 +834,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../../../api/smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -920,6 +900,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../api/smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1030,7 +1015,7 @@
 
 
 <div class="viewcode-block" id="MCMCGaussianProcess"><a class="viewcode-back" href="../../../../api/smac.model.gaussian_process.mcmc_gaussian_process.html#smac.model.gaussian_process.MCMCGaussianProcess">[docs]</a><span class="k">class</span> <span class="nc">MCMCGaussianProcess</span><span class="p">(</span><span class="n">AbstractGaussianProcess</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Implementation of a Gaussian process model which out-integrates its hyperparameters by</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation of a Gaussian process model which out-integrates its hyperparameters by</span>
 <span class="sd">    Markow-Chain-Monte-Carlo (MCMC). If you use this class make sure that you also use an integrated acquisition</span>
 <span class="sd">    function to integrate over the GP&#39;s hyperparameter as proposed by Snoek et al.</span>
 
@@ -1049,10 +1034,10 @@
 <span class="sd">        The number of hyperparameter samples. This also determines the number of walker for MCMC sampling as each</span>
 <span class="sd">        walker will return one hyperparameter sample.</span>
 <span class="sd">    chain_length : int, defaults to 50</span>
-<span class="sd">        The length of the MCMC chain. We start `n_mcmc_walkers` walker for `chain_length` steps and we use the last</span>
+<span class="sd">        The length of the MCMC chain. We start `n_mcmc_walkers` walker for `chain_length` steps, and we use the last</span>
 <span class="sd">        sample in the chain as a hyperparameter sample.</span>
 <span class="sd">    burning_steps : int, defaults to 50</span>
-<span class="sd">        The number of burnin steps before the actual MCMC sampling starts.</span>
+<span class="sd">        The number of burning steps before the actual MCMC sampling starts.</span>
 <span class="sd">    mcmc_sampler : str, defaults to &quot;emcee&quot;</span>
 <span class="sd">        Choose a self-tuning MCMC sampler. Can be either ``emcee`` or ``nuts``.</span>
 <span class="sd">    normalize_y : bool, defaults to True</span>
@@ -1103,7 +1088,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_ll_evals</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_burned</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_is_trained</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># TODO: What type does this variable hold?</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
@@ -1123,7 +1108,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">models</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">GaussianProcess</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the internally used gaussian processes.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the internally used gaussian processes.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_models</span>
 
     <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span>
@@ -1132,17 +1117,17 @@
         <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">optimize_hyperparameters</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Performs MCMC sampling to sample hyperparameter configurations from the likelihood and</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Performs MCMC sampling to sample hyperparameter configurations from the likelihood and</span>
 <span class="sd">        trains for each sample a Gaussian process on X and y.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : np.ndarray [#samples, #hyperparameter + #features]</span>
+<span class="sd">        X : np.ndarray [#samples, #hyperparameters + #features]</span>
 <span class="sd">            Input data points.</span>
 <span class="sd">        Y : np.ndarray [#samples, #objectives]</span>
 <span class="sd">            The corresponding target values.</span>
 <span class="sd">        optimize_hyperparameters: boolean</span>
-<span class="sd">            If set to true we perform MCMC sampling. Otherwise, we just use the hyperparameter specified in the kernel.</span>
+<span class="sd">            If set to true, we perform MCMC sampling. Otherwise, we just use the hyperparameter specified in the kernel.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_impute_inactive</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_y</span><span class="p">:</span>
@@ -1150,7 +1135,7 @@
             <span class="c1"># Scikit-learn uses a different &quot;normalization&quot; than we use in SMAC3. Scikit-learn normalizes the data to</span>
             <span class="c1"># have zero mean, while we normalize it to have zero mean unit variance. To make sure the scikit-learn GP</span>
             <span class="c1"># behaves the same when we use it directly or indirectly (through the gaussian_process.py file), we</span>
-            <span class="c1"># normalize the data here. Then, after the individual GPs are fit, we inject the statistics into them so</span>
+            <span class="c1"># normalize the data here. Then, after the individual GPs are fit, we inject the statistics into them, so</span>
             <span class="c1"># they unnormalize the data at prediction time.</span>
             <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 
@@ -1232,18 +1217,23 @@
                 <span class="p">)</span>
                 <span class="n">indices</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">ind</span><span class="p">))</span> <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">)]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+
+                <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">p0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mcmc_sampler</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_average_samples</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_samples</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)]</span>
+                <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_samples</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)]</span>  <span class="c1"># type: ignore</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gp</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">theta</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_samples</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_samples</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_models</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span><span class="p">:</span>
 
             <span class="k">if</span> <span class="p">(</span><span class="n">sample</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
@@ -1294,24 +1284,24 @@
             <span class="n">kernel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_kernel</span><span class="p">,</span>
             <span class="n">normalize_y</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># We do not use scikit-learn&#39;s normalize routine</span>
             <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">n_restarts_optimizer</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># We do not use scikit-learn&#39;s optimization routine</span>
+            <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># We do not use scikit-learn&#39;s optimization routine</span>
             <span class="n">alpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Governed by the kernel</span>
             <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_ll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the marginal log likelihood (+ the prior) for a hyperparameter configuration</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the marginal log likelihood (+ the prior) for a hyperparameter configuration</span>
 <span class="sd">        theta.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        theta : np.ndarray</span>
-<span class="sd">            Hyperparameter vector. Note that all hyperparameter are on a log scale.</span>
+<span class="sd">            Hyperparameter vector. Note that all hyperparameters are on a log scale.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_ll_evals</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="c1"># Bound the hyperparameter space to keep things sane. Note all</span>
-        <span class="c1"># hyperparameters live on a log scale</span>
+        <span class="c1"># Bound the hyperparameter space to keep things sane. Note that all</span>
+        <span class="c1"># hyperparameters live on a log scale.</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">theta</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
             <span class="n">theta</span><span class="p">[</span><span class="n">theta</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">50</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">50</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">theta</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
@@ -1333,7 +1323,7 @@
             <span class="k">return</span> <span class="n">lml</span>
 
     <span class="k">def</span> <span class="nf">_ll_w_grad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the marginal log likelihood (+ the prior) for a hyperparameter configuration</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the marginal log likelihood (+ the prior) for a hyperparameter configuration</span>
 <span class="sd">        theta.</span>
 
 <span class="sd">        Parameters</span>
@@ -1343,7 +1333,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_ll_evals</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="c1"># Bound the hyperparameter space to keep things sane. Note all hyperparameters live on a log scale</span>
+        <span class="c1"># Bound the hyperparameter space to keep things sane. Note that all hyperparameters live on a log scale.</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">theta</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
             <span class="n">theta</span><span class="p">[</span><span class="n">theta</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">50</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">50</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">theta</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
@@ -1380,9 +1370,9 @@
         <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">covariance_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;diagonal&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the predictive mean and variance of the objective function</span>
-<span class="sd">        at X average over all hyperparameter samples.</span>
+<span class="sd">        at X averaged over all hyperparameter samples.</span>
 
 <span class="sd">        The mean is computed by:</span>
 <span class="sd">        :math \mu(x) = \frac{1}{M}\sum_{i=1}^{M}\mu_m(x)</span>
@@ -1443,7 +1433,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

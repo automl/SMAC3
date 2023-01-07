@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.runner.abstract_runner &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>smac.runner.abstract_runner &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -96,11 +96,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -127,7 +127,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1">
@@ -171,8 +171,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="../../../examples/1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -191,7 +191,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/5_priors.html">
+      <a class="reference internal" href="../../../examples/1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../examples/1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -317,12 +322,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -363,11 +373,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -400,23 +405,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="../../../api/smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -629,18 +624,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -649,18 +634,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -859,6 +834,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -920,6 +900,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1024,22 +1009,24 @@
 
 
 <div class="viewcode-block" id="AbstractRunner"><a class="viewcode-back" href="../../../api/smac.runner.abstract_runner.html#smac.runner.AbstractRunner">[docs]</a><span class="k">class</span> <span class="nc">AbstractRunner</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Interface class to handle the execution of SMAC configurations. This interface defines how to interact with the</span>
-<span class="sd">    SMBO loop. The complexity of running a configuration as well as handling the results is abstracted to the SMBO via</span>
-<span class="sd">    an AbstractRunner.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface class to handle the execution of SMAC configurations.</span>
+<span class="sd">    This interface defines how to interact with the SMBO loop.</span>
+<span class="sd">    The complexity of running a configuration as well as handling the results is abstracted to the</span>
+<span class="sd">    SMBO via an AbstractRunner.</span>
 
 <span class="sd">    From SMBO perspective, launching a configuration follows a</span>
 <span class="sd">    submit/collect scheme as follows:</span>
 
 <span class="sd">    1. A run is launched via ``submit_run()``</span>
-<span class="sd">        * ``submit_run`` internally calls ``run_wrapper()``, a method that contains common processing functions among</span>
-<span class="sd">          different unners.</span>
-<span class="sd">        * A class that implements AbstractRunner defines ``run()`` which is really the algorithm to translate a</span>
-<span class="sd">          ``TrialInfo`` to a ``TrialValue``, i.e. a configuration to an actual result.</span>
+
+<span class="sd">       - ``submit_run`` internally calls ``run_wrapper()``, a method that contains common processing functions among</span>
+<span class="sd">         different runners.</span>
+<span class="sd">       - A class that implements AbstractRunner defines ``run()`` which is really the algorithm to</span>
+<span class="sd">         translate a ``TrialInfo`` to a ``TrialValue``, i.e. a configuration to an actual result.</span>
 <span class="sd">    2. A completed run is collected via ``iter_results()``, which iterates and consumes any finished runs, if any.</span>
-<span class="sd">    3. This interface also offers the method ``wait()`` as a mechanism to make sure we have enough data in the next</span>
-<span class="sd">       iteration to make a decision. For example, the intensifier might not be able to select the next challenger</span>
-<span class="sd">       until more results are available.</span>
+<span class="sd">    3. This interface also offers the method ``wait()`` as a mechanism to make sure we have enough</span>
+<span class="sd">       data in the next iteration to make a decision. For example, the intensifier might not be</span>
+<span class="sd">       able to select the next challenger until more results are available.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1056,7 +1043,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span> <span class="o">=</span> <span class="n">scenario</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_required_arguments</span> <span class="o">=</span> <span class="n">required_arguments</span>
 
-        <span class="c1"># The results is a FIFO structure, implemented via a list</span>
+        <span class="c1"># The results are a FIFO structure, implemented via a list</span>
         <span class="c1"># (because the Queue lock is not pickable). Finished runs are</span>
         <span class="c1"># put in this list and collected via _process_pending_runs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_results_queue</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1078,7 +1065,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_crash_cost</span> <span class="o">=</span> <span class="p">[</span><span class="n">scenario</span><span class="o">.</span><span class="n">crash_cost</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span><span class="p">)]</span>
 
 <div class="viewcode-block" id="AbstractRunner.run_wrapper"><a class="viewcode-back" href="../../../api/smac.runner.abstract_runner.html#smac.runner.AbstractRunner.run_wrapper">[docs]</a>    <span class="k">def</span> <span class="nf">run_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial_info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Wrapper around run() to execute and check the execution of a given config. This function encapsulates common</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrapper around run() to execute and check the execution of a given config.</span>
+<span class="sd">        This function encapsulates common</span>
 <span class="sd">        handling/processing, so that run() implementation is simplified.</span>
 
 <span class="sd">        Parameters</span>
@@ -1117,9 +1105,6 @@
 
         <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">trial_info</span><span class="o">.</span><span class="n">budget</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">DONOTADVANCE</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot handle DONOTADVANCE state when using intensify or SH/HB on instances.&quot;</span><span class="p">)</span>
-
         <span class="c1"># Catch NaN or inf</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">cost</span><span class="p">)):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
@@ -1143,22 +1128,22 @@
             <span class="n">starttime</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
             <span class="n">endtime</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
         <span class="p">)</span>
+
         <span class="k">return</span> <span class="n">trial_info</span><span class="p">,</span> <span class="n">trial_value</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the meta-data of the created object.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">}</span>
 
 <div class="viewcode-block" id="AbstractRunner.submit_trial"><a class="viewcode-back" href="../../../api/smac.runner.abstract_runner.html#smac.runner.AbstractRunner.submit_trial">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">submit_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial_info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;This function submits a configuration embedded in a TrialInfo object, and uses one of the</span>
-<span class="sd">        workers to produce a result (such result will eventually be available on the `self._results_queue`</span>
-<span class="sd">        FIFO).</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function submits a configuration embedded in a TrialInfo object, and uses one of the workers to produce</span>
+<span class="sd">        a result (such result will eventually be available on the ``self._results_queue`` FIFO).</span>
 
-<span class="sd">        This interface method will be called by SMBO, with the expectation</span>
-<span class="sd">        that a function will be executed by a worker. What will be executed is dictated by trial_info, and &quot;how&quot; will it</span>
-<span class="sd">        be executed is decided via the child class that implements a run() method.</span>
+<span class="sd">        This interface method will be called by SMBO, with the expectation that a function will be executed by a worker.</span>
+<span class="sd">        What will be executed is dictated by ``trial_info``, and `how` it will be executed is decided via the child</span>
+<span class="sd">        class that implements a ``run`` method.</span>
 
 <span class="sd">        Because config submission can be a serial/parallel endeavor, it is expected to be implemented by a child class.</span>
 
@@ -1177,7 +1162,8 @@
         <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">StatusType</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Runs the target function with a configuration on a single instance-budget-seed combination (aka trial).</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs the target function with a configuration on a single instance-budget-seed</span>
+<span class="sd">        combination (aka trial).</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1186,8 +1172,8 @@
 <span class="sd">        instance : str | None, defaults to None</span>
 <span class="sd">            The Problem instance.</span>
 <span class="sd">        budget : float | None, defaults to None</span>
-<span class="sd">            A positive, real-valued number representing an arbitrary limit to the target function handled by the</span>
-<span class="sd">            target function internally.</span>
+<span class="sd">            A positive, real-valued number representing an arbitrary limit to the target function</span>
+<span class="sd">            handled by the target function internally.</span>
 <span class="sd">        seed : int, defaults to None</span>
 
 <span class="sd">        Returns</span>
@@ -1197,7 +1183,7 @@
 <span class="sd">        cost : float | list[float]</span>
 <span class="sd">            Resulting cost(s) of the trial.</span>
 <span class="sd">        runtime : float</span>
-<span class="sd">            The time the target function function took to run.</span>
+<span class="sd">            The time the target function took to run.</span>
 <span class="sd">        additional_info : dict</span>
 <span class="sd">            All further additional trial information.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1205,8 +1191,8 @@
 
 <div class="viewcode-block" id="AbstractRunner.iter_results"><a class="viewcode-back" href="../../../api/smac.runner.abstract_runner.html#smac.runner.AbstractRunner.iter_results">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">iter_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;This method returns any finished configuration, and returns a list with the</span>
-<span class="sd">        results of exercising the configurations. This class keeps populating results</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method returns any finished configuration, and returns a list with the</span>
+<span class="sd">        results of executing the configurations. This class keeps populating results</span>
 <span class="sd">        to ``self._results_queue`` until a call to ``get_finished`` trials is done. In this case,</span>
 <span class="sd">        the `self._results_queue` list is emptied and all trial values produced by running</span>
 <span class="sd">        `run` are returned.</span>
@@ -1220,21 +1206,21 @@
 
 <div class="viewcode-block" id="AbstractRunner.wait"><a class="viewcode-back" href="../../../api/smac.runner.abstract_runner.html#smac.runner.AbstractRunner.wait">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The SMBO/intensifier might need to wait for trials to finish before making a decision.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The SMBO/intensifier might need to wait for trials to finish before making a decision.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="AbstractRunner.is_running"><a class="viewcode-back" href="../../../api/smac.runner.abstract_runner.html#smac.runner.AbstractRunner.is_running">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">is_running</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Whether or not there are trials still running.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether there are trials still running.</span>
 
-<span class="sd">        Generally, if the runner is serial, launching a trial instantly returns it&#39;s result. On</span>
+<span class="sd">        Generally, if the runner is serial, launching a trial instantly returns its result. On</span>
 <span class="sd">        parallel runners, there might be pending configurations to complete.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="AbstractRunner.count_available_workers"><a class="viewcode-back" href="../../../api/smac.runner.abstract_runner.html#smac.runner.AbstractRunner.count_available_workers">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">count_available_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the number of available workers.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the number of available workers.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
 </pre></div>
 
@@ -1258,7 +1244,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

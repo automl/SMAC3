@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Custom Callback &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>Custom Callback &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -40,7 +40,7 @@
     <script src="../../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="User Priors over the Optimum" href="5_priors.html" />
+    <link rel="next" title="Continue an Optimization" href="5_continue.html" />
     <link rel="prev" title="Ask-and-Tell" href="3_ask_and_tell.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
@@ -99,11 +99,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -174,8 +174,8 @@
     </label>
     <ul class="current">
      <li class="toctree-l3">
-      <a class="reference internal" href="1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -194,7 +194,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="5_priors.html">
+      <a class="reference internal" href="5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -320,12 +325,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -366,11 +376,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -403,23 +408,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="../../api/smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -632,18 +627,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -652,18 +637,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../api/smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -862,6 +837,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -923,6 +903,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1034,20 +1019,20 @@ Current incumbent: {&#39;x0&#39;: -0.9968221839517355, &#39;x1&#39;: 4.308470431
 Current incumbent value: 1102.7877872130716
 
 Evaluated 20 trials so far.
-Current incumbent: {&#39;x0&#39;: 0.03135360777378082, &#39;x1&#39;: -0.21179260686039925}
-Current incumbent value: 5.465623793958126
+Current incumbent: {&#39;x0&#39;: -0.9968221839517355, &#39;x1&#39;: 4.30847043171525}
+Current incumbent value: 1102.7877872130716
 
 Evaluated 30 trials so far.
-Current incumbent: {&#39;x0&#39;: 0.03104708574713655, &#39;x1&#39;: -0.034678518343637776}
-Current incumbent value: 1.0659081020778713
+Current incumbent: {&#39;x0&#39;: -0.9968221839517355, &#39;x1&#39;: 4.30847043171525}
+Current incumbent value: 1102.7877872130716
 
 Evaluated 40 trials so far.
-Current incumbent: {&#39;x0&#39;: 0.03104708574713655, &#39;x1&#39;: 0.016330022764775798}
-Current incumbent value: 0.9624814567444364
+Current incumbent: {&#39;x0&#39;: -0.9968221839517355, &#39;x1&#39;: 4.30847043171525}
+Current incumbent value: 1102.7877872130716
 
 Evaluated 50 trials so far.
-Current incumbent: {&#39;x0&#39;: 0.029508593566554886, &#39;x1&#39;: -0.011213346364975507}
-Current incumbent value: 0.956456125602556
+Current incumbent: {&#39;x0&#39;: 0.03135360777378082, &#39;x1&#39;: -0.21179260686039925}
+Current incumbent value: 5.465623793958126
 
 We just triggered to stop the optimization after 50 finished trials.
 </pre></div>
@@ -1091,23 +1076,23 @@ We just triggered to stop the optimization after 50 finished trials.
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trials_counter</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">smbo</span><span class="o">.</span><span class="n">SMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Let&#39;s start!&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">on_tell_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">BaseSMBO</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">TrialValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">on_tell_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">smac</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">smbo</span><span class="o">.</span><span class="n">SMBO</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">TrialValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trials_counter</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trials_counter</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Evaluated </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">trials_counter</span><span class="si">}</span><span class="s2"> trials so far.&quot;</span><span class="p">)</span>
 
-            <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smbo</span><span class="o">.</span><span class="n">incumbent</span>
+            <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smbo</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">get_incumbent</span><span class="p">()</span>
             <span class="k">assert</span> <span class="n">incumbent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current incumbent: </span><span class="si">{</span><span class="n">incumbent</span><span class="o">.</span><span class="n">get_dictionary</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current incumbent value: </span><span class="si">{</span><span class="n">smbo</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trials_counter</span> <span class="o">==</span> <span class="mi">50</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;We just triggered to stop the optimization after </span><span class="si">{</span><span class="n">smbo</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">finished</span><span class="si">}</span><span class="s2"> finished trials.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;We just triggered to stop the optimization after </span><span class="si">{</span><span class="n">smbo</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">finished</span><span class="si">}</span><span class="s2"> finished trials.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
 
         <span class="k">return</span> <span class="kc">None</span>
@@ -1120,19 +1105,16 @@ We just triggered to stop the optimization after 50 finished trials.
     <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
 
     <span class="c1"># Now we use SMAC to find the best hyperparameters</span>
-    <span class="n">smac</span> <span class="o">=</span> <span class="n">HPOFacade</span><span class="p">(</span>
+    <span class="n">HPOFacade</span><span class="p">(</span>
         <span class="n">scenario</span><span class="p">,</span>
         <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">,</span>
         <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">CustomCallback</span><span class="p">()],</span>
         <span class="n">logging_level</span><span class="o">=</span><span class="mi">999999</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="c1"># Let&#39;s optimize</span>
-    <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  6.765 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.137 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-4-callback-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/43217042d929e9cbc326a2703a4cb336/4_callback.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">4_callback.py</span></code></a></p>
@@ -1156,10 +1138,10 @@ We just triggered to stop the optimization after 50 finished trials.
             <p class="prev-next-title">Ask-and-Tell</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="5_priors.html" title="next page">
+    <a class='right-next' id="next-link" href="5_continue.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">User Priors over the Optimum</p>
+        <p class="prev-next-title">Continue an Optimization</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
@@ -1178,7 +1160,7 @@ We just triggered to stop the optimization after 50 finished trials.
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

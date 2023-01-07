@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.runhistory.encoder &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>smac.runhistory.encoder &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -99,11 +99,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -174,8 +174,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="../examples/1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -194,7 +194,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/5_priors.html">
+      <a class="reference internal" href="../examples/1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -320,12 +325,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -366,11 +376,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -403,23 +408,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -632,18 +627,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -652,18 +637,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -862,6 +837,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -923,6 +903,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1038,6 +1023,15 @@
        <code class="docutils literal notranslate">
         <span class="pre">
          AbstractRunHistoryEncoder.multi_objective_algorithm
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.runhistory.encoder.AbstractRunHistoryEncoder.runhistory">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         AbstractRunHistoryEncoder.runhistory
         </span>
        </code>
       </a>
@@ -1163,64 +1157,6 @@
     </ul>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#smac.runhistory.encoder.RunHistoryRawEncoder">
-     <code class="docutils literal notranslate">
-      <span class="pre">
-       RunHistoryRawEncoder
-      </span>
-     </code>
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.runhistory.encoder.RunHistoryRawEncoder.transform_raw_values">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         RunHistoryRawEncoder.transform_raw_values()
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.runhistory.encoder.RunHistoryRawEncoder.transform_response_values">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         RunHistoryRawEncoder.transform_response_values()
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.runhistory.encoder.RunHistoryRawEncoder.transform_with_raw">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         RunHistoryRawEncoder.transform_with_raw()
-        </span>
-       </code>
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#smac.runhistory.encoder.RunHistoryRawScaledEncoder">
-     <code class="docutils literal notranslate">
-      <span class="pre">
-       RunHistoryRawScaledEncoder
-      </span>
-     </code>
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.runhistory.encoder.RunHistoryRawScaledEncoder.transform_raw_values">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         RunHistoryRawScaledEncoder.transform_raw_values()
-        </span>
-       </code>
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#smac.runhistory.encoder.RunHistoryScaledEncoder">
      <code class="docutils literal notranslate">
       <span class="pre">
@@ -1294,14 +1230,14 @@
 <h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.AbstractRunHistoryEncoder">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.</span></span><span class="sig-name descname"><span class="pre">AbstractRunHistoryEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario,</span> <span class="pre">considered_states=[&lt;StatusType.SUCCESS:</span> <span class="pre">1&gt;,</span> <span class="pre">&lt;StatusType.CRASHED:</span> <span class="pre">3&gt;,</span> <span class="pre">&lt;StatusType.MEMORYOUT:</span> <span class="pre">5&gt;,</span> <span class="pre">&lt;StatusType.DONOTADVANCE:</span> <span class="pre">6&gt;],</span> <span class="pre">lower_budget_states=[],</span> <span class="pre">scale_percentage=5,</span> <span class="pre">seed=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/abstract_encoder.html#AbstractRunHistoryEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.AbstractRunHistoryEncoder" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.</span></span><span class="sig-name descname"><span class="pre">AbstractRunHistoryEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario,</span> <span class="pre">considered_states=[&lt;StatusType.SUCCESS:</span> <span class="pre">1&gt;,</span> <span class="pre">&lt;StatusType.CRASHED:</span> <span class="pre">2&gt;,</span> <span class="pre">&lt;StatusType.MEMORYOUT:</span> <span class="pre">4&gt;],</span> <span class="pre">lower_budget_states=[],</span> <span class="pre">scale_percentage=5,</span> <span class="pre">seed=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/abstract_encoder.html#AbstractRunHistoryEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.AbstractRunHistoryEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Abstract class for preparing data in order to train a surrogate model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
-<li><p><strong>considered_states</strong> (<em>list</em><em>[</em><a class="reference internal" href="smac.runhistory.html#smac.runhistory.StatusType" title="smac.runhistory.StatusType"><em>StatusType</em></a><em>]</em><em>, </em><em>defaults to</em><em> [</em><em>StatusType.SUCCESS</em><em>, </em><em>StatusType.CRASHED</em><em>, </em><em>StatusType.MEMORYOUT</em><em>, </em><em>StatusType.DONOTADVANCE</em><em>]  </em><em># noqa: E501</em>) – Trials with the passed states are considered.</p></li>
+<li><p><strong>scenario</strong> (<em>Scenario object.</em>) – </p></li>
+<li><p><strong>considered_states</strong> (<em>list</em><em>[</em><a class="reference internal" href="smac.runhistory.html#smac.runhistory.StatusType" title="smac.runhistory.StatusType"><em>StatusType</em></a><em>]</em><em>, </em><em>defaults to</em><em> [</em><em>StatusType.SUCCESS</em><em>, </em><em>StatusType.CRASHED</em><em>, </em><em>StatusType.MEMORYOUT</em><em>]  </em><em># noqa: E501</em>) – Trials with the passed states are considered.</p></li>
 <li><p><strong>lower_budget_states</strong> (<em>list</em><em>[</em><a class="reference internal" href="smac.runhistory.html#smac.runhistory.StatusType" title="smac.runhistory.StatusType"><em>StatusType</em></a><em>]</em><em>, </em><em>defaults to</em><em> [</em><em>]</em>) – Additionally consider all trials with these states for budget &lt; current budget.</p></li>
 <li><p><strong>scale_percentage</strong> (<em>int</em><em>, </em><em>defaults to 5</em>) – Scaled y-transformation use a percentile to estimate distance to optimum. Only used in some sub-classes.</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to none</em>) – </p></li>
@@ -1313,15 +1249,16 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.AbstractRunHistoryEncoder.get_configurations">
-<span class="sig-name descname"><span class="pre">get_configurations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runhistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget_subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/abstract_encoder.html#AbstractRunHistoryEncoder.get_configurations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.AbstractRunHistoryEncoder.get_configurations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns vector representation of the configurations. Instance features are not
+<span class="sig-name descname"><span class="pre">get_configurations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">budget_subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/abstract_encoder.html#AbstractRunHistoryEncoder.get_configurations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.AbstractRunHistoryEncoder.get_configurations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns vector representation of the configurations.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Instance features are not
 appended and cost values are not taken into account.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunHistory" title="smac.runhistory.RunHistory"><em>RunHistory</em></a>) – </p></li>
-<li><p><strong>budget_subset</strong> (<em>list</em><em> | </em><em>None</em><em>, </em><em>defaults to none</em>) – List of budgets to consider.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>budget_subset</strong> (<em>list</em><em>[</em><em>int</em><em>|</em><em>float</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to none</em>) – List of budgets to consider.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>configs_array</strong></p>
@@ -1335,10 +1272,17 @@ appended and cost values are not taken into account.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.AbstractRunHistoryEncoder.meta">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.runhistory.encoder.AbstractRunHistoryEncoder.meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the meta data of the created object.</p>
+<dd><p>Returns the meta-data of the created object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>dict[str, Any]</strong> (<em>meta-data of the created object: name, considered states, lower budget</em>)</p></li>
+<li><p><em>states, scale_percentage, seed.</em></p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1346,7 +1290,7 @@ appended and cost values are not taken into account.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.AbstractRunHistoryEncoder.multi_objective_algorithm">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">multi_objective_algorithm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="smac.multi_objective.abstract_multi_objective_algorithm.html#smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm" title="smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm"><span class="pre">smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#smac.runhistory.encoder.AbstractRunHistoryEncoder.multi_objective_algorithm" title="Permalink to this definition">¶</a></dt>
-<dd><p>The multi objecctive algorithm used to transform the data.</p>
+<dd><p>The multi objective algorithm used to transform the data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Optional</span></code>[<a class="reference internal" href="smac.multi_objective.abstract_multi_objective_algorithm.html#smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm" title="smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractMultiObjectiveAlgorithm</span></code></a>]</p>
@@ -1354,16 +1298,24 @@ appended and cost values are not taken into account.</p>
 </dl>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="smac.runhistory.encoder.AbstractRunHistoryEncoder.runhistory">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">runhistory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><span class="pre">RunHistory</span></a></em><a class="headerlink" href="#smac.runhistory.encoder.AbstractRunHistoryEncoder.runhistory" title="Permalink to this definition">¶</a></dt>
+<dd><p>The RunHistory used to transform the data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunHistory</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.AbstractRunHistoryEncoder.transform">
-<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runhistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget_subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/abstract_encoder.html#AbstractRunHistoryEncoder.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.AbstractRunHistoryEncoder.transform" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a vector representation of the runhistory.</p>
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">budget_subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/abstract_encoder.html#AbstractRunHistoryEncoder.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.AbstractRunHistoryEncoder.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a vector representation of the RunHistory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.RunHistory" title="smac.runhistory.RunHistory"><em>RunHistory</em></a>) – </p></li>
-<li><p><strong>budget_subset</strong> (<em>list</em><em> | </em><em>None</em><em>, </em><em>defauls to none</em>) – List of budgets to consider.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>budget_subset</strong> (<em>list</em><em> | </em><em>None</em><em>, </em><em>defaults to none</em>) – List of budgets to consider.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
@@ -1399,17 +1351,14 @@ appended and cost values are not taken into account.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.RunHistoryEIPSEncoder">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.</span></span><span class="sig-name descname"><span class="pre">RunHistoryEIPSEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario,</span> <span class="pre">considered_states=[&lt;StatusType.SUCCESS:</span> <span class="pre">1&gt;,</span> <span class="pre">&lt;StatusType.CRASHED:</span> <span class="pre">3&gt;,</span> <span class="pre">&lt;StatusType.MEMORYOUT:</span> <span class="pre">5&gt;,</span> <span class="pre">&lt;StatusType.DONOTADVANCE:</span> <span class="pre">6&gt;],</span> <span class="pre">lower_budget_states=[],</span> <span class="pre">scale_percentage=5,</span> <span class="pre">seed=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/eips_encoder.html#RunHistoryEIPSEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryEIPSEncoder" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.</span></span><span class="sig-name descname"><span class="pre">RunHistoryEIPSEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario,</span> <span class="pre">considered_states=[&lt;StatusType.SUCCESS:</span> <span class="pre">1&gt;,</span> <span class="pre">&lt;StatusType.CRASHED:</span> <span class="pre">2&gt;,</span> <span class="pre">&lt;StatusType.MEMORYOUT:</span> <span class="pre">4&gt;],</span> <span class="pre">lower_budget_states=[],</span> <span class="pre">scale_percentage=5,</span> <span class="pre">seed=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/eips_encoder.html#RunHistoryEIPSEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryEIPSEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder" title="smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractRunHistoryEncoder</span></code></a></p>
-<p>Encoder specifically for the EIPS acquisition function.</p>
+<p>Encoder specifically for the EIPS (expected improvement per second) acquisition function.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.RunHistoryEIPSEncoder.transform_response_values">
 <span class="sig-name descname"><span class="pre">transform_response_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/eips_encoder.html#RunHistoryEIPSEncoder.transform_response_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryEIPSEncoder.transform_response_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform function response values. Transform the runtimes by a log transformation
-(log(1.</p>
-<ul class="simple">
-<li><p>runtime).</p></li>
-</ul>
+log(1. + runtime).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>values</strong> (<em>np.ndarray</em>) – Response values to be transformed.</p>
@@ -1424,7 +1373,7 @@ appended and cost values are not taken into account.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.RunHistoryEncoder">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.</span></span><span class="sig-name descname"><span class="pre">RunHistoryEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario,</span> <span class="pre">considered_states=[&lt;StatusType.SUCCESS:</span> <span class="pre">1&gt;,</span> <span class="pre">&lt;StatusType.CRASHED:</span> <span class="pre">3&gt;,</span> <span class="pre">&lt;StatusType.MEMORYOUT:</span> <span class="pre">5&gt;,</span> <span class="pre">&lt;StatusType.DONOTADVANCE:</span> <span class="pre">6&gt;],</span> <span class="pre">lower_budget_states=[],</span> <span class="pre">scale_percentage=5,</span> <span class="pre">seed=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/encoder.html#RunHistoryEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryEncoder" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.</span></span><span class="sig-name descname"><span class="pre">RunHistoryEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario,</span> <span class="pre">considered_states=[&lt;StatusType.SUCCESS:</span> <span class="pre">1&gt;,</span> <span class="pre">&lt;StatusType.CRASHED:</span> <span class="pre">2&gt;,</span> <span class="pre">&lt;StatusType.MEMORYOUT:</span> <span class="pre">4&gt;],</span> <span class="pre">lower_budget_states=[],</span> <span class="pre">scale_percentage=5,</span> <span class="pre">seed=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/encoder.html#RunHistoryEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder" title="smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractRunHistoryEncoder</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.RunHistoryEncoder.transform_response_values">
@@ -1447,7 +1396,7 @@ appended and cost values are not taken into account.</p>
 <dt class="sig sig-object py" id="smac.runhistory.encoder.RunHistoryInverseScaledEncoder.transform_response_values">
 <span class="sig-name descname"><span class="pre">transform_response_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/inverse_scaled_encoder.html#RunHistoryInverseScaledEncoder.transform_response_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryInverseScaledEncoder.transform_response_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform the response values by linearly scaling
-them between zero and one and then using inverse scaling.</p>
+them between zero and one and then use inverse scaling.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
@@ -1459,12 +1408,12 @@ them between zero and one and then using inverse scaling.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.RunHistoryLogEncoder">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.</span></span><span class="sig-name descname"><span class="pre">RunHistoryLogEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario,</span> <span class="pre">considered_states=[&lt;StatusType.SUCCESS:</span> <span class="pre">1&gt;,</span> <span class="pre">&lt;StatusType.CRASHED:</span> <span class="pre">3&gt;,</span> <span class="pre">&lt;StatusType.MEMORYOUT:</span> <span class="pre">5&gt;,</span> <span class="pre">&lt;StatusType.DONOTADVANCE:</span> <span class="pre">6&gt;],</span> <span class="pre">lower_budget_states=[],</span> <span class="pre">scale_percentage=5,</span> <span class="pre">seed=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/log_encoder.html#RunHistoryLogEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryLogEncoder" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.</span></span><span class="sig-name descname"><span class="pre">RunHistoryLogEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario,</span> <span class="pre">considered_states=[&lt;StatusType.SUCCESS:</span> <span class="pre">1&gt;,</span> <span class="pre">&lt;StatusType.CRASHED:</span> <span class="pre">2&gt;,</span> <span class="pre">&lt;StatusType.MEMORYOUT:</span> <span class="pre">4&gt;],</span> <span class="pre">lower_budget_states=[],</span> <span class="pre">scale_percentage=5,</span> <span class="pre">seed=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/log_encoder.html#RunHistoryLogEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryLogEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.runhistory.encoder.encoder.html#smac.runhistory.encoder.encoder.RunHistoryEncoder" title="smac.runhistory.encoder.encoder.RunHistoryEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunHistoryEncoder</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.RunHistoryLogEncoder.transform_response_values">
 <span class="sig-name descname"><span class="pre">transform_response_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/log_encoder.html#RunHistoryLogEncoder.transform_response_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryLogEncoder.transform_response_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transforms the response values by using a log.</p>
+<dd><p>Transforms the response values by using log.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
@@ -1476,7 +1425,7 @@ them between zero and one and then using inverse scaling.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.RunHistoryLogScaledEncoder">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.</span></span><span class="sig-name descname"><span class="pre">RunHistoryLogScaledEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario,</span> <span class="pre">considered_states=[&lt;StatusType.SUCCESS:</span> <span class="pre">1&gt;,</span> <span class="pre">&lt;StatusType.CRASHED:</span> <span class="pre">3&gt;,</span> <span class="pre">&lt;StatusType.MEMORYOUT:</span> <span class="pre">5&gt;,</span> <span class="pre">&lt;StatusType.DONOTADVANCE:</span> <span class="pre">6&gt;],</span> <span class="pre">lower_budget_states=[],</span> <span class="pre">scale_percentage=5,</span> <span class="pre">seed=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/log_scaled_encoder.html#RunHistoryLogScaledEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryLogScaledEncoder" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.</span></span><span class="sig-name descname"><span class="pre">RunHistoryLogScaledEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario,</span> <span class="pre">considered_states=[&lt;StatusType.SUCCESS:</span> <span class="pre">1&gt;,</span> <span class="pre">&lt;StatusType.CRASHED:</span> <span class="pre">2&gt;,</span> <span class="pre">&lt;StatusType.MEMORYOUT:</span> <span class="pre">4&gt;],</span> <span class="pre">lower_budget_states=[],</span> <span class="pre">scale_percentage=5,</span> <span class="pre">seed=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/log_scaled_encoder.html#RunHistoryLogScaledEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryLogScaledEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.runhistory.encoder.encoder.html#smac.runhistory.encoder.encoder.RunHistoryEncoder" title="smac.runhistory.encoder.encoder.RunHistoryEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunHistoryEncoder</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.RunHistoryLogScaledEncoder.transform_response_values">
@@ -1493,82 +1442,8 @@ then using the log transformation.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="smac.runhistory.encoder.RunHistoryRawEncoder">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.</span></span><span class="sig-name descname"><span class="pre">RunHistoryRawEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario,</span> <span class="pre">considered_states=[&lt;StatusType.SUCCESS:</span> <span class="pre">1&gt;,</span> <span class="pre">&lt;StatusType.CRASHED:</span> <span class="pre">3&gt;,</span> <span class="pre">&lt;StatusType.MEMORYOUT:</span> <span class="pre">5&gt;,</span> <span class="pre">&lt;StatusType.DONOTADVANCE:</span> <span class="pre">6&gt;],</span> <span class="pre">lower_budget_states=[],</span> <span class="pre">scale_percentage=5,</span> <span class="pre">seed=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/boing_encoder.html#RunHistoryRawEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryRawEncoder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.runhistory.encoder.encoder.html#smac.runhistory.encoder.encoder.RunHistoryEncoder" title="smac.runhistory.encoder.encoder.RunHistoryEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunHistoryEncoder</span></code></a></p>
-<p>A transformer that transform the RunHistroy to vectors. This set of classes will return the raw cost values in
-addition to the transformed cost values. The raw cost values can then be applied for local BO approaches.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.runhistory.encoder.RunHistoryRawEncoder.transform_raw_values">
-<span class="sig-name descname"><span class="pre">transform_raw_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/boing_encoder.html#RunHistoryRawEncoder.transform_raw_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryRawEncoder.transform_raw_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the raw input values before transformation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.runhistory.encoder.RunHistoryRawEncoder.transform_response_values">
-<span class="sig-name descname"><span class="pre">transform_response_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/boing_encoder.html#RunHistoryRawEncoder.transform_response_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryRawEncoder.transform_response_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the input values.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.runhistory.encoder.RunHistoryRawEncoder.transform_with_raw">
-<span class="sig-name descname"><span class="pre">transform_with_raw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runhistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget_subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/boing_encoder.html#RunHistoryRawEncoder.transform_with_raw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryRawEncoder.transform_with_raw" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns vector representation of runhistory; if imputation is
-disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped. This function returns both the raw
-and transformed cost values</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – Runhistory containing all evaluated configurations/instances</p></li>
-<li><p><strong>budget_subset</strong> (<em>list</em><em> of </em><em>budgets to consider</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p><strong>X</strong> (<em>numpy.ndarray</em>) – configuration vector x instance features</p></li>
-<li><p><strong>Y</strong> (<em>numpy.ndarray</em>) – cost values</p></li>
-<li><p><strong>Y_raw</strong> (<em>numpy.ndarray</em>) – cost values before transformation</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="smac.runhistory.encoder.RunHistoryRawScaledEncoder">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.</span></span><span class="sig-name descname"><span class="pre">RunHistoryRawScaledEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario,</span> <span class="pre">considered_states=[&lt;StatusType.SUCCESS:</span> <span class="pre">1&gt;,</span> <span class="pre">&lt;StatusType.CRASHED:</span> <span class="pre">3&gt;,</span> <span class="pre">&lt;StatusType.MEMORYOUT:</span> <span class="pre">5&gt;,</span> <span class="pre">&lt;StatusType.DONOTADVANCE:</span> <span class="pre">6&gt;],</span> <span class="pre">lower_budget_states=[],</span> <span class="pre">scale_percentage=5,</span> <span class="pre">seed=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/boing_encoder.html#RunHistoryRawScaledEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryRawScaledEncoder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.runhistory.encoder.boing_encoder.html#smac.runhistory.encoder.boing_encoder.RunHistoryRawEncoder" title="smac.runhistory.encoder.boing_encoder.RunHistoryRawEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunHistoryRawEncoder</span></code></a>, <a class="reference internal" href="smac.runhistory.encoder.log_scaled_encoder.html#smac.runhistory.encoder.log_scaled_encoder.RunHistoryLogScaledEncoder" title="smac.runhistory.encoder.log_scaled_encoder.RunHistoryLogScaledEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunHistoryLogScaledEncoder</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.runhistory.encoder.RunHistoryRawScaledEncoder.transform_raw_values">
-<span class="sig-name descname"><span class="pre">transform_raw_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/boing_encoder.html#RunHistoryRawScaledEncoder.transform_raw_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryRawScaledEncoder.transform_raw_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the raw input values before transformation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.RunHistoryScaledEncoder">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.</span></span><span class="sig-name descname"><span class="pre">RunHistoryScaledEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario,</span> <span class="pre">considered_states=[&lt;StatusType.SUCCESS:</span> <span class="pre">1&gt;,</span> <span class="pre">&lt;StatusType.CRASHED:</span> <span class="pre">3&gt;,</span> <span class="pre">&lt;StatusType.MEMORYOUT:</span> <span class="pre">5&gt;,</span> <span class="pre">&lt;StatusType.DONOTADVANCE:</span> <span class="pre">6&gt;],</span> <span class="pre">lower_budget_states=[],</span> <span class="pre">scale_percentage=5,</span> <span class="pre">seed=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/scaled_encoder.html#RunHistoryScaledEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryScaledEncoder" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.</span></span><span class="sig-name descname"><span class="pre">RunHistoryScaledEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario,</span> <span class="pre">considered_states=[&lt;StatusType.SUCCESS:</span> <span class="pre">1&gt;,</span> <span class="pre">&lt;StatusType.CRASHED:</span> <span class="pre">2&gt;,</span> <span class="pre">&lt;StatusType.MEMORYOUT:</span> <span class="pre">4&gt;],</span> <span class="pre">lower_budget_states=[],</span> <span class="pre">scale_percentage=5,</span> <span class="pre">seed=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/scaled_encoder.html#RunHistoryScaledEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.RunHistoryScaledEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.runhistory.encoder.encoder.html#smac.runhistory.encoder.encoder.RunHistoryEncoder" title="smac.runhistory.encoder.encoder.RunHistoryEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunHistoryEncoder</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.RunHistoryScaledEncoder.transform_response_values">
@@ -1673,7 +1548,7 @@ square root.</p>
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.intensifier.successive_halving &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>smac.intensifier.successive_halving &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -96,11 +96,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -127,7 +127,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1">
@@ -171,8 +171,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="../../../examples/1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -191,7 +191,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/1_basics/5_priors.html">
+      <a class="reference internal" href="../../../examples/1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../examples/1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -317,12 +322,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../../../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -363,11 +373,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -400,23 +405,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="../../../api/smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -629,18 +624,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -649,18 +634,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../api/smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -859,6 +834,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -920,6 +900,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1003,320 +988,564 @@
   <h1>Source code for smac.intensifier.successive_halving</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterator</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 
 <span class="kn">from</span> <span class="nn">smac.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
 <span class="kn">from</span> <span class="nn">smac.intensifier.abstract_intensifier</span> <span class="kn">import</span> <span class="n">AbstractIntensifier</span>
-<span class="kn">from</span> <span class="nn">smac.intensifier.abstract_parallel_intensifier</span> <span class="kn">import</span> <span class="n">AbstractParallelIntensifier</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory</span> <span class="kn">import</span> <span class="n">TrialInfo</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.dataclasses</span> <span class="kn">import</span> <span class="n">InstanceSeedBudgetKey</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.errors</span> <span class="kn">import</span> <span class="n">NotEvaluatedError</span>
 <span class="kn">from</span> <span class="nn">smac.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac.utils.configspace</span> <span class="kn">import</span> <span class="n">get_config_hash</span>
+<span class="kn">from</span> <span class="nn">smac.utils.data_structures</span> <span class="kn">import</span> <span class="n">batch</span>
 <span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span> <span class="nn">smac.utils.pareto_front</span> <span class="kn">import</span> <span class="n">calculate_pareto_front</span><span class="p">,</span> <span class="n">sort_by_crowding_distance</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2022, automl.org&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
-
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="SuccessiveHalving"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving">[docs]</a><span class="k">class</span> <span class="nc">SuccessiveHalving</span><span class="p">(</span><span class="n">AbstractParallelIntensifier</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Races multiple challengers against an incumbent using Successive Halving method.</span>
+<div class="viewcode-block" id="SuccessiveHalving"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving">[docs]</a><span class="k">class</span> <span class="nc">SuccessiveHalving</span><span class="p">(</span><span class="n">AbstractIntensifier</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementation of Succesive Halving supporting multi-fidelity, multi-objective, and multi-processing.</span>
+<span class="sd">    Internally, a tracker keeps track of configurations and their bracket and stage.</span>
 
-<span class="sd">    Implementation following the description in</span>
-<span class="sd">    &quot;BOHB: Robust and Efficient Hyperparameter Optimization at Scale&quot; (Falkner et al. 2018)</span>
-<span class="sd">    Supplementary reference: http://proceedings.mlr.press/v80/falkner18a/falkner18a-supp.pdf</span>
+<span class="sd">    The behaviour of this intensifier is as follows:</span>
 
-<span class="sd">    Successive Halving intensifier (and Hyperband) can operate on two kinds of budgets:</span>
+<span class="sd">    - First, adds configurations from the runhistory to the tracker. The first stage is always filled-up. For example,</span>
+<span class="sd">      the user provided 4 configs with the tell-method but the first stage requires 8 configs: 4 new configs are</span>
+<span class="sd">      sampled and added together with the provided configs as a group to the tracker.</span>
+<span class="sd">    - While loop:</span>
 
-<span class="sd">    1. Instances as budget:</span>
-<span class="sd">      When multiple instances are provided or when run objective is &quot;runtime&quot;, this is the criterion used as budget</span>
-<span class="sd">      for successive halving iterations i.e., the budget determines how many instances the challengers are evaluated</span>
-<span class="sd">      on at a time. Top challengers for the next iteration are selected based on the combined performance across</span>
-<span class="sd">      all instances used. If `min_budget` and `max_budget` are not provided, then they are set to 1 and total number</span>
-<span class="sd">      of available instances respectively by default.</span>
-<span class="sd">    2. Real-valued budget:</span>
-<span class="sd">      This is used when there is only one instance provided and when run objective is &quot;quality&quot;,</span>
-<span class="sd">      i.e., budget is a positive, real-valued number that can be passed to the target function as an argument.</span>
-<span class="sd">      It can be used to control anything by the target function, Eg: number of epochs for training a neural network.</span>
-<span class="sd">      The parameters `min_budget` and `max_budget` are required for this type of budget.</span>
+<span class="sd">      - If a trial in the tracker has not been yielded yet, yield it.</span>
+<span class="sd">      - If we are running out of trials, we simply add a new batch of configurations to the first stage.</span>
 
-<span class="sd">    This class instantiates ``SuccessiveHalvingWorker`` objects on a need basis, that is, to</span>
-<span class="sd">    prevent workers from being idle. The actual logic that implements the Successive halving method</span>
-<span class="sd">    lies in the worker class.</span>
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    The implementation natively supports brackets from Hyperband. However, in the case of Successive Halving,</span>
+<span class="sd">    only one bracket is used.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    scenario : Scenario</span>
-<span class="sd">    instance_seed_pairs : list[tuple[str  |  None, int]] | None, defaults to None</span>
-<span class="sd">        This argument is used by Hyperband.</span>
-<span class="sd">    instance_order : str | None, defaults to `shuffle_once`</span>
-<span class="sd">        How to order the instances. Can be set to:</span>
-<span class="sd">        * None: Use as is given by the user.</span>
-<span class="sd">        * shuffle_once: Shuffle once and use across all Successive Halving run .</span>
-<span class="sd">        * shuffle: Shuffle before every Successive Halving run</span>
-<span class="sd">    incumbent_selection : str, defaults to `highest_executed_budget`</span>
-<span class="sd">        How to select the incumbent in Successive Halving. Only active for (real-valued) budgets. Can be set to:</span>
-<span class="sd">        * highest_executed_budget: Incumbent is the best in the highest budget run so far.</span>
-<span class="sd">        * highest_budget: Incumbent is selected only based on the highest budget.</span>
-<span class="sd">        * any_budget: Incumbent is the best on any budget i.e., best performance regardless of budget.</span>
-<span class="sd">    n_initial_challengers : int | None, defaults to None</span>
-<span class="sd">        Number of challengers to consider for the initial budget. If not specified, it is calculated internally.</span>
-<span class="sd">    min_challenger : int, defaults to 1</span>
-<span class="sd">        Minimal number of challengers to be considered (even if time_bound is exhausted earlier).</span>
-<span class="sd">    eta : float, defaults to 3</span>
-<span class="sd">        The &quot;halving&quot; factor after each iteration in a Successive Halving run.</span>
-<span class="sd">    seed : int | None, defaults to None</span>
-<span class="sd">        This seed is not the seed used for target function evaluation but rather for sampling next candidates.</span>
-<span class="sd">    n_seeds : int | None, defaults to None</span>
-<span class="sd">        The number of seeds to use if the target function is non-deterministic.</span>
+<span class="sd">    eta : int, defaults to 3</span>
+<span class="sd">        Input that controls the proportion of configurations discarded in each round of Successive Halving.</span>
+<span class="sd">    n_seeds : int, defaults to 1</span>
+<span class="sd">        How many seeds to use for each instance.</span>
+<span class="sd">    instance_seed_order : str, defaults to &quot;shuffle_once&quot;</span>
+<span class="sd">        How to order the instance-seed pairs. Can be set to:</span>
+
+<span class="sd">        - `None`: No shuffling at all and use the instance-seed order provided by the user.</span>
+<span class="sd">        - `shuffle_once`: Shuffle the instance-seed keys once and use the same order across all runs.</span>
+<span class="sd">        - `shuffle`: Shuffles the instance-seed keys for each bracket individually.</span>
+<span class="sd">    incumbent_selection : str, defaults to &quot;highest_observed_budget&quot;</span>
+<span class="sd">        How to select the incumbent when using budgets. Can be set to:</span>
+
+<span class="sd">        - `any_budget`: Incumbent is the best on any budget i.e., best performance regardless of budget.</span>
+<span class="sd">        - `highest_observed_budget`: Incumbent is the best in the highest budget run so far.</span>
+<span class="sd">        - `highest_budget`: Incumbent is selected only based on the highest budget.</span>
+<span class="sd">    max_incumbents : int, defaults to 10</span>
+<span class="sd">        How many incumbents to keep track of in the case of multi-objective.</span>
+<span class="sd">    seed : int, defaults to None</span>
+<span class="sd">        Internal seed used for random events like shuffle seeds.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
-        <span class="n">instance_seed_pairs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">instance_order</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;shuffle_once&quot;</span><span class="p">,</span>
-        <span class="n">incumbent_selection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;highest_executed_budget&quot;</span><span class="p">,</span>
-        <span class="n">n_initial_challengers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">min_challenger</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">eta</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">n_seeds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">instance_seed_order</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;shuffle_once&quot;</span><span class="p">,</span>
+        <span class="n">max_incumbents</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">incumbent_selection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;highest_observed_budget&quot;</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">n_seeds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-
+    <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
-            <span class="n">min_challenger</span><span class="o">=</span><span class="n">min_challenger</span><span class="p">,</span>
+            <span class="n">n_seeds</span><span class="o">=</span><span class="n">n_seeds</span><span class="p">,</span>
+            <span class="n">max_incumbents</span><span class="o">=</span><span class="n">max_incumbents</span><span class="p">,</span>
             <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_pairs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_instance_order</span> <span class="o">=</span> <span class="n">instance_order</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_incumbent_selection</span> <span class="o">=</span> <span class="n">incumbent_selection</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_n_initial_challengers</span> <span class="o">=</span> <span class="n">n_initial_challengers</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_n_seeds</span> <span class="o">=</span> <span class="n">n_seeds</span> <span class="k">if</span> <span class="n">n_seeds</span> <span class="k">else</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_eta</span> <span class="o">=</span> <span class="n">eta</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_min_budget</span><span class="p">:</span> <span class="nb">float</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_max_budget</span><span class="p">:</span> <span class="nb">float</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_instance_as_budget</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_order</span> <span class="o">=</span> <span class="n">instance_seed_order</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_incumbent_selection</span> <span class="o">=</span> <span class="n">incumbent_selection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_highest_observed_budget_only</span> <span class="o">=</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">incumbent_selection</span> <span class="o">==</span> <span class="s2">&quot;any_budget&quot;</span> <span class="k">else</span> <span class="kc">True</span>
 
-        <span class="n">available_incumbent_selections</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;highest_executed_budget&quot;</span><span class="p">,</span> <span class="s2">&quot;highest_budget&quot;</span><span class="p">,</span> <span class="s2">&quot;any_budget&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">incumbent_selection</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">available_incumbent_selections</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The incumbent selection must be one of </span><span class="si">{</span><span class="n">available_incumbent_selections</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
+        <span class="n">meta</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">meta</span>
+        <span class="n">meta</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;eta&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eta</span><span class="p">,</span>
+                <span class="s2">&quot;instance_seed_order&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_order</span><span class="p">,</span>
+                <span class="s2">&quot;incumbent_selection&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_incumbent_selection</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_challenger</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Successive Halving can not handle argument `min_challenger` &gt; 1.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">meta</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_seeds</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;The case multiple seeds without using instances can not be handled yet!&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="SuccessiveHalving.reset"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the internal variables of the intensifier including the tracker.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">eta</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The parameter `eta` must be greater than 1.&quot;</span><span class="p">)</span>
+        <span class="c1"># States</span>
+        <span class="c1"># dict[tuple[bracket, stage], list[tuple[seed to shuffle instance-seed keys, list[config_id]]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span></div>
 
-        <span class="c1"># We declare the instance seed pairs now</span>
-        <span class="k">if</span> <span class="n">instance_seed_pairs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># Set seed(s) for all SH runs. Currently user gives the number of seeds to consider.</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deterministic</span><span class="p">:</span>
-                <span class="n">seeds</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Only one seed is used as `deterministic` is set to true.&quot;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">seeds</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">MAXINT</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_seeds</span><span class="p">)]</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_seeds</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                        <span class="s2">&quot;The target function is specified to be non-deterministic, &quot;</span>
-                        <span class="s2">&quot;but number of seeds to evaluate are set to 1. &quot;</span>
-                        <span class="s2">&quot;Consider increasing `n_seeds` from the intensifier.&quot;</span>
-                    <span class="p">)</span>
+<div class="viewcode-block" id="SuccessiveHalving.__post_init__"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving.__post_init__">[docs]</a>    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Post initialization steps after the runhistory has been set.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__post_init__</span><span class="p">()</span>
 
-            <span class="c1"># Storing instances &amp; seeds as tuples</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_pairs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">seeds</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_pairs</span> <span class="o">=</span> <span class="p">[(</span><span class="kc">None</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">seeds</span><span class="p">]</span>
+        <span class="c1"># We generate our instance seed pairs once</span>
+        <span class="n">is_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_seed_keys_of_interest</span><span class="p">()</span>
 
-            <span class="c1"># Determine instance-seed pair order</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_order</span> <span class="o">==</span> <span class="s2">&quot;shuffle_once&quot;</span><span class="p">:</span>
-                <span class="c1"># Randomize once</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_pairs</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_target_function_seeds</span> <span class="o">=</span> <span class="n">seeds</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_pairs</span> <span class="o">=</span> <span class="n">instance_seed_pairs</span>
-
-        <span class="c1"># Get seeds and check whether instances are involved</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_target_function_seeds</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_instance_as_budget</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">for</span> <span class="n">instance</span><span class="p">,</span> <span class="n">seed</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_pairs</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">seed</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_target_function_seeds</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_target_function_seeds</span> <span class="o">+=</span> <span class="p">[</span><span class="n">seed</span><span class="p">]</span>
-
-            <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_instance_as_budget</span> <span class="o">=</span> <span class="kc">True</span>
-
-        <span class="c1"># Budgets</span>
-        <span class="n">min_budget</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">min_budget</span>
-        <span class="n">max_budget</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">max_budget</span>
+        <span class="c1"># Budgets, followed by lots of sanity-checking</span>
+        <span class="n">eta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eta</span>
+        <span class="n">min_budget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">min_budget</span>
+        <span class="n">max_budget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">max_budget</span>
 
         <span class="k">if</span> <span class="n">max_budget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">min_budget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">max_budget</span> <span class="o">&lt;</span> <span class="n">min_budget</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Max budget has to be larger than min budget.&quot;</span><span class="p">)</span>
 
-        <span class="c1"># If only 1 instance was provided</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_as_budget</span><span class="p">:</span>
-            <span class="c1"># budget with algorithm_walltime_limit</span>
-            <span class="k">if</span> <span class="n">min_budget</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">max_budget</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;Successive Halving with real-valued budget (i.e., only 1 instance) &quot;</span>
-                    <span class="s2">&quot;requires parameters `min_budget` and `max_budget` for intensification!&quot;</span>
-                <span class="p">)</span>
-
-            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_pairs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_min_budget</span> <span class="o">=</span> <span class="n">min_budget</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_max_budget</span> <span class="o">=</span> <span class="n">max_budget</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uses_instances</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">min_budget</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">max_budget</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Successive Halving requires integer budgets when using instances.&quot;</span><span class="p">)</span>
 
-            <span class="c1"># Budget with instances</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_min_budget</span> <span class="o">=</span> <span class="n">min_budget</span> <span class="k">if</span> <span class="n">min_budget</span> <span class="k">else</span> <span class="mi">1</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_max_budget</span> <span class="o">=</span> <span class="n">max_budget</span> <span class="k">if</span> <span class="n">max_budget</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_pairs</span><span class="p">)</span>
+            <span class="n">min_budget</span> <span class="o">=</span> <span class="n">min_budget</span> <span class="k">if</span> <span class="n">min_budget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">1</span>
+            <span class="n">max_budget</span> <span class="o">=</span> <span class="n">max_budget</span> <span class="k">if</span> <span class="n">max_budget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">is_keys</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_budget</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_pairs</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">max_budget</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">is_keys</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Max budget (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_budget</span><span class="si">}</span><span class="s2">) can not be greater than the number of &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;instance-seed pairs (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_pairs</span><span class="p">)</span><span class="si">}</span><span class="s2">).&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Max budget of </span><span class="si">{</span><span class="n">max_budget</span><span class="si">}</span><span class="s2"> can not be greater than the number of instance-seed &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;keys (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">is_keys</span><span class="p">)</span><span class="si">}</span><span class="s2">).&quot;</span>
                 <span class="p">)</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_budget</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_pairs</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">max_budget</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">is_keys</span><span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                    <span class="s2">&quot;Max budget (</span><span class="si">%d</span><span class="s2">) does not include all instance-seed pairs (</span><span class="si">%d</span><span class="s2">).&quot;</span>
-                    <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_budget</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_pairs</span><span class="p">))</span>
+                    <span class="sa">f</span><span class="s2">&quot;Max budget </span><span class="si">{</span><span class="n">max_budget</span><span class="si">}</span><span class="s2"> does not include all instance seed  &quot;</span> <span class="sa">f</span><span class="s2">&quot;pairs (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">is_keys</span><span class="p">)</span><span class="si">}</span><span class="s2">).&quot;</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">min_budget</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">max_budget</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Successive Halving requires the parameters min_budget and max_budget defined in the scenario.&quot;</span>
                 <span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_budget</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Minimum budget must be greater than 0.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">is_keys</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Successive Halving supports only one seed when using budgets.&quot;</span><span class="p">)</span>
 
-        <span class="n">budget_type</span> <span class="o">=</span> <span class="s2">&quot;INSTANCES&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_as_budget</span> <span class="k">else</span> <span class="s2">&quot;BUDGETS&quot;</span>
+        <span class="k">if</span> <span class="n">min_budget</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">min_budget</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Min budget has to be larger than 0.&quot;</span><span class="p">)</span>
+
+        <span class="n">budget_type</span> <span class="o">=</span> <span class="s2">&quot;INSTANCES&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uses_instances</span> <span class="k">else</span> <span class="s2">&quot;BUDGETS&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Using successive halving with budget type </span><span class="si">{</span><span class="n">budget_type</span><span class="si">}</span><span class="s2">, min budget </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_min_budget</span><span class="si">}</span><span class="s2">, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;max budget </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_budget</span><span class="si">}</span><span class="s2"> and eta </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_eta</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Successive Halving uses budget type </span><span class="si">{</span><span class="n">budget_type</span><span class="si">}</span><span class="s2"> with eta </span><span class="si">{</span><span class="n">eta</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;min budget </span><span class="si">{</span><span class="n">min_budget</span><span class="si">}</span><span class="s2">, and max budget </span><span class="si">{</span><span class="n">max_budget</span><span class="si">}</span><span class="s2">.&quot;</span>
         <span class="p">)</span>
 
-        <span class="c1"># Pre-computing stuff for SH</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_max_sh_iterations</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_budget</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_budget</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eta</span><span class="p">)))</span>
+        <span class="c1"># Pre-computing Successive Halving variables</span>
+        <span class="n">max_iter</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">max_budget</span> <span class="o">/</span> <span class="n">min_budget</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">eta</span><span class="p">)))</span>
+        <span class="n">n_initial_challengers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">eta</span><span class="o">**</span><span class="n">max_iter</span><span class="p">)</span>
 
-        <span class="c1"># Initial number of challengers to sample</span>
-        <span class="k">if</span> <span class="n">n_initial_challengers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_n_initial_challengers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eta</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_sh_iterations</span><span class="p">)</span>
+        <span class="c1"># How many configs in each stage</span>
+        <span class="n">linspace</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">,</span> <span class="n">max_iter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">n_configs_</span> <span class="o">=</span> <span class="n">n_initial_challengers</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">eta</span><span class="p">,</span> <span class="n">linspace</span><span class="p">)</span>
+        <span class="n">n_configs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">n_configs_</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
-        <span class="c1"># Challengers can be repeated only if optimizing across multiple seeds or changing instance orders every run</span>
-        <span class="c1"># (this does not include having multiple instances)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_seeds</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_order</span> <span class="o">==</span> <span class="s2">&quot;shuffle&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_repeat_configs</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_repeat_configs</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># How many budgets in each stage</span>
+        <span class="n">linspace</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">max_iter</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">max_iter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">budgets</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_budget</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">eta</span><span class="p">,</span> <span class="n">linspace</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_as_budget</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;The argument `incumbent_selection` is ignored because instances are used as budget type.&quot;</span><span class="p">)</span>
+        <span class="c1"># Global variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_min_budget</span> <span class="o">=</span> <span class="n">min_budget</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_budget</span> <span class="o">=</span> <span class="n">max_budget</span>
+
+        <span class="c1"># Stage variables, depending on the bracket (0 is the bracket here since SH only has one bracket)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_iterations</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="n">max_iter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_configs_in_stage</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="n">n_configs</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_budgets_in_stage</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="n">budgets</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="SuccessiveHalving.get_state"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving.get_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
+        <span class="c1"># Replace config by dict</span>
+        <span class="n">tracker</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="k">for</span> <span class="n">seed</span><span class="p">,</span> <span class="n">configs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                <span class="c1"># We have to make key serializable</span>
+                <span class="n">new_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">tracker</span><span class="p">[</span><span class="n">new_key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">seed</span><span class="p">,</span> <span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">get_dictionary</span><span class="p">()</span> <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">]))</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;tracker&quot;</span><span class="p">:</span> <span class="n">tracker</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="SuccessiveHalving.set_state"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving.set_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+
+        <span class="n">tracker</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;tracker&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">old_key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">old_key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>
+            <span class="n">new_key</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">keys</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="k">for</span> <span class="n">seed</span><span class="p">,</span> <span class="n">config_dicts</span> <span class="ow">in</span> <span class="n">tracker</span><span class="p">[</span><span class="n">old_key</span><span class="p">]:</span>
+                <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="p">[</span><span class="n">new_key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="n">seed</span><span class="p">,</span>
+                        <span class="p">[</span><span class="n">Configuration</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span> <span class="n">config_dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">config_dict</span> <span class="ow">in</span> <span class="n">config_dicts</span><span class="p">],</span>
+                    <span class="p">)</span>
+                <span class="p">)</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-            <span class="s2">&quot;instance_seed_pairs&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_pairs</span><span class="p">,</span>
-            <span class="s2">&quot;instance_order&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_order</span><span class="p">,</span>
-            <span class="s2">&quot;incumbent_selection&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_incumbent_selection</span><span class="p">,</span>
-            <span class="s2">&quot;n_initial_challengers&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_initial_challengers</span><span class="p">,</span>
-            <span class="s2">&quot;min_challenger&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_challenger</span><span class="p">,</span>
-            <span class="s2">&quot;eta&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eta</span><span class="p">,</span>
-            <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed</span><span class="p">,</span>
-            <span class="s2">&quot;n_seeds&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_seeds</span><span class="p">,</span>
-        <span class="p">}</span>
+    <span class="k">def</span> <span class="nf">uses_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="kc">True</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">uses_budgets</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
-        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_as_budget</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">instances</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">uses_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_as_budget</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">instances</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="SuccessiveHalving.get_target_function_seeds"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving.get_target_function_seeds">[docs]</a>    <span class="k">def</span> <span class="nf">get_target_function_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_target_function_seeds</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="SuccessiveHalving.get_target_function_budgets"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving.get_target_function_budgets">[docs]</a>    <span class="k">def</span> <span class="nf">get_target_function_budgets</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
-        <span class="c1"># If we use instance as budget, then we always use None for the budget</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_as_budget</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+<div class="viewcode-block" id="SuccessiveHalving.print_tracker"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving.print_tracker">[docs]</a>    <span class="k">def</span> <span class="nf">print_tracker</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints the number of configurations in each bracket/stage.&quot;&quot;&quot;</span>
+        <span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span><span class="p">),</span> <span class="n">others</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">config_ids</span> <span class="ow">in</span> <span class="n">others</span><span class="p">:</span>
+                <span class="n">counter</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">config_ids</span><span class="p">)</span>
 
-        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">budgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_budgets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_min_budget</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_budget</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">budgets</span>  <span class="c1"># type: ignore</span></div>
+            <span class="k">if</span> <span class="n">counter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Bracket </span><span class="si">{</span><span class="n">bracket</span><span class="si">}</span><span class="s2"> / Stage </span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">counter</span><span class="si">}</span><span class="s2"> configs&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="SuccessiveHalving.get_target_function_instances"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving.get_target_function_instances">[docs]</a>    <span class="k">def</span> <span class="nf">get_target_function_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span> <span class="o">==</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="ow">or</span> <span class="kc">None</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> statistics:&quot;</span><span class="p">)</span>
 
-        <span class="n">instances</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">instances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">messages</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
-        <span class="k">return</span> <span class="n">instances</span></div>
+<div class="viewcode-block" id="SuccessiveHalving.get_trials_of_interest"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving.get_trials_of_interest">[docs]</a>    <span class="k">def</span> <span class="nf">get_trials_of_interest</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
+        <span class="n">is_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_seed_keys_of_interest</span><span class="p">(</span><span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">budget</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="SuccessiveHalving.calculate_budgets"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving.calculate_budgets">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_budgets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_budget</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">max_budget</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;Calculates the budgets for successive halving.</span>
+        <span class="c1"># When we use budgets, we always evaluated on the highest budget only</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uses_budgets</span><span class="p">:</span>
+            <span class="n">budget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_budget</span>
+
+        <span class="n">trials</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">is_keys</span><span class="p">:</span>
+            <span class="n">trials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TrialInfo</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">key</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">key</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="n">budget</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">trials</span></div>
+
+<div class="viewcode-block" id="SuccessiveHalving.get_instance_seed_budget_keys"><a class="viewcode-back" href="../../../api/smac.intensifier.successive_halving.html#smac.intensifier.SuccessiveHalving.get_instance_seed_budget_keys">[docs]</a>    <span class="k">def</span> <span class="nf">get_instance_seed_budget_keys</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">compare</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the instance-seed-budget keys for a given configuration. This method supports ``highest_budget``,</span>
+<span class="sd">        which only returns the instance-seed-budget keys for the highest budget (if specified). In this case, the</span>
+<span class="sd">        incumbents in ``update_incumbents`` are only changed if the costs on the highest budget are lower.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        min_budget : float</span>
-<span class="sd">            The minimal budget.</span>
-<span class="sd">        max_budget : float</span>
-<span class="sd">            The maximal budget.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        max_iterations : int</span>
-<span class="sd">            How many iterations will be performed.</span>
-<span class="sd">        n_initial_challengers : int</span>
-<span class="sd">            How many challengers will be sampled in the first iteration.</span>
-<span class="sd">        budgets : list[float]</span>
-<span class="sd">            The budgets for each iteration.</span>
+<span class="sd">        config: Configuration</span>
+<span class="sd">            The Configuration to be queried</span>
+<span class="sd">        compare : bool, defaults to False</span>
+<span class="sd">            Get rid of the budget information for comparing if the configuration was evaluated on the same</span>
+<span class="sd">            instance-seed keys.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">max_iterations</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">max_budget</span> <span class="o">/</span> <span class="n">min_budget</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eta</span><span class="p">)))</span>
-        <span class="n">n_initial_challengers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eta</span><span class="o">**</span><span class="n">max_iterations</span><span class="p">)</span>
-
-        <span class="c1"># Budgets to consider in each stage</span>
-        <span class="n">linspace</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_sh_iterations</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_sh_iterations</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">_budgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_budget</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eta</span><span class="p">,</span> <span class="n">linspace</span><span class="p">)</span>
-        <span class="n">budgets</span> <span class="o">=</span> <span class="n">_budgets</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-
-        <span class="k">return</span> <span class="n">max_iterations</span><span class="p">,</span> <span class="n">n_initial_challengers</span><span class="p">,</span> <span class="n">budgets</span></div>
-
-    <span class="k">def</span> <span class="nf">_get_intensifier_ranking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">intensifier</span><span class="p">:</span> <span class="n">AbstractIntensifier</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-        <span class="kn">from</span> <span class="nn">smac.intensifier.successive_halving_worker</span> <span class="kn">import</span> <span class="n">SuccessiveHalvingWorker</span>
-
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">intensifier</span><span class="p">,</span> <span class="n">SuccessiveHalvingWorker</span><span class="p">)</span>
-
-        <span class="c1"># Each row of this matrix is id, stage, configs+instances for stage</span>
-        <span class="c1"># We use sh.run_tracker as a cheap way to know how advanced the run is</span>
-        <span class="c1"># in case of stage ties among successive halvers. sh.run_tracker is</span>
-        <span class="c1"># also emptied each iteration</span>
-        <span class="k">return</span> <span class="n">intensifier</span><span class="o">.</span><span class="n">stage</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">intensifier</span><span class="o">.</span><span class="n">_run_tracker</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_add_new_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">smac.intensifier.successive_halving_worker</span> <span class="kn">import</span> <span class="n">SuccessiveHalvingWorker</span>
-
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_intensifier_instances</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">n_workers</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-
-        <span class="n">sh</span> <span class="o">=</span> <span class="n">SuccessiveHalvingWorker</span><span class="p">(</span>
-            <span class="n">successive_halving</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-            <span class="n">identifier</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_intensifier_instances</span><span class="p">),</span>
+        <span class="n">isb_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_instance_seed_budget_keys</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span> <span class="n">highest_observed_budget_only</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_highest_observed_budget_only</span>
         <span class="p">)</span>
-        <span class="n">sh</span><span class="o">.</span><span class="n">_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stats</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier_instances</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_intensifier_instances</span><span class="p">)]</span> <span class="o">=</span> <span class="n">sh</span>
 
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="c1"># If incumbent should only be changed on the highest budget, we have to kick out all budgets below the highest</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uses_budgets</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_incumbent_selection</span> <span class="o">==</span> <span class="s2">&quot;highest_budget&quot;</span><span class="p">:</span>
+            <span class="n">isb_keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">isb_keys</span> <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">budget</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_budget</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">compare</span><span class="p">:</span>
+            <span class="c1"># Get rid of duplicates</span>
+            <span class="n">isb_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                <span class="nb">set</span><span class="p">([</span><span class="n">InstanceSeedBudgetKey</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">key</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">key</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">isb_keys</span><span class="p">])</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">isb_keys</span></div>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__post_init__</span><span class="p">()</span>
+
+        <span class="c1"># Log brackets/stages</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Number of configs in stage:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">bracket</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_configs_in_stage</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Bracket </span><span class="si">{</span><span class="n">bracket</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Budgets in stage:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">bracket</span><span class="p">,</span> <span class="n">budgets</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_budgets_in_stage</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Bracket </span><span class="si">{</span><span class="n">bracket</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">budgets</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
+
+        <span class="c1"># We have to add already existing trials from the runhistory</span>
+        <span class="c1"># Idea: We simply add existing configs to the tracker (first stage) but assign a random instance shuffle seed.</span>
+        <span class="c1"># In the best case, trials (added from the users) are included in the seed and it has not re-computed again.</span>
+        <span class="c1"># Note: If the intensifier was restored, we don&#39;t want to go in here</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">bracket</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">stage</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="c1"># Print ignored budgets</span>
+            <span class="n">ignored_budgets</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">rh</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">budget</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_budgets_in_stage</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">k</span><span class="o">.</span><span class="n">budget</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignored_budgets</span><span class="p">:</span>
+                    <span class="n">ignored_budgets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ignored_budgets</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Trials with budgets </span><span class="si">{</span><span class="n">ignored_budgets</span><span class="si">}</span><span class="s2"> will been ignored. Consider adding trials with budgets &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_budgets_in_stage</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="c1"># We batch the configs because we need n_configs in each iteration</span>
+            <span class="c1"># If we don&#39;t have n_configs, we sample new ones</span>
+            <span class="c1"># We take the number of configs from the first bracket and the first stage</span>
+            <span class="n">n_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_configs_in_stage</span><span class="p">[</span><span class="n">bracket</span><span class="p">][</span><span class="n">stage</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">configs</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">(</span><span class="n">rh</span><span class="o">.</span><span class="n">get_configs</span><span class="p">(),</span> <span class="n">n_configs</span><span class="p">):</span>
+                <span class="n">n_rh_configs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">configs</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">configs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">n_configs</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">config</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_generator</span><span class="p">)</span>
+                        <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                        <span class="c1"># We stop if we don&#39;t find any configuration anymore</span>
+                        <span class="k">return</span>
+
+                <span class="n">seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_order_seed</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="p">[(</span><span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">seed</span><span class="p">,</span> <span class="n">configs</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Added </span><span class="si">{</span><span class="n">n_rh_configs</span><span class="si">}</span><span class="s2"> configs from runhistory and </span><span class="si">{</span><span class="n">n_configs</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">n_rh_configs</span><span class="si">}</span><span class="s2"> new configs to &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Successive Halving&#39;s first bracket and first stage with order seed </span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="c1"># If we don&#39;t yield trials anymore, we have to update</span>
+            <span class="c1"># Otherwise, we can just keep yielding trials from the tracker</span>
+            <span class="n">update</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="c1"># We iterate over the tracker to do two things:</span>
+            <span class="c1"># 1) Yield trials of configs that are not yet evaluated/running</span>
+            <span class="c1"># 2) Update tracker and move better configs to the next stage</span>
+            <span class="c1"># We start in reverse order to complete higher stages first</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Updating tracker:&quot;</span><span class="p">)</span>
+
+            <span class="c1"># TODO: Process stages ascending or descending?</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="n">pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="p">[(</span><span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">seed</span><span class="p">,</span> <span class="n">configs</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
+                    <span class="n">isb_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_instance_seed_budget_keys_by_stage</span><span class="p">(</span><span class="n">bracket</span><span class="o">=</span><span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="n">stage</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+
+                    <span class="c1"># We iterate over the configs and yield trials which are not running/evaluated yet</span>
+                    <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
+                        <span class="n">config_hash</span> <span class="o">=</span> <span class="n">get_config_hash</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+                        <span class="n">trials</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_trials</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">from_keys</span><span class="o">=</span><span class="n">isb_keys</span><span class="p">)</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;--- Yielding </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">trials</span><span class="p">)</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">isb_keys</span><span class="p">)</span><span class="si">}</span><span class="s2"> for config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2"> in &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;stage </span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2"> with seed </span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s2">...&quot;</span>
+                        <span class="p">)</span>
+
+                        <span class="k">for</span> <span class="n">trial</span> <span class="ow">in</span> <span class="n">trials</span><span class="p">:</span>
+                            <span class="k">yield</span> <span class="n">trial</span>
+                            <span class="n">update</span> <span class="o">=</span> <span class="kc">True</span>
+
+                    <span class="c1"># If all configs were evaluated on ``n_configs_required``, we finally can compare</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">successful_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_best_configs</span><span class="p">(</span><span class="n">configs</span><span class="p">,</span> <span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">isb_keys</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="n">NotEvaluatedError</span><span class="p">:</span>
+                        <span class="c1"># We can&#39;t compare anything, so we just continue with the next pairs</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;--- Could not compare configs because not all trials have been evaluated yet.&quot;</span><span class="p">)</span>
+                        <span class="k">continue</span>
+
+                    <span class="c1"># Update tracker</span>
+                    <span class="c1"># Remove current shuffle index / config pair</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="p">[(</span><span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span><span class="p">)]</span><span class="o">.</span><span class="n">remove</span><span class="p">((</span><span class="n">seed</span><span class="p">,</span> <span class="n">configs</span><span class="p">))</span>
+
+                    <span class="c1"># Add successful to the next stage</span>
+                    <span class="k">if</span> <span class="n">stage</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_iterations</span><span class="p">[</span><span class="n">bracket</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">config_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">rh</span><span class="o">.</span><span class="n">get_config_id</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">successful_configs</span><span class="p">]</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="p">[(</span><span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">seed</span><span class="p">,</span> <span class="n">successful_configs</span><span class="p">))</span>
+
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;--- Promoted </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">config_ids</span><span class="p">)</span><span class="si">}</span><span class="s2"> configs from stage </span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2"> to stage </span><span class="si">{</span><span class="n">stage</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> in &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;bracket </span><span class="si">{</span><span class="n">bracket</span><span class="si">}</span><span class="s2">.&quot;</span>
+                        <span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;--- Removed </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">successful_configs</span><span class="p">)</span><span class="si">}</span><span class="s2"> configs to last stage in bracket </span><span class="si">{</span><span class="n">bracket</span><span class="si">}</span><span class="s2">.&quot;</span>
+                        <span class="p">)</span>
+
+                    <span class="c1"># Log how many configs are in each stage</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">print_tracker</span><span class="p">()</span>
+
+            <span class="c1"># Since we yielded something before, we want to go back as long as we do not find any trials anymore</span>
+            <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># TODO: Aggressive progressing without knowing how well trials performed</span>
+            <span class="c1"># Idea: Don&#39;t add constantly new batches (see ASHA)</span>
+
+            <span class="c1"># If we are running out of trials, we want to add configs to the first stage</span>
+            <span class="c1"># We simply add as many configs to the stage as required (_n_configs_in_stage[0])</span>
+            <span class="n">configs</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">next_bracket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_bracket</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_configs_in_stage</span><span class="p">[</span><span class="n">next_bracket</span><span class="p">][</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">config</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_generator</span><span class="p">)</span>
+                    <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                    <span class="c1"># We stop if we don&#39;t find any configuration anymore</span>
+                    <span class="k">return</span>
+
+            <span class="c1"># We keep track of the seed so we always evaluate on the same instances</span>
+            <span class="n">next_seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_order_seed</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="p">[(</span><span class="n">next_bracket</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">next_seed</span><span class="p">,</span> <span class="n">configs</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Added </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">configs</span><span class="p">)</span><span class="si">}</span><span class="s2"> new configs to bracket </span><span class="si">{</span><span class="n">next_bracket</span><span class="si">}</span><span class="s2"> stage 0 with shuffle seed </span><span class="si">{</span><span class="n">next_seed</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_instance_seed_budget_keys_by_stage</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">bracket</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">stage</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns all instance-seed-budget keys (isb keys) for the given stage. Each stage</span>
+<span class="sd">        is associated with a budget (N). Two possible options:</span>
+
+<span class="sd">        1) Instance based: We return N isb keys. If a seed is specified, we shuffle the keys before</span>
+<span class="sd">        returning the first N instances. The budget is set to None here.</span>
+<span class="sd">        2) Budget based: We return one isb only but the budget is set to N.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">is_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_seed_keys_of_interest</span><span class="p">()</span>
+
+        <span class="c1"># We have to differentiate between budgets and instances based here</span>
+        <span class="c1"># If we are budget based, we always have one instance seed pair only</span>
+        <span class="c1"># If we are in the instance setting, we have to return a specific number of instance seed pairs</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uses_instances</span><span class="p">:</span>
+            <span class="c1"># Shuffle instance seed pairs group-based</span>
+            <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">is_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reorder_instance_seed_keys</span><span class="p">(</span><span class="n">is_keys</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+
+            <span class="c1"># We only return the first N instances</span>
+            <span class="n">N</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_budgets_in_stage</span><span class="p">[</span><span class="n">bracket</span><span class="p">][</span><span class="n">stage</span><span class="p">])</span>
+            <span class="n">is_keys</span> <span class="o">=</span> <span class="n">is_keys</span><span class="p">[:</span><span class="n">N</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">is_keys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+
+            <span class="c1"># The stage defines which budget should be used (in real-valued setting)</span>
+            <span class="c1"># No shuffle is needed here because we only have on instance seed pair</span>
+            <span class="n">budget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_budgets_in_stage</span><span class="p">[</span><span class="n">bracket</span><span class="p">][</span><span class="n">stage</span><span class="p">]</span>
+
+        <span class="n">isbk</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">isk</span> <span class="ow">in</span> <span class="n">is_keys</span><span class="p">:</span>
+            <span class="n">isbk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InstanceSeedBudgetKey</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">isk</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">isk</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="n">budget</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">isbk</span>
+
+    <span class="k">def</span> <span class="nf">_get_next_trials</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+        <span class="n">from_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns trials for a given config from a list of instances (instance-seed-budget keys). The returned trials</span>
+<span class="sd">        have not run or evaluated yet.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
+        <span class="n">evaluated_trials</span> <span class="o">=</span> <span class="n">rh</span><span class="o">.</span><span class="n">get_trials</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">highest_observed_budget_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">running_trials</span> <span class="o">=</span> <span class="n">rh</span><span class="o">.</span><span class="n">get_running_trials</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="n">next_trials</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">from_keys</span><span class="p">:</span>
+            <span class="n">trial</span> <span class="o">=</span> <span class="n">TrialInfo</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">trial</span> <span class="ow">in</span> <span class="n">evaluated_trials</span> <span class="ow">or</span> <span class="n">trial</span> <span class="ow">in</span> <span class="n">running_trials</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">next_trials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trial</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">next_trials</span>
+
+    <span class="k">def</span> <span class="nf">_get_best_configs</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
+        <span class="n">bracket</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">stage</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">from_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the best configurations. The number of configurations is depending on the stage. Raises</span>
+<span class="sd">        ``NotEvaluatedError`` if not all trials have been evaluated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">n_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_configs_in_stage</span><span class="p">[</span><span class="n">bracket</span><span class="p">][</span><span class="n">stage</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
+        <span class="n">configs</span> <span class="o">=</span> <span class="n">configs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
+            <span class="n">isb_keys</span> <span class="o">=</span> <span class="n">rh</span><span class="o">.</span><span class="n">get_instance_seed_budget_keys</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">isb_key</span> <span class="ow">in</span> <span class="n">isb_keys</span> <span class="k">for</span> <span class="n">isb_key</span> <span class="ow">in</span> <span class="n">from_keys</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">NotEvaluatedError</span>
+
+        <span class="n">selected_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_configs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">n_configs</span><span class="p">:</span>
+            <span class="c1"># We calculate the pareto front for the given configs</span>
+            <span class="c1"># We use the same isb keys for all the configs</span>
+            <span class="n">all_keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">from_keys</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">]</span>
+            <span class="n">incumbents</span> <span class="o">=</span> <span class="n">calculate_pareto_front</span><span class="p">(</span><span class="n">rh</span><span class="p">,</span> <span class="n">configs</span><span class="p">,</span> <span class="n">all_keys</span><span class="p">)</span>
+
+            <span class="c1"># Idea: We recursively calculate the pareto front in every iteration</span>
+            <span class="k">for</span> <span class="n">incumbent</span> <span class="ow">in</span> <span class="n">incumbents</span><span class="p">:</span>
+                <span class="n">configs</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
+                <span class="n">selected_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
+
+        <span class="c1"># If we have more selected configs, we remove the ones with the smallest crowding distance</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_configs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">n_configs</span><span class="p">:</span>
+            <span class="n">selected_configs</span> <span class="o">=</span> <span class="n">sort_by_crowding_distance</span><span class="p">(</span><span class="n">rh</span><span class="p">,</span> <span class="n">configs</span><span class="p">,</span> <span class="n">all_keys</span><span class="p">)[:</span><span class="n">n_configs</span><span class="p">]</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Found more configs than required. Removed configs with smallest crowding distance.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">selected_configs</span>
+
+    <span class="k">def</span> <span class="nf">_get_next_order_seed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Next instances shuffle seed to use.&quot;&quot;&quot;</span>
+        <span class="c1"># Here we have the option to shuffle the trials when specified by the user</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_order</span> <span class="o">==</span> <span class="s2">&quot;shuffle&quot;</span><span class="p">:</span>
+            <span class="n">seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">MAXINT</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_seed_order</span> <span class="o">==</span> <span class="s2">&quot;shuffle_once&quot;</span><span class="p">:</span>
+            <span class="n">seed</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">seed</span>
+
+    <span class="k">def</span> <span class="nf">_get_next_bracket</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Successive Halving only uses one bracket. Therefore, we always return 0 here.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
 </pre></div>
 
               </div>
@@ -1339,7 +1568,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Ask-and-Tell Interface &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>Ask-and-Tell Interface &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -99,11 +99,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -174,8 +174,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="../examples/1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -194,7 +194,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/5_priors.html">
+      <a class="reference internal" href="../examples/1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -320,12 +325,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -366,11 +376,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../api/smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../api/smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -403,23 +408,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../api/smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../api/smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="../api/smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="../api/smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../api/smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -632,18 +627,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../api/smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../api/smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -652,18 +637,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../api/smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../api/smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../api/smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -862,6 +837,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../api/smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -923,6 +903,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../api/smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -995,24 +980,9 @@
               
               <div class="toc-item">
                 
-<div class="tocsection onthispage pt-5 pb-3">
-    <i class="fas fa-list"></i> On this page
-</div>
 
 <nav id="bd-toc-nav">
-    <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#calling-tell-without-ask">
-   Calling Tell without Ask
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#calling-multiple-tells">
-   Calling Multiple Tells
-  </a>
- </li>
-</ul>
-
+    
 </nav>
               </div>
               
@@ -1035,36 +1005,20 @@
   <section id="ask-and-tell-interface">
 <h1>Ask-and-Tell Interface<a class="headerlink" href="#ask-and-tell-interface" title="Permalink to this heading">¶</a></h1>
 <p>SMAC provides an ask-and-tell interface in v2.0, giving the user the opportunity to ask for the next trial
-and report the results of the trial. However, the ask-and-tell interfaces comes in v2.0 with some
-limitations which you should be aware of.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The initial design is already part of the ask and tell. Therefore, if you ask for the first trials,
-you will receive configurations from the initial design.</p>
+and report the results of the trial.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When specifying <code class="docutils literal notranslate"><span class="pre">n_trials</span></code> in the scenario and trials have been registered by the user, SMAC will
+count the users trials as well. However, the wallclock time will first start when calling <code class="docutils literal notranslate"><span class="pre">optimize</span></code>.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Using ask-and-tell instead of the optimize method might result in different results because
-some callbacks are ignored and skipped trials are handled differently. In fact, skipped trials
-are ignored completely and can results in being stuck when only skipped trials are found.</p>
+<p>It might be the case that not all user-provided trials can be considered. Take Successive Halving, for example,
+when specifying the min and max budget, intermediate budgets are calculated. If the user provided trials with
+different budgets, they, obviously, can not be considered. However, all user-provided configurations will flow
+into the intensification process.</p>
 </div>
 <p>Please have a look at our <a class="reference internal" href="../examples/1_basics/3_ask_and_tell.html#ask-and-tell"><span class="std std-ref">ask-and-tell example</span></a>.</p>
-<section id="calling-tell-without-ask">
-<h2>Calling Tell without Ask<a class="headerlink" href="#calling-tell-without-ask" title="Permalink to this heading">¶</a></h2>
-<p>Sometimes you want to report pre-evaluated trials to the optimization. You can realize this by calling the
-<code class="docutils literal notranslate"><span class="pre">tell</span></code> method without calling <code class="docutils literal notranslate"><span class="pre">ask</span></code> before. But be aware that this <em>only</em> works with the <code class="docutils literal notranslate"><span class="pre">Intensifier</span></code> and not
-with <code class="docutils literal notranslate"><span class="pre">Successive</span> <span class="pre">Halving</span></code> or <code class="docutils literal notranslate"><span class="pre">Hyperband</span></code>. The <code class="docutils literal notranslate"><span class="pre">Intensifier</span></code> checks the run history and detects pre-evaluated
-trials and incorporates it into the optimization. Since <code class="docutils literal notranslate"><span class="pre">Successive</span> <span class="pre">Halving</span></code> and <code class="docutils literal notranslate"><span class="pre">Hyperband</span></code> are more
-complicated (needs specific budgets and pre-defined number of configurations in each stage), it is not supported yet.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Calling <code class="docutils literal notranslate"><span class="pre">tell</span></code> without <code class="docutils literal notranslate"><span class="pre">ask</span></code> does only work for specific intensifiers.</p>
-</div>
-</section>
-<section id="calling-multiple-tells">
-<h2>Calling Multiple Tells<a class="headerlink" href="#calling-multiple-tells" title="Permalink to this heading">¶</a></h2>
-<p>Calling multiple times <code class="docutils literal notranslate"><span class="pre">tell</span></code> before <code class="docutils literal notranslate"><span class="pre">ask</span></code> is not supported yet.</p>
-</section>
 </section>
 
 
@@ -1102,7 +1056,7 @@ complicated (needs specific budgets and pre-defined number of configurations in 
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

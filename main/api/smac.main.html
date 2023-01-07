@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.main &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>smac.main &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -40,7 +40,7 @@
     <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.main.base_smbo" href="smac.main.base_smbo.html" />
+    <link rel="next" title="smac.main.config_selector" href="smac.main.config_selector.html" />
     <link rel="prev" title="smac.facade.random_facade" href="smac.facade.random_facade.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
@@ -99,11 +99,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -174,8 +174,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="../examples/1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -194,7 +194,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/5_priors.html">
+      <a class="reference internal" href="../examples/1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -320,12 +325,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -366,11 +376,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -403,23 +408,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -632,18 +627,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -652,18 +637,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -862,6 +837,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -923,6 +903,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1005,156 +990,6 @@
   <a class="reference internal nav-link" href="#interfaces">
    Interfaces
   </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#smac.main.BaseSMBO">
-     <code class="docutils literal notranslate">
-      <span class="pre">
-       BaseSMBO
-      </span>
-     </code>
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.main.BaseSMBO.ask">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         BaseSMBO.ask()
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.main.BaseSMBO.get_next_configurations">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         BaseSMBO.get_next_configurations()
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.main.BaseSMBO.incumbent">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         BaseSMBO.incumbent
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.main.BaseSMBO.optimize">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         BaseSMBO.optimize()
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.main.BaseSMBO.runhistory">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         BaseSMBO.runhistory
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.main.BaseSMBO.save">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         BaseSMBO.save()
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.main.BaseSMBO.stats">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         BaseSMBO.stats
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.main.BaseSMBO.tell">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         BaseSMBO.tell()
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.main.BaseSMBO.update_acquisition_function">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         BaseSMBO.update_acquisition_function()
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.main.BaseSMBO.update_model">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         BaseSMBO.update_model()
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.main.BaseSMBO.validate">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         BaseSMBO.validate()
-        </span>
-       </code>
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#smac.main.SMBO">
-     <code class="docutils literal notranslate">
-      <span class="pre">
-       SMBO
-      </span>
-     </code>
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.main.SMBO.ask">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         SMBO.ask()
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.main.SMBO.get_next_configurations">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         SMBO.get_next_configurations()
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.main.SMBO.tell">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         SMBO.tell()
-        </span>
-       </code>
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#modules">
@@ -1186,286 +1021,15 @@
 <span id="smac-main"></span><h1>smac.main<a class="headerlink" href="#module-smac.main" title="Permalink to this heading">¶</a></h1>
 <section id="interfaces">
 <h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this heading">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="smac.main.BaseSMBO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.main.</span></span><span class="sig-name descname"><span class="pre">BaseSMBO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_maximizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/base_smbo.html#BaseSMBO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.BaseSMBO" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Implementation that contains the main Bayesian optimization loop.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – The scenario object, holding all environmental information.</p></li>
-<li><p><strong>stats</strong> (<em>Stats</em>) – Stats object to collect statistics about SMAC.</p></li>
-<li><p><strong>runner</strong> (<a class="reference internal" href="smac.runner.html#smac.runner.AbstractRunner" title="smac.runner.AbstractRunner"><em>AbstractRunner</em></a>) – The runner (containing the target function) is called internally to judge a trial’s performance.</p></li>
-<li><p><strong>initial_design</strong> (<em>InitialDesign</em>) – The sampled configurations from the initial design are evaluated before the Bayesian optimization loop starts.</p></li>
-<li><p><strong>runhistory</strong> (<em>Runhistory</em>) – The runhistory stores all trials.</p></li>
-<li><p><strong>runhistory_encoder</strong> (<a class="reference internal" href="smac.runhistory.encoder.html#smac.runhistory.encoder.RunHistoryEncoder" title="smac.runhistory.encoder.RunHistoryEncoder"><em>RunHistoryEncoder</em></a>) – Based on the runhistory, the surrogate model is trained. However, the data first needs to be encoded, which
-is done by the runhistory encoder. For example, inactive hyperparameters need to be encoded or cost values
-can be log transformed.</p></li>
-<li><p><strong>intensifier</strong> (<a class="reference internal" href="smac.intensifier.html#smac.intensifier.AbstractIntensifier" title="smac.intensifier.AbstractIntensifier"><em>AbstractIntensifier</em></a>) – The intensifier decides which trial (combination of configuration, seed, budget and instance) should be run
-next.</p></li>
-<li><p><strong>model</strong> (<a class="reference internal" href="smac.model.html#smac.model.AbstractModel" title="smac.model.AbstractModel"><em>AbstractModel</em></a>) – The surrogate model.</p></li>
-<li><p><strong>acquisition_maximizer</strong> (<a class="reference internal" href="smac.acquisition.maximizer.html#smac.acquisition.maximizer.AbstractAcquisitionMaximizer" title="smac.acquisition.maximizer.AbstractAcquisitionMaximizer"><em>AbstractAcquisitionMaximizer</em></a>) – The acquisition maximizer, deciding which configuration is most promising based on the surrogate model and
-acquisition function.</p></li>
-<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.function.html#smac.acquisition.function.AbstractAcquisitionFunction" title="smac.acquisition.function.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – The acquisition function.</p></li>
-<li><p><strong>random_design</strong> (<em>RandomDesign</em>) – The random design is used in the acquisition maximier, deciding whether the next configuration should be drawn
-from the acquisition function or randomly.</p></li>
-<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>defaults to False</em>) – When True, overwrites the run results if a previous run is found that is
-inconsistent in the meta data with the current setup. If <code class="docutils literal notranslate"><span class="pre">overwrite</span></code> is set to False, the user is asked
-for the exact behaviour (overwrite completely, save old run, or use old results).</p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This model should only be initialized by a facade.</p>
-</div>
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.main.BaseSMBO.ask">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/base_smbo.html#BaseSMBO.ask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.BaseSMBO.ask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Asks the intensifier for the next trial.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<a class="reference internal" href="smac.runhistory.enumerations.html#smac.runhistory.enumerations.TrialInfoIntent" title="smac.runhistory.enumerations.TrialInfoIntent"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrialInfoIntent</span></code></a>, <a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.TrialInfo" title="smac.runhistory.dataclasses.TrialInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrialInfo</span></code></a>]</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>intent</strong> (<em>TrialInfoIntent</em>) – Intent of the trials (wait/skip/run).</p></li>
-<li><p><strong>info</strong> (<em>TrialInfo</em>) – Information about the trial (config, instance, seed, budget).</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.main.BaseSMBO.get_next_configurations">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_next_configurations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/base_smbo.html#BaseSMBO.get_next_configurations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.BaseSMBO.get_next_configurations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Chooses next candidate solution with Bayesian optimization. The suggested configurations
-depend on the surrogate model acquisition optimizer/function. This method is used by
-the intensifier.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>n</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Number of configurations to return. If None, uses the number of challengers defined in the acquisition
-optimizer.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>configurations</strong> – Iterator over configurations from the acquisition optimizer.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Iterator[Configuration]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="smac.main.BaseSMBO.incumbent">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">incumbent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConfigSpace.configuration_space.Configuration</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#smac.main.BaseSMBO.incumbent" title="Permalink to this definition">¶</a></dt>
-<dd><p>The best configuration so far.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.main.BaseSMBO.optimize">
-<span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/base_smbo.html#BaseSMBO.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.BaseSMBO.optimize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Runs the Bayesian optimization loop.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>incumbent</strong> – The best found configuration.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Configuration</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="smac.main.BaseSMBO.runhistory">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">runhistory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><span class="pre">RunHistory</span></a></em><a class="headerlink" href="#smac.main.BaseSMBO.runhistory" title="Permalink to this definition">¶</a></dt>
-<dd><p>The run history, which is filled with all information during the optimization process.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunHistory</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.main.BaseSMBO.save">
-<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/base_smbo.html#BaseSMBO.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.BaseSMBO.save" title="Permalink to this definition">¶</a></dt>
-<dd><p>Saves the current stats and runhistory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="smac.main.BaseSMBO.stats">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stats</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Stats</span></em><a class="headerlink" href="#smac.main.BaseSMBO.stats" title="Permalink to this definition">¶</a></dt>
-<dd><p>The stats object, which is updated during the optimization and shows relevant information, e.g., how many
-trials have been finished and how the trajectory looks like.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Stats</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.main.BaseSMBO.tell">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/base_smbo.html#BaseSMBO.tell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.BaseSMBO.tell" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the result of a trial to the runhistory and updates the intensifier. Also,
-the stats object is updated.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>info</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.TrialInfo" title="smac.runhistory.TrialInfo"><em>TrialInfo</em></a>) – Describes the trial from which to process the results.</p></li>
-<li><p><strong>value</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.TrialValue" title="smac.runhistory.TrialValue"><em>TrialValue</em></a>) – Contains relevant information regarding the execution of a trial.</p></li>
-<li><p><strong>time_left</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – How much time in seconds is left to perform intensification.</p></li>
-<li><p><strong>save</strong> (<em>bool</em><em>, </em><em>optional to True</em>) – Whether the runhistory should be saved.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.main.BaseSMBO.update_acquisition_function">
-<span class="sig-name descname"><span class="pre">update_acquisition_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/base_smbo.html#BaseSMBO.update_acquisition_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.BaseSMBO.update_acquisition_function" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates acquisition function and assosiates the current model. Also, the acquisition
-optimizer is updated.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.main.BaseSMBO.update_model">
-<span class="sig-name descname"><span class="pre">update_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/base_smbo.html#BaseSMBO.update_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.BaseSMBO.update_model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the model and updates the acquisition function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.main.BaseSMBO.validate">
-<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/base_smbo.html#BaseSMBO.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.BaseSMBO.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates a configuration with different seeds than in the optimization process and on the highest
-budget (if budget type is real-valued).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>config</strong> (<em>Configuration</em>) – Configuration to validate</p></li>
-<li><p><strong>instances</strong> (<em>list</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Which instances to validate. If None, all instances specified in the scenario are used.
-In case that the budget type is real-valued budget, this argument is ignored.</p></li>
-<li><p><strong>seed</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – If None, the seed from the scenario is used.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>cost</strong> – The averaged cost of the configuration. In case of multi-fidelity, the cost of each objective is
-averaged.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float | list[float]</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="smac.main.SMBO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.main.</span></span><span class="sig-name descname"><span class="pre">SMBO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/smbo.html#SMBO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.SMBO" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.main.base_smbo.html#smac.main.base_smbo.BaseSMBO" title="smac.main.base_smbo.BaseSMBO"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseSMBO</span></code></a></p>
-<p>Implements <code class="docutils literal notranslate"><span class="pre">get_next_configurations</span></code>, <code class="docutils literal notranslate"><span class="pre">ask</span></code>, and <code class="docutils literal notranslate"><span class="pre">tell</span></code>.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.main.SMBO.ask">
-<span class="sig-name descname"><span class="pre">ask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/smbo.html#SMBO.ask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.SMBO.ask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Asks the intensifier for the next trial.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<a class="reference internal" href="smac.runhistory.enumerations.html#smac.runhistory.enumerations.TrialInfoIntent" title="smac.runhistory.enumerations.TrialInfoIntent"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrialInfoIntent</span></code></a>, <a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.TrialInfo" title="smac.runhistory.dataclasses.TrialInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrialInfo</span></code></a>]</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>intent</strong> (<em>TrialInfoIntent</em>) – Intent of the trials (wait/skip/run).</p></li>
-<li><p><strong>info</strong> (<em>TrialInfo</em>) – Information about the trial (config, instance, seed, budget).</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.main.SMBO.get_next_configurations">
-<span class="sig-name descname"><span class="pre">get_next_configurations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/smbo.html#SMBO.get_next_configurations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.SMBO.get_next_configurations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Chooses next candidate solution with Bayesian optimization. The suggested configurations
-depend on the surrogate model acquisition optimizer/function. This method is used by
-the intensifier.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>n</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Number of configurations to return. If None, uses the number of challengers defined in the acquisition
-optimizer.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>configurations</strong> – Iterator over configurations from the acquisition optimizer.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Iterator[Configuration]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.main.SMBO.tell">
-<span class="sig-name descname"><span class="pre">tell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/smbo.html#SMBO.tell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.SMBO.tell" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the result of a trial to the runhistory and updates the intensifier. Also,
-the stats object is updated.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>info</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.TrialInfo" title="smac.runhistory.TrialInfo"><em>TrialInfo</em></a>) – Describes the trial from which to process the results.</p></li>
-<li><p><strong>value</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.TrialValue" title="smac.runhistory.TrialValue"><em>TrialValue</em></a>) – Contains relevant information regarding the execution of a trial.</p></li>
-<li><p><strong>time_left</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – How much time in seconds is left to perform intensification.</p></li>
-<li><p><strong>save</strong> (<em>bool</em><em>, </em><em>optional to True</em>) – Whether the runhistory should be saved.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </section>
 <section id="modules">
 <h2>Modules<a class="headerlink" href="#modules" title="Permalink to this heading">¶</a></h2>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="smac.main.base_smbo.html#module-smac.main.base_smbo" title="smac.main.base_smbo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.main.base_smbo</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="smac.main.config_selector.html#module-smac.main.config_selector" title="smac.main.config_selector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.main.config_selector</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="smac.main.boing.html#module-smac.main.boing" title="smac.main.boing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.main.boing</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="smac.main.smbo.html#module-smac.main.smbo" title="smac.main.smbo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.main.smbo</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="smac.main.turbo.html#module-smac.main.turbo" title="smac.main.turbo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.main.turbo</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="smac.main.smbo.html#module-smac.main.smbo" title="smac.main.smbo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.main.smbo</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -1486,10 +1050,10 @@ the stats object is updated.</p>
             <p class="prev-next-title">smac.facade.random_facade</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.main.base_smbo.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.main.config_selector.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.main.base_smbo</p>
+        <p class="prev-next-title">smac.main.config_selector</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
@@ -1508,7 +1072,7 @@ the stats object is updated.</p>
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

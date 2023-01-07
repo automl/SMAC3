@@ -17,7 +17,9 @@ smac.utils.configspace
    
       convert_configurations_to_array
       get_conditional_hyperparameters
+      get_config_hash
       get_types
+      print_config_changes
    
    
 

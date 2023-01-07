@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.facade &#8212; SMAC3 Documentation 2.0.0a2 documentation</title>
+    <title>smac.facade &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -99,11 +99,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0a2
+        v2.0.0b1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0a2 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0a2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -174,8 +174,8 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/1_synthetic_function.html">
-       Synthetic Function
+      <a class="reference internal" href="../examples/1_basics/1_quadratic_function.html">
+       Quadratic Function
       </a>
      </li>
      <li class="toctree-l3">
@@ -194,7 +194,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../examples/1_basics/5_priors.html">
+      <a class="reference internal" href="../examples/1_basics/5_continue.html">
+       Continue an Optimization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples/1_basics/6_priors.html">
        User Priors over the Optimum
       </a>
      </li>
@@ -320,12 +325,17 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../advanced_usage/10_continue.html">
-     Continue a Run
+     Continue
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../advanced_usage/11_reproducability.html">
-     Reproducability
+    <a class="reference internal" href="../advanced_usage/11_reproducibility.html">
+     Reproducibility
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced_usage/12_optimizations.html">
+     Optimizations
     </a>
    </li>
   </ul>
@@ -366,11 +376,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.facade.boing_facade.html">
-       smac.facade.boing_facade
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="smac.facade.hyperband_facade.html">
        smac.facade.hyperband_facade
       </a>
@@ -403,23 +408,13 @@
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.main.base_smbo.html">
-       smac.main.base_smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.main.boing.html">
-       smac.main.boing
+      <a class="reference internal" href="smac.main.config_selector.html">
+       smac.main.config_selector
       </a>
      </li>
      <li class="toctree-l3">
       <a class="reference internal" href="smac.main.smbo.html">
        smac.main.smbo
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.main.turbo.html">
-       smac.main.turbo
       </a>
      </li>
     </ul>
@@ -632,18 +627,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.abstract_parallel_intensifier.html">
-       smac.intensifier.abstract_parallel_intensifier
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.hyperband_worker.html">
-       smac.intensifier.hyperband_worker
       </a>
      </li>
      <li class="toctree-l3">
@@ -652,18 +637,8 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.stages.html">
-       smac.intensifier.stages
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="smac.intensifier.successive_halving.html">
        smac.intensifier.successive_halving
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="smac.intensifier.successive_halving_worker.html">
-       smac.intensifier.successive_halving_worker
       </a>
      </li>
     </ul>
@@ -862,6 +837,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="smac.runhistory.errors.html">
+       smac.runhistory.errors
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="smac.runhistory.runhistory.html">
        smac.runhistory.runhistory
       </a>
@@ -923,6 +903,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.utils.pareto_front.html">
+       smac.utils.pareto_front
       </a>
      </li>
      <li class="toctree-l3 has-children">
@@ -1043,6 +1028,15 @@
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.facade.AbstractFacade.get_config_selector">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         AbstractFacade.get_config_selector()
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#smac.facade.AbstractFacade.get_initial_design">
        <code class="docutils literal notranslate">
         <span class="pre">
@@ -1079,15 +1073,6 @@
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.facade.AbstractFacade.get_next_configurations">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         AbstractFacade.get_next_configurations()
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#smac.facade.AbstractFacade.get_random_design">
        <code class="docutils literal notranslate">
         <span class="pre">
@@ -1106,37 +1091,10 @@
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.facade.AbstractFacade.get_target_function_budgets">
+      <a class="reference internal nav-link" href="#smac.facade.AbstractFacade.intensifier">
        <code class="docutils literal notranslate">
         <span class="pre">
-         AbstractFacade.get_target_function_budgets()
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.facade.AbstractFacade.get_target_function_instances">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         AbstractFacade.get_target_function_instances()
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.facade.AbstractFacade.get_target_function_seeds">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         AbstractFacade.get_target_function_seeds()
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.facade.AbstractFacade.incumbent">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         AbstractFacade.incumbent
+         AbstractFacade.intensifier
         </span>
        </code>
       </a>
@@ -1160,6 +1118,15 @@
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.facade.AbstractFacade.optimizer">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         AbstractFacade.optimizer
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#smac.facade.AbstractFacade.runhistory">
        <code class="docutils literal notranslate">
         <span class="pre">
@@ -1173,15 +1140,6 @@
        <code class="docutils literal notranslate">
         <span class="pre">
          AbstractFacade.scenario
-        </span>
-       </code>
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#smac.facade.AbstractFacade.stats">
-       <code class="docutils literal notranslate">
-        <span class="pre">
-         AbstractFacade.stats
         </span>
        </code>
       </a>
@@ -1630,7 +1588,7 @@
 <h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.facade.AbstractFacade">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">AbstractFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_maximizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">AbstractFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_maximizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_selector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Facade is an abstraction on top of the SMBO backend to organize the components of a Bayesian Optimization loop
 in a configurable and separable manner to suit the various needs of different (hyperparameter) optimization
@@ -1638,7 +1596,7 @@ pipelines.</p>
 <p>With the exception to scenario and <code class="docutils literal notranslate"><span class="pre">target_function</span></code>, which are expected of the user, the parameters <code class="docutils literal notranslate"><span class="pre">model</span></code>,
 <code class="docutils literal notranslate"><span class="pre">acquisition_function</span></code>, <code class="docutils literal notranslate"><span class="pre">acquisition_maximizer</span></code>, <code class="docutils literal notranslate"><span class="pre">initial_design</span></code>, <code class="docutils literal notranslate"><span class="pre">random_design</span></code>, <code class="docutils literal notranslate"><span class="pre">intensifier</span></code>,
 <code class="docutils literal notranslate"><span class="pre">multi_objective_algorithm</span></code>, <code class="docutils literal notranslate"><span class="pre">runhistory_encoder</span></code> can either be explicitly specified in the subclasses’
-<code class="docutils literal notranslate"><span class="pre">get_*</span></code> methods (defining a specific BO pipeline) or be instantiated by the user to overwrite a pipelines
+<code class="docutils literal notranslate"><span class="pre">get_*</span></code> methods (defining a specific BO pipeline) or be instantiated by the user to overwrite a pipeline
 components explicitly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1651,12 +1609,12 @@ it is assumed to be a script. In this case, <code class="docutils literal notran
 <li><p><strong>acquisition_maximizer</strong> (<a class="reference internal" href="smac.acquisition.maximizer.html#smac.acquisition.maximizer.AbstractAcquisitionMaximizer" title="smac.acquisition.maximizer.AbstractAcquisitionMaximizer"><em>AbstractAcquisitionMaximizer</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The acquisition maximizer, deciding which configuration is most promising based on the surrogate model and
 acquisition function.</p></li>
 <li><p><strong>initial_design</strong> (<em>InitialDesign</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The sampled configurations from the initial design are evaluated before the Bayesian optimization loop starts.</p></li>
-<li><p><strong>random_design</strong> (<em>RandomDesign</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The random design is used in the acquisition maximier, deciding whether the next configuration should be drawn
+<li><p><strong>random_design</strong> (<em>RandomDesign</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The random design is used in the acquisition maximizer, deciding whether the next configuration should be drawn
 from the acquisition function or randomly.</p></li>
 <li><p><strong>intensifier</strong> (<a class="reference internal" href="smac.intensifier.html#smac.intensifier.AbstractIntensifier" title="smac.intensifier.AbstractIntensifier"><em>AbstractIntensifier</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The intensifier decides which trial (combination of configuration, seed, budget and instance) should be run
 next.</p></li>
 <li><p><strong>multi_objective_algorithm</strong> (<a class="reference internal" href="smac.multi_objective.html#smac.multi_objective.AbstractMultiObjectiveAlgorithm" title="smac.multi_objective.AbstractMultiObjectiveAlgorithm"><em>AbstractMultiObjectiveAlgorithm</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – In case of multiple objectives, the objectives need to be interpreted so that an optimization is possible.
-The multi objective algorithm takes care of that.</p></li>
+The multi-objective algorithm takes care of that.</p></li>
 <li><p><strong>runhistory_encoder</strong> (<a class="reference internal" href="smac.runhistory.encoder.html#smac.runhistory.encoder.RunHistoryEncoder" title="smac.runhistory.encoder.RunHistoryEncoder"><em>RunHistoryEncoder</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Based on the runhistory, the surrogate model is trained. However, the data first needs to be encoded, which
 is done by the runhistory encoder. For example, inactive hyperparameters need to be encoded or cost values
 can be log transformed.</p></li>
@@ -1672,8 +1630,7 @@ for the exact behaviour (overwrite completely, save old run, or use old results)
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.AbstractFacade.ask">
 <span class="sig-name descname"><span class="pre">ask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.ask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.ask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Asks the intensifier for the next trial. This method returns only trials with the intend
-to run.</p>
+<dd><p>Asks the intensifier for the next trial.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.TrialInfo" title="smac.runhistory.dataclasses.TrialInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrialInfo</span></code></a></p>
@@ -1701,6 +1658,17 @@ specifying how the acquisition function instance is optimized.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.acquisition.maximizer.abstract_acqusition_maximizer.html#smac.acquisition.maximizer.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer" title="smac.acquisition.maximizer.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionMaximizer</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.facade.AbstractFacade.get_config_selector">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_config_selector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retrain_after</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_config_selector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.get_config_selector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default configuration selector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.main.config_selector.html#smac.main.config_selector.ConfigSelector" title="smac.main.config_selector.ConfigSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigSelector</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1743,24 +1711,11 @@ specifying how to challenge the incumbent configuration on other problem instanc
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.AbstractFacade.get_multi_objective_algorithm">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_multi_objective_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_multi_objective_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.get_multi_objective_algorithm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the multi-objective algorithm instance to be used in the Bayesian optimization loop,
-specifying the scalarization strategy for multiple objectives’ costs</p>
+<dd><p>Returns the multi-objective algorithm instance to be used in the BO loop,
+specifying the scalarization strategy for multiple objectives’ costs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.multi_objective.abstract_multi_objective_algorithm.html#smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm" title="smac.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractMultiObjectiveAlgorithm</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.AbstractFacade.get_next_configurations">
-<span class="sig-name descname"><span class="pre">get_next_configurations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_next_configurations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.get_next_configurations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Choose next candidate solution with Bayesian optimization. The suggested configurations
-depend on the surrogate model acquisition optimizer/function. This method is used by
-the intensifier.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterator</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1780,7 +1735,7 @@ specifying how to interleave the BO iterations with randomly selected configurat
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.AbstractFacade.get_runhistory_encoder">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_runhistory_encoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_runhistory_encoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.get_runhistory_encoder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an instance of the runhistory encoder class to be used in the Bayesian optimization loop,
+<dd><p>Returns an instance of the runhistory encoder class to be used in the BO loop,
 specifying how the runhistory is to be prepared for the next surrogate model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1789,46 +1744,13 @@ specifying how the runhistory is to be prepared for the next surrogate model.</p
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.AbstractFacade.get_target_function_budgets">
-<span class="sig-name descname"><span class="pre">get_target_function_budgets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_target_function_budgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.get_target_function_budgets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Which budgets are used to call the target function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.AbstractFacade.get_target_function_instances">
-<span class="sig-name descname"><span class="pre">get_target_function_instances</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_target_function_instances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.get_target_function_instances" title="Permalink to this definition">¶</a></dt>
-<dd><p>Which instances are used to call the target function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.AbstractFacade.get_target_function_seeds">
-<span class="sig-name descname"><span class="pre">get_target_function_seeds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.get_target_function_seeds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.get_target_function_seeds" title="Permalink to this definition">¶</a></dt>
-<dd><p>Which seeds are used to call the target function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py property">
-<dt class="sig sig-object py" id="smac.facade.AbstractFacade.incumbent">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">incumbent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConfigSpace.configuration_space.Configuration</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#smac.facade.AbstractFacade.incumbent" title="Permalink to this definition">¶</a></dt>
-<dd><p>The best configuration so far.</p>
+<dt class="sig sig-object py" id="smac.facade.AbstractFacade.intensifier">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">intensifier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="smac.intensifier.abstract_intensifier.html#smac.intensifier.abstract_intensifier.AbstractIntensifier" title="smac.intensifier.abstract_intensifier.AbstractIntensifier"><span class="pre">AbstractIntensifier</span></a></em><a class="headerlink" href="#smac.facade.AbstractFacade.intensifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>The optimizer which is responsible for the BO loop. Keeps track of useful information like status.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>]</p>
+<dd class="field-odd"><p><a class="reference internal" href="smac.intensifier.abstract_intensifier.html#smac.intensifier.abstract_intensifier.AbstractIntensifier" title="smac.intensifier.abstract_intensifier.AbstractIntensifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractIntensifier</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1848,7 +1770,7 @@ whether a run should be continued or not.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.AbstractFacade.optimize">
 <span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.optimize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optimizes the algorithm.</p>
+<dd><p>Optimizes the configuration of the algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>incumbent</strong> – Best found configuration.</p>
@@ -1860,9 +1782,20 @@ whether a run should be continued or not.</p>
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="smac.facade.AbstractFacade.optimizer">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">optimizer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="smac.main.smbo.html#smac.main.smbo.SMBO" title="smac.main.smbo.SMBO"><span class="pre">SMBO</span></a></em><a class="headerlink" href="#smac.facade.AbstractFacade.optimizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The optimizer which is responsible for the BO loop. Keeps track of useful information like status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.main.smbo.html#smac.main.smbo.SMBO" title="smac.main.smbo.SMBO"><code class="xref py py-class docutils literal notranslate"><span class="pre">SMBO</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="smac.facade.AbstractFacade.runhistory">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">runhistory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><span class="pre">RunHistory</span></a></em><a class="headerlink" href="#smac.facade.AbstractFacade.runhistory" title="Permalink to this definition">¶</a></dt>
-<dd><p>The run history, which is filled with all information during the optimization process.</p>
+<dd><p>The runhistory which is filled with all trials during the optimization process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunHistory</span></code></a></p>
@@ -1873,7 +1806,7 @@ whether a run should be continued or not.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.facade.AbstractFacade.scenario">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scenario</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><span class="pre">Scenario</span></a></em><a class="headerlink" href="#smac.facade.AbstractFacade.scenario" title="Permalink to this definition">¶</a></dt>
-<dd><p>The scenario object.</p>
+<dd><p>The scenario object which holds all environment information.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scenario</span></code></a></p>
@@ -1881,23 +1814,10 @@ whether a run should be continued or not.</p>
 </dl>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="smac.facade.AbstractFacade.stats">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stats</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Stats</span></em><a class="headerlink" href="#smac.facade.AbstractFacade.stats" title="Permalink to this definition">¶</a></dt>
-<dd><p>The stats object, which is updated during the optimization and shows relevant information, e.g., how many
-trials have been finished and how the trajectory looks like.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Stats</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.AbstractFacade.tell">
 <span class="sig-name descname"><span class="pre">tell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.tell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.tell" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the result of a trial to the runhistory and updates the intensifier. Also,
-the stats object is updated.</p>
+<dd><p>Adds the result of a trial to the runhistory and updates the intensifier.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1914,15 +1834,15 @@ the stats object is updated.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.AbstractFacade.validate">
-<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates a configuration with different seeds than in the optimization process and on the highest
-budget (if budget type is real-valued).</p>
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/abstract_facade.html#AbstractFacade.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AbstractFacade.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates a configuration on seeds different from the ones used in the optimization process and on the
+highest budget (if budget type is real-valued).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>Configuration</em>) – Configuration to validate</p></li>
 <li><p><strong>instances</strong> (<em>list</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Which instances to validate. If None, all instances specified in the scenario are used.
-In case that the budget type is real-valued budget, this argument is ignored.</p></li>
+In case that the budget type is real-valued, this argument is ignored.</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – If None, the seed from the scenario is used.</p></li>
 </ul>
 </dd>
@@ -1940,7 +1860,7 @@ averaged.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.facade.AlgorithmConfigurationFacade">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">AlgorithmConfigurationFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_maximizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/algorithm_configuration_facade.html#AlgorithmConfigurationFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AlgorithmConfigurationFacade" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">AlgorithmConfigurationFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_maximizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_selector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/algorithm_configuration_facade.html#AlgorithmConfigurationFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AlgorithmConfigurationFacade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.facade.abstract_facade.html#smac.facade.abstract_facade.AbstractFacade" title="smac.facade.abstract_facade.AbstractFacade"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractFacade</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.AlgorithmConfigurationFacade.get_acquisition_function">
@@ -1987,17 +1907,14 @@ acquisition function.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.AlgorithmConfigurationFacade.get_intensifier">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_challenger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensify_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/algorithm_configuration_facade.html#AlgorithmConfigurationFacade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AlgorithmConfigurationFacade.get_intensifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">Intensifier</span></code> as intensifier. Uses the default configuration for <code class="docutils literal notranslate"><span class="pre">race_against</span></code>.</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_incumbents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/algorithm_configuration_facade.html#AlgorithmConfigurationFacade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.AlgorithmConfigurationFacade.get_intensifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">Intensifier</span></code> as intensifier. Supports budgets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
-<li><p><strong>min_config_calls</strong> (<em>int</em><em>, </em><em>defaults to 1</em>) – Minimum number of trials per config (summed over all calls to intensify).</p></li>
-<li><p><strong>max_config_calls</strong> (<em>int</em><em>, </em><em>defaults to 2000</em>) – Maximum number of trials per config (summed over all calls to intensify).</p></li>
-<li><p><strong>min_challenger</strong> (<em>int</em><em>, </em><em>defaults to 2</em>) – Minimal number of challengers to be considered (even if time_bound is exhausted earlier).</p></li>
-<li><p><strong>intensify_percentage</strong> (<em>float</em><em>, </em><em>defaults to 0.5</em>) – How much percentage of the time should configurations be intensified (evaluated on higher budgets or
-more instances). This parameter is accessed in the SMBO class.</p></li>
+<li><p><strong>max_config_calls</strong> (<em>int</em><em>, </em><em>defaults to 3</em>) – Maximum number of configuration evaluations. Basically, how many instance-seed keys should be evaluated at
+maximum for a configuration.</p></li>
+<li><p><strong>max_incumbents</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – How many incumbents to keep track of in the case of multi-objective.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2036,7 +1953,8 @@ more instances). This parameter is accessed in the SMBO class.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
-<li><p><strong>objective_weights</strong> (<em>list</em><em>[</em><em>float</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Weights for an weighted average. Must be of the same length as the number of objectives.</p></li>
+<li><p><strong>objective_weights</strong> (<em>list</em><em>[</em><em>float</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Weights for averaging the objectives in a weighted manner. Must be of the same length as the number of
+objectives.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2074,7 +1992,7 @@ more instances). This parameter is accessed in the SMBO class.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.facade.BlackBoxFacade">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">BlackBoxFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_maximizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.BlackBoxFacade" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">BlackBoxFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_maximizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_selector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.BlackBoxFacade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.facade.abstract_facade.html#smac.facade.abstract_facade.AbstractFacade" title="smac.facade.abstract_facade.AbstractFacade"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractFacade</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.BlackBoxFacade.get_acquisition_function">
@@ -2102,7 +2020,7 @@ acquisition function.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>challengers</strong> (<em>int</em><em>, </em><em>defaults to 1000</em>) – Number of challengers.</p></li>
-<li><p><strong>local_search_iterations</strong> (<em>int</em><em>, </em><em>defauts to 10</em>) – Number of local search iterations.</p></li>
+<li><p><strong>local_search_iterations</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – Number of local search iterations.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2113,17 +2031,17 @@ acquisition function.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.BlackBoxFacade.get_initial_design">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_initial_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs_per_hyperparamter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_initial_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.BlackBoxFacade.get_initial_design" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_initial_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs_per_hyperparamter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_initial_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.BlackBoxFacade.get_initial_design" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a Sobol design instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
 <li><p><strong>n_configs</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Number of initial configurations (disables the arguments <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code>).</p></li>
-<li><p><strong>n_configs_per_hyperparameter</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – Number of initial configurations per hyperparameter. For example, if my configuration space covers five
+<li><p><strong>n_configs_per_hyperparameter</strong> (<em>int</em><em>, </em><em>defaults to 8</em>) – Number of initial configurations per hyperparameter. For example, if my configuration space covers five
 hyperparameters and <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code> is set to 10, then 50 initial configurations will be
 samples.</p></li>
-<li><p><strong>max_ratio</strong> (<em>float</em><em>, </em><em>defaults to 0.1</em>) – Use at most <code class="docutils literal notranslate"><span class="pre">scenario.n_trials</span></code> * <code class="docutils literal notranslate"><span class="pre">max_ratio</span></code> number of configurations in the initial design.
+<li><p><strong>max_ratio</strong> (<em>float</em><em>, </em><em>defaults to 0.25</em>) – Use at most <code class="docutils literal notranslate"><span class="pre">scenario.n_trials</span></code> * <code class="docutils literal notranslate"><span class="pre">max_ratio</span></code> number of configurations in the initial design.
 Additional configurations are not affected by this parameter.</p></li>
 <li><p><strong>additional_configs</strong> (<em>list</em><em>[</em><em>Configuration</em><em>]</em><em>, </em><em>defaults to</em><em> [</em><em>]</em>) – Adds additional configurations to the initial design.</p></li>
 </ul>
@@ -2136,17 +2054,15 @@ Additional configurations are not affected by this parameter.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.BlackBoxFacade.get_intensifier">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_challenger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensify_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.BlackBoxFacade.get_intensifier" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_incumbents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.BlackBoxFacade.get_intensifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns <code class="docutils literal notranslate"><span class="pre">Intensifier</span></code> as intensifier. Uses the default configuration for <code class="docutils literal notranslate"><span class="pre">race_against</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
-<li><p><strong>min_config_calls</strong> (<em>int</em><em>, </em><em>defaults to 1</em>) – Minimum number of trials per config (summed over all calls to intensify).</p></li>
-<li><p><strong>max_config_calls</strong> (<em>int</em><em>, </em><em>defaults to 1</em>) – Maximum number of trials per config (summed over all calls to intensify).</p></li>
-<li><p><strong>min_challenger</strong> (<em>int</em><em>, </em><em>defaults to 3</em>) – Minimal number of challengers to be considered (even if time_bound is exhausted earlier).</p></li>
-<li><p><strong>intensify_percentage</strong> (<em>float</em><em>, </em><em>defaults to 0.5</em>) – How much percentage of the time should configurations be intensified (evaluated on higher budgets or
-more instances). This parameter is accessed in the SMBO class.</p></li>
+<li><p><strong>max_config_calls</strong> (<em>int</em><em>, </em><em>defaults to 3</em>) – Maximum number of configuration evaluations. Basically, how many instance-seed keys should be evaluated at
+maximum for a configuration.</p></li>
+<li><p><strong>max_incumbents</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – How many incumbents to keep track of in the case of multi-objective.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2176,7 +2092,7 @@ categorical (HammingKernel), continuous (Matern), and noise kernels (White).</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
-<li><p><strong>model_type</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Which gaussian process model should be chosen. Choose between <cite>vanilla</cite> and <cite>mcmc</cite>.</p></li>
+<li><p><strong>model_type</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Which Gaussian Process model should be chosen. Choose between <cite>vanilla</cite> and <cite>mcmc</cite>.</p></li>
 <li><p><strong>kernel</strong> (<em>kernels.Kernel</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – The kernel used in the surrogate model.</p></li>
 </ul>
 </dd>
@@ -2192,12 +2108,13 @@ categorical (HammingKernel), continuous (Matern), and noise kernels (White).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.BlackBoxFacade.get_multi_objective_algorithm">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_multi_objective_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objective_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/blackbox_facade.html#BlackBoxFacade.get_multi_objective_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.BlackBoxFacade.get_multi_objective_algorithm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the mean aggregation strategy for the multi objective algorithm.</p>
+<dd><p>Returns the mean aggregation strategy for the multi-objective algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
-<li><p><strong>objective_weights</strong> (<em>list</em><em>[</em><em>float</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Weights for an weighted average. Must be of the same length as the number of objectives.</p></li>
+<li><p><strong>objective_weights</strong> (<em>list</em><em>[</em><em>float</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Weights for averaging the objectives in a weighted manner. Must be of the same length as the number of
+objectives.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2235,19 +2152,31 @@ categorical (HammingKernel), continuous (Matern), and noise kernels (White).</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.facade.HyperbandFacade">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">HyperbandFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_maximizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/hyperband_facade.html#HyperbandFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.HyperbandFacade" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">HyperbandFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_maximizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_selector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/hyperband_facade.html#HyperbandFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.HyperbandFacade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.facade.random_facade.html#smac.facade.random_facade.RandomFacade" title="smac.facade.random_facade.RandomFacade"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomFacade</span></code></a></p>
 <p>Facade to use model-free Hyperband <a class="reference internal" href="../6_references.html#ljdr18" id="id1"><span>[LJDR18]</span></a> for algorithm configuration.</p>
 <p>Uses Random Aggressive Online Racing (ROAR) to compare configurations, a random
 initial design and the Hyperband intensifier.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.HyperbandFacade.get_intensifier">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_challenger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/hyperband_facade.html#HyperbandFacade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.HyperbandFacade.get_intensifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a Hyperband intensifier instance. That means that budgets are supported.</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'shuffle_once'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_incumbents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'highest_observed_budget'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/hyperband_facade.html#HyperbandFacade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.HyperbandFacade.get_intensifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a Hyperband intensifier instance. Budgets are supported.</p>
 <dl class="simple">
-<dt>min_challenger<span class="classifier">int, defaults to 1</span></dt><dd><p>Minimal number of challengers to be considered (even if time_bound is exhausted earlier).</p>
+<dt>eta<span class="classifier">int, defaults to 3</span></dt><dd><p>Input that controls the proportion of configurations discarded in each round of Successive Halving.</p>
 </dd>
-<dt>eta<span class="classifier">float, defaults to 3</span></dt><dd><p>The “halving” factor after each iteration in a Successive Halving run.</p>
+<dt>n_seeds<span class="classifier">int, defaults to 1</span></dt><dd><p>How many seeds to use for each instance.</p>
+</dd>
+<dt>instance_seed_order<span class="classifier">str, defaults to “shuffle_once”</span></dt><dd><p>How to order the instance-seed pairs. Can be set to:
+* None: No shuffling at all and use the instance-seed order provided by the user.
+* “shuffle_once”: Shuffle the instance-seed keys once and use the same order across all runs.
+* “shuffle”: Shuffle the instance-seed keys for each bracket individually.</p>
+</dd>
+<dt>incumbent_selection<span class="classifier">str, defaults to “any_budget”</span></dt><dd><p>How to select the incumbent when using budgets. Can be set to:
+* “any_budget”: Incumbent is the best on any budget i.e., best performance regardless of budget.
+* “highest_observed_budget”: Incumbent is the best in the highest budget run so far.
+* “highest_budget”: Incumbent is selected only based on the highest budget.</p>
+</dd>
+<dt>max_incumbents<span class="classifier">int, defaults to 10</span></dt><dd><p>How many incumbents to keep track of in the case of multi-objective.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
@@ -2261,7 +2190,7 @@ initial design and the Hyperband intensifier.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.facade.HyperparameterOptimizationFacade">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">HyperparameterOptimizationFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_maximizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/hyperparameter_optimization_facade.html#HyperparameterOptimizationFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.HyperparameterOptimizationFacade" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">HyperparameterOptimizationFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_maximizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_selector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/hyperparameter_optimization_facade.html#HyperparameterOptimizationFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.HyperparameterOptimizationFacade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.facade.abstract_facade.html#smac.facade.abstract_facade.AbstractFacade" title="smac.facade.abstract_facade.AbstractFacade"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractFacade</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.HyperparameterOptimizationFacade.get_acquisition_function">
@@ -2293,7 +2222,7 @@ acquisition function.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>challengers</strong> (<em>int</em><em>, </em><em>defaults to 10000</em>) – Number of challengers.</p></li>
-<li><p><strong>local_search_iterations</strong> (<em>int</em><em>, </em><em>defauts to 10</em>) – Number of local search iterations.</p></li>
+<li><p><strong>local_search_iterations</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – Number of local search iterations.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2304,7 +2233,7 @@ acquisition function.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.HyperparameterOptimizationFacade.get_initial_design">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_initial_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs_per_hyperparamter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/hyperparameter_optimization_facade.html#HyperparameterOptimizationFacade.get_initial_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.HyperparameterOptimizationFacade.get_initial_design" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_initial_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs_per_hyperparamter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/hyperparameter_optimization_facade.html#HyperparameterOptimizationFacade.get_initial_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.HyperparameterOptimizationFacade.get_initial_design" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a Sobol design instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2314,7 +2243,7 @@ acquisition function.</p></li>
 <li><p><strong>n_configs_per_hyperparameter</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – Number of initial configurations per hyperparameter. For example, if my configuration space covers five
 hyperparameters and <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code> is set to 10, then 50 initial configurations will be
 samples.</p></li>
-<li><p><strong>max_ratio</strong> (<em>float</em><em>, </em><em>defaults to 0.1</em>) – Use at most <code class="docutils literal notranslate"><span class="pre">scenario.n_trials</span></code> * <code class="docutils literal notranslate"><span class="pre">max_ratio</span></code> number of configurations in the initial design.
+<li><p><strong>max_ratio</strong> (<em>float</em><em>, </em><em>defaults to 0.25</em>) – Use at most <code class="docutils literal notranslate"><span class="pre">scenario.n_trials</span></code> * <code class="docutils literal notranslate"><span class="pre">max_ratio</span></code> number of configurations in the initial design.
 Additional configurations are not affected by this parameter.</p></li>
 <li><p><strong>additional_configs</strong> (<em>list</em><em>[</em><em>Configuration</em><em>]</em><em>, </em><em>defaults to</em><em> [</em><em>]</em>) – Adds additional configurations to the initial design.</p></li>
 </ul>
@@ -2327,17 +2256,15 @@ Additional configurations are not affected by this parameter.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.HyperparameterOptimizationFacade.get_intensifier">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_challenger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensify_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/hyperparameter_optimization_facade.html#HyperparameterOptimizationFacade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.HyperparameterOptimizationFacade.get_intensifier" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_incumbents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/hyperparameter_optimization_facade.html#HyperparameterOptimizationFacade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.HyperparameterOptimizationFacade.get_intensifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns <code class="docutils literal notranslate"><span class="pre">Intensifier</span></code> as intensifier. Uses the default configuration for <code class="docutils literal notranslate"><span class="pre">race_against</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
-<li><p><strong>min_config_calls</strong> (<em>int</em><em>, </em><em>defaults to 1</em>) – Minimum number of trials per config (summed over all calls to intensify).</p></li>
-<li><p><strong>max_config_calls</strong> (<em>int</em><em>, </em><em>defaults to 1</em>) – Maximum number of trials per config (summed over all calls to intensify).</p></li>
-<li><p><strong>min_challenger</strong> (<em>int</em><em>, </em><em>defaults to 3</em>) – Minimal number of challengers to be considered (even if time_bound is exhausted earlier).</p></li>
-<li><p><strong>intensify_percentage</strong> (<em>float</em><em>, </em><em>defaults to 1e-10</em>) – How much percentage of the time should configurations be intensified (evaluated on higher budgets or
-more instances). This parameter is accessed in the SMBO class.</p></li>
+<li><p><strong>max_config_calls</strong> (<em>int</em><em>, </em><em>defaults to 3</em>) – Maximum number of configuration evaluations. Basically, how many instance-seed keys should be max evaluated
+for a configuration.</p></li>
+<li><p><strong>max_incumbents</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – How many incumbents to keep track of in the case of multi-objective.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2370,12 +2297,13 @@ more instances). This parameter is accessed in the SMBO class.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.HyperparameterOptimizationFacade.get_multi_objective_algorithm">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_multi_objective_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objective_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/hyperparameter_optimization_facade.html#HyperparameterOptimizationFacade.get_multi_objective_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.HyperparameterOptimizationFacade.get_multi_objective_algorithm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the mean aggregation strategy for the multi objective algorithm.</p>
+<dd><p>Returns the mean aggregation strategy for the multi-objective algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
-<li><p><strong>objective_weights</strong> (<em>list</em><em>[</em><em>float</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Weights for an weighted average. Must be of the same length as the number of objectives.</p></li>
+<li><p><strong>objective_weights</strong> (<em>list</em><em>[</em><em>float</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Weights for averaging the objectives in a weighted manner. Must be of the same length as the number of
+objectives.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2414,44 +2342,12 @@ training the surrogate model.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.facade.MultiFidelityFacade">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">MultiFidelityFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_maximizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/multi_fidelity_facade.html#MultiFidelityFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.MultiFidelityFacade" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">MultiFidelityFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_maximizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_selector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/multi_fidelity_facade.html#MultiFidelityFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.MultiFidelityFacade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.facade.hyperparameter_optimization_facade.html#smac.facade.hyperparameter_optimization_facade.HyperparameterOptimizationFacade" title="smac.facade.hyperparameter_optimization_facade.HyperparameterOptimizationFacade"><code class="xref py py-class docutils literal notranslate"><span class="pre">HyperparameterOptimizationFacade</span></code></a></p>
-<p>This facade configures SMAC in a multi-fidelity setting.
-The way this facade combines the components is the following and exploits
-fidelity information in the following form:</p>
-<ol class="arabic simple">
-<li><p>The initial design is a RandomInitialDesign.</p></li>
-</ol>
-<p>2. The intensification is Hyperband. The configurations from the initial design
-are presented as challengers and executed in the Hyperband fashion.
-3. The model is a RandomForest surrogate model. The data to train it is collected by <code class="docutils literal notranslate"><span class="pre">SMBO._collect_data</span></code>.</p>
-<blockquote>
-<div><p>Notably, the method searches through the runhistory and collects the data from the highest fidelity level,
-that supports at least <code class="docutils literal notranslate"><span class="pre">SMBO._min_samples_model</span></code> number of configurations.</p>
-</div></blockquote>
-<ol class="arabic simple" start="4">
-<li><p>The acquisition function is <code class="docutils literal notranslate"><span class="pre">EI</span></code>, presenting the value of a candidate configuration.</p></li>
-<li><p>The acquisition optimizer is <code class="docutils literal notranslate"><span class="pre">LocalAndSortedRandomSearch</span></code>. It optimizes the acquisition</p></li>
-</ol>
-<blockquote>
-<div><p>function to present the best configuration as challenger to the intensifier.
-From now on 2. works as follows: The intensifier runs the challenger in a Hyperband fashion against the existing
-configurations and their observed performances until the challenger does not survive a fidelity level. The
-intensifier can inquire about a known configuration on a yet unseen fidelity if necessary.</p>
-</div></blockquote>
-<p>The loop 2-5 continues until a termination criterion is reached.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For intensification the data acquisition and aggregation strategy in step 2 is changed.
-Incumbents are updated by the mean performance over the intersection of instances, that
-the challenger and incumbent have in common (<code class="docutils literal notranslate"><span class="pre">abstract_intensifier._compare_configs</span></code>).
-The model in step 3 is trained on all the available instance performance values.
-The datapoints for a hyperparameter configuration are disambiguated by the instance features
-or an index as replacement if no instance features are available.</p>
-</div>
+<p>This facade configures SMAC in a multi-fidelity setting.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.MultiFidelityFacade.get_initial_design">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_initial_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs_per_hyperparamter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/multi_fidelity_facade.html#MultiFidelityFacade.get_initial_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.MultiFidelityFacade.get_initial_design" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_initial_design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_configs_per_hyperparamter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_configs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/multi_fidelity_facade.html#MultiFidelityFacade.get_initial_design"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.MultiFidelityFacade.get_initial_design" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a random initial design.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2474,14 +2370,24 @@ Additional configurations are not affected by this parameter.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.MultiFidelityFacade.get_intensifier">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_challenger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/multi_fidelity_facade.html#MultiFidelityFacade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.MultiFidelityFacade.get_intensifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a Hyperband intensifier instance. That means that budgets are supported.</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'shuffle_once'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_incumbents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'highest_observed_budget'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/multi_fidelity_facade.html#MultiFidelityFacade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.MultiFidelityFacade.get_intensifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a Hyperband intensifier instance. Budgets are supported.</p>
 <dl class="simple">
-<dt>min_challenger<span class="classifier">int, defaults to 1</span></dt><dd><p>Minimal number of challengers to be considered (even if time_bound is exhausted earlier).</p>
+<dt>eta<span class="classifier">int, defaults to 3</span></dt><dd><p>Input that controls the proportion of configurations discarded in each round of Successive Halving.</p>
 </dd>
-<dt>eta<span class="classifier">float, defaults to 3</span></dt><dd><p>The “halving” factor after each iteration in a Successive Halving run.</p>
+<dt>n_seeds<span class="classifier">int, defaults to 1</span></dt><dd><p>How many seeds to use for each instance.</p>
 </dd>
-<dt>n_seeds<span class="classifier">int | None, defaults to None</span></dt><dd><p>The number of seeds to use if the target function is non-deterministic.</p>
+<dt>instance_seed_order<span class="classifier">str, defaults to “shuffle_once”</span></dt><dd><p>How to order the instance-seed pairs. Can be set to:
+* None: No shuffling at all and use the instance-seed order provided by the user.
+* “shuffle_once”: Shuffle the instance-seed keys once and use the same order across all runs.
+* “shuffle”: Shuffles the instance-seed keys for each bracket individually.</p>
+</dd>
+<dt>incumbent_selection<span class="classifier">str, defaults to “any_budget”</span></dt><dd><p>How to select the incumbent when using budgets. Can be set to:
+* “any_budget”: Incumbent is the best on any budget, i.e., the best performance regardless of budget.
+* “highest_observed_budget”: Incumbent is the best in the highest budget run so far.
+* “highest_budget”: Incumbent is selected only based on the highest budget.</p>
+</dd>
+<dt>max_incumbents<span class="classifier">int, defaults to 10</span></dt><dd><p>How many incumbents to keep track of in the case of multi-objective.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
@@ -2495,7 +2401,7 @@ Additional configurations are not affected by this parameter.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.facade.RandomFacade">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">RandomFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_maximizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/random_facade.html#RandomFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.RandomFacade" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.</span></span><span class="sig-name descname"><span class="pre">RandomFacade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_maximizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_objective_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runhistory_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_selector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/random_facade.html#RandomFacade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.RandomFacade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.facade.abstract_facade.html#smac.facade.abstract_facade.AbstractFacade" title="smac.facade.abstract_facade.AbstractFacade"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractFacade</span></code></a></p>
 <p>Facade to use Random Online Aggressive Racing (ROAR).</p>
 <p><em>Aggressive Racing:</em>
@@ -2561,19 +2467,26 @@ space and therefore neither uses the acquisition function nor the model.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.RandomFacade.get_intensifier">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_challenger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensify_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/random_facade.html#RandomFacade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.RandomFacade.get_intensifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">Intensifier</span></code> as intensifier. Uses the default configuration for <code class="docutils literal notranslate"><span class="pre">race_against</span></code>.</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_config_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_incumbents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/random_facade.html#RandomFacade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.RandomFacade.get_intensifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">Intensifier</span></code> as intensifier.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Please use <code class="docutils literal notranslate"><span class="pre">HyperbandFacade</span></code> if you want to incorporate budgets.</p>
+<p>Please use the <code class="docutils literal notranslate"><span class="pre">HyperbandFacade</span></code> if you want to incorporate budgets.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>If you are in an algorithm configuration setting, consider increasing <code class="docutils literal notranslate"><span class="pre">max_config_calls</span></code>.</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.intensifier.intensifier.html#smac.intensifier.intensifier.Intensifier" title="smac.intensifier.intensifier.Intensifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Intensifier</span></code></a></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_config_calls</strong> (<em>int</em><em>, </em><em>defaults to 3</em>) – Maximum number of configuration evaluations. Basically, how many instance-seed keys should be max evaluated
+for a configuration.</p></li>
+<li><p><strong>max_incumbents</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – How many incumbents to keep track of in the case of multi-objective.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="smac.intensifier.intensifier.html#smac.intensifier.intensifier.Intensifier" title="smac.intensifier.intensifier.Intensifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Intensifier</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2593,12 +2506,13 @@ dummy model (returning random values in this case).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.RandomFacade.get_multi_objective_algorithm">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_multi_objective_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objective_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/random_facade.html#RandomFacade.get_multi_objective_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.RandomFacade.get_multi_objective_algorithm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the mean aggregation strategy for the multi objective algorithm.</p>
+<dd><p>Returns the mean aggregation strategy for the multi-objective algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.html#smac.scenario.Scenario" title="smac.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
-<li><p><strong>objective_weights</strong> (<em>list</em><em>[</em><em>float</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Weights for an weighted average. Must be of the same length as the number of objectives.</p></li>
+<li><p><strong>objective_weights</strong> (<em>list</em><em>[</em><em>float</em><em>] </em><em>| </em><em>None</em><em>, </em><em>defaults to None</em>) – Weights for averaging the objectives in a weighted manner. Must be of the same length as the number of
+objectives.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2645,19 +2559,16 @@ dummy model (returning random values in this case).</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="smac.facade.blackbox_facade.html#module-smac.facade.blackbox_facade" title="smac.facade.blackbox_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.blackbox_facade</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="smac.facade.boing_facade.html#module-smac.facade.boing_facade" title="smac.facade.boing_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.boing_facade</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="smac.facade.hyperband_facade.html#module-smac.facade.hyperband_facade" title="smac.facade.hyperband_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.hyperband_facade</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="smac.facade.hyperband_facade.html#module-smac.facade.hyperband_facade" title="smac.facade.hyperband_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.hyperband_facade</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="smac.facade.hyperparameter_optimization_facade.html#module-smac.facade.hyperparameter_optimization_facade" title="smac.facade.hyperparameter_optimization_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.hyperparameter_optimization_facade</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="smac.facade.hyperparameter_optimization_facade.html#module-smac.facade.hyperparameter_optimization_facade" title="smac.facade.hyperparameter_optimization_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.hyperparameter_optimization_facade</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="smac.facade.multi_fidelity_facade.html#module-smac.facade.multi_fidelity_facade" title="smac.facade.multi_fidelity_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.multi_fidelity_facade</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="smac.facade.multi_fidelity_facade.html#module-smac.facade.multi_fidelity_facade" title="smac.facade.multi_fidelity_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.multi_fidelity_facade</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="smac.facade.random_facade.html#module-smac.facade.random_facade" title="smac.facade.random_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.random_facade</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="smac.facade.random_facade.html#module-smac.facade.random_facade" title="smac.facade.random_facade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.facade.random_facade</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -2700,7 +2611,7 @@ dummy model (returning random values in this case).</p>
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>

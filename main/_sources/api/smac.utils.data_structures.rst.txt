@@ -15,6 +15,7 @@ smac.utils.data\_structures
 
    .. autosummary::
    
+      batch
       recursively_compare_dicts
    
    
