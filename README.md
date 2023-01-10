@@ -8,9 +8,9 @@ Status](https://codecov.io/gh/automl/SMAC3/branch/master/graph/badge.svg)](https
 
 <img src="docs/images/logo.png" style="width: 50%;" />
 
-SMAC is a tool for algorithm configuration to optimize the parameters of arbitrary algorithms, including hyperparameter 
-optimization of Machine Learning algorithms. The main core consists of Bayesian Optimization in combination with an 
-aggressive racing mechanism to efficiently decide which of two configurations performs better.
+SMAC offers a robust and flexible framework for Bayesian Optimization to support users in determining well-performing 
+hyperparameter configurations for their (Machine Learning) algorithms, datasets and applications at hand. The main core 
+consists of Bayesian Optimization in combination with an aggressive racing mechanism to efficiently decide which of two configurations performs better.
 
 SMAC3 is written in Python3 and continuously tested with Python 3.8, 3.9, and 3.10. Its Random
 Forest is written in C++. In further texts, SMAC is representatively mentioned for SMAC3.
