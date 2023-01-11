@@ -8,6 +8,7 @@ from ConfigSpace.configuration_space import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import (
     CategoricalHyperparameter,
     Constant,
+    IntegerHyperparameter,
     NumericalHyperparameter,
     OrdinalHyperparameter,
 )
@@ -124,6 +125,8 @@ class InitialDesign:
 
         params = cs.get_hyperparameters()
         for idx, param in enumerate(params):
+            if isinstance(param, IntegerHyperparameter):
+                design[:, idx] = param._inverse_transform(param._transform(design[:, idx]))
             if isinstance(param, NumericalHyperparameter):
                 continue
             elif isinstance(param, Constant):
@@ -141,7 +144,7 @@ class InitialDesign:
                 v_design[v_design == 1] = 1 - 10**-10
                 design[:, idx] = np.array(v_design * len(param.sequence), dtype=int)
             else:
-                raise ValueError("Hyperparameter not supported in LHD")
+                raise ValueError("Hyperparameter not supported when transforming a continuous design.")
 
         self.logger.debug("Initial Design")
         configs = []
