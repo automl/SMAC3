@@ -66,7 +66,7 @@ setuptools.setup(
         "ConfigSpace>=0.6.0",
         "joblib",
         "scikit-learn>=1.1.2",
-        "pyrfr>=0.8.3",
+        "pyrfr>=0.8.4",
         "dask",
         "distributed",
         "emcee>=3.0.0",
