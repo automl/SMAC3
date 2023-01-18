@@ -189,7 +189,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
         vectorization_max_obtain: int = 64,
     ):
         super().__init__(acquisition_function, config_space, rng)
-        self.max_steps = max_steps
+        self.max_steps = np.inf if max_steps is None else max_steps
         self.n_steps_plateau_walk = n_steps_plateau_walk
         self.vectorization_min_obtain = vectorization_min_obtain
         self.vectorization_max_obtain = vectorization_max_obtain
@@ -455,17 +455,25 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                 if not active[i]:
                     continue
                 if obtain_n[i] == 0 or improved[i]:
-                    obtain_n[i] = 2
+                    obtain_n[i] = self.vectorization_min_obtain
                 else:
                     obtain_n[i] = obtain_n[i] * 2
                     obtain_n[i] = min(obtain_n[i], self.vectorization_max_obtain)
                 if new_neighborhood[i]:
                     if not improved[i] and n_no_plateau_walk[i] < self.n_steps_plateau_walk:
-                        if len(neighbors_w_equal_acq[i]) != 0:
+                        if len(neighbors_w_equal_acq[i]) > 0:
                             candidates[i] = neighbors_w_equal_acq[i][0]
                             neighbors_w_equal_acq[i] = []
+                        else:
+                            # Local optima: All neighbours are worse
+                            self.logger.debug(
+                                f"Local search {i}: Stop search since there are no better points in the neighborhood.")
+                            active[i] = False
+                            continue
+
                         n_no_plateau_walk[i] += 1
-                    if n_no_plateau_walk[i] >= self.n_steps_plateau_walk:
+
+                    if n_no_plateau_walk[i] >= self.n_steps_plateau_walk or local_search_steps[i] >= self.max_steps:
                         active[i] = False
                         continue
 
@@ -476,10 +484,13 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         self.logger.debug(
             "Local searches took %s steps and looked at %s configurations. Computing the acquisition function in "
-            "vectorized for took %f seconds on average.",
+            "vectorized for took %f seconds on average. Each local search took on average %f seconds to compute its "
+            "acquisition functions and computing one acquisition function took %f on average.",
             local_search_steps,
             neighbors_looked_at,
             np.mean(times),
+            np.sum(times)/num_candidates,
+            np.sum(times)/np.sum(neighbors_looked_at),
         )
 
         return [(a, i) for a, i in zip(acq_val_candidates, candidates)]
