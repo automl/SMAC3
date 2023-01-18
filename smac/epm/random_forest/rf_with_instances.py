@@ -294,27 +294,31 @@ class RandomForestWithInstances(BaseModel):
             raise ValueError("Rows in X should have %d entries but have %d!" % (len(self.bounds), X.shape[1]))
 
         X = self._impute_inactive(X)
+        try:
+            dat_ = self.rf.predict_marginalized_over_instances_batch(X, self.instance_features, self.log_y)
+            dat_ = np.array(dat_)
+        except AttributeError:
+            self.logger.warning("Old Implementation")
+            dat_ = np.zeros((X.shape[0], self.rf_opts.num_trees))  # marginalized predictions for each tree
+            for i, x in enumerate(X):
 
-        dat_ = np.zeros((X.shape[0], self.rf_opts.num_trees))  # marginalized predictions for each tree
-        for i, x in enumerate(X):
+                # marginalize over instances
+                # 1. get all leaf values for each tree
+                preds_trees = [[] for i in range(self.rf_opts.num_trees)]  # type: List[List[float]]
 
-            # marginalize over instances
-            # 1. get all leaf values for each tree
-            preds_trees = [[] for i in range(self.rf_opts.num_trees)]  # type: List[List[float]]
+                for feat in self.instance_features:
+                    x_ = np.concatenate([x, feat])
+                    preds_per_tree = self.rf.all_leaf_values(x_)
+                    for tree_id, preds in enumerate(preds_per_tree):
+                        preds_trees[tree_id] += preds
 
-            for feat in self.instance_features:
-                x_ = np.concatenate([x, feat])
-                preds_per_tree = self.rf.all_leaf_values(x_)
-                for tree_id, preds in enumerate(preds_per_tree):
-                    preds_trees[tree_id] += preds
-
-            # 2. average in each tree
-            if self.log_y:
-                for tree_id in range(self.rf_opts.num_trees):
-                    dat_[i, tree_id] = np.log(np.exp(np.array(preds_trees[tree_id])).mean())
-            else:
-                for tree_id in range(self.rf_opts.num_trees):
-                    dat_[i, tree_id] = np.array(preds_trees[tree_id]).mean()
+                # 2. average in each tree
+                if self.log_y:
+                    for tree_id in range(self.rf_opts.num_trees):
+                        dat_[i, tree_id] = np.log(np.exp(np.array(preds_trees[tree_id])).mean())
+                else:
+                    for tree_id in range(self.rf_opts.num_trees):
+                        dat_[i, tree_id] = np.array(preds_trees[tree_id]).mean()
 
         # 3. compute statistics across trees
         mean_ = dat_.mean(axis=1)
