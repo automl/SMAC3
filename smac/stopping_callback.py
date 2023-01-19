@@ -19,6 +19,8 @@ class StoppingCallback(Callback):
         self.upper_bound_estimation_percentage = upper_bound_estimation_percentage
         self.wait_iterations = wait_iterations
         self.n_points_lcb = n_points_lcb
+        self.incumbent = None
+        self.incumbent_value = None
 
     def on_tell_end(self, smbo: smac.main.smbo.SMBO, info: TrialInfo, value: TrialValue) -> bool:
         """Checks if the optimization should be stopped after the given trial."""
@@ -32,7 +34,16 @@ class StoppingCallback(Callback):
             # convert config to vector
 
             config = smbo.runhistory.ids_config[trial_info.config_id].get_array()
-            print("config", config)
+
+            if self.incumbent is None:
+                self.incumbent = trial_info
+                self.incumbent_value = trial_value.cost
+                self.incumbent_variance = trial_value.additional_info['']
+            elif trial_value.cost < self.incumbent_value:
+                self.incumbent = trial_info
+                self.incumbent_value = trial_value.cost
+
+            print(trial_value.additional_info)
 
             # todo - select x% of the configurations
 
