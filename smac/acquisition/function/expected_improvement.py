@@ -17,7 +17,7 @@ logger = get_logger(__name__)
 
 
 class EI(AbstractAcquisitionFunction):
-    r"""Computes the expected improvement for a given x.
+    r"""Expected Improvement (with or without function values in log space) acquisition function
 
     :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]`,
     with :math:`f(X^+)` as the best location.
@@ -29,6 +29,16 @@ class EI(AbstractAcquisitionFunction):
         acquisition function.
     log : bool, defaults to False
         Whether the function values are in log-space.
+
+
+    Attributes
+    ----------
+    _xi : float
+        Exploration-exloitation trade-off parameter.
+    _log: bool
+        Function values in log-space or not.
+    _eta : float
+        Current incumbent function value (best value observed so far).
 
     """
 
@@ -60,6 +70,15 @@ class EI(AbstractAcquisitionFunction):
         return meta
 
     def _update(self, **kwargs: Any) -> None:
+        """Update acsquisition function attributes
+
+        Parameters
+        ----------
+        eta : float
+            Function value of current incumbent.
+        xi : float, optional
+            Exploration-exploitation trade-off parameter
+        """
         assert "eta" in kwargs
         self._eta = kwargs["eta"]
 
@@ -67,11 +86,37 @@ class EI(AbstractAcquisitionFunction):
             self._xi = kwargs["xi"]
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
-        """Computess the EI value and its derivatives."""
+        """Compute EI acquisition value
+
+        Parameters
+        ----------
+        X : np.ndarray [N, D]
+            The input points where the acquisition function should be evaluated. The dimensionality of X is (N, D),
+            with N as the number of points to evaluate at and D is the number of dimensions of one X.
+
+        Returns
+        -------
+        np.ndarray [N,1]
+            Acquisition function values wrt X.
+
+        Raises
+        ------
+        ValueError
+            If `update` has not been called before (current incumbent value `eta` unspecified).
+        ValueError
+            If EI is < 0 for at least one sample (normal function value space).
+        ValueError
+            If EI is < 0 for at least one sample (log function value space).
+        """
         assert self._model is not None
         assert self._xi is not None
+
         if self._eta is None:
-            raise ValueError("No `eta` specified. Call `update` to inform the acqusition function.")
+            raise ValueError(
+                "No current best specified. Call update("
+                "eta=<int>) to inform the acquisition function "
+                "about the current best value."
+            )
 
         if not self._log:
             if len(X.shape) == 1:
@@ -96,6 +141,7 @@ class EI(AbstractAcquisitionFunction):
                 f[s_copy == 0.0] = 0.0
             else:
                 f = calculate_f()
+
             if (f < 0).any():
                 raise ValueError("Expected Improvement is smaller than 0 for at least one " "sample.")
 
@@ -136,7 +182,7 @@ class EI(AbstractAcquisitionFunction):
 
 
 class EIPS(EI):
-    r"""Computess for a given x the expected improvement as acquisition value.
+    r"""Expected Improvement per Second acquisition function
 
     :math:`EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}`,
     with :math:`f(X^+)` as the best location and :math:`r(x)` as runtime.
@@ -155,16 +201,39 @@ class EIPS(EI):
         return "Expected Improvement per Second"
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
-        """Computess the EIPS value."""
+        """Compute EI per second acquisition value
+
+        Parameters
+        ----------
+        X : np.ndarray [N, D]
+            The input points where the acquisition function should be evaluated. The dimensionality of X is (N, D),
+            with N as the number of points to evaluate at and D is the number of dimensions of one X.
+
+        Returns
+        -------
+        np.ndarray [N,1]
+            Acquisition function values wrt X.
+
+        Raises
+        ------
+        ValueError
+            If the mean has the wrong shape, should have shape (-1, 2).
+        ValueError
+            If the variance has the wrong shape, should have shape (-1, 2).
+        ValueError
+            If `update` has not been called before (current incumbent value `eta` unspecified).
+        ValueError
+            If EIPS is < 0 for at least one sample.
+        """
         assert self._model is not None
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
 
         m, v = self._model.predict_marginalized(X)
         if m.shape[1] != 2:
-            raise ValueError("m has wrong shape: %s != (-1, 2)" % str(m.shape))
+            raise ValueError(f"m has wrong shape: {m.shape} != (-1, 2)")
         if v.shape[1] != 2:
-            raise ValueError("v has wrong shape: %s != (-1, 2)" % str(v.shape))
+            raise ValueError(f"v has wrong shape: {v.shape} != (-1, 2)")
 
         m_cost = m[:, 0]
         v_cost = v[:, 0]

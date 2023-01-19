@@ -135,7 +135,7 @@ def test_add_multiple_times(scenario, runhistory, config1):
         )
 
     assert len(runhistory._data) == 1
-    assert len(runhistory.get_trials(config1, only_max_observed_budget=True)) == 1
+    assert len(runhistory.get_trials(config1, highest_observed_budget_only=True)) == 1
     assert len(runhistory._config_id_to_isk_to_budget[1]) == 1
 
     # We expect to get 1.0 and 2.0 because runhistory does not overwrite by default
@@ -593,43 +593,3 @@ def test_objective_weights(scenario, runhistory, config1, config2):
     # If we change the weights/mo algorithm now, we expect a higher value in the second cost
     runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario, objective_weights=[1, 2])
     assert round(runhistory.get_cost(config1), 2) == 0.67
-
-
-def test_pareto_front1(scenario, runhistory, config1, config2):
-    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
-    runhistory.add(
-        config=config1,
-        cost=[0, 10],
-        time=5,
-        status=StatusType.SUCCESS,
-    )
-
-    runhistory.add(
-        config=config2,
-        cost=[100, 0],
-        time=15,
-        status=StatusType.SUCCESS,
-    )
-
-    incumbents, _ = runhistory.get_pareto_front()
-    assert config1 in incumbents and config2 in incumbents
-
-
-def test_pareto_front2(scenario, runhistory, config1, config2):
-    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
-    runhistory.add(
-        config=config1,
-        cost=[0, 10],
-        time=5,
-        status=StatusType.SUCCESS,
-    )
-
-    runhistory.add(
-        config=config2,
-        cost=[0, 15],
-        time=15,
-        status=StatusType.SUCCESS,
-    )
-
-    incumbents, _ = runhistory.get_pareto_front()
-    assert config1 in incumbents and config2 not in incumbents

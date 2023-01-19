@@ -46,8 +46,7 @@ class ModulusRandomDesign(AbstractRandomDesign):
 
 
 class DynamicModulusRandomDesign(AbstractRandomDesign):
-    """Interleave a random configuration, decreasing the fraction of random configurations over
-    time.
+    """Interleave a random configuration, decreasing the fraction of random configurations over time.
 
     Parameters
     ----------
@@ -60,15 +59,11 @@ class DynamicModulusRandomDesign(AbstractRandomDesign):
        is over, it is not further increased. If it is not reached before the optimization is over,
        there will be no adjustment to make sure that the `end_modulus` is reached.
     seed : int, defaults to 0
-        Integer used to initialize the random state (not used)
+        Integer used to initialize the random state. This class does not use the seed.
     """
 
     def __init__(
-        self,
-        start_modulus: float = 2.0,
-        modulus_increment: float = 0.3,
-        end_modulus: float = np.inf,
-        seed: int = 0,
+        self, start_modulus: float = 2.0, modulus_increment: float = 0.3, end_modulus: float = np.inf, seed: int = 0
     ):
         super().__init__(seed)
         assert start_modulus > 0

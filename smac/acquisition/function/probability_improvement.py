@@ -17,7 +17,7 @@ logger = get_logger(__name__)
 
 
 class PI(AbstractAcquisitionFunction):
-    r"""Computes the probability of improvement for a given x over the best so far value as acquisition value.
+    r"""Probability of Improvement
 
     :math:`P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+}))` :math:`:= \Phi(\\frac{ \mu(\mathbf{X})-f(\mathbf{X^+}) }
     { \sigma(\mathbf{X}) })` with :math:`f(X^+)` as the incumbent and :math:`\Phi` the cdf of the standard normal.
@@ -45,6 +45,15 @@ class PI(AbstractAcquisitionFunction):
         return meta
 
     def _update(self, **kwargs: Any) -> None:
+        """Update acsquisition function attributes
+
+        Parameters
+        ----------
+        eta : float
+            Function value of current incumbent.
+        xi : float, optional
+            Exploration-exploitation trade-off parameter
+        """
         assert "eta" in kwargs
         self._eta = kwargs["eta"]
 
@@ -52,7 +61,7 @@ class PI(AbstractAcquisitionFunction):
             self._xi = kwargs["xi"]
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
-        """Computes the PI value.
+        """Compute the PI value.
 
         Parameters
         ----------
@@ -63,6 +72,12 @@ class PI(AbstractAcquisitionFunction):
         -------
         np.ndarray [N, 1]
             Expected Improvement of X.
+
+        Raises
+        ------
+        ValueError
+            If `update` has not been called before (current incumbent value `eta` unspecified).
+
         """
         assert self._model is not None
         if self._eta is None:

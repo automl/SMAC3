@@ -24,19 +24,19 @@ logger = get_logger(__name__)
 
 
 class TargetFunctionRunner(AbstractSerialRunner):
-    """Class to execute target functions which are python functions. Evaluates functions for given configuration and
-    resource limit.
+    """Class to execute target functions which are python functions. Evaluates function for given
+    configuration and resource limit.
 
-    The target function can either return a float (the loss), or a tuple with the first element being a float and the
-    second being additional run information. In a multi-objective setting, the float value is replaced by a list of
-    floats.
+    The target function can either return a float (the loss), or a tuple with the first element
+    being a float and the second being additional run information. In a multi-objective
+    setting, the float value is replaced by a list of floats.
 
     Parameters
     ----------
     target_function : Callable
-        The target function function.
+        The target function.
     scenario : Scenario
-    required_arguments : list[str]
+    required_arguments : list[str], defaults to []
         A list of required arguments, which are passed to the target function.
     """
 
@@ -61,14 +61,14 @@ class TargetFunctionRunner(AbstractSerialRunner):
             if argument not in signature.keys():
                 raise RuntimeError(
                     f"Target function needs to have the arguments {required_arguments} "
-                    f"but could not found {argument}."
+                    f"but could not find {argument}."
                 )
 
         # Now we check for additional arguments which are not used by SMAC
         # However, we only want to warn the user and not
         for key in list(signature.keys())[1:]:
             if key not in required_arguments:
-                logger.warning(f"The argument {key} is not set by SMAC. Consider removing it.")
+                logger.warning(f"The argument {key} is not set by SMAC: Consider removing it from the target function.")
 
         # Pynisher limitations
         if (memory := self._scenario.trial_memory_limit) is not None:
@@ -94,8 +94,8 @@ class TargetFunctionRunner(AbstractSerialRunner):
         budget: float | None = None,
         seed: int | None = None,
     ) -> tuple[StatusType, float | list[float], float, dict]:
-        """Calls the target function with pynisher if algorithm walltime limit or memory limit is set. Otherwise
-        the function is called directly.
+        """Calls the target function with pynisher if algorithm wall time limit or memory limit is
+        set. Otherwise, the function is called directly.
 
         Parameters
         ----------
@@ -104,8 +104,8 @@ class TargetFunctionRunner(AbstractSerialRunner):
         instance : str | None, defaults to None
             The Problem instance.
         budget : float | None, defaults to None
-            A positive, real-valued number representing an arbitrary limit to the target function handled by the
-            target function internally.
+            A positive, real-valued number representing an arbitrary limit to the target function
+            handled by the target function internally.
         seed : int, defaults to None
 
         Returns
@@ -115,7 +115,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
         cost : float | list[float]
             Resulting cost(s) of the trial.
         runtime : float
-            The time the target function function took to run.
+            The time the target function took to run.
         additional_info : dict
             All further additional trial information.
         """

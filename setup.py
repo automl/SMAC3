@@ -32,7 +32,7 @@ extras_require = {
         "pytest-xdist",
         "pytest-timeout",
         # Docs
-        "automl-sphinx-theme>=0.1.18",
+        "automl-sphinx-theme>=0.2",
         # Others
         "mypy",
         "isort",
@@ -67,8 +67,7 @@ setuptools.setup(
         "joblib",
         "scikit-learn>=1.1.2",
         "pyrfr>=0.8.4",
-        "dask",
-        "distributed",
+        "dask[distributed]",
         "emcee>=3.0.0",
         "regex",
         "pyyaml",

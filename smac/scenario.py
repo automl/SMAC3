@@ -9,8 +9,8 @@ import random
 from dataclasses import dataclass
 from pathlib import Path
 
-import ConfigSpace
 import numpy as np
+from ConfigSpace import ConfigurationSpace
 from ConfigSpace.read_and_write import json as cs_json
 
 from smac.utils.logging import get_logger
@@ -25,7 +25,7 @@ class Scenario:
 
     Parameters
     ----------
-    configspace : ConfigSpace
+    configspace : ConfigurationSpace
         The configuration space from which to sample the configurations.
     name : str | None, defaults to None
         The name of the run. If no name is passed, SMAC generates a hash from the meta data.
@@ -36,7 +36,7 @@ class Scenario:
         If deterministic is set to true, only one seed is passed to the target function.
         Otherwise, multiple seeds (if n_seeds of the intensifier is greater than 1) are passed
         to the target function to ensure generalization.
-    objective : str | list[str] | None, defaults to "cost"
+    objectives : str | list[str] | None, defaults to "cost"
         The objective(s) to optimize. This argument is required for multi-objective optimization.
     crash_cost : float | list[float], defaults to np.inf
         Defines the cost for a failed trial. In case of multi-objective, each objective can be associated with
@@ -63,13 +63,10 @@ class Scenario:
     instance_features : dict[str, list[float]] | None, defaults to None
         Instances can be associated with features. For example, meta data of the dataset (mean, var, ...) can be
         incorporated which are then further used to expand the training data of the surrogate model.
-    instance_order : str | None, defaults to "shuffle_once"
-        How to order the instances. Possible values are "shuffle" and "shuffle_once". You can disable this feature by
-        setting the argument to None.
-    min_budget : float | None, defaults to None
+    min_budget : float | int | None, defaults to None
         The minimum budget (epochs, subset size, number of instances, ...) that is used for the optimization.
         Use this argument if you use multi-fidelity or instance optimization.
-    max_budget : float | None, defaults to None
+    max_budget : float | int | None, defaults to None
         The maximum budget (epochs, subset size, number of instances, ...) that is used for the optimization.
         Use this argument if you use multi-fidelity or instance optimization.
     seed : int, defaults to 0
@@ -80,7 +77,7 @@ class Scenario:
     """
 
     # General
-    configspace: ConfigSpace
+    configspace: ConfigurationSpace
     name: str | None = None
     output_directory: Path = Path("smac3_output")
     deterministic: bool = False
@@ -102,8 +99,8 @@ class Scenario:
     instance_features: dict[str, list[float]] | None = None
 
     # Budgets
-    min_budget: float | None = None
-    max_budget: float | None = None
+    min_budget: float | int | None = None
+    max_budget: float | int | None = None
 
     # Others
     seed: int = 0

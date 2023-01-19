@@ -94,17 +94,17 @@ class GaussianProcess(AbstractGaussianProcess):
         optimize_hyperparameters: bool = True,
     ) -> Self:
         """Computes the Cholesky decomposition of the covariance of X and estimates the GP
-        hyperparameters by optimizing the marginal loglikelihood. The prior mean of the GP is set to
+        hyperparameters by optimizing the marginal log likelihood. The prior mean of the GP is set to
         the empirical mean of X.
 
         Parameters
         ----------
-        X : np.ndarray [#samples, #hyperparameter + #features]
+        X : np.ndarray [#samples, #hyperparameters + #features]
             Input data points.
         Y : np.ndarray [#samples, #objectives]
             The corresponding target values.
         optimize_hyperparameters: boolean
-            If set to true the hyperparameters are optimized otherwise the default hyperparameters of the kernel are
+            If set to true, the hyperparameters are optimized, otherwise the default hyperparameters of the kernel are
             used.
         """
         if self._normalize_y:
@@ -146,7 +146,7 @@ class GaussianProcess(AbstractGaussianProcess):
             kernel=self._kernel,
             normalize_y=False,  # We do not use scikit-learn's normalize routine
             optimizer=None,
-            n_restarts_optimizer=-1,  # We do not use scikit-learn's optimization routine
+            n_restarts_optimizer=0,  # We do not use scikit-learn's optimization routine
             alpha=0,  # Governed by the kernel
             random_state=self._rng,
         )
@@ -276,14 +276,14 @@ class GaussianProcess(AbstractGaussianProcess):
 
         Parameters
         ----------
-        X : np.ndarray [#samples, #hyperparameter + #features]
+        X : np.ndarray [#samples, #hyperparameters + #features]
             Input data points.
         n_funcs: int
             Number of function values that are drawn at each test point.
 
         Returns
         -------
-        function_samples : np.array
+        function_samples : np.ndarray
             The F function values drawn at the N test points.
         """
         if not self._is_trained:

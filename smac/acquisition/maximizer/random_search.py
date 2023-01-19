@@ -22,7 +22,22 @@ class RandomSearch(AbstractAcquisitionMaximizer):
         n_points: int,
         _sorted: bool = False,
     ) -> list[tuple[float, Configuration]]:
-        """Randomly sampled configurations."""
+        """Maximize acquisition function with random search
+
+        Parameters
+        ----------
+        previous_configs : list[Configuration]
+            Not used.
+        n_points : int
+            Number of configurations to return.
+        _sorted : bool, optional
+            If True, sort candidates by their acquisition value (descending), by default False
+
+        Returns
+        -------
+        list[tuple[float, Configuration]]
+            Candidates with their acquisition function value. (acq value, candidate)
+        """
         if n_points > 1:
             rand_configs = self._configspace.sample_configuration(size=n_points)
         else:

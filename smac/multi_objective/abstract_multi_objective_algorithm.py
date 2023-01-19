@@ -8,13 +8,7 @@ __license__ = "3-clause BSD"
 
 
 class AbstractMultiObjectiveAlgorithm(ABC):
-    """A general interface for multi-objective optimizer, depending on different strategies.
-
-    Parameters
-    ----------
-    scenario : Scenario
-    seed : int | None, defaults to None
-    """
+    """A general interface for multi-objective optimizer, depending on different strategies."""
 
     def __init__(self) -> None:
         pass

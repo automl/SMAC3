@@ -10,6 +10,12 @@ options = {
     "copyright": copyright,
     "author": author,
     "version": version,
+    "versions": {
+        f"v{version} (unstable)": "#",
+        "v2.0.0a2": "https://automl.github.io/SMAC3/v2.0.0a2/",
+        "v2.0.0a1": "https://automl.github.io/SMAC3/v2.0.0a1/",
+        "v1.4.0": "https://automl.github.io/SMAC3/v1.4.0/",
+    },
     "name": name,
     "html_theme_options": {
         "github_url": "https://github.com/automl/SMAC3",

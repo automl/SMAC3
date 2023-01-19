@@ -5,7 +5,7 @@ from typing import Mapping
 import numpy as np
 
 from smac.runhistory.encoder import AbstractRunHistoryEncoder
-from smac.runhistory.runhistory import RunHistory, TrialKey, TrialValue
+from smac.runhistory.runhistory import TrialKey, TrialValue
 from smac.utils.configspace import convert_configurations_to_array
 from smac.utils.logging import get_logger
 from smac.utils.multi_objective import normalize_costs
@@ -21,7 +21,6 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
     def _build_matrix(
         self,
         trials: Mapping[TrialKey, TrialValue],
-        runhistory: RunHistory,
         store_statistics: bool = False,
     ) -> tuple[np.ndarray, np.ndarray]:
         # First build nan-matrix of size #configs x #params+1
@@ -33,13 +32,10 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
         # TODO: Extend for native multi-objective
         y = np.ones([n_rows, 1])
 
-        if self._multi_objective_algorithm is not None:
-            self._multi_objective_algorithm.update_on_iteration_start()
-
         # Then populate matrix
         for row, (key, run) in enumerate(trials.items()):
             # Scaling is automatically done in configSpace
-            conf = runhistory._ids_config[key.config_id]
+            conf = self.runhistory._ids_config[key.config_id]
             conf_vector = convert_configurations_to_array([conf])[0]
 
             if self._n_features > 0 and self._instance_features is not None:
@@ -55,7 +51,7 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
 
                 # Let's normalize y here
                 # We use the objective_bounds calculated by the runhistory
-                y_ = normalize_costs(run.cost, runhistory.objective_bounds)
+                y_ = normalize_costs(run.cost, self.runhistory.objective_bounds)
                 y_agg = self._multi_objective_algorithm(y_)
                 y[row] = y_agg
             else:

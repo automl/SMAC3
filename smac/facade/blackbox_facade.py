@@ -59,7 +59,7 @@ class BlackBoxFacade(AbstractFacade):
         ----------
         scenario : Scenario
         model_type : str | None, defaults to None
-            Which gaussian process model should be chosen. Choose between `vanilla` and `mcmc`.
+            Which Gaussian Process model should be chosen. Choose between `vanilla` and `mcmc`.
         kernel : kernels.Kernel | None, defaults to None
             The kernel used in the surrogate model.
 
@@ -199,7 +199,7 @@ class BlackBoxFacade(AbstractFacade):
         ----------
         challengers : int, defaults to 1000
             Number of challengers.
-        local_search_iterations: int, defauts to 10
+        local_search_iterations: int, defaults to 10
             Number of local search iterations.
         """
         return LocalAndSortedRandomSearch(
@@ -213,33 +213,24 @@ class BlackBoxFacade(AbstractFacade):
     def get_intensifier(  # type: ignore
         scenario: Scenario,
         *,
-        min_challenger: int = 1,
-        min_config_calls: int = 1,
         max_config_calls: int = 3,
-        intensify_percentage: float = 0.5,
+        max_incumbents: int = 20,
     ) -> Intensifier:
         """Returns ``Intensifier`` as intensifier. Uses the default configuration for ``race_against``.
 
         Parameters
         ----------
         scenario : Scenario
-        min_config_calls : int, defaults to 1
-            Minimum number of trials per config (summed over all calls to intensify).
-        max_config_calls : int, defaults to 1
-            Maximum number of trials per config (summed over all calls to intensify).
-        min_challenger : int, defaults to 3
-            Minimal number of challengers to be considered (even if time_bound is exhausted earlier).
-        intensify_percentage : float, defaults to 0.5
-            How much percentage of the time should configurations be intensified (evaluated on higher budgets or
-            more instances). This parameter is accessed in the SMBO class.
+        max_config_calls : int, defaults to 3
+            Maximum number of configuration evaluations. Basically, how many instance-seed keys should be evaluated at
+            maximum for a configuration.
+        max_incumbents : int, defaults to 10
+            How many incumbents to keep track of in the case of multi-objective.
         """
         return Intensifier(
             scenario=scenario,
-            min_challenger=min_challenger,
-            race_against=scenario.configspace.get_default_configuration(),
-            min_config_calls=min_config_calls,
             max_config_calls=max_config_calls,
-            intensify_percentage=intensify_percentage,
+            max_incumbents=max_incumbents,
         )
 
     @staticmethod
@@ -247,8 +238,8 @@ class BlackBoxFacade(AbstractFacade):
         scenario: Scenario,
         *,
         n_configs: int | None = None,
-        n_configs_per_hyperparamter: int = 10,
-        max_ratio: float = 0.1,
+        n_configs_per_hyperparamter: int = 8,
+        max_ratio: float = 0.25,
         additional_configs: list[Configuration] = [],
     ) -> SobolInitialDesign:
         """Returns a Sobol design instance.
@@ -258,11 +249,11 @@ class BlackBoxFacade(AbstractFacade):
         scenario : Scenario
         n_configs : int | None, defaults to None
             Number of initial configurations (disables the arguments ``n_configs_per_hyperparameter``).
-        n_configs_per_hyperparameter: int, defaults to 10
+        n_configs_per_hyperparameter: int, defaults to 8
             Number of initial configurations per hyperparameter. For example, if my configuration space covers five
             hyperparameters and ``n_configs_per_hyperparameter`` is set to 10, then 50 initial configurations will be
             samples.
-        max_ratio: float, defaults to 0.1
+        max_ratio: float, defaults to 0.25
             Use at most ``scenario.n_trials`` * ``max_ratio`` number of configurations in the initial design.
             Additional configurations are not affected by this parameter.
         additional_configs: list[Configuration], defaults to []
@@ -298,13 +289,14 @@ class BlackBoxFacade(AbstractFacade):
         *,
         objective_weights: list[float] | None = None,
     ) -> MeanAggregationStrategy:
-        """Returns the mean aggregation strategy for the multi objective algorithm.
+        """Returns the mean aggregation strategy for the multi-objective algorithm.
 
         Parameters
         ----------
         scenario : Scenario
         objective_weights : list[float] | None, defaults to None
-            Weights for an weighted average. Must be of the same length as the number of objectives.
+            Weights for averaging the objectives in a weighted manner. Must be of the same length as the number of
+            objectives.
         """
         return MeanAggregationStrategy(
             scenario=scenario,

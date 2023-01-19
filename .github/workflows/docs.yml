@@ -34,8 +34,15 @@ jobs:
         python-version: "3.10"
 
     - name: Install dependencies
+      id: install
       run: |
         pip install ".[gpytorch,dev]"
+
+        # Getting the version
+        SMAC_VERSION=$(python -c "import smac; print('v' + str(smac.version));")
+
+        # Make it a global variable
+        echo "SMAC_VERSION=$SMAC_VERSION" >> $GITHUB_ENV
 
     - name: Make docs
       run: |
@@ -56,6 +63,11 @@ jobs:
         rm -rf $branch_name
         cp -r ../${{ env.name }}/docs/build/html $branch_name
 
+        # we also copy the current SMAC_VERSION
+        rm -rf $SMAC_VERSION
+        cp -r ../${{ env.name }}/docs/build/html $SMAC_VERSION
+
+
     - name: Push to gh-pages
       if: (contains(github.ref, 'develop') || contains(github.ref, 'main')) && github.event_name == 'push'
       run: |
@@ -63,6 +75,7 @@ jobs:
         cd ../gh-pages
         branch_name=${GITHUB_REF##*/}
         git add $branch_name/
+        git add $SMAC_VERSION/
         git config --global user.name 'Github Actions'
         git config --global user.email 'not@mail.com'
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}

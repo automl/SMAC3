@@ -43,23 +43,23 @@ class CustomCallback(Callback):
     def __init__(self) -> None:
         self.trials_counter = 0
 
-    def on_start(self, smbo: smac.main.BaseSMBO) -> None:
+    def on_start(self, smbo: smac.main.smbo.SMBO) -> None:
         print("Let's start!")
         print("")
 
-    def on_tell_end(self, smbo: smac.main.BaseSMBO, info: TrialInfo, value: TrialValue) -> bool | None:
+    def on_tell_end(self, smbo: smac.main.smbo.SMBO, info: TrialInfo, value: TrialValue) -> bool | None:
         self.trials_counter += 1
         if self.trials_counter % 10 == 0:
             print(f"Evaluated {self.trials_counter} trials so far.")
 
-            incumbent = smbo.incumbent
+            incumbent = smbo.intensifier.get_incumbent()
             assert incumbent is not None
             print(f"Current incumbent: {incumbent.get_dictionary()}")
             print(f"Current incumbent value: {smbo.runhistory.get_cost(incumbent)}")
             print("")
 
         if self.trials_counter == 50:
-            print(f"We just triggered to stop the optimization after {smbo.stats.finished} finished trials.")
+            print(f"We just triggered to stop the optimization after {smbo.runhistory.finished} finished trials.")
             return False
 
         return None
@@ -72,13 +72,10 @@ if __name__ == "__main__":
     scenario = Scenario(model.configspace, n_trials=200)
 
     # Now we use SMAC to find the best hyperparameters
-    smac = HPOFacade(
+    HPOFacade(
         scenario,
         model.train,
         overwrite=True,
         callbacks=[CustomCallback()],
         logging_level=999999,
-    )
-
-    # Let's optimize
-    smac.optimize()
+    ).optimize()

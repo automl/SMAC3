@@ -1,73 +1,78 @@
 from __future__ import annotations
 
-from smac.intensifier.abstract_intensifier import AbstractIntensifier
-from smac.intensifier.successive_halving import SuccessiveHalving
+from typing import Any
 
-__copyright__ = "Copyright 2022, automl.org"
-__license__ = "3-clause BSD"
+import numpy as np
+
+from smac.intensifier.successive_halving import SuccessiveHalving
 
 
 class Hyperband(SuccessiveHalving):
-    """Races multiple challengers against an incumbent using Hyperband method.
+    """See ``SuccessiveHalving`` for documentation."""
 
-    Implementation from "BOHB: Robust and Efficient Hyperparameter Optimization at Scale" (Falkner et al. 2018)
+    def reset(self) -> None:
+        """Resets the internal variables of the intensifier, including the tracker and the next bracket."""
+        super().reset()
 
-    Hyperband is an extension of the Successive Halving intensifier. Please refer to `SuccessiveHalving` documentation
-    for more detailed information about the different types of budgets possible and the way instances are handled.
+        # Reset current bracket
+        self._next_bracket: int = 0
 
-    Internally, this class uses the `HyperbandWorker` class which actually implements the hyperband logic.
-    To allow for parallelism, Hyperband can create multiple `HyperbandWorker` instances, based on the number
-    of idle workers available.
+    def __post_init__(self) -> None:
+        super().__post_init__()
 
-    Parameters
-    ----------
-    scenario : Scenario
-    instance_seed_pairs : list[tuple[str  |  None, int]] | None, defaults to None
-        This argument is used by Hyperband.
-    instance_order : str | None, defaults to `shuffle_once`
-        How to order the instances. Can be set to:
-        * None: Use as is given by the user.
-        * shuffle_once: Shuffle once and use across all Successive Halving run .
-        * shuffle: Shuffle before every Successive Halving run
-    incumbent_selection : str, defaults to `highest_executed_budget`
-        How to select the incumbent in Successive Halving. Only active for (real-valued) budgets. Can be set to:
-        * highest_executed_budget: Incumbent is the best in the highest budget run so far.
-        * highest_budget: Incumbent is selected only based on the highest budget.
-        * any_budget: Incumbent is the best on any budget i.e., best performance regardless of budget.
-    n_initial_challengers : int | None, defaults to None
-        Number of challengers to consider for the initial budget. If not specified, it is calculated internally.
-    min_challenger : int, defaults to 1
-        Minimal number of challengers to be considered (even if time_bound is exhausted earlier).
-    eta : float, defaults to 3
-        The "halving" factor after each iteration in a Successive Halving run.
-    seed : int | None, defaults to None
-    n_seeds : int | None, defaults to None
-        The number of seeds to use if the target function is non-deterministic.
-    """
+        min_budget = self._min_budget
+        max_budget = self._max_budget
+        eta = self._eta
 
-    def _get_intensifier_ranking(self, intensifier: AbstractIntensifier) -> tuple[int, int]:
-        from smac.intensifier.hyperband_worker import HyperbandWorker
+        # The only difference we have to do is change max_iterations, n_configs_in_stage, budgets_in_stage
+        s_max = int(np.floor(np.log(max_budget / min_budget) / np.log(eta)))
 
-        assert isinstance(intensifier, HyperbandWorker)
-        assert intensifier._sh_intensifier
+        max_iterations: dict[int, int] = {}
+        n_configs_in_stage: dict[int, list] = {}
+        budgets_in_stage: dict[int, list] = {}
 
-        # For hyperband, we use the internal successive halving as a criteria
-        # to see how advanced this intensifier is
-        stage = intensifier._sh_intensifier.stage
+        for i in range(s_max + 1):
+            max_iter = s_max - i
+            n_initial_challengers = int(eta**max_iter)
 
-        return stage, len(intensifier._sh_intensifier._run_tracker)
+            # How many configs in each stage
+            linspace = -np.linspace(0, max_iter, max_iter + 1)
+            n_configs_ = n_initial_challengers * np.power(eta, linspace)
+            n_configs = np.array(np.round(n_configs_), dtype=int).tolist()
 
-    def _add_new_instance(self, n_workers: int) -> bool:
-        from smac.intensifier.hyperband_worker import HyperbandWorker
+            # How many budgets in each stage
+            linspace = -np.linspace(max_iter, 0, max_iter + 1)
+            budgets = (max_budget * np.power(eta, linspace)).tolist()
 
-        if len(self._intensifier_instances) >= n_workers:
-            return False
+            max_iterations[i] = max_iter + 1
+            n_configs_in_stage[i] = n_configs
+            budgets_in_stage[i] = budgets
 
-        hp = HyperbandWorker(
-            hyperband=self,
-            identifier=len(self._intensifier_instances),
-        )
-        hp._stats = self._stats
-        self._intensifier_instances[len(self._intensifier_instances)] = hp
+        self._s_max = s_max
+        self._max_iterations = max_iterations
+        self._n_configs_in_stage = n_configs_in_stage
+        self._budgets_in_stage = budgets_in_stage
 
-        return True
+    def get_state(self) -> dict[str, Any]:  # noqa: D102
+        state = super().get_state()
+        state["next_bracket"] = self._next_bracket
+
+        return state
+
+    def set_state(self, state: dict[str, Any]) -> None:  # noqa: D102
+        super().set_state(state)
+        self._next_bracket = state["next_bracket"]
+
+    def _get_next_bracket(self) -> int:
+        """In contrast to Successive Halving, Hyperband uses multiple brackets. Each time a new batch
+        is added to the tracker, the bracket is increased.
+        """
+        current_bracket = self._next_bracket
+        next_bracket = current_bracket + 1
+
+        if next_bracket > self._s_max or next_bracket < 0:
+            next_bracket = 0
+
+        self._next_bracket = next_bracket
+
+        return current_bracket

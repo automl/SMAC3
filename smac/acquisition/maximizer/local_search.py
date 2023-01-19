@@ -90,8 +90,24 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         n_points: int,
         additional_start_points: list[tuple[float, Configuration]] | None = None,
     ) -> list[tuple[float, Configuration]]:
-        """Starts a local search from the given startpoint and quits if either the max number of
-        steps is reached or no neighbor with an higher improvement was found.
+        """Start a local search from the given startpoint.
+
+        Quit if either the max number of steps is reached or
+        no neighbor with an higher improvement was found.
+
+        Parameters
+        ----------
+        previous_configs : list[Configuration]
+            Previous configuration (e.g., from the runhistory).
+        n_points : int
+            Number of initial points to be generated.
+        additional_start_points : list[tuple[float, Configuration]] | None
+            Additional starting points.
+
+        Returns
+        -------
+        list[Configuration]
+            Final candidates.
         """
         init_points = self._get_initial_points(previous_configs, n_points, additional_start_points)
         configs_acq = self._search(init_points)
@@ -112,6 +128,22 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         n_points: int,
         additional_start_points: list[tuple[float, Configuration]] | None,
     ) -> list[Configuration]:
+        """Get initial points to start search from.
+
+        Parameters
+        ----------
+        previous_configs : list[Configuration]
+            Previous configuration (e.g., from the runhistory).
+        n_points : int
+            Number of initial points to be generated.
+        additional_start_points : list[tuple[float, Configuration]] | None
+            Additional starting points.
+
+        Returns
+        -------
+        list[Configuration]
+            A list of initial points/configurations.
+        """
         if len(previous_configs) == 0:
             init_points = self._configspace.sample_configuration(size=n_points)
         else:
@@ -130,8 +162,9 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         additional_start_points: list[tuple[float, Configuration]] | None,
     ) -> list[Configuration]:
         """
-        A function that generates a set of initial points from the previous configurations and additional points (if
-        applicable). The idea is to decouple runhistory from the local search model and replace it with a more genreal
+        Generate a set of initial points from the previous configurations and possibly additional points.
+
+        The idea is to decouple runhistory from the local search model and replace it with a more general
         form (list[Configuration]).
 
         Parameters
@@ -141,7 +174,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         n_points: int
             Number of initial points to be generated.
         additional_start_points: list[tuple[float, Configuration]] | None
-            if we want to specify another set of points as initial points
+            Additional starting points.
 
         Returns
         -------
@@ -203,6 +236,18 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         self,
         start_points: list[Configuration],
     ) -> list[tuple[float, Configuration]]:
+        """Optimize the acquisition function.
+
+        Parameters
+        ----------
+        start_points : list[Configuration]
+            Starting points for the search.
+
+        Returns
+        -------
+        list[tuple[float, Configuration]]
+            Candidates with their acquisition function value. (acq value, candidate)
+        """
         assert self._acquisition_function is not None
 
         # Gather data structure for starting points

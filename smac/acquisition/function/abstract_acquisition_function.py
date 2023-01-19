@@ -37,7 +37,7 @@ class AbstractAcquisitionFunction:
 
     @property
     def model(self) -> AbstractModel | None:
-        """Returns the used surrogate model in the acquisition function."""
+        """Return the used surrogate model in the acquisition function."""
         return self._model
 
     @model.setter
@@ -46,7 +46,7 @@ class AbstractAcquisitionFunction:
         self._model = model
 
     def update(self, model: AbstractModel, **kwargs: Any) -> None:
-        """Updates the acquisition function attributes required for calculation.
+        """Update the acquisition function attributes required for calculation.
 
         This method will be called after fitting the model, but before maximizing the acquisition
         function. As an examples, EI uses it to update the current fmin. The default implementation only updates the
@@ -65,10 +65,14 @@ class AbstractAcquisitionFunction:
         self._update(**kwargs)
 
     def _update(self, **kwargs: Any) -> None:
+        """Update acsquisition function attributes
+
+        Might be different for each child class.
+        """
         pass
 
     def __call__(self, configurations: list[Configuration]) -> np.ndarray:
-        """Compute the acquisition value for a given X.
+        """Compute the acquisition value for a given configuration.
 
         Parameters
         ----------

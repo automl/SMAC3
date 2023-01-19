@@ -149,7 +149,7 @@
 #         optimize_hyperparameters: bool = True,
 #     ) -> Self:
 #         """Computes the Cholesky decomposition of the covariance of X and estimates the GP
-#         hyperparameters by optimizing the marginal loglikelihood. The prior mean of the GP is set to
+#         hyperparameters by optimizing the marginal log likelihood. The prior mean of the GP is set to
 #         the empirical mean of X.
 
 #         Parameters
@@ -346,7 +346,7 @@
 
 #         Returns
 #         -------
-#         function_samples : np.array
+#         function_samples : np.ndarray
 #             The F function values drawn at the N test points.
 #         """
 #         if not self._is_trained:

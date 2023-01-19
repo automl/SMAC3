@@ -19,6 +19,7 @@ class ProbabilityRandomDesign(AbstractRandomDesign):
     probability : float
         Probability that a configuration will be drawn at random.
     seed : int, defaults to 0
+        Integer used to initialize the random state.
     """
 
     def __init__(self, probability: float, seed: int = 0):
@@ -43,8 +44,7 @@ class ProbabilityRandomDesign(AbstractRandomDesign):
 
 
 class DynamicProbabilityRandomDesign(AbstractRandomDesign):
-    """Interleave a random configuration according to a given probability which is decreased over
-    time.
+    """Interleave a random configuration according to a given probability which is decreased over time.
 
     Parameters
     ----------
@@ -53,14 +53,10 @@ class DynamicProbabilityRandomDesign(AbstractRandomDesign):
     factor : float
         Multiply the `probability` by `factor` in each iteration.
     seed : int, defaults to 0
+        Integer used to initialize the random state.
     """
 
-    def __init__(
-        self,
-        probability: float,
-        factor: float,
-        seed: int = 0,
-    ):
+    def __init__(self, probability: float, factor: float, seed: int = 0):
         super().__init__(seed)
         assert 0 <= probability <= 1
         assert factor > 0

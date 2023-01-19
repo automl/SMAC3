@@ -21,22 +21,25 @@ logger = get_logger(__name__)
 
 
 class DaskParallelRunner(AbstractRunner):
-    """Interface to submit and collect a job in a distributed fashion. DaskParallelRunner is intended to comply with the
-    bridge design pattern. Nevertheless, to reduce the amount of code within single-vs-parallel implementations,
-    DaskParallelRunner wraps a BaseRunner object which is then executed in parallel on `n_workers`.
+    """Interface to submit and collect a job in a distributed fashion. DaskParallelRunner is
+    intended to comply with the bridge design pattern. Nevertheless, to reduce the amount of code
+    within single-vs-parallel implementations, DaskParallelRunner wraps a BaseRunner object which
+    is then executed in parallel on `n_workers`.
 
     This class then is constructed by passing an AbstractRunner that implements
-    a `run` method, and is capable of doing so in a serial fashion. Neext,
-    this wrapper class uses dask to initialize `N` number of AbstractRunner that actively wait of a TrialInfo to produce
-    a RunInfo object.
+    a `run` method, and is capable of doing so in a serial fashion. Next,
+    this wrapper class uses dask to initialize `N` number of AbstractRunner that actively wait of a
+    TrialInfo to produce a RunInfo object.
 
     To be more precise, the work model is then:
+
     1. The intensifier dictates "what" to run (a configuration/instance/seed) via a TrialInfo object.
     2. An abstract runner takes this TrialInfo object and launches the task via
        `submit_run`. In the case of DaskParallelRunner, `n_workers` receive a pickle-object of
-       `DaskParallelRunner.single_worker`, each with a `run` method coming from `DaskParallelRunner.single_worker.run()`
-    3. TrialInfo objects are run in a distributed fashion, an their results are available locally to each worker.
-       Such result is collected by `iter_results` and then passed to SMBO.
+       `DaskParallelRunner.single_worker`, each with a `run` method coming from
+       `DaskParallelRunner.single_worker.run()`
+    3. TrialInfo objects are run in a distributed fashion, and their results are available locally to each worker. The
+       result is collected by `iter_results` and then passed to SMBO.
     4. Exceptions are also locally available to each worker and need to be collected.
 
     Dask works with `Future` object which are managed via the DaskParallelRunner.client.
@@ -48,9 +51,9 @@ class DaskParallelRunner(AbstractRunner):
     patience: int, default to 5
         How much to wait for workers (seconds) to be available if one fails.
     dask_client: Client | None, defaults to None
-        User-created dask client, which can be used to start a dask cluster and then attach
-        SMAC to it. This will not be closed automatically and will have to be closed manually if provided explicitly.
-        If none is provided (default), a local one will be created for you and closed upon completion.
+        User-created dask client, which can be used to start a dask cluster and then attach SMAC to it. This will not
+        be closed automatically and will have to be closed manually if provided explicitly. If none is provided
+        (default), a local one will be created for you and closed upon completion.
     """
 
     def __init__(
@@ -96,13 +99,14 @@ class DaskParallelRunner(AbstractRunner):
             self._close_client_at_del = False
 
     def submit_trial(self, trial_info: TrialInfo) -> None:
-        """This function submits a configuration embedded in a `trial_info` object, and uses one of the
-        workers to produce a result locally to each worker.
+        """This function submits a configuration embedded in a ``trial_info`` object, and uses one of
+        the workers to produce a result locally to each worker.
 
         The execution of a configuration follows this procedure:
-        1. The SMBO/intensifier generates a `TrialInfo`.
-        2. SMBO calls `submit_trial` so that a worker launches the `trial_info`.
-        3. `submit_trial` internally calls self.run(). It does so via a call to `run_wrapper` which contains common
+
+        #. The SMBO/intensifier generates a `TrialInfo`.
+        #. SMBO calls `submit_trial` so that a worker launches the `trial_info`.
+        #. `submit_trial` internally calls ``self.run()``. It does so via a call to `run_wrapper` which contains common
            code that any `run` method will otherwise have to implement.
 
         All results will be only available locally to each worker, so the main node needs to collect them.
@@ -114,6 +118,7 @@ class DaskParallelRunner(AbstractRunner):
         """
         # Check for resources or block till one is available
         if self.count_available_workers() <= 0:
+            logger.debug("No worker available. Waiting for one to be available...")
             wait(self._pending_trials, return_when="FIRST_COMPLETED")
             self._process_pending_trials()
 
@@ -128,8 +133,8 @@ class DaskParallelRunner(AbstractRunner):
                 )
 
         # At this point we can submit the job
-        run = self._client.submit(self._single_worker.run_wrapper, trial_info=trial_info)
-        self._pending_trials.append(run)
+        trial = self._client.submit(self._single_worker.run_wrapper, trial_info=trial_info)
+        self._pending_trials.append(trial)
 
     def iter_results(self) -> Iterator[tuple[TrialInfo, TrialValue]]:  # noqa: D102
         self._process_pending_trials()
@@ -153,7 +158,9 @@ class DaskParallelRunner(AbstractRunner):
         return self._single_worker.run(config=config, instance=instance, seed=seed, budget=budget)
 
     def count_available_workers(self) -> int:
-        """Total number of workers available. This number is dynamic as more resources can be allocated."""
+        """Total number of workers available. This number is dynamic as more resources
+        can be allocated.
+        """
         return sum(self._client.nthreads().values()) - len(self._pending_trials)
 
     def close(self, force: bool = False) -> None:
@@ -162,10 +169,10 @@ class DaskParallelRunner(AbstractRunner):
             self._client.close()
 
     def _process_pending_trials(self) -> None:
-        """The completed trials are moved from ``self._pending_trials`` to ``self._reseults_queue``. We make sure
-        pending trials never exceed the capacity of the scheduler.
+        """The completed trials are moved from ``self._pending_trials`` to ``self._results_queue``.
+        We make sure pending trials never exceed the capacity of the scheduler.
         """
-        # In code check to make sure we don;t exceed resource allocation
+        # In code check to make sure we don't exceed resource allocation
         if self.count_available_workers() < 0:
             logger.warning(
                 "More running jobs than resources available. "

@@ -10,10 +10,10 @@ from ConfigSpace import (
 
 import smac
 from smac.facade.blackbox_facade import BlackBoxFacade
-from smac.facade.boing_facade import BOinGFacade
 from smac.facade.hyperparameter_optimization_facade import (
     HyperparameterOptimizationFacade,
 )
+from smac.facade.old.boing_facade import BOinGFacade
 from smac.main.boing import subspace_extraction
 from smac.model.random_forest.random_forest import RandomForest
 from smac.model.utils import check_subspace_points, get_types
