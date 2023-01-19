@@ -1,3 +1,9 @@
+# 1.4.1
+
+## Bugfix or Minor Changes
+* Local search now stops when it reaches a local optimum or when a user-defined maximum number of steps is reached.
+
+
 # 1.4.0
 
 ## Features
