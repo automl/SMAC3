@@ -298,7 +298,6 @@ class RandomForestWithInstances(BaseModel):
             dat_ = self.rf.predict_marginalized_over_instances_batch(X, self.instance_features, self.log_y)
             dat_ = np.array(dat_)
         except AttributeError:
-            self.logger.warning("Old Implementation")
             dat_ = np.zeros((X.shape[0], self.rf_opts.num_trees))  # marginalized predictions for each tree
             for i, x in enumerate(X):
 

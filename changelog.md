@@ -1,5 +1,10 @@
 # 1.4.0
 
+## Bugfix or Minor Changes
+* Random forest with instances predicts the marginalized costs by using a C++ implementation in `pyrfr`, which is much faster. 
+
+# 1.4.0
+
 ## Features
 * [BOinG](https://arxiv.org/abs/2111.05834): A two-stage Bayesian optimization approach to allow the 
 optimizer to focus on the most promising regions.
