@@ -3,7 +3,7 @@
 ## Minor
 - Removed example badget in README
 - Added SMAC logo to README
-
+- Random forest with instances predicts the marginalized costs by using a C++ implementation in `pyrfr`, which is much faster.
 
 # 2.0.0a1
 
