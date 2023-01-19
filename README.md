@@ -110,6 +110,11 @@ You should have received a copy of the 3-clause BSD license
 along with this program (see LICENSE file).
 If not, see [here](https://opensource.org/licenses/BSD-3-Clause).
 
+## Contacting us
+
+If you have trouble using SMAC, a concrete question or found a bug, please create an [issue](https://github.com/automl/SMAC3/issues). This is the easiest way to communicate about these things with us. 
+
+For all other inquiries, please write an email to smac[at]ai[dot]uni[dash]hannover[dot]de.
 
 ## Miscellaneous
 
