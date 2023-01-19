@@ -6,6 +6,7 @@
 - Added more examples.
 - Updated documentation based on new implementation.
 - Added benchmark to compare different versions.
+- Random forest with instances predicts the marginalized costs by using a C++ implementation in `pyrfr`, which is much faster. 
 
 
 # 2.0.0a2
