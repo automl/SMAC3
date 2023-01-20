@@ -169,7 +169,7 @@ class LCB(AbstractConfidenceBound):
 class UCB(AbstractConfidenceBound):
     r"""Computes the upper confidence bound for a given x over the best so far value as acquisition value.
 
-    :math:`LCB(X) = \mu(\mathbf{X}) + \sqrt(\beta_t)\sigma(\mathbf{X})` [SKKS10]_
+    :math:`UCB(X) = \mu(\mathbf{X}) + \sqrt(\beta_t)\sigma(\mathbf{X})` [SKKS10]_
 
     with
 
@@ -180,7 +180,7 @@ class UCB(AbstractConfidenceBound):
     :math:`\text{Number of data points} t`
     :math:`\text{Exploration/exploitation tradeoff} \beta`
 
-    Returns -LCB(X) as the acquisition_function optimizer maximizes the acquisition value.
+    Returns -UCB(X) as the acquisition_function optimizer maximizes the acquisition value.
 
     Parameters
     ----------
