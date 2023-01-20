@@ -107,7 +107,7 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
             sign = 1
         else:
             raise ValueError(
-                f"Which confidence bound is supposed to be use? Use LCB or UCB. bound_type is {self.bound_type}."
+                f"Which confidence bound is supposed to be used? Use LCB or UCB. bound_type is {self.bound_type}."
             )
         if self._num_data is None:
             raise ValueError(
