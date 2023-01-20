@@ -3,8 +3,8 @@ __license__ = "3-clause BSD"
 
 import numpy as np
 
-import smac
-from smac import Callback
+from smac.main.smbo import SMBO
+from smac.callback import Callback
 from smac.runhistory import TrialInfo, TrialValue
 
 
@@ -23,7 +23,7 @@ class StoppingCallback(Callback):
         self.incumbent_value = None
         self.incumbent_statistical_error = None
 
-    def on_tell_end(self, smbo: smac.main.smbo.SMBO, info: TrialInfo, value: TrialValue) -> bool:
+    def on_tell_end(self, smbo: SMBO, info: TrialInfo, value: TrialValue) -> bool:
         """Checks if the optimization should be stopped after the given trial."""
 
         # todo: add the following functionality
