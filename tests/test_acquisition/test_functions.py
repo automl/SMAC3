@@ -9,6 +9,7 @@ from smac.acquisition.function import (
     LCB,
     PI,
     TS,
+    UCB,
     IntegratedAcquisitionFunction,
     PriorAcquisitionFunction,
 )
@@ -670,6 +671,11 @@ def acq_lcb(model):
     return lcb
 
 
+def test_lcb_name(acq_lcb):
+    assert acq_lcb.name != "Confidence Bound"
+    assert acq_lcb.name == "Lower Confidence Bound"
+
+
 def test_lcb_1xD(model, acq_lcb):
     ei = acq_lcb
     ei.update(model=model, eta=1.0, par=1, num_data=3)
@@ -710,6 +716,65 @@ def test_lcb_NxD(model, acq_lcb):
     assert np.isclose(acq[0][0], 0.045306943655446116)
     assert np.isclose(acq[1][0], 1.3358936353814157)
     assert np.isclose(acq[2][0], 3.5406943655446117)
+
+
+# --------------------------------------------------------------
+# Test UCB
+# --------------------------------------------------------------
+
+
+@pytest.fixture
+def acq_ucb(model):
+    lcb = UCB()
+    lcb.model = model
+    return lcb
+
+
+def test_ucb_name(acq_ucb):
+    assert acq_ucb.name != "Confidence Bound"
+    assert acq_ucb.name == "Upper Confidence Bound"
+
+
+def test_ucb_1xD(model, acq_ucb):
+    ei = acq_ucb
+    ei.update(model=model, eta=1.0, par=1, num_data=3)
+    configurations = [ConfigurationMock([0.5, 0.5, 0.5])]
+    acq = ei(configurations)
+    assert acq.shape == (1, 1)
+    assert np.isclose(acq[0][0], -2.315443985917585)
+    ei.update(model=model, eta=1.0, par=1, num_data=100)
+    configurations = [ConfigurationMock([0.5, 0.5, 0.5])]
+    acq = ei(configurations)
+    assert acq.shape == (1, 1)
+    assert np.isclose(acq[0][0], -3.7107557771721433)
+
+
+def test_ucb_1xD_no_improvement_vs_improvement(model, acq_ucb):
+    ei = acq_ucb
+    ei.update(model=model, par=1, num_data=1)
+    configurations = [ConfigurationMock([100, 100])]
+    acq = ei(configurations)
+    assert acq.shape == (1, 1)
+    assert np.isclose(acq[0][0], -111.77410022515474)
+    configurations = [ConfigurationMock([0.001, 0.001])]
+    acq = ei(configurations)
+    assert acq.shape == (1, 1)
+    assert np.isclose(acq[0][0], -0.03823297411059034)
+
+
+def test_ucb_NxD(model, acq_ucb):
+    ei = acq_ucb
+    ei.update(model=model, eta=1.0, num_data=100)
+    configurations = [
+        ConfigurationMock([0.0001, 0.0001, 0.0001]),
+        ConfigurationMock([0.1, 0.1, 0.1]),
+        ConfigurationMock([1.0, 1.0, 1.0]),
+    ]
+    acq = ei(configurations)
+    assert acq.shape == (3, 1)
+    assert np.isclose(acq[0][0], -0.04550694365544612)
+    assert np.isclose(acq[1][0], -1.5358936353814159)
+    assert np.isclose(acq[2][0], -5.540694365544612)
 
 
 # --------------------------------------------------------------
