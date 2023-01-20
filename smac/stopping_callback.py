@@ -21,40 +21,45 @@ class StoppingCallback(Callback):
         self.n_points_lcb = n_points_lcb
         self.incumbent = None
         self.incumbent_value = None
+        self.incumbent_statistical_error = None
 
     def on_tell_end(self, smbo: smac.main.smbo.SMBO, info: TrialInfo, value: TrialValue) -> bool:
         """Checks if the optimization should be stopped after the given trial."""
 
-        print("End of tell")
-        # todo - non-protected access to model
+        # todo: add the following functionality
+        # - be able to query model about configs (via config selector; takes care of the encoding/decoding)
+
         model = smbo.intensifier.config_selector._model
-        # for regret: sample ucb for all configurations in the runhistory
-        # 1. get all configurations in the runhistory
+
+        # update statistical error of incumbent if it has changed
+        # todo get incumbent from intensifier instead
         for trial_info, trial_value in smbo.runhistory.items():
-            # convert config to vector
-
-            config = smbo.runhistory.ids_config[trial_info.config_id].get_array()
-
-            if self.incumbent is None:
+            if self.incumbent is None or trial_value.cost < self.incumbent_value:
                 self.incumbent = trial_info
                 self.incumbent_value = trial_value.cost
-                self.incumbent_variance = trial_value.additional_info['']
-            elif trial_value.cost < self.incumbent_value:
-                self.incumbent = trial_info
-                self.incumbent_value = trial_value.cost
+                incumbent_std = trial_value.additional_info['std_crossval']
+                folds = trial_value.additional_info['folds']
+                data_points = trial_value.additional_info['data_points']
+                data_points_test = data_points/folds
+                data_points_train = data_points - data_points_test
+                factor_statistical_error = 1/folds + data_points_test/data_points_train
+                self.incumbent_statistical_error = factor_statistical_error * incumbent_std**2
 
             print(trial_value.additional_info)
 
-            # todo - select x% of the configurations
-
-        # 2. get model evaluations for all configurations
-        # todo - what is y
-        # todo - non-protected access to model etc.
-        transformed_subset, y = smbo._intensifier._config_selector._runhistory_encoder.transform()
+        # todo - select x% of the best configurations
+        # compute regret
+        # get model evaluations for all configurations
+        encoding, costs = smbo.intensifier.config_selector._runhistory_encoder.transform()
+        print("encoding", encoding)
+        # todo maybe this transformation should be applied to the costs instead of the encoding
+        transformed_encoding = smbo.intensifier.config_selector._runhistory_encoder.transform_response_values(encoding)
+        print("transformed_encoding", transformed_encoding)
 
         # todo - dont rely on rf being used
         if model._rf is not None:
-            mean, var = model.predict_marginalized(transformed_subset)
+            # get pessimistic estimate of incumbent performance
+            mean, var = model.predict_marginalized(transformed_encoding)
             # todo the predicted mean is lower than 0 - why?
             std = np.sqrt(var)
             ucbs = mean + np.sqrt(self.beta) * std
@@ -64,15 +69,17 @@ class StoppingCallback(Callback):
             min_ucb = np.min(ucbs)
             print("min_ucb", min_ucb)
 
+            # get optimistic estimate of the best possible performance
+            # get inspired by random search acquisition function maximizer
+            min_lcb = 0
+
+            # decide whether to stop
+            regret = min_ucb - min_lcb
+
+            # we are stopping once regret < incumbent statistical error (return false = do not continue)
+            return regret >= self.incumbent_statistical_error
+
         else:
             print("no model built yet")
-        # for regret: sample lcb for a number of points
-        # get inspired by random search acquisition function maximizer
 
-        #regret = min_ucb - min_lcb
-
-        # todo get trial info of incumbent
-        # trial_info = ??
-
-        #error = 0
         return True
