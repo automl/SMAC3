@@ -5,7 +5,7 @@ import numpy as np
 
 from smac.main.smbo import SMBO
 from smac.callback import Callback
-from smac.runhistory import TrialInfo, TrialValue
+from smac.runhistory import TrialInfo, TrialValue, TrialKey
 
 
 class StoppingCallback(Callback):
@@ -26,26 +26,20 @@ class StoppingCallback(Callback):
     def on_tell_end(self, smbo: SMBO, info: TrialInfo, value: TrialValue) -> bool:
         """Checks if the optimization should be stopped after the given trial."""
 
+        # do not trigger stopping criterion before wait_iterations
+        if smbo.runhistory.submitted < self.wait_iterations:
+            return True
+
         # todo: add the following functionality
         # - be able to query model about configs (via config selector; takes care of the encoding/decoding)
 
         model = smbo.intensifier.config_selector._model
 
         # update statistical error of incumbent if it has changed
-        # todo get incumbent from intensifier instead
-        for trial_info, trial_value in smbo.runhistory.items():
-            if self.incumbent is None or trial_value.cost < self.incumbent_value:
-                self.incumbent = trial_info
-                self.incumbent_value = trial_value.cost
-                incumbent_std = trial_value.additional_info['std_crossval']
-                folds = trial_value.additional_info['folds']
-                data_points = trial_value.additional_info['data_points']
-                data_points_test = data_points/folds
-                data_points_train = data_points - data_points_test
-                factor_statistical_error = 1/folds + data_points_test/data_points_train
-                self.incumbent_statistical_error = factor_statistical_error * incumbent_std**2
-
-            print(trial_value.additional_info)
+        incumbent_config = smbo.intensifier.get_incumbent()
+        trial_infos = smbo.runhistory.get_trials(incumbent_config)
+        trial_values = [smbo.runhistory[TrialKey(config_id=smbo.runhistory.get_config_id(trial_info.config), instance=trial_info.instance, seed=trial_info.seed, budget=trial_info.budget)] for trial_info in trial_infos]
+        print("trial_values", trial_values)
 
         # todo - select x% of the best configurations
         # compute regret
