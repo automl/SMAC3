@@ -19,7 +19,9 @@ logger = get_logger(__name__)
 class AbstractConfidenceBound(AbstractAcquisitionFunction):
     r"""Computes the lower or upper confidence bound for a given x over the best so far value as acquisition value.
 
-    :math:`LCB(X) = \mu(\mathbf{X}) -+ \sqrt(\beta_t)\sigma(\mathbf{X})` [SKKS10]_
+    Example for LCB (UCB adds the variance term instead of subtracting it):
+
+    :math:`LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})` [SKKS10]_
 
     with
 
