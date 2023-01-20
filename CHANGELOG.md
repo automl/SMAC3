@@ -1,3 +1,6 @@
+# 2.0.1b1
+- Add Upper Confidence Bound as an acquisition function
+
 # 2.0.0b1
 
 - Completely reimplemented the intensifiers (including Successive Halving and Hyperband): All intensifiers support 
