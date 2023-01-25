@@ -7,6 +7,9 @@
 - Updated documentation based on new implementation.
 - Added benchmark to compare different versions.
 
+## Bugfixes
+- Correct handling of integer hyperparameters in the initial design.
+
 
 # 2.0.0a2
 
