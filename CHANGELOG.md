@@ -1,5 +1,6 @@
 # 2.0.1b1
 - Add Upper Confidence Bound as an acquisition function
+- Add Stopping Criterion Callback
 
 # 2.0.0b1
 
