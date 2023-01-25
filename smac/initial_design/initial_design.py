@@ -127,7 +127,7 @@ class InitialDesign:
         for idx, param in enumerate(params):
             if isinstance(param, IntegerHyperparameter):
                 design[:, idx] = param._inverse_transform(param._transform(design[:, idx]))
-            if isinstance(param, NumericalHyperparameter):
+            elif isinstance(param, NumericalHyperparameter):
                 continue
             elif isinstance(param, Constant):
                 # add a vector with zeros
