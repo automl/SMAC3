@@ -104,6 +104,7 @@
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
         <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -1094,6 +1095,11 @@ Additional configurations are not affected by this parameter.</p></li>
 <dt class="sig sig-object py" id="smac.facade.multi_fidelity_facade.MultiFidelityFacade.get_intensifier">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'shuffle_once'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_incumbents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'highest_observed_budget'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/multi_fidelity_facade.html#MultiFidelityFacade.get_intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.multi_fidelity_facade.MultiFidelityFacade.get_intensifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a Hyperband intensifier instance. Budgets are supported.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.intensifier.hyperband.html#smac.intensifier.hyperband.Hyperband" title="smac.intensifier.hyperband.Hyperband"><code class="xref py py-class docutils literal notranslate"><span class="pre">Hyperband</span></code></a></p>
+</dd>
+</dl>
 <dl class="simple">
 <dt>eta<span class="classifier">int, defaults to 3</span></dt><dd><p>Input that controls the proportion of configurations discarded in each round of Successive Halving.</p>
 </dd>
@@ -1110,11 +1116,6 @@ Additional configurations are not affected by this parameter.</p></li>
 * “highest_budget”: Incumbent is selected only based on the highest budget.</p>
 </dd>
 <dt>max_incumbents<span class="classifier">int, defaults to 10</span></dt><dd><p>How many incumbents to keep track of in the case of multi-objective.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.intensifier.hyperband.html#smac.intensifier.hyperband.Hyperband" title="smac.intensifier.hyperband.Hyperband"><code class="xref py py-class docutils literal notranslate"><span class="pre">Hyperband</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

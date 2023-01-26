@@ -104,6 +104,7 @@
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
         <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -1332,22 +1333,12 @@ intensifier to get more information.</p>
 <dt class="sig sig-object py" id="smac.intensifier.abstract_intensifier.AbstractIntensifier.config_generator">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">config_generator</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">Configuration</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier.config_generator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Based on the configuration selector, an iterator is returned that generates configurations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterator</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.intensifier.abstract_intensifier.AbstractIntensifier.config_selector">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">config_selector</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="smac.main.config_selector.html#smac.main.config_selector.ConfigSelector" title="smac.main.config_selector.ConfigSelector"><span class="pre">ConfigSelector</span></a></em><a class="headerlink" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier.config_selector" title="Permalink to this definition">¶</a></dt>
 <dd><p>The configuration selector for the intensifier.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.main.config_selector.html#smac.main.config_selector.ConfigSelector" title="smac.main.config_selector.ConfigSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigSelector</span></code></a></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1369,7 +1360,7 @@ more options in the future.</p>
 <dd><p>Returns the current incumbent in a single-objective setting.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1494,11 +1485,6 @@ Expands the keys from <code class="docutils literal notranslate"><span class="pr
 <dt class="sig sig-object py" id="smac.intensifier.abstract_intensifier.AbstractIntensifier.incumbents_changed">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">incumbents_changed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier.incumbents_changed" title="Permalink to this definition">¶</a></dt>
 <dd><p>How often the incumbents have changed.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1516,11 +1502,6 @@ Expands the keys from <code class="docutils literal notranslate"><span class="pr
 <dt class="sig sig-object py" id="smac.intensifier.abstract_intensifier.AbstractIntensifier.meta">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier.meta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the meta data of the created object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1538,11 +1519,6 @@ Expands the keys from <code class="docutils literal notranslate"><span class="pr
 <dt class="sig sig-object py" id="smac.intensifier.abstract_intensifier.AbstractIntensifier.runhistory">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">runhistory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><span class="pre">RunHistory</span></a></em><a class="headerlink" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier.runhistory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runhistory of the intensifier.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunHistory</span></code></a></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1572,11 +1548,6 @@ method also saves the incumbents and trajectory.</p>
 <dt class="sig sig-object py" id="smac.intensifier.abstract_intensifier.AbstractIntensifier.trajectory">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">trajectory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.TrajectoryItem" title="smac.runhistory.dataclasses.TrajectoryItem"><span class="pre">smac.runhistory.dataclasses.TrajectoryItem</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier.trajectory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the trajectory (changes of incumbents) of the optimization run.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.TrajectoryItem" title="smac.runhistory.dataclasses.TrajectoryItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrajectoryItem</span></code></a>]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1596,44 +1567,24 @@ configuration is only considered incumbent if it has a better performance on all
 <dt class="sig sig-object py" id="smac.intensifier.abstract_intensifier.AbstractIntensifier.used_walltime">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">used_walltime</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier.used_walltime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns used wallclock time.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.intensifier.abstract_intensifier.AbstractIntensifier.uses_budgets">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uses_budgets</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier.uses_budgets" title="Permalink to this definition">¶</a></dt>
 <dd><p>If the intensifier needs to make use of budgets.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.intensifier.abstract_intensifier.AbstractIntensifier.uses_instances">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uses_instances</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier.uses_instances" title="Permalink to this definition">¶</a></dt>
 <dd><p>If the intensifier needs to make use of instances.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.intensifier.abstract_intensifier.AbstractIntensifier.uses_seeds">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uses_seeds</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#smac.intensifier.abstract_intensifier.AbstractIntensifier.uses_seeds" title="Permalink to this definition">¶</a></dt>
 <dd><p>If the intensifier needs to make use of seeds.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 </dd></dl>

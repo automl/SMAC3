@@ -104,6 +104,7 @@
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
         <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -1269,11 +1270,6 @@ contained subobjects that are estimators.</p>
 <dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.hyperparameters">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hyperparameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">sklearn.gaussian_process.kernels.Hyperparameter</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.hyperparameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of all hyperparameter specifications.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Hyperparameter</span></code>]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py property">
@@ -1281,22 +1277,12 @@ contained subobjects that are estimators.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.meta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the meta data of the created object. This method calls the <cite>get_params</cite> method to collect the
 parameters of the kernel.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.n_dims">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">n_dims</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.n_dims" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the number of non-fixed hyperparameters of the kernel.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 </dd></dl>
