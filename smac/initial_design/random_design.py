@@ -16,5 +16,5 @@ class RandomInitialDesign(AbstractInitialDesign):
         if self._n_configs == 1:
             configs = [configs]
         for config in configs:
-            config.origin = "Random Initial Design"
+            config.origin = "Initial Design: Random"
         return configs
