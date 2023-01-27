@@ -1,3 +1,9 @@
+# 1.4.1
+
+## Bugfixes
+- Correct handling of integer hyperparameters in the initial design (#531).
+
+
 # 1.4.0
 
 ## Features
