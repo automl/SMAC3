@@ -8,7 +8,7 @@
 - Added benchmark to compare different versions.
 
 ## Bugfixes
-- Correct handling of integer hyperparameters in the initial design.
+- Correct handling of integer hyperparameters in the initial design (#531).
 
 
 # 2.0.0a2
