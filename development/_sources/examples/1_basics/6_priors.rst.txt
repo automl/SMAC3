@@ -38,7 +38,7 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
 
  .. code-block:: none
 
-    [INFO][abstract_initial_design.py:133] Using 10 initial design configurations and 1 additional configurations.
+    [INFO][abstract_initial_design.py:134] Using 10 initial design configurations and 1 additional configurations.
     [WARNING][prior_acqusition_function.py:107] Discretizing the prior for random forest models.
     [INFO][abstract_intensifier.py:493] Added config fec0cb as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:565] Added config 34b1eb and rejected config fec0cb as incumbent because it is not better than the incumbents on 1 instances:
@@ -238,7 +238,7 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  31.462 seconds)
+   **Total running time of the script:** ( 0 minutes  28.945 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_6_priors.py:

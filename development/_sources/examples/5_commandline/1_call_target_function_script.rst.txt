@@ -54,8 +54,8 @@ This simple example shows how to call a script with the following content:
 
  .. code-block:: none
 
-    [INFO][abstract_initial_design.py:81] Reducing the number of initial configurations from 8 to 7 (max_ratio == 0.25).
-    [INFO][abstract_initial_design.py:133] Using 7 initial design configurations and 0 additional configurations.
+    [INFO][abstract_initial_design.py:82] Reducing the number of initial configurations from 8 to 7 (max_ratio == 0.25).
+    [INFO][abstract_initial_design.py:134] Using 7 initial design configurations and 0 additional configurations.
     [INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
     [INFO][abstract_intensifier.py:493] Added config 33ba44 as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:565] Added config 249a5c and rejected config 33ba44 as incumbent because it is not better than the incumbents on 1 instances:
@@ -115,7 +115,7 @@ This simple example shows how to call a script with the following content:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  5.610 seconds)
+   **Total running time of the script:** ( 0 minutes  4.755 seconds)
 
 
 .. _sphx_glr_download_examples_5_commandline_1_call_target_function_script.py:

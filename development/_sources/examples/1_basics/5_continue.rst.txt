@@ -33,7 +33,7 @@ function is continued. We use a custom callback, to artificially stop the first 
 
  .. code-block:: none
 
-    [INFO][abstract_initial_design.py:133] Using 10 initial design configurations and 0 additional configurations.
+    [INFO][abstract_initial_design.py:134] Using 10 initial design configurations and 0 additional configurations.
     [INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
     [INFO][abstract_intensifier.py:493] Added config 3ce33d as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:565] Added config c53710 and rejected config 3ce33d as incumbent because it is not better than the incumbents on 1 instances:
@@ -44,7 +44,7 @@ function is continued. We use a custom callback, to artificially stop the first 
     [INFO][configspace.py:175] --- x: 0.4316552169620991 -> -0.3100988641381264
     [INFO][smbo.py:222] A callback returned False. Abort is requested.
     [INFO][smbo.py:311] Shutting down because the stop flag was set.
-    [INFO][abstract_initial_design.py:133] Using 10 initial design configurations and 0 additional configurations.
+    [INFO][abstract_initial_design.py:134] Using 10 initial design configurations and 0 additional configurations.
     [INFO][smbo.py:462] Continuing from previous run.
     [INFO][abstract_intensifier.py:288] Added existing seed 209652396 from runhistory to the intensifier.
     [INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
@@ -173,7 +173,7 @@ function is continued. We use a custom callback, to artificially stop the first 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.881 seconds)
+   **Total running time of the script:** ( 0 minutes  0.834 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_5_continue.py:

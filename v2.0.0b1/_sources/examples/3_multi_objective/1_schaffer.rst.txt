@@ -39,7 +39,7 @@ SMAC prioritizes the second objective over the first one.
 
  .. code-block:: none
 
-    [INFO][abstract_initial_design.py:133] Using 10 initial design configurations and 0 additional configurations.
+    [INFO][abstract_initial_design.py:134] Using 10 initial design configurations and 0 additional configurations.
     [INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
     [INFO][abstract_intensifier.py:493] Added config 8a8909 as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:573] Config 3a64dd is a new incumbent. Total number of incumbents: 2.
@@ -464,7 +464,7 @@ SMAC prioritizes the second objective over the first one.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  11.285 seconds)
+   **Total running time of the script:** ( 0 minutes  9.405 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_1_schaffer.py:

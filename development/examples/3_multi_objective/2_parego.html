@@ -1016,23 +1016,31 @@ a Pareto front. The red cross indicates the best configuration selected by SMAC.
 <p>In the optimization, SMAC evaluates the configurations on two different seeds. Therefore, the plot shows the
 mean accuracy and run-time of each configuration.</p>
 <img src="../../_images/sphx_glr_2_parego_001.png" srcset="../../_images/sphx_glr_2_parego_001.png" alt="Pareto-Front" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[WARNING][target_function_runner.py:71] The argument budget is not set by SMAC: Consider removing it from the target function.
-[INFO][abstract_initial_design.py:133] Using 5 initial design configurations and 0 additional configurations.
+[INFO][abstract_initial_design.py:134] Using 5 initial design configurations and 0 additional configurations.
 [INFO][abstract_intensifier.py:493] Added config 97ef22 as new incumbent because there are no incumbents yet.
 [INFO][abstract_intensifier.py:573] Config f88a6b is a new incumbent. Total number of incumbents: 2.
 [INFO][abstract_intensifier.py:573] Config d77b40 is a new incumbent. Total number of incumbents: 3.
-[INFO][abstract_intensifier.py:573] Config 18175d is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:573] Config ebe0fe is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:565] Added config 8d3909 and rejected config ebe0fe as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][configspace.py:175] --- activation: &#39;logistic&#39; -&gt; &#39;relu&#39;
+[INFO][configspace.py:175] --- batch_size: 204 -&gt; 190
+[INFO][configspace.py:175] --- learning_rate_init: 0.00046763832408948776 -&gt; 0.0002293095101699798
+[INFO][configspace.py:175] --- n_neurons: 209 -&gt; 208
+[INFO][abstract_intensifier.py:565] Added config babda6 and rejected config 8d3909 as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][configspace.py:175] --- batch_size: 190 -&gt; 199
+[INFO][configspace.py:175] --- learning_rate_init: 0.0002293095101699798 -&gt; 0.007681180962299055
+[INFO][configspace.py:175] --- n_neurons: 208 -&gt; 219
 [INFO][smbo.py:306] Configuration budget is exhausted:
-[INFO][smbo.py:307] --- Remaining wallclock time: -0.962679386138916
+[INFO][smbo.py:307] --- Remaining wallclock time: -0.7021632194519043
 [INFO][smbo.py:308] --- Remaining cpu time: inf
-[INFO][smbo.py:309] --- Remaining trials: 177
+[INFO][smbo.py:309] --- Remaining trials: 161
 Validated costs from default config:
---- [0.60155834 0.34960687]
+--- [0.60155834 0.23112321]
 
 Validated costs from the Pareto front (incumbents):
---- [0.88924791 0.38766456]
---- [0.04813757 1.00132596]
---- [0.03561281 1.13742614]
---- [0.30828768 0.70255744]
+--- [0.04813757 0.66298473]
+--- [0.03561281 0.88831782]
+--- [0.10462396 0.19926226]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1206,7 +1214,7 @@ Validated costs from the Pareto front (incumbents):
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  38.347 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  34.828 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0422a2b52bca2c17c0ab975a6ae7e8db/2_parego.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_parego.py</span></code></a></p>

@@ -1012,7 +1012,7 @@ to download the full example code</p>
 <span id="sphx-glr-examples-1-basics-5-continue-py"></span><h1>Continue an Optimization<a class="headerlink" href="#continue-an-optimization" title="Permalink to this heading">¶</a></h1>
 <p>SMAC can also be continued. In this example, an optimization of a simple quadratic
 function is continued. We use a custom callback, to artificially stop the first optimization.</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:133] Using 10 initial design configurations and 0 additional configurations.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:134] Using 10 initial design configurations and 0 additional configurations.
 [INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
 [INFO][abstract_intensifier.py:493] Added config 3ce33d as new incumbent because there are no incumbents yet.
 [INFO][abstract_intensifier.py:565] Added config c53710 and rejected config 3ce33d as incumbent because it is not better than the incumbents on 1 instances:
@@ -1023,7 +1023,7 @@ function is continued. We use a custom callback, to artificially stop the first 
 [INFO][configspace.py:175] --- x: 0.4316552169620991 -&gt; -0.3100988641381264
 [INFO][smbo.py:222] A callback returned False. Abort is requested.
 [INFO][smbo.py:311] Shutting down because the stop flag was set.
-[INFO][abstract_initial_design.py:133] Using 10 initial design configurations and 0 additional configurations.
+[INFO][abstract_initial_design.py:134] Using 10 initial design configurations and 0 additional configurations.
 [INFO][smbo.py:462] Continuing from previous run.
 [INFO][abstract_intensifier.py:288] Added existing seed 209652396 from runhistory to the intensifier.
 [INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
@@ -1144,7 +1144,7 @@ Incumbent cost of continued run: 1.0393385263038637e-07
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost of continued run: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.881 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.834 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-5-continue-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/422686ca3edb22afd49c1684c91a3eb9/5_continue.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">5_continue.py</span></code></a></p>
