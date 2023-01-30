@@ -2,6 +2,7 @@
 
 ## Improvements
 - Clarify origin of configurations (#908).
+- Random forest with instances predicts the marginalized costs by using a C++ implementation in `pyrfr`, which is much faster (#903).
 
 ## Bugfixes
 - Continue run when setting incumbent selection to highest budget when using Successive Halving (#907).

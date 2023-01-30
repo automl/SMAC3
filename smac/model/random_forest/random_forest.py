@@ -274,26 +274,9 @@ class RandomForest(AbstractRandomForest):
         assert self._rf is not None
         X = self._impute_inactive(X)
 
-        dat_ = np.zeros((X.shape[0], self._rf_opts.num_trees))  # Marginalized predictions for each tree
-        for i, x in enumerate(X):
-
-            # Marginalize over instances
-            # 1. get all leaf values for each tree
-            preds_trees: list[list[float]] = [[] for i in range(self._rf_opts.num_trees)]
-
-            for feat in self._instance_features.values():
-                x_ = np.concatenate([x, feat])
-                preds_per_tree = self._rf.all_leaf_values(x_)
-                for tree_id, preds in enumerate(preds_per_tree):
-                    preds_trees[tree_id] += preds
-
-            # 2. average in each tree
-            if self._log_y:
-                for tree_id in range(self._rf_opts.num_trees):
-                    dat_[i, tree_id] = np.log(np.exp(np.array(preds_trees[tree_id])).mean())
-            else:
-                for tree_id in range(self._rf_opts.num_trees):
-                    dat_[i, tree_id] = np.array(preds_trees[tree_id]).mean()
+        X_feat = list(self._instance_features.values())
+        dat_ = self._rf.predict_marginalized_over_instances_batch(X, X_feat, self._log_y)
+        dat_ = np.array(dat_)
 
         # 3. compute statistics across trees
         mean_ = dat_.mean(axis=1)
