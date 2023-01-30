@@ -1,5 +1,8 @@
 # 2.0.0b2
 
+## Improvements
+- Clarify origin of configurations (#908).
+
 ## Bugfixes
 - Continue run when setting incumbent selection to highest budget when using Successive Halving (#907).
 
@@ -14,7 +17,7 @@
 - Added benchmark to compare different versions.
 
 ## Bugfixes
-- Correct handling of integer hyperparameters in the initial design (#531).
+- Correct handling of integer hyperparameters in the initial design (#531)
 
 
 # 2.0.0a2

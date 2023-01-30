@@ -44,5 +44,5 @@ class SobolInitialDesign(AbstractInitialDesign):
             sobol = sobol_gen.random(self._n_configs)
 
         return self._transform_continuous_designs(
-            design=sobol, origin="Sobol Initial Design", configspace=self._configspace
+            design=sobol, origin="Initial Design: Sobol", configspace=self._configspace
         )
