@@ -1,12 +1,23 @@
+# 2.0.0b2
+
+## Improvements
+- Clarify origin of configurations (#908).
+
+## Bugfixes
+- Continue run when setting incumbent selection to highest budget when using Successive Halving (#907).
+
+
 # 2.0.0b1
 
-- Completely reimplemented the intensifiers (including Successive Halving and Hyperband): All intensifiers support 
-multi-fidelity, multi-objective and multi-threading by nature now.
+- Completely reimplemented the intensifiers (including Successive Halving and Hyperband): All intensifiers support multi-fidelity, multi-objective and multi-threading by nature now.
 - Expected behaviour for ask-and-tell interface ensured (also for Successive Halving).
 - Continuing a run is now fully supported.
 - Added more examples.
 - Updated documentation based on new implementation.
 - Added benchmark to compare different versions.
+
+## Bugfixes
+- Correct handling of integer hyperparameters in the initial design (#531)
 
 
 # 2.0.0a2
