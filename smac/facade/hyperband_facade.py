@@ -1,49 +1,55 @@
-from typing import Any
+from __future__ import annotations
 
-from smac.facade.roar_facade import ROAR
-from smac.initial_design.random_configuration_design import RandomConfigurations
-from smac.intensification.hyperband import Hyperband
+from smac.facade.random_facade import RandomFacade
+from smac.intensifier.hyperband import Hyperband
+from smac.scenario import Scenario
 
-__author__ = "Ashwin Raaghav Narayanan"
-__copyright__ = "Copyright 2019, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class HB4AC(ROAR):
-    """Facade to use model-free Hyperband for algorithm configuration.
+class HyperbandFacade(RandomFacade):
+    """
+    Facade to use model-free Hyperband [LJDR18]_ for algorithm configuration.
 
-    This facade overwrites options available via the SMAC facade.
-
-    See Also
-    --------
-    :class:`~smac.facade.smac_ac_facade.SMAC4AC` for documentation of parameters.
-
-    Attributes
-    ----------
-    logger
-    stats : Stats
-    solver : SMBO
-    runhistory : RunHistory
-        List with information about previous runs
-    trajectory : list
-        List of all incumbents
+    Uses Random Aggressive Online Racing (ROAR) to compare configurations, a random
+    initial design and the Hyperband intensifier.
     """
 
-    def __init__(self, **kwargs: Any):
-        kwargs["initial_design"] = kwargs.get("initial_design", RandomConfigurations)
+    @staticmethod
+    def get_intensifier(  # type: ignore
+        scenario: Scenario,
+        *,
+        eta: int = 3,
+        n_seeds: int = 1,
+        instance_seed_order: str | None = "shuffle_once",
+        max_incumbents: int = 10,
+        incumbent_selection: str = "highest_observed_budget",
+    ) -> Hyperband:
+        """Returns a Hyperband intensifier instance. Budgets are supported.
 
-        # Intensification parameters
-        # select Hyperband as the intensifier ensure respective parameters are provided
-        kwargs["intensifier"] = Hyperband
-
-        # set Hyperband parameters if not given
-        intensifier_kwargs = kwargs.get("intensifier_kwargs", dict())
-        intensifier_kwargs["min_chall"] = 1
-        if intensifier_kwargs.get("eta") is None:
-            intensifier_kwargs["eta"] = 3
-        if intensifier_kwargs.get("instance_order") is None:
-            intensifier_kwargs["instance_order"] = "shuffle_once"
-        kwargs["intensifier_kwargs"] = intensifier_kwargs
-
-        super().__init__(**kwargs)
-        self.logger.info(self.__class__)
+        eta : int, defaults to 3
+            Input that controls the proportion of configurations discarded in each round of Successive Halving.
+        n_seeds : int, defaults to 1
+            How many seeds to use for each instance.
+        instance_seed_order : str, defaults to "shuffle_once"
+            How to order the instance-seed pairs. Can be set to:
+            * None: No shuffling at all and use the instance-seed order provided by the user.
+            * "shuffle_once": Shuffle the instance-seed keys once and use the same order across all runs.
+            * "shuffle": Shuffle the instance-seed keys for each bracket individually.
+        incumbent_selection : str, defaults to "any_budget"
+            How to select the incumbent when using budgets. Can be set to:
+            * "any_budget": Incumbent is the best on any budget i.e., best performance regardless of budget.
+            * "highest_observed_budget": Incumbent is the best in the highest budget run so far.
+            * "highest_budget": Incumbent is selected only based on the highest budget.
+        max_incumbents : int, defaults to 10
+            How many incumbents to keep track of in the case of multi-objective.
+        """
+        return Hyperband(
+            scenario=scenario,
+            eta=eta,
+            n_seeds=n_seeds,
+            instance_seed_order=instance_seed_order,
+            max_incumbents=max_incumbents,
+            incumbent_selection=incumbent_selection,
+        )

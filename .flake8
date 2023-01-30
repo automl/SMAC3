@@ -6,5 +6,7 @@ extend-exclude =
     .venv
     build
 extend-ignore =
-    E203  # No whitespace before ':' in [x : y]
-    E731  # No lambdas — too strict
+    # No whitespace before ':' in [x : y]
+    E203
+    # No lambdas — too strict
+    E731

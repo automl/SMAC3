@@ -5,22 +5,25 @@ Home
    :hidden:
    :maxdepth: 2
 
-   getting_started/index
+   1_installation
+   2_package_overview
+   3_getting_started
+   4_minimal_example
    examples/index
-   details/index
-   api
-   glossary
-   faq
-   license
+   advanced_usage/index
+   5_api
+   6_references
+   7_glossary
+   8_faq
+   9_license
 
 
-SMAC is a tool for algorithm configuration to optimize the parameters of
-arbitrary algorithms, including hyperparameter optimization of Machine Learning algorithms. The main core consists of
-Bayesian Optimization in combination with an aggressive racing mechanism to
-efficiently decide which of two configurations performs better.
+SMAC is a tool for algorithm configuration to optimize the parameters of arbitrary algorithms, including hyperparameter 
+optimization of Machine Learning algorithms. The main core consists of Bayesian Optimization in combination with an 
+aggressive racing mechanism to efficiently decide which of two configurations performs better.
 
-SMAC3 is written in Python3 and continuously tested with Python 3.7, 3.8 and 3.9. Its Random
-Forest is written in C++. In further texts, SMAC is representatively mentioned for SMAC3.
+SMAC3 is written in Python3 and continuously tested with Python 3.8, 3.9, and 3.10. Its Random
+Forest is written in C++. In the following, SMAC is representatively mentioned for SMAC3.
 
 If you use SMAC, please cite our `JMLR paper <https://jmlr.org/papers/v23/21-0888.html>`_:
 

@@ -1,5 +1,0 @@
-algo = python examples/commandline/branin.py
-paramfile = examples/commandline/branin/configspace.pcs
-run_obj = quality
-runcount_limit = 10
-deterministic = 1

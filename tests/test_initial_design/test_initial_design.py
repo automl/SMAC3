@@ -1,145 +1,123 @@
-import unittest
-import unittest.mock
+import pytest
 
-import numpy as np
-from ConfigSpace import Configuration, UniformFloatHyperparameter
-
-from smac.configspace import ConfigurationSpace
-from smac.initial_design.default_configuration_design import DefaultConfiguration
-from smac.initial_design.initial_design import InitialDesign
-from smac.runhistory.runhistory import RunHistory
-from smac.scenario.scenario import Scenario
-from smac.stats.stats import Stats
-from smac.tae.execute_func import ExecuteTAFuncDict
-from smac.utils.io.traj_logging import TrajLogger
+from smac.initial_design import AbstractInitialDesign
+from smac.initial_design.default_design import DefaultInitialDesign
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class TestSingleInitialDesign(unittest.TestCase):
-    def setUp(self):
-        self.cs = ConfigurationSpace()
-        self.cs.add_hyperparameter(UniformFloatHyperparameter(name="x1", lower=1, upper=10, default_value=1))
-        self.scenario = Scenario(
-            {
-                "cs": self.cs,
-                "run_obj": "quality",
-                "output_dir": "",
-                "ta_run_limit": 100,
-            }
+def test_single_default_config_design(make_scenario, configspace_small):
+    dc = DefaultInitialDesign(
+        scenario=make_scenario(configspace_small),
+        n_configs=10,
+    )
+
+    # should return only the default config
+    configs = dc.select_configurations()
+    assert len(configs) == 1
+    assert configs[0]["a"] == 1
+    assert configs[0]["b"] == 1e-1
+    assert configs[0]["c"] == "cat"
+
+
+def test_multi_config_design(make_scenario, configspace_small):
+    scenario = make_scenario(configspace_small)
+    configs = configspace_small.sample_configuration(5)
+
+    dc = AbstractInitialDesign(
+        scenario=scenario,
+        n_configs=0,
+        additional_configs=configs,
+    )
+
+    # Selects multiple initial configurations to run.
+    # Since the configs were passed to initial design (and n_configs == 0), it should return the same.
+    init_configs = dc.select_configurations()
+    assert len(init_configs) == len(configs)
+    assert init_configs == configs
+
+
+def test_config_numbers(make_scenario, configspace_small):
+    n_configs = 5
+    n_configs_per_hyperparameter = 10
+
+    scenario = make_scenario(configspace_small)
+    configs = configspace_small.sample_configuration(n_configs)
+
+    n_hps = len(configspace_small.get_hyperparameters())
+
+    dc = AbstractInitialDesign(
+        scenario=scenario,
+        n_configs=15,
+        max_ratio=1.0,
+    )
+
+    assert dc._n_configs == 15
+
+    dc = AbstractInitialDesign(
+        scenario=scenario,
+        n_configs_per_hyperparameter=n_configs_per_hyperparameter,
+        additional_configs=configs,
+        max_ratio=1.0,
+    )
+
+    assert dc._n_configs == n_hps * n_configs_per_hyperparameter
+
+    # If we have max ratio then we expect less
+    dc = AbstractInitialDesign(
+        scenario=scenario,
+        n_configs_per_hyperparameter=1234523,
+        # additional_configs=configs,
+        max_ratio=0.5,
+    )
+
+    assert dc._n_configs == int(scenario.n_trials / 2)
+
+    # If we have max ratio then we expect less
+    dc = AbstractInitialDesign(
+        scenario=scenario,
+        n_configs_per_hyperparameter=1234523,
+        additional_configs=configs,
+        max_ratio=0.5,
+    )
+
+    assert dc._n_configs == int(scenario.n_trials / 2)
+
+    dc = AbstractInitialDesign(
+        scenario=scenario,
+        n_configs_per_hyperparameter=n_configs_per_hyperparameter,
+        max_ratio=1.0,
+    )
+
+    assert dc._n_configs == n_hps * n_configs_per_hyperparameter
+
+    # We can't have more initial configs than
+    with pytest.raises(ValueError):
+        dc = AbstractInitialDesign(
+            scenario=scenario,
+            n_configs=32351235,
+            # If we add additional configs then we should get a value although n_configs is cut by max ratio
+            additional_configs=configs,
+            max_ratio=1.0,
         )
-        self.stats = Stats(scenario=self.scenario)
-        self.rh = RunHistory()
-        self.ta = ExecuteTAFuncDict(lambda x: x["x1"] ** 2, stats=self.stats)
 
-    def test_single_default_config_design(self):
-        self.stats.start_timing()
-        tj = TrajLogger(output_dir=None, stats=self.stats)
-
-        dc = DefaultConfiguration(
-            cs=self.cs,
-            traj_logger=tj,
-            rng=np.random.RandomState(seed=12345),
-            ta_run_limit=self.scenario.ta_run_limit,
+    # We need to specify at least `n_configs`, `configs` or `n_configs_per_hyperparameter`
+    with pytest.raises(ValueError):
+        dc = AbstractInitialDesign(
+            scenario=scenario,
+            n_configs_per_hyperparameter=None,
         )
 
-        # should return only the default config
-        configs = dc.select_configurations()
-        self.assertEqual(len(configs), 1)
-        self.assertEqual(configs[0]["x1"], 1)
 
-    def test_multi_config_design(self):
-        self.stats.start_timing()
-        tj = TrajLogger(output_dir=None, stats=self.stats)
-        _ = np.random.RandomState(seed=12345)
+def test_select_configurations(make_scenario, configspace_small):
+    scenario = make_scenario(configspace_small)
 
-        configs = [
-            Configuration(configuration_space=self.cs, values={"x1": 4}),
-            Configuration(configuration_space=self.cs, values={"x1": 2}),
-        ]
-        dc = InitialDesign(
-            cs=self.cs,
-            traj_logger=tj,
-            rng=np.random.RandomState(seed=12345),
-            ta_run_limit=self.scenario.ta_run_limit,
-            configs=configs,
-        )
+    dc = AbstractInitialDesign(
+        scenario=scenario,
+        n_configs=15,
+    )
 
-        # selects multiple initial configurations to run
-        # since the configs were passed to initial design, it should return the same
-        init_configs = dc.select_configurations()
-        self.assertEqual(len(init_configs), 2)
-        self.assertEqual(init_configs, configs)
-
-    def test_init_budget(self):
-        self.stats.start_timing()
-        tj = TrajLogger(output_dir=None, stats=self.stats)
-        _ = np.random.RandomState(seed=12345)
-
-        kwargs = dict(
-            cs=self.cs,
-            traj_logger=tj,
-            rng=np.random.RandomState(seed=12345),
-            ta_run_limit=self.scenario.ta_run_limit,
-        )
-
-        configs = [
-            Configuration(configuration_space=self.cs, values={"x1": 4}),
-            Configuration(configuration_space=self.cs, values={"x1": 2}),
-        ]
-        dc = InitialDesign(
-            configs=configs,
-            init_budget=3,
-            **kwargs,
-        )
-        self.assertEqual(dc.init_budget, 3)
-
-        dc = InitialDesign(
-            init_budget=3,
-            **kwargs,
-        )
-        self.assertEqual(dc.init_budget, 3)
-
-        configs = [
-            Configuration(configuration_space=self.cs, values={"x1": 4}),
-            Configuration(configuration_space=self.cs, values={"x1": 2}),
-        ]
-        dc = InitialDesign(
-            configs=configs,
-            **kwargs,
-        )
-        self.assertEqual(dc.init_budget, 2)
-
-        dc = InitialDesign(
-            **kwargs,
-        )
-        self.assertEqual(dc.init_budget, 10)
-
-        with self.assertRaisesRegex(
-            ValueError,
-            "Initial budget 200 cannot be higher than the run limit 100.",
-        ):
-            InitialDesign(init_budget=200, **kwargs)
-
-        with self.assertRaisesRegex(
-            ValueError,
-            "Need to provide either argument `init_budget`, `configs` or `n_configs_x_params`, "
-            "but provided none of them.",
-        ):
-            InitialDesign(**kwargs, n_configs_x_params=None)
-
-    def test__select_configurations(self):
-        kwargs = dict(
-            cs=self.cs,
-            rng=np.random.RandomState(1),
-            traj_logger=unittest.mock.Mock(),
-            ta_run_limit=1000,
-            configs=None,
-            n_configs_x_params=None,
-            max_config_fracs=0.25,
-            init_budget=1,
-        )
-        init_design = InitialDesign(**kwargs)
-        with self.assertRaises(NotImplementedError):
-            init_design._select_configurations()
+    # We expect empty list here
+    with pytest.raises(NotImplementedError):
+        dc.select_configurations()

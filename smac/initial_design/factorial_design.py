@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import itertools
 
 import numpy as np
@@ -10,33 +12,17 @@ from ConfigSpace.hyperparameters import (
 )
 from ConfigSpace.util import deactivate_inactive_hyperparameters
 
-from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 
-__author__ = "Marius Lindauer"
-__copyright__ = "Copyright 2016, ML4AAD"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class FactorialInitialDesign(InitialDesign):
-    """Factorial initial design.
+class FactorialInitialDesign(AbstractInitialDesign):
+    """Factorial initial design to select corner and middle configurations."""
 
-    Attributes
-    ----------
-    configs : List[Configuration]
-        List of configurations to be evaluated
-        Don't pass configs to the constructor;
-        otherwise factorial design is overwritten
-    """
-
-    def _select_configurations(self) -> Configuration:
-        """Selects a single configuration to run.
-
-        Returns
-        -------
-        config: Configuration
-            initial incumbent configuration
-        """
-        params = self.cs.get_hyperparameters()
+    def _select_configurations(self) -> list[Configuration]:
+        params = self._configspace.get_hyperparameters()
 
         values = []
         mid = []
@@ -54,25 +40,22 @@ class FactorialInitialDesign(InitialDesign):
                 v = [param.sequence[0], param.sequence[-1]]
                 length = len(param.sequence)
                 mid.append(param.sequence[int(length / 2)])
+
             values.append(v)
 
         factorial_design = itertools.product(*values)
 
-        self.logger.debug("Initial Design")
-        configs = [self.cs.get_default_configuration()]
+        configs = [self._configspace.get_default_configuration()]
         # add middle point in space
         conf_dict = dict([(p.name, v) for p, v in zip(params, mid)])
-        middle_conf = deactivate_inactive_hyperparameters(conf_dict, self.cs)
+        middle_conf = deactivate_inactive_hyperparameters(conf_dict, self._configspace)
         configs.append(middle_conf)
 
-        # add corner points
+        # Add corner points
         for design in factorial_design:
             conf_dict = dict([(p.name, v) for p, v in zip(params, design)])
-            conf = deactivate_inactive_hyperparameters(conf_dict, self.cs)
-            conf.origin = "Factorial Design"
+            conf = deactivate_inactive_hyperparameters(conf_dict, self._configspace)
+            conf.origin = "Initial Design: Factorial"
             configs.append(conf)
-            self.logger.debug(conf)
-
-        self.logger.debug("Size of factorial design: %d" % (len(configs)))
 
         return configs
