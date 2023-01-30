@@ -7,6 +7,9 @@
 ## Bugfixes
 - Continue run when setting incumbent selection to highest budget when using Successive Halving (#907).
 
+## Workflows
+- Added workflow to update pre-commit versions (#874).
+
 
 # 2.0.0b1
 
