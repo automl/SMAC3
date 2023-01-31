@@ -47,13 +47,26 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
         Number of data points seen so far.
     _bound_type: str
         Type of Confidence Bound. Either UCB or LCB. Set in child class.
+    _update_beta : bool
+        Whether to update beta or not.
+    _beta_scaling_srinivas : bool
+        Whether to use the beta scaling according to [0, 1].
+
+    References
+    ----------
+    [0] Srinivas, Niranjan, et al. "Gaussian process optimization in the bandit setting: No regret and experimental
+    design." arXiv preprint arXiv:0912.3995 (2009). or not.
+    [1] Makarova, Anastasia, et al. "Automatic Termination for Hyperparameter Optimization." First Conference on
+    Automated Machine Learning (Main Track). 2022.
 
     """
 
-    def __init__(self, beta: float = 1.0) -> None:
+    def __init__(self, beta: float = 1.0, update_beta=True, beta_scaling_srinivas=False) -> None:
         super(AbstractConfidenceBound, self).__init__()
         self._beta: float = beta
         self._num_data: int | None = None
+        self._update_beta = update_beta
+        self._beta_scaling_srinivas = beta_scaling_srinivas
 
     @property
     @abstractmethod
@@ -72,7 +85,7 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
         return meta
 
     def _update(self, **kwargs: Any) -> None:
-        """Update acsquisition function attributes
+        """Update acquisition function attributes
 
         Parameters
         ----------
@@ -93,8 +106,8 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
 
         Returns
         -------
-        np.ndarray [N,1]
-            Acquisition function values wrt X.
+        np.ndarray
+            Acquisition function values wrt X; shape [N,1].
 
         Raises
         ------
@@ -113,7 +126,7 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
             )
         if self._num_data is None:
             raise ValueError(
-                "No current number of data points specified. Call `update` to inform the acqusition function."
+                "No current number of data points specified. Call `update` to inform the acquisition function."
             )
 
         if len(X.shape) == 1:
@@ -121,7 +134,12 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
 
         m, var_ = self._model.predict_marginalized(X)
         std = np.sqrt(var_)
-        beta_t = 2 * np.log((X.shape[1] * self._num_data**2) / self._beta)
+        if self._update_beta and not self._beta_scaling_srinivas:
+            beta_t = 2 * np.log((X.shape[1] * self._num_data**2) / self._beta)
+        elif self._update_beta and self._beta_scaling_srinivas:
+            beta_t = (2 * np.log((X.shape[1] * self._num_data**2 * np.pi ** 2) / (6 * self._beta))) / 5
+        else:
+            beta_t = self._beta
 
         return -(m + sign * np.sqrt(beta_t) * std)
 

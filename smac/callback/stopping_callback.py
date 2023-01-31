@@ -1,6 +1,3 @@
-__copyright__ = "Copyright 2023, automl.org"
-__license__ = "3-clause BSD"
-
 import numpy as np
 
 from smac.acquisition.function import LCB, UCB
@@ -8,86 +5,136 @@ from smac.acquisition.maximizer import LocalAndSortedRandomSearch
 from smac.main.smbo import SMBO
 from smac.callback import Callback
 from smac.runhistory import TrialInfo, TrialValue, TrialKey
+from smac.utils.logging import get_logger
+
+__copyright__ = "Copyright 2023, automl.org"
+__license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
+
+
+def estimate_crossvalidation_statistical_error(std, folds, data_points_test, data_points_train):
+    """Estimates the statistical error of a k-fold cross-validation according to [0].
+
+    [0] Nadeau, Claude, and Yoshua Bengio. "Inference for the generalization error." Advances in neural information
+    processing systems 12 (1999).
+
+    Parameters
+    ----------
+    std : float
+        Standard deviation of the cross-validation.
+    folds : int
+        Number of folds.
+    data_points_test : int
+        Number of data points in the test set.
+    data_points_train : int
+        Number of data points in the training set.
+
+    Returns
+    -------
+    float
+        Estimated statistical error.
+    """
+    return np.sqrt((1 / folds + data_points_test / data_points_train) * pow(std, 2))
 
 
 class StoppingCallback(Callback):
-    """Callback implementing the stopping criterion by Makarova et al. (2022) [1].
+    """Callback implementing the stopping criterion by Makarova et al. (2022) [0].
 
-    [1] Makarova, Anastasia, et al. "Automatic Termination for Hyperparameter Optimization." First Conference on
+    [0] Makarova, Anastasia, et al. "Automatic Termination for Hyperparameter Optimization." First Conference on
     Automated Machine Learning (Main Track). 2022."""
 
-    def __init__(self, initial_beta=0.2, upper_bound_estimation_percentage=1, wait_iterations=20, n_points_lcb=1000):
-        self.beta = initial_beta
-        self.upper_bound_estimation_percentage = upper_bound_estimation_percentage
-        self.wait_iterations = wait_iterations
-        self.n_points_lcb = n_points_lcb
+    def __init__(self,
+                 initial_beta=0.1,
+                 update_beta=True,
+                 upper_bound_estimation_rate=0.5,
+                 wait_iterations=20,
+                 n_points_lcb=1000,
+                 model_log_transform=True,
+                 statistical_error_threshold=None,
+                 statistical_error_field_name='statistical_error'):
+        super().__init__()
+        self._upper_bound_estimation_rate = upper_bound_estimation_rate
+        self._wait_iterations = wait_iterations
+        self._n_points_lcb = n_points_lcb
+        self._model_log_transform = model_log_transform
+        self._statistical_error_threshold = statistical_error_threshold
+        self._statistical_error_field_name = statistical_error_field_name
 
-        # todo - add static beta version
-        self.lcb = LCB(beta=self.beta)
-        self.ucb = UCB(beta=self.beta)
+        self._lcb = LCB(beta=initial_beta, update_beta=update_beta, beta_scaling_srinivas=True)
+        self._ucb = UCB(beta=initial_beta, update_beta=update_beta, beta_scaling_srinivas=True)
 
     def on_tell_end(self, smbo: SMBO, info: TrialInfo, value: TrialValue) -> bool:
         """Checks if the optimization should be stopped after the given trial."""
 
         # do not trigger stopping criterion before wait_iterations
-        if smbo.runhistory.submitted < self.wait_iterations:
+        if smbo.runhistory.submitted < self._wait_iterations:
             return True
 
-        # update statistical error of incumbent
-        # todo - only recompute if incumbent changed (maybe easier one additional info has the statistical error)
+        # get statistical error of incumbent
         incumbent_config = smbo.intensifier.get_incumbent()
-        trial_infos = smbo.runhistory.get_trials(incumbent_config)
-        trial_values = [smbo.runhistory[TrialKey(config_id=smbo.runhistory.get_config_id(trial_info.config),
-                                                 instance=trial_info.instance, seed=trial_info.seed,
-                                                 budget=trial_info.budget)] for trial_info in trial_infos]
+        trial_info_list = smbo.runhistory.get_trials(incumbent_config)
 
-        if len(trial_values) != 1:
+        if len(trial_info_list) > 1:
             raise ValueError("Currently, only one trial per config is supported.")
-        trial_value = trial_values[0]
+        trial_info = trial_info_list[0]
 
-        # todo - don't assume train/test split sizes - rather add 'statistical error' to additional info
-        std_incumbent = trial_value.additional_info['std_crossval']
-        folds = trial_value.additional_info['folds']
-        data_points = trial_value.additional_info['data_points']
-        data_points_test = data_points / folds
-        data_points_train = data_points - data_points_test
-        incumbent_statistical_error = (1/folds + data_points_test / data_points_train) * pow(std_incumbent, 2)
+        trial_value = smbo.runhistory[TrialKey(config_id=smbo.runhistory.get_config_id(trial_info.config),
+                                               instance=trial_info.instance, seed=trial_info.seed,
+                                               budget=trial_info.budget)]
+
+        if self._statistical_error_threshold is not None:
+            incumbent_statistical_error = self._statistical_error_threshold
+        else:
+            incumbent_statistical_error = trial_value.additional_info[self._statistical_error_field_name]
 
         # compute regret
-        # todo - dont rely on rf being used
-        model = smbo.intensifier.config_selector._model
-        if model._rf is not None:
+        model = smbo.intensifier.config_selector.model
+        if model.fitted:
+            configs = smbo.runhistory.get_configs(sort_by='cost')
+
             # update acquisition functions
-            num_data = len(smbo.intensifier.config_selector._get_evaluated_configs())
-            self.lcb.update(model=model, num_data=num_data)
-            self.ucb.update(model=model, num_data=num_data)
+            num_data = len(configs)
+            self._lcb.update(model=model, num_data=num_data)
+            self._ucb.update(model=model, num_data=num_data)
 
             # get pessimistic estimate of incumbent performance
-            configs = smbo.runhistory.get_configs(sort_by='cost')
-            print([(config, self.ucb([config])) for config in configs])
-            configs = configs[:int(self.upper_bound_estimation_percentage * len(configs))]
-            min_ucb = min(self.ucb(configs))
-            print("min ucb", min_ucb)
+            configs = configs[:int(self._upper_bound_estimation_rate * num_data)]
+            min_ucb = min(-1 * self._ucb(configs))[0]
+            if self._model_log_transform:
+                min_ucb = np.exp(min_ucb)
 
             # get optimistic estimate of the best possible performance (min lcb of all configs)
-            maximizer = LocalAndSortedRandomSearch(configspace=smbo._scenario.configspace,
-                                                   acquisition_function=self.lcb,
+            maximizer = LocalAndSortedRandomSearch(configspace=smbo.scenario.configspace,
+                                                   acquisition_function=self._lcb,
                                                    challengers=1)
             # it is maximizing the negative lcb, thus, the minimum is found
-            challenger_list = maximizer.maximize(previous_configs=[], n_points=self.n_points_lcb)
-            min_lcb = self.lcb(challenger_list)[0]
-            print("min lcb", min_lcb)
+            challenger_list = maximizer.maximize(previous_configs=[], n_points=self._n_points_lcb)
+            min_lcb = -1 * self._lcb(challenger_list)[0]
+            if self._model_log_transform:
+                min_lcb = np.exp(min_lcb)[0]
 
-            # decide whether to stop
+            # compute regret
             regret = min_ucb - min_lcb
 
-            print("regret", regret)
-            print("statistical error", incumbent_statistical_error)
+            # print stats
+            logger.debug(f'Minimum UCB: {min_ucb}, minimum LCB: {min_lcb}, regret: {regret}, '
+                         f'statistical error: {incumbent_statistical_error}')
 
-            # we are stopping once regret < incumbent statistical error (return false = do not continue)
-            return regret >= incumbent_statistical_error
+            # we are stopping once regret < incumbent statistical error (return false = do not continue optimization
+            continue_optimization = regret >= incumbent_statistical_error
+            info_str = f'triggered after {len(smbo.runhistory)} evaluations with regret ' \
+                       f'~{round(regret, 3)} and incumbent error ~{round(incumbent_statistical_error, 3)}.'
+            if not continue_optimization:
+                logger.info(f'Stopping criterion {info_str}')
+            else:
+                logger.debug(f'Stopping criterion not {info_str}')
+
+            return continue_optimization
 
         else:
-            print("no model built yet")
+            logger.info("Stopping criterion not triggered as model is not built yet.")
+            return True
 
-        return True
+    def __str__(self):
+        return "StoppingCallback"

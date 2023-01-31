@@ -87,6 +87,11 @@ class SMBO:
         self._initialize_state()
 
     @property
+    def scenario(self) -> Scenario:
+        """The scenario object, holding all environmental information."""
+        return self._scenario
+
+    @property
     def runhistory(self) -> RunHistory:
         """The run history, which is filled with all information during the optimization process."""
         return self._runhistory
@@ -182,12 +187,12 @@ class SMBO:
             info.config.origin = "Custom"
 
         for callback in self._callbacks:
-            response = callback.on_tell_start(self, info, value)
+            continue_optimization = callback.on_tell_start(self, info, value)
 
             # If a callback returns False, the optimization loop should be interrupted
             # the other callbacks are still being called.
-            if response is False:
-                logger.info("A callback returned False. Abort is requested.")
+            if continue_optimization is not None and not continue_optimization:
+                logger.info(f'Callback {callback} returned False (on_tell_start). Abort is requested.')
                 self._stop = True
 
         # Some sanity checks here
@@ -214,12 +219,12 @@ class SMBO:
         logger.debug(f"Tell method was called with cost {value.cost} ({StatusType(value.status).name}).")
 
         for callback in self._callbacks:
-            response = callback.on_tell_end(self, info, value)
+            continue_optimization = callback.on_tell_end(self, info, value)
 
             # If a callback returns False, the optimization loop should be interrupted
             # the other callbacks are still being called.
-            if response is False:
-                logger.info("A callback returned False. Abort is requested.")
+            if continue_optimization is not None and not continue_optimization:
+                logger.info(f'Callback {callback} returned False (on_tell_end). Abort is requested.')
                 self._stop = True
 
         if save:

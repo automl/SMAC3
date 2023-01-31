@@ -604,7 +604,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         Returns
         -------
-        configurations : list
+        configurations : list[Configuration]
             All configurations in the runhistory.
         """
         configs = list(self._config_ids.keys())
@@ -677,7 +677,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         Returns
         -------
-        trials : list[InstanceSeedBudgetKey]
+        trials : list[TrialInfo]
             List of trials for the passed configuration.
         """
         config_id = self._config_ids.get(config)

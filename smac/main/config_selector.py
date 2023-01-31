@@ -106,6 +106,11 @@ class ConfigSelector:
             raise RuntimeError("SMAC needs initial configurations to work.")
 
     @property
+    def model(self) -> AbstractModel | None:
+        """Returns the surrogate model."""
+        return self._model
+
+    @property
     def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
