@@ -1,3 +1,5 @@
+from abc import abstractmethod
+
 import numpy as np
 
 from smac.acquisition.function import LCB, UCB
@@ -38,6 +40,32 @@ def estimate_crossvalidation_statistical_error(std, folds, data_points_test, dat
     return np.sqrt((1 / folds + data_points_test / data_points_train) * pow(std, 2))
 
 
+class AbstractStoppingCallbackCallback:
+    """Abstract class for stopping criterion callbacks."""
+
+    @abstractmethod
+    def log(self, smbo: SMBO, min_ubc: float, min_lcb: float, regret: float, statistical_error: float, triggered: bool)\
+            -> None:
+        """Logs the stopping criterion values.
+
+        Parameters
+        ----------
+        smbo : SMBO
+            The SMBO instance.
+        min_ubc : float
+            Minimum upper confidence bound.
+        min_lcb : float
+            Minimum lower confidence bound.
+        regret : float
+            Regret.
+        statistical_error : float
+            Statistical error.
+        triggered : bool
+            Whether the stopping criterion was triggered.
+        """
+        raise NotImplementedError()
+
+
 class StoppingCallback(Callback):
     """Callback implementing the stopping criterion by Makarova et al. (2022) [0].
 
@@ -52,7 +80,9 @@ class StoppingCallback(Callback):
                  n_points_lcb=1000,
                  model_log_transform=True,
                  statistical_error_threshold=None,
-                 statistical_error_field_name='statistical_error'):
+                 statistical_error_field_name='statistical_error',
+                 do_not_trigger=False,
+                 callbacks: list[AbstractStoppingCallbackCallback] = None):
         super().__init__()
         self._upper_bound_estimation_rate = upper_bound_estimation_rate
         self._wait_iterations = wait_iterations
@@ -60,6 +90,8 @@ class StoppingCallback(Callback):
         self._model_log_transform = model_log_transform
         self._statistical_error_threshold = statistical_error_threshold
         self._statistical_error_field_name = statistical_error_field_name
+        self._do_not_trigger = do_not_trigger
+        self._callbacks = callbacks if callbacks is not None else []
 
         self._lcb = LCB(beta=initial_beta, update_beta=update_beta, beta_scaling_srinivas=True)
         self._ucb = UCB(beta=initial_beta, update_beta=update_beta, beta_scaling_srinivas=True)
@@ -75,8 +107,12 @@ class StoppingCallback(Callback):
         incumbent_config = smbo.intensifier.get_incumbent()
         trial_info_list = smbo.runhistory.get_trials(incumbent_config)
 
-        if len(trial_info_list) > 1:
+        if trial_info_list is None or len(trial_info_list) == 0:
+            logger.warn("No trial info for incumbent found. Stopping criterion will not be triggered.")
+            return True
+        elif len(trial_info_list) > 1:
             raise ValueError("Currently, only one trial per config is supported.")
+
         trial_info = trial_info_list[0]
 
         trial_value = smbo.runhistory[TrialKey(config_id=smbo.runhistory.get_config_id(trial_info.config),
@@ -123,6 +159,10 @@ class StoppingCallback(Callback):
 
             # we are stopping once regret < incumbent statistical error (return false = do not continue optimization
             continue_optimization = regret >= incumbent_statistical_error
+
+            for callback in self._callbacks:
+                callback.log(smbo, min_ucb, min_lcb, regret, incumbent_statistical_error, not continue_optimization)
+
             info_str = f'triggered after {len(smbo.runhistory)} evaluations with regret ' \
                        f'~{round(regret, 3)} and incumbent error ~{round(incumbent_statistical_error, 3)}.'
             if not continue_optimization:
@@ -130,10 +170,13 @@ class StoppingCallback(Callback):
             else:
                 logger.debug(f'Stopping criterion not {info_str}')
 
-            return continue_optimization
+            if self._do_not_trigger:
+                return True
+            else:
+                return continue_optimization
 
         else:
-            logger.info("Stopping criterion not triggered as model is not built yet.")
+            logger.debug("Stopping criterion not triggered as model is not built yet.")
             return True
 
     def __str__(self):
