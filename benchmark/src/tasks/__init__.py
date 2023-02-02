@@ -2,6 +2,8 @@ import numpy as np
 from src.datasets.breast_cancer import BreastCancerDataset
 from src.datasets.digits import DigitsDataset
 from src.models.branin import Branin
+from src.models.ac_branin import ACBranin
+from src.datasets.ac_branin import ACBraninDataset
 from src.models.himmelblau import HimmelblauModel
 from src.models.mlp import MLPModel
 from src.models.svm import SVMModel
@@ -39,6 +41,17 @@ TASKS = [
         walltime_limit=60,
         max_config_calls=1,
         n_workers=8,
+    ),
+    Task(
+        name="Branin (AC)",
+        model=ACBranin(ACBraninDataset()),
+        deterministic=True,
+        objectives=["regret"],
+        optimization_type="hpo",
+        n_trials=100,
+        walltime_limit=1720,
+        max_config_calls=1,
+        use_instances=True,
     ),
     ######## Himmelblau ########
     Task(
