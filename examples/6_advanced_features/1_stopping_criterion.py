@@ -53,8 +53,6 @@ scenario = Scenario(configspace, deterministic=True, n_trials=50)
 intensifier = Intensifier(scenario, max_config_calls=1)
 # HPO Facade uses a random forest model with log_y=True, so we also need to transform the target values
 model_log_transform = True
-# Adjust to desired logging level
-logging_level = 0
 
 # Use SMAC to find the best configuration/hyperparameters
 callback = StoppingCallback(
@@ -67,7 +65,6 @@ smac = HyperparameterOptimizationFacade(
     scenario,
     train,
     callbacks=[callback],
-    logging_level=logging_level,
     intensifier=intensifier
 )
 incumbent = smac.optimize()
