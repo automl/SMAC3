@@ -90,10 +90,15 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         n_points: int,
         additional_start_points: list[tuple[float, Configuration]] | None = None,
     ) -> list[tuple[float, Configuration]]:
-        """Start a local search from the given startpoint.
+        """Start a local search from the given startpoints. Iteratively collect neighbours
+        using Configspace.utils.get_one_exchange_neighbourhood and evaluate them.
+        If the new config is better than the current best, the local search is coninued from the
+        new config.
 
         Quit if either the max number of steps is reached or
-        no neighbor with an higher improvement was found.
+        no neighbor with a higher improvement was found or the number of local steps self._n_steps_plateau_walk
+        for each of the starting point is depleted.
+
 
         Parameters
         ----------
@@ -165,7 +170,17 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         Generate a set of initial points from the previous configurations and possibly additional points.
 
         The idea is to decouple runhistory from the local search model and replace it with a more general
-        form (list[Configuration]).
+        form (list[Configuration]). This is useful to more quickly collect new configurations
+        along the iterations, rather than feeding it to the runhistory every time.
+
+        create three lists and concatenate them:
+        1. sorted the previous configs by acquisition value
+        2. sorted the previous configs by marginal predictive costs
+        3. additional start points
+
+        and create a list that carries unique configurations only. Crucially,
+        when reading from left to right, all but the first occurrence of a configuration
+        are dropped.
 
         Parameters
         ----------
@@ -201,12 +216,10 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                 weights = weights / np.sum(weights)
                 costs = costs @ weights
 
-            # From here
+            # From here: make argsort result to be random between equal values
             # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
             random = self._rng.rand(len(costs))
-
-            # Last column is primary sort key!
-            indices = np.lexsort((random.flatten(), costs.flatten()))
+            indices = np.lexsort((random.flatten(), costs.flatten())) # Last column is primary sort key!
 
             # Cannot use zip here because the indices array cannot index the
             # rand_configs list, because the second is a pure python list
@@ -237,6 +250,21 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         start_points: list[Configuration],
     ) -> list[tuple[float, Configuration]]:
         """Optimize the acquisition function.
+
+        Execution:
+        1. Neighbour generation strategy for each of the starting points is according to
+        ConfigSpace.utils.get_one_exchange_neighbourhood.
+        2. Each of the starting points create a local search, that can be active.
+        if it is active, request a neighbour of its neightbourhood and evaluate it.
+        3. Comparing the acquisition function of the neighbors with the acquisition value of the
+        candidate.
+        If it improved, then the candidate is replaced by the neighbor. And this candidate is
+        investigated again with two new neighbours.
+        If it did not improve, it is investigated with twice as many new neighbours
+        (at most self._vectorization_max_obtain neighbours).
+        The local search for a starting point is stopped if the number of evaluations is larger
+        than self._n_steps_plateau_walk.
+
 
         Parameters
         ----------
@@ -286,6 +314,15 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         neighborhood_iterators = []
         for i, inc in enumerate(candidates):
             neighborhood_iterators.append(
+                # get_one_exchange_neighbourhood implementational details:
+                # https://github.com/automl/ConfigSpace/blob/05ab3da2a06c084ba920e8e4e3f62f2e87e81442/ConfigSpace/util.pyx#L95
+                # Return all configurations in a one-exchange neighborhood.
+                #
+                #     The method is implemented as defined by:
+                #     Frank Hutter, Holger H. Hoos and Kevin Leyton-Brown
+                #     Sequential Model-Based Optimization for General Algorithm Configuration
+                #     In Proceedings of the conference on Learning and Intelligent
+                #     Optimization(LION 5)
                 get_one_exchange_neighbourhood(inc, seed=self._rng.randint(low=0, high=100000))
             )
             local_search_steps[i] += 1
