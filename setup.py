@@ -63,7 +63,7 @@ setuptools.setup(
         "scipy>=1.9.2",
         "psutil",
         "pynisher>=1.0.0",
-        "ConfigSpace>=0.6.0",
+        "ConfigSpace>=0.6.1",
         "joblib",
         "scikit-learn>=1.1.2",
         "pyrfr>=0.8.4",
