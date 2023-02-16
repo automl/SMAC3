@@ -57,6 +57,23 @@ If you know how to fix a bug or implement your own feature, follow this small gu
 
 We try to react as fast as possible to your pull request.
 
+## Git-Flow Workflow and Branch-Naming
+
+We aim to approximately follow the [Git-Flow Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow). 
+Thus, the following conventions apply:
+
+Branches are named as follows:
+- `main` The main branch, containing the latest stable release (tagged)
+- `development` The development branch, for merging features and bugfixes in-between releases
+- `release/<version>` Release branches for *preparing* a new release (no new features developed here), 
+   deleted after release
+- `feature/<feature-name>` Feature branches for implementing new functionality, updating existing functionality 
+   or fixing bugs on the development branch
+- `hotfix/<bug-name>` Hotfix branches for fixing bugs in the latest release
+- `support/<version>` Support branches for bugfixes in older releases (e.g., `support/v0.12.x`). New 'old' versions are
+   tagged here.
+- `gh-pages` The branch for the GitHub pages
+
 ## Reporting Security Issues
 
 If you find security related issues, vulnerabilities or bugs including sensitive information, please do *not* report this to the issue tracker, or elsewhere public. Instead, please let us know via security@automl.org
