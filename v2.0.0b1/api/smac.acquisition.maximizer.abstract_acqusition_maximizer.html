@@ -1105,9 +1105,11 @@ incumbent and becoming a candidate for the next function evaluation.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>previous_configs</strong> (<em>list</em><em>[</em><em>Configuration</em><em>]</em>) – Previous evaluated configurations.</p></li>
-<li><p><strong>n_points</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – Number of points to be sampled. If <cite>n_points</cite> is not specified, <cite>self._challengers</cite> is used.</p></li>
-<li><p><strong>random_design</strong> (<a class="reference internal" href="smac.random_design.html#smac.random_design.AbstractRandomDesign" title="smac.random_design.AbstractRandomDesign"><em>AbstractRandomDesign</em></a><em>, </em><em>defaults to None</em>) – Part of the returned ChallengerList such that we can interleave random configurations by a scheme defined by
-the random design. The method <cite>random_design.next_iteration()</cite> is called at the end of this function.</p></li>
+<li><p><strong>n_points</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – Number of points to be sampled. If <cite>n_points</cite> is not specified,
+<cite>self._challengers</cite> is used.</p></li>
+<li><p><strong>random_design</strong> (<a class="reference internal" href="smac.random_design.html#smac.random_design.AbstractRandomDesign" title="smac.random_design.AbstractRandomDesign"><em>AbstractRandomDesign</em></a><em>, </em><em>defaults to None</em>) – Part of the returned ChallengerList such that we can interleave random configurations
+by a scheme defined by the random design. The method <cite>random_design.next_iteration()</cite>
+is called at the end of this function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1122,7 +1124,7 @@ the random design. The method <cite>random_design.next_iteration()</cite> is cal
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.acquisition.maximizer.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer.meta">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.acquisition.maximizer.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer.meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the meta data of the created object.</p>
+<dd><p>Return the meta-data of the created object.</p>
 </dd></dl>
 
 </dd></dl>

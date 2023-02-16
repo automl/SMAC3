@@ -1048,6 +1048,16 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.maximizer.differential_evolution.</span></span><span class="sig-name descname"><span class="pre">DifferentialEvolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">challengers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/maximizer/differential_evolution.html#DifferentialEvolution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.maximizer.differential_evolution.DifferentialEvolution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.maximizer.abstract_acqusition_maximizer.html#smac.acquisition.maximizer.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer" title="smac.acquisition.maximizer.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionMaximizer</span></code></a></p>
 <p>Get candidate solutions via <cite>DifferentialEvolutionSolvers</cite> from scipy.</p>
+<p>According to scipy 1.9.2 documentation:</p>
+<p>‘Finds the global minimum of a multivariate function.
+Differential Evolution is stochastic in nature (does not use gradient methods) to find the minimum,
+and can search large areas of candidate space, but often requires larger numbers of function
+evaluations than conventional gradient-based techniques.
+The algorithm is due to Storn and Price [1].’</p>
+<dl class="simple">
+<dt>[1] Storn, R and Price, K, Differential Evolution - a Simple and Efficient Heuristic for Global</dt><dd><p>Optimization over Continuous Spaces, Journal of Global Optimization, 1997, 11, 341 - 359.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

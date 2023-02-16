@@ -1079,6 +1079,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_incumbent_selection</span> <span class="o">=</span> <span class="n">incumbent_selection</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_highest_observed_budget_only</span> <span class="o">=</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">incumbent_selection</span> <span class="o">==</span> <span class="s2">&quot;any_budget&quot;</span> <span class="k">else</span> <span class="kc">True</span>
 
+        <span class="c1"># Global variables derived from scenario</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_min_budget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">min_budget</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_budget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">max_budget</span>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
         <span class="n">meta</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">meta</span>
@@ -1109,8 +1113,8 @@
 
         <span class="c1"># Budgets, followed by lots of sanity-checking</span>
         <span class="n">eta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eta</span>
-        <span class="n">min_budget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">min_budget</span>
-        <span class="n">max_budget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">max_budget</span>
+        <span class="n">min_budget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_budget</span>
+        <span class="n">max_budget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_budget</span>
 
         <span class="k">if</span> <span class="n">max_budget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">min_budget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">max_budget</span> <span class="o">&lt;</span> <span class="n">min_budget</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Max budget has to be larger than min budget.&quot;</span><span class="p">)</span>

@@ -1000,7 +1000,19 @@
 
 
 <div class="viewcode-block" id="DifferentialEvolution"><a class="viewcode-back" href="../../../../api/smac.acquisition.maximizer.differential_evolution.html#smac.acquisition.maximizer.DifferentialEvolution">[docs]</a><span class="k">class</span> <span class="nc">DifferentialEvolution</span><span class="p">(</span><span class="n">AbstractAcquisitionMaximizer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get candidate solutions via `DifferentialEvolutionSolvers` from scipy.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get candidate solutions via `DifferentialEvolutionSolvers` from scipy.</span>
+
+<span class="sd">    According to scipy 1.9.2 documentation:</span>
+
+<span class="sd">    &#39;Finds the global minimum of a multivariate function.</span>
+<span class="sd">    Differential Evolution is stochastic in nature (does not use gradient methods) to find the minimum,</span>
+<span class="sd">    and can search large areas of candidate space, but often requires larger numbers of function</span>
+<span class="sd">    evaluations than conventional gradient-based techniques.</span>
+<span class="sd">    The algorithm is due to Storn and Price [1].&#39;</span>
+
+<span class="sd">    [1] Storn, R and Price, K, Differential Evolution - a Simple and Efficient Heuristic for Global</span>
+<span class="sd">     Optimization over Continuous Spaces, Journal of Global Optimization, 1997, 11, 341 - 359.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1035,7 +1047,7 @@
         <span class="n">_</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">pop</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">population</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">population_energies</span><span class="p">):</span>
             <span class="n">rc</span> <span class="o">=</span> <span class="n">Configuration</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_configspace</span><span class="p">,</span> <span class="n">vector</span><span class="o">=</span><span class="n">pop</span><span class="p">)</span>
-            <span class="n">rc</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s2">&quot;Differential Evolution&quot;</span>
+            <span class="n">rc</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s2">&quot;Acquisition Function Maximizer: Differential Evolution&quot;</span>
             <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="o">-</span><span class="n">val</span><span class="p">,</span> <span class="n">rc</span><span class="p">))</span>
 
         <span class="n">configs</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>

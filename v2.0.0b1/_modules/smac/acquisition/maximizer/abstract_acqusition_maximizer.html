@@ -1049,7 +1049,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the meta data of the created object.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the meta-data of the created object.&quot;&quot;&quot;</span>
         <span class="n">acquisition_function_meta</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acquisition_function_meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span><span class="o">.</span><span class="n">meta</span>
@@ -1074,10 +1074,12 @@
 <span class="sd">        previous_configs: list[Configuration]</span>
 <span class="sd">            Previous evaluated configurations.</span>
 <span class="sd">        n_points: int, defaults to None</span>
-<span class="sd">            Number of points to be sampled. If `n_points` is not specified, `self._challengers` is used.</span>
+<span class="sd">            Number of points to be sampled. If `n_points` is not specified,</span>
+<span class="sd">            `self._challengers` is used.</span>
 <span class="sd">        random_design: AbstractRandomDesign, defaults to None</span>
-<span class="sd">            Part of the returned ChallengerList such that we can interleave random configurations by a scheme defined by</span>
-<span class="sd">            the random design. The method `random_design.next_iteration()` is called at the end of this function.</span>
+<span class="sd">            Part of the returned ChallengerList such that we can interleave random configurations</span>
+<span class="sd">            by a scheme defined by the random design. The method `random_design.next_iteration()`</span>
+<span class="sd">            is called at the end of this function.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1089,6 +1091,9 @@
 
         <span class="k">def</span> <span class="nf">next_configs_by_acquisition_value</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
             <span class="k">assert</span> <span class="n">n_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="c1"># since maximize returns a tuple of acquisition value and configuration,</span>
+            <span class="c1"># and we only need the configuration, we return the second element of the tuple</span>
+            <span class="c1"># for each element in the list</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maximize</span><span class="p">(</span><span class="n">previous_configs</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)]</span>
 
         <span class="n">challengers</span> <span class="o">=</span> <span class="n">ChallengerList</span><span class="p">(</span>

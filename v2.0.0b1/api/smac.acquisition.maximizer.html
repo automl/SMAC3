@@ -1171,9 +1171,11 @@ incumbent and becoming a candidate for the next function evaluation.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>previous_configs</strong> (<em>list</em><em>[</em><em>Configuration</em><em>]</em>) – Previous evaluated configurations.</p></li>
-<li><p><strong>n_points</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – Number of points to be sampled. If <cite>n_points</cite> is not specified, <cite>self._challengers</cite> is used.</p></li>
-<li><p><strong>random_design</strong> (<a class="reference internal" href="smac.random_design.html#smac.random_design.AbstractRandomDesign" title="smac.random_design.AbstractRandomDesign"><em>AbstractRandomDesign</em></a><em>, </em><em>defaults to None</em>) – Part of the returned ChallengerList such that we can interleave random configurations by a scheme defined by
-the random design. The method <cite>random_design.next_iteration()</cite> is called at the end of this function.</p></li>
+<li><p><strong>n_points</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – Number of points to be sampled. If <cite>n_points</cite> is not specified,
+<cite>self._challengers</cite> is used.</p></li>
+<li><p><strong>random_design</strong> (<a class="reference internal" href="smac.random_design.html#smac.random_design.AbstractRandomDesign" title="smac.random_design.AbstractRandomDesign"><em>AbstractRandomDesign</em></a><em>, </em><em>defaults to None</em>) – Part of the returned ChallengerList such that we can interleave random configurations
+by a scheme defined by the random design. The method <cite>random_design.next_iteration()</cite>
+is called at the end of this function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1188,7 +1190,7 @@ the random design. The method <cite>random_design.next_iteration()</cite> is cal
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.acquisition.maximizer.AbstractAcquisitionMaximizer.meta">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.acquisition.maximizer.AbstractAcquisitionMaximizer.meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the meta data of the created object.</p>
+<dd><p>Return the meta-data of the created object.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1198,6 +1200,16 @@ the random design. The method <cite>random_design.next_iteration()</cite> is cal
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.maximizer.</span></span><span class="sig-name descname"><span class="pre">DifferentialEvolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">challengers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/maximizer/differential_evolution.html#DifferentialEvolution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.maximizer.DifferentialEvolution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.maximizer.abstract_acqusition_maximizer.html#smac.acquisition.maximizer.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer" title="smac.acquisition.maximizer.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionMaximizer</span></code></a></p>
 <p>Get candidate solutions via <cite>DifferentialEvolutionSolvers</cite> from scipy.</p>
+<p>According to scipy 1.9.2 documentation:</p>
+<p>‘Finds the global minimum of a multivariate function.
+Differential Evolution is stochastic in nature (does not use gradient methods) to find the minimum,
+and can search large areas of candidate space, but often requires larger numbers of function
+evaluations than conventional gradient-based techniques.
+The algorithm is due to Storn and Price [1].’</p>
+<dl class="simple">
+<dt>[1] Storn, R and Price, K, Differential Evolution - a Simple and Efficient Heuristic for Global</dt><dd><p>Optimization over Continuous Spaces, Journal of Global Optimization, 1997, 11, 341 - 359.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
@@ -1233,10 +1245,12 @@ version.</p></li>
 <dt class="sig sig-object py" id="smac.acquisition.maximizer.LocalAndSortedRandomSearch">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.maximizer.</span></span><span class="sig-name descname"><span class="pre">LocalAndSortedRandomSearch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">challengers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps_plateau_walk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_search_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/maximizer/local_and_random_search.html#LocalAndSortedRandomSearch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.maximizer.LocalAndSortedRandomSearch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.maximizer.abstract_acqusition_maximizer.html#smac.acquisition.maximizer.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer" title="smac.acquisition.maximizer.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionMaximizer</span></code></a></p>
-<p>Implement SMAC’s default acquisition function optimization.</p>
-<p>This optimizer performs local search from the previous best points according, to the acquisition function, uses the
-acquisition function to sort randomly sampled configurations. Random configurations are interleaved by the main SMAC
-code.</p>
+<p>Implements SMAC’s default acquisition function optimization.</p>
+<p>This optimizer performs local search from the previous best points according, to the acquisition
+function, uses the acquisition function to sort randomly sampled configurations.
+Random configurations are interleaved by the main SMAC code.</p>
+<p>The Random configurations are interleaved to circumvent issues from a constant prediction
+from the Random Forest model at the beginning of the optimization process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1259,7 +1273,7 @@ code.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.acquisition.maximizer.LocalAndSortedRandomSearch.meta">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.acquisition.maximizer.LocalAndSortedRandomSearch.meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the meta data of the created object.</p>
+<dd><p>Return the meta-data of the created object.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1288,7 +1302,7 @@ reduce the overhead of SMAC.</p></li>
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.acquisition.maximizer.LocalSearch.meta">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.acquisition.maximizer.LocalSearch.meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the meta data of the created object.</p>
+<dd><p>Return the meta-data of the created object.</p>
 </dd></dl>
 
 </dd></dl>

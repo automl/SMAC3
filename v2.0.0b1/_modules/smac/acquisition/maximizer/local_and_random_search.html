@@ -1008,11 +1008,14 @@
 
 
 <div class="viewcode-block" id="LocalAndSortedRandomSearch"><a class="viewcode-back" href="../../../../api/smac.acquisition.maximizer.local_and_random_search.html#smac.acquisition.maximizer.LocalAndSortedRandomSearch">[docs]</a><span class="k">class</span> <span class="nc">LocalAndSortedRandomSearch</span><span class="p">(</span><span class="n">AbstractAcquisitionMaximizer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implement SMAC&#39;s default acquisition function optimization.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements SMAC&#39;s default acquisition function optimization.</span>
 
-<span class="sd">    This optimizer performs local search from the previous best points according, to the acquisition function, uses the</span>
-<span class="sd">    acquisition function to sort randomly sampled configurations. Random configurations are interleaved by the main SMAC</span>
-<span class="sd">    code.</span>
+<span class="sd">    This optimizer performs local search from the previous best points according, to the acquisition</span>
+<span class="sd">    function, uses the acquisition function to sort randomly sampled configurations.</span>
+<span class="sd">    Random configurations are interleaved by the main SMAC code.</span>
+
+<span class="sd">    The Random configurations are interleaved to circumvent issues from a constant prediction</span>
+<span class="sd">    from the Random Forest model at the beginning of the optimization process.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>

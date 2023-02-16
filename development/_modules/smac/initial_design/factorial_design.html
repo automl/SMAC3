@@ -1044,7 +1044,7 @@
         <span class="k">for</span> <span class="n">design</span> <span class="ow">in</span> <span class="n">factorial_design</span><span class="p">:</span>
             <span class="n">conf_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">design</span><span class="p">)])</span>
             <span class="n">conf</span> <span class="o">=</span> <span class="n">deactivate_inactive_hyperparameters</span><span class="p">(</span><span class="n">conf_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configspace</span><span class="p">)</span>
-            <span class="n">conf</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s2">&quot;Factorial Initial Design&quot;</span>
+            <span class="n">conf</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s2">&quot;Initial Design: Factorial&quot;</span>
             <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">configs</span></div>
