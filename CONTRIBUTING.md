@@ -53,6 +53,7 @@ If you know how to fix a bug or implement your own feature, follow this small gu
 - Pull request must include tests.
 - We are using the Numpy Style Python Docstrings. Take a look at this [example](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_numpy.html#example-numpy). 
 - The code should follow the PEP8 coding convention.
+- Check that the copyright notice of all files that have been significantly changed includes the current year.
 
 We try to react as fast as possible to your pull request.
 
