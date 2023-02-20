@@ -281,7 +281,7 @@ class MCMCGaussianProcess(BaseModel):
             kernel=self.kernel,
             normalize_y=False,
             optimizer=None,
-            n_restarts_optimizer=-1,  # Do not use scikit-learn's optimization routine
+            n_restarts_optimizer=0,  # Do not use scikit-learn's optimization routine
             alpha=0,  # Governed by the kernel
         )
 
