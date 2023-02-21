@@ -6,8 +6,11 @@ from collections import OrderedDict
 import gpytorch
 import numpy as np
 import torch
-from botorch.optim.numpy_converter import module_to_array, set_params_with_array
-from botorch.optim.utils import _scipy_objective_and_grad
+from botorch.optim.numpy_converter import (
+    module_to_array,
+    set_params_with_array,
+    _scipy_objective_and_grad
+)
 from gpytorch.constraints.constraints import Interval
 from gpytorch.distributions.multivariate_normal import MultivariateNormal
 from gpytorch.kernels import Kernel
