@@ -9,7 +9,6 @@ import torch
 from botorch.optim.numpy_converter import (
     module_to_array,
     set_params_with_array,
-    _scipy_objective_and_grad
 )
 from gpytorch.constraints.constraints import Interval
 from gpytorch.distributions.multivariate_normal import MultivariateNormal
@@ -25,6 +24,17 @@ from scipy import optimize
 from smac.configspace import ConfigurationSpace
 from smac.epm.gaussian_process import BaseModel
 from smac.utils.constants import VERY_SMALL_NUMBER
+
+# Please see https://github.com/automl/SMAC3/issues/924
+# If we can't import it properly, we will fail when the dependant
+# model is created.
+try:
+    from botorch.optim.numpy_convert import _scipy_objective_and_grad
+except ImportError:
+    try:
+        from botorch.optim.utils import _scipy_objective_and_grad
+    except ImportError:
+        _scipy_objective_and_grad = None
 
 warnings.filterwarnings("ignore", module="gpytorch")
 
@@ -107,6 +117,12 @@ class GPyTorchGaussianProcess(BaseModel):
             The number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
             set n_feats (> pca_dims).
         """
+        if _scipy_objective_and_grad is None:
+            raise ImportError(
+                "Could not import _scipy_objective_and_grad from botorch."
+                " Please https://github.com/automl/SMAC3/issues/924."
+                " If this is effecting you, please let us know."
+            )
         super(GPyTorchGaussianProcess, self).__init__(
             configspace,
             types,
