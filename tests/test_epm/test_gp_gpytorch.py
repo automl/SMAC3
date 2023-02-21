@@ -3,7 +3,6 @@ import unittest.mock
 import numpy as np
 import pyro
 import torch
-from botorch.models.kernels.categorical import CategoricalKernel
 from gpytorch.constraints.constraints import Interval
 from gpytorch.kernels import MaternKernel, ProductKernel, ScaleKernel
 from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
@@ -18,6 +17,7 @@ from smac.configspace import (
     UniformFloatHyperparameter,
 )
 from smac.epm.gaussian_process.gpytorch import GPyTorchGaussianProcess
+from smac.epm.gaussian_process.utils.botorch_utils import CategoricalKernel
 
 from .test_gp import TestGP, get_cat_data, get_cont_data
 
