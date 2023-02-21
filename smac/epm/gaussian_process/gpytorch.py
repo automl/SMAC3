@@ -6,6 +6,7 @@ from collections import OrderedDict
 import gpytorch
 import numpy as np
 import torch
+
 from gpytorch.constraints.constraints import Interval
 from gpytorch.distributions.multivariate_normal import MultivariateNormal
 from gpytorch.kernels import Kernel
@@ -107,6 +108,12 @@ class GPyTorchGaussianProcess(BaseModel):
             The number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
             set n_feats (> pca_dims).
         """
+        if _scipy_objective_and_grad is None:
+            raise ImportError(
+                "Could not import _scipy_objective_and_grad from botorch."
+                " Please https://github.com/automl/SMAC3/issues/924."
+                " If this is effecting you, please let us know."
+            )
         super(GPyTorchGaussianProcess, self).__init__(
             configspace,
             types,

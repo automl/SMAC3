@@ -2,6 +2,7 @@
 
 ## Bugfixes
 - Correct handling of integer hyperparameters in the initial design (#531).
+- Pass correct parameter to GaussianProcessRegressor (#921).
 
 
 # 1.4.0
