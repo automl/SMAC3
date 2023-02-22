@@ -6,10 +6,7 @@ from collections import OrderedDict
 import gpytorch
 import numpy as np
 import torch
-from botorch.optim.numpy_converter import (
-    module_to_array,
-    set_params_with_array,
-)
+
 from gpytorch.constraints.constraints import Interval
 from gpytorch.distributions.multivariate_normal import MultivariateNormal
 from gpytorch.kernels import Kernel
@@ -23,18 +20,12 @@ from scipy import optimize
 
 from smac.configspace import ConfigurationSpace
 from smac.epm.gaussian_process import BaseModel
+from smac.epm.gaussian_process.utils.botorch_utils import (
+    module_to_array,
+    set_params_with_array,
+    _scipy_objective_and_grad
+)
 from smac.utils.constants import VERY_SMALL_NUMBER
-
-# Please see https://github.com/automl/SMAC3/issues/924
-# If we can't import it properly, we will fail when the dependant
-# model is created.
-try:
-    from botorch.optim.numpy_convert import _scipy_objective_and_grad
-except ImportError:
-    try:
-        from botorch.optim.utils import _scipy_objective_and_grad
-    except ImportError:
-        _scipy_objective_and_grad = None
 
 warnings.filterwarnings("ignore", module="gpytorch")
 
