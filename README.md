@@ -44,8 +44,7 @@ pip install smac
 Or alternatively, clone the environment:
 ```
 git clone https://github.com/automl/SMAC3.git && cd SMAC3
-pip install -r requirements.txt
-pip install .
+pip install -e .[dev]
 ```
 
 We refer to the [documention](https://automl.github.io/SMAC3) for further installation options.
