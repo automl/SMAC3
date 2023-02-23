@@ -25,7 +25,7 @@ from src.wrappers.v14 import Version14  # noqa: E402
 from src.wrappers.v20 import Version20  # noqa: E402
 from src.wrappers.wrapper import Wrapper  # noqa: E402
 
-SEEDS = [0, 50, 100, 150]
+SEEDS = [0, 50, 100, 150, 200] # , 250, 300, 350, 400, 450]
 WRAPPERS = [Version14, Version20]
 RAW_FILENAME = Path("report/raw.json")
 
@@ -111,7 +111,7 @@ class Benchmark:
 
         self._save_data()
 
-    def _get_mean_std(self, values: list[tuple[list[float], list[float]]]) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def _get_mean_std(self, values: list[tuple[list[float], list[float]]]) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         # First we have to get all x values
         X: list[float] = []
         for x_values, _ in values:
@@ -145,7 +145,7 @@ class Benchmark:
         mean = np.mean(Y_array, axis=1)
         std = np.std(Y_array, axis=1)
 
-        return np.array(X), mean, std
+        return np.array(X), Y_array, mean, std
 
     def run(self) -> None:
         # Get name of the current computer (for comparison purposes)
@@ -204,6 +204,10 @@ class Benchmark:
         self._write_table()
 
     def _plot_trajectory(self) -> None:
+        import seaborn as sns
+        sns.set_style("whitegrid")
+        sns.set_palette("colorblind")
+
         d = self._data[self._computer]
 
         for sort_by in ["trials", "walltime"]:
@@ -223,24 +227,55 @@ class Benchmark:
                 plt.subplot(len_tasks, 1, i + 1)
                 plt.title(task.name)
 
+                df = []
+
                 for version, seeds in d[task.id][traj].items():
-                    X, Y_mean, Y_std = self._get_mean_std(seeds.values())
+                    for seed, (X, Y) in seeds.items():
+                        X = np.array(X)
+                        Y = np.array(Y)
+                        df.append(pd.DataFrame({
+                            "version": [version] * len(X),
+                            "seed": [seed] * len(Y),
+                            "x": X,
+                            "y": Y,
+                        }))
+                        # assert np.all(X[1:] > X[:-1]), f"X not strictly monotonically increasing, {version, seed, X, Y}"
+                        # assert np.all(Y[1:] < Y[:-1]), f"Y not strictly monotonically decreasing, {version, seed, X, Y}"
+                df = pd.concat(df).reset_index(drop=True)
 
-                    plt.plot(X, Y_mean, label=version, linewidth=0.75)
-                    plt.fill_between(X, Y_mean - Y_std, Y_mean + Y_std, alpha=0.25)
-                    # plt.scatter(X, Y_mean, s=3, marker="x")
+                # Fill missing values
+                x_unique = df["x"].unique()
+                new_df = []
+                for gid, gdf in df.groupby(by=["version", "seed"]):
+                    x_missing = list(set(x_unique).difference(set(gdf["x"].unique())))
+                    gdf = pd.concat((gdf, 
+                        pd.DataFrame({
+                            "version": gid[0],
+                            "seed": gid[1],
+                            "x": x_missing,
+                            "y": [np.nan] * len(x_missing),
+                        })
+                    ))
+                    gdf.sort_values(by="x", inplace=True)
+                    gdf.ffill(inplace=True)  # forward fill
+                    new_df.append(gdf)
+                df = pd.concat(new_df).reset_index(drop=True)
 
-                plt.legend()
-                plt.ylabel(objective)
+                ax = sns.lineplot(data=df, x="x", y="y", hue="version", style=None, lw=1)
+                ax.legend()
+                # ax.get_legend().remove()
+
+                # plt.legend()
+                ax.set_ylabel(objective)
 
                 if task.y_log_scale:
-                    plt.yscale("log")
+                    ax.set_yscale("log")
 
                 if task.x_log_scale:
-                    plt.xscale("log")
+                    ax.set_xscale("log")
 
                 if i == len_tasks - 1:
-                    plt.xlabel(sort_by)
+                    ax.set_xlabel(sort_by)
 
                 i += 1
 
@@ -275,7 +310,7 @@ class Benchmark:
                     continue
 
                 values = d[task.id]["trajectory_walltime"][version].values()
-                X, Y_mean, Y_std = self._get_mean_std(values)
+                X, Y_array, Y_mean, Y_std = self._get_mean_std(values)
                 data[f"{version} (cost / time)"].append(
                     f"{round(Y_mean[-1], 2)} +- {round(Y_std[-1], 2)} / {round(X[-1], 2)}"
                 )
