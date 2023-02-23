@@ -9,12 +9,14 @@ on:
     branches:
       - main
       - development
+      - v1.4
 
   # Trigger on a open/push to a PR targeting one of these branches
   pull_request:
     branches:
       - main
       - development
+      - v1.4
 
 jobs:
   ubuntu:
