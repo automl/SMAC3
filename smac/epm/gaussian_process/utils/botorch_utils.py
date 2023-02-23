@@ -5,7 +5,7 @@ https://github.com/pytorch/botorch
 The idea is to have a vendored version of BoTorch functions that does not lead to consistent issues with dependencies
 related issue: https://github.com/automl/SMAC3/issues/924
 """
-from typing import Dict, List, NamedTuple, Optional, Set, Tuple, Union
+from typing import Any, Dict, List, NamedTuple, Optional, Set, Tuple, Union
 
 from collections import OrderedDict
 from math import inf
@@ -21,7 +21,7 @@ from gpytorch.utils.errors import NanError
 from torch.nn import Module
 from torch.optim import Optimizer
 
-ParameterBounds = Dict[str, Tuple[Optional[float], Optional[float]]]
+ParameterBounds = Dict[str, Tuple[Optional[Union[float, torch.Tensor]], Optional[Union[float, torch.Tensor]]]]
 
 
 class CategoricalKernel(Kernel):
@@ -43,7 +43,7 @@ class CategoricalKernel(Kernel):
         x2: torch.Tensor,
         diag: bool = False,
         last_dim_is_batch: bool = False,
-        **kwargs,
+        **kwargs: Any,
     ) -> torch.Tensor:
         """Compute the covariance between x1 and x2.
 
@@ -128,7 +128,7 @@ def module_to_array(
     # get bounds specified in model (if any)
     bounds_: ParameterBounds = {}
     if hasattr(module, "named_parameters_and_constraints"):
-        for param_name, _, constraint in module.named_parameters_and_constraints():
+        for param_name, _, constraint in module.named_parameters_and_constraints():  # type: ignore[operator]
             if constraint is not None and not constraint.enforced:
                 bounds_[param_name] = constraint.lower_bound, constraint.upper_bound
 
@@ -144,9 +144,9 @@ def module_to_array(
             if bounds_:
                 l_, u_ = bounds_.get(p_name, (-inf, inf))
                 if torch.is_tensor(l_):
-                    l_ = l_.cpu().detach()
+                    l_ = l_.cpu().detach()  # type: ignore[union-attr]
                 if torch.is_tensor(u_):
-                    u_ = u_.cpu().detach()
+                    u_ = u_.cpu().detach()  # type: ignore[union-attr]
                 # check for Nones here b/c it may be passed in manually in bounds
                 lower.append(np.full(t.nelement(), l_ if l_ is not None else -inf))
                 upper.append(np.full(t.nelement(), u_ if u_ is not None else inf))
@@ -200,7 +200,7 @@ def set_params_with_array(module: Module, x: np.ndarray, property_dict: Dict[str
 
 def _get_extra_mll_args(
     mll: MarginalLogLikelihood,
-) -> Union[List[torch.Tensor], List[List[torch.Tensor]]]:
+) -> Union[List[torch.Tensor], List[List[torch.Tensor]], List]:
     r"""Obtain extra arguments for MarginalLogLikelihood objects.
 
     Get extra arguments (beyond the model output and training targets) required

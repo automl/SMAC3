@@ -382,7 +382,7 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
                 # set inducing points for covariance module here
                 self.gp_model.set_augment_module(X_inducing)
         else:
-            self.hypers, self.property_dict, _ = module_to_array(module=self.gp)
+            self.hypers, self.property_dict, _ = module_to_array(module=self.gp)  # type: ignore[assignment]
 
         self.is_trained = True
         return self
