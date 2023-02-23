@@ -3,8 +3,8 @@
 # If things break on update, raise an issue
 
 repos:
-  - repo: https://github.com/pycqa/isort
-    rev: 5.10.1
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.12.0
     hooks:
       - id: isort
         name: isort smac
@@ -37,7 +37,7 @@ repos:
         exclude: "scripts|tests"
 
   - repo: https://github.com/PyCQA/flake8
-    rev: 5.0.4
+    rev: 6.0.0
     hooks:
       - id: flake8
         name: flake8 smac
