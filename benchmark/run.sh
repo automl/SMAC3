@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Env name
+ENVNAME=smac
+
 # Declare the old versions here
 declare -a versions=("1.4.0")
 
@@ -21,8 +24,8 @@ do
 done
 
 # Benchmark the current version
-conda run -n SMAC pip install -r requirements.txt
-conda run --no-capture-output -n SMAC python src/benchmark.py
+conda run -n ${ENVNAME} pip install -r requirements.txt
+conda run --no-capture-output -n ${ENVNAME} python src/benchmark.py
 
 # Clean-up
 rm -rf smac3-output*
