@@ -48,9 +48,9 @@ TASKS = [
         deterministic=True,
         objectives=["regret"],
         optimization_type="ac",
-        n_trials=100,
+        n_trials=300,
         walltime_limit=1720,
-        max_config_calls=1,
+        max_config_calls=10000,
         use_instances=True,
     ),
     ######## Himmelblau ########
