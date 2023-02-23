@@ -47,34 +47,32 @@ mean accuracy and run-time of each configuration.
     [INFO][abstract_intensifier.py:493] Added config 97ef22 as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:573] Config f88a6b is a new incumbent. Total number of incumbents: 2.
     [INFO][abstract_intensifier.py:573] Config d77b40 is a new incumbent. Total number of incumbents: 3.
-    [INFO][abstract_intensifier.py:565] Added config 9b71f8 and rejected config f88a6b as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][configspace.py:175] --- batch_size: 77 -> 153
-    [INFO][configspace.py:175] --- learning_rate_init: 0.000534923804864797 -> 0.0013375774087092183
-    [INFO][configspace.py:175] --- n_neurons: 146 -> 163
-    [INFO][abstract_intensifier.py:565] Added config 62aa1a and rejected config d77b40 as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][configspace.py:175] --- activation: 'logistic' -> 'tanh'
-    [INFO][configspace.py:175] --- batch_size: 175 -> 192
-    [INFO][configspace.py:175] --- learning_rate_init: 0.004156370184967407 -> 0.014582086129306586
-    [INFO][configspace.py:175] --- n_layer: 2 -> 1
-    [INFO][configspace.py:175] --- n_neurons: 90 -> 183
-    [INFO][abstract_intensifier.py:573] Config ef9d9d is a new incumbent. Total number of incumbents: 4.
-    [INFO][abstract_intensifier.py:573] Config 446ce2 is a new incumbent. Total number of incumbents: 5.
-    [INFO][abstract_intensifier.py:565] Added config 823a54 and rejected config b3abd5 as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][configspace.py:175] --- activation: 'relu' -> 'tanh'
-    [INFO][configspace.py:175] --- batch_size: 257 -> 270
-    [INFO][configspace.py:175] --- learning_rate_init: 0.012346846781958942 -> 0.012702954333050409
-    [INFO][configspace.py:175] --- n_neurons: 166 -> 158
+    [INFO][abstract_intensifier.py:573] Config 377e01 is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:573] Config 5a1d77 is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:573] Config d810f4 is a new incumbent. Total number of incumbents: 5.
+    [INFO][abstract_intensifier.py:573] Config c00fa1 is a new incumbent. Total number of incumbents: 6.
+    [INFO][abstract_intensifier.py:573] Config e05fd9 is a new incumbent. Total number of incumbents: 7.
+    [INFO][abstract_intensifier.py:565] Added config 959ac9 and rejected config c00fa1 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][configspace.py:175] --- batch_size: 217 -> 232
+    [INFO][configspace.py:175] --- learning_rate_init: 0.0007851686755781114 -> 0.0007887288192267715
+    [INFO][configspace.py:175] --- n_neurons: 118 -> 128
+    [INFO][abstract_intensifier.py:573] Config 73c142 is a new incumbent. Total number of incumbents: 8.
     [INFO][smbo.py:306] Configuration budget is exhausted:
-    [INFO][smbo.py:307] --- Remaining wallclock time: -1.7685346603393555
+    [INFO][smbo.py:307] --- Remaining wallclock time: -0.4582545757293701
     [INFO][smbo.py:308] --- Remaining cpu time: inf
-    [INFO][smbo.py:309] --- Remaining trials: 167
+    [INFO][smbo.py:309] --- Remaining trials: 158
     Validated costs from default config: 
-    --- [0.60155834 0.22255611]
+    --- [0.60155834 0.2034831 ]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.88924791 0.29129887]
-    --- [0.02922083 0.61889708]
-    --- [0.03144615 0.53900754]
+    --- [0.88924791 0.24235952]
+    --- [0.09516713 0.4372555 ]
+    --- [0.03032885 0.52273977]
+    --- [0.02643841 0.52292824]
+    --- [0.02421154 0.5353061 ]
+    --- [0.09572501 0.44273186]
+    --- [0.23456979 0.4951638 ]
+    --- [0.24430207 0.40747809]
 
 
 
@@ -255,7 +253,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  35.308 seconds)
+   **Total running time of the script:** ( 0 minutes  38.275 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:

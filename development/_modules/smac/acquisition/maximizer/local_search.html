@@ -1208,7 +1208,7 @@
             <span class="c1"># From here: make argsort result to be random between equal values</span>
             <span class="c1"># http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values</span>
             <span class="n">random</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">costs</span><span class="p">))</span>
-            <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">lexsort</span><span class="p">((</span><span class="n">random</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">costs</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span> <span class="c1"># Last column is primary sort key!</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">lexsort</span><span class="p">((</span><span class="n">random</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">costs</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span>  <span class="c1"># Last column is primary sort key!</span>
 
             <span class="c1"># Cannot use zip here because the indices array cannot index the</span>
             <span class="c1"># rand_configs list, because the second is a pure python list</span>
