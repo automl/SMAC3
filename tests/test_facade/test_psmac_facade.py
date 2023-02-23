@@ -1,5 +1,5 @@
-import os
 import glob
+import os
 import shutil
 import unittest
 from contextlib import suppress
@@ -35,6 +35,7 @@ class TestPSMACFacade(unittest.TestCase):
     @patch("smac.facade.smac_ac_facade.SMBO", new=MockSMBO)
     def test_psmac(self):
         import joblib
+
         from smac.facade.psmac_facade import PSMAC
         from smac.facade.smac_ac_facade import SMAC4AC
         from smac.facade.smac_bb_facade import SMAC4BB

@@ -6,7 +6,6 @@ from collections import OrderedDict
 import gpytorch
 import numpy as np
 import torch
-
 from gpytorch.constraints.constraints import Interval
 from gpytorch.distributions.multivariate_normal import MultivariateNormal
 from gpytorch.kernels import Kernel
@@ -21,9 +20,9 @@ from scipy import optimize
 from smac.configspace import ConfigurationSpace
 from smac.epm.gaussian_process import BaseModel
 from smac.epm.gaussian_process.utils.botorch_utils import (
+    _scipy_objective_and_grad,
     module_to_array,
     set_params_with_array,
-    _scipy_objective_and_grad
 )
 from smac.utils.constants import VERY_SMALL_NUMBER
 

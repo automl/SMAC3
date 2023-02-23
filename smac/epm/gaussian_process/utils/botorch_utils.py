@@ -5,21 +5,21 @@ https://github.com/pytorch/botorch
 The idea is to have a vendored version of BoTorch functions that does not lead to consistent issues with dependencies
 related issue: https://github.com/automl/SMAC3/issues/924
 """
-from collections import OrderedDict
-from math import inf
 from typing import Dict, List, NamedTuple, Optional, Set, Tuple, Union
 
+from collections import OrderedDict
+from math import inf
+
+import numpy as np
+import torch
 from gpytorch import module
 from gpytorch.kernels import Kernel
 from gpytorch.mlls.exact_marginal_log_likelihood import ExactMarginalLogLikelihood
 from gpytorch.mlls.marginal_log_likelihood import MarginalLogLikelihood
 from gpytorch.mlls.sum_marginal_log_likelihood import SumMarginalLogLikelihood
-from torch.optim import Optimizer
 from gpytorch.utils.errors import NanError
-
-import numpy as np
-import torch
 from torch.nn import Module
+from torch.optim import Optimizer
 
 ParameterBounds = Dict[str, Tuple[Optional[float], Optional[float]]]
 
@@ -38,12 +38,12 @@ class CategoricalKernel(Kernel):
     has_lengthscale = True
 
     def forward(
-            self,
-            x1: torch.Tensor,
-            x2: torch.Tensor,
-            diag: bool = False,
-            last_dim_is_batch: bool = False,
-            **kwargs,
+        self,
+        x1: torch.Tensor,
+        x2: torch.Tensor,
+        diag: bool = False,
+        last_dim_is_batch: bool = False,
+        **kwargs,
     ) -> torch.Tensor:
         delta = x1.unsqueeze(-2) != x2.unsqueeze(-3)
         dists = delta / self.lengthscale.unsqueeze(-2)
@@ -64,9 +64,9 @@ class TorchAttr(NamedTuple):
 
 
 def module_to_array(
-        module: Module,
-        bounds: Optional[ParameterBounds] = None,
-        exclude: Optional[Set[str]] = None,
+    module: Module,
+    bounds: Optional[ParameterBounds] = None,
+    exclude: Optional[Set[str]] = None,
 ) -> Tuple[np.ndarray, Dict[str, TorchAttr], Optional[np.ndarray]]:
     r"""Extract named parameters from a module into a numpy array.
 
@@ -112,9 +112,7 @@ def module_to_array(
 
     for p_name, t in module.named_parameters():
         if p_name not in exclude and t.requires_grad:
-            property_dict[p_name] = TorchAttr(
-                shape=t.shape, dtype=t.dtype, device=t.device
-            )
+            property_dict[p_name] = TorchAttr(shape=t.shape, dtype=t.dtype, device=t.device)
             x.append(t.detach().view(-1).cpu().double().clone().numpy())
             # construct bounds
             if bounds_:
@@ -135,9 +133,7 @@ def module_to_array(
     return x_out, property_dict, bounds_out
 
 
-def set_params_with_array(
-        module: Module, x: np.ndarray, property_dict: Dict[str, TorchAttr]
-) -> Module:
+def set_params_with_array(module: Module, x: np.ndarray, property_dict: Dict[str, TorchAttr]) -> Module:
     r"""Set module parameters with values from numpy array.
 
     Args:
@@ -161,14 +157,10 @@ def set_params_with_array(
         # Construct the new tensor
         if len(attrs.shape) == 0:  # deal with scalar tensors
             end_idx = start_idx + 1
-            new_data = torch.tensor(
-                x[start_idx], dtype=attrs.dtype, device=attrs.device
-            )
+            new_data = torch.tensor(x[start_idx], dtype=attrs.dtype, device=attrs.device)
         else:
             end_idx = start_idx + np.prod(attrs.shape)
-            new_data = torch.tensor(
-                x[start_idx:end_idx], dtype=attrs.dtype, device=attrs.device
-            ).view(*attrs.shape)
+            new_data = torch.tensor(x[start_idx:end_idx], dtype=attrs.dtype, device=attrs.device).view(*attrs.shape)
         start_idx = end_idx
         # Update corresponding parameter in-place. Disable autograd to update.
         param_dict[p_name].requires_grad_(False)
@@ -178,7 +170,7 @@ def set_params_with_array(
 
 
 def _get_extra_mll_args(
-        mll: MarginalLogLikelihood,
+    mll: MarginalLogLikelihood,
 ) -> Union[List[torch.Tensor], List[List[torch.Tensor]]]:
     r"""Obtain extra arguments for MarginalLogLikelihood objects.
 
@@ -200,12 +192,12 @@ def _get_extra_mll_args(
 
 
 def _scipy_objective_and_grad(
-        x: np.ndarray,
-        mll: module,
-        property_dict: Dict,
-        train_inputs: Optional[torch.Tensor] = None,
-        train_targets: Optional[torch.Tensor] = None,
-        variational_optimizer: Optional[Optimizer] = None
+    x: np.ndarray,
+    mll: module,
+    property_dict: Dict,
+    train_inputs: Optional[torch.Tensor] = None,
+    train_targets: Optional[torch.Tensor] = None,
+    variational_optimizer: Optional[Optimizer] = None,
 ) -> Tuple[float, np.ndarray]:
     """
     A modification of from botorch.optim.utils._scipy_objective_and_grad, the key difference is that

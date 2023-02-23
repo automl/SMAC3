@@ -3,7 +3,6 @@ import logging
 import os
 import tempfile
 import unittest.mock
-import json
 from unittest.mock import patch
 
 from smac.configspace import (
@@ -16,9 +15,8 @@ from smac.configspace import (
 )
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.utils.io.traj_logging import TrajEntry, TrajLogger
-
 from smac.utils.io.result_merging import ResultMerger
+from smac.utils.io.traj_logging import TrajEntry, TrajLogger
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

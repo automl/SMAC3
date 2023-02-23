@@ -1,7 +1,7 @@
 from typing import Dict, List, Optional, Tuple, Union
 
-from functools import partial
 from collections import OrderedDict
+from functools import partial
 
 import gpytorch
 import numpy as np
@@ -21,10 +21,10 @@ from smac.configspace import ConfigurationSpace
 from smac.epm.gaussian_process.gpytorch import ExactGPModel, GPyTorchGaussianProcess
 from smac.epm.gaussian_process.kernels.boing import FITCKernel, FITCMean
 from smac.epm.gaussian_process.utils.botorch_utils import (
+    _get_extra_mll_args,
+    _scipy_objective_and_grad,
     module_to_array,
     set_params_with_array,
-    _get_extra_mll_args,
-    _scipy_objective_and_grad
 )
 from smac.epm.utils import check_subspace_points
 
@@ -356,7 +356,7 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
                         theta, f_opt, res_dict = optimize.fmin_l_bfgs_b(
                             partial(_scipy_objective_and_grad, variational_optimizer=variational_ngd_optimizer),
                             start_point,
-                            args=(var_mll, property_dict, (X_out_, ), y_out_),
+                            args=(var_mll, property_dict, (X_out_,), y_out_),
                             bounds=bounds,
                             maxiter=50,
                         )
