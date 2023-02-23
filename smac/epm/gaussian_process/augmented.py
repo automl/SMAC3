@@ -1,6 +1,5 @@
 from typing import Dict, List, Optional, Tuple, Union
 
-from collections import OrderedDict
 from functools import partial
 
 import gpytorch
@@ -13,7 +12,6 @@ from gpytorch.likelihoods import GaussianLikelihood
 from gpytorch.means import ZeroMean
 from gpytorch.mlls import ExactMarginalLogLikelihood
 from gpytorch.models import ExactGP
-from gpytorch.utils.errors import NanError
 from scipy import optimize
 from scipy.stats.qmc import LatinHypercube
 
@@ -21,7 +19,6 @@ from smac.configspace import ConfigurationSpace
 from smac.epm.gaussian_process.gpytorch import ExactGPModel, GPyTorchGaussianProcess
 from smac.epm.gaussian_process.kernels.boing import FITCKernel, FITCMean
 from smac.epm.gaussian_process.utils.botorch_utils import (
-    _get_extra_mll_args,
     _scipy_objective_and_grad,
     module_to_array,
     set_params_with_array,
