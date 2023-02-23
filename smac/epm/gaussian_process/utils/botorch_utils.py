@@ -45,6 +45,29 @@ class CategoricalKernel(Kernel):
         last_dim_is_batch: bool = False,
         **kwargs,
     ) -> torch.Tensor:
+        """Compute the covariance between x1 and x2.
+
+        Parameters
+        ----------
+        x1 : torch.Tensor
+            First set of data, `n x d` or `b x n x d`
+        x2 : torch.Tensor
+            Second set of data, `m x d` or `b x m x d`
+        diag : bool, optional
+            Should the Kernel compute the whole kernel, or just the diag?, by default False
+        last_dim_is_batch : bool, optional
+            If this is true, it treats the last dimension of the data as another batch dimension.
+            (Useful for additive structure over the dimensions), by default False
+
+        Returns
+        -------
+        torch.Tensor | :class:`~linear_operator.operators.LinearOperator`
+            The exact size depends on the kernel's evaluation mode:
+
+            * `full_covar`: `n x m` or `b x n x m`
+            * `full_covar` with `last_dim_is_batch=True`: `k x n x m` or `b x k x n x m`
+            * `diag`: `n` or `b x n`
+        """
         delta = x1.unsqueeze(-2) != x2.unsqueeze(-3)
         dists = delta / self.lengthscale.unsqueeze(-2)
         if last_dim_is_batch:
@@ -72,7 +95,8 @@ def module_to_array(
 
     Only extracts parameters with requires_grad, since it is meant for optimizing.
 
-    Args:
+    Parameters
+    ----------
         module: A module with parameters. May specify parameter constraints in
             a `named_parameters_and_constraints` method.
         bounds: A ParameterBounds dictionary mapping parameter names to tuples
@@ -81,7 +105,8 @@ def module_to_array(
             registered with the module.
         exclude: A list of parameter names that are to be excluded from extraction.
 
-    Returns:
+    Returns
+    -------
         3-element tuple containing
         - The parameter values as a numpy array.
         - An ordered dictionary with the name and tensor attributes of each
@@ -89,7 +114,8 @@ def module_to_array(
         - A `2 x n_params` numpy array with lower and upper bounds if at least
         one constraint is finite, and None otherwise.
 
-    Example:
+    Example
+    -------
         >>> mll = ExactMarginalLogLikelihood(model.likelihood, model)
         >>> parameter_array, property_dict, bounds_out = module_to_array(mll)
     """
@@ -136,16 +162,19 @@ def module_to_array(
 def set_params_with_array(module: Module, x: np.ndarray, property_dict: Dict[str, TorchAttr]) -> Module:
     r"""Set module parameters with values from numpy array.
 
-    Args:
+    Parameters
+    ----------
         module: Module with parameters to be set
         x: Numpy array with parameter values
         property_dict: Dictionary of parameter names and torch attributes as
             returned by module_to_array.
 
-    Returns:
+    Returns
+    -------
         Module: module with parameters updated in-place.
 
-    Example:
+    Example
+    -------
         >>> mll = ExactMarginalLogLikelihood(model.likelihood, model)
         >>> parameter_array, property_dict, bounds_out = module_to_array(mll)
         >>> parameter_array += 0.1  # perturb parameters (for example only)
@@ -177,10 +206,12 @@ def _get_extra_mll_args(
     Get extra arguments (beyond the model output and training targets) required
     for the particular type of MarginalLogLikelihood for a forward pass.
 
-    Args:
+    Parameters
+    ----------
         mll: The MarginalLogLikelihood module.
 
-    Returns:
+    Returns
+    -------
         Extra arguments for the MarginalLogLikelihood.
         Returns an empty list if the mll type is unknown.
     """
