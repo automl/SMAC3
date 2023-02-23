@@ -2,10 +2,9 @@
 # Click the repo and update to latest tags.
 # If things break on update, raise an issue
 
-
 repos:
-  - repo: https://github.com/pycqa/isort
-    rev: 5.10.1
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.12.0
     hooks:
       - id: isort
         name: isort smac
@@ -35,13 +34,12 @@ repos:
       - id: mypy
         name: mypy smac
         files: smac
-        exclude: "scripts|tests|smac/utils/dependencies.py|smac/__init__.py"
+        exclude: "scripts|tests"
 
-  - repo: https://gitlab.com/pycqa/flake8
-    rev: 4.0.1
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.0.0
     hooks:
       - id: flake8
         name: flake8 smac
         files: smac
         exclude: "scripts|tests"
-
