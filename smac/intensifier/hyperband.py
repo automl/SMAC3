@@ -25,7 +25,7 @@ class Hyperband(SuccessiveHalving):
         eta = self._eta
 
         # The only difference we have to do is change max_iterations, n_configs_in_stage, budgets_in_stage
-        s_max = int(np.floor(np.log(max_budget / min_budget) / np.log(eta)))
+        s_max = int(np.floor(np.log(max_budget / min_budget) / np.log(eta)))  # type: ignore[operator]
 
         max_iterations: dict[int, int] = {}
         n_configs_in_stage: dict[int, list] = {}
