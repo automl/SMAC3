@@ -11,7 +11,7 @@ for version in "${versions[@]}"
 do
     # Setup environment
     conda env remove -n SMACBench
-    conda create -n SMACBench python=3.9 -y
+    conda create -n SMACBench python=3.10 -y
     conda run -n SMACBench pip install smac==$version
     conda run -n SMACBench pip install -r requirements.txt
 
