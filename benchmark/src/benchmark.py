@@ -216,9 +216,62 @@ class Benchmark:
             traj = f"trajectory_{sort_by}"
             filename = Path(f"report/{traj}.png")
 
+            
+
+            # Collect data
+            df = []
+            for task in TASKS:
+                objective = d[task.id]["objective"]
+                
+                for version, seeds in d[task.id][traj].items():
+                    for seed, (X, Y) in seeds.items():
+                        X = np.array(X)
+                        Y = np.array(Y)
+                        df.append(pd.DataFrame({
+                            "task": task.name,
+                            "objective": objective,
+                            "version": [version] * len(X),
+                            "seed": [seed] * len(Y),
+                            "x": X,
+                            "y": Y,
+                        }))
+                        # assert np.all(X[1:] > X[:-1]), f"X not strictly monotonically increasing, {version, seed, X, Y}"
+                        # assert np.all(Y[1:] < Y[:-1]), f"Y not strictly monotonically decreasing, {version, seed, X, Y}"
+            plot_df = pd.concat(df).reset_index(drop=True)
+
+            # Fill missing values
+            
+            # new_df = []
+            # for group_id, group_df in df.groupby(by="task"):
+            #     x_unique = group_df["x"].unique()
+            #     for gid, gdf in df.groupby(by=["task", "version", "seed"]):
+            #         x_missing = list(set(x_unique).difference(set(gdf["x"].unique())))
+            #         gdf = pd.concat((gdf, 
+            #             pd.DataFrame({
+            #                 "task": gid[0],
+            #                 "version": gid[1],
+            #                 "seed": gid[2],
+            #                 "x": x_missing,
+            #                 "y": [np.nan] * len(x_missing),
+            #             })
+            #         ))
+            #         gdf.sort_values(by="x", inplace=True)
+            #         gdf.ffill(inplace=True)  # forward fill
+            #         new_df.append(gdf)
+            # df = pd.concat(new_df).reset_index(drop=True)
+
+            # grid = sns.FacetGrid(data=df, row="task", hue="version", sharex=False, sharey=False)
+            # grid.map_dataframe(sns.lineplot, x="x", y="y")
+            # grid.set_ylabels(objective)
+            # grid.set_titles(row_template="{row_name}")
+            # grid.tight_layout()
+
+            # Plot
             plt.figure(rows=len_tasks)
             plt.tight_layout()
             plt.subplots_adjust(wspace=0.6)
+
+            hue_order = list(plot_df["version"].unique())
 
             i = 0
             for task in TASKS:
@@ -227,21 +280,7 @@ class Benchmark:
                 plt.subplot(len_tasks, 1, i + 1)
                 plt.title(task.name)
 
-                df = []
-
-                for version, seeds in d[task.id][traj].items():
-                    for seed, (X, Y) in seeds.items():
-                        X = np.array(X)
-                        Y = np.array(Y)
-                        df.append(pd.DataFrame({
-                            "version": [version] * len(X),
-                            "seed": [seed] * len(Y),
-                            "x": X,
-                            "y": Y,
-                        }))
-                        # assert np.all(X[1:] > X[:-1]), f"X not strictly monotonically increasing, {version, seed, X, Y}"
-                        # assert np.all(Y[1:] < Y[:-1]), f"Y not strictly monotonically decreasing, {version, seed, X, Y}"
-                df = pd.concat(df).reset_index(drop=True)
+                df = plot_df[plot_df["task"] == task.name]
 
                 # Fill missing values
                 x_unique = df["x"].unique()
@@ -261,7 +300,7 @@ class Benchmark:
                     new_df.append(gdf)
                 df = pd.concat(new_df).reset_index(drop=True)
 
-                ax = sns.lineplot(data=df, x="x", y="y", hue="version", style=None, lw=1)
+                ax = sns.lineplot(data=df, x="x", y="y", hue="version", style=None, lw=1, hue_order=hue_order)
                 ax.legend()
                 # ax.get_legend().remove()
 
@@ -278,6 +317,73 @@ class Benchmark:
                     ax.set_xlabel(sort_by)
 
                 i += 1
+
+
+
+            # Plot
+            # plt.figure(rows=len_tasks)
+            # plt.tight_layout()
+            # plt.subplots_adjust(wspace=0.6)
+
+            # i = 0
+            # for task in TASKS:
+            #     objective = d[task.id]["objective"]
+
+            #     plt.subplot(len_tasks, 1, i + 1)
+            #     plt.title(task.name)
+
+            #     df = []
+
+            #     for version, seeds in d[task.id][traj].items():
+            #         for seed, (X, Y) in seeds.items():
+            #             X = np.array(X)
+            #             Y = np.array(Y)
+            #             df.append(pd.DataFrame({
+            #                 "task": task.id,
+            #                 "version": [version] * len(X),
+            #                 "seed": [seed] * len(Y),
+            #                 "x": X,
+            #                 "y": Y,
+            #             }))
+            #             # assert np.all(X[1:] > X[:-1]), f"X not strictly monotonically increasing, {version, seed, X, Y}"
+            #             # assert np.all(Y[1:] < Y[:-1]), f"Y not strictly monotonically decreasing, {version, seed, X, Y}"
+            #     df = pd.concat(df).reset_index(drop=True)
+
+            #     # Fill missing values
+            #     x_unique = df["x"].unique()
+            #     new_df = []
+            #     for gid, gdf in df.groupby(by=["version", "seed"]):
+            #         x_missing = list(set(x_unique).difference(set(gdf["x"].unique())))
+            #         gdf = pd.concat((gdf, 
+            #             pd.DataFrame({
+            #                 "version": gid[0],
+            #                 "seed": gid[1],
+            #                 "x": x_missing,
+            #                 "y": [np.nan] * len(x_missing),
+            #             })
+            #         ))
+            #         gdf.sort_values(by="x", inplace=True)
+            #         gdf.ffill(inplace=True)  # forward fill
+            #         new_df.append(gdf)
+            #     df = pd.concat(new_df).reset_index(drop=True)
+
+            #     ax = sns.lineplot(data=df, x="x", y="y", hue="version", style=None, lw=1)
+            #     ax.legend()
+            #     # ax.get_legend().remove()
+
+            #     # plt.legend()
+            #     ax.set_ylabel(objective)
+
+            #     if task.y_log_scale:
+            #         ax.set_yscale("log")
+
+            #     if task.x_log_scale:
+            #         ax.set_xscale("log")
+
+            #     if i == len_tasks - 1:
+            #         ax.set_xlabel(sort_by)
+
+            #     i += 1
 
             plt.save_figure(str(filename))
 
