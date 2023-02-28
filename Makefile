@@ -1,8 +1,11 @@
 # These have been configured to only really run short tasks. Longer form tasks
 # are usually completed in github actions.
 
+SHELL := /bin/bash
+
 NAME := SMAC3
 PACKAGE_NAME := smac
+VERSION := 2.0.0b1
 
 DIR := "${CURDIR}"
 SOURCE_DIR := ${PACKAGE_NAME}
@@ -141,7 +144,7 @@ publish: clean build
 	@echo "Test with the following:"
 	@echo "* Create a new virtual environment to install the uplaoded distribution into"
 	@echo "* Run the following:"
-	@echo "--- pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ ${NAME}"
+	@echo "--- pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ ${PACKAGE_NAME}==${VERSION}"
 	@echo
 	@echo "* Run this to make sure it can import correctly, plus whatever else you'd like to test:"
 	@echo "--- python -c 'import ${PACKAGE_NAME}'"
