@@ -1130,6 +1130,7 @@ class SuccessiveHalving(ParallelScheduler):
     Supplementary reference: http://proceedings.mlr.press/v80/falkner18a/falkner18a-supp.pdf
 
     Successive Halving intensifier (and Hyperband) can operate on two kinds of budgets:
+
     1. **'Instances' as budget**:
         When multiple instances are provided or when run objective is "runtime", this is the criterion used as budget
         for successive halving iterations i.e., the budget determines how many instances the challengers are evaluated

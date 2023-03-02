@@ -48,8 +48,8 @@ class AbstractTAFunc(SerialRunner):
     use_pynisher: bool
         use pynisher to limit resources;
         if disabled
-          * TA func can use as many resources
-          as it wants (time and memory) --- use with caution
+
+          * TA func can use as many resources as it wants (time and memory) --- use with caution
           * all runs will be returned as SUCCESS if returned value is not None
 
     Attributes

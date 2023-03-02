@@ -85,6 +85,7 @@ class MultiObjectiveEPM(BaseEPM):
     ) -> List[BaseEPM]:
         """
         Construct a list of estimators. The number of the estimators equals 'self.num_targets'
+
         Parameters
         ----------
         configspace : ConfigurationSpace
