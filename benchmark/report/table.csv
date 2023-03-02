@@ -1,4 +1,4 @@
-tasks,n_trials,walltime,instances,1.4.0 (cost / time),2.0.0b1 (cost / time)
+tasks,n_trials,walltime,instances,2.0.0b1 (cost / time),1.4.0 (cost / time)
 Branin (Blackbox),200,60,False,N/A,N/A
 Branin (HPO),200,60,False,N/A,N/A
 "Branin (HPO, 8 workers)",200,60,False,N/A,N/A
