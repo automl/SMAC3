@@ -4,7 +4,7 @@ Basic Usage
 There are two ways to use SMAC, either within your Python-code or over the commandline.
 
 Either way, you need to provide a :ref:`target algorithm<Target Algorithm Evaluator>` you want to
-optimize and the `configuration space <https://automl.github.io/ConfigSpace/master/>`_, which
+optimize and the `configuration space <https://automl.github.io/ConfigSpace/main/>`_, which
 specifies the legal ranges and default values of the tunable parameters.
 In addition, you can configure the optimization process with the :ref:`scenario<Scenario>` object.
 
