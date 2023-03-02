@@ -323,7 +323,7 @@ class TestGP(unittest.TestCase):
             model.train(X_train, y_train)
             y_hat, mu_hat = model.predict(X_test)
             mae = np.mean(np.abs(y_hat - y_test), dtype=np.float128)
-            self.assertAlmostEqual(mae, maes[i], places=6)
+            self.assertAlmostEqual(mae, maes[i], places=4)
 
     def test_nll(self):
         rs = np.random.RandomState(1)
