@@ -1100,6 +1100,16 @@
             <span class="n">seed</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">999999</span><span class="p">)</span>
             <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;seed&quot;</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
 
+        <span class="c1"># Transform instances to string if they are not</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instances</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span> <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">instances</span><span class="p">]</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;instances&quot;</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+
+        <span class="c1"># Transform instance features to string if they are not</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">instance_features</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">instance</span><span class="p">):</span> <span class="n">features</span> <span class="k">for</span> <span class="n">instance</span><span class="p">,</span> <span class="n">features</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_features</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;instance_features&quot;</span><span class="p">,</span> <span class="n">instance_features</span><span class="p">)</span>
+
         <span class="c1"># Change directory wrt name and seed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_change_output_directory</span><span class="p">()</span>
 
