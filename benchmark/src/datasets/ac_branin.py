@@ -1,16 +1,13 @@
 from __future__ import annotations
 
-import itertools
-
-import numpy as np
 import pandas as pd
-from sklearn import datasets
+from pathlib import Path
 from src.datasets.dataset import Dataset
 
 
 class ACBraninDataset(Dataset):
     def __init__(self) -> None:
-        self._data = pd.read_csv("/home/benjamin/Dokumente/code/tmp/SMAC3/benchmark/src/datasets/ac_branin_instances_features.csv", skipinitialspace=True)
+        self._data = pd.read_csv(Path(__file__).parent / "ac_branin_instances_features.csv", skipinitialspace=True)
         self.data["instance"] = self.data["instance"].apply(str)
 
     def get_instances(self, n: int | None = None) -> list[str]:
