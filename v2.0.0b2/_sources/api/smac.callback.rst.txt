@@ -1,0 +1,37 @@
+﻿smac.callback
+=============
+
+.. automodule:: smac.callback
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      Callback
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

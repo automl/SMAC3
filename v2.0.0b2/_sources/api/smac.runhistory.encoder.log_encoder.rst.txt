@@ -1,0 +1,37 @@
+smac.runhistory.encoder.log\_encoder
+====================================
+
+.. automodule:: smac.runhistory.encoder.log_encoder
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      RunHistoryLogEncoder
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
