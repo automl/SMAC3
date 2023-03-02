@@ -173,14 +173,14 @@ class TestGPMCMC(unittest.TestCase):
         self.assertLessEqual(abs(var_hat[0][0]) - 3700, 200, msg=str(var_hat))
 
     def test_gp_on_sklearn_data(self):
-        X, y = sklearn.datasets.load_boston(return_X_y=True)
+        X, y = sklearn.datasets.load_diabetes(return_X_y=True)
         # Normalize such that the bounds in get_gp hold
         X = X / X.max(axis=0)
         rs = np.random.RandomState(1)
         model = get_gp(X.shape[1], rs, noise=1e-10, normalize_y=True)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [6.841565457149357281, 7.4943401900804902144]
+        maes = [63.50535558902004261, 68.04738539479251094]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]

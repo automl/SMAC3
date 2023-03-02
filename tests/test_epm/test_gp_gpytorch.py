@@ -74,8 +74,8 @@ def get_gp(n_dimensions, rs, noise=None, normalize_y=True) -> GPyTorchGaussianPr
 
 
 def get_mixed_gp(cat_dims, cont_dims, rs, normalize_y=True):
-    cat_dims = np.array(cat_dims, dtype=np.int)
-    cont_dims = np.array(cont_dims, dtype=np.int)
+    cat_dims = np.array(cat_dims, dtype=int)
+    cont_dims = np.array(cont_dims, dtype=int)
     n_dimensions = len(cat_dims) + len(cont_dims)
     exp_kernel = MaternKernel(
         2.5,
