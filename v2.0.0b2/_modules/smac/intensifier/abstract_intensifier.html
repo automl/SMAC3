@@ -1442,6 +1442,25 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the incumbents. This method is called everytime a trial is added to the runhistory. Since only</span>
 <span class="sd">        the affected config and the current incumbents are used, this method is very efficient. Furthermore, a</span>
 <span class="sd">        configuration is only considered incumbent if it has a better performance on all incumbent instances.</span>
+
+<span class="sd">        Crucially, if there is no incumbent (at the start) then, the first configuration assumes</span>
+<span class="sd">        incumbent status. For the next configuration, we need to check if the configuration</span>
+<span class="sd">        is better on all instances that have been evaluated for the incumbent. If this is the</span>
+<span class="sd">        case, then we can replace the incumbent. Otherwise, a) we need to requeue the config to</span>
+<span class="sd">        obtain the missing instance-seed-budget combination or b) mark this configuration as</span>
+<span class="sd">        inferior (&quot;rejected&quot;) to not consider it again. The comparison behaviour is controlled by</span>
+<span class="sd">        self.get_instance_seed_budget_keys() and self.get_incumbent_instance_seed_budget_keys().</span>
+
+<span class="sd">        Notably, this method is written to support both multi-fidelity and multi-objective</span>
+<span class="sd">        optimization. While the get_instance_seed_budget_keys() method and</span>
+<span class="sd">        self.get_incumbent_instance_seed_budget_keys() are used for the multi-fidelity behaviour,</span>
+<span class="sd">        calculate_pareto_front() is used as a hard coded way to support multi-objective</span>
+<span class="sd">        optimization, including the single objective as special case. calculate_pareto_front()</span>
+<span class="sd">        is called on the set of all (in case of MO) incumbents amended with the challenger</span>
+<span class="sd">        configuration, provided it has a sufficient overlap in seed-instance-budget combinations.</span>
+
+<span class="sd">        Lastly, if we have a self._max_incumbents and the pareto front provides more than this</span>
+<span class="sd">        specified amount, we cut the incumbents using crowding distance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
 
@@ -1463,6 +1482,7 @@
         <span class="c1"># Now we get the incumbents and see which trials have been used</span>
         <span class="n">incumbents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incumbents</span><span class="p">()</span>
         <span class="n">incumbent_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">rh</span><span class="o">.</span><span class="n">get_config_id</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">incumbents</span><span class="p">]</span>
+        <span class="c1"># Find the lowest intersection of instance-seed-budget keys for all incumbents.</span>
         <span class="n">incumbent_isb_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incumbent_instance_seed_budget_keys</span><span class="p">()</span>
 
         <span class="c1"># Save for later</span>
@@ -1493,7 +1513,10 @@
         <span class="c1"># 2) Highest budget: We only want to compare the configs if they are evaluated on the highest budget.</span>
         <span class="c1"># Here we do actually care about the budgets. Please see the ``get_instance_seed_budget_keys`` method from</span>
         <span class="c1"># Successive Halving to get more information.</span>
+        <span class="c1"># Noitce: compare=True only takes effect when subclass implemented it. -- e.g. in SH it</span>
+        <span class="c1"># will remove the budgets from the keys.</span>
         <span class="n">config_isb_comparison_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_seed_budget_keys</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">compare</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Find the lowest intersection of instance-seed-budget keys for all incumbents.</span>
         <span class="n">config_incumbent_isb_comparison_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incumbent_instance_seed_budget_keys</span><span class="p">(</span><span class="n">compare</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Now we have to check if the new config has been evaluated on the same keys as the incumbents</span>

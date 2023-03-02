@@ -1028,7 +1028,13 @@
 <span class="sd">            How to select the incumbent when using budgets. Can be set to:</span>
 <span class="sd">            * &quot;any_budget&quot;: Incumbent is the best on any budget, i.e., the best performance regardless of budget.</span>
 <span class="sd">            * &quot;highest_observed_budget&quot;: Incumbent is the best in the highest budget run so far.</span>
-<span class="sd">            * &quot;highest_budget&quot;: Incumbent is selected only based on the highest budget.</span>
+<span class="sd">            refer to `runhistory.get_trials` for more details. Crucially, if true, then a</span>
+<span class="sd">            for a given config-instance-seed, only the highest (so far executed) budget is used for</span>
+<span class="sd">            comparison against the incumbent. Notice, that if the highest observed budget is smaller</span>
+<span class="sd">            than the highest budget of the incumbent, the configuration will be queued again to</span>
+<span class="sd">            be intensified again.</span>
+<span class="sd">            * &quot;highest_budget&quot;: Incumbent is selected only based on the absolute highest budget</span>
+<span class="sd">            available only.</span>
 <span class="sd">        max_incumbents : int, defaults to 10</span>
 <span class="sd">            How many incumbents to keep track of in the case of multi-objective.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

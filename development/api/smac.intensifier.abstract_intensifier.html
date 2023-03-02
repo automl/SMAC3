@@ -1554,6 +1554,22 @@ method also saves the incumbents and trajectory.</p>
 <dd><p>Updates the incumbents. This method is called everytime a trial is added to the runhistory. Since only
 the affected config and the current incumbents are used, this method is very efficient. Furthermore, a
 configuration is only considered incumbent if it has a better performance on all incumbent instances.</p>
+<p>Crucially, if there is no incumbent (at the start) then, the first configuration assumes
+incumbent status. For the next configuration, we need to check if the configuration
+is better on all instances that have been evaluated for the incumbent. If this is the
+case, then we can replace the incumbent. Otherwise, a) we need to requeue the config to
+obtain the missing instance-seed-budget combination or b) mark this configuration as
+inferior (“rejected”) to not consider it again. The comparison behaviour is controlled by
+self.get_instance_seed_budget_keys() and self.get_incumbent_instance_seed_budget_keys().</p>
+<p>Notably, this method is written to support both multi-fidelity and multi-objective
+optimization. While the get_instance_seed_budget_keys() method and
+self.get_incumbent_instance_seed_budget_keys() are used for the multi-fidelity behaviour,
+calculate_pareto_front() is used as a hard coded way to support multi-objective
+optimization, including the single objective as special case. calculate_pareto_front()
+is called on the set of all (in case of MO) incumbents amended with the challenger
+configuration, provided it has a sufficient overlap in seed-instance-budget combinations.</p>
+<p>Lastly, if we have a self._max_incumbents and the pareto front provides more than this
+specified amount, we cut the incumbents using crowding distance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
