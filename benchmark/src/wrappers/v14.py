@@ -73,13 +73,15 @@ class Version14(Wrapper):
         intensifier_kwargs: dict[Any, Any] = {}
         facade_kwargs: dict[Any, Any] = {}
 
-        intensifier_kwargs["maxR"] = self.task.max_config_calls
-
         # Create facade
         if self.task.optimization_type == "bb":
             facade_object = SMAC4BB
+            intensifier_kwargs["maxR"] = self.task.max_config_calls
+
         elif self.task.optimization_type == "hpo":
             facade_object = SMAC4HPO
+            intensifier_kwargs["maxR"] = self.task.max_config_calls
+
         elif self.task.optimization_type == "mf":
             facade_object = SMAC4MF
 
@@ -97,6 +99,8 @@ class Version14(Wrapper):
             facade_kwargs["n_jobs"] = self.task.n_workers
         elif self.task.optimization_type == "ac":
             facade_object = SMAC4AC
+            intensifier_kwargs["maxR"] = self.task.max_config_calls
+
         else:
             raise RuntimeError("Unknown optimization type.")
 
