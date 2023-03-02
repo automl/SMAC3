@@ -1,0 +1,37 @@
+smac.utils.multi\_objective
+===========================
+
+.. automodule:: smac.utils.multi_objective
+
+   
+   
+   
+
+   
+   
+
+   Functions
+   ^^^^^^^^^
+
+   .. autosummary::
+   
+      normalize_costs
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

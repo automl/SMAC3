@@ -1,0 +1,43 @@
+﻿smac.intensifier
+================
+
+.. automodule:: smac.intensifier
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
+
+Modules
+^^^^^^^
+
+.. autosummary::
+   :template: module.rst
+   :toctree:
+   :recursive:
+
+   smac.intensifier.abstract_intensifier
+   smac.intensifier.hyperband
+   smac.intensifier.intensifier
+   smac.intensifier.successive_halving
+

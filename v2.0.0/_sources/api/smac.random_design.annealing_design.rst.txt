@@ -1,0 +1,37 @@
+smac.random\_design.annealing\_design
+=====================================
+
+.. automodule:: smac.random_design.annealing_design
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      CosineAnnealingRandomDesign
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
