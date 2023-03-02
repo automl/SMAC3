@@ -37,7 +37,7 @@ class ConfigSelector:
     ----------
     retrain_after : int, defaults to 8
         How many configurations should be returned before the surrogate model is retrained.
-    retries : int, defaults to 8
+    retries : int, defaults to 16
         How often to retry receiving a new configuration before giving up.
     min_trials: int, defaults to 1
         How many samples are required to train the surrogate model. If budgets are involved,
@@ -73,7 +73,9 @@ class ConfigSelector:
         self._previous_entries = -1
         self._predict_x_best = True
         self._min_trials = min_trials
-        self._considered_budgets: list[float | int | None] = [None]
+        self._considered_budgets: list[float | int | None] = []
+        self._retrained_model: int = 0
+        self._model_trained_on_samples_amount: int = 0
 
         # How often to retry receiving a new configuration
         # (counter increases if the received config was already returned before)
@@ -193,6 +195,8 @@ class ConfigSelector:
             # Check if X/Y differs from the last run, otherwise use cached results
             if self._previous_entries != Y.shape[0]:
                 self._model.train(X, Y)
+                self._retrained_model += 1
+                self._model_trained_on_samples_amount = X.shape[0]
 
                 x_best_array: np.ndarray | None = None
                 if incumbent_value is not None:
@@ -301,6 +305,7 @@ class ConfigSelector:
             ),
             np.empty(shape=[0, 0]),
         )
+
 
     def _get_evaluated_configs(self) -> list[Configuration]:
         assert self._runhistory is not None
