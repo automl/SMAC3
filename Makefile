@@ -5,7 +5,7 @@ SHELL := /bin/bash
 
 NAME := SMAC3
 PACKAGE_NAME := smac
-VERSION := 2.0.0b2
+VERSION := 2.0.0
 
 DIR := "${CURDIR}"
 SOURCE_DIR := ${PACKAGE_NAME}
