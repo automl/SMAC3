@@ -1,4 +1,4 @@
-# 2.0.0b2
+# 2.0.0
 
 ## Improvements
 - Clarify origin of configurations (#908).
@@ -11,6 +11,9 @@
 
 ## Workflows
 - Added workflow to update pre-commit versions (#874).
+
+## Misc
+- Added benchmarking procedure to compare to previous releases.
 
 
 # 2.0.0b1
