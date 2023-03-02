@@ -177,7 +177,7 @@ class GPyTorchGaussianProcess(BaseModel):
             self.hypers = self._optimize()
             self.gp = set_params_with_array(self.gp, self.hypers, self.property_dict)
         else:
-            self.hypers, self.property_dict, _ = module_to_array(module=self.gp)
+            self.hypers, self.property_dict, _ = module_to_array(module=self.gp)  # type: ignore[assignment]
         self.is_trained = True
         return self
 
@@ -225,7 +225,7 @@ class GPyTorchGaussianProcess(BaseModel):
 
         bounds = np.asarray(bounds).transpose().tolist()
 
-        self.property_dict = property_dict
+        self.property_dict = property_dict  # type: ignore[assignment]
 
         p0 = [x0]
 
