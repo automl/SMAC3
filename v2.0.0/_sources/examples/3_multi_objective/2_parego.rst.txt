@@ -47,30 +47,41 @@ mean accuracy and run-time of each configuration.
     [INFO][abstract_intensifier.py:513] Added config 97ef22 as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:596] Config f88a6b is a new incumbent. Total number of incumbents: 2.
     [INFO][abstract_intensifier.py:596] Config d77b40 is a new incumbent. Total number of incumbents: 3.
-    [INFO][abstract_intensifier.py:596] Config e9c4e4 is a new incumbent. Total number of incumbents: 4.
-    [INFO][abstract_intensifier.py:596] Config b7b225 is a new incumbent. Total number of incumbents: 5.
-    [INFO][abstract_intensifier.py:588] Added config 3b66ce and rejected config b7b225 as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][configspace.py:175] --- batch_size: 175 -> 238
-    [INFO][configspace.py:175] --- learning_rate_init: 0.0005898937576427071 -> 0.0011023393217469322
-    [INFO][configspace.py:175] --- n_neurons: 135 -> 133
-    [INFO][abstract_intensifier.py:596] Config 446113 is a new incumbent. Total number of incumbents: 5.
-    [INFO][abstract_intensifier.py:596] Config 760fde is a new incumbent. Total number of incumbents: 6.
-    [INFO][abstract_intensifier.py:596] Config 4f1872 is a new incumbent. Total number of incumbents: 7.
+    [INFO][abstract_intensifier.py:596] Config 2550ff is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:596] Config 731517 is a new incumbent. Total number of incumbents: 5.
+    [INFO][abstract_intensifier.py:588] Added config 4f0203 and rejected config 97ef22 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][configspace.py:175] --- activation: 'logistic' -> 'tanh'
+    [INFO][configspace.py:175] --- batch_size: None -> 187
+    [INFO][configspace.py:175] --- learning_rate_init: None -> 0.0003792253293366629
+    [INFO][configspace.py:175] --- n_layer: 4 -> 1
+    [INFO][configspace.py:175] --- n_neurons: 11 -> 18
+    [INFO][configspace.py:175] --- solver: 'lbfgs' -> 'adam'
+    [INFO][abstract_intensifier.py:596] Config e3f0ec is a new incumbent. Total number of incumbents: 6.
+    [INFO][abstract_intensifier.py:596] Config 444768 is a new incumbent. Total number of incumbents: 7.
+    [INFO][abstract_intensifier.py:596] Config bc07b3 is a new incumbent. Total number of incumbents: 8.
+    [INFO][abstract_intensifier.py:588] Added config feb72f and rejected config 731517 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][configspace.py:175] --- activation: 'tanh' -> 'relu'
+    [INFO][configspace.py:175] --- batch_size: 267 -> 154
+    [INFO][configspace.py:175] --- learning_rate_init: 0.00030186906493189153 -> 0.0016946314038140617
+    [INFO][configspace.py:175] --- n_neurons: 138 -> 101
+    [INFO][abstract_intensifier.py:596] Config f6e452 is a new incumbent. Total number of incumbents: 7.
+    [INFO][abstract_intensifier.py:596] Config f9e846 is a new incumbent. Total number of incumbents: 8.
     [INFO][smbo.py:306] Configuration budget is exhausted:
-    [INFO][smbo.py:307] --- Remaining wallclock time: -0.747086763381958
+    [INFO][smbo.py:307] --- Remaining wallclock time: -1.3627922534942627
     [INFO][smbo.py:308] --- Remaining cpu time: inf
-    [INFO][smbo.py:309] --- Remaining trials: 166
+    [INFO][smbo.py:309] --- Remaining trials: 165
     Validated costs from default config: 
-    --- [0.60155834 0.23556316]
+    --- [0.60155834 0.21430171]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.88924791 0.27056515]
-    --- [0.14330006 0.48897433]
-    --- [0.0734641  0.48808706]
-    --- [0.02782962 0.62283969]
-    --- [0.03867533 0.56280077]
-    --- [0.7760229  0.46757758]
-    --- [0.18420226 0.46443427]
+    --- [0.04813757 0.6543752 ]
+    --- [0.03561281 0.92393625]
+    --- [0.03506345 1.14226294]
+    --- [0.05760136 0.55493712]
+    --- [0.30634092 0.23978817]
+    --- [0.05926958 0.49506354]
+    --- [0.05871325 0.43419814]
+    --- [0.03367765 1.23116565]
 
 
 
@@ -251,7 +262,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  38.127 seconds)
+   **Total running time of the script:** ( 0 minutes  43.358 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:
