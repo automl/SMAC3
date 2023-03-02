@@ -7,6 +7,7 @@
 
 ## Bugfixes
 - Continue run when setting incumbent selection to highest budget when using Successive Halving (#907).
+- If integer features are used, they are automatically converted to strings.
 
 ## Workflows
 - Added workflow to update pre-commit versions (#874).
