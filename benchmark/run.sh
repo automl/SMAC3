@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Env name
+ENVNAME=smac
+
 # Declare the old versions here
 declare -a versions=("1.4.0")
 
@@ -8,7 +11,7 @@ for version in "${versions[@]}"
 do
     # Setup environment
     conda env remove -n SMACBench
-    conda create -n SMACBench python=3.9 -y
+    conda create -n SMACBench python=3.10 -y
     conda run -n SMACBench pip install smac==$version
     conda run -n SMACBench pip install -r requirements.txt
 
@@ -21,8 +24,8 @@ do
 done
 
 # Benchmark the current version
-conda run -n SMAC pip install -r requirements.txt
-conda run --no-capture-output -n SMAC python src/benchmark.py
+conda run -n ${ENVNAME} pip install -r requirements.txt
+conda run --no-capture-output -n ${ENVNAME} python src/benchmark.py
 
 # Clean-up
 rm -rf smac3-output*

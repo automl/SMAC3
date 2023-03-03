@@ -1,0 +1,61 @@
+name: Stale-Reminder
+
+on:
+  schedule:
+    - cron: '42 14 * * 3'
+  workflow_dispatch:
+
+jobs:
+  stale-reminder:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get cutoff date for soon-to-be-stale issues
+      id: date
+      run: |
+        echo "CUTOFF_DATE=$(date -d '-46 days' '+%Y-%m-%d')" >> $GITHUB_ENV
+    - name: Collect issues that may become stale
+      id: stale
+      uses: lee-dohm/select-matching-issues@v1
+      with:
+          format: list
+          path: "potentially_stale_issues.md"
+          token: ${{ github.token }}
+          query: >-
+            is:open
+            -label:dependency,documentation,feature,enhancement,bug,test,example
+            updated:<${{ env.CUTOFF_DATE }}
+            sort:updated-asc
+    - name: Collect labelled issues that have not had interaction in a long time (but will not become stale)
+      id: old
+      uses: lee-dohm/select-matching-issues@v1
+      with:
+          format: list
+          path: "old_issues.md"
+          token: ${{ github.token }}
+          query: >-
+            is:open
+            label:dependency,documentation,feature,enhancement,bug,test,example
+            updated:<${{ env.CUTOFF_DATE }}
+            sort:updated-asc
+    - name: Combine issues into mail content
+      id: combine
+      run: |
+        echo $date
+        echo "## Issues that may become stale in <= 14 days <br />" >> mail.html
+        echo "$(<potentially_stale_issues.md) <br />" >> mail.html
+        echo "## Issues that have not had interaction in the last 46 days but will not go stale due to their labels<br />" >> mail.html
+        echo "$(<old_issues.md) <br />" >> mail.html
+    - name: Send mail
+      id: mail
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: ${{secrets.MAIL_SERVER_ADDRESS}}
+        server_port: ${{secrets.MAIL_SERVER_PORT}}
+        secure: true
+        username: ${{secrets.MAIL_USERNAME}}
+        password: ${{secrets.MAIL_PASSWORD}}
+        subject: '[Stale Issues]  Issues with last interaction before ${{ env.CUTOFF_DATE }}'
+        to: ${{secrets.MAIL_TARGET}}
+        from: SMAC3 Stale-Bot <${{secrets.MAIL_ADDRESS}}>
+        html_body: file://mail.html
+        convert_markdown: true

@@ -55,7 +55,7 @@ class FactorialInitialDesign(AbstractInitialDesign):
         for design in factorial_design:
             conf_dict = dict([(p.name, v) for p, v in zip(params, design)])
             conf = deactivate_inactive_hyperparameters(conf_dict, self._configspace)
-            conf.origin = "Factorial Initial Design"
+            conf.origin = "Initial Design: Factorial"
             configs.append(conf)
 
         return configs
