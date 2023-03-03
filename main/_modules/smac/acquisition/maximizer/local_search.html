@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.acquisition.maximizer.local_search &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
+    <title>smac.acquisition.maximizer.local_search &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -32,9 +32,6 @@
   <link rel="preload" as="script" href="../../../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-    <script src="../../../../_static/jquery.js"></script>
-    <script src="../../../../_static/underscore.js"></script>
-    <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../../../_static/doctools.js"></script>
     <script src="../../../../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -57,7 +54,7 @@
     
     
   <a class="navbar-brand" href="../../../../index.html">
-    <img src="../../../../_static/logo.png" class="logo" alt="logo">
+  <!-- <p class="title">SMAC3 Documentation</p> -->
   </a>
 
     
@@ -96,11 +93,13 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0b1
+        v2.0.0
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -127,7 +126,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1">
@@ -1078,10 +1077,15 @@
         <span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">additional_start_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start a local search from the given startpoint.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start a local search from the given startpoints. Iteratively collect neighbours</span>
+<span class="sd">        using Configspace.utils.get_one_exchange_neighbourhood and evaluate them.</span>
+<span class="sd">        If the new config is better than the current best, the local search is coninued from the</span>
+<span class="sd">        new config.</span>
 
 <span class="sd">        Quit if either the max number of steps is reached or</span>
-<span class="sd">        no neighbor with an higher improvement was found.</span>
+<span class="sd">        no neighbor with a higher improvement was found or the number of local steps self._n_steps_plateau_walk</span>
+<span class="sd">        for each of the starting point is depleted.</span>
+
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1106,7 +1110,7 @@
         <span class="c1"># Sort according to acq value</span>
         <span class="n">configs_acq</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">inc</span> <span class="ow">in</span> <span class="n">configs_acq</span><span class="p">:</span>
-            <span class="n">inc</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s2">&quot;Local Search&quot;</span>
+            <span class="n">inc</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s2">&quot;Acquisition Function Maximizer: Local Search&quot;</span>
 
         <span class="k">return</span> <span class="n">configs_acq</span>
 
@@ -1153,7 +1157,17 @@
 <span class="sd">        Generate a set of initial points from the previous configurations and possibly additional points.</span>
 
 <span class="sd">        The idea is to decouple runhistory from the local search model and replace it with a more general</span>
-<span class="sd">        form (list[Configuration]).</span>
+<span class="sd">        form (list[Configuration]). This is useful to more quickly collect new configurations</span>
+<span class="sd">        along the iterations, rather than feeding it to the runhistory every time.</span>
+
+<span class="sd">        create three lists and concatenate them:</span>
+<span class="sd">        1. sorted the previous configs by acquisition value</span>
+<span class="sd">        2. sorted the previous configs by marginal predictive costs</span>
+<span class="sd">        3. additional start points</span>
+
+<span class="sd">        and create a list that carries unique configurations only. Crucially,</span>
+<span class="sd">        when reading from left to right, all but the first occurrence of a configuration</span>
+<span class="sd">        are dropped.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1189,12 +1203,10 @@
                 <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
                 <span class="n">costs</span> <span class="o">=</span> <span class="n">costs</span> <span class="o">@</span> <span class="n">weights</span>
 
-            <span class="c1"># From here</span>
+            <span class="c1"># From here: make argsort result to be random between equal values</span>
             <span class="c1"># http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values</span>
             <span class="n">random</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">costs</span><span class="p">))</span>
-
-            <span class="c1"># Last column is primary sort key!</span>
-            <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">lexsort</span><span class="p">((</span><span class="n">random</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">costs</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">lexsort</span><span class="p">((</span><span class="n">random</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">costs</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span>  <span class="c1"># Last column is primary sort key!</span>
 
             <span class="c1"># Cannot use zip here because the indices array cannot index the</span>
             <span class="c1"># rand_configs list, because the second is a pure python list</span>
@@ -1225,6 +1237,21 @@
         <span class="n">start_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Optimize the acquisition function.</span>
+
+<span class="sd">        Execution:</span>
+<span class="sd">        1. Neighbour generation strategy for each of the starting points is according to</span>
+<span class="sd">        ConfigSpace.utils.get_one_exchange_neighbourhood.</span>
+<span class="sd">        2. Each of the starting points create a local search, that can be active.</span>
+<span class="sd">        if it is active, request a neighbour of its neightbourhood and evaluate it.</span>
+<span class="sd">        3. Comparing the acquisition function of the neighbors with the acquisition value of the</span>
+<span class="sd">        candidate.</span>
+<span class="sd">        If it improved, then the candidate is replaced by the neighbor. And this candidate is</span>
+<span class="sd">        investigated again with two new neighbours.</span>
+<span class="sd">        If it did not improve, it is investigated with twice as many new neighbours</span>
+<span class="sd">        (at most self._vectorization_max_obtain neighbours).</span>
+<span class="sd">        The local search for a starting point is stopped if the number of evaluations is larger</span>
+<span class="sd">        than self._n_steps_plateau_walk.</span>
+
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1274,6 +1301,15 @@
         <span class="n">neighborhood_iterators</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">inc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">candidates</span><span class="p">):</span>
             <span class="n">neighborhood_iterators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="c1"># get_one_exchange_neighbourhood implementational details:</span>
+                <span class="c1"># https://github.com/automl/ConfigSpace/blob/05ab3da2a06c084ba920e8e4e3f62f2e87e81442/ConfigSpace/util.pyx#L95</span>
+                <span class="c1"># Return all configurations in a one-exchange neighborhood.</span>
+                <span class="c1">#</span>
+                <span class="c1">#     The method is implemented as defined by:</span>
+                <span class="c1">#     Frank Hutter, Holger H. Hoos and Kevin Leyton-Brown</span>
+                <span class="c1">#     Sequential Model-Based Optimization for General Algorithm Configuration</span>
+                <span class="c1">#     In Proceedings of the conference on Learning and Intelligent</span>
+                <span class="c1">#     Optimization(LION 5)</span>
                 <span class="n">get_one_exchange_neighbourhood</span><span class="p">(</span><span class="n">inc</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">100000</span><span class="p">))</span>
             <span class="p">)</span>
             <span class="n">local_search_steps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -1432,7 +1468,7 @@
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.3.0. Template is modified version of <a
+6.1.3. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

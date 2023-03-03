@@ -32,34 +32,34 @@ This examples show how to use the Ask-and-Tell interface.
 
  .. code-block:: none
 
-    [INFO][abstract_initial_design.py:133] Using 20 initial design configurations and 0 additional configurations.
-    [INFO][abstract_intensifier.py:493] Added config 98ccec as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:565] Added config 94dccd and rejected config 98ccec as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_initial_design.py:134] Using 20 initial design configurations and 0 additional configurations.
+    [INFO][abstract_intensifier.py:513] Added config 98ccec as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:588] Added config 94dccd and rejected config 98ccec as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x0: -0.9968221839517355 -> 0.03135360777378082
     [INFO][configspace.py:175] --- x1: 4.30847043171525 -> -0.21179260686039925
-    [INFO][abstract_intensifier.py:565] Added config 94b2fe and rejected config 94dccd as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:588] Added config 94b2fe and rejected config 94dccd as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x0: 0.03135360777378082 -> 1.8422549832482282
     [INFO][configspace.py:175] --- x1: -0.21179260686039925 -> 3.526509233029728
-    [INFO][abstract_intensifier.py:565] Added config 026b73 and rejected config 94b2fe as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:588] Added config 026b73 and rejected config 94b2fe as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x0: 1.8422549832482282 -> 0.10203668300079549
     [INFO][configspace.py:175] --- x1: 3.526509233029728 -> 0.1151862278387501
-    [INFO][abstract_intensifier.py:565] Added config 5db1de and rejected config 026b73 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:588] Added config 5db1de and rejected config 026b73 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x0: 0.10203668300079549 -> 0.10138875906166067
     [INFO][configspace.py:175] --- x1: 0.1151862278387501 -> 0.10325090860241648
-    [INFO][abstract_intensifier.py:565] Added config c89070 and rejected config 5db1de as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:588] Added config c89070 and rejected config 5db1de as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x0: 0.10138875906166067 -> 0.08653325483166885
     [INFO][configspace.py:175] --- x1: 0.10325090860241648 -> 0.08549815086526724
     [INFO][smbo.py:298] Finished 50 trials.
-    [INFO][abstract_intensifier.py:565] Added config f3174e and rejected config c89070 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:588] Added config f3174e and rejected config c89070 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x0: 0.08653325483166885 -> 0.05367820946404134
     [INFO][configspace.py:175] --- x1: 0.08549815086526724 -> 0.07009655254860192
-    [INFO][abstract_intensifier.py:565] Added config 458538 and rejected config f3174e as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:588] Added config 458538 and rejected config f3174e as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x0: 0.05367820946404134 -> 0.08292029094844988
     [INFO][configspace.py:175] --- x1: 0.07009655254860192 -> 0.06495875484764024
-    [INFO][abstract_intensifier.py:565] Added config d95598 and rejected config 458538 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:588] Added config d95598 and rejected config 458538 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x0: 0.08292029094844988 -> 0.08393076270018529
     [INFO][configspace.py:175] --- x1: 0.06495875484764024 -> 0.034451435520161944
-    [INFO][abstract_intensifier.py:565] Added config 2b7962 and rejected config d95598 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:588] Added config 2b7962 and rejected config d95598 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x0: 0.08393076270018529 -> 0.07805927091208886
     [INFO][configspace.py:175] --- x1: 0.034451435520161944 -> 0.0059357711510132916
     [INFO][smbo.py:298] Finished 100 trials.
@@ -158,7 +158,7 @@ This examples show how to use the Ask-and-Tell interface.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.036 seconds)
+   **Total running time of the script:** ( 0 minutes  2.996 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_3_ask_and_tell.py:

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.intensifier.abstract_intensifier &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
+    <title>smac.intensifier.abstract_intensifier &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -32,9 +32,6 @@
   <link rel="preload" as="script" href="../../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -57,7 +54,7 @@
     
     
   <a class="navbar-brand" href="../../../index.html">
-    <img src="../../../_static/logo.png" class="logo" alt="logo">
+  <!-- <p class="title">SMAC3 Documentation</p> -->
   </a>
 
     
@@ -96,11 +93,13 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0b1
+        v2.0.0
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -127,7 +126,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1">
@@ -1443,6 +1442,25 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the incumbents. This method is called everytime a trial is added to the runhistory. Since only</span>
 <span class="sd">        the affected config and the current incumbents are used, this method is very efficient. Furthermore, a</span>
 <span class="sd">        configuration is only considered incumbent if it has a better performance on all incumbent instances.</span>
+
+<span class="sd">        Crucially, if there is no incumbent (at the start) then, the first configuration assumes</span>
+<span class="sd">        incumbent status. For the next configuration, we need to check if the configuration</span>
+<span class="sd">        is better on all instances that have been evaluated for the incumbent. If this is the</span>
+<span class="sd">        case, then we can replace the incumbent. Otherwise, a) we need to requeue the config to</span>
+<span class="sd">        obtain the missing instance-seed-budget combination or b) mark this configuration as</span>
+<span class="sd">        inferior (&quot;rejected&quot;) to not consider it again. The comparison behaviour is controlled by</span>
+<span class="sd">        self.get_instance_seed_budget_keys() and self.get_incumbent_instance_seed_budget_keys().</span>
+
+<span class="sd">        Notably, this method is written to support both multi-fidelity and multi-objective</span>
+<span class="sd">        optimization. While the get_instance_seed_budget_keys() method and</span>
+<span class="sd">        self.get_incumbent_instance_seed_budget_keys() are used for the multi-fidelity behaviour,</span>
+<span class="sd">        calculate_pareto_front() is used as a hard coded way to support multi-objective</span>
+<span class="sd">        optimization, including the single objective as special case. calculate_pareto_front()</span>
+<span class="sd">        is called on the set of all (in case of MO) incumbents amended with the challenger</span>
+<span class="sd">        configuration, provided it has a sufficient overlap in seed-instance-budget combinations.</span>
+
+<span class="sd">        Lastly, if we have a self._max_incumbents and the pareto front provides more than this</span>
+<span class="sd">        specified amount, we cut the incumbents using crowding distance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
 
@@ -1464,6 +1482,7 @@
         <span class="c1"># Now we get the incumbents and see which trials have been used</span>
         <span class="n">incumbents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incumbents</span><span class="p">()</span>
         <span class="n">incumbent_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">rh</span><span class="o">.</span><span class="n">get_config_id</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">incumbents</span><span class="p">]</span>
+        <span class="c1"># Find the lowest intersection of instance-seed-budget keys for all incumbents.</span>
         <span class="n">incumbent_isb_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incumbent_instance_seed_budget_keys</span><span class="p">()</span>
 
         <span class="c1"># Save for later</span>
@@ -1494,7 +1513,10 @@
         <span class="c1"># 2) Highest budget: We only want to compare the configs if they are evaluated on the highest budget.</span>
         <span class="c1"># Here we do actually care about the budgets. Please see the ``get_instance_seed_budget_keys`` method from</span>
         <span class="c1"># Successive Halving to get more information.</span>
+        <span class="c1"># Noitce: compare=True only takes effect when subclass implemented it. -- e.g. in SH it</span>
+        <span class="c1"># will remove the budgets from the keys.</span>
         <span class="n">config_isb_comparison_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_seed_budget_keys</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">compare</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Find the lowest intersection of instance-seed-budget keys for all incumbents.</span>
         <span class="n">config_incumbent_isb_comparison_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incumbent_instance_seed_budget_keys</span><span class="p">(</span><span class="n">compare</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Now we have to check if the new config has been evaluated on the same keys as the incumbents</span>
@@ -1751,7 +1773,7 @@
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.3.0. Template is modified version of <a
+6.1.3. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.acquisition.maximizer.abstract_acqusition_maximizer &#8212; SMAC3 Documentation 2.0.0b1 documentation</title>
+    <title>smac.acquisition.maximizer.abstract_acqusition_maximizer &#8212; SMAC3 Documentation 2.0.0 documentation</title>
     
   <link href="../../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -32,9 +32,6 @@
   <link rel="preload" as="script" href="../../../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-    <script src="../../../../_static/jquery.js"></script>
-    <script src="../../../../_static/underscore.js"></script>
-    <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../../../_static/doctools.js"></script>
     <script src="../../../../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -57,7 +54,7 @@
     
     
   <a class="navbar-brand" href="../../../../index.html">
-    <img src="../../../../_static/logo.png" class="logo" alt="logo">
+  <!-- <p class="title">SMAC3 Documentation</p> -->
   </a>
 
     
@@ -96,11 +93,13 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0b1
+        v2.0.0
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0b1 (unstable)</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
     </div>
@@ -127,7 +126,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0b1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1">
@@ -1048,7 +1047,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the meta data of the created object.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the meta-data of the created object.&quot;&quot;&quot;</span>
         <span class="n">acquisition_function_meta</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acquisition_function_meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span><span class="o">.</span><span class="n">meta</span>
@@ -1073,10 +1072,12 @@
 <span class="sd">        previous_configs: list[Configuration]</span>
 <span class="sd">            Previous evaluated configurations.</span>
 <span class="sd">        n_points: int, defaults to None</span>
-<span class="sd">            Number of points to be sampled. If `n_points` is not specified, `self._challengers` is used.</span>
+<span class="sd">            Number of points to be sampled. If `n_points` is not specified,</span>
+<span class="sd">            `self._challengers` is used.</span>
 <span class="sd">        random_design: AbstractRandomDesign, defaults to None</span>
-<span class="sd">            Part of the returned ChallengerList such that we can interleave random configurations by a scheme defined by</span>
-<span class="sd">            the random design. The method `random_design.next_iteration()` is called at the end of this function.</span>
+<span class="sd">            Part of the returned ChallengerList such that we can interleave random configurations</span>
+<span class="sd">            by a scheme defined by the random design. The method `random_design.next_iteration()`</span>
+<span class="sd">            is called at the end of this function.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1088,6 +1089,9 @@
 
         <span class="k">def</span> <span class="nf">next_configs_by_acquisition_value</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
             <span class="k">assert</span> <span class="n">n_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="c1"># since maximize returns a tuple of acquisition value and configuration,</span>
+            <span class="c1"># and we only need the configuration, we return the second element of the tuple</span>
+            <span class="c1"># for each element in the list</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maximize</span><span class="p">(</span><span class="n">previous_configs</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)]</span>
 
         <span class="n">challengers</span> <span class="o">=</span> <span class="n">ChallengerList</span><span class="p">(</span>
@@ -1182,7 +1186,7 @@
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-5.3.0. Template is modified version of <a
+6.1.3. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>
