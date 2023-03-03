@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from abc import abstractmethod
 from typing import Any, Callable
-from typing_extensions import Literal
 
 from pathlib import Path
 
