@@ -48,22 +48,23 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
     [INFO][configspace.py:175] --- n_layer: 2 -> 3
     [INFO][configspace.py:175] --- n_neurons: 157 -> 108
     [INFO][configspace.py:175] --- optimizer: 'sgd' -> 'adam'
-    [INFO][abstract_intensifier.py:588] Added config 34ee2a and rejected config 34b1eb as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- batch_size: 128 -> 83
+    [INFO][abstract_intensifier.py:588] Added config 9d6edf and rejected config 34b1eb as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- batch_size: 128 -> 48
+    [INFO][configspace.py:175] --- learning_rate_init: 0.0010000000000000002 -> 0.0008561309336666343
     [INFO][configspace.py:175] --- n_layer: 3 -> 4
-    [INFO][abstract_intensifier.py:588] Added config 066046 and rejected config 34ee2a as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- batch_size: 83 -> 71
+    [INFO][configspace.py:175] --- n_neurons: 108 -> 107
+    [INFO][abstract_intensifier.py:588] Added config f444e1 and rejected config 9d6edf as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- batch_size: 48 -> 78
+    [INFO][configspace.py:175] --- learning_rate_init: 0.0008561309336666343 -> 0.006128780165374783
     [INFO][configspace.py:175] --- n_layer: 4 -> 3
-    [INFO][abstract_intensifier.py:588] Added config 7424fb and rejected config 066046 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- batch_size: 71 -> 27
-    [INFO][configspace.py:175] --- n_layer: 3 -> 4
-    [INFO][configspace.py:175] --- n_neurons: 108 -> 105
+    [INFO][abstract_intensifier.py:588] Added config c0b873 and rejected config f444e1 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- batch_size: 78 -> 77
     [INFO][smbo.py:306] Configuration budget is exhausted:
     [INFO][smbo.py:307] --- Remaining wallclock time: inf
     [INFO][smbo.py:308] --- Remaining cpu time: inf
     [INFO][smbo.py:309] --- Remaining trials: 0
     Default cost: 0.038952336737852145
-    Default cost: 0.026719281956050667
+    Default cost: 0.02727174249458364
 
 
 
@@ -238,7 +239,7 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  29.246 seconds)
+   **Total running time of the script:** ( 0 minutes  40.303 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_6_priors.py:
