@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from abc import abstractmethod
 from typing import Any, Callable
-from typing_extensions import Literal
 
 from pathlib import Path
 
 import joblib
 from ConfigSpace import Configuration
+from typing_extensions import Literal
 
 import smac
 from smac.acquisition.function.abstract_acquisition_function import (
