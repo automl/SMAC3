@@ -90,6 +90,10 @@ class SuccessiveHalving(AbstractIntensifier):
         self._incumbent_selection = incumbent_selection
         self._highest_observed_budget_only = False if incumbent_selection == "any_budget" else True
 
+        # Global variables derived from scenario
+        self._min_budget = self._scenario.min_budget
+        self._max_budget = self._scenario.max_budget
+
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
         meta = super().meta
@@ -120,8 +124,8 @@ class SuccessiveHalving(AbstractIntensifier):
 
         # Budgets, followed by lots of sanity-checking
         eta = self._eta
-        min_budget = self._scenario.min_budget
-        max_budget = self._scenario.max_budget
+        min_budget = self._min_budget
+        max_budget = self._max_budget
 
         if max_budget is not None and min_budget is not None and max_budget < min_budget:
             raise ValueError("Max budget has to be larger than min budget.")

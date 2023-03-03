@@ -45,11 +45,11 @@ class RandomSearch(AbstractAcquisitionMaximizer):
 
         if _sorted:
             for i in range(len(rand_configs)):
-                rand_configs[i].origin = "Random Search (sorted)"
+                rand_configs[i].origin = "Acquisition Function Maximizer: Random Search (sorted)"
 
             return self._sort_by_acquisition_value(rand_configs)
         else:
             for i in range(len(rand_configs)):
-                rand_configs[i].origin = "Random Search"
+                rand_configs[i].origin = "Acquisition Function Maximizer: Random Search"
 
             return [(0, rand_configs[i]) for i in range(len(rand_configs))]

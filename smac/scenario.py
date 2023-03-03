@@ -113,6 +113,16 @@ class Scenario:
             seed = random.randint(0, 999999)
             object.__setattr__(self, "seed", seed)
 
+        # Transform instances to string if they are not
+        if self.instances is not None:
+            instances = [str(instance) for instance in self.instances]
+            object.__setattr__(self, "instances", instances)
+
+        # Transform instance features to string if they are not
+        if self.instance_features is not None:
+            instance_features = {str(instance): features for instance, features in self.instance_features.items()}
+            object.__setattr__(self, "instance_features", instance_features)
+
         # Change directory wrt name and seed
         self._change_output_directory()
 

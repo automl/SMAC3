@@ -674,6 +674,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         config : Configuration
         highest_observed_budget_only : bool
             Select only the highest observed budget run for this configuration.
+            Meaning on multiple executions of the same instance-seed pair for a
+            a given configuration, only the highest observed budget is returned.
 
         Returns
         -------
