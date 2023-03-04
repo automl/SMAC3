@@ -166,7 +166,7 @@ def test_ei_maximization_get_next_by_random_search():
     assert len(rval) == 10
     for i in range(10):
         assert isinstance(rval[i][1], ConfigurationMock)
-        assert rval[i][1].origin == "Random Search"
+        assert rval[i][1].origin == "Acquisition Function Maximizer: Random Search"
         assert rval[i][0] == 0
 
 
@@ -178,7 +178,7 @@ def test_get_next_by_random_search():
     assert len(rval) == 10
     for i in range(10):
         assert isinstance(rval[i][1], Configuration)
-        assert rval[i][1].origin == "Random Search"
+        assert rval[i][1].origin == "Acquisition Function Maximizer: Random Search"
         assert rval[i][0] == 0
 
 
@@ -248,7 +248,7 @@ def test_local_search_2(configspace, acquisition_function):
     start_point = start_points[0]
     _, incumbent = ls._maximize([start_point], 1, None)[0]
 
-    assert incumbent.origin == "Local Search"
+    assert incumbent.origin == "Acquisition Function Maximizer: Local Search"
     assert start_point != incumbent
 
     # Check if they are sorted
@@ -293,7 +293,7 @@ def test_random_search(configspace, acquisition_function):
     start_point = start_points[0]
     _, incumbent = rs._maximize([start_point], 1, None)[0]
 
-    assert incumbent.origin == "Random Search"
+    assert incumbent.origin == "Acquisition Function Maximizer: Random Search"
     assert start_point != incumbent
 
     # Check if they all are 0 (because we don't get a maximize value for random search)
@@ -311,7 +311,7 @@ def test_random_search_sorted(configspace, acquisition_function):
     start_point = start_points[0]
     _, incumbent = rs._maximize([start_point], 1, _sorted=True)[0]
 
-    assert incumbent.origin == "Random Search (sorted)"
+    assert incumbent.origin == "Acquisition Function Maximizer: Random Search (sorted)"
     assert start_point != incumbent
 
     # Check if they are higher than 0 (because we sorted them)
@@ -342,8 +342,8 @@ def test_local_and_random_search(configspace, acquisition_function):
         assert v_old >= v
         v_old = v
 
-    assert "Random Search (sorted)" in config_origins
-    assert "Local Search" in config_origins
+    assert "Acquisition Function Maximizer: Random Search (sorted)" in config_origins
+    assert "Acquisition Function Maximizer: Local Search" in config_origins
 
 
 # --------------------------------------------------------------
@@ -429,4 +429,4 @@ def test_differential_evolution(configspace, acquisition_function):
     rs = DifferentialEvolution(configspace, acquisition_function, challengers=1000)
 
     values = rs._maximize(start_points, 1)
-    values[0][1].origin == "Differential Evolution"
+    values[0][1].origin == "Acquisition Function Maximizer: Differential Evolution"

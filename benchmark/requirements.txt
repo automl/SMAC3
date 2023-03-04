@@ -1,3 +1,4 @@
 pandas
 ConfigSpace>=0.6
 matplotlib
+seaborn

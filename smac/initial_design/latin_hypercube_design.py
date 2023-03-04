@@ -26,5 +26,5 @@ class LatinHypercubeInitialDesign(AbstractInitialDesign):
         lhd = LatinHypercube(d=len(params) - constants, seed=self._rng.randint(0, 1000000)).random(n=self._n_configs)
 
         return self._transform_continuous_designs(
-            design=lhd, origin="Latin Hypercube Initial Design", configspace=self._configspace
+            design=lhd, origin="Initial Design: Latin Hypercube", configspace=self._configspace
         )

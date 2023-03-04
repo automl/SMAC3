@@ -60,7 +60,7 @@ class AbstractAcquisitionMaximizer:
 
     @property
     def meta(self) -> dict[str, Any]:
-        """Return the meta data of the created object."""
+        """Return the meta-data of the created object."""
         acquisition_function_meta = None
         if self._acquisition_function is not None:
             acquisition_function_meta = self._acquisition_function.meta
@@ -85,10 +85,12 @@ class AbstractAcquisitionMaximizer:
         previous_configs: list[Configuration]
             Previous evaluated configurations.
         n_points: int, defaults to None
-            Number of points to be sampled. If `n_points` is not specified, `self._challengers` is used.
+            Number of points to be sampled. If `n_points` is not specified,
+            `self._challengers` is used.
         random_design: AbstractRandomDesign, defaults to None
-            Part of the returned ChallengerList such that we can interleave random configurations by a scheme defined by
-            the random design. The method `random_design.next_iteration()` is called at the end of this function.
+            Part of the returned ChallengerList such that we can interleave random configurations
+            by a scheme defined by the random design. The method `random_design.next_iteration()`
+            is called at the end of this function.
 
         Returns
         -------
@@ -100,6 +102,9 @@ class AbstractAcquisitionMaximizer:
 
         def next_configs_by_acquisition_value() -> list[Configuration]:
             assert n_points is not None
+            # since maximize returns a tuple of acquisition value and configuration,
+            # and we only need the configuration, we return the second element of the tuple
+            # for each element in the list
             return [t[1] for t in self._maximize(previous_configs, n_points)]
 
         challengers = ChallengerList(
