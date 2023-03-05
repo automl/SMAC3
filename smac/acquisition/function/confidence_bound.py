@@ -61,9 +61,10 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
 
     """
 
-    def __init__(self, beta: float = 1.0, update_beta=True, beta_scaling_srinivas=False) -> None:
+    def __init__(self, beta: float = 1.0, nu: float = 1.0, update_beta=True, beta_scaling_srinivas=False) -> None:
         super(AbstractConfidenceBound, self).__init__()
         self._beta: float = beta
+        self._nu: float = nu
         self._num_data: int | None = None
         self._update_beta = update_beta
         self._beta_scaling_srinivas = beta_scaling_srinivas
@@ -80,7 +81,7 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
         meta = super().meta
-        meta.update({"beta": self._beta})
+        meta.update({"beta": self._beta, "nu": self._nu})
 
         return meta
 
@@ -141,7 +142,7 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
         else:
             beta_t = self._beta
 
-        return -(m + sign * np.sqrt(beta_t) * std)
+        return -(m + sign * np.sqrt(self._nu * beta_t) * std)
 
 
 # Order of parents is important (priorities). This way _bound_type is correctly overwritten by the Mixin
