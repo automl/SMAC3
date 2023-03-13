@@ -278,6 +278,9 @@ class SMBO:
                 # Sample next trial from the intensification
                 trial_info = self.ask()
 
+		# Set the ID on the sampled config 
+		run_info.config.config_id = self.runhistory.config_ids[run_info.config]
+
                 # We submit the trial to the runner
                 # In multi-worker mode, SMAC waits till a new worker is available here
                 self._runner.submit_trial(trial_info=trial_info)
