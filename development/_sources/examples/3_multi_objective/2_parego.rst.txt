@@ -10,7 +10,7 @@
     .. note::
         :class: sphx-glr-download-link-note
 
-        Click :ref:`here <sphx_glr_download_examples_3_multi_objective_2_parego.py>`
+        :ref:`Go to the end <sphx_glr_download_examples_3_multi_objective_2_parego.py>`
         to download the full example code
 
 .. rst-class:: sphx-glr-example-title
@@ -46,17 +46,28 @@ mean accuracy and run-time of each configuration.
     [INFO][abstract_initial_design.py:134] Using 5 initial design configurations and 0 additional configurations.
     [INFO][abstract_intensifier.py:513] Added config 97ef22 as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:596] Config f88a6b is a new incumbent. Total number of incumbents: 2.
-    [INFO][abstract_intensifier.py:596] Config 8e1252 is a new incumbent. Total number of incumbents: 3.
+    [INFO][abstract_intensifier.py:596] Config d77b40 is a new incumbent. Total number of incumbents: 3.
+    [INFO][abstract_intensifier.py:588] Added config f8346a and rejected config f88a6b as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][configspace.py:175] --- batch_size: 77 -> 153
+    [INFO][configspace.py:175] --- learning_rate_init: 0.000534923804864797 -> 0.001846601584667459
+    [INFO][configspace.py:175] --- n_neurons: 146 -> 165
+    [INFO][abstract_intensifier.py:596] Config edc530 is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:596] Config acff30 is a new incumbent. Total number of incumbents: 5.
+    [INFO][abstract_intensifier.py:596] Config 7e7191 is a new incumbent. Total number of incumbents: 6.
     [INFO][smbo.py:306] Configuration budget is exhausted:
-    [INFO][smbo.py:307] --- Remaining wallclock time: -1.22084641456604
+    [INFO][smbo.py:307] --- Remaining wallclock time: -0.7071816921234131
     [INFO][smbo.py:308] --- Remaining cpu time: inf
-    [INFO][smbo.py:309] --- Remaining trials: 190
+    [INFO][smbo.py:309] --- Remaining trials: 181
     Validated costs from default config: 
-    --- [0.60155834 0.71887147]
+    --- [0.60155834 0.3474685 ]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.88924791 0.67182565]
-    --- [0.03561281 2.16773963]
+    --- [0.88924791 0.34284675]
+    --- [0.03561281 1.18100119]
+    --- [0.03561823 0.86332226]
+    --- [0.02782575 1.39352393]
+    --- [0.14302228 0.71266377]
+    --- [0.0439624  0.91533375]
 
 
 
@@ -237,7 +248,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  38.710 seconds)
+   **Total running time of the script:** ( 0 minutes  42.513 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:
@@ -245,6 +256,8 @@ mean accuracy and run-time of each configuration.
 .. only:: html
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
+
+
 
 
     .. container:: sphx-glr-download sphx-glr-download-python

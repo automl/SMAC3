@@ -1208,6 +1208,9 @@
 
             <span class="n">config_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_id</span>
 
+        <span class="c1"># Set the id attribute of the config object, so that users can access it</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">config_id</span> <span class="o">=</span> <span class="n">config_id</span>
+
         <span class="k">if</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span> <span class="o">=</span> <span class="n">n_objectives</span>

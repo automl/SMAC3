@@ -10,7 +10,7 @@
     .. note::
         :class: sphx-glr-download-link-note
 
-        Click :ref:`here <sphx_glr_download_examples_1_basics_5_continue.py>`
+        :ref:`Go to the end <sphx_glr_download_examples_1_basics_5_continue.py>`
         to download the full example code
 
 .. rst-class:: sphx-glr-example-title
@@ -173,7 +173,7 @@ function is continued. We use a custom callback, to artificially stop the first 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.831 seconds)
+   **Total running time of the script:** ( 0 minutes  1.025 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_5_continue.py:
@@ -181,6 +181,8 @@ function is continued. We use a custom callback, to artificially stop the first 
 .. only:: html
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
+
+
 
 
     .. container:: sphx-glr-download sphx-glr-download-python

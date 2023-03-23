@@ -20,7 +20,7 @@ Multi-Objective
 .. only:: html
 
   .. image:: /examples/3_multi_objective/images/thumb/sphx_glr_1_schaffer_thumb.png
-    :alt: 2D Schaffer Function with Objective Weights
+    :alt:
 
   :ref:`sphx_glr_examples_3_multi_objective_1_schaffer.py`
 
@@ -37,7 +37,7 @@ Multi-Objective
 .. only:: html
 
   .. image:: /examples/3_multi_objective/images/thumb/sphx_glr_2_parego_thumb.png
-    :alt: ParEGO
+    :alt:
 
   :ref:`sphx_glr_examples_3_multi_objective_2_parego.py`
 

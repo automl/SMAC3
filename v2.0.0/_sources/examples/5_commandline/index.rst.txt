@@ -20,7 +20,7 @@ SMAC can call a target function from a script. This is useful if you want to opt
 .. only:: html
 
   .. image:: /examples/5_commandline/images/thumb/sphx_glr_1_call_target_function_script_thumb.png
-    :alt: Call Target Function From Script
+    :alt:
 
   :ref:`sphx_glr_examples_5_commandline_1_call_target_function_script.py`
 
