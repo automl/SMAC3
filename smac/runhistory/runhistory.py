@@ -221,6 +221,9 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
             config_id = self._n_id
 
+        # Set the id attribute of the config object, so that users can access it
+        config.config_id = config_id
+
         if status != StatusType.RUNNING:
             if self._n_objectives == -1:
                 self._n_objectives = n_objectives
