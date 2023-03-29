@@ -11,8 +11,7 @@ options = {
     "author": author,
     "version": version,
     "versions": {
-        f"v{version} (unstable)": "#",
-        "v2.0.0": "https://automl.github.io/SMAC3/v2.0.0/",
+        f"v{version}": "#",
         "v2.0.0b1": "https://automl.github.io/SMAC3/v2.0.0b1/",
         "v2.0.0a2": "https://automl.github.io/SMAC3/v2.0.0a2/",
         "v2.0.0a1": "https://automl.github.io/SMAC3/v2.0.0a1/",
