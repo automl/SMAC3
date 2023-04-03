@@ -419,7 +419,10 @@ class AbstractIntensifier:
             if len(incumbent_isb_keys) <= 1:
                 return []
 
-            incumbent_isb_keys = list(set.difference(*map(set, incumbent_isb_keys)))  # type: ignore
+            # Compute the actual differences
+            intersection_isb_keys = set.intersection(*map(set, incumbent_isb_keys))  # type: ignore
+            union_isb_keys = set.union(*map(set, incumbent_isb_keys))  # type: ignore
+            incumbent_isb_keys = list(union_isb_keys - intersection_isb_keys)  # type: ignore
 
             if len(incumbent_isb_keys) == 0:
                 return []
