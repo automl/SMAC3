@@ -30,7 +30,7 @@ If you use SMAC, please cite our `JMLR paper <https://jmlr.org/papers/v23/21-088
 .. code-block:: text
 
     @article{lindauer-jmlr22a,
-             author  = {Marius Lindauer and Katharina Eggensperger and Matthias Feurer and AndrÃ© Biedenkapp and Difan Deng and Carolin Benjamins and Tim Ruhkopf and RenÃ© Sass and Frank Hutter},
+             author  = {Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and Tim Ruhkopf and René Sass and Frank Hutter},
              title   = {SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization},
              journal = {Journal of Machine Learning Research},
              year    = {2022},
