@@ -9,7 +9,7 @@ date-released: "2016-08-17"
 url: "https://automl.github.io/SMAC3/master/index.html"
 repository-code: "https://github.com/automl/SMAC3"
 
-version: "1.0.1"
+version: "2.0.0"
 
 type: "software"
 keywords:
@@ -50,8 +50,20 @@ authors:
     given-names: "Carolin"
     affiliation: "Leibniz Universität Hannover"
 
+  - family-names: "Ruhkopf"
+    given-names: "Tim"
+    affiliation: "Leibniz Universität Hannover"
+
   - family-names: "Sass"
     given-names: "René"
+    affiliation: "Leibniz Universität Hannover"
+
+  - family-names: "Segel"
+    given-names: "Sarah"
+    affiliation: "Leibniz Universität Hannover"
+
+  - family-names: "Graf"
+    given-names: "Helena"
     affiliation: "Leibniz Universität Hannover"
 
   - family-names: "Hutter"
@@ -68,7 +80,7 @@ preferred-citation:
   title: "SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization"
   month: "9"
   year: "2021"
-  url: "https://arxiv.org/abs/2109.09831"
+  url: "https://www.jmlr.org/papers/volume23/21-0888/21-0888.pdf"
 
   authors:
     - family-names: "Lindauer"
@@ -96,6 +108,10 @@ preferred-citation:
 
     - family-names: "Benjamins"
       given-names: "Carolin"
+      affiliation: "Leibniz Universität Hannover"
+
+    - family-names: "Ruhkopf"
+      given-names: "Tim"
       affiliation: "Leibniz Universität Hannover"
 
     - family-names: "Sass"
