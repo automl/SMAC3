@@ -82,8 +82,8 @@ authors:
 preferred-citation:
   type: "article"
   title: "SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization"
-  month: "9"
-  year: "2021"
+  month: "2"
+  year: "2022"
   url: "https://www.jmlr.org/papers/volume23/21-0888/21-0888.pdf"
 
   authors:
