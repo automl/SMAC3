@@ -20,7 +20,7 @@ Multi-Fidelity and Multi-Instances
 .. only:: html
 
   .. image:: /examples/2_multi_fidelity/images/thumb/sphx_glr_1_mlp_epochs_thumb.png
-    :alt: Multi-Layer Perceptron Using Multiple Epochs
+    :alt:
 
   :ref:`sphx_glr_examples_2_multi_fidelity_1_mlp_epochs.py`
 
@@ -37,7 +37,7 @@ Multi-Fidelity and Multi-Instances
 .. only:: html
 
   .. image:: /examples/2_multi_fidelity/images/thumb/sphx_glr_2_sgd_datasets_thumb.png
-    :alt: Stochastic Gradient Descent On Multiple Datasets
+    :alt:
 
   :ref:`sphx_glr_examples_2_multi_fidelity_2_sgd_datasets.py`
 

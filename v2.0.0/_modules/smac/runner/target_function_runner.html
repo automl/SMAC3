@@ -1037,7 +1037,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_target_function</span> <span class="o">=</span> <span class="n">target_function</span>
 
         <span class="c1"># Check if target function is callable</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_target_function</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_target_function</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                 <span class="s2">&quot;Argument `target_function` must be a callable but is type&quot;</span> <span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_target_function</span><span class="p">)</span><span class="si">}</span><span class="s2">`.&quot;</span>
             <span class="p">)</span>
