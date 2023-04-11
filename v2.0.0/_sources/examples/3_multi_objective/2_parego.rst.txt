@@ -47,21 +47,23 @@ mean accuracy and run-time of each configuration.
     [INFO][abstract_intensifier.py:513] Added config 97ef22 as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:596] Config f88a6b is a new incumbent. Total number of incumbents: 2.
     [INFO][abstract_intensifier.py:596] Config d77b40 is a new incumbent. Total number of incumbents: 3.
-    [INFO][abstract_intensifier.py:596] Config 7e74c1 is a new incumbent. Total number of incumbents: 4.
-    [INFO][abstract_intensifier.py:596] Config b17aaf is a new incumbent. Total number of incumbents: 5.
+    [INFO][abstract_intensifier.py:596] Config 6cb169 is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:588] Added config 568c82 and rejected config 6cb169 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][configspace.py:175] --- batch_size: 166 -> 60
+    [INFO][configspace.py:175] --- learning_rate_init: 0.0017917243365731285 -> 0.0005121473246815639
+    [INFO][configspace.py:175] --- n_layer: 3 -> 2
+    [INFO][configspace.py:175] --- n_neurons: 215 -> 193
     [INFO][smbo.py:306] Configuration budget is exhausted:
-    [INFO][smbo.py:307] --- Remaining wallclock time: -0.05789589881896973
+    [INFO][smbo.py:307] --- Remaining wallclock time: -2.1422998905181885
     [INFO][smbo.py:308] --- Remaining cpu time: inf
-    [INFO][smbo.py:309] --- Remaining trials: 182
+    [INFO][smbo.py:309] --- Remaining trials: 184
     Validated costs from default config: 
-    --- [0.60155834 0.36323869]
+    --- [0.60155834 0.3280468 ]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.88924791 0.37297177]
-    --- [0.04813757 0.98243177]
-    --- [0.03561281 1.17328227]
-    --- [0.0450797  0.94221997]
-    --- [0.03088982 1.27895021]
+    --- [0.88924791 0.34052515]
+    --- [0.03367224 0.84172738]
+    --- [0.02671696 3.50466168]
 
 
 
@@ -242,7 +244,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  40.468 seconds)
+   **Total running time of the script:** ( 0 minutes  42.385 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:
