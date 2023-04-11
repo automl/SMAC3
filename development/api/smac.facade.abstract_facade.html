@@ -1237,8 +1237,10 @@ The multi-objective algorithm takes care of that.</p></li>
 <li><p><strong>runhistory_encoder</strong> (<a class="reference internal" href="smac.runhistory.encoder.html#smac.runhistory.encoder.RunHistoryEncoder" title="smac.runhistory.encoder.RunHistoryEncoder"><em>RunHistoryEncoder</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – Based on the runhistory, the surrogate model is trained. However, the data first needs to be encoded, which
 is done by the runhistory encoder. For example, inactive hyperparameters need to be encoded or cost values
 can be log transformed.</p></li>
-<li><p><strong>logging_level</strong> (<em>int</em><em> | </em><em>Path</em><em> | </em><em>None</em>) – The level of logging (the lowest level 0 indicates the debug level). If a path is passed, a yaml file is
-expected with the logging configuration. If nothing is passed, the default logging.yml from SMAC is used.</p></li>
+<li><p><strong>logging_level</strong> (<em>int</em><em> | </em><em>Path</em><em> | </em><em>Literal</em><em>[</em><em>False</em><em>] </em><em>| </em><em>None</em>) – The level of logging (the lowest level 0 indicates the debug level). If a path is passed, a yaml file is
+expected with the logging configuration. If nothing is passed, the default logging.yml from SMAC is used.
+If False is passed, SMAC will not do any customization of the logging setup and the responsibility is left
+to the user.</p></li>
 <li><p><strong>callbacks</strong> (<em>list</em><em>[</em><a class="reference internal" href="smac.callback.html#smac.callback.Callback" title="smac.callback.Callback"><em>Callback</em></a><em>]</em><em>, </em><em>defaults to</em><em> [</em><em>]</em>) – Callbacks, which are incorporated into the optimization loop.</p></li>
 <li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>defaults to False</em>) – When True, overwrites the run results if a previous run is found that is
 inconsistent in the meta data with the current setup. If <code class="docutils literal notranslate"><span class="pre">overwrite</span></code> is set to False, the user is asked

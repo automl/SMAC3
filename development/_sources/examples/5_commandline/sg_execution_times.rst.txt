@@ -6,8 +6,8 @@
 
 Computation times
 =================
-**00:06.692** total execution time for **examples_5_commandline** files:
+**00:06.431** total execution time for **examples_5_commandline** files:
 
 +----------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_5_commandline_1_call_target_function_script.py` (``1_call_target_function_script.py``) | 00:06.692 | 0.0 MB |
+| :ref:`sphx_glr_examples_5_commandline_1_call_target_function_script.py` (``1_call_target_function_script.py``) | 00:06.431 | 0.0 MB |
 +----------------------------------------------------------------------------------------------------------------+-----------+--------+

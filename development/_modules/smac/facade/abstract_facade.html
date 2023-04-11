@@ -994,6 +994,7 @@
 
 <span class="kn">import</span> <span class="nn">joblib</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Literal</span>
 
 <span class="kn">import</span> <span class="nn">smac</span>
 <span class="kn">from</span> <span class="nn">smac.acquisition.function.abstract_acquisition_function</span> <span class="kn">import</span> <span class="p">(</span>
@@ -1068,9 +1069,11 @@
 <span class="sd">        Based on the runhistory, the surrogate model is trained. However, the data first needs to be encoded, which</span>
 <span class="sd">        is done by the runhistory encoder. For example, inactive hyperparameters need to be encoded or cost values</span>
 <span class="sd">        can be log transformed.</span>
-<span class="sd">    logging_level: int | Path | None</span>
+<span class="sd">    logging_level: int | Path | Literal[False] | None</span>
 <span class="sd">        The level of logging (the lowest level 0 indicates the debug level). If a path is passed, a yaml file is</span>
 <span class="sd">        expected with the logging configuration. If nothing is passed, the default logging.yml from SMAC is used.</span>
+<span class="sd">        If False is passed, SMAC will not do any customization of the logging setup and the responsibility is left</span>
+<span class="sd">        to the user.</span>
 <span class="sd">    callbacks: list[Callback], defaults to []</span>
 <span class="sd">        Callbacks, which are incorporated into the optimization loop.</span>
 <span class="sd">    overwrite: bool, defaults to False</span>
@@ -1093,11 +1096,12 @@
         <span class="n">multi_objective_algorithm</span><span class="p">:</span> <span class="n">AbstractMultiObjectiveAlgorithm</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">runhistory_encoder</span><span class="p">:</span> <span class="n">AbstractRunHistoryEncoder</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">config_selector</span><span class="p">:</span> <span class="n">ConfigSelector</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">logging_level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">logging_level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">callbacks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callback</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
         <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="n">setup_logging</span><span class="p">(</span><span class="n">logging_level</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">logging_level</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">setup_logging</span><span class="p">(</span><span class="n">logging_level</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model</span><span class="p">(</span><span class="n">scenario</span><span class="p">)</span>
