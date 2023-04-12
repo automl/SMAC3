@@ -7,6 +7,7 @@ from pathlib import Path
 
 import joblib
 from ConfigSpace import Configuration
+from typing_extensions import Literal
 
 import smac
 from smac.acquisition.function.abstract_acquisition_function import (
@@ -81,9 +82,11 @@ class AbstractFacade:
         Based on the runhistory, the surrogate model is trained. However, the data first needs to be encoded, which
         is done by the runhistory encoder. For example, inactive hyperparameters need to be encoded or cost values
         can be log transformed.
-    logging_level: int | Path | None
+    logging_level: int | Path | Literal[False] | None
         The level of logging (the lowest level 0 indicates the debug level). If a path is passed, a yaml file is
         expected with the logging configuration. If nothing is passed, the default logging.yml from SMAC is used.
+        If False is passed, SMAC will not do any customization of the logging setup and the responsibility is left
+        to the user.
     callbacks: list[Callback], defaults to []
         Callbacks, which are incorporated into the optimization loop.
     overwrite: bool, defaults to False
@@ -106,11 +109,12 @@ class AbstractFacade:
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
         runhistory_encoder: AbstractRunHistoryEncoder | None = None,
         config_selector: ConfigSelector | None = None,
-        logging_level: int | Path | None = None,
+        logging_level: int | Path | Literal[False] | None = None,
         callbacks: list[Callback] = [],
         overwrite: bool = False,
     ):
-        setup_logging(logging_level)
+        if logging_level is not False:
+            setup_logging(logging_level)
 
         if model is None:
             model = self.get_model(scenario)

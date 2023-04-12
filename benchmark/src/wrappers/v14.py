@@ -20,6 +20,7 @@ class Version14(Wrapper):
         from smac.facade.smac_bb_facade import SMAC4BB
         from smac.facade.smac_hpo_facade import SMAC4HPO
         from smac.facade.smac_mf_facade import SMAC4MF
+        from smac.facade.smac_ac_facade import SMAC4AC
         from smac.scenario.scenario import Scenario
 
         if self.task.n_workers > 1 and self.task.optimization_type != "mf":
@@ -75,8 +76,12 @@ class Version14(Wrapper):
         # Create facade
         if self.task.optimization_type == "bb":
             facade_object = SMAC4BB
+            intensifier_kwargs["maxR"] = self.task.max_config_calls
+
         elif self.task.optimization_type == "hpo":
             facade_object = SMAC4HPO
+            intensifier_kwargs["maxR"] = self.task.max_config_calls
+
         elif self.task.optimization_type == "mf":
             facade_object = SMAC4MF
 
@@ -92,6 +97,10 @@ class Version14(Wrapper):
 
             intensifier_kwargs["incumbent_selection"] = inc_selection
             facade_kwargs["n_jobs"] = self.task.n_workers
+        elif self.task.optimization_type == "ac":
+            facade_object = SMAC4AC
+            intensifier_kwargs["maxR"] = self.task.max_config_calls
+
         else:
             raise RuntimeError("Unknown optimization type.")
 

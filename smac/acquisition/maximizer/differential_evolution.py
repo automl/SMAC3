@@ -11,7 +11,19 @@ __license__ = "3-clause BSD"
 
 
 class DifferentialEvolution(AbstractAcquisitionMaximizer):
-    """Get candidate solutions via `DifferentialEvolutionSolvers` from scipy."""
+    """Get candidate solutions via `DifferentialEvolutionSolvers` from scipy.
+
+    According to scipy 1.9.2 documentation:
+
+    'Finds the global minimum of a multivariate function.
+    Differential Evolution is stochastic in nature (does not use gradient methods) to find the minimum,
+    and can search large areas of candidate space, but often requires larger numbers of function
+    evaluations than conventional gradient-based techniques.
+    The algorithm is due to Storn and Price [1].'
+
+    [1] Storn, R and Price, K, Differential Evolution - a Simple and Efficient Heuristic for Global
+     Optimization over Continuous Spaces, Journal of Global Optimization, 1997, 11, 341 - 359.
+    """
 
     def _maximize(
         self,
@@ -46,7 +58,7 @@ class DifferentialEvolution(AbstractAcquisitionMaximizer):
         _ = ds.solve()
         for pop, val in zip(ds.population, ds.population_energies):
             rc = Configuration(self._configspace, vector=pop)
-            rc.origin = "Differential Evolution"
+            rc.origin = "Acquisition Function Maximizer: Differential Evolution"
             configs.append((-val, rc))
 
         configs.sort(key=lambda t: t[0])
