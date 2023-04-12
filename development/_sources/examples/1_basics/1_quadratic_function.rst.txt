@@ -167,7 +167,7 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.080 seconds)
+   **Total running time of the script:** ( 0 minutes  2.691 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_1_quadratic_function.py:

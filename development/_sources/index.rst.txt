@@ -29,12 +29,15 @@ If you use SMAC, please cite our `JMLR paper <https://jmlr.org/papers/v23/21-088
 
 .. code-block:: text
 
-    @inproceedings {lindauer-arxiv21a,
-      author = {Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and Tim Ruhkopf and René Sass and Frank Hutter},
-      title = {SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization},
-      booktitle = {ArXiv: 2109.09831},
-      year = {2021},
-      url = {https://arxiv.org/abs/2109.09831}
+    @article{lindauer-jmlr22a,
+             author  = {Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and Tim Ruhkopf and René Sass and Frank Hutter},
+             title   = {SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization},
+             journal = {Journal of Machine Learning Research},
+             year    = {2022},
+             volume  = {23},
+             number  = {54},
+             pages   = {1--9},
+             url     = {http://jmlr.org/papers/v23/21-0888.html}
     }
 
 For the original idea, we refer to:

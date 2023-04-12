@@ -1018,21 +1018,23 @@ mean accuracy and run-time of each configuration.</p>
 [INFO][abstract_intensifier.py:513] Added config 97ef22 as new incumbent because there are no incumbents yet.
 [INFO][abstract_intensifier.py:596] Config f88a6b is a new incumbent. Total number of incumbents: 2.
 [INFO][abstract_intensifier.py:596] Config d77b40 is a new incumbent. Total number of incumbents: 3.
-[INFO][abstract_intensifier.py:596] Config 7c7980 is a new incumbent. Total number of incumbents: 4.
-[INFO][abstract_intensifier.py:596] Config 35761c is a new incumbent. Total number of incumbents: 5.
+[INFO][abstract_intensifier.py:596] Config ac78c6 is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:588] Added config 6e64e6 and rejected config ff2d43 as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][configspace.py:175] --- batch_size: 168 -&gt; 223
+[INFO][configspace.py:175] --- learning_rate_init: 0.02401870361105283 -&gt; 0.00307103561324703
+[INFO][configspace.py:175] --- n_neurons: 196 -&gt; 138
+[INFO][abstract_intensifier.py:596] Config cab4c3 is a new incumbent. Total number of incumbents: 4.
 [INFO][smbo.py:306] Configuration budget is exhausted:
-[INFO][smbo.py:307] --- Remaining wallclock time: -0.10937261581420898
+[INFO][smbo.py:307] --- Remaining wallclock time: -0.6147029399871826
 [INFO][smbo.py:308] --- Remaining cpu time: inf
-[INFO][smbo.py:309] --- Remaining trials: 181
+[INFO][smbo.py:309] --- Remaining trials: 173
 Validated costs from default config:
---- [0.60155834 0.32908356]
+--- [0.60155834 0.24464631]
 
 Validated costs from the Pareto front (incumbents):
---- [0.88924791 0.36632395]
---- [0.04813757 1.09623766]
---- [0.03561281 1.41947556]
---- [0.0311676  1.38239288]
---- [0.06344398 1.15219522]
+--- [0.88924791 0.27296889]
+--- [0.02504565 1.33298373]
+--- [0.03060817 0.48728216]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1206,7 +1208,7 @@ Validated costs from the Pareto front (incumbents):
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  41.919 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  35.488 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0422a2b52bca2c17c0ab975a6ae7e8db/2_parego.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_parego.py</span></code></a></p>
