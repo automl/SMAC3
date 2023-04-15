@@ -1,3 +1,8 @@
+# 2.0.1
+
+## Bugfixes
+- Adjust amount of configurations in different stages of hyperband brackets to conform to the original paper.
+
 # 2.0.0
 
 ## Improvements
