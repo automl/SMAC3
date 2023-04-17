@@ -2,7 +2,7 @@
 
 set -e
 
-python -m pip install .[docs,examples]
+python -m pip install -e .[docs,examples]
 
 # Taken from https://github.com/scikit-learn/scikit-learn/blob/22cd233e1932457947e9994285dc7fd4e93881e4/.binder/postBuild
 # under BSD3 license, copyright the scikit-learn contributors

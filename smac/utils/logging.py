@@ -1,56 +1,42 @@
-import logging
-import typing
+from __future__ import annotations
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+import logging
+import logging.config
+from pathlib import Path
+
+import yaml
+
+import smac
+
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class PickableLoggerAdapter(object):
-    def __init__(self, name: str) -> None:
-        self.name = name
-        self.logger = logging.getLogger(self.name)
+def setup_logging(level: int | Path | None = None) -> None:
+    """Sets up the logging configuration for all modules.
 
-    def __getstate__(self) -> typing.Dict[str, str]:
-        """
-        Method is called when pickle dumps an object.
-        Returns
-        -------
-        Dictionary, representing the object state to be pickled. Ignores
-        the self.logger field and only returns the logger name.
-        """
-        return {'name': self.name}
+    Parameters
+    ----------
+    level : int | Path | None, defaults to None
+        An integer representing the logging level. An custom logging configuration can be used when passing a path.
+    """
+    if isinstance(level, Path):
+        log_filename = level
+    else:
+        path = Path() / smac.__file__
+        log_filename = path.parent / "logging.yml"
 
-    def __setstate__(self, state: typing.Dict[str, typing.Any]) -> None:
-        """
-        Method is called when pickle loads an object. Retrieves the name and
-        creates a logger.
-        Parameters
-        ----------
-        state - dictionary, containing the logger name.
-        """
-        self.name = state['name']
-        self.logger = logging.getLogger(self.name)
+    with (log_filename).open("r") as stream:
+        config = yaml.safe_load(stream)
 
-    def debug(self, msg, *args, **kwargs):  # type: ignore[no-untyped-def] # noqa F821
-        self.logger.debug(msg, *args, **kwargs)
+    if isinstance(level, int):
+        config["root"]["level"] = level
+        config["handlers"]["console"]["level"] = level
 
-    def info(self, msg, *args, **kwargs):  # type: ignore[no-untyped-def] # noqa F821
-        self.logger.info(msg, *args, **kwargs)
+    logging.config.dictConfig(config)
 
-    def warning(self, msg, *args, **kwargs):  # type: ignore[no-untyped-def] # noqa F821
-        self.logger.warning(msg, *args, **kwargs)
 
-    def error(self, msg, *args, **kwargs):  # type: ignore[no-untyped-def] # noqa F821
-        self.logger.error(msg, *args, **kwargs)
-
-    def exception(self, msg, *args, **kwargs):  # type: ignore[no-untyped-def] # noqa F821
-        self.logger.exception(msg, *args, **kwargs)
-
-    def critical(self, msg, *args, **kwargs):  # type: ignore[no-untyped-def] # noqa F821
-        self.logger.critical(msg, *args, **kwargs)
-
-    def log(self, level, msg, *args, **kwargs):  # type: ignore[no-untyped-def] # noqa F821
-        self.logger.log(level, msg, *args, **kwargs)
-
-    def isEnabledFor(self, level):  # type: ignore[no-untyped-def] # noqa F821
-        return self.logger.isEnabledFor(level)
+def get_logger(logger_name: str) -> logging.Logger:
+    """Get the logger by name."""
+    logger = logging.getLogger(logger_name)
+    return logger

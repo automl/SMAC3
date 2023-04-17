@@ -1,42 +1,81 @@
-name: Docs
-on: [pull_request, push]
+name: docs
+
+on:
+  # Manual trigger option in github
+  # This won't push to github pages where docs are hosted due
+  # to the gaurded if statement in those steps
+  workflow_dispatch:
+
+  # Trigger on push to these branches
+  push:
+    branches:
+      - main
+      - development
+
+  # Trigger on a open/push to a PR targeting one of these branches
+  pull_request:
+    branches:
+      - main
+      - development
+
+env:
+  name: SMAC3
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v3
+
     - name: Setup Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: 3.8
+        python-version: "3.10"
+
     - name: Install dependencies
+      id: install
       run: |
-        pip install -e .[all]
+        pip install ".[gpytorch,dev]"
+
+        # Getting the version
+        SMAC_VERSION=$(python -c "import smac; print('v' + str(smac.version));")
+
+        # Make it a global variable
+        echo "SMAC_VERSION=$SMAC_VERSION" >> $GITHUB_ENV
+
     - name: Make docs
       run: |
-        cd doc
-        make buildapi
-        make html
+        make clean
+        make docs
+
     - name: Pull latest gh-pages
-      if: (contains(github.ref, 'develop') || contains(github.ref, 'master')) && github.event_name == 'push'
+      if: (contains(github.ref, 'develop') || contains(github.ref, 'main')) && github.event_name == 'push'
       run: |
         cd ..
-        git clone https://github.com/automl/SMAC3.git --branch gh-pages --single-branch gh-pages
-    - name: Copy new doc into gh-pages
-      if: (contains(github.ref, 'develop') || contains(github.ref, 'master')) && github.event_name == 'push'
+        git clone https://github.com/${{ github.repository }}.git --branch gh-pages --single-branch gh-pages
+
+    - name: Copy new docs into gh-pages
+      if: (contains(github.ref, 'develop') || contains(github.ref, 'main')) && github.event_name == 'push'
       run: |
         branch_name=${GITHUB_REF##*/}
         cd ../gh-pages
         rm -rf $branch_name
-        cp -r ../SMAC3/doc/build/html $branch_name
+        cp -r ../${{ env.name }}/docs/build/html $branch_name
+
+        # we also copy the current SMAC_VERSION
+        rm -rf $SMAC_VERSION
+        cp -r ../${{ env.name }}/docs/build/html $SMAC_VERSION
+
+
     - name: Push to gh-pages
-      if: (contains(github.ref, 'develop') || contains(github.ref, 'master')) && github.event_name == 'push'
+      if: (contains(github.ref, 'develop') || contains(github.ref, 'main')) && github.event_name == 'push'
       run: |
         last_commit=$(git log --pretty=format:"%an: %s")
         cd ../gh-pages
         branch_name=${GITHUB_REF##*/}
         git add $branch_name/
+        git add $SMAC_VERSION/
         git config --global user.name 'Github Actions'
         git config --global user.email 'not@mail.com'
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}

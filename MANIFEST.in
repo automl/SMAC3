@@ -1,2 +1,6 @@
-include requirements.txt
-include extras_require.json
+include LICENSE.txt
+include smac/py.typed  # This file is to export types
+include smac/logging.yml
+
+prune tests
+prune examples

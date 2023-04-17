@@ -1,31 +1,46 @@
-name: dist-check
+name: dist
 
-on: [push, pull_request]
+on:
+  # Manual trigger option in github
+  workflow_dispatch:
+
+  # Trigger on push to these branches
+  push:
+    branches:
+      - main
+      - development
+
+  # Trigger on a open/push to a PR targeting one of these branches
+  pull_request:
+    branches:
+      - main
+      - development
 
 jobs:
   dist:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v3
+
     - name: Setup Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: 3.8
+        python-version: "3.10"
+
     - name: Build dist
       run: |
         python setup.py sdist
+
     - name: Twine check
       run: |
         pip install twine
         last_dist=$(ls -t dist/smac-*.tar.gz | head -n 1)
         twine_output=`twine check "$last_dist"`
-        if [[ "$twine_output" != "Checking $last_dist: PASSED" ]]; then echo $twine_output && exit 1;fi
-    - name: Install dist
-      run: |
-        last_dist=$(ls -t dist/smac-*.tar.gz | head -n 1)
-        pip install $last_dist
-    - name: PEP 561 Compliance
-      run: |
-        pip install mypy
-        cd ..  # required to use the installed version of smac
-        if ! python -c "import smac"; then exit 1; fi
+        if [[ "$twine_output" != "Checking $last_dist: PASSED" ]]
+        then
+          echo $twine_output
+        else
+          pip install $last_dist
+        fi

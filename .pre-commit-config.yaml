@@ -1,31 +1,45 @@
+# If you see me, please update my `rev` field using the provided links
+# Click the repo and update to latest tags.
+# If things break on update, raise an issue
+
 repos:
+  - repo: https://github.com/pycqa/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+        name: isort smac
+        files: smac
+        exclude: "scripts|tests"
+
+  - repo: https://github.com/ambv/black
+    rev: 22.3.0
+    hooks:
+      - id: black
+        name: black smac
+        files: smac
+        exclude: "scripts|tests"
+
+  - repo: https://github.com/pycqa/pydocstyle
+    rev: 6.1.1
+    hooks:
+      - id: pydocstyle
+        name: pydocstyle smac
+        files: smac
+        exclude: "scripts|tests"
+        additional_dependencies: ["toml"]  # Needed to parse pyproject.toml
+
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.761
+    rev: v0.942
     hooks:
       - id: mypy
-        # We would like to have the following options set, 
-        # but for now we have to use the ones above to get started
-        # --ignore-missing-imports --strict"
-        # --disallow-any-unimported"
-        # --disallow-any-expr"
-        # --disallow-any-decorated"
-        # --disallow-any-explicit"
-        # --disallow-any-generics"
-        # Add the following once the scenario is removed from the main code or typed
-        # https://mypy.readthedocs.io/en/stable/command_line.html#configuring-warnings
-        # --warn-unused-ignores"
-        args: [--show-error-codes, --ignore-missing-imports, --disallow-untyped-decorators, --disallow-incomplete-defs, --disallow-untyped-defs, --follow-imports, skip]
-        name: mypy SMAC
-        files: smac/.*
-  - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.8.3
+        name: mypy smac
+        files: smac
+        exclude: "scripts|tests"
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 5.0.4
     hooks:
       - id: flake8
-        name: flake8 SMAC
+        name: flake8 smac
         files: smac
-      - id: flake8
-        name: flake8 test
-        files: test
-      - id: flake8
-        name: flake8 examples
-        files: examples
+        exclude: "scripts|tests"

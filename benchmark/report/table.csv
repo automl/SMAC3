@@ -1,0 +1,14 @@
+tasks,n_trials,walltime,instances,2.0.0b1 (cost / time),1.4.0 (cost / time)
+Branin (Blackbox),200,60,False,N/A,N/A
+Branin (HPO),200,60,False,N/A,N/A
+"Branin (HPO, 8 workers)",200,60,False,N/A,N/A
+Himmelblau (Blackbox),300,60,False,N/A,N/A
+Himmelblau (HPO),300,60,False,N/A,N/A
+"Himmelblau (HPO, 8 workers)",300,60,False,N/A,N/A
+SVM-Digits,500,inf,True,N/A,N/A
+SVM-Digits (HB),500,inf,True,N/A,N/A
+"SVM-Digits (HB, 8 workers)",500,inf,True,N/A,N/A
+MLP-BreastCancer (HB),1500,480,False,N/A,N/A
+"MLP-BreastCancer (HB, 8 workers)",1500,480,False,N/A,N/A
+MLP-BreastCancer (SH),1500,480,False,N/A,N/A
+"MLP-BreastCancer (SH, 8 workers)",1500,480,False,N/A,N/A

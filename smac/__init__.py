@@ -1,36 +1,55 @@
-import json
-import os
-import sys
+import datetime
+import traceback
 
-from smac.utils import dependencies
+name = "SMAC3"
+package_name = "smac"
+author = (
+    "\tMarius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, "
+    "Difan Deng,\n\tCarolin Benjamins, Tim Ruhkopf, René Sass and Frank Hutter"
+)
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
-__license__ = "3-clause BSD"
-__version__ = '1.0.1'
-__author__ = 'Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, ' \
-             'Difan Deng, Carolin Benjamins, René Sass ' \
-             'and Frank Hutter'
-
-
-with open(os.path.join(os.path.dirname(__file__), 'requirements.txt')) as fh:
-    dependencies.verify_packages(fh.read())
-
-with open(os.path.join(os.path.dirname(__file__), 'extras_require.json')) as fh:
-    extras_require = json.load(fh)
-
-extras_installed = set()
-for name, requirements in extras_require.items():
-    if name in ['documentation', 'test']:
-        continue
-    if dependencies.are_valid_packages(requirements):
-        extras_installed.add(name)
-
-if sys.version_info < (3, 7, 0):
-    raise ValueError("SMAC requires Python 3.7.0 or newer.")
+author_email = "fh@cs.uni-freiburg.de"
+description = "SMAC3, a Python implementation of 'Sequential Model-based Algorithm Configuration'."
+url = "https://www.automl.org/"
+project_urls = {
+    "Documentation": "https://https://github.com/automl.github.io/SMAC3/main",
+    "Source Code": "https://github.com/https://github.com/automl/smac",
+}
+copyright = f"""
+    Copyright {datetime.date.today().strftime('%Y')}, Marius Lindauer, Katharina Eggensperger,
+    Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
+    and Frank Hutter"""
+version = "2.0.0b1"
 
 
-if os.name != 'posix':
-    print(
-        'Detected unsupported operating system: %s. Please be aware, that SMAC might not run on this system.' %
-        sys.platform
+try:
+    from smac.utils.logging import setup_logging
+
+    setup_logging(0)
+
+    from smac.callback import Callback
+    from smac.facade import (
+        AlgorithmConfigurationFacade,
+        BlackBoxFacade,
+        HyperbandFacade,
+        HyperparameterOptimizationFacade,
+        MultiFidelityFacade,
+        RandomFacade,
     )
+    from smac.runhistory.runhistory import RunHistory
+    from smac.scenario import Scenario
+
+    __all__ = [
+        "Scenario",
+        "RunHistory",
+        "BlackBoxFacade",
+        "HyperparameterOptimizationFacade",
+        "MultiFidelityFacade",
+        "AlgorithmConfigurationFacade",
+        "RandomFacade",
+        "HyperbandFacade",
+        "Callback",
+    ]
+except ModuleNotFoundError as e:
+    print(e)
+    traceback.print_exc()
