@@ -215,8 +215,9 @@ class FITCKernel(Kernel):
         if not self.training and hasattr(self, "_cached_kernel_inv_root"):
             return self._cached_kernel_inv_root
         else:
-            chol = psd_safe_cholesky(self._inducing_mat, upper=True,
-                                     jitter=settings.cholesky_jitter.value(dtype=self._inducing_mat.dtype))
+            chol = psd_safe_cholesky(
+                self._inducing_mat, upper=True, jitter=settings.cholesky_jitter.value(dtype=self._inducing_mat.dtype)
+            )
             eye = torch.eye(chol.size(-1), device=chol.device, dtype=chol.dtype)
             inv_root = torch.triangular_solve(eye, chol)[0]
 
@@ -313,8 +314,9 @@ class FITCKernel(Kernel):
         if not self.training and hasattr(self, "_cached_inducing_sigma_inv_root"):
             return self._cached_inducing_sigma_inv_root
         else:
-            chol = psd_safe_cholesky(self._inducing_sigma, upper=True,
-                                     jitter=settings.cholesky_jitter.value(self._inducing_sigma.dtype))
+            chol = psd_safe_cholesky(
+                self._inducing_sigma, upper=True, jitter=settings.cholesky_jitter.value(self._inducing_sigma.dtype)
+            )
 
             eye = torch.eye(chol.size(-1), device=chol.device, dtype=chol.dtype)
             inv_root = torch.triangular_solve(eye, chol)[0]
