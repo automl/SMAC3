@@ -53,8 +53,26 @@ If you know how to fix a bug or implement your own feature, follow this small gu
 - Pull request must include tests.
 - We are using the Numpy Style Python Docstrings. Take a look at this [example](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_numpy.html#example-numpy). 
 - The code should follow the PEP8 coding convention.
+- Check that the copyright notice of all files that have been significantly changed includes the current year.
 
 We try to react as fast as possible to your pull request.
+
+## Git-Flow Workflow and Branch-Naming
+
+We aim to approximately follow the [Git-Flow Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow). 
+Thus, the following conventions apply:
+
+Branches are named as follows:
+- `main` The main branch, containing the latest stable release (tagged)
+- `development` The development branch, for merging features and bugfixes in-between releases
+- `release/<version>` Release branches for *preparing* a new release (no new features developed here), 
+   deleted after release
+- `feature/<feature-name>` Feature branches for implementing new functionality, updating existing functionality 
+   or fixing bugs on the development branch
+- `hotfix/<bug-name>` Hotfix branches for fixing bugs in the latest release
+- `support/<version>` Support branches for bugfixes in older releases (e.g., `support/v0.12.x`). New 'old' versions are
+   tagged here.
+- `gh-pages` The branch for the GitHub pages
 
 ## Reporting Security Issues
 

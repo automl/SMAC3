@@ -419,7 +419,10 @@ class AbstractIntensifier:
             if len(incumbent_isb_keys) <= 1:
                 return []
 
-            incumbent_isb_keys = list(set.difference(*map(set, incumbent_isb_keys)))  # type: ignore
+            # Compute the actual differences
+            intersection_isb_keys = set.intersection(*map(set, incumbent_isb_keys))  # type: ignore
+            union_isb_keys = set.union(*map(set, incumbent_isb_keys))  # type: ignore
+            incumbent_isb_keys = list(union_isb_keys - intersection_isb_keys)  # type: ignore
 
             if len(incumbent_isb_keys) == 0:
                 return []
@@ -455,6 +458,25 @@ class AbstractIntensifier:
         """Updates the incumbents. This method is called everytime a trial is added to the runhistory. Since only
         the affected config and the current incumbents are used, this method is very efficient. Furthermore, a
         configuration is only considered incumbent if it has a better performance on all incumbent instances.
+
+        Crucially, if there is no incumbent (at the start) then, the first configuration assumes
+        incumbent status. For the next configuration, we need to check if the configuration
+        is better on all instances that have been evaluated for the incumbent. If this is the
+        case, then we can replace the incumbent. Otherwise, a) we need to requeue the config to
+        obtain the missing instance-seed-budget combination or b) mark this configuration as
+        inferior ("rejected") to not consider it again. The comparison behaviour is controlled by
+        self.get_instance_seed_budget_keys() and self.get_incumbent_instance_seed_budget_keys().
+
+        Notably, this method is written to support both multi-fidelity and multi-objective
+        optimization. While the get_instance_seed_budget_keys() method and
+        self.get_incumbent_instance_seed_budget_keys() are used for the multi-fidelity behaviour,
+        calculate_pareto_front() is used as a hard coded way to support multi-objective
+        optimization, including the single objective as special case. calculate_pareto_front()
+        is called on the set of all (in case of MO) incumbents amended with the challenger
+        configuration, provided it has a sufficient overlap in seed-instance-budget combinations.
+
+        Lastly, if we have a self._max_incumbents and the pareto front provides more than this
+        specified amount, we cut the incumbents using crowding distance.
         """
         rh = self.runhistory
 
@@ -476,6 +498,7 @@ class AbstractIntensifier:
         # Now we get the incumbents and see which trials have been used
         incumbents = self.get_incumbents()
         incumbent_ids = [rh.get_config_id(c) for c in incumbents]
+        # Find the lowest intersection of instance-seed-budget keys for all incumbents.
         incumbent_isb_keys = self.get_incumbent_instance_seed_budget_keys()
 
         # Save for later
@@ -506,7 +529,10 @@ class AbstractIntensifier:
         # 2) Highest budget: We only want to compare the configs if they are evaluated on the highest budget.
         # Here we do actually care about the budgets. Please see the ``get_instance_seed_budget_keys`` method from
         # Successive Halving to get more information.
+        # Noitce: compare=True only takes effect when subclass implemented it. -- e.g. in SH it
+        # will remove the budgets from the keys.
         config_isb_comparison_keys = self.get_instance_seed_budget_keys(config, compare=True)
+        # Find the lowest intersection of instance-seed-budget keys for all incumbents.
         config_incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
 
         # Now we have to check if the new config has been evaluated on the same keys as the incumbents

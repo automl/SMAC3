@@ -8,9 +8,9 @@ Status](https://codecov.io/gh/automl/SMAC3/branch/master/graph/badge.svg)](https
 
 <img src="docs/images/logo.png" style="width: 50%;" />
 
-SMAC is a tool for algorithm configuration to optimize the parameters of arbitrary algorithms, including hyperparameter 
-optimization of Machine Learning algorithms. The main core consists of Bayesian Optimization in combination with an 
-aggressive racing mechanism to efficiently decide which of two configurations performs better.
+SMAC offers a robust and flexible framework for Bayesian Optimization to support users in determining well-performing 
+hyperparameter configurations for their (Machine Learning) algorithms, datasets and applications at hand. The main core 
+consists of Bayesian Optimization in combination with an aggressive racing mechanism to efficiently decide which of two configurations performs better.
 
 SMAC3 is written in Python3 and continuously tested with Python 3.8, 3.9, and 3.10. Its Random
 Forest is written in C++. In further texts, SMAC is representatively mentioned for SMAC3.
@@ -96,6 +96,10 @@ incumbent = smac.optimize()
 
 More examples can be found in the [documentation](https://automl.github.io/SMAC3/main/examples/).
 
+## Visualization via DeepCAVE
+
+With DeepCAVE ([Repo](https://github.com/automl/DeepCAVE), [Paper](https://arxiv.org/abs/2206.03493)) you can visualize your SMAC runs. It is a visualization and analysis tool for AutoML (especially for the sub-problem
+hyperparameter optimization) runs.
 
 ## License
 
@@ -110,6 +114,11 @@ You should have received a copy of the 3-clause BSD license
 along with this program (see LICENSE file).
 If not, see [here](https://opensource.org/licenses/BSD-3-Clause).
 
+## Contacting us
+
+If you have trouble using SMAC, a concrete question or found a bug, please create an [issue](https://github.com/automl/SMAC3/issues). This is the easiest way to communicate about these things with us. 
+
+For all other inquiries, please write an email to smac[at]ai[dot]uni[dash]hannover[dot]de.
 
 ## Miscellaneous
 

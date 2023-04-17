@@ -13,5 +13,5 @@ class DefaultInitialDesign(AbstractInitialDesign):
 
     def _select_configurations(self) -> list[Configuration]:
         config = self._configspace.get_default_configuration()
-        config.origin = "Default"
+        config.origin = "Initial Design: Default"
         return [config]

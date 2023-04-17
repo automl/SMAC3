@@ -1,3 +1,23 @@
+# 2.0.0
+
+## Improvements
+- Clarify origin of configurations (#908).
+- Random forest with instances predicts the marginalized costs by using a C++ implementation in `pyrfr`, which is much faster (#903).
+- Add version to makefile to install correct test release version
+- Add option to disable logging by setting `logging_level=False`. (#947)
+
+## Bugfixes
+- Continue run when setting incumbent selection to highest budget when using Successive Halving (#907).
+- If integer features are used, they are automatically converted to strings.
+- The ISB-pair differences over the incumbent's configurations are computed correctly now (#956).
+
+## Workflows
+- Added workflow to update pre-commit versions (#874).
+
+## Misc
+- Added benchmarking procedure to compare to previous releases.
+
+
 # 2.0.0b1
 
 - Completely reimplemented the intensifiers (including Successive Halving and Hyperband): All intensifiers support multi-fidelity, multi-objective and multi-threading by nature now.
@@ -6,6 +26,9 @@
 - Added more examples.
 - Updated documentation based on new implementation.
 - Added benchmark to compare different versions.
+
+## Bugfixes
+- Correct handling of integer hyperparameters in the initial design (#531)
 
 
 # 2.0.0a2
