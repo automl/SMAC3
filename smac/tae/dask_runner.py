@@ -32,6 +32,7 @@ class DaskParallelRunner(BaseRunner):
     RunValue object.
 
     To be more precise, the work model is then:
+
     1.  The smbo.intensifier dictates "what" to run (a configuration/instance/seed)
         via a RunInfo object.
     2.  a tae_runner takes this RunInfo object and launches the task via

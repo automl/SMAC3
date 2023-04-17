@@ -20,7 +20,7 @@ Optimize :term:`Black-Box<BB>` functions
 
 Flexible hyperparameters
     Use categorical, continuous or hierarchical hyperparameters with the well-integrated
-    `ConfigurationSpace <https://automl.github.io/ConfigSpace/master/API-Doc.html>`_. SMAC can
+    `ConfigurationSpace <https://automl.github.io/ConfigSpace/main/api/index.html>`_. SMAC can
     optimize up to 100
     hyperparameters efficiently.
 

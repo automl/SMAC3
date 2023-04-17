@@ -196,8 +196,9 @@ class TestEPMChooserBOinG(unittest.TestCase):
 
         epm_chooser.failcount_BOinG = 19
         # in this case, prob_to_TurBO becomes 1
-        with unittest.mock.patch("smac.optimizer.configuration_chooser.boing_chooser.BOinGChooser."
-                                 "restart_TuRBOinG") as mk:
+        with unittest.mock.patch(
+            "smac.optimizer.configuration_chooser.boing_chooser.BOinGChooser." "restart_TuRBOinG"
+        ) as mk:
             next(epm_chooser.choose_next())
             self.assertTrue(epm_chooser.run_TuRBO)
             self.assertTrue(mk.called)

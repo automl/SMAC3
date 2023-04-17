@@ -3,7 +3,6 @@ import unittest.mock
 import numpy as np
 import pyro
 import torch
-from botorch.models.kernels.categorical import CategoricalKernel
 from gpytorch.constraints.constraints import Interval
 from gpytorch.kernels import MaternKernel, ProductKernel, ScaleKernel
 from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
@@ -18,6 +17,7 @@ from smac.configspace import (
     UniformFloatHyperparameter,
 )
 from smac.epm.gaussian_process.gpytorch import GPyTorchGaussianProcess
+from smac.epm.gaussian_process.utils.botorch_utils import CategoricalKernel
 
 from .test_gp import TestGP, get_cat_data, get_cont_data
 
@@ -74,8 +74,8 @@ def get_gp(n_dimensions, rs, noise=None, normalize_y=True) -> GPyTorchGaussianPr
 
 
 def get_mixed_gp(cat_dims, cont_dims, rs, normalize_y=True):
-    cat_dims = np.array(cat_dims, dtype=np.int)
-    cont_dims = np.array(cont_dims, dtype=np.int)
+    cat_dims = np.array(cat_dims, dtype=int)
+    cont_dims = np.array(cont_dims, dtype=int)
     n_dimensions = len(cat_dims) + len(cont_dims)
     exp_kernel = MaternKernel(
         2.5,

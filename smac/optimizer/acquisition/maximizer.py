@@ -820,8 +820,9 @@ class ChallengerList(Iterator):
     Parameters
     ----------
     challenger_callback : Callable
-        Callback function which returns a list of challengers (without interleaved random configurations, must a be a
-        closure: https://www.programiz.com/python-programming/closure)
+        Callback function which returns a list of challengers (without interleaved random configurations, must be a
+        closure: www.programiz.com/python-programming/closure (our doc builder cannot connect to this website, you
+        need to open this link manually))
 
     configuration_space : ConfigurationSpace
         ConfigurationSpace from which to sample new random configurations.

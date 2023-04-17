@@ -52,7 +52,7 @@ Glossary
         the data subset the algorithm is trained on.
 
     PCS
-        `ConfigurationSpace <https://automl.github.io/ConfigSpace/master/API-Doc.html>`_ can be written/read from a PCS file.
+        `ConfigurationSpace <https://automl.github.io/ConfigSpace/main/api/index.html>`_ can be written/read from a PCS file.
 
     EPM
         Empirical Performance Models. Empirical performance models are regression models that characterize a given

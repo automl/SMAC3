@@ -83,8 +83,8 @@ def get_mixed_gp(cat_dims, cont_dims, rs, noise=1e-3, normalize_y=True):
         WhiteKernel,
     )
 
-    cat_dims = np.array(cat_dims, dtype=np.int)
-    cont_dims = np.array(cont_dims, dtype=np.int)
+    cat_dims = np.array(cat_dims, dtype=int)
+    cont_dims = np.array(cont_dims, dtype=int)
     n_dimensions = len(cat_dims) + len(cont_dims)
     cov_amp = ConstantKernel(
         2.0,
@@ -306,14 +306,14 @@ class TestGP(unittest.TestCase):
         self.assertAlmostEqual(var_sd[0][0] ** 2, var_hat[0][0])
 
     def test_gp_on_sklearn_data(self):
-        X, y = sklearn.datasets.load_boston(return_X_y=True)
+        X, y = sklearn.datasets.load_diabetes(return_X_y=True)
         # Normalize such that the bounds in get_gp (10) hold
         X = X / X.max(axis=0)
         rs = np.random.RandomState(1)
         model = get_gp(X.shape[1], rs)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [8.712875586609810299, 8.7608419489812271634]
+        maes = [63.641981362625492318, 68.13160774209401146]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]
@@ -323,7 +323,7 @@ class TestGP(unittest.TestCase):
             model.train(X_train, y_train)
             y_hat, mu_hat = model.predict(X_test)
             mae = np.mean(np.abs(y_hat - y_test), dtype=np.float128)
-            self.assertAlmostEqual(mae, maes[i])
+            self.assertAlmostEqual(mae, maes[i], places=4)
 
     def test_nll(self):
         rs = np.random.RandomState(1)

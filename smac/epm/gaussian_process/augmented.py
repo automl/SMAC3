@@ -1,12 +1,10 @@
 from typing import Dict, List, Optional, Tuple, Union
 
-from collections import OrderedDict
+from functools import partial
 
 import gpytorch
 import numpy as np
 import torch
-from botorch.optim.numpy_converter import module_to_array, set_params_with_array
-from botorch.optim.utils import _get_extra_mll_args
 from gpytorch.constraints.constraints import Interval
 from gpytorch.distributions import MultivariateNormal
 from gpytorch.kernels import Kernel
@@ -14,13 +12,17 @@ from gpytorch.likelihoods import GaussianLikelihood
 from gpytorch.means import ZeroMean
 from gpytorch.mlls import ExactMarginalLogLikelihood
 from gpytorch.models import ExactGP
-from gpytorch.utils.errors import NanError
 from scipy import optimize
 from scipy.stats.qmc import LatinHypercube
 
 from smac.configspace import ConfigurationSpace
 from smac.epm.gaussian_process.gpytorch import ExactGPModel, GPyTorchGaussianProcess
 from smac.epm.gaussian_process.kernels.boing import FITCKernel, FITCMean
+from smac.epm.gaussian_process.utils.botorch_utils import (
+    _scipy_objective_and_grad,
+    module_to_array,
+    set_params_with_array,
+)
 from smac.epm.utils import check_subspace_points
 
 gpytorch.settings.debug.off()
@@ -344,74 +346,14 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
                     new_start_point[inducing_idx : inducing_idx + inducing_size] = new_inducing_points
                     start_points.append(new_start_point)
 
-                def sci_opi_wrapper(
-                    x: np.ndarray,
-                    mll: gpytorch.module,
-                    property_dict: Dict,
-                    train_inputs: torch.Tensor,
-                    train_targets: torch.Tensor,
-                ) -> Tuple[float, np.ndarray]:
-                    """
-                    A modification of from botorch.optim.utils._scipy_objective_and_grad, the key difference is that
-                    we do an additional natural gradient update before computing the gradient values
-                    Parameters
-                    ----------
-                    x: np.ndarray
-                        optimizer input
-                    mll: gpytorch.module
-                        a gpytorch module whose hyperparameters are defined by x
-                    property_dict: Dict
-                        a dict describing how x is mapped to initialize mll
-                    train_inputs: torch.Tensor (N_input, D)
-                        input points of the GP model
-                    train_targets: torch.Tensor (N_input, 1)
-                        target value of the GP model
-                    Returns
-                    ----------
-                    loss: np.ndarray
-                        loss value
-                    grad: np.ndarray
-                        gradient w.r.t. the inputs
-                    ----------
-                    """
-                    # A modification of from botorch.optim.utils._scipy_objective_and_grad:
-                    # https://botorch.org/api/_modules/botorch/optim/utils.html
-                    # The key difference is that we do an additional natural gradient update here
-                    variational_ngd_optimizer.zero_grad()
-
-                    mll = set_params_with_array(mll, x, property_dict)
-                    mll.zero_grad()
-                    try:  # catch linear algebra errors in gpytorch
-                        output = mll.model(train_inputs)
-                        args = [output, train_targets] + _get_extra_mll_args(mll)
-                        loss = -mll(*args).sum()
-                    except RuntimeError as e:
-                        if isinstance(e, NanError) or "singular" in e.args[0]:
-                            return float("nan"), np.full_like(x, "nan")
-                        else:
-                            raise e  # pragma: nocover
-                    loss.backward()
-                    variational_ngd_optimizer.step()
-                    param_dict = OrderedDict(mll.named_parameters())
-                    grad = []
-                    for p_name in property_dict:
-                        t = param_dict[p_name].grad
-                        if t is None:
-                            # this deals with parameters that do not affect the loss
-                            grad.append(np.zeros(property_dict[p_name].shape.numel()))
-                        else:
-                            grad.append(t.detach().view(-1).cpu().double().clone().numpy())
-                    mll.zero_grad()
-                    return loss.item(), np.concatenate(grad)
-
                 theta_star = x0
                 f_opt_star = np.inf
                 for start_point in start_points:
                     try:
                         theta, f_opt, res_dict = optimize.fmin_l_bfgs_b(
-                            sci_opi_wrapper,
+                            partial(_scipy_objective_and_grad, variational_optimizer=variational_ngd_optimizer),
                             start_point,
-                            args=(var_mll, property_dict, X_out_, y_out_),
+                            args=(var_mll, property_dict, (X_out_,), y_out_),
                             bounds=bounds,
                             maxiter=50,
                         )
@@ -440,7 +382,7 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
                 # set inducing points for covariance module here
                 self.gp_model.set_augment_module(X_inducing)
         else:
-            self.hypers, self.property_dict, _ = module_to_array(module=self.gp)
+            self.hypers, self.property_dict, _ = module_to_array(module=self.gp)  # type: ignore[assignment]
 
         self.is_trained = True
         return self

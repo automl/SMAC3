@@ -1,3 +1,11 @@
+# 1.4.1
+
+## Bugfixes
+- Correct handling of integer hyperparameters in the initial design (#531).
+- Pass correct parameter to GaussianProcessRegressor (#921).
+- GPyTorch GaussianProcess no longer depends on the functions from BoTorch (#925)
+- Fix installation guide (#923)
+
 # 1.4.0
 
 ## Features

@@ -15,7 +15,6 @@ function.
     https://open.library.ubc.ca/collections/ubctheses/24/items/1.0167184.
 """
 import importlib
-
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -23,15 +22,15 @@ logging.basicConfig(level=logging.INFO)
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
+import smac
+
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
 from smac.facade.psmac_facade import PSMAC
 from smac.facade.smac_bb_facade import SMAC4BB
-import smac
 
 importlib.reload(smac.facade.psmac_facade)
 from smac.facade.psmac_facade import PSMAC
-
 from smac.optimizer.acquisition import EI
 
 # Import SMAC-utilities

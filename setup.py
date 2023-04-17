@@ -25,7 +25,6 @@ extras_require = {
         "torch>=1.9.0",
         "gpytorch>=1.5.0",
         "pyro-ppl>=1.7.0",
-        "botorch>=0.5.0"
     ],
     "dev": [
         "setuptools",

@@ -9,17 +9,19 @@ on:
     branches:
       - main
       - development
+      - v1.4
 
   # Trigger on a open/push to a PR targeting one of these branches
   pull_request:
     branches:
       - main
       - development
+      - v1.4
 
 jobs:
   ubuntu:
 
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         python-version: [3.9]

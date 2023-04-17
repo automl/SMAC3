@@ -6,8 +6,6 @@ from collections import OrderedDict
 import gpytorch
 import numpy as np
 import torch
-from botorch.optim.numpy_converter import module_to_array, set_params_with_array
-from botorch.optim.utils import _scipy_objective_and_grad
 from gpytorch.constraints.constraints import Interval
 from gpytorch.distributions.multivariate_normal import MultivariateNormal
 from gpytorch.kernels import Kernel
@@ -21,6 +19,11 @@ from scipy import optimize
 
 from smac.configspace import ConfigurationSpace
 from smac.epm.gaussian_process import BaseModel
+from smac.epm.gaussian_process.utils.botorch_utils import (
+    _scipy_objective_and_grad,
+    module_to_array,
+    set_params_with_array,
+)
 from smac.utils.constants import VERY_SMALL_NUMBER
 
 warnings.filterwarnings("ignore", module="gpytorch")
@@ -174,7 +177,7 @@ class GPyTorchGaussianProcess(BaseModel):
             self.hypers = self._optimize()
             self.gp = set_params_with_array(self.gp, self.hypers, self.property_dict)
         else:
-            self.hypers, self.property_dict, _ = module_to_array(module=self.gp)
+            self.hypers, self.property_dict, _ = module_to_array(module=self.gp)  # type: ignore[assignment]
         self.is_trained = True
         return self
 
@@ -222,7 +225,7 @@ class GPyTorchGaussianProcess(BaseModel):
 
         bounds = np.asarray(bounds).transpose().tolist()
 
-        self.property_dict = property_dict
+        self.property_dict = property_dict  # type: ignore[assignment]
 
         p0 = [x0]
 

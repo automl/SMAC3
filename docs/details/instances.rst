@@ -22,7 +22,7 @@ I want to use five different subsets, identified by its id:
 Alternatively, you can also pass ``instance_file`` to the scenario object.
 Additionally to the instances, there is the option to define ``features``. Those instance features are
 used to expand the internal X matrix and thus play a role in training the underlying optimizer.
-See `here <https://github.com/automl/SMAC3/blob/master/smac/runhistory/runhistory2epm.py#L423>`_ for
+See `here <https://github.com/automl/SMAC3/blob/v1.4/smac/runhistory/runhistory2epm.py#L384>`_ for
 the exact implementation.
 
 For example, if I want to add the number of samples and the mean of each subset, I can do as

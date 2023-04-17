@@ -254,7 +254,7 @@ class TestRFWithInstances(unittest.TestCase):
     def test_rf_on_sklearn_data(self):
         import sklearn.datasets
 
-        X, y = sklearn.datasets.load_boston(return_X_y=True)
+        X, y = sklearn.datasets.load_diabetes(return_X_y=True)
         rs = np.random.RandomState(1)
 
         types = np.zeros(X.shape[1])
@@ -274,7 +274,7 @@ class TestRFWithInstances(unittest.TestCase):
                     pca_components=100,
                     log_y=True,
                 )
-                maes = [0.43169704431695493156, 0.4267519520332511912]
+                maes = [0.55565385250439197065, 0.5619729292547211884]
             else:
                 targets = y
                 model = RandomForestWithInstances(
@@ -285,7 +285,7 @@ class TestRFWithInstances(unittest.TestCase):
                     ratio_features=1.0,
                     pca_components=100,
                 )
-                maes = [9.3298376833224042496, 9.348010654109179346]
+                maes = [76.23598411238554823, 77.51529526532357067]
 
             for i, (train_split, test_split) in enumerate(cv.split(X, targets)):
                 X_train = X[train_split]
