@@ -61,7 +61,7 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
 
     """
 
-    def __init__(self, beta: float = 1.0, update_beta=True, beta_scaling_srinivas=False) -> None:
+    def __init__(self, beta: float = 1.0, update_beta: bool = True, beta_scaling_srinivas: bool = False) -> None:
         super(AbstractConfidenceBound, self).__init__()
         self._beta: float = beta
         self._num_data: int | None = None
@@ -71,6 +71,7 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
     @property
     @abstractmethod
     def bound_type(self) -> str:
+        """Type of Confidence Bound. Either UCB or LCB. Set in child class."""
         ...
 
     @property
@@ -137,7 +138,7 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
         if self._update_beta and not self._beta_scaling_srinivas:
             beta_t = 2 * np.log((X.shape[1] * self._num_data**2) / self._beta)
         elif self._update_beta and self._beta_scaling_srinivas:
-            beta_t = (2 * np.log((X.shape[1] * self._num_data**2 * np.pi ** 2) / (6 * self._beta))) / 5
+            beta_t = (2 * np.log((X.shape[1] * self._num_data**2 * np.pi**2) / (6 * self._beta))) / 5
         else:
             beta_t = self._beta
 
@@ -178,7 +179,7 @@ class LCB(AbstractConfidenceBound):
     """
 
     @property
-    def bound_type(self) -> str:
+    def bound_type(self) -> str:  # noqa: D102
         return "LCB"
 
     @property
@@ -219,7 +220,7 @@ class UCB(AbstractConfidenceBound):
     """
 
     @property
-    def bound_type(self) -> str:
+    def bound_type(self) -> str:  # noqa: D102
         return "UCB"
 
     @property

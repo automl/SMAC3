@@ -1,12 +1,13 @@
 from abc import abstractmethod
+from typing import Union
 
 import numpy as np
 
 from smac.acquisition.function import LCB, UCB
 from smac.acquisition.maximizer import LocalAndSortedRandomSearch
-from smac.main.smbo import SMBO
 from smac.callback import Callback
-from smac.runhistory import TrialInfo, TrialValue, TrialKey
+from smac.main.smbo import SMBO
+from smac.runhistory import TrialInfo, TrialKey, TrialValue
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2023, automl.org"
@@ -15,7 +16,9 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-def estimate_crossvalidation_statistical_error(std, folds, data_points_test, data_points_train):
+def estimate_crossvalidation_statistical_error(
+    std: float, folds: int, data_points_test: int, data_points_train: int
+) -> float:
     """Estimates the statistical error of a k-fold cross-validation according to [0].
 
     [0] Nadeau, Claude, and Yoshua Bengio. "Inference for the generalization error." Advances in neural information
@@ -44,8 +47,9 @@ class AbstractStoppingCallbackCallback:
     """Abstract class for stopping criterion callbacks."""
 
     @abstractmethod
-    def log(self, smbo: SMBO, min_ubc: float, min_lcb: float, regret: float, statistical_error: float, triggered: bool)\
-            -> None:
+    def log(
+        self, smbo: SMBO, min_ubc: float, min_lcb: float, regret: float, statistical_error: float, triggered: bool
+    ) -> None:
         """Logs the stopping criterion values.
 
         Parameters
@@ -67,22 +71,26 @@ class AbstractStoppingCallbackCallback:
 
 
 class StoppingCallback(Callback):
-    """Callback implementing the stopping criterion by Makarova et al. (2022) [0].
+    """
+    Callback implementing the stopping criterion by Makarova et al. (2022) [0].
 
     [0] Makarova, Anastasia, et al. "Automatic Termination for Hyperparameter Optimization." First Conference on
-    Automated Machine Learning (Main Track). 2022."""
+    Automated Machine Learning (Main Track). 2022.
+    """
 
-    def __init__(self,
-                 initial_beta=0.1,
-                 update_beta=True,
-                 upper_bound_estimation_rate=0.5,
-                 wait_iterations=20,
-                 n_points_lcb=1000,
-                 model_log_transform=True,
-                 statistical_error_threshold=None,
-                 statistical_error_field_name='statistical_error',
-                 do_not_trigger=False,
-                 callbacks: list[AbstractStoppingCallbackCallback] = None):
+    def __init__(
+        self,
+        initial_beta: float = 0.1,
+        update_beta: bool = True,
+        upper_bound_estimation_rate: float = 0.5,
+        wait_iterations: int = 20,
+        n_points_lcb: int = 1000,
+        model_log_transform: bool = True,
+        statistical_error_threshold: Union[float, None] = None,
+        statistical_error_field_name: str = "statistical_error",
+        do_not_trigger: bool = False,
+        callbacks: list[AbstractStoppingCallbackCallback] = None,
+    ):
         super().__init__()
         self._upper_bound_estimation_rate = upper_bound_estimation_rate
         self._wait_iterations = wait_iterations
@@ -98,7 +106,6 @@ class StoppingCallback(Callback):
 
     def on_tell_end(self, smbo: SMBO, info: TrialInfo, value: TrialValue) -> bool:
         """Checks if the optimization should be stopped after the given trial."""
-
         # do not trigger stopping criterion before wait_iterations
         if smbo.runhistory.submitted < self._wait_iterations:
             return True
@@ -115,9 +122,14 @@ class StoppingCallback(Callback):
 
         trial_info = trial_info_list[0]
 
-        trial_value = smbo.runhistory[TrialKey(config_id=smbo.runhistory.get_config_id(trial_info.config),
-                                               instance=trial_info.instance, seed=trial_info.seed,
-                                               budget=trial_info.budget)]
+        trial_value = smbo.runhistory[
+            TrialKey(
+                config_id=smbo.runhistory.get_config_id(trial_info.config),
+                instance=trial_info.instance,
+                seed=trial_info.seed,
+                budget=trial_info.budget,
+            )
+        ]
 
         if self._statistical_error_threshold is not None:
             incumbent_statistical_error = self._statistical_error_threshold
@@ -125,9 +137,10 @@ class StoppingCallback(Callback):
             incumbent_statistical_error = trial_value.additional_info[self._statistical_error_field_name]
 
         # compute regret
+        assert smbo.intensifier.config_selector.model is not None
         model = smbo.intensifier.config_selector.model
         if model.fitted:
-            configs = smbo.runhistory.get_configs(sort_by='cost')
+            configs = smbo.runhistory.get_configs(sort_by="cost")
 
             # update acquisition functions
             num_data = len(configs)
@@ -135,15 +148,15 @@ class StoppingCallback(Callback):
             self._ucb.update(model=model, num_data=num_data)
 
             # get pessimistic estimate of incumbent performance
-            configs = configs[:int(self._upper_bound_estimation_rate * num_data)]
+            configs = configs[: int(self._upper_bound_estimation_rate * num_data)]
             min_ucb = min(-1 * self._ucb(configs))[0]
             if self._model_log_transform:
                 min_ucb = np.exp(min_ucb)
 
             # get optimistic estimate of the best possible performance (min lcb of all configs)
-            maximizer = LocalAndSortedRandomSearch(configspace=smbo.scenario.configspace,
-                                                   acquisition_function=self._lcb,
-                                                   challengers=1)
+            maximizer = LocalAndSortedRandomSearch(
+                configspace=smbo.scenario.configspace, acquisition_function=self._lcb, challengers=1
+            )
             # it is maximizing the negative lcb, thus, the minimum is found
             challenger_list = maximizer.maximize(previous_configs=[], n_points=self._n_points_lcb)
             min_lcb = -1 * self._lcb(challenger_list)[0]
@@ -154,8 +167,10 @@ class StoppingCallback(Callback):
             regret = min_ucb - min_lcb
 
             # print stats
-            logger.debug(f'Minimum UCB: {min_ucb}, minimum LCB: {min_lcb}, regret: {regret}, '
-                         f'statistical error: {incumbent_statistical_error}')
+            logger.debug(
+                f"Minimum UCB: {min_ucb}, minimum LCB: {min_lcb}, regret: {regret}, "
+                f"statistical error: {incumbent_statistical_error}"
+            )
 
             # we are stopping once regret < incumbent statistical error (return false = do not continue optimization
             continue_optimization = regret >= incumbent_statistical_error
@@ -163,12 +178,14 @@ class StoppingCallback(Callback):
             for callback in self._callbacks:
                 callback.log(smbo, min_ucb, min_lcb, regret, incumbent_statistical_error, not continue_optimization)
 
-            info_str = f'triggered after {len(smbo.runhistory)} evaluations with regret ' \
-                       f'~{round(regret, 3)} and incumbent error ~{round(incumbent_statistical_error, 3)}.'
+            info_str = (
+                f"triggered after {len(smbo.runhistory)} evaluations with regret "
+                f"~{round(regret, 3)} and incumbent error ~{round(incumbent_statistical_error, 3)}."
+            )
             if not continue_optimization:
-                logger.info(f'Stopping criterion {info_str}')
+                logger.info(f"Stopping criterion {info_str}")
             else:
-                logger.debug(f'Stopping criterion not {info_str}')
+                logger.debug(f"Stopping criterion not {info_str}")
 
             if self._do_not_trigger:
                 return True
@@ -179,5 +196,5 @@ class StoppingCallback(Callback):
             logger.debug("Stopping criterion not triggered as model is not built yet.")
             return True
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "StoppingCallback"

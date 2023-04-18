@@ -365,12 +365,10 @@ class SuccessiveHalving(AbstractIntensifier):
             # 1) Yield trials of configs that are not yet evaluated/running
             # 2) Update tracker and move better configs to the next stage
             # We start in reverse order to complete higher stages first
-            logger.debug(f'Tracker Status: {[(key, a[0], len(a[1])) for key, value in self._tracker.items() for a in value]}')
+            logger.debug("Updating tracker:")
 
             # TODO: Process stages ascending or descending?
-            tracker_keys = list(self._tracker.keys())
-            for (bracket, stage) in tracker_keys:
-                logger.debug(f'Starting bracket {bracket}, stage {stage}.')
+            for (bracket, stage) in list(self._tracker.keys()):
                 pairs = self._tracker[(bracket, stage)].copy()
                 for seed, configs in pairs:
                     isb_keys = self._get_instance_seed_budget_keys_by_stage(bracket=bracket, stage=stage, seed=seed)
@@ -394,7 +392,6 @@ class SuccessiveHalving(AbstractIntensifier):
                     except NotEvaluatedError:
                         # We can't compare anything, so we just continue with the next pairs
                         logger.debug("--- Could not compare configs because not all trials have been evaluated yet.")
-                        logger.debug(f"--- Tracker status: {[(key,value) for key, value in tracker_keys]}")
                         continue
 
                     # Update tracker
@@ -410,8 +407,6 @@ class SuccessiveHalving(AbstractIntensifier):
                             f"--- Promoted {len(config_ids)} configs from stage {stage} to stage {stage + 1} in "
                             f"bracket {bracket}."
                         )
-                        logger.debug(
-                            f"--- Tracker status: {[(key, value) for key, value in tracker_keys]}")
                     else:
                         logger.debug(
                             f"--- Removed {len(successful_configs)} configs to last stage in bracket {bracket}."

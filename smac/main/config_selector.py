@@ -306,7 +306,6 @@ class ConfigSelector:
             np.empty(shape=[0, 0]),
         )
 
-
     def _get_evaluated_configs(self) -> list[Configuration]:
         assert self._runhistory is not None
         return self._runhistory.get_configs_per_budget(budget_subset=self._considered_budgets)

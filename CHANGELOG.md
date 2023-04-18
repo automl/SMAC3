@@ -2,6 +2,13 @@
 - Add Upper Confidence Bound as an acquisition function
 - Add Stopping Criterion Callback
 
+## Improvements
+- Generalization of confidence-bound-based acquisition functions.
+- Add some missing public properties.
+
+## Bugfixes
+- Correct return value check for callbacks.
+
 # 2.0.0
 
 ## Improvements

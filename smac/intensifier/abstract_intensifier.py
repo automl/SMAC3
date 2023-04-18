@@ -452,7 +452,7 @@ class AbstractIntensifier:
             def on_tell_end(self, smbo: smac.main.smbo.SMBO, info: TrialInfo, value: TrialValue) -> None:
                 self.intensifier.update_incumbents(info.config)
 
-            def __str__(self):
+            def __str__(self) -> str:
                 return "RunHistoryCallback"
 
         return RunHistoryCallback(self)
