@@ -192,7 +192,7 @@ class SMBO:
             # If a callback returns False, the optimization loop should be interrupted
             # the other callbacks are still being called.
             if continue_optimization is not None and not continue_optimization:
-                logger.info(f'Callback {callback} returned False (on_tell_start). Abort is requested.')
+                logger.info(f"Callback {callback} returned False (on_tell_start). Abort is requested.")
                 self._stop = True
 
         # Some sanity checks here
@@ -224,7 +224,7 @@ class SMBO:
             # If a callback returns False, the optimization loop should be interrupted
             # the other callbacks are still being called.
             if continue_optimization is not None and not continue_optimization:
-                logger.info(f'Callback {callback} returned False (on_tell_end). Abort is requested.')
+                logger.info(f"Callback {callback} returned False (on_tell_end). Abort is requested.")
                 self._stop = True
 
         if save:
@@ -445,7 +445,7 @@ class SMBO:
                     logger.info("Cost threshold was reached. Abort is requested.")
                     self._stop = True
 
-    def _register_callback(self, callback: Callback) -> None:
+    def register_callback(self, callback: Callback) -> None:
         """Registers a callback to be called before, in between, and after the Bayesian optimization loop."""
         self._callbacks += [callback]
 
