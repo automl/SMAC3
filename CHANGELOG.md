@@ -8,6 +8,7 @@
 
 ## Bugfixes
 - Correct return value check for callbacks.
+- Fix validation in smbo to use the seed in the scenario.
 
 # 2.0.0
 

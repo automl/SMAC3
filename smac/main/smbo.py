@@ -8,6 +8,7 @@ from pathlib import Path
 
 import numpy as np
 from ConfigSpace import Configuration
+from numpy import ndarray
 
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
@@ -517,28 +518,27 @@ class SMBO:
         config: Configuration,
         *,
         seed: int | None = None,
-    ) -> float | list[float]:
+    ) -> float | ndarray[float]:
         """Validates a configuration on other seeds than the ones used in the optimization process and on the highest
-        budget (if budget type is real-valued).
+        budget (if budget type is real-valued). Does not exceed the maximum number of config calls or seeds as defined
+        in the scenario.
 
         Parameters
         ----------
         config : Configuration
             Configuration to validate
-        instances : list[str] | None, defaults to None
-            Which instances to validate. If None, all instances specified in the scenario are used.
             In case that the budget type is real-valued budget, this argument is ignored.
         seed : int | None, defaults to None
             If None, the seed from the scenario is used.
 
         Returns
         -------
-        cost : float | list[float]
+        cost : float | ndarray[float]
             The averaged cost of the configuration. In case of multi-fidelity, the cost of each objective is
             averaged.
         """
         if seed is None:
-            seed = 0
+            seed = self._scenario.seed
 
         costs = []
         for trial in self._intensifier.get_trials_of_interest(config, validate=True, seed=seed):
