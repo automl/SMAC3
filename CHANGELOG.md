@@ -1,3 +1,8 @@
+# 2.0.1
+
+## Bugfixes
+- Fix validation in smbo to use the seed in the scenario.
+
 # 2.0.0
 
 ## Improvements
