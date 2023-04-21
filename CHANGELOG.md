@@ -1,3 +1,11 @@
+# 2.?
+
+## Improvements
+- Add option to pass a dask client to the facade, e.g. enables running on a hpc cluster (#983).
+
+## Bugfixes
+- The ISB-pair differences over the incumbent's configurations are computed correctly now (#956).
+
 # 2.0.0
 
 ## Improvements
@@ -9,7 +17,6 @@
 ## Bugfixes
 - Continue run when setting incumbent selection to highest budget when using Successive Halving (#907).
 - If integer features are used, they are automatically converted to strings.
-- The ISB-pair differences over the incumbent's configurations are computed correctly now (#956).
 
 ## Workflows
 - Added workflow to update pre-commit versions (#874).
