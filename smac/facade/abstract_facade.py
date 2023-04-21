@@ -113,8 +113,7 @@ class AbstractFacade:
         callbacks: list[Callback] = [],
         overwrite: bool = False,
     ):
-        if logging_level is not False:
-            setup_logging(logging_level)
+        setup_logging(logging_level)
 
         if model is None:
             model = self.get_model(scenario)

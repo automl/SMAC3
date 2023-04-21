@@ -2,6 +2,7 @@
 
 ## Bugfixes
 - Adjust amount of configurations in different stages of hyperband brackets to conform to the original paper.
+- Fix validation in smbo to use the seed in the scenario.
 
 # 2.0.0
 
@@ -14,6 +15,7 @@
 ## Bugfixes
 - Continue run when setting incumbent selection to highest budget when using Successive Halving (#907).
 - If integer features are used, they are automatically converted to strings.
+- The ISB-pair differences over the incumbent's configurations are computed correctly now (#956).
 
 ## Workflows
 - Added workflow to update pre-commit versions (#874).
