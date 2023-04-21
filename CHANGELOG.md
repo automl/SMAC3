@@ -1,10 +1,12 @@
-# 2.?
+# 2.0.1
 
 ## Improvements
 - Add option to pass a dask client to the facade, e.g. enables running on a hpc cluster (#983).
 
 ## Bugfixes
 - The ISB-pair differences over the incumbent's configurations are computed correctly now (#956).
+- Fix validation in smbo to use the seed in the scenario.
+
 
 # 2.0.0
 
