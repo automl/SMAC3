@@ -271,13 +271,12 @@ class AbstractIntensifier:
 
             i = 0
             while True:
-                # We have two conditions to stop the loop:
-                # A) We found enough configs
-                # B) We used enough seeds
-                A = self._max_config_calls is not None and len(instance_seed_keys) >= self._max_config_calls
-                B = self._n_seeds is not None and i >= self._n_seeds
+                found_enough_configs = (
+                    self._max_config_calls is not None and len(instance_seed_keys) >= self._max_config_calls
+                )
+                used_enough_seeds = self._n_seeds is not None and i >= self._n_seeds
 
-                if A or B:
+                if found_enough_configs or used_enough_seeds:
                     break
 
                 if validate:

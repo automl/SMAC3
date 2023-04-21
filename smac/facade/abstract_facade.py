@@ -119,8 +119,7 @@ class AbstractFacade:
         overwrite: bool = False,
         dask_client: Client | None = None,
     ):
-        if logging_level is not False:
-            setup_logging(logging_level)
+        setup_logging(logging_level)
 
         if model is None:
             model = self.get_model(scenario)

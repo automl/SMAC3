@@ -2,7 +2,7 @@ name: Stale-Reminder
 
 on:
   schedule:
-    - cron: '42 14 * * 3'
+    - cron: '00 13 * * 1'
   workflow_dispatch:
 
 jobs:
