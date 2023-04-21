@@ -74,7 +74,6 @@ class TargetFunctionRunner(AbstractSerialRunner):
         if (memory := self._scenario.trial_memory_limit) is not None:
             unit = None
             if isinstance(memory, (tuple, list)):
-                print(">"*30, memory)
                 memory, unit = memory
             memory = int(math.ceil(memory))
             if unit is not None:
