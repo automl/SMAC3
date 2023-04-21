@@ -531,7 +531,7 @@ class AbstractIntensifier:
         # 2) Highest budget: We only want to compare the configs if they are evaluated on the highest budget.
         # Here we do actually care about the budgets. Please see the ``get_instance_seed_budget_keys`` method from
         # Successive Halving to get more information.
-        # Noitce: compare=True only takes effect when subclass implemented it. -- e.g. in SH it
+        # Notice: compare=True only takes effect when subclass implemented it. -- e.g. in SH it
         # will remove the budgets from the keys.
         config_isb_comparison_keys = self.get_instance_seed_budget_keys(config, compare=True)
         # Find the lowest intersection of instance-seed-budget keys for all incumbents.
@@ -567,6 +567,9 @@ class AbstractIntensifier:
         all_incumbent_isb_keys = []
         for incumbent in incumbents:
             all_incumbent_isb_keys.append(self.get_instance_seed_budget_keys(incumbent))
+
+        # Allow some modifications to the incumbent list
+        all_incumbent_isb_keys = self._sub_select_incumbent_isb(incumbents, all_incumbent_isb_keys)
 
         # We compare the incumbents now and only return the ones on the pareto front
         new_incumbents = calculate_pareto_front(rh, incumbents, all_incumbent_isb_keys)
@@ -629,6 +632,12 @@ class AbstractIntensifier:
             )
 
         self._update_trajectory(new_incumbents)
+
+    def _sub_select_incumbent_isb(
+        self, incumbents: list[Configuration], isb_keys: list[list[InstanceSeedBudgetKey]]
+    ) -> list[list[InstanceSeedBudgetKey]]:
+        """Allows specific intensifiers to sub-select isb keys available for the incumbent selection."""
+        return isb_keys
 
     @abstractmethod
     def __iter__(self) -> Iterator[TrialInfo]:
@@ -695,7 +704,16 @@ class AbstractIntensifier:
     def _update_trajectory(self, configs: list[Configuration]) -> None:
         rh = self.runhistory
         config_ids = [rh.get_config_id(c) for c in configs]
-        costs = [rh.average_cost(c, normalize=False) for c in configs]
+
+        all_incumbent_isb_keys = []
+        for config in configs:
+            all_incumbent_isb_keys.append(self.get_instance_seed_budget_keys(config))
+
+        # Allow some modifications to the incumbent list
+        all_incumbent_isb_keys = self._sub_select_incumbent_isb(configs, all_incumbent_isb_keys)
+
+        # selected are not included (needs to be same as incumbent selection)
+        costs = [rh.average_cost(configs[i], all_incumbent_isb_keys[i], normalize=False) for i in range(len(configs))]
 
         self._incumbents = configs
         self._incumbents_changed += 1

@@ -269,6 +269,44 @@ class SuccessiveHalving(AbstractIntensifier):
 
         return trials
 
+    def _sub_select_incumbent_isb(
+        self, incumbents: list[Configuration], isb_keys: list[list[InstanceSeedBudgetKey]]
+    ) -> list[list[InstanceSeedBudgetKey]]:
+
+        if not self._incumbent_selection == "any_budget":
+            return isb_keys
+
+        for i in range(len(incumbents)):
+            isb_keys[i] = self._get_best_cost_for_config(incumbents[i], isb_keys[i])
+
+        return isb_keys
+
+    def _get_best_cost_for_config(
+        self, config: Configuration, isb_keys: list[InstanceSeedBudgetKey]
+    ) -> list[InstanceSeedBudgetKey]:
+        # step one: merge all the usb keys for one budget
+        budgets = set([isb.budget for isb in isb_keys])
+        configs_by_budgets = {budget: [] for budget in budgets}
+        for isb in isb_keys:
+            configs_by_budgets[isb.budget].append(isb)
+
+        # step two: get the average performance for each budget
+        runhistory_average_cost_by_budget = {}
+        for budget, isbs in configs_by_budgets.items():
+            average_cost = self.runhistory.average_cost(config=config, instance_seed_budget_keys=isbs)
+
+            if type(average_cost) == list:
+                raise NotImplementedError(
+                    "SH with any-budget incumbent selection only supports single-objective " "scenarios."
+                )
+
+            runhistory_average_cost_by_budget[budget] = average_cost
+
+        # step three: get the best performance
+        best_budget = min(runhistory_average_cost_by_budget, key=runhistory_average_cost_by_budget.get)
+
+        return configs_by_budgets[best_budget]
+
     def get_instance_seed_budget_keys(
         self, config: Configuration, compare: bool = False
     ) -> list[InstanceSeedBudgetKey]:
