@@ -7,8 +7,8 @@ from pathlib import Path
 
 import joblib
 from ConfigSpace import Configuration
-from typing_extensions import Literal
 from dask.distributed import Client
+from typing_extensions import Literal
 
 import smac
 from smac.acquisition.function.abstract_acquisition_function import (
