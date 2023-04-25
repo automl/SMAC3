@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Iterator
+from typing import Any, Iterator, Optional
 
 from collections import defaultdict
 
@@ -286,7 +286,7 @@ class SuccessiveHalving(AbstractIntensifier):
     ) -> list[InstanceSeedBudgetKey]:
         # step one: merge all the usb keys for one budget
         budgets = set([isb.budget for isb in isb_keys])
-        configs_by_budgets = {budget: [] for budget in budgets}
+        configs_by_budgets: dict[Optional[float], list[InstanceSeedBudgetKey]] = {budget: [] for budget in budgets}
         for isb in isb_keys:
             configs_by_budgets[isb.budget].append(isb)
 
@@ -303,7 +303,7 @@ class SuccessiveHalving(AbstractIntensifier):
             runhistory_average_cost_by_budget[budget] = average_cost
 
         # step three: get the best performance
-        best_budget = min(runhistory_average_cost_by_budget, key=runhistory_average_cost_by_budget.get)
+        best_budget = min(runhistory_average_cost_by_budget, key=runhistory_average_cost_by_budget.get)  # type: ignore
 
         return configs_by_budgets[best_budget]
 

@@ -48,7 +48,7 @@ class AbstractStoppingCallbackCallback:
 
     @abstractmethod
     def log(
-        self, smbo: SMBO, min_ubc: float, min_lcb: float, regret: float, statistical_error: float, triggered: bool
+        self, smbo: SMBO, min_ucb: float, min_lcb: float, regret: float, statistical_error: float, triggered: bool
     ) -> None:
         """Logs the stopping criterion values.
 
@@ -56,7 +56,7 @@ class AbstractStoppingCallbackCallback:
         ----------
         smbo : SMBO
             The SMBO instance.
-        min_ubc : float
+        min_ucb : float
             Minimum upper confidence bound.
         min_lcb : float
             Minimum lower confidence bound.
