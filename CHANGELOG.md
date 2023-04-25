@@ -4,6 +4,7 @@
 - Callbacks registration is now a public method of the optimizer and allows callbacks to be inserted at a specific position.
 
 ## Bugfixes
+- Adjust amount of configurations in different stages of hyperband brackets to conform to the original paper.
 - Fix validation in smbo to use the seed in the scenario.
 - Change order of callbacks, intensifier callback for incumbent selection is now the first callback. 
 
