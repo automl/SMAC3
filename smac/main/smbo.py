@@ -441,9 +441,19 @@ class SMBO:
                     logger.info("Cost threshold was reached. Abort is requested.")
                     self._stop = True
 
-    def _register_callback(self, callback: Callback) -> None:
-        """Registers a callback to be called before, in between, and after the Bayesian optimization loop."""
-        self._callbacks += [callback]
+    def register_callback(self, callback: Callback, index: int = -1) -> None:
+        """
+        Registers a callback to be called before, in between, and after the Bayesian optimization loop.
+
+
+        Parameters
+        ----------
+        callback : Callback
+            The callback to be registered.
+        index : int
+            The index at which the callback should be registered.
+        """
+        self._callbacks.insert(index, callback)
 
     def _initialize_state(self) -> None:
         """Detects whether the optimization is restored from a previous state."""
