@@ -1,7 +1,11 @@
 # 2.0.1
 
+## Improvements
+- Callbacks registration is now a public method of the optimizer and allows callbacks to be inserted at a specific position.
+
 ## Bugfixes
 - Fix validation in smbo to use the seed in the scenario.
+- Change order of callbacks, intensifier callback for incumbent selection is now the first callback. 
 
 # 2.0.0
 
