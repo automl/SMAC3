@@ -25,3 +25,6 @@ class RunHistoryLogEncoder(RunHistoryEncoder):
             values[values < constants.MINIMAL_COST_FOR_LOG] = constants.MINIMAL_COST_FOR_LOG
 
         return np.log(values)
+
+    def transform_response_values_inverse(self, values: np.ndarray) -> np.ndarray:  # noqa D102
+        raise NotImplementedError("Inverse transform is not implemented for log cost.")

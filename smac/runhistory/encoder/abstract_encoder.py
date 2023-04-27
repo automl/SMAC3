@@ -299,3 +299,21 @@ class AbstractRunHistoryEncoder:
         transformed_values : np.ndarray
         """
         raise NotImplementedError
+
+    @abstractmethod
+    def transform_response_values_inverse(
+        self,
+        values: np.ndarray,
+    ) -> np.ndarray:
+        """Inverse transform function response values.
+
+        Parameters
+        ----------
+        values : np.ndarray
+            Response values to be inverse transformed.
+
+        Returns
+        -------
+        inverse_transformed_values : np.ndarray
+        """
+        raise NotImplementedError

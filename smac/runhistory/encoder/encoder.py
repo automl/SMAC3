@@ -69,3 +69,7 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
         """Returns the input values."""
         return values
+
+    def transform_response_values_inverse(self, values: np.ndarray) -> np.ndarray:
+        """Returns the input values."""
+        return values

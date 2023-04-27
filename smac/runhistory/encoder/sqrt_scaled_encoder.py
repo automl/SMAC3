@@ -11,7 +11,6 @@ from smac.utils.logging import get_logger
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
-
 logger = get_logger(__name__)
 
 
@@ -38,3 +37,6 @@ class RunHistorySqrtScaledEncoder(RunHistoryEncoder):
         values = np.sqrt(values)
 
         return values
+
+    def transform_response_values_inverse(self, values: np.ndarray) -> np.ndarray:  # noqa D102
+        raise NotImplementedError("Inverse transform is not implemented for sqrt scaled cost.")

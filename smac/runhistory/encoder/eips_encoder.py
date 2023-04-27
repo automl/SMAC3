@@ -13,7 +13,6 @@ from smac.utils.multi_objective import normalize_costs
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
-
 logger = get_logger(__name__)
 
 
@@ -81,3 +80,6 @@ class RunHistoryEIPSEncoder(AbstractRunHistoryEncoder):
         # We need to ensure that time remains positive after the log transform.
         values[:, 1] = np.log(1 + values[:, 1])
         return values
+
+    def transform_response_values_inverse(self, values: np.ndarray) -> np.ndarray:  # noqa D102
+        raise NotImplementedError("Inverse transform not implemented for EIPS")

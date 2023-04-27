@@ -26,3 +26,6 @@ class RunHistoryScaledEncoder(RunHistoryEncoder):
         min_y[np.where(min_y == self._max_y)] *= 1 - 10**-101
         values = (values - min_y) / (self._max_y - min_y)
         return values
+
+    def transform_response_values_inverse(self, values: np.ndarray) -> np.ndarray:  # noqa D102
+        raise NotImplementedError("Inverse transform is not implemented for scaled cost.")

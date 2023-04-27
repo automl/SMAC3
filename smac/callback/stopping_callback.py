@@ -149,19 +149,27 @@ class StoppingCallback(Callback):
 
             # get pessimistic estimate of incumbent performance
             configs = configs[: int(self._upper_bound_estimation_rate * num_data)]
-            min_ucb = min(-1 * self._ucb(configs))[0]
-            if self._model_log_transform:
-                min_ucb = np.exp(min_ucb)
+            min_ucb = self._ucb(configs)
+            min_ucb *= -1
+            if smbo.intensifier.config_selector._runhistory_encoder is not None:
+                min_ucb = smbo.intensifier.config_selector._runhistory_encoder.transform_response_values_inverse(
+                    min_ucb
+                )
+            min_ucb = min(min_ucb)[0]
 
             # get optimistic estimate of the best possible performance (min lcb of all configs)
             maximizer = LocalAndSortedRandomSearch(
                 configspace=smbo.scenario.configspace, acquisition_function=self._lcb, challengers=1
             )
-            # it is maximizing the negative lcb, thus, the minimum is found
+            # SMBO is maximizing the negative lcb, thus, we need to invert the lcb
             challenger_list = maximizer.maximize(previous_configs=[], n_points=self._n_points_lcb)
-            min_lcb = -1 * self._lcb(challenger_list)[0]
-            if self._model_log_transform:
-                min_lcb = np.exp(min_lcb)[0]
+            min_lcb = self._lcb(challenger_list)
+            min_lcb *= -1
+            if smbo.intensifier.config_selector._runhistory_encoder is not None:
+                min_lcb = smbo.intensifier.config_selector._runhistory_encoder.transform_response_values_inverse(
+                    min_lcb
+                )
+            min_lcb = min(min_lcb)[0]
 
             # compute regret
             regret = min_ucb - min_lcb
