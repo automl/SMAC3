@@ -275,7 +275,7 @@ class AbstractFacade:
         """
         return self._optimizer.tell(info, value, save=save)
 
-    def optimize(self) -> Configuration | list[Configuration]:
+    def optimize(self, shared_data=None) -> Configuration | list[Configuration]:
         """
         Optimizes the configuration of the algorithm.
 
@@ -286,7 +286,7 @@ class AbstractFacade:
         """
         incumbents = None
         try:
-            incumbents = self._optimizer.optimize()
+            incumbents = self._optimizer.optimize(shared_data=shared_data)
         finally:
             self._optimizer.save()
 
