@@ -93,6 +93,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
         instance: str | None = None,
         budget: float | None = None,
         seed: int | None = None,
+        **shared_dict,
     ) -> tuple[StatusType, float | list[float], float, dict]:
         """Calls the target function with pynisher if algorithm wall time limit or memory limit is
         set. Otherwise, the function is called directly.
@@ -121,6 +122,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
         """
         # The kwargs are passed to the target function.
         kwargs: dict[str, Any] = {}
+        kwargs.update(shared_dict)
 
         if "seed" in self._required_arguments:
             kwargs["seed"] = seed

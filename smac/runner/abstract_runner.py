@@ -76,7 +76,7 @@ class AbstractRunner(ABC):
                 assert isinstance(scenario.crash_cost, float)
                 self._crash_cost = [scenario.crash_cost for _ in range(self._n_objectives)]
 
-    def run_wrapper(self, trial_info: TrialInfo) -> tuple[TrialInfo, TrialValue]:
+    def run_wrapper(self, trial_info: TrialInfo, **shared_dict) -> tuple[TrialInfo, TrialValue]:
         """Wrapper around run() to execute and check the execution of a given config.
         This function encapsulates common
         handling/processing, so that run() implementation is simplified.
@@ -101,6 +101,7 @@ class AbstractRunner(ABC):
                 instance=trial_info.instance,
                 budget=trial_info.budget,
                 seed=trial_info.seed,
+                **shared_dict,
             )
         except Exception as e:
             status = StatusType.CRASHED

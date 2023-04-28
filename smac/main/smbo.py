@@ -19,6 +19,7 @@ from smac.runhistory import StatusType, TrialInfo, TrialValue
 from smac.runhistory.runhistory import RunHistory
 from smac.runner import FirstRunCrashedException
 from smac.runner.abstract_runner import AbstractRunner
+from smac.runner.dask_runner import DaskParallelRunner
 from smac.scenario import Scenario
 from smac.utils.data_structures import recursively_compare_dicts
 from smac.utils.logging import get_logger
@@ -244,7 +245,7 @@ class SMBO:
             assert config_selector._acquisition_maximizer is not None
             config_selector._acquisition_maximizer.acquisition_function = acquisition_function
 
-    def optimize(self) -> Configuration | list[Configuration]:
+    def optimize(self, shared_data=None) -> Configuration | list[Configuration]:
         """Runs the Bayesian optimization loop.
 
         Returns
@@ -269,6 +270,12 @@ class SMBO:
         for callback in self._callbacks:
             callback.on_start(self)
 
+
+        should_share = isinstance(self._runner, DaskParallelRunner) and shared_data is not None
+        shared_dict = (
+            dict(shared_data=self._runner._client.scatter(shared_data, broadcast=True)) if should_share else {}
+        )
+
         # Main BO loop
         while True:
             for callback in self._callbacks:
@@ -280,7 +287,7 @@ class SMBO:
 
                 # We submit the trial to the runner
                 # In multi-worker mode, SMAC waits till a new worker is available here
-                self._runner.submit_trial(trial_info=trial_info)
+                self._runner.submit_trial(trial_info=trial_info, **shared_dict)
             except StopIteration:
                 self._stop = True
 

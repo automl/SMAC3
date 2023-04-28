@@ -98,7 +98,7 @@ class DaskParallelRunner(AbstractRunner):
             self._client = dask_client
             self._close_client_at_del = False
 
-    def submit_trial(self, trial_info: TrialInfo) -> None:
+    def submit_trial(self, trial_info: TrialInfo, **shared_dict) -> None:
         """This function submits a configuration embedded in a ``trial_info`` object, and uses one of
         the workers to produce a result locally to each worker.
 
@@ -133,7 +133,7 @@ class DaskParallelRunner(AbstractRunner):
                 )
 
         # At this point we can submit the job
-        trial = self._client.submit(self._single_worker.run_wrapper, trial_info=trial_info)
+        trial = self._client.submit(self._single_worker.run_wrapper, trial_info=trial_info, **shared_dict)
         self._pending_trials.append(trial)
 
     def iter_results(self) -> Iterator[tuple[TrialInfo, TrialValue]]:  # noqa: D102
@@ -154,8 +154,9 @@ class DaskParallelRunner(AbstractRunner):
         instance: str | None = None,
         budget: float | None = None,
         seed: int | None = None,
+        **shared_dict,
     ) -> tuple[StatusType, float | list[float], float, dict]:  # noqa: D102
-        return self._single_worker.run(config=config, instance=instance, seed=seed, budget=budget)
+        return self._single_worker.run(config=config, instance=instance, seed=seed, budget=budget, **shared_dict)
 
     def count_available_workers(self) -> int:
         """Total number of workers available. This number is dynamic as more resources
