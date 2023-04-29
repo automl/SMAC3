@@ -122,6 +122,11 @@ class ConfigSelector:
             "min_trials": self._min_trials,
         }
 
+    @property
+    def runhistory_encoder(self) -> AbstractRunHistoryEncoder | None:
+        """Returns the runhistory encoder."""
+        return self._runhistory_encoder
+
     def __iter__(self) -> Iterator[Configuration]:
         """This method returns the next configuration to evaluate. It ignores already processed configurations, i.e.,
         the configurations from the runhistory, if the runhistory is not empty.

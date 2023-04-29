@@ -115,7 +115,7 @@ class StoppingCallback(Callback):
         trial_info_list = smbo.runhistory.get_trials(incumbent_config)
 
         if trial_info_list is None or len(trial_info_list) == 0:
-            logger.warn("No trial info for incumbent found. Stopping criterion will not be triggered.")
+            logger.warning("No trial info for incumbent found. Stopping criterion will not be triggered.")
             return True
         elif len(trial_info_list) > 1:
             raise ValueError("Currently, only one trial per config is supported.")
@@ -141,6 +141,7 @@ class StoppingCallback(Callback):
         model = smbo.intensifier.config_selector.model
         if model.fitted:
             configs = smbo.runhistory.get_configs(sort_by="cost")
+            runhistory_encoder = smbo.intensifier.config_selector.runhistory_encoder
 
             # update acquisition functions
             num_data = len(configs)
@@ -151,10 +152,8 @@ class StoppingCallback(Callback):
             configs = configs[: int(self._upper_bound_estimation_rate * num_data)]
             min_ucb = self._ucb(configs)
             min_ucb *= -1
-            if smbo.intensifier.config_selector._runhistory_encoder is not None:
-                min_ucb = smbo.intensifier.config_selector._runhistory_encoder.transform_response_values_inverse(
-                    min_ucb
-                )
+            if runhistory_encoder is not None:
+                min_ucb = runhistory_encoder.transform_response_values_inverse(min_ucb)
             min_ucb = min(min_ucb)[0]
 
             # get optimistic estimate of the best possible performance (min lcb of all configs)
@@ -165,10 +164,8 @@ class StoppingCallback(Callback):
             challenger_list = maximizer.maximize(previous_configs=[], n_points=self._n_points_lcb)
             min_lcb = self._lcb(challenger_list)
             min_lcb *= -1
-            if smbo.intensifier.config_selector._runhistory_encoder is not None:
-                min_lcb = smbo.intensifier.config_selector._runhistory_encoder.transform_response_values_inverse(
-                    min_lcb
-                )
+            if runhistory_encoder is not None:
+                min_lcb = runhistory_encoder.transform_response_values_inverse(min_lcb)
             min_lcb = min(min_lcb)[0]
 
             # compute regret
