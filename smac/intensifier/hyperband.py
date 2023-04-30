@@ -4,6 +4,13 @@ from typing import Any
 
 from smac.intensifier.successive_halving import SuccessiveHalving
 
+__copyright__ = "Copyright 2023, automl.org"
+__license__ = "3-clause BSD"
+
+from smac.utils.logging import get_logger
+
+logger = get_logger(__name__)
+
 
 class Hyperband(SuccessiveHalving):
     """See ``SuccessiveHalving`` for documentation."""
@@ -58,5 +65,4 @@ class Hyperband(SuccessiveHalving):
             next_bracket = 0
 
         self._next_bracket = next_bracket
-
         return current_bracket

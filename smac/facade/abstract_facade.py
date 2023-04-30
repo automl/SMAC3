@@ -81,7 +81,7 @@ class AbstractFacade:
     runhistory_encoder : RunHistoryEncoder | None, defaults to None
         Based on the runhistory, the surrogate model is trained. However, the data first needs to be encoded, which
         is done by the runhistory encoder. For example, inactive hyperparameters need to be encoded or cost values
-        can be log transformed.
+        can be log-transformed.
     logging_level: int | Path | Literal[False] | None
         The level of logging (the lowest level 0 indicates the debug level). If a path is passed, a yaml file is
         expected with the logging configuration. If nothing is passed, the default logging.yml from SMAC is used.
@@ -110,9 +110,11 @@ class AbstractFacade:
         runhistory_encoder: AbstractRunHistoryEncoder | None = None,
         config_selector: ConfigSelector | None = None,
         logging_level: int | Path | Literal[False] | None = None,
-        callbacks: list[Callback] = [],
+        callbacks: list[Callback] | None = None,
         overwrite: bool = False,
     ):
+        if callbacks is None:
+            callbacks = []
         setup_logging(logging_level)
 
         if model is None:
@@ -308,9 +310,6 @@ class AbstractFacade:
         ----------
         config : Configuration
             Configuration to validate
-        instances : list[str] | None, defaults to None
-            Which instances to validate. If None, all instances specified in the scenario are used.
-            In case that the budget type is real-valued, this argument is ignored.
         seed : int | None, defaults to None
             If None, the seed from the scenario is used.
 

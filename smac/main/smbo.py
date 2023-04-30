@@ -459,6 +459,7 @@ class SMBO:
             The index at which the callback should be registered.
         """
         self._callbacks.insert(index, callback)
+        logger.info([callback for callback in self._callbacks])
 
     def _initialize_state(self) -> None:
         """Detects whether the optimization is restored from a previous state."""

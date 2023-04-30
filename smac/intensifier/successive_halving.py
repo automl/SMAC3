@@ -19,7 +19,7 @@ from smac.utils.configspace import get_config_hash
 from smac.utils.logging import get_logger
 from smac.utils.pareto_front import calculate_pareto_front, sort_by_crowding_distance
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2023, automl.org"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
@@ -364,27 +364,33 @@ class SuccessiveHalving(AbstractIntensifier):
         return isb_keys
 
     def __iter__(self) -> Iterator[TrialInfo]:  # noqa: D102
-        self._log_state()
-
         self.__post_init__()
+        self._log_initial_state()
         self._check_runhistory_for_invalid_existing_trials()
         self._configs_from_rh = self.runhistory.get_configs()
 
         # Initialize the first stage
+        self._get_next_bracket()
         self._seeds_per_bracket[(0, 0)] = self._get_next_order_seed()
         isb_keys = self._get_instance_seed_budget_keys_by_stage(0, 0, self._seeds_per_bracket[(0, 0)])
         self._open_stages[(0, 0, 0)] = Stage(amount_configs_to_yield=self._n_configs_in_stage[0][0], isb_keys=isb_keys)
         self._next_repetition = 1
 
         while True:
+            logger.debug(
+                f"Starting Successive Halving iteration with open stages:"
+                f" {[open_stage_ for open_stage_ in self._open_stages]}"
+            )
 
             stages_to_delete = []
             stages_to_add = {}
 
             for repetition, bracket, stage in sorted(self._open_stages.keys()):
                 stage_info = self._open_stages[(repetition, bracket, stage)]
+                logger.debug(f"--- Processing repetition {repetition}, bracket {bracket}, stage {stage}")
+                logger.debug(f"--- Stage info: {stage_info}")
 
-                if not stage_info.is_done:
+                if not stage_info.all_yielded:
                     if stage == 0:
                         try:
                             if len(self._configs_from_rh) > 0:
@@ -412,14 +418,28 @@ class SuccessiveHalving(AbstractIntensifier):
 
                         except StopIteration:
                             # We ran out of configs
-                            # TODO - only in this stage - might still be able to progress in other stages if we wait.
-                            # TODO currently this will lead to a forever loop if we run out of configs
-                            # logger.debug(f"--- No more configs available in stage {stage}.")
-                            # stage_info.amount_configs_to_yield = stage_info.amount_configs_yielded
-                            return
+                            logger.debug(f"--- No more configs available in stage {stage}.")
+                            stage_info.amount_configs_to_yield = stage_info.amount_configs_yielded
+                            if np.all([open_stage.all_yielded for open_stage in self._open_stages.values()]):
+                                return
+                            continue
+                    else:
+                        # We yield trials which are not running/evaluated yet
+                        config = stage_info.configs[stage_info.amount_configs_yielded]
+                        trials_for_config = self._get_next_trials(config, from_keys=stage_info.isb_keys)
+                        stage_info.add_trials_for_config(config, trials_for_config)
+                        logger.debug(
+                            f"--- Yielding {len(trials_for_config)}/{len(stage_info.isb_keys)} in "
+                            f"stage {stage} with seed {self._seeds_per_bracket[(repetition, bracket)]}..."
+                        )
+
+                        for trial in trials_for_config:
+                            yield trial
+
+                        stage_info.amount_configs_yielded += 1
 
                 # When we have yielded all the configs, we check if we want to promote configs.
-                if stage_info.is_done:
+                if stage_info.all_yielded:
                     try:
                         successful_configs = self._get_best_configs(
                             stage_info.configs, bracket, stage, stage_info.isb_keys
@@ -430,47 +450,63 @@ class SuccessiveHalving(AbstractIntensifier):
 
                         # Add successful to the next stage
                         if stage < self._max_iterations[bracket] - 1:
-                            config_ids = [self.runhistory.get_config_id(config) for config in successful_configs]
                             stages_to_add[(repetition, bracket, stage + 1)] = Stage(
                                 amount_configs_to_yield=self._n_configs_in_stage[bracket][stage + 1],
                                 isb_keys=self._get_instance_seed_budget_keys_by_stage(
-                                    bracket, stage + 1, self._seeds_per_bracket[(repetition, bracket)]
+                                    bracket,
+                                    stage + 1,
+                                    self._seeds_per_bracket[(repetition, bracket)],
                                 ),
+                                configs=successful_configs,
                             )
 
                             logger.debug(
-                                f"--- Promoted {len(config_ids)} configs from stage {stage} to stage {stage + 1} in "
-                                f"bracket {bracket}."
+                                f"--- Promoted {len(successful_configs)} configs from stage {stage} to stage "
+                                f"{stage + 1} in bracket {bracket}."
                             )
                         else:
                             logger.debug(
                                 f"--- Removed {len(successful_configs)} configs to last stage in bracket {bracket}."
                             )
-                            self._open_new_repetition_if_necessary(bracket, stages_to_add)
+                            self._open_new_repetition_or_bracket_if_necessary(repetition, stages_to_add)
                     except NotEvaluatedError:
                         # We can't compare anything, so we just continue with the next pairs
                         logger.debug("--- Could not compare configs because not all trials have been evaluated yet.")
-                        self._open_new_repetition_if_necessary(bracket, stages_to_add)
+                        self._open_new_repetition_or_bracket_if_necessary(repetition, stages_to_add)
 
             # We have to update the tracker and remove stages that are done and add new stages
             for repetition, bracket, stage in stages_to_delete:
+                logger.debug(f"--- Removing repetition {repetition}, bracket {bracket}, stage {stage} from tracker.")
                 del self._open_stages[repetition, bracket, stage]
 
             for repetition, bracket, stage in stages_to_add.keys():
                 self._open_stages[(repetition, bracket, stage)] = stages_to_add[(repetition, bracket, stage)]
 
-    def _open_new_repetition_if_necessary(self, bracket: int, stages_to_add: dict[tuple[int, int, int], Stage]) -> None:
-        if np.all([open_stage.is_done for open_stage in self._open_stages.values()]):
-            self._seeds_per_bracket[(self._next_repetition, bracket)] = self._get_next_order_seed()
-            stages_to_add[(self._next_repetition, 0, 0)] = Stage(
-                amount_configs_to_yield=self._n_configs_in_stage[0][0],
+    def _open_new_repetition_or_bracket_if_necessary(
+        self, repetition: int, stages_to_add: dict[tuple[int, int, int], Stage]
+    ) -> None:
+        if np.all([open_stage.all_yielded for open_stage in self._open_stages.values()]):
+            next_bracket = self._get_next_bracket()
+
+            if next_bracket == 0:
+                next_repetition = self._next_repetition
+                self._next_repetition += 1
+            else:
+                next_repetition = repetition
+
+            self._seeds_per_bracket[(next_repetition, next_bracket)] = self._get_next_order_seed()
+            new_stage = Stage(
+                amount_configs_to_yield=self._n_configs_in_stage[next_bracket][0],
                 isb_keys=self._get_instance_seed_budget_keys_by_stage(
-                    0, 0, self._seeds_per_bracket[(self._next_repetition, 0)]
+                    next_bracket, 0, self._seeds_per_bracket[(next_repetition, next_bracket)]
                 ),
             )
-            self._next_repetition += 1
+            stages_to_add[(next_repetition, next_bracket, 0)] = new_stage
+            logger.debug(f"--- Opened new repetition {next_repetition}, bracket {next_bracket}, stage 0.")
+        else:
+            logger.debug("--- Not all stages are done yet, so no new repetition or bracket is opened.")
 
-    def _log_state(self) -> None:
+    def _log_initial_state(self) -> None:
         # Log brackets/stages
         logger.info("Number of configs in stage:")
         for bracket, n in self._n_configs_in_stage.items():
