@@ -10,12 +10,12 @@ from ConfigSpace import Configuration
 
 from smac.constants import MAXINT
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
+from smac.intensifier.stage_information import Stage
 from smac.runhistory import TrialInfo
 from smac.runhistory.dataclasses import InstanceSeedBudgetKey
 from smac.runhistory.errors import NotEvaluatedError
 from smac.scenario import Scenario
 from smac.utils.configspace import get_config_hash
-from smac.utils.data_structures import batch
 from smac.utils.logging import get_logger
 from smac.utils.pareto_front import calculate_pareto_front, sort_by_crowding_distance
 
@@ -60,7 +60,7 @@ class SuccessiveHalving(AbstractIntensifier):
     incumbent_selection : str, defaults to "highest_observed_budget"
         How to select the incumbent when using budgets. Can be set to:
 
-        - `any_budget`: Incumbent is the best on any budget i.e., best performance regardless of budget.
+        - `any_budget`: Incumbent is the best on any budget i.e., the best performance regardless of budget.
         - `highest_observed_budget`: Incumbent is the best in the highest budget run so far.
         - `highest_budget`: Incumbent is selected only based on the highest budget.
     max_incumbents : int, defaults to 10
@@ -95,6 +95,15 @@ class SuccessiveHalving(AbstractIntensifier):
         self._min_budget = self._scenario.min_budget
         self._max_budget = self._scenario.max_budget
 
+        # States
+        self._tracker: dict[tuple[int, int], list[tuple[int | None, list[Configuration]]]] = defaultdict(list)
+        self._configs_from_rh: list[Configuration] = []
+        # map repetition, bracket, and stage to stage information
+        self._open_stages: dict[tuple[int, int, int], Stage] = dict()
+        # map repetition and bracket to seed
+        self._seeds_per_bracket: dict[tuple[int, int], Optional[int]] = dict()
+        self._next_repetition = 0
+
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
         meta = super().meta
@@ -114,7 +123,7 @@ class SuccessiveHalving(AbstractIntensifier):
 
         # States
         # dict[tuple[bracket, stage], list[tuple[seed to shuffle instance-seed keys, list[config_id]]]
-        self._tracker: dict[tuple[int, int], list[tuple[int | None, list[Configuration]]]] = defaultdict(list)
+        self._tracker = defaultdict(list)
 
     def __post_init__(self) -> None:
         """Post initialization steps after the runhistory has been set."""
@@ -355,144 +364,131 @@ class SuccessiveHalving(AbstractIntensifier):
         return isb_keys
 
     def __iter__(self) -> Iterator[TrialInfo]:  # noqa: D102
-        self.__post_init__()
+        self._log_state()
 
+        self.__post_init__()
+        self._check_runhistory_for_invalid_existing_trials()
+        self._configs_from_rh = self.runhistory.get_configs()
+
+        # Initialize the first stage
+        self._seeds_per_bracket[(0, 0)] = self._get_next_order_seed()
+        isb_keys = self._get_instance_seed_budget_keys_by_stage(0, 0, self._seeds_per_bracket[(0, 0)])
+        self._open_stages[(0, 0, 0)] = Stage(amount_configs_to_yield=self._n_configs_in_stage[0][0], isb_keys=isb_keys)
+        self._next_repetition = 1
+
+        while True:
+
+            stages_to_delete = []
+            stages_to_add = {}
+
+            for repetition, bracket, stage in sorted(self._open_stages.keys()):
+                stage_info = self._open_stages[(repetition, bracket, stage)]
+
+                if not stage_info.is_done:
+                    if stage == 0:
+                        try:
+                            if len(self._configs_from_rh) > 0:
+                                config = self._configs_from_rh.pop(0)
+                            else:
+                                config = next(self._config_generator)  # type: ignore
+
+                            stage_info.add_config(config)
+                            seed = self._seeds_per_bracket[(repetition, bracket)]
+
+                            # We yield trials which are not running/evaluated yet
+                            config_hash = get_config_hash(config)
+                            trials_for_config = self._get_next_trials(config, from_keys=stage_info.isb_keys)
+                            stage_info.add_trials_for_config(config, trials_for_config)
+                            logger.debug(
+                                f"--- Yielding {len(trials_for_config)}/{len(stage_info.isb_keys)} for config "
+                                f"{config_hash} in "
+                                f"stage {stage} with seed {seed}..."
+                            )
+
+                            for trial in trials_for_config:
+                                yield trial
+
+                            stage_info.amount_configs_yielded += 1
+
+                        except StopIteration:
+                            # We ran out of configs
+                            # TODO - only in this stage - might still be able to progress in other stages if we wait.
+                            # TODO currently this will lead to a forever loop if we run out of configs
+                            # logger.debug(f"--- No more configs available in stage {stage}.")
+                            # stage_info.amount_configs_to_yield = stage_info.amount_configs_yielded
+                            return
+
+                # When we have yielded all the configs, we check if we want to promote configs.
+                if stage_info.is_done:
+                    try:
+                        successful_configs = self._get_best_configs(
+                            stage_info.configs, bracket, stage, stage_info.isb_keys
+                        )
+
+                        # Mark current stage for removal from tracker
+                        stages_to_delete.append((repetition, bracket, stage))
+
+                        # Add successful to the next stage
+                        if stage < self._max_iterations[bracket] - 1:
+                            config_ids = [self.runhistory.get_config_id(config) for config in successful_configs]
+                            stages_to_add[(repetition, bracket, stage + 1)] = Stage(
+                                amount_configs_to_yield=self._n_configs_in_stage[bracket][stage + 1],
+                                isb_keys=self._get_instance_seed_budget_keys_by_stage(
+                                    bracket, stage + 1, self._seeds_per_bracket[(repetition, bracket)]
+                                ),
+                            )
+
+                            logger.debug(
+                                f"--- Promoted {len(config_ids)} configs from stage {stage} to stage {stage + 1} in "
+                                f"bracket {bracket}."
+                            )
+                        else:
+                            logger.debug(
+                                f"--- Removed {len(successful_configs)} configs to last stage in bracket {bracket}."
+                            )
+                            self._open_new_repetition_if_necessary(bracket, stages_to_add)
+                    except NotEvaluatedError:
+                        # We can't compare anything, so we just continue with the next pairs
+                        logger.debug("--- Could not compare configs because not all trials have been evaluated yet.")
+                        self._open_new_repetition_if_necessary(bracket, stages_to_add)
+
+            # We have to update the tracker and remove stages that are done and add new stages
+            for repetition, bracket, stage in stages_to_delete:
+                del self._open_stages[repetition, bracket, stage]
+
+            for repetition, bracket, stage in stages_to_add.keys():
+                self._open_stages[(repetition, bracket, stage)] = stages_to_add[(repetition, bracket, stage)]
+
+    def _open_new_repetition_if_necessary(self, bracket: int, stages_to_add: dict[tuple[int, int, int], Stage]) -> None:
+        if np.all([open_stage.is_done for open_stage in self._open_stages.values()]):
+            self._seeds_per_bracket[(self._next_repetition, bracket)] = self._get_next_order_seed()
+            stages_to_add[(self._next_repetition, 0, 0)] = Stage(
+                amount_configs_to_yield=self._n_configs_in_stage[0][0],
+                isb_keys=self._get_instance_seed_budget_keys_by_stage(
+                    0, 0, self._seeds_per_bracket[(self._next_repetition, 0)]
+                ),
+            )
+            self._next_repetition += 1
+
+    def _log_state(self) -> None:
         # Log brackets/stages
         logger.info("Number of configs in stage:")
         for bracket, n in self._n_configs_in_stage.items():
             logger.info(f"--- Bracket {bracket}: {n}")
-
         logger.info("Budgets in stage:")
         for bracket, budgets in self._budgets_in_stage.items():
             logger.info(f"--- Bracket {bracket}: {budgets}")
 
-        rh = self.runhistory
-
-        # We have to add already existing trials from the runhistory
-        # Idea: We simply add existing configs to the tracker (first stage) but assign a random instance shuffle seed.
-        # In the best case, trials (added from the users) are included in the seed and it has not re-computed again.
-        # Note: If the intensifier was restored, we don't want to go in here
-        if len(self._tracker) == 0:
-            bracket = 0
-            stage = 0
-
-            # Print ignored budgets
-            ignored_budgets = []
-            for k in rh.keys():
-                if k.budget not in self._budgets_in_stage[0] and k.budget not in ignored_budgets:
-                    ignored_budgets.append(k.budget)
-
-            if len(ignored_budgets) > 0:
-                logger.warning(
-                    f"Trials with budgets {ignored_budgets} will been ignored. Consider adding trials with budgets "
-                    f"{self._budgets_in_stage[0]}."
-                )
-
-            # We batch the configs because we need n_configs in each iteration
-            # If we don't have n_configs, we sample new ones
-            # We take the number of configs from the first bracket and the first stage
-            n_configs = self._n_configs_in_stage[bracket][stage]
-            for configs in batch(rh.get_configs(), n_configs):
-                n_rh_configs = len(configs)
-
-                if len(configs) < n_configs:
-                    try:
-                        config = next(self.config_generator)
-                        configs.append(config)
-                    except StopIteration:
-                        # We stop if we don't find any configuration anymore
-                        return
-
-                seed = self._get_next_order_seed()
-                self._tracker[(bracket, stage)].append((seed, configs))
-                logger.info(
-                    f"Added {n_rh_configs} configs from runhistory and {n_configs - n_rh_configs} new configs to "
-                    f"Successive Halving's first bracket and first stage with order seed {seed}."
-                )
-
-        while True:
-            # If we don't yield trials anymore, we have to update
-            # Otherwise, we can just keep yielding trials from the tracker
-            update = False
-
-            # We iterate over the tracker to do two things:
-            # 1) Yield trials of configs that are not yet evaluated/running
-            # 2) Update tracker and move better configs to the next stage
-            # We start in reverse order to complete higher stages first
-            logger.debug("Updating tracker:")
-
-            # TODO: Process stages ascending or descending?
-            for (bracket, stage) in list(self._tracker.keys()):
-                pairs = self._tracker[(bracket, stage)].copy()
-                for seed, configs in pairs:
-                    isb_keys = self._get_instance_seed_budget_keys_by_stage(bracket=bracket, stage=stage, seed=seed)
-
-                    # We iterate over the configs and yield trials which are not running/evaluated yet
-                    for config in configs:
-                        config_hash = get_config_hash(config)
-                        trials = self._get_next_trials(config, from_keys=isb_keys)
-                        logger.debug(
-                            f"--- Yielding {len(trials)}/{len(isb_keys)} for config {config_hash} in "
-                            f"stage {stage} with seed {seed}..."
-                        )
-
-                        for trial in trials:
-                            yield trial
-                            update = True
-
-                    # If all configs were evaluated on ``n_configs_required``, we finally can compare
-                    try:
-                        successful_configs = self._get_best_configs(configs, bracket, stage, isb_keys)
-                    except NotEvaluatedError:
-                        # We can't compare anything, so we just continue with the next pairs
-                        logger.debug("--- Could not compare configs because not all trials have been evaluated yet.")
-                        continue
-
-                    # Update tracker
-                    # Remove current shuffle index / config pair
-                    self._tracker[(bracket, stage)].remove((seed, configs))
-
-                    # Add successful to the next stage
-                    if stage < self._max_iterations[bracket] - 1:
-                        config_ids = [rh.get_config_id(config) for config in successful_configs]
-                        self._tracker[(bracket, stage + 1)].append((seed, successful_configs))
-
-                        logger.debug(
-                            f"--- Promoted {len(config_ids)} configs from stage {stage} to stage {stage + 1} in "
-                            f"bracket {bracket}."
-                        )
-                    else:
-                        logger.debug(
-                            f"--- Removed {len(successful_configs)} configs to last stage in bracket {bracket}."
-                        )
-
-                    # Log how many configs are in each stage
-                    self.print_tracker()
-
-            # Since we yielded something before, we want to go back as long as we do not find any trials anymore
-            if update:
-                continue
-
-            # TODO: Aggressive progressing without knowing how well trials performed
-            # Idea: Don't add constantly new batches (see ASHA)
-
-            # If we are running out of trials, we want to add configs to the first stage
-            # We simply add as many configs to the stage as required (_n_configs_in_stage[0])
-            configs = []
-            next_bracket = self._get_next_bracket()
-            for _ in range(self._n_configs_in_stage[next_bracket][0]):
-                try:
-                    config = next(self.config_generator)
-                    configs.append(config)
-                except StopIteration:
-                    # We stop if we don't find any configuration anymore
-                    return
-
-            # We keep track of the seed so we always evaluate on the same instances
-            next_seed = self._get_next_order_seed()
-            self._tracker[(next_bracket, 0)].append((next_seed, configs))
-            logger.debug(
-                f"Added {len(configs)} new configs to bracket {next_bracket} stage 0 with shuffle seed {next_seed}."
+    def _check_runhistory_for_invalid_existing_trials(self) -> None:
+        # Print ignored budgets
+        ignored_budgets = []
+        for k in self.runhistory.keys():
+            if k.budget not in self._budgets_in_stage[0] and k.budget not in ignored_budgets:
+                ignored_budgets.append(k.budget)
+        if len(ignored_budgets) > 0:
+            logger.warning(
+                f"Trials with budgets {ignored_budgets} will been ignored. Consider adding trials with budgets "
+                f"{self._budgets_in_stage[0]}."
             )
 
     def _get_instance_seed_budget_keys_by_stage(
@@ -502,11 +498,11 @@ class SuccessiveHalving(AbstractIntensifier):
         seed: int | None = None,
     ) -> list[InstanceSeedBudgetKey]:
         """Returns all instance-seed-budget keys (isb keys) for the given stage. Each stage
-        is associated with a budget (N). Two possible options:
+        is associated with a budget (budget_n). Two possible options:
 
-        1) Instance based: We return N isb keys. If a seed is specified, we shuffle the keys before
-        returning the first N instances. The budget is set to None here.
-        2) Budget based: We return one isb only but the budget is set to N.
+        1) Instance based: We return budget_n isb keys. If a seed is specified, we shuffle the keys before
+        returning the first budget_n instances. The budget is set to None here.
+        2) Budget based: We return one isb only but the budget is set to budget_n.
         """
         budget: float | int | None = None
         is_keys = self.get_instance_seed_keys_of_interest()
@@ -520,9 +516,9 @@ class SuccessiveHalving(AbstractIntensifier):
             if seed is not None:
                 is_keys = self._reorder_instance_seed_keys(is_keys, seed=seed)
 
-            # We only return the first N instances
-            N = int(self._budgets_in_stage[bracket][stage])
-            is_keys = is_keys[:N]
+            # We only return the first budget_n instances
+            budget_n = int(self._budgets_in_stage[bracket][stage])
+            is_keys = is_keys[:budget_n]
         else:
             assert len(is_keys) == 1
 
@@ -530,11 +526,11 @@ class SuccessiveHalving(AbstractIntensifier):
             # No shuffle is needed here because we only have on instance seed pair
             budget = self._budgets_in_stage[bracket][stage]
 
-        isbk = []
+        isb_keys = []
         for isk in is_keys:
-            isbk.append(InstanceSeedBudgetKey(instance=isk.instance, seed=isk.seed, budget=budget))
+            isb_keys.append(InstanceSeedBudgetKey(instance=isk.instance, seed=isk.seed, budget=budget))
 
-        return isbk
+        return isb_keys
 
     def _get_next_trials(
         self,
