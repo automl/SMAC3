@@ -9,7 +9,7 @@ from smac.initial_design.random_design import RandomInitialDesign
 from smac.intensifier.hyperband import Hyperband
 from smac.scenario import Scenario
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2023, automl.org"
 __license__ = "3-clause BSD"
 
 
@@ -25,6 +25,7 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
         instance_seed_order: str | None = "shuffle_once",
         max_incumbents: int = 10,
         incumbent_selection: str = "highest_observed_budget",
+        sample_brackets_at_once: bool = False,
     ) -> Hyperband:
         """Returns a Hyperband intensifier instance. Budgets are supported.
 
@@ -50,6 +51,8 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
             available only.
         max_incumbents : int, defaults to 10
             How many incumbents to keep track of in the case of multi-objective.
+        sample_brackets_at_once : bool, defaults to False
+            Whether to sample all brackets at once or one config at a time.
         """
         return Hyperband(
             scenario=scenario,
@@ -58,6 +61,7 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
             instance_seed_order=instance_seed_order,
             max_incumbents=max_incumbents,
             incumbent_selection=incumbent_selection,
+            sample_brackets_at_once=sample_brackets_at_once,
         )
 
     @staticmethod
@@ -65,9 +69,9 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
         scenario: Scenario,
         *,
         n_configs: int | None = None,
-        n_configs_per_hyperparamter: int = 10,
+        n_configs_per_hyperparameter: int = 10,
         max_ratio: float = 0.25,
-        additional_configs: list[Configuration] = [],
+        additional_configs: list[Configuration] = None,
     ) -> RandomInitialDesign:
         """Returns a random initial design.
 
@@ -86,10 +90,11 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
         additional_configs: list[Configuration], defaults to []
             Adds additional configurations to the initial design.
         """
+        additional_configs = [] if additional_configs is None else additional_configs
         return RandomInitialDesign(
             scenario=scenario,
             n_configs=n_configs,
-            n_configs_per_hyperparameter=n_configs_per_hyperparamter,
+            n_configs_per_hyperparameter=n_configs_per_hyperparameter,
             max_ratio=max_ratio,
             additional_configs=additional_configs,
         )

@@ -15,7 +15,7 @@ from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.runhistory.encoder.log_scaled_encoder import RunHistoryLogScaledEncoder
 from smac.scenario import Scenario
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2023, automl.org"
 __license__ = "3-clause BSD"
 
 
@@ -35,6 +35,8 @@ class HyperparameterOptimizationFacade(AbstractFacade):
 
         Parameters
         ----------
+        scenario : Scenario
+            The scenario to optimize.
         n_trees : int, defaults to 10
             The number of trees in the random forest.
         ratio_features : float, defaults to 5.0 / 6.0
@@ -93,6 +95,8 @@ class HyperparameterOptimizationFacade(AbstractFacade):
 
         Parameters
         ----------
+        scenario : Scenario
+            The scenario to optimize.
         challengers : int, defaults to 10000
             Number of challengers.
         local_search_iterations: int, defaults to 10
@@ -136,9 +140,9 @@ class HyperparameterOptimizationFacade(AbstractFacade):
         scenario: Scenario,
         *,
         n_configs: int | None = None,
-        n_configs_per_hyperparamter: int = 10,
+        n_configs_per_hyperparameter: int = 10,
         max_ratio: float = 0.25,
-        additional_configs: list[Configuration] = [],
+        additional_configs: list[Configuration] = None,
     ) -> SobolInitialDesign:
         """Returns a Sobol design instance.
 
@@ -157,10 +161,11 @@ class HyperparameterOptimizationFacade(AbstractFacade):
         additional_configs: list[Configuration], defaults to []
             Adds additional configurations to the initial design.
         """
+        additional_configs = [] if additional_configs is None else additional_configs
         return SobolInitialDesign(
             scenario=scenario,
             n_configs=n_configs,
-            n_configs_per_hyperparameter=n_configs_per_hyperparamter,
+            n_configs_per_hyperparameter=n_configs_per_hyperparameter,
             max_ratio=max_ratio,
             additional_configs=additional_configs,
         )
@@ -175,6 +180,8 @@ class HyperparameterOptimizationFacade(AbstractFacade):
 
         Parameters
         ----------
+        scenario : Scenario
+            The scenario to optimize.
         probability : float, defaults to 0.2
             Probability that a configuration will be drawn at random.
         """
@@ -191,6 +198,7 @@ class HyperparameterOptimizationFacade(AbstractFacade):
         Parameters
         ----------
         scenario : Scenario
+            The scenario to optimize.
         objective_weights : list[float] | None, defaults to None
             Weights for averaging the objectives in a weighted manner. Must be of the same length as the number of
             objectives.
@@ -206,5 +214,10 @@ class HyperparameterOptimizationFacade(AbstractFacade):
     ) -> RunHistoryLogScaledEncoder:
         """Returns a log scaled runhistory encoder. That means that costs are log scaled before
         training the surrogate model.
+
+        Parameters
+        ----------
+        scenario : Scenario
+            The scenario to optimize.
         """
         return RunHistoryLogScaledEncoder(scenario)

@@ -15,7 +15,6 @@ from smac.runhistory import TrialInfo
 from smac.runhistory.dataclasses import InstanceSeedBudgetKey
 from smac.runhistory.errors import NotEvaluatedError
 from smac.scenario import Scenario
-from smac.utils.configspace import get_config_hash
 from smac.utils.logging import get_logger
 from smac.utils.pareto_front import calculate_pareto_front, sort_by_crowding_distance
 
@@ -65,6 +64,9 @@ class SuccessiveHalving(AbstractIntensifier):
         - `highest_budget`: Incumbent is selected only based on the highest budget.
     max_incumbents : int, defaults to 10
         How many incumbents to keep track of in the case of multi-objective.
+    sample_brackets_at_once : bool, defaults to False
+        Whether to sample all configurations in a bracket at once or one at a time, after a potential surrogate model
+        retrain.
     seed : int, defaults to None
         Internal seed used for random events like shuffle seeds.
     """
@@ -77,6 +79,7 @@ class SuccessiveHalving(AbstractIntensifier):
         instance_seed_order: str | None = "shuffle_once",
         max_incumbents: int = 10,
         incumbent_selection: str = "highest_observed_budget",
+        sample_brackets_at_once: bool = False,
         seed: int | None = None,
     ):
         super().__init__(
@@ -90,6 +93,7 @@ class SuccessiveHalving(AbstractIntensifier):
         self._instance_seed_order = instance_seed_order
         self._incumbent_selection = incumbent_selection
         self._highest_observed_budget_only = False if incumbent_selection == "any_budget" else True
+        self._sample_brackets_at_once = sample_brackets_at_once
 
         # Global variables derived from scenario
         self._min_budget = self._scenario.min_budget
@@ -373,7 +377,8 @@ class SuccessiveHalving(AbstractIntensifier):
         self._get_next_bracket()
         self._seeds_per_bracket[(0, 0)] = self._get_next_order_seed()
         isb_keys = self._get_instance_seed_budget_keys_by_stage(0, 0, self._seeds_per_bracket[(0, 0)])
-        self._open_stages[(0, 0, 0)] = Stage(amount_configs_to_yield=self._n_configs_in_stage[0][0], isb_keys=isb_keys)
+        first_stage = Stage(amount_configs_to_yield=self._n_configs_in_stage[0][0], isb_keys=isb_keys)
+        self._open_stages[(0, 0, 0)] = first_stage
         self._next_repetition = 1
 
         while True:
@@ -391,52 +396,42 @@ class SuccessiveHalving(AbstractIntensifier):
                 logger.debug(f"--- Stage info: {stage_info}")
 
                 if not stage_info.all_yielded:
-                    if stage == 0:
-                        try:
-                            if len(self._configs_from_rh) > 0:
-                                config = self._configs_from_rh.pop(0)
-                            else:
-                                config = next(self._config_generator)  # type: ignore
-
-                            stage_info.add_config(config)
-                            seed = self._seeds_per_bracket[(repetition, bracket)]
-
-                            # We yield trials which are not running/evaluated yet
-                            config_hash = get_config_hash(config)
-                            trials_for_config = self._get_next_trials(config, from_keys=stage_info.isb_keys)
-                            stage_info.add_trials_for_config(config, trials_for_config)
-                            logger.debug(
-                                f"--- Yielding {len(trials_for_config)}/{len(stage_info.isb_keys)} for config "
-                                f"{config_hash} in "
-                                f"stage {stage} with seed {seed}..."
-                            )
-
-                            for trial in trials_for_config:
-                                yield trial
-
-                            stage_info.amount_configs_yielded += 1
-
-                        except StopIteration:
-                            # We ran out of configs
-                            logger.debug(f"--- No more configs available in stage {stage}.")
-                            stage_info.amount_configs_to_yield = stage_info.amount_configs_yielded
-                            if np.all([open_stage.all_yielded for open_stage in self._open_stages.values()]):
-                                return
-                            continue
-                    else:
-                        # We yield trials which are not running/evaluated yet
-                        config = stage_info.configs[stage_info.amount_configs_yielded]
-                        trials_for_config = self._get_next_trials(config, from_keys=stage_info.isb_keys)
-                        stage_info.add_trials_for_config(config, trials_for_config)
-                        logger.debug(
-                            f"--- Yielding {len(trials_for_config)}/{len(stage_info.isb_keys)} in "
-                            f"stage {stage} with seed {self._seeds_per_bracket[(repetition, bracket)]}..."
+                    # check if config(s) still need to be sampled
+                    if stage == 0 and len(stage_info.configs) < stage_info.amount_configs_to_yield:
+                        # sample either one config or all configs at once
+                        configs_to_sample = (
+                            1 if not self._sample_brackets_at_once else stage_info.amount_configs_to_yield
                         )
 
-                        for trial in trials_for_config:
-                            yield trial
+                        for i in range(configs_to_sample):
+                            try:
+                                if len(self._configs_from_rh) > 0:
+                                    config = self._configs_from_rh.pop(0)
+                                else:
+                                    config = next(self._config_generator)  # type: ignore
 
-                        stage_info.amount_configs_yielded += 1
+                                stage_info.add_config(config)
+                            except StopIteration:
+                                # We ran out of configs
+                                logger.info(f"--- No more configs available in stage {stage}.")
+                                stage_info.amount_configs_to_yield = len(stage_info.configs)
+                                if np.all([open_stage.all_yielded for open_stage in self._open_stages.values()]):
+                                    return
+                                continue
+
+                    # Yield the next trials for the next config
+                    config = stage_info.configs[stage_info.amount_configs_yielded]
+                    trials_for_config = self._get_next_trials(config, from_keys=stage_info.isb_keys)
+                    stage_info.add_trials_for_config(config, trials_for_config)
+                    logger.debug(
+                        f"--- Yielding {len(trials_for_config)}/{len(stage_info.isb_keys)} in "
+                        f"stage {stage} with seed {self._seeds_per_bracket[(repetition, bracket)]}..."
+                    )
+
+                    for trial in trials_for_config:
+                        yield trial
+
+                    stage_info.amount_configs_yielded += 1
 
                 # When we have yielded all the configs, we check if we want to promote configs.
                 if stage_info.all_yielded:
