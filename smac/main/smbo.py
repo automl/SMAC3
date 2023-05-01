@@ -458,6 +458,8 @@ class SMBO:
         index : int
             The index at which the callback should be registered.
         """
+        if index < 0 or index > len(self._callbacks):
+            index = len(self._callbacks)
         self._callbacks.insert(index, callback)
         logger.info([callback for callback in self._callbacks])
 
