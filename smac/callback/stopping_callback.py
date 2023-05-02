@@ -1,13 +1,16 @@
 from abc import abstractmethod
-from typing import Union
+from typing import Optional, Union
 
+import ConfigSpace
 import numpy as np
+from ConfigSpace import Configuration
 
 from smac.acquisition.function import LCB, UCB
 from smac.acquisition.maximizer import LocalAndSortedRandomSearch
 from smac.callback import Callback
 from smac.main.smbo import SMBO
 from smac.runhistory import TrialInfo, TrialKey, TrialValue
+from smac.runhistory.encoder import AbstractRunHistoryEncoder
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2023, automl.org"
@@ -150,23 +153,9 @@ class StoppingCallback(Callback):
 
             # get pessimistic estimate of incumbent performance
             configs = configs[: int(self._upper_bound_estimation_rate * num_data)]
-            min_ucb = self._ucb(configs)
-            min_ucb *= -1
-            if runhistory_encoder is not None:
-                min_ucb = runhistory_encoder.transform_response_values_inverse(min_ucb)
-            min_ucb = min(min_ucb)[0]
-
-            # get optimistic estimate of the best possible performance (min lcb of all configs)
-            maximizer = LocalAndSortedRandomSearch(
-                configspace=smbo.scenario.configspace, acquisition_function=self._lcb, challengers=1
+            min_lcb, min_ucb = self.compute_min_lcb_ucb(
+                self._ucb, self._lcb, self._n_points_lcb, configs, smbo.scenario.configspace, runhistory_encoder
             )
-            # SMBO is maximizing the negative lcb, thus, we need to invert the lcb
-            challenger_list = maximizer.maximize(previous_configs=[], n_points=self._n_points_lcb)
-            min_lcb = self._lcb(challenger_list)
-            min_lcb *= -1
-            if runhistory_encoder is not None:
-                min_lcb = runhistory_encoder.transform_response_values_inverse(min_lcb)
-            min_lcb = min(min_lcb)[0]
 
             # compute regret
             regret = min_ucb - min_lcb
@@ -200,6 +189,32 @@ class StoppingCallback(Callback):
         else:
             logger.debug("Stopping criterion not triggered as model is not built yet.")
             return True
+
+    @staticmethod
+    def compute_min_lcb_ucb(
+        ucb: UCB,
+        lcb: LCB,
+        n_points_lcb: int,
+        configs: list[Configuration],
+        configspace: ConfigSpace,
+        runhistory_encoder: Optional[AbstractRunHistoryEncoder] = None,
+    ) -> tuple[float, float]:
+        """Computes the minimum lcb and ucb of the given configs."""
+        min_ucb = ucb(configs)
+        min_ucb *= -1
+        if runhistory_encoder is not None:
+            min_ucb = runhistory_encoder.transform_response_values_inverse(min_ucb)
+        min_ucb = min(min_ucb)[0]
+        # get optimistic estimate of the best possible performance (min lcb of all configs)
+        maximizer = LocalAndSortedRandomSearch(configspace=configspace, acquisition_function=lcb, challengers=1)
+        # SMBO is maximizing the negative lcb, thus, we need to invert the lcb
+        challenger_list = maximizer.maximize(previous_configs=[], n_points=n_points_lcb)
+        min_lcb = lcb(challenger_list)
+        min_lcb *= -1
+        if runhistory_encoder is not None:
+            min_lcb = runhistory_encoder.transform_response_values_inverse(min_lcb)
+        min_lcb = min(min_lcb)[0]
+        return min_lcb, min_ucb
 
     def __str__(self) -> str:
         return "StoppingCallback"

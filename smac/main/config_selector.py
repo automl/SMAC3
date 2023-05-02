@@ -289,17 +289,17 @@ class ConfigSelector:
         # Sort available budgets from highest to lowest budget
         available_budgets = sorted(list(set(available_budgets)), reverse=True)  # type: ignore
 
-        # Get #points per budget and if there are enough samples, then build a model
+        # Get #points per budget and if there are enough samples, build a model
         for b in available_budgets:
-            X, Y = self._runhistory_encoder.transform(budget_subset=[b])
+            x, y = self._runhistory_encoder.transform(budget_subset=[b])
 
-            if X.shape[0] >= self._min_trials:
+            if x.shape[0] >= self._min_trials:
                 self._considered_budgets = [b]
 
                 # TODO: Add running configs
                 configs_array = self._runhistory_encoder.get_configurations(budget_subset=self._considered_budgets)
 
-                return X, Y, configs_array
+                return x, y, configs_array
 
         return (
             np.empty(shape=[0, 0]),

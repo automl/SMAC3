@@ -7,8 +7,17 @@ class Stage:
     """Class to store information about a stage in the multi-fidelity optimization process."""
 
     def __init__(
-        self, amount_configs_to_yield: int, isb_keys: list[InstanceSeedBudgetKey], configs: list[Configuration] = None
+        self,
+        repetition: int,
+        bracket: int,
+        stage: int,
+        amount_configs_to_yield: int,
+        isb_keys: list[InstanceSeedBudgetKey],
+        configs: list[Configuration] = None,
     ):
+        self.repetition: int = repetition
+        self.bracket: int = bracket
+        self.stage: int = stage
         if configs is None:
             configs = []
         self.configs: list[Configuration] = configs

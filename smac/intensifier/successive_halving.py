@@ -8,6 +8,7 @@ from collections import defaultdict
 import numpy as np
 from ConfigSpace import Configuration
 
+from smac.callback.multifidelity_stopping_callback import should_stage_stop
 from smac.constants import MAXINT
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.intensifier.stage_information import Stage
@@ -81,6 +82,7 @@ class SuccessiveHalving(AbstractIntensifier):
         incumbent_selection: str = "highest_observed_budget",
         sample_brackets_at_once: bool = False,
         seed: int | None = None,
+        early_stopping: bool = False,
     ):
         super().__init__(
             scenario=scenario,
@@ -94,6 +96,7 @@ class SuccessiveHalving(AbstractIntensifier):
         self._incumbent_selection = incumbent_selection
         self._highest_observed_budget_only = False if incumbent_selection == "any_budget" else True
         self._sample_brackets_at_once = sample_brackets_at_once
+        self._early_stopping = early_stopping
 
         # Global variables derived from scenario
         self._min_budget = self._scenario.min_budget
@@ -191,6 +194,12 @@ class SuccessiveHalving(AbstractIntensifier):
         self._max_iterations: dict[int, int] = {0: max_iter + 1}
         self._n_configs_in_stage: dict[int, list] = {0: n_configs}
         self._budgets_in_stage: dict[int, list] = {0: budgets}
+
+        # Initialize if early stopping
+        if self._early_stopping:
+            # For each fidelity, we need a model
+            # TODO
+            pass
 
     @staticmethod
     def _get_max_iterations(eta: int, max_budget: float | int, min_budget: float | int) -> int:
@@ -374,15 +383,17 @@ class SuccessiveHalving(AbstractIntensifier):
         self._configs_from_rh = self.runhistory.get_configs()
 
         # Initialize the first stage
-        self._get_next_bracket()
+        self._get_next_bracket()  # move bracket counter
         self._seeds_per_bracket[(0, 0)] = self._get_next_order_seed()
         isb_keys = self._get_instance_seed_budget_keys_by_stage(0, 0, self._seeds_per_bracket[(0, 0)])
-        first_stage = Stage(amount_configs_to_yield=self._n_configs_in_stage[0][0], isb_keys=isb_keys)
+        first_stage = Stage(
+            repetition=0, bracket=0, stage=0, amount_configs_to_yield=self._n_configs_in_stage[0][0], isb_keys=isb_keys
+        )
         self._open_stages[(0, 0, 0)] = first_stage
         self._next_repetition = 1
 
         while True:
-            logger.debug(
+            logger.info(
                 f"Starting Successive Halving iteration with open stages:"
                 f" {[open_stage_ for open_stage_ in self._open_stages]}"
             )
@@ -395,10 +406,17 @@ class SuccessiveHalving(AbstractIntensifier):
                 logger.debug(f"--- Processing repetition {repetition}, bracket {bracket}, stage {stage}")
                 logger.debug(f"--- Stage info: {stage_info}")
 
+                # skip stage if possible
+                if self._skip_stage(stage_info):
+                    logger.info(f"--- Skipping the rest of stage {stage}")
+                    # Mark the current stage as finished by decreasing the amount of configs to yield to the amount
+                    # of configs already yielded
+                    stage_info.amount_configs_to_yield = stage_info.amount_configs_yielded
+
+                # --- yield configs if necessary
                 if not stage_info.all_yielded:
-                    # check if config(s) still need to be sampled
+                    # sample configs if necessary
                     if stage == 0 and len(stage_info.configs) < stage_info.amount_configs_to_yield:
-                        # sample either one config or all configs at once
                         configs_to_sample = (
                             1 if not self._sample_brackets_at_once else stage_info.amount_configs_to_yield
                         )
@@ -412,14 +430,14 @@ class SuccessiveHalving(AbstractIntensifier):
 
                                 stage_info.add_config(config)
                             except StopIteration:
-                                # We ran out of configs
                                 logger.info(f"--- No more configs available in stage {stage}.")
                                 stage_info.amount_configs_to_yield = len(stage_info.configs)
                                 if np.all([open_stage.all_yielded for open_stage in self._open_stages.values()]):
                                     return
                                 continue
 
-                    # Yield the next trials for the next config
+                    # yield the trials for the next config
+                    logger.info(f"Intermediate Log for stage {stage}: {stage_info}")
                     config = stage_info.configs[stage_info.amount_configs_yielded]
                     trials_for_config = self._get_next_trials(config, from_keys=stage_info.isb_keys)
                     stage_info.add_trials_for_config(config, trials_for_config)
@@ -433,20 +451,23 @@ class SuccessiveHalving(AbstractIntensifier):
 
                     stage_info.amount_configs_yielded += 1
 
-                # When we have yielded all the configs, we check if we want to promote configs.
+                # --- promote configs if possible
                 if stage_info.all_yielded:
+                    # TODO allow to skip stage: need to modify get_best_configs
                     try:
-                        successful_configs = self._get_best_configs(
-                            stage_info.configs, bracket, stage, stage_info.isb_keys
-                        )
+                        successful_configs = self._get_best_configs(stage_info, bracket, stage)
 
-                        # Mark current stage for removal from tracker
+                        # Remove current stage from tracker
                         stages_to_delete.append((repetition, bracket, stage))
 
                         # Add successful to the next stage
+                        amount_configs_to_yield = len(successful_configs)
                         if stage < self._max_iterations[bracket] - 1:
                             stages_to_add[(repetition, bracket, stage + 1)] = Stage(
-                                amount_configs_to_yield=self._n_configs_in_stage[bracket][stage + 1],
+                                repetition=repetition,
+                                bracket=bracket,
+                                stage=stage + 1,
+                                amount_configs_to_yield=amount_configs_to_yield,
                                 isb_keys=self._get_instance_seed_budget_keys_by_stage(
                                     bracket,
                                     stage + 1,
@@ -463,13 +484,13 @@ class SuccessiveHalving(AbstractIntensifier):
                             logger.debug(
                                 f"--- Removed {len(successful_configs)} configs to last stage in bracket {bracket}."
                             )
-                            self._open_new_repetition_or_bracket_if_necessary(repetition, stages_to_add)
                     except NotEvaluatedError:
-                        # We can't compare anything, so we just continue with the next pairs
                         logger.debug("--- Could not compare configs because not all trials have been evaluated yet.")
-                        self._open_new_repetition_or_bracket_if_necessary(repetition, stages_to_add)
 
-            # We have to update the tracker and remove stages that are done and add new stages
+                    # Check if we need to open a new repetition or bracket
+                    self._open_new_repetition_or_bracket_if_necessary(repetition, stages_to_add)
+
+            # Update the tracker and remove stages that are done and add new stages
             for repetition, bracket, stage in stages_to_delete:
                 logger.debug(f"--- Removing repetition {repetition}, bracket {bracket}, stage {stage} from tracker.")
                 del self._open_stages[repetition, bracket, stage]
@@ -480,6 +501,8 @@ class SuccessiveHalving(AbstractIntensifier):
     def _open_new_repetition_or_bracket_if_necessary(
         self, repetition: int, stages_to_add: dict[tuple[int, int, int], Stage]
     ) -> None:
+        if len(stages_to_add) > 0:
+            return
         if np.all([open_stage.all_yielded for open_stage in self._open_stages.values()]):
             next_bracket = self._get_next_bracket()
 
@@ -491,13 +514,16 @@ class SuccessiveHalving(AbstractIntensifier):
 
             self._seeds_per_bracket[(next_repetition, next_bracket)] = self._get_next_order_seed()
             new_stage = Stage(
+                repetition=next_repetition,
+                bracket=next_bracket,
+                stage=0,
                 amount_configs_to_yield=self._n_configs_in_stage[next_bracket][0],
                 isb_keys=self._get_instance_seed_budget_keys_by_stage(
                     next_bracket, 0, self._seeds_per_bracket[(next_repetition, next_bracket)]
                 ),
             )
             stages_to_add[(next_repetition, next_bracket, 0)] = new_stage
-            logger.debug(f"--- Opened new repetition {next_repetition}, bracket {next_bracket}, stage 0.")
+            logger.info(f"--- Opened new repetition {next_repetition}, bracket {next_bracket}, stage 0.")
         else:
             logger.debug("--- Not all stages are done yet, so no new repetition or bracket is opened.")
 
@@ -588,10 +614,9 @@ class SuccessiveHalving(AbstractIntensifier):
 
     def _get_best_configs(
         self,
-        configs: list[Configuration],
+        stage_info: Stage,
         bracket: int,
         stage: int,
-        from_keys: list[InstanceSeedBudgetKey],
     ) -> list[Configuration]:
         """Returns the best configurations. The number of configurations is depending on the stage. Raises
         ``NotEvaluatedError`` if not all trials have been evaluated.
@@ -602,12 +627,29 @@ class SuccessiveHalving(AbstractIntensifier):
             return []
 
         rh = self.runhistory
-        configs = configs.copy()
+        configs = stage_info.configs.copy()
+        from_keys = stage_info.isb_keys
+        if self._early_stopping:
+            configs = configs[: stage_info.amount_configs_yielded]
 
-        for config in configs:
-            isb_keys = rh.get_instance_seed_budget_keys(config)
+        evaluated = []
+        for i in range(len(configs)):
+            isb_keys = rh.get_instance_seed_budget_keys(configs[i])
+
+            # TODO is this sensible in the instance setting?
             if not all(isb_key in isb_keys for isb_key in from_keys):
+                if not self._early_stopping:
+                    raise NotEvaluatedError
+            else:
+                evaluated.append(i)
+
+        # TODO: only allowed to have less configs if actually stopped! Also, in promotion might have a problem some
+        # fidelities later if we only promote one, but two are needed two fidelities after that --> does that translate?
+        if self._early_stopping:
+            if len(evaluated) == 0:
                 raise NotEvaluatedError
+            configs = [configs[i] for i in evaluated]
+            n_configs = min(n_configs, len(configs))
 
         selected_configs: list[Configuration] = []
         while len(selected_configs) < n_configs:
@@ -643,3 +685,15 @@ class SuccessiveHalving(AbstractIntensifier):
     def _get_next_bracket(self) -> int:
         """Successive Halving only uses one bracket. Therefore, we always return 0 here."""
         return 0
+
+    def _skip_stage(self, stage_info: Stage) -> bool:
+        if not self._early_stopping:
+            return False
+
+        # no early stopping if no config evaluated or all already yielded
+        if stage_info.amount_configs_yielded == 0 or stage_info.all_yielded:
+            return False
+
+        stop = should_stage_stop(self.runhistory, self._budgets_in_stage, self._scenario, stage_info)
+
+        return stop
