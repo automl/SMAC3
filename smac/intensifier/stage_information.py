@@ -2,6 +2,9 @@ from ConfigSpace import Configuration
 
 from smac.runhistory import InstanceSeedBudgetKey, TrialInfo
 
+__copyright__ = "Copyright 2023, automl.org"
+__license__ = "3-clause BSD"
+
 
 class Stage:
     """Class to store information about a stage in the multi-fidelity optimization process."""
@@ -11,6 +14,7 @@ class Stage:
         repetition: int,
         bracket: int,
         stage: int,
+        budget: float,
         amount_configs_to_yield: int,
         isb_keys: list[InstanceSeedBudgetKey],
         configs: list[Configuration] = None,
@@ -18,6 +22,7 @@ class Stage:
         self.repetition: int = repetition
         self.bracket: int = bracket
         self.stage: int = stage
+        self.budget: float = budget
         if configs is None:
             configs = []
         self.configs: list[Configuration] = configs

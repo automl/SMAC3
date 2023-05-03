@@ -13,8 +13,6 @@ logger = get_logger(__name__)
 
 
 class Hyperband(SuccessiveHalving):
-    """See ``SuccessiveHalving`` for documentation."""
-
     def reset(self) -> None:
         """Resets the internal variables of the intensifier, including the tracker and the next bracket."""
         super().reset()

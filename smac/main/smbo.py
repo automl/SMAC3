@@ -461,7 +461,6 @@ class SMBO:
         if index < 0 or index > len(self._callbacks):
             index = len(self._callbacks)
         self._callbacks.insert(index, callback)
-        logger.info([callback for callback in self._callbacks])
 
     def _initialize_state(self) -> None:
         """Detects whether the optimization is restored from a previous state."""

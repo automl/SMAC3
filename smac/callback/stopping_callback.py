@@ -51,14 +51,18 @@ class AbstractStoppingCallbackCallback:
 
     @abstractmethod
     def log(
-        self, smbo: SMBO, min_ucb: float, min_lcb: float, regret: float, statistical_error: float, triggered: bool
+        self,
+        min_ucb: float,
+        min_lcb: float,
+        regret: float,
+        statistical_error: float,
+        triggered: bool,
+        **kwargs: dict,
     ) -> None:
         """Logs the stopping criterion values.
 
         Parameters
         ----------
-        smbo : SMBO
-            The SMBO instance.
         min_ucb : float
             Minimum upper confidence bound.
         min_lcb : float
@@ -88,7 +92,6 @@ class StoppingCallback(Callback):
         upper_bound_estimation_rate: float = 0.5,
         wait_iterations: int = 20,
         n_points_lcb: int = 1000,
-        model_log_transform: bool = True,
         statistical_error_threshold: Union[float, None] = None,
         statistical_error_field_name: str = "statistical_error",
         do_not_trigger: bool = False,
@@ -98,7 +101,6 @@ class StoppingCallback(Callback):
         self._upper_bound_estimation_rate = upper_bound_estimation_rate
         self._wait_iterations = wait_iterations
         self._n_points_lcb = n_points_lcb
-        self._model_log_transform = model_log_transform
         self._statistical_error_threshold = statistical_error_threshold
         self._statistical_error_field_name = statistical_error_field_name
         self._do_not_trigger = do_not_trigger
@@ -170,7 +172,7 @@ class StoppingCallback(Callback):
             continue_optimization = regret >= incumbent_statistical_error
 
             for callback in self._callbacks:
-                callback.log(smbo, min_ucb, min_lcb, regret, incumbent_statistical_error, not continue_optimization)
+                callback.log(min_ucb, min_lcb, regret, incumbent_statistical_error, not continue_optimization)
 
             info_str = (
                 f"triggered after {len(smbo.runhistory)} evaluations with regret "

@@ -25,7 +25,7 @@ from smac.utils.configspace import get_config_hash
 from smac.utils.logging import get_logger
 from smac.utils.multi_objective import normalize_costs
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2023, automl.org"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
@@ -678,7 +678,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         highest_observed_budget_only : bool
             Select only the highest observed budget run for this configuration.
             Meaning on multiple executions of the same instance-seed pair for a
-            a given configuration, only the highest observed budget is returned.
+            given configuration, only the highest observed budget is returned.
 
         Returns
         -------

@@ -39,7 +39,7 @@ class HyperbandFacade(RandomFacade):
             * "shuffle": Shuffle the instance-seed keys for each bracket individually.
         incumbent_selection : str, defaults to "any_budget"
             How to select the incumbent when using budgets. Can be set to:
-            * "any_budget": Incumbent is the best on any budget i.e., best performance regardless of budget.
+            * "any_budget": Incumbent is the best on any budget i.e., the best performance regardless of budget.
             * "highest_observed_budget": Incumbent is the best in the highest budget run so far.
             * "highest_budget": Incumbent is selected only based on the highest budget.
         max_incumbents : int, defaults to 10

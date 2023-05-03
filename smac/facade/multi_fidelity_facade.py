@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from ConfigSpace import Configuration
 
+from smac.callback.multifidelity_stopping_callback import MultiFidelityStoppingCallback
 from smac.facade.hyperparameter_optimization_facade import (
     HyperparameterOptimizationFacade,
 )
@@ -26,7 +27,7 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
         max_incumbents: int = 10,
         incumbent_selection: str = "highest_observed_budget",
         sample_brackets_at_once: bool = False,
-        early_stopping: bool = False,
+        early_stopping: MultiFidelityStoppingCallback = None,
     ) -> Hyperband:
         """Returns a Hyperband intensifier instance. Budgets are supported.
 
@@ -54,7 +55,7 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
             How many incumbents to keep track of in the case of multi-objective.
         sample_brackets_at_once : bool, defaults to False
             Whether to sample all brackets at once or one config at a time.
-        early_stopping : bool, defaults to False
+        early_stopping : MultiFidelityStoppingCallback, defaults to False
             Whether to stop the optimization early.
         """
         return Hyperband(

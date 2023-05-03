@@ -8,7 +8,7 @@ from collections import defaultdict
 import numpy as np
 from ConfigSpace import Configuration
 
-from smac.callback.multifidelity_stopping_callback import should_stage_stop
+from smac.callback.multifidelity_stopping_callback import MultiFidelityStoppingCallback
 from smac.constants import MAXINT
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.intensifier.stage_information import Stage
@@ -82,7 +82,7 @@ class SuccessiveHalving(AbstractIntensifier):
         incumbent_selection: str = "highest_observed_budget",
         sample_brackets_at_once: bool = False,
         seed: int | None = None,
-        early_stopping: bool = False,
+        early_stopping: MultiFidelityStoppingCallback | None = None,
     ):
         super().__init__(
             scenario=scenario,
@@ -202,7 +202,7 @@ class SuccessiveHalving(AbstractIntensifier):
     @staticmethod
     def _compute_configs_and_budgets_for_stages(
         eta: int, max_budget: float | int, max_iter: int, s_max: int | None = None
-    ) -> tuple[list[int], list[int]]:
+    ) -> tuple[list[float], list[int]]:
         if s_max is None:
             s_max = max_iter
 
@@ -381,7 +381,12 @@ class SuccessiveHalving(AbstractIntensifier):
         self._seeds_per_bracket[(0, 0)] = self._get_next_order_seed()
         isb_keys = self._get_instance_seed_budget_keys_by_stage(0, 0, self._seeds_per_bracket[(0, 0)])
         first_stage = Stage(
-            repetition=0, bracket=0, stage=0, amount_configs_to_yield=self._n_configs_in_stage[0][0], isb_keys=isb_keys
+            repetition=0,
+            bracket=0,
+            stage=0,
+            budget=self._budgets_in_stage[0][0],
+            amount_configs_to_yield=self._n_configs_in_stage[0][0],
+            isb_keys=isb_keys,
         )
         self._open_stages[(0, 0, 0)] = first_stage
         self._next_repetition = 1
@@ -462,6 +467,7 @@ class SuccessiveHalving(AbstractIntensifier):
                                 repetition=repetition,
                                 bracket=bracket,
                                 stage=stage + 1,
+                                budget=self._budgets_in_stage[bracket][stage + 1],
                                 amount_configs_to_yield=amount_configs_to_yield,
                                 isb_keys=self._get_instance_seed_budget_keys_by_stage(
                                     bracket,
@@ -514,6 +520,7 @@ class SuccessiveHalving(AbstractIntensifier):
                 repetition=next_repetition,
                 bracket=next_bracket,
                 stage=0,
+                budget=self._budgets_in_stage[next_bracket][0],
                 amount_configs_to_yield=self._n_configs_in_stage[next_bracket][0],
                 isb_keys=self._get_instance_seed_budget_keys_by_stage(
                     next_bracket, 0, self._seeds_per_bracket[(next_repetition, next_bracket)]
@@ -672,13 +679,15 @@ class SuccessiveHalving(AbstractIntensifier):
         return 0
 
     def _skip_stage(self, stage_info: Stage) -> bool:
-        if not self._early_stopping:
+        if self._early_stopping is None:
             return False
 
         # no early stopping if no config evaluated or all already yielded
         if stage_info.amount_configs_yielded == 0 or stage_info.all_configs_yielded:
             return False
 
-        stop = should_stage_stop(self.runhistory, self._budgets_in_stage, self._scenario, stage_info)
+        stop = self._early_stopping.should_stage_stop(
+            self.runhistory, self._budgets_in_stage, self._scenario, stage_info
+        )
 
         return stop
