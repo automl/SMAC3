@@ -26,7 +26,7 @@ def should_stage_stop(
     """
     # TODO: move this info somewhere else
     stat_error_field_name = "statistical_error"
-    best_n = "promoted"
+    best_n = "best_config"
     # To skip a stage, get the incumbent(s) statistical error on that stage and compare it to the regret of the
     # model on that stage. If the regret is smaller than the statistical error, skip the stage.
     # Get the best configs statistical error
@@ -62,7 +62,7 @@ def should_stage_stop(
     # Sort the configs by their performance
     stats.sort(key=lambda trial: trial[0])
     # Get the best config
-    if best_n == "promoted":
+    if best_n == "best_config":
         # TODO select right amount
         select_amount = 1
         statistical_error = np.mean([stat[1] for stat in stats[:select_amount]])

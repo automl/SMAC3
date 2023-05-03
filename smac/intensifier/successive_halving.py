@@ -195,12 +195,6 @@ class SuccessiveHalving(AbstractIntensifier):
         self._n_configs_in_stage: dict[int, list] = {0: n_configs}
         self._budgets_in_stage: dict[int, list] = {0: budgets}
 
-        # Initialize if early stopping
-        if self._early_stopping:
-            # For each fidelity, we need a model
-            # TODO
-            pass
-
     @staticmethod
     def _get_max_iterations(eta: int, max_budget: float | int, min_budget: float | int) -> int:
         return int(np.floor(np.log(max_budget / min_budget) / np.log(eta)))
@@ -397,26 +391,26 @@ class SuccessiveHalving(AbstractIntensifier):
                 f"Starting Successive Halving iteration with open stages:"
                 f" {[open_stage_ for open_stage_ in self._open_stages]}"
             )
+            if len(self._open_stages) == 0:
+                raise ValueError("No more stages to process.")
 
             stages_to_delete = []
             stages_to_add = {}
 
             for repetition, bracket, stage in sorted(self._open_stages.keys()):
                 stage_info = self._open_stages[(repetition, bracket, stage)]
-                logger.debug(f"--- Processing repetition {repetition}, bracket {bracket}, stage {stage}")
-                logger.debug(f"--- Stage info: {stage_info}")
+                logger.debug(f"Processing repetition {repetition}, bracket {bracket}, stage {stage}")
+                logger.debug(f"{stage_info}")
 
                 # skip stage if possible
                 if self._skip_stage(stage_info):
-                    logger.info(f"--- Skipping the rest of stage {stage}")
-                    # Mark the current stage as finished by decreasing the amount of configs to yield to the amount
-                    # of configs already yielded
-                    stage_info.amount_configs_to_yield = stage_info.amount_configs_yielded
+                    logger.info(f"Skipping the rest of stage {stage}")
+                    stage_info.terminate()
 
                 # --- yield configs if necessary
-                if not stage_info.all_yielded:
+                if not stage_info.all_configs_yielded and not stage_info.terminated:
                     # sample configs if necessary
-                    if stage == 0 and len(stage_info.configs) < stage_info.amount_configs_to_yield:
+                    if not stage_info.all_configs_generated:
                         configs_to_sample = (
                             1 if not self._sample_brackets_at_once else stage_info.amount_configs_to_yield
                         )
@@ -431,14 +425,18 @@ class SuccessiveHalving(AbstractIntensifier):
                                 stage_info.add_config(config)
                             except StopIteration:
                                 logger.info(f"--- No more configs available in stage {stage}.")
-                                stage_info.amount_configs_to_yield = len(stage_info.configs)
-                                if np.all([open_stage.all_yielded for open_stage in self._open_stages.values()]):
+                                stage_info.terminate()
+                                if np.all(
+                                    [
+                                        open_stage.all_configs_yielded or open_stage.terminated
+                                        for open_stage in self._open_stages.values()
+                                    ]
+                                ):
                                     return
                                 continue
 
                     # yield the trials for the next config
-                    logger.info(f"Intermediate Log for stage {stage}: {stage_info}")
-                    config = stage_info.configs[stage_info.amount_configs_yielded]
+                    config = stage_info.get_next_config()
                     trials_for_config = self._get_next_trials(config, from_keys=stage_info.isb_keys)
                     stage_info.add_trials_for_config(config, trials_for_config)
                     logger.debug(
@@ -449,13 +447,10 @@ class SuccessiveHalving(AbstractIntensifier):
                     for trial in trials_for_config:
                         yield trial
 
-                    stage_info.amount_configs_yielded += 1
-
                 # --- promote configs if possible
-                if stage_info.all_yielded:
-                    # TODO allow to skip stage: need to modify get_best_configs
+                if stage_info.all_configs_yielded or stage_info.terminated:
                     try:
-                        successful_configs = self._get_best_configs(stage_info, bracket, stage)
+                        successful_configs = self._get_best_configs(stage_info)
 
                         # Remove current stage from tracker
                         stages_to_delete.append((repetition, bracket, stage))
@@ -503,7 +498,9 @@ class SuccessiveHalving(AbstractIntensifier):
     ) -> None:
         if len(stages_to_add) > 0:
             return
-        if np.all([open_stage.all_yielded for open_stage in self._open_stages.values()]):
+        if np.all(
+            [open_stage.all_configs_yielded or open_stage.terminated for open_stage in self._open_stages.values()]
+        ):
             next_bracket = self._get_next_bracket()
 
             if next_bracket == 0:
@@ -612,51 +609,39 @@ class SuccessiveHalving(AbstractIntensifier):
 
         return next_trials
 
-    def _get_best_configs(
-        self,
-        stage_info: Stage,
-        bracket: int,
-        stage: int,
-    ) -> list[Configuration]:
+    def _get_best_configs(self, stage_info: Stage) -> list[Configuration]:
         """Returns the best configurations. The number of configurations is depending on the stage. Raises
         ``NotEvaluatedError`` if not all trials have been evaluated.
         """
         try:
-            n_configs = self._n_configs_in_stage[bracket][stage + 1]
+            n_configs_next_stage = self._n_configs_in_stage[stage_info.bracket][stage_info.stage + 1]
         except IndexError:
             return []
 
-        rh = self.runhistory
-        configs = stage_info.configs.copy()
+        configs = stage_info.yielded_configs.copy()
         from_keys = stage_info.isb_keys
-        if self._early_stopping:
-            configs = configs[: stage_info.amount_configs_yielded]
 
+        # check that all configs have been evaluated - however, not necessary in the case of early stopping, in which
+        # case we simply collect all evaluated configs
         evaluated = []
-        for i in range(len(configs)):
-            isb_keys = rh.get_instance_seed_budget_keys(configs[i])
+        for config in configs:
+            isb_keys = self.runhistory.get_instance_seed_budget_keys(config)
 
-            # TODO is this sensible in the instance setting?
-            if not all(isb_key in isb_keys for isb_key in from_keys):
-                if not self._early_stopping:
-                    raise NotEvaluatedError
-            else:
-                evaluated.append(i)
-
-        # TODO: only allowed to have less configs if actually stopped! Also, in promotion might have a problem some
-        # fidelities later if we only promote one, but two are needed two fidelities after that --> does that translate?
-        if self._early_stopping:
-            if len(evaluated) == 0:
+            if all(isb_key in isb_keys for isb_key in from_keys):
+                evaluated.append(config)
+            elif not stage_info.terminated:
                 raise NotEvaluatedError
-            configs = [configs[i] for i in evaluated]
-            n_configs = min(n_configs, len(configs))
+
+        # We only select the best configs out of the evaluated ones in the case of early stopping
+        configs = evaluated
+        n_configs_next_stage = min(n_configs_next_stage, len(configs))
 
         selected_configs: list[Configuration] = []
-        while len(selected_configs) < n_configs:
+        while len(selected_configs) < n_configs_next_stage:
             # We calculate the pareto front for the given configs
             # We use the same isb keys for all the configs
             all_keys = [from_keys for _ in configs]
-            incumbents = calculate_pareto_front(rh, configs, all_keys)
+            incumbents = calculate_pareto_front(self.runhistory, configs, all_keys)
 
             # Idea: We recursively calculate the pareto front in every iteration
             for incumbent in incumbents:
@@ -664,8 +649,8 @@ class SuccessiveHalving(AbstractIntensifier):
                 selected_configs.append(incumbent)
 
         # If we have more selected configs, we remove the ones with the smallest crowding distance
-        if len(selected_configs) > n_configs:
-            selected_configs = sort_by_crowding_distance(rh, configs, all_keys)[:n_configs]
+        if len(selected_configs) > n_configs_next_stage:
+            selected_configs = sort_by_crowding_distance(self.runhistory, configs, all_keys)[:n_configs_next_stage]
             logger.debug("Found more configs than required. Removed configs with smallest crowding distance.")
 
         return selected_configs
@@ -691,7 +676,7 @@ class SuccessiveHalving(AbstractIntensifier):
             return False
 
         # no early stopping if no config evaluated or all already yielded
-        if stage_info.amount_configs_yielded == 0 or stage_info.all_yielded:
+        if stage_info.amount_configs_yielded == 0 or stage_info.all_configs_yielded:
             return False
 
         stop = should_stage_stop(self.runhistory, self._budgets_in_stage, self._scenario, stage_info)
