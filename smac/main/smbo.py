@@ -245,8 +245,18 @@ class SMBO:
             assert config_selector._acquisition_maximizer is not None
             config_selector._acquisition_maximizer.acquisition_function = acquisition_function
 
-    def optimize(self, shared_data=None) -> Configuration | list[Configuration]:
+    def optimize(self, *, data_to_scatter: dict[str, Any] | None = None) -> Configuration | list[Configuration]:
         """Runs the Bayesian optimization loop.
+
+        Parameters
+        ----------
+        data_to_scatter: dict[str, Any] | None
+            When a user scatters data from their local process to the distributed network,
+            this data is distributed in a round-robin fashion grouping by number of cores.
+            Roughly speaking, we can keep this data in memory and then we do not have to (de-)serialize the data
+            every time we would like to execute a target function with a big dataset.
+            For example, when your target function has a big dataset shared across all the target function,
+            this argument is very useful.
 
         Returns
         -------
@@ -270,11 +280,16 @@ class SMBO:
         for callback in self._callbacks:
             callback.on_start(self)
 
-
-        should_share = isinstance(self._runner, DaskParallelRunner) and shared_data is not None
-        shared_dict = (
-            dict(shared_data=self._runner._client.scatter(shared_data, broadcast=True)) if should_share else {}
-        )
+        dask_data_to_scatter = {}
+        if isinstance(self._runner, DaskParallelRunner) and dask_data_to_scatter is not None:
+            dask_data_to_scatter = dict(
+                data_to_scatter=self._runner._client.scatter(data_to_scatter, broadcast=True)
+            )
+        elif dask_data_to_scatter is not None:
+            raise ValueError(
+                "dask_data_to_scatter is valid only for DaskParallelRunner, "
+                f"but {dask_data_to_scatter} was provided for {self._runner.__class__.__name__}"
+            )
 
         # Main BO loop
         while True:
@@ -287,7 +302,7 @@ class SMBO:
 
                 # We submit the trial to the runner
                 # In multi-worker mode, SMAC waits till a new worker is available here
-                self._runner.submit_trial(trial_info=trial_info, **shared_dict)
+                self._runner.submit_trial(trial_info=trial_info, **dask_data_to_scatter)
             except StopIteration:
                 self._stop = True
 

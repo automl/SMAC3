@@ -76,7 +76,9 @@ class AbstractRunner(ABC):
                 assert isinstance(scenario.crash_cost, float)
                 self._crash_cost = [scenario.crash_cost for _ in range(self._n_objectives)]
 
-    def run_wrapper(self, trial_info: TrialInfo, **shared_dict) -> tuple[TrialInfo, TrialValue]:
+    def run_wrapper(
+        self, trial_info: TrialInfo, **dask_data_to_scatter: dict[str, Any]
+    ) -> tuple[TrialInfo, TrialValue]:
         """Wrapper around run() to execute and check the execution of a given config.
         This function encapsulates common
         handling/processing, so that run() implementation is simplified.
@@ -85,6 +87,13 @@ class AbstractRunner(ABC):
         ----------
         trial_info : RunInfo
             Object that contains enough information to execute a configuration run in isolation.
+        dask_data_to_scatter: dict[str, Any]
+            When a user scatters data from their local process to the distributed network,
+            this data is distributed in a round-robin fashion grouping by number of cores.
+            Roughly speaking, we can keep this data in memory and then we do not have to (de-)serialize the data
+            every time we would like to execute a target function with a big dataset.
+            For example, when your target function has a big dataset shared across all the target function,
+            this argument is very useful.
 
         Returns
         -------
@@ -101,7 +110,7 @@ class AbstractRunner(ABC):
                 instance=trial_info.instance,
                 budget=trial_info.budget,
                 seed=trial_info.seed,
-                **shared_dict,
+                **dask_data_to_scatter,
             )
         except Exception as e:
             status = StatusType.CRASHED

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Iterator
+from typing import Any, Iterator
 
 import time
 from pathlib import Path
@@ -98,7 +98,7 @@ class DaskParallelRunner(AbstractRunner):
             self._client = dask_client
             self._close_client_at_del = False
 
-    def submit_trial(self, trial_info: TrialInfo, **shared_dict) -> None:
+    def submit_trial(self, trial_info: TrialInfo, **dask_data_to_scatter: dict[str, Any]) -> None:
         """This function submits a configuration embedded in a ``trial_info`` object, and uses one of
         the workers to produce a result locally to each worker.
 
@@ -115,6 +115,14 @@ class DaskParallelRunner(AbstractRunner):
         ----------
         trial_info : TrialInfo
             An object containing the configuration launched.
+
+        dask_data_to_scatter: dict[str, Any]
+            When a user scatters data from their local process to the distributed network,
+            this data is distributed in a round-robin fashion grouping by number of cores.
+            Roughly speaking, we can keep this data in memory and then we do not have to (de-)serialize the data
+            every time we would like to execute a target function with a big dataset.
+            For example, when your target function has a big dataset shared across all the target function,
+            this argument is very useful.
         """
         # Check for resources or block till one is available
         if self.count_available_workers() <= 0:
@@ -133,7 +141,7 @@ class DaskParallelRunner(AbstractRunner):
                 )
 
         # At this point we can submit the job
-        trial = self._client.submit(self._single_worker.run_wrapper, trial_info=trial_info, **shared_dict)
+        trial = self._client.submit(self._single_worker.run_wrapper, trial_info=trial_info, **dask_data_to_scatter)
         self._pending_trials.append(trial)
 
     def iter_results(self) -> Iterator[tuple[TrialInfo, TrialValue]]:  # noqa: D102
@@ -154,9 +162,11 @@ class DaskParallelRunner(AbstractRunner):
         instance: str | None = None,
         budget: float | None = None,
         seed: int | None = None,
-        **shared_dict,
+        **dask_data_to_scatter: dict[str, Any],
     ) -> tuple[StatusType, float | list[float], float, dict]:  # noqa: D102
-        return self._single_worker.run(config=config, instance=instance, seed=seed, budget=budget, **shared_dict)
+        return self._single_worker.run(
+            config=config, instance=instance, seed=seed, budget=budget, **dask_data_to_scatter
+        )
 
     def count_available_workers(self) -> int:
         """Total number of workers available. This number is dynamic as more resources
