@@ -281,7 +281,7 @@ class AbstractFacade:
 
         Parameters
         ----------
-        dask_data_to_scatter: dict[str, Any] | None
+        data_to_scatter: dict[str, Any] | None
             We first note that this argument is valid only dask_runner!
             When a user scatters data from their local process to the distributed network,
             this data is distributed in a round-robin fashion grouping by number of cores.
@@ -397,7 +397,7 @@ class AbstractFacade:
         scenario: Scenario,
         *,
         retrain_after: int = 8,
-        retries: int = 16,
+        retries: int = 1000,
     ) -> ConfigSelector:
         """Returns the default configuration selector."""
         return ConfigSelector(scenario, retrain_after=retrain_after, retries=retries)
