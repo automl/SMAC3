@@ -57,6 +57,9 @@ class Scenario:
     n_trials : int, defaults to 100
         The maximum number of trials (combination of configuration, seed, budget, and instance, depending on the task)
         to run.
+    use_default_config: bool, defaults to False.
+        If True, the configspace's default configuration is evaluated in the initial design.
+        For historic benchmark reasons, this is False by default.
     instances : list[str] | None, defaults to None
         Names of the instances to use. If None, no instances are used.
         Instances could be dataset names, seeds, subsets, etc.
@@ -93,6 +96,7 @@ class Scenario:
     trial_walltime_limit: float | None = None
     trial_memory_limit: int | None = None
     n_trials: int = 100
+    use_default_config: bool = False
 
     # Algorithm Configuration
     instances: list[str] | None = None

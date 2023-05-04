@@ -59,9 +59,17 @@ class AbstractInitialDesign:
         if seed is None:
             seed = scenario.seed
 
+        self.use_default_config = scenario.use_default_config
+
         self._seed = seed
         self._rng = np.random.RandomState(seed)
         self._n_configs_per_hyperparameter = n_configs_per_hyperparameter
+
+        if self.use_default_config:
+            default_config = self._configspace.get_default_configuration()
+            default_config.origin = "Initial Design: Default configuration"
+            additional_configs.append(default_config)
+
         self._additional_configs = additional_configs
 
         n_params = len(self._configspace.get_hyperparameters())

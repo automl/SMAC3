@@ -2,6 +2,8 @@
 
 ## Improvements
 - Callbacks registration is now a public method of the optimizer and allows callbacks to be inserted at a specific position.
+- added scenario.use_default_config argument/attribute=False, that adds the user's configspace default configuration 
+  as an additional_config to the inital design if set to True. This reduces the number of the sampled configs by one.
 
 ## Bugfixes
 - Adjust amount of configurations in different stages of hyperband brackets to conform to the original paper.
