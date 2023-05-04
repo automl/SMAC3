@@ -72,7 +72,12 @@ class TargetFunctionRunner(AbstractSerialRunner):
 
         # Pynisher limitations
         if (memory := self._scenario.trial_memory_limit) is not None:
+            unit = None
+            if isinstance(memory, (tuple, list)):
+                memory, unit = memory
             memory = int(math.ceil(memory))
+            if unit is not None:
+                memory = (memory, unit)
 
         if (time := self._scenario.trial_walltime_limit) is not None:
             time = int(math.ceil(time))
