@@ -359,8 +359,6 @@ class Intensifier(AbstractIntensifier):
 
         # Return only N trials
         if N is not None:
-            if N < 0:
-                N = 1
             N = N - counter
             if len(is_keys) > N:
                 is_keys = is_keys[:N]
