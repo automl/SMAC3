@@ -282,9 +282,7 @@ class SMBO:
 
         dask_data_to_scatter = {}
         if isinstance(self._runner, DaskParallelRunner) and data_to_scatter is not None:
-            dask_data_to_scatter = dict(
-                data_to_scatter=self._runner._client.scatter(data_to_scatter, broadcast=True)
-            )
+            dask_data_to_scatter = dict(data_to_scatter=self._runner._client.scatter(data_to_scatter, broadcast=True))
         elif data_to_scatter is not None:
             raise ValueError(
                 "data_to_scatter is valid only for DaskParallelRunner, "
