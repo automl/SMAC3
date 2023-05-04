@@ -46,22 +46,17 @@ mean accuracy and run-time of each configuration.
     [INFO][abstract_initial_design.py:134] Using 5 initial design configurations and 0 additional configurations.
     [INFO][abstract_intensifier.py:515] Added config 97ef22 as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:598] Config f88a6b is a new incumbent. Total number of incumbents: 2.
-    [INFO][abstract_intensifier.py:598] Config d77b40 is a new incumbent. Total number of incumbents: 3.
-    [INFO][abstract_intensifier.py:598] Config 621669 is a new incumbent. Total number of incumbents: 4.
-    [INFO][abstract_intensifier.py:598] Config c07f09 is a new incumbent. Total number of incumbents: 5.
+    [INFO][abstract_intensifier.py:598] Config 8e1252 is a new incumbent. Total number of incumbents: 3.
     [INFO][smbo.py:307] Configuration budget is exhausted:
-    [INFO][smbo.py:308] --- Remaining wallclock time: -1.530118703842163
+    [INFO][smbo.py:308] --- Remaining wallclock time: -0.15648150444030762
     [INFO][smbo.py:309] --- Remaining cpu time: inf
-    [INFO][smbo.py:310] --- Remaining trials: 174
+    [INFO][smbo.py:310] --- Remaining trials: 190
     Validated costs from default config: 
-    --- [0.60155834 0.27295494]
+    --- [0.60155834 0.53531563]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.88924791 0.29774463]
-    --- [0.04813757 0.75440979]
-    --- [0.03561281 1.01678693]
-    --- [0.0665065  0.58060002]
-    --- [0.06622331 0.47612441]
+    --- [0.88924791 0.57136393]
+    --- [0.03561281 1.82998335]
 
 
 
@@ -242,7 +237,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  38.570 seconds)
+   **Total running time of the script:** ( 0 minutes  36.370 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:
