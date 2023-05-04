@@ -225,8 +225,6 @@ class Intensifier(AbstractIntensifier):
                 try:
                     config = next(self.config_generator)
                     config_hash = get_config_hash(config)
-                    # We set the number of trials to be negative as they might not be executed in the asynchronous
-                    # Therefore, once the N is found to be -1, we do not consider them as valid
                     self._queue.append((config, 1))
                     logger.debug(f"--- Added a new config {config_hash} to the queue.")
 
