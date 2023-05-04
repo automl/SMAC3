@@ -1038,30 +1038,29 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][smbo.py:299] Finished 0 trials.
 [INFO][smbo.py:299] Finished 0 trials.
 [INFO][smbo.py:299] Finished 50 trials.
-[INFO][abstract_intensifier.py:515] Added config d3f994 as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:590] Added config 8ea495 and rejected config d3f994 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- batch_size: None -&gt; 214
-[INFO][configspace.py:175] --- learning_rate_init: None -&gt; 0.005599223654063347
-[INFO][configspace.py:175] --- n_layer: 3 -&gt; 4
-[INFO][configspace.py:175] --- n_neurons: 51 -&gt; 66
-[INFO][configspace.py:175] --- solver: &#39;lbfgs&#39; -&gt; &#39;adam&#39;
-[INFO][abstract_intensifier.py:590] Added config a95ab1 and rejected config 8ea495 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- batch_size: 214 -&gt; 205
-[INFO][configspace.py:175] --- learning_rate_init: 0.005599223654063347 -&gt; 0.004317600781044413
-[INFO][configspace.py:175] --- n_layer: 4 -&gt; 3
-[INFO][configspace.py:175] --- n_neurons: 66 -&gt; 100
-[INFO][smbo.py:299] Finished 100 trials.
+[INFO][smbo.py:299] Finished 50 trials.
+[INFO][abstract_intensifier.py:515] Added config 8ea495 as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:590] Added config 704d44 and rejected config 8ea495 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- activation: &#39;tanh&#39; -&gt; &#39;logistic&#39;
+[INFO][configspace.py:175] --- batch_size: 214 -&gt; 31
+[INFO][configspace.py:175] --- learning_rate_init: 0.005599223654063347 -&gt; 0.0038549874043245355
+[INFO][configspace.py:175] --- n_layer: 4 -&gt; 1
+[INFO][configspace.py:175] --- n_neurons: 66 -&gt; 87
+[INFO][abstract_intensifier.py:590] Added config 867bd1 and rejected config 704d44 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- batch_size: 31 -&gt; 30
+[INFO][configspace.py:175] --- learning_rate_init: 0.0038549874043245355 -&gt; 0.004679235679993789
+[INFO][configspace.py:175] --- n_neurons: 87 -&gt; 179
 [INFO][smbo.py:307] Configuration budget is exhausted:
-[INFO][smbo.py:308] --- Remaining wallclock time: -0.03720569610595703
+[INFO][smbo.py:308] --- Remaining wallclock time: -0.08941340446472168
 [INFO][smbo.py:309] --- Remaining cpu time: inf
-[INFO][smbo.py:310] --- Remaining trials: 383
+[INFO][smbo.py:310] --- Remaining trials: 385
 Default cost (SuccessiveHalving): 0.36672856700711853
-Incumbent cost (SuccessiveHalving): 0.02671618693902822
+Incumbent cost (SuccessiveHalving): 0.017254719900959392
 [INFO][abstract_initial_design.py:69] Using `n_configs` and ignoring `n_configs_per_hyperparameter`.
 [INFO][abstract_facade.py:187] Workers are reduced to 8.
 /opt/hostedtoolcache/Python/3.10.11/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
 Perhaps you already have a cluster running?
-Hosting the HTTP server on port 39803 instead
+Hosting the HTTP server on port 32993 instead
   warnings.warn(
 [INFO][abstract_initial_design.py:134] Using 5 initial design configurations and 0 additional configurations.
 [INFO][successive_halving.py:164] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
@@ -1081,25 +1080,38 @@ Hosting the HTTP server on port 39803 instead
 [INFO][smbo.py:299] Finished 0 trials.
 [INFO][smbo.py:299] Finished 0 trials.
 [INFO][smbo.py:299] Finished 0 trials.
-[INFO][abstract_intensifier.py:515] Added config 3e854d as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:590] Added config e27357 and rejected config 3e854d as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- activation: &#39;relu&#39; -&gt; &#39;logistic&#39;
-[INFO][configspace.py:175] --- batch_size: None -&gt; 103
-[INFO][configspace.py:175] --- learning_rate_init: None -&gt; 0.02113934324402315
-[INFO][configspace.py:175] --- n_layer: 4 -&gt; 1
-[INFO][configspace.py:175] --- n_neurons: 9 -&gt; 19
-[INFO][configspace.py:175] --- solver: &#39;lbfgs&#39; -&gt; &#39;adam&#39;
-[INFO][abstract_intensifier.py:590] Added config 704d44 and rejected config e27357 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- batch_size: 103 -&gt; 31
-[INFO][configspace.py:175] --- learning_rate_init: 0.02113934324402315 -&gt; 0.0038549874043245355
-[INFO][configspace.py:175] --- n_neurons: 19 -&gt; 87
+[INFO][abstract_intensifier.py:515] Added config b57404 as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:590] Added config f6afb8 and rejected config b57404 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- batch_size: 123 -&gt; 86
+[INFO][configspace.py:175] --- learning_rate_init: 0.011991802841520254 -&gt; 0.00264515393793579
+[INFO][configspace.py:175] --- n_layer: 1 -&gt; 5
+[INFO][configspace.py:175] --- n_neurons: 55 -&gt; 60
+[INFO][configspace.py:175] --- solver: &#39;sgd&#39; -&gt; &#39;adam&#39;
 [INFO][smbo.py:299] Finished 50 trials.
+[INFO][abstract_intensifier.py:590] Added config 8ea495 and rejected config f6afb8 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- batch_size: 86 -&gt; 214
+[INFO][configspace.py:175] --- learning_rate_init: 0.00264515393793579 -&gt; 0.005599223654063347
+[INFO][configspace.py:175] --- n_layer: 5 -&gt; 4
+[INFO][configspace.py:175] --- n_neurons: 60 -&gt; 66
+[INFO][abstract_intensifier.py:590] Added config dba1ad and rejected config 8ea495 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- batch_size: 214 -&gt; 196
+[INFO][configspace.py:175] --- learning_rate_init: 0.005599223654063347 -&gt; 0.02058572411750497
+[INFO][configspace.py:175] --- n_layer: 4 -&gt; 1
+[INFO][configspace.py:175] --- n_neurons: 66 -&gt; 73
 [INFO][smbo.py:307] Configuration budget is exhausted:
-[INFO][smbo.py:308] --- Remaining wallclock time: -0.3525402545928955
+[INFO][smbo.py:308] --- Remaining wallclock time: -1.829167366027832
 [INFO][smbo.py:309] --- Remaining cpu time: inf
-[INFO][smbo.py:310] --- Remaining trials: 421
+[INFO][smbo.py:310] --- Remaining trials: 433
+[INFO][abstract_intensifier.py:590] Added config 035a84 and rejected config dba1ad as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- activation: &#39;tanh&#39; -&gt; &#39;relu&#39;
+[INFO][configspace.py:175] --- batch_size: 196 -&gt; 259
+[INFO][configspace.py:175] --- learning_rate: None -&gt; &#39;constant&#39;
+[INFO][configspace.py:175] --- learning_rate_init: 0.02058572411750497 -&gt; 0.0075638421362735015
+[INFO][configspace.py:175] --- n_layer: 1 -&gt; 4
+[INFO][configspace.py:175] --- n_neurons: 73 -&gt; 183
+[INFO][configspace.py:175] --- solver: &#39;adam&#39; -&gt; &#39;sgd&#39;
 Default cost (Hyperband): 0.36672856700711853
-Incumbent cost (Hyperband): 0.0178087279480037
+Incumbent cost (Hyperband): 0.021148251315382338
 </pre></div>
 </div>
 <div class="line-block">
@@ -1270,7 +1282,7 @@ Incumbent cost (Hyperband): 0.0178087279480037
     <span class="n">plot_trajectory</span><span class="p">(</span><span class="n">facades</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 2 minutes  37.916 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 2 minutes  37.399 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e36c26bb3a993c4641a06c811122b11e/1_mlp_epochs.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_mlp_epochs.py</span></code></a></p>

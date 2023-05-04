@@ -75,17 +75,12 @@ the target function now is required to have an instance argument.
     [INFO][smbo.py:299] Finished 250 trials.
     [INFO][smbo.py:299] Finished 300 trials.
     [INFO][smbo.py:299] Finished 350 trials.
-    [INFO][abstract_intensifier.py:590] Added config 4eee0f and rejected config d431b1 as incumbent because it is not better than the incumbents on 45 instances:
-    [INFO][configspace.py:175] --- alpha: 0.6027633760716439 -> 0.043401399746380895
-    [INFO][configspace.py:175] --- eta0: 0.03077201812975574 -> 0.0004515379327023025
-    [INFO][configspace.py:175] --- l1_ratio: 0.06414749634878436 -> 0.04764670575090954
-    [INFO][configspace.py:175] --- learning_rate: 'adaptive' -> 'constant'
     [INFO][smbo.py:307] Configuration budget is exhausted:
-    [INFO][smbo.py:308] --- Remaining wallclock time: -0.004213094711303711
+    [INFO][smbo.py:308] --- Remaining wallclock time: -0.05104637145996094
     [INFO][smbo.py:309] --- Remaining cpu time: inf
-    [INFO][smbo.py:310] --- Remaining trials: 4617
+    [INFO][smbo.py:310] --- Remaining trials: 4633
     Default cost: 0.15489347419148672
-    Incumbent cost: 0.005753776023683193
+    Incumbent cost: 0.006249006102246613
 
 
 
@@ -225,7 +220,7 @@ the target function now is required to have an instance argument.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  33.857 seconds)
+   **Total running time of the script:** ( 0 minutes  38.287 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_2_sgd_datasets.py:
