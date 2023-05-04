@@ -60,6 +60,8 @@ class Scenario:
     use_default_config: bool, defaults to False.
         If True, the configspace's default configuration is evaluated in the initial design.
         For historic benchmark reasons, this is False by default.
+        Notice, that this will result in n_configs + 1 for the initial design. Respecting n_trials,
+        this will result in one fewer evaluated configuration in the optimization.
     instances : list[str] | None, defaults to None
         Names of the instances to use. If None, no instances are used.
         Instances could be dataset names, seeds, subsets, etc.

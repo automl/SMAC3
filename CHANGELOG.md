@@ -2,8 +2,9 @@
 
 ## Improvements
 - Callbacks registration is now a public method of the optimizer and allows callbacks to be inserted at a specific position.
-- added scenario.use_default_config argument/attribute=False, that adds the user's configspace default configuration 
-  as an additional_config to the inital design if set to True. This reduces the number of the sampled configs by one.
+- Added scenario.use_default_config argument/attribute=False, that adds the user's configspace default configuration 
+  as an additional_config to the inital design if set to True. This adds one additional configuration to the number of configs 
+  originating from the initial design. Since n_trials is still respected, this results in one fewer BO steps
 - Adapt developer install instructions to include pre-commit installation
 
 
