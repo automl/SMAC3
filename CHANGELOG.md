@@ -2,6 +2,7 @@
 
 ## Improvements
 - Callbacks registration is now a public method of the optimizer and allows callbacks to be inserted at a specific position.
+- Adapt developer install instructions to include pre-commit installation
 
 ## Bugfixes
 - Adjust amount of configurations in different stages of hyperband brackets to conform to the original paper.
