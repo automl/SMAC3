@@ -81,7 +81,11 @@ class Intensifier(AbstractIntensifier):
 
     def get_state(self) -> dict[str, Any]:  # noqa: D102
         return {
-            "queue": [(self.runhistory.get_config_id(config), n) for config, n in self._queue],
+            "queue": [
+                (self.runhistory.get_config_id(config), n)
+                for config, n in self._queue
+                if self.runhistory.has_config(config)
+            ],
         }
 
     def set_state(self, state: dict[str, Any]) -> None:  # noqa: D102
@@ -221,6 +225,8 @@ class Intensifier(AbstractIntensifier):
                 try:
                     config = next(self.config_generator)
                     config_hash = get_config_hash(config)
+                    # We set the number of trials to be negative as they might not be executed in the asynchronous
+                    # Therefore, once the N is found to be -1, we do not consider them as valid
                     self._queue.append((config, 1))
                     logger.debug(f"--- Added a new config {config_hash} to the queue.")
 
@@ -355,6 +361,8 @@ class Intensifier(AbstractIntensifier):
 
         # Return only N trials
         if N is not None:
+            if N < 0:
+                N = 1
             N = N - counter
             if len(is_keys) > N:
                 is_keys = is_keys[:N]

@@ -596,6 +596,10 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         """Returns the configuration id from a configuration."""
         return self._config_ids[config]
 
+    def has_config(self, config: Configuration) -> bool:
+        """Check if the config is stored in the runhistory"""
+        return config in self._config_ids
+
     def get_configs(self, sort_by: str | None = None) -> list[Configuration]:
         """Return all configurations in this RunHistory object.
 
