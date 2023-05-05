@@ -21,13 +21,11 @@ See an example for obtaining the information via GitPython below:
 """
 
 import sys
-import json
 from ConfigSpace import Configuration, ConfigurationSpace, Float
 
-import smac
-from smac import Callback
 from smac import HyperparameterOptimizationFacade as HPOFacade
 from smac import Scenario
+from smac.callbacks.metadata_callback import MetadataCallback
 
 __copyright__ = "Copyright 2023, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -49,22 +47,6 @@ class Rosenbrock2D:
 
         cost = 100.0 * (x2 - x1**2.0) ** 2.0 + (1 - x1) ** 2.0
         return cost
-
-
-class MetadataCallback(Callback):
-    def __init__(self, **kwargs):
-        self.kwargs = kwargs
-
-    def on_start(self, smbo: smac.main.smbo.SMBO) -> None:
-        path = smbo._scenario.output_directory
-        meta_dict = {}
-        for key, value in self.kwargs.items():
-            meta_dict[key] = value
-
-        path.mkdir(parents=True, exist_ok=True)
-
-        with open(path / "metadata.json", "w") as fp:
-            json.dump(meta_dict, fp, indent=2)
 
 
 if __name__ == "__main__":
