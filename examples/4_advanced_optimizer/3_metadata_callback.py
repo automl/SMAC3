@@ -16,7 +16,7 @@ See an example for obtaining the information via GitPython below:
         branch=str(repo.active_branch),
         commit=str(repo.head.commit),
         command=" ".join([sys.argv[0][len(repo.working_tree_dir) + 1:]] + sys.argv[1:]),
-        custom_information="Some Custom Information"
+        additional_information="Some Additional Information"
     )
 """
 
