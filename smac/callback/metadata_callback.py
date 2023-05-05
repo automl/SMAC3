@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 
 from smac.callback.callback import Callback
@@ -8,7 +10,8 @@ __license__ = "3-clause BSD"
 
 
 class MetadataCallback(Callback):
-    def __init__(self, **kwargs: str) -> None:
+    def __init__(self, **kwargs: str | int | float | dict | list) -> None:
+        # Arguments must be json serializable
         self.kwargs = kwargs
 
     def on_start(self, smbo: SMBO) -> None:

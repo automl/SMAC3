@@ -3,7 +3,7 @@ Callback for logging run metadata
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 An example for using a callback to log run metadata to a file. Any arguments passed to the callback will be logged
-to a json file at the beginning of the SMAC run.
+to a json file at the beginning of the SMAC run (arguments must be json serializable).
 
 Instead of editing the Git-related information (repository, branch, commit) by hand each time they change,
 this information can also be added automatically using GitPython (install via "pip install GitPython").
