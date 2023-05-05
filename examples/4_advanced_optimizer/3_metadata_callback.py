@@ -10,19 +10,20 @@ this information can also be added automatically using GitPython (install via "p
 See an example for obtaining the information via GitPython below:
     from git import Repo
     repo = Repo(".", search_parent_directories=True)
-    get_metadata_callback(
-        project_name="My Project Name",
+    MetadataCallback(
         repository=repo.working_tree_dir.split("/")[-1],
         branch=str(repo.active_branch),
         commit=str(repo.head.commit),
         command=" ".join([sys.argv[0][len(repo.working_tree_dir) + 1:]] + sys.argv[1:]),
-        additional_information="Some Additional Information"
     )
 """
 
 import sys
+import platform
+from datetime import datetime
 from ConfigSpace import Configuration, ConfigurationSpace, Float
 
+import smac
 from smac import HyperparameterOptimizationFacade as HPOFacade
 from smac import Scenario
 from smac.callback.metadata_callback import MetadataCallback
@@ -67,6 +68,9 @@ if __name__ == "__main__":
                 branch="Name of Active Branch",
                 commit="Commit Hash",
                 command=" ".join(sys.argv),
+                utc_time=str(datetime.utcnow()),
+                smac_version=getattr(smac, "version"),
+                os=platform.platform(),
                 additional_information="Some Additional Information"
             )
         ],
