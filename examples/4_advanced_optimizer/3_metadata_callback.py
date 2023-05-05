@@ -2,7 +2,8 @@
 Callback for logging run metadata
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-An example for using a callback to log run metadata to a file.
+An example for using a callback to log run metadata to a file. Any arguments passed to the callback will be logged
+to a json file at the beginning of the SMAC run.
 
 Instead of editing the Git-related information (repository, branch, commit) by hand each time they change,
 this information can also be added automatically using GitPython (install via "pip install GitPython").
@@ -51,23 +52,12 @@ class Rosenbrock2D:
 
 
 class MetadataCallback(Callback):
-    def __init__(self, project_name, repository, branch, commit, command, **kwargs):
-        self.project_name = project_name
-        self.repository = repository
-        self.branch = branch
-        self.commit = commit
-        self.command = command
+    def __init__(self, **kwargs):
         self.kwargs = kwargs
 
     def on_start(self, smbo: smac.main.smbo.SMBO) -> None:
         path = smbo._scenario.output_directory
-        meta_dict = {
-            "project_name": self.project_name,
-            "repository": self.repository,
-            "branch": self.branch,
-            "commit": self.commit,
-            "command": self.command
-        }
+        meta_dict = {}
         for key, value in self.kwargs.items():
             meta_dict[key] = value
 
@@ -95,7 +85,7 @@ if __name__ == "__main__":
                 branch="Name of Active Branch",
                 commit="Commit Hash",
                 command=" ".join(sys.argv),
-                custom_information="Some Custom Information"
+                additional_information="Some Additional Information"
             )
         ],
         logging_level=999999,
