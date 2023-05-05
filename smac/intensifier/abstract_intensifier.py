@@ -12,7 +12,7 @@ import numpy as np
 from ConfigSpace import Configuration
 
 import smac
-from smac.callback import Callback
+from smac.callback.callback import Callback
 from smac.constants import MAXINT
 from smac.main.config_selector import ConfigSelector
 from smac.runhistory import TrialInfo

@@ -1,7 +1,7 @@
 import json
 
-import smac
-from smac import Callback
+from smac.callback.callback import Callback
+from smac.main.smbo import SMBO
 
 __copyright__ = "Copyright 2023, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -11,7 +11,7 @@ class MetadataCallback(Callback):
     def __init__(self, **kwargs: str) -> None:
         self.kwargs = kwargs
 
-    def on_start(self, smbo: smac.main.smbo.SMBO) -> None:
+    def on_start(self, smbo: SMBO) -> None:
         """Called before the optimization starts."""
         path = smbo._scenario.output_directory
         meta_dict = {}

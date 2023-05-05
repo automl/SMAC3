@@ -25,7 +25,7 @@ from ConfigSpace import Configuration, ConfigurationSpace, Float
 
 from smac import HyperparameterOptimizationFacade as HPOFacade
 from smac import Scenario
-from smac.callbacks.metadata_callback import MetadataCallback
+from smac.callback.metadata_callback import MetadataCallback
 
 __copyright__ = "Copyright 2023, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
