@@ -1,0 +1,102 @@
+"""
+Callback for logging run metadata
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+An example for using a callback to log run metadata to a file.
+
+Instead of editing the Git-related information (repository, branch, commit) by hand each time they change,
+this information can also be added automatically using GitPython (install via "pip install GitPython").
+See an example for obtaining the information via GitPython below:
+    from git import Repo
+    repo = Repo(".", search_parent_directories=True)
+    get_metadata_callback(
+        project_name="My Project Name",
+        repository=repo.working_tree_dir.split("/")[-1],
+        branch=str(repo.active_branch),
+        commit=str(repo.head.commit),
+        command=" ".join([sys.argv[0][len(repo.working_tree_dir) + 1:]] + sys.argv[1:]),
+        custom_information="Some Custom Information"
+    )
+"""
+
+import sys
+import json
+from ConfigSpace import Configuration, ConfigurationSpace, Float
+
+import smac
+from smac import Callback
+from smac import HyperparameterOptimizationFacade as HPOFacade
+from smac import Scenario
+
+__copyright__ = "Copyright 2023, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
+
+class Rosenbrock2D:
+    @property
+    def configspace(self) -> ConfigurationSpace:
+        cs = ConfigurationSpace(seed=0)
+        x0 = Float("x0", (-5, 10), default=-3)
+        x1 = Float("x1", (-5, 10), default=-4)
+        cs.add_hyperparameters([x0, x1])
+
+        return cs
+
+    def train(self, config: Configuration, seed: int = 0) -> float:
+        x1 = config["x0"]
+        x2 = config["x1"]
+
+        cost = 100.0 * (x2 - x1**2.0) ** 2.0 + (1 - x1) ** 2.0
+        return cost
+
+
+class MetadataCallback(Callback):
+    def __init__(self, project_name, repository, branch, commit, command, **kwargs):
+        self.project_name = project_name
+        self.repository = repository
+        self.branch = branch
+        self.commit = commit
+        self.command = command
+        self.kwargs = kwargs
+
+    def on_start(self, smbo: smac.main.smbo.SMBO) -> None:
+        path = smbo._scenario.output_directory
+        meta_dict = {
+            "project_name": self.project_name,
+            "repository": self.repository,
+            "branch": self.branch,
+            "commit": self.commit,
+            "command": self.command
+        }
+        for key, value in self.kwargs.items():
+            meta_dict[key] = value
+
+        path.mkdir(parents=True, exist_ok=True)
+
+        with open(path / "metadata.json", "w") as fp:
+            json.dump(meta_dict, fp, indent=2)
+
+
+if __name__ == "__main__":
+    model = Rosenbrock2D()
+
+    # Scenario object specifying the optimization "environment"
+    scenario = Scenario(model.configspace, n_trials=200)
+
+    # Now we use SMAC to find the best hyperparameters and add the metadata callback defined above
+    HPOFacade(
+        scenario,
+        model.train,
+        overwrite=True,
+        callbacks=[
+            MetadataCallback(
+                project_name="My Project Name",
+                repository="My Repository Name",
+                branch="Name of Active Branch",
+                commit="Commit Hash",
+                command=" ".join(sys.argv),
+                custom_information="Some Custom Information"
+            )
+        ],
+        logging_level=999999,
+    ).optimize()
