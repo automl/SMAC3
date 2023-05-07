@@ -70,6 +70,13 @@ class SuccessiveHalving(AbstractIntensifier):
         retrain.
     seed : int, defaults to None
         Internal seed used for random events like shuffle seeds.
+    early_stopping : MultiFidelityStoppingCallback, defaults to None
+        Callback used to stop the single fidelities.
+    remove_stopped_fidelities_incrementally : bool, defaults to False
+        Whether to remove stopped fidelities incrementally or not at all (can revisit).
+    only_go_to_next_fidelity_after_early_stopping : bool, defaults to False
+        Whether to only go to the next fidelity after early stopping or not (essentially removes bracket size
+        limitations).
     """
 
     def __init__(
@@ -84,6 +91,7 @@ class SuccessiveHalving(AbstractIntensifier):
         seed: int | None = None,
         early_stopping: MultiFidelityStoppingCallback | None = None,
         remove_stopped_fidelities_incrementally: bool = False,
+        only_go_to_next_fidelity_after_early_stopping: bool = False,
     ):
         super().__init__(
             scenario=scenario,
@@ -99,6 +107,7 @@ class SuccessiveHalving(AbstractIntensifier):
         self._sample_brackets_at_once = sample_brackets_at_once
         self._early_stopping = early_stopping
         self._remove_stopped_fidelities_incrementally = remove_stopped_fidelities_incrementally
+        self._only_go_to_next_fidelity_after_early_stopping = only_go_to_next_fidelity_after_early_stopping
 
         # Global variables derived from scenario
         self._min_budget = self._scenario.min_budget
@@ -415,6 +424,8 @@ class SuccessiveHalving(AbstractIntensifier):
                 if self._skip_stage(stage_info):
                     logger.info(f"Skipping the rest of stage {stage}")
                     stage_info.terminate()
+                elif self._only_go_to_next_fidelity_after_early_stopping and stage_info.all_configs_yielded:
+                    stage_info.amount_configs_to_yield += 1
 
                 # --- yield configs if necessary
                 if not stage_info.all_configs_yielded and not stage_info.terminated:
@@ -457,7 +468,9 @@ class SuccessiveHalving(AbstractIntensifier):
                         yield trial
 
                 # --- promote configs if possible
-                if stage_info.all_configs_yielded or stage_info.terminated:
+                if (
+                    stage_info.all_configs_yielded and not self._only_go_to_next_fidelity_after_early_stopping
+                ) or stage_info.terminated:
                     try:
                         successful_configs = self._get_best_configs(stage_info)
 
@@ -528,7 +541,7 @@ class SuccessiveHalving(AbstractIntensifier):
                 while self._budgets_in_stage[next_bracket][next_stage] in self._stopped_fidelities:
                     next_stage += 1
 
-                    if next_stage > len(self._budgets_in_stage[next_bracket]):
+                    if next_stage > len(self._budgets_in_stage[next_bracket]) - 1:
                         logger.info("--- All fidelities have been closed.")
                         return
 
@@ -641,6 +654,9 @@ class SuccessiveHalving(AbstractIntensifier):
         except IndexError:
             return []
 
+        if self._only_go_to_next_fidelity_after_early_stopping:
+            n_configs_next_stage = max(n_configs_next_stage, int(stage_info.amount_configs_yielded / self._eta))
+
         configs = stage_info.yielded_configs.copy()
         from_keys = stage_info.isb_keys
 
@@ -698,8 +714,12 @@ class SuccessiveHalving(AbstractIntensifier):
         if self._early_stopping is None:
             return False
 
-        # no early stopping if no config evaluated or all already yielded
-        if stage_info.amount_configs_yielded == 0 or stage_info.all_configs_yielded:
+        # no early stopping if no config evaluated or all already yielded (except in cases where skipping is beneficial
+        # even when all configs already have been yielded)
+        skip_last_config = (
+            self._only_go_to_next_fidelity_after_early_stopping or self._remove_stopped_fidelities_incrementally
+        )
+        if stage_info.amount_configs_yielded == 0 or (stage_info.all_configs_yielded and (not skip_last_config)):
             return False
 
         stop = self._early_stopping.should_stage_stop(self.runhistory, self._scenario, stage_info)
