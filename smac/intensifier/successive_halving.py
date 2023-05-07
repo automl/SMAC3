@@ -188,6 +188,17 @@ class SuccessiveHalving(AbstractIntensifier):
         if min_budget is None or min_budget <= 0:
             raise ValueError("Min budget has to be larger than 0.")
 
+        if (
+            self._only_go_to_next_fidelity_after_early_stopping
+            or self._remove_stopped_fidelities_incrementally
+            and self._early_stopping is None
+        ):
+            raise ValueError(
+                "Early stopping has to be enabled for the options "
+                "only_go_to_next_fidelity_after_early_stopping and remove_stopped_fidelities_"
+                "incrementally."
+            )
+
         budget_type = "INSTANCES" if self.uses_instances else "BUDGETS"
         logger.info(
             f"Successive Halving uses budget type {budget_type} with eta {eta}, "

@@ -8,6 +8,7 @@ from ConfigSpace import Configuration
 from smac.acquisition.function import LCB, UCB
 from smac.acquisition.maximizer import LocalAndSortedRandomSearch
 from smac.callback import Callback
+from smac.intensifier import SuccessiveHalving
 from smac.main.smbo import SMBO
 from smac.runhistory import TrialInfo, TrialKey, TrialValue
 from smac.runhistory.encoder import AbstractRunHistoryEncoder
@@ -95,6 +96,7 @@ class StoppingCallback(Callback):
         statistical_error_threshold: Union[float, None] = None,
         statistical_error_field_name: str = "statistical_error",
         do_not_trigger: bool = False,
+        highest_fidelity_only: bool = True,
         callbacks: list[AbstractStoppingCallbackCallback] = None,
     ):
         super().__init__()
@@ -104,6 +106,7 @@ class StoppingCallback(Callback):
         self._statistical_error_threshold = statistical_error_threshold
         self._statistical_error_field_name = statistical_error_field_name
         self._do_not_trigger = do_not_trigger
+        self._highest_fidelity_only = highest_fidelity_only
         self._callbacks = callbacks if callbacks is not None else []
 
         self._lcb = LCB(beta=initial_beta, update_beta=update_beta, beta_scaling_srinivas=True)
@@ -114,6 +117,17 @@ class StoppingCallback(Callback):
         # do not trigger stopping criterion before wait_iterations
         if smbo.runhistory.submitted < self._wait_iterations:
             return True
+
+        # in the case of the highest fidelity only, check if the received config is on the highest fidelity and
+        # if the model is trained on the highest fidelity
+        if self._highest_fidelity_only:
+            assert isinstance(smbo.intensifier, SuccessiveHalving)
+            intensifier: SuccessiveHalving = smbo.intensifier
+            if (
+                info.budget != intensifier._max_budget
+                or intensifier.config_selector._model_trained_on_budget != intensifier._max_budget
+            ):
+                return True
 
         # get statistical error of incumbent
         incumbent_config = smbo.intensifier.get_incumbent()
@@ -127,6 +141,10 @@ class StoppingCallback(Callback):
             raise ValueError("Currently, only one trial per config is supported.")
 
         trial_info = trial_info_list[0]
+
+        # check if the incumbent is on the highest fidelity
+        if self._highest_fidelity_only and trial_info.budget != intensifier._max_budget:
+            return True
 
         trial_value = smbo.runhistory[
             TrialKey(
