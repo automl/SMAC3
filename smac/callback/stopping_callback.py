@@ -117,6 +117,7 @@ class StoppingCallback(Callback):
 
         # get statistical error of incumbent
         incumbent_config = smbo.intensifier.get_incumbent()
+        # this gets the highest observed budget ONLY of the incumbent config
         trial_info_list = smbo.runhistory.get_trials(incumbent_config)
 
         if trial_info_list is None or len(trial_info_list) == 0:

@@ -7,9 +7,12 @@ from smac.acquisition.function import LCB, UCB
 from smac.intensifier.stage_information import Stage
 from smac.runhistory import TrialKey
 from smac.runhistory.encoder import RunHistoryEncoder
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2023, automl.org"
 __license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 
 class MultiFidelityStoppingCallback:
@@ -36,10 +39,9 @@ class MultiFidelityStoppingCallback:
 
         self._lcb = LCB(beta=initial_beta, update_beta=update_beta, beta_scaling_srinivas=True)
         self._ucb = UCB(beta=initial_beta, update_beta=update_beta, beta_scaling_srinivas=True)
+        self.removed_fidelities: set[float] = set()
 
-    def should_stage_stop(
-        self, runhistory: RunHistory, budgets_in_stage: dict[int, list[int]], scenario: Scenario, stage_info: Stage
-    ) -> bool:
+    def should_stage_stop(self, runhistory: RunHistory, scenario: Scenario, stage_info: Stage) -> bool:
         """
         Check if a stage should stop.
 
@@ -47,8 +49,6 @@ class MultiFidelityStoppingCallback:
         ----------
         runhistory : RunHistory
             Runhistory of the current optimization run
-        budgets_in_stage : dict[int, list[int]]
-            Budgets in each stage
         scenario : Scenario
             Scenario object
         stage_info : Stage
@@ -61,11 +61,9 @@ class MultiFidelityStoppingCallback:
         best_configs = []
         stats = []
         for config in configs:
-            trial_keys = runhistory.get_trials(config)
+            trial_keys = runhistory.get_trials(config, highest_observed_budget_only=False)
 
-            trial_keys = [
-                trial for trial in trial_keys if trial.budget == budgets_in_stage[stage_info.bracket][stage_info.stage]
-            ]
+            trial_keys = [trial for trial in trial_keys if trial.budget == stage_info.budget]
 
             if len(trial_keys) == 0:
                 continue
@@ -100,7 +98,11 @@ class MultiFidelityStoppingCallback:
             selected_amount = 1
         else:
             assert self._statistical_error_config_estimation_percentage is not None
-            selected_amount = int(len(stats) * self._statistical_error_config_estimation_percentage)
+            selected_amount = round(
+                stage_info.amount_configs_to_yield * self._statistical_error_config_estimation_percentage
+            )
+            selected_amount = max(1, selected_amount)
+            selected_amount = min(selected_amount, len(stats))
 
         statistical_error = float(np.mean([stat[1] for stat in stats[:selected_amount]]))
 
@@ -108,7 +110,7 @@ class MultiFidelityStoppingCallback:
         # Get data
         encoder = RunHistoryEncoder(scenario)
         encoder.runhistory = runhistory
-        x, y = encoder.transform(budget_subset=[budgets_in_stage[stage_info.bracket][stage_info.stage]])
+        x, y = encoder.transform(budget_subset=[stage_info.budget])
 
         # Train model
         from smac.facade.blackbox_facade import BlackBoxFacade

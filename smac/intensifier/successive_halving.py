@@ -27,7 +27,7 @@ logger = get_logger(__name__)
 
 class SuccessiveHalving(AbstractIntensifier):
     """
-    Implementation of Succesive Halving supporting multi-fidelity, multi-objective, and multi-processing.
+    Implementation of Successive Halving supporting multi-fidelity, multi-objective, and multi-processing.
     Internally, a tracker keeps track of configurations and their bracket and stage.
 
     The behaviour of this intensifier is as follows:
@@ -83,6 +83,7 @@ class SuccessiveHalving(AbstractIntensifier):
         sample_brackets_at_once: bool = False,
         seed: int | None = None,
         early_stopping: MultiFidelityStoppingCallback | None = None,
+        remove_stopped_fidelities_incrementally: bool = False,
     ):
         super().__init__(
             scenario=scenario,
@@ -97,6 +98,7 @@ class SuccessiveHalving(AbstractIntensifier):
         self._highest_observed_budget_only = False if incumbent_selection == "any_budget" else True
         self._sample_brackets_at_once = sample_brackets_at_once
         self._early_stopping = early_stopping
+        self._remove_stopped_fidelities_incrementally = remove_stopped_fidelities_incrementally
 
         # Global variables derived from scenario
         self._min_budget = self._scenario.min_budget
@@ -107,6 +109,7 @@ class SuccessiveHalving(AbstractIntensifier):
         self._configs_from_rh: list[Configuration] = []
         # map repetition, bracket, and stage to stage information
         self._open_stages: dict[tuple[int, int, int], Stage] = dict()
+        self._stopped_fidelities: set[float] = set()
         # map repetition and bracket to seed
         self._seeds_per_bracket: dict[tuple[int, int], Optional[int]] = dict()
         self._next_repetition = 0
@@ -324,8 +327,8 @@ class SuccessiveHalving(AbstractIntensifier):
 
         # step two: get the average performance for each budget
         runhistory_average_cost_by_budget = {}
-        for budget, isbs in configs_by_budgets.items():
-            average_cost = self.runhistory.average_cost(config=config, instance_seed_budget_keys=isbs)
+        for budget, isb_s in configs_by_budgets.items():
+            average_cost = self.runhistory.average_cost(config=config, instance_seed_budget_keys=isb_s)
 
             if type(average_cost) == list:
                 raise NotImplementedError(
@@ -397,7 +400,8 @@ class SuccessiveHalving(AbstractIntensifier):
                 f" {[open_stage_ for open_stage_ in self._open_stages]}"
             )
             if len(self._open_stages) == 0:
-                raise ValueError("No more stages to process.")
+                logger.info("No more stages to process. Exiting.")
+                return
 
             stages_to_delete = []
             stages_to_add = {}
@@ -507,6 +511,7 @@ class SuccessiveHalving(AbstractIntensifier):
         if np.all(
             [open_stage.all_configs_yielded or open_stage.terminated for open_stage in self._open_stages.values()]
         ):
+            # Increase counters
             next_bracket = self._get_next_bracket()
 
             if next_bracket == 0:
@@ -516,18 +521,29 @@ class SuccessiveHalving(AbstractIntensifier):
                 next_repetition = repetition
 
             self._seeds_per_bracket[(next_repetition, next_bracket)] = self._get_next_order_seed()
+            next_stage = 0
+
+            # Incrementally check if the stage can still be opened, or the fidelity has already been closed
+            if self._remove_stopped_fidelities_incrementally:
+                while self._budgets_in_stage[next_bracket][next_stage] in self._stopped_fidelities:
+                    next_stage += 1
+
+                    if next_stage > len(self._budgets_in_stage[next_bracket]):
+                        logger.info("--- All fidelities have been closed.")
+                        return
+
             new_stage = Stage(
                 repetition=next_repetition,
                 bracket=next_bracket,
-                stage=0,
-                budget=self._budgets_in_stage[next_bracket][0],
-                amount_configs_to_yield=self._n_configs_in_stage[next_bracket][0],
+                stage=next_stage,
+                budget=self._budgets_in_stage[next_bracket][next_stage],
+                amount_configs_to_yield=self._n_configs_in_stage[next_bracket][next_stage],
                 isb_keys=self._get_instance_seed_budget_keys_by_stage(
-                    next_bracket, 0, self._seeds_per_bracket[(next_repetition, next_bracket)]
+                    next_bracket, next_stage, self._seeds_per_bracket[(next_repetition, next_bracket)]
                 ),
             )
-            stages_to_add[(next_repetition, next_bracket, 0)] = new_stage
-            logger.info(f"--- Opened new repetition {next_repetition}, bracket {next_bracket}, stage 0.")
+            stages_to_add[(next_repetition, next_bracket, next_stage)] = new_stage
+            logger.info(f"--- Opened new repetition {next_repetition}, bracket {next_bracket}, stage {next_stage}.")
         else:
             logger.debug("--- Not all stages are done yet, so no new repetition or bracket is opened.")
 
@@ -686,8 +702,22 @@ class SuccessiveHalving(AbstractIntensifier):
         if stage_info.amount_configs_yielded == 0 or stage_info.all_configs_yielded:
             return False
 
-        stop = self._early_stopping.should_stage_stop(
-            self.runhistory, self._budgets_in_stage, self._scenario, stage_info
-        )
+        stop = self._early_stopping.should_stage_stop(self.runhistory, self._scenario, stage_info)
+
+        # If stopped and either the stages' budget is the minimum budget or the previous fidelity has also been stopped,
+        # we add the budget to the stopped fidelities
+        if self._remove_stopped_fidelities_incrementally:
+            is_min_budget = stage_info.budget == self._budgets_in_stage[0][0]
+            if is_min_budget:
+                previous_fidelity_stopped = False
+            else:
+                previous_fidelity_stopped = self._budgets_in_stage[0][stage_info.stage - 1] in self._stopped_fidelities
+
+            if stop and (is_min_budget or previous_fidelity_stopped):
+                # track as stopped fidelity and close all current open stages using the budget
+                self._stopped_fidelities.add(stage_info.budget)
+                for stage in self._open_stages.values():
+                    if stage.budget == stage_info.budget:
+                        stage.terminate()
 
         return stop

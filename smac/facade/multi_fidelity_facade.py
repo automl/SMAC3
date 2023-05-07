@@ -28,6 +28,7 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
         incumbent_selection: str = "highest_observed_budget",
         sample_brackets_at_once: bool = False,
         early_stopping: MultiFidelityStoppingCallback = None,
+        remove_stopped_fidelities_incrementally: bool = False,
     ) -> Hyperband:
         """Returns a Hyperband intensifier instance. Budgets are supported.
 
@@ -57,6 +58,8 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
             Whether to sample all brackets at once or one config at a time.
         early_stopping : MultiFidelityStoppingCallback, defaults to False
             Whether to stop the optimization early.
+        remove_stopped_fidelities_incrementally : bool, defaults to False
+            Whether to remove stopped fidelities incrementally or not remove them completely at all.
         """
         return Hyperband(
             scenario=scenario,
@@ -67,6 +70,7 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
             incumbent_selection=incumbent_selection,
             sample_brackets_at_once=sample_brackets_at_once,
             early_stopping=early_stopping,
+            remove_stopped_fidelities_incrementally=remove_stopped_fidelities_incrementally,
         )
 
     @staticmethod
