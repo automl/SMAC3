@@ -8,6 +8,7 @@ from smac.facade.hyperparameter_optimization_facade import (
 )
 from smac.initial_design.random_design import RandomInitialDesign
 from smac.intensifier.hyperband import Hyperband
+from smac.intensifier.search_space_modifier import AbstractSearchSpaceModifier
 from smac.scenario import Scenario
 
 __copyright__ = "Copyright 2023, automl.org"
@@ -30,6 +31,7 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
         early_stopping: MultiFidelityStoppingCallback = None,
         remove_stopped_fidelities_incrementally: bool = False,
         only_go_to_next_fidelity_after_early_stopping: bool = False,
+        modify_search_space_on_stop: AbstractSearchSpaceModifier = None,
     ) -> Hyperband:
         """Returns a Hyperband intensifier instance. Budgets are supported.
 
@@ -63,6 +65,8 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
             Whether to remove stopped fidelities incrementally or not remove them completely at all.
         only_go_to_next_fidelity_after_early_stopping : bool, defaults to False
             Whether to only go to the next fidelity after early stopping or not.
+        modify_search_space_on_stop : AbstractSearchSpaceModifier, defaults to None
+            Whether to modify the search space on stop or not.
         """
         return Hyperband(
             scenario=scenario,
@@ -75,6 +79,7 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
             early_stopping=early_stopping,
             remove_stopped_fidelities_incrementally=remove_stopped_fidelities_incrementally,
             only_go_to_next_fidelity_after_early_stopping=only_go_to_next_fidelity_after_early_stopping,
+            modify_search_space_on_stop=modify_search_space_on_stop,
         )
 
     @staticmethod

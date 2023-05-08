@@ -9,9 +9,6 @@ from smac.runhistory import TrialKey
 from smac.runhistory.encoder import RunHistoryEncoder
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2023, automl.org"
-__license__ = "3-clause BSD"
-
 logger = get_logger(__name__)
 
 

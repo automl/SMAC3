@@ -11,6 +11,7 @@ from ConfigSpace import Configuration
 from smac.callback.multifidelity_stopping_callback import MultiFidelityStoppingCallback
 from smac.constants import MAXINT
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
+from smac.intensifier.search_space_modifier import AbstractSearchSpaceModifier
 from smac.intensifier.stage_information import Stage
 from smac.runhistory import TrialInfo
 from smac.runhistory.dataclasses import InstanceSeedBudgetKey
@@ -77,6 +78,8 @@ class SuccessiveHalving(AbstractIntensifier):
     only_go_to_next_fidelity_after_early_stopping : bool, defaults to False
         Whether to only go to the next fidelity after early stopping or not (essentially removes bracket size
         limitations).
+    modify_search_space_on_stop : AbstractSearchSpaceModifier, defaults to None
+        Search space modifier to use when stopping a fidelity.
     """
 
     def __init__(
@@ -92,6 +95,7 @@ class SuccessiveHalving(AbstractIntensifier):
         early_stopping: MultiFidelityStoppingCallback | None = None,
         remove_stopped_fidelities_incrementally: bool = False,
         only_go_to_next_fidelity_after_early_stopping: bool = False,
+        modify_search_space_on_stop: AbstractSearchSpaceModifier = None,
     ):
         super().__init__(
             scenario=scenario,
@@ -108,6 +112,7 @@ class SuccessiveHalving(AbstractIntensifier):
         self._early_stopping = early_stopping
         self._remove_stopped_fidelities_incrementally = remove_stopped_fidelities_incrementally
         self._only_go_to_next_fidelity_after_early_stopping = only_go_to_next_fidelity_after_early_stopping
+        self._shrink_search_space_on_stop = modify_search_space_on_stop
 
         # Global variables derived from scenario
         self._min_budget = self._scenario.min_budget
@@ -415,7 +420,7 @@ class SuccessiveHalving(AbstractIntensifier):
         self._next_repetition = 1
 
         while True:
-            logger.info(
+            logger.debug(
                 f"Starting Successive Halving iteration with open stages:"
                 f" {[open_stage_ for open_stage_ in self._open_stages]}"
             )
@@ -435,6 +440,10 @@ class SuccessiveHalving(AbstractIntensifier):
                 if self._skip_stage(stage_info):
                     logger.info(f"Skipping the rest of stage {stage}")
                     stage_info.terminate()
+                    if self._shrink_search_space_on_stop is not None:
+                        self._shrink_search_space_on_stop.modify_search_space(
+                            self._scenario.configspace, self.runhistory
+                        )
                 elif self._only_go_to_next_fidelity_after_early_stopping and stage_info.all_configs_yielded:
                     stage_info.amount_configs_to_yield += 1
 
@@ -567,7 +576,7 @@ class SuccessiveHalving(AbstractIntensifier):
                 ),
             )
             stages_to_add[(next_repetition, next_bracket, next_stage)] = new_stage
-            logger.info(f"--- Opened new repetition {next_repetition}, bracket {next_bracket}, stage {next_stage}.")
+            logger.debug(f"--- Opened new repetition {next_repetition}, bracket {next_bracket}, stage {next_stage}.")
         else:
             logger.debug("--- Not all stages are done yet, so no new repetition or bracket is opened.")
 

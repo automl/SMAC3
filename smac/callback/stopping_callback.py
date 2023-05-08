@@ -1,9 +1,8 @@
 from abc import abstractmethod
 from typing import Optional, Union
 
-import ConfigSpace
 import numpy as np
-from ConfigSpace import Configuration
+from ConfigSpace import Configuration, ConfigurationSpace
 
 from smac import RunHistory
 from smac.acquisition.function import LCB, UCB
@@ -14,9 +13,6 @@ from smac.main.smbo import SMBO
 from smac.runhistory import TrialInfo, TrialKey, TrialValue
 from smac.runhistory.encoder import AbstractRunHistoryEncoder
 from smac.utils.logging import get_logger
-
-__copyright__ = "Copyright 2023, automl.org"
-__license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
 
@@ -253,7 +249,9 @@ class StoppingCallback(Callback):
                     ]
                     trials_ucb.append((config, trial_value.cost))
         trials_ucb.sort(key=lambda trial_ucb: trial_ucb[1])
-        trials_ucb = trials_ucb[: int(upper_bound_estimation_rate * len(trials_ucb))]
+        amount_selected_configs = int(upper_bound_estimation_rate * len(trials_ucb))
+        amount_selected_configs = max(1, amount_selected_configs)
+        trials_ucb = trials_ucb[:amount_selected_configs]
         configs_ucb = [trial[0] for trial in trials_ucb]
 
         return configs_ucb
@@ -264,7 +262,7 @@ class StoppingCallback(Callback):
         lcb: LCB,
         n_points_lcb: int,
         configs: list[Configuration],
-        configspace: ConfigSpace,
+        configspace: ConfigurationSpace,
         runhistory_encoder: Optional[AbstractRunHistoryEncoder] = None,
     ) -> tuple[float, float]:
         """
@@ -280,7 +278,7 @@ class StoppingCallback(Callback):
             The number of points that should be sampled for the lcb.
         configs : list[Configuration]
             The configs for computing the ucb.
-        configspace : ConfigSpace
+        configspace : ConfigurationSpace
             The configspace, needed for optimizing lcb.
         runhistory_encoder : Optional[AbstractRunHistoryEncoder]
             The runhistory encoder, needs to be given if the costs in the runhistory are encoded.
@@ -294,6 +292,7 @@ class StoppingCallback(Callback):
         maximizer = LocalAndSortedRandomSearch(configspace=configspace, acquisition_function=lcb, challengers=1)
         # SMBO is maximizing the negative lcb, thus, we need to invert the lcb
         challenger_list = maximizer.maximize(previous_configs=[], n_points=n_points_lcb)
+
         min_lcb = lcb(challenger_list)
         min_lcb *= -1
         if runhistory_encoder is not None:
