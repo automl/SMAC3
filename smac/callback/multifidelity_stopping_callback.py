@@ -125,11 +125,17 @@ class MultiFidelityStoppingCallback:
         self._ucb.update(model=model, num_data=len(x))
         from smac.callback import StoppingCallback
 
+        # Sample configs for ucb
+        # Get all configs that have been evaluated on the current fidelity from rh, sort by cost and choose amount
+        configs_ucb = StoppingCallback.get_configs_for_budget(
+            runhistory, self._upper_bound_estimation_rate, stage_info.budget
+        )
+
         min_lcb, min_ucb = StoppingCallback.compute_min_lcb_ucb(
             ucb=self._ucb,
             lcb=self._lcb,
             n_points_lcb=1000,
-            configs=best_configs,
+            configs=configs_ucb,
             configspace=scenario.configspace,
         )
         regret = min_ucb - min_lcb

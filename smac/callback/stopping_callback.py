@@ -5,6 +5,7 @@ import ConfigSpace
 import numpy as np
 from ConfigSpace import Configuration
 
+from smac import RunHistory
 from smac.acquisition.function import LCB, UCB
 from smac.acquisition.maximizer import LocalAndSortedRandomSearch
 from smac.callback import Callback
@@ -164,7 +165,12 @@ class StoppingCallback(Callback):
         assert smbo.intensifier.config_selector.model is not None
         model = smbo.intensifier.config_selector.model
         if model.fitted:
-            configs = smbo.runhistory.get_configs(sort_by="cost")
+            if not self._highest_fidelity_only:
+                configs = smbo.runhistory.get_configs(sort_by="cost")
+            else:
+                max_budget: float = smbo.intensifier._max_budget  # type: ignore[attr-defined]
+                configs = self.get_configs_for_budget(smbo.runhistory, self._upper_bound_estimation_rate, max_budget)
+
             runhistory_encoder = smbo.intensifier.config_selector.runhistory_encoder
 
             # update acquisition functions
@@ -212,6 +218,47 @@ class StoppingCallback(Callback):
             return True
 
     @staticmethod
+    def get_configs_for_budget(
+        runhistory: RunHistory, upper_bound_estimation_rate: float, budget: float
+    ) -> list[Configuration]:
+        """
+        Returns the configs for the given budget sorted by cost.
+
+        Parameters
+        ----------
+        runhistory : RunHistory
+            The runhistory from which the configs should be extracted.
+        upper_bound_estimation_rate : float
+            The rate of configs that should be considered for the upper bound estimation.
+        budget : float
+            The budget for which the configs should be extracted.
+
+        Returns
+        -------
+        configs_ucb : list[Configuration]
+        """
+        configs_ucb = runhistory.get_configs_per_budget([budget])
+        trials_ucb = []
+        for config in configs_ucb:
+            trials = runhistory.get_trials(config, highest_observed_budget_only=False)
+            for trial in trials:
+                if trial.budget == budget:
+                    trial_value = runhistory[
+                        TrialKey(
+                            config_id=runhistory.get_config_id(config),
+                            instance=trial.instance,
+                            seed=trial.seed,
+                            budget=trial.budget,
+                        )
+                    ]
+                    trials_ucb.append((config, trial_value.cost))
+        trials_ucb.sort(key=lambda trial_ucb: trial_ucb[1])
+        trials_ucb = trials_ucb[: int(upper_bound_estimation_rate * len(trials_ucb))]
+        configs_ucb = [trial[0] for trial in trials_ucb]
+
+        return configs_ucb
+
+    @staticmethod
     def compute_min_lcb_ucb(
         ucb: UCB,
         lcb: LCB,
@@ -220,7 +267,24 @@ class StoppingCallback(Callback):
         configspace: ConfigSpace,
         runhistory_encoder: Optional[AbstractRunHistoryEncoder] = None,
     ) -> tuple[float, float]:
-        """Computes the minimum lcb and ucb of the given configs."""
+        """
+        Computes the minimum lcb and ucb of the given configs.
+
+        Parameters
+        ----------
+        ucb : UCB
+            The ucb acquisition function.
+        lcb : LCB
+            The lcb acquisition function.
+        n_points_lcb : int
+            The number of points that should be sampled for the lcb.
+        configs : list[Configuration]
+            The configs for computing the ucb.
+        configspace : ConfigSpace
+            The configspace, needed for optimizing lcb.
+        runhistory_encoder : Optional[AbstractRunHistoryEncoder]
+            The runhistory encoder, needs to be given if the costs in the runhistory are encoded.
+        """
         min_ucb = ucb(configs)
         min_ucb *= -1
         if runhistory_encoder is not None:

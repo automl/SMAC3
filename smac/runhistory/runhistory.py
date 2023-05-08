@@ -81,7 +81,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
     @property
     def multi_objective_algorithm(self) -> AbstractMultiObjectiveAlgorithm | None:
-        """The multi-objective algorithm required to scaralize the costs in case of multi-objective."""
+        """The multi-objective algorithm required to scalarize the costs in case of multi-objective."""
         return self._multi_objective_algorithm
 
     @multi_objective_algorithm.setter
