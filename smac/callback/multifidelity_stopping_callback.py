@@ -23,6 +23,7 @@ class MultiFidelityStoppingCallback:
         statistical_error_field_name: Optional[str] = "statistical_error",
         statistical_error_estimation_only_incumbent: bool = True,
         statistical_error_config_estimation_percentage: Optional[float] = None,
+        epsilon: float = 1e-4,
         callbacks: list = None,
     ):
         super().__init__()
@@ -32,6 +33,7 @@ class MultiFidelityStoppingCallback:
         self._statistical_error_field_name = statistical_error_field_name
         self._statistical_error_estimation_only_incumbent = statistical_error_estimation_only_incumbent
         self._statistical_error_config_estimation_percentage = statistical_error_config_estimation_percentage
+        self._epsilon = epsilon
         self._callbacks = callbacks if callbacks is not None else []
 
         self._lcb = LCB(beta=initial_beta, update_beta=update_beta, beta_scaling_srinivas=True)
@@ -136,7 +138,7 @@ class MultiFidelityStoppingCallback:
             configspace=scenario.configspace,
         )
         regret = min_ucb - min_lcb
-        stop = statistical_error > regret
+        stop = statistical_error >= regret or np.abs(statistical_error - regret) < self._epsilon
 
         for callback in self._callbacks:
             callback.log(

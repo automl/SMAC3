@@ -93,6 +93,7 @@ class StoppingCallback(Callback):
         statistical_error_threshold: Union[float, None] = None,
         statistical_error_field_name: str = "statistical_error",
         do_not_trigger: bool = False,
+        epsilon: float = 1e-4,
         highest_fidelity_only: bool = True,
         callbacks: list[AbstractStoppingCallbackCallback] = None,
     ):
@@ -103,6 +104,7 @@ class StoppingCallback(Callback):
         self._statistical_error_threshold = statistical_error_threshold
         self._statistical_error_field_name = statistical_error_field_name
         self._do_not_trigger = do_not_trigger
+        self._epsilon = epsilon
         self._highest_fidelity_only = highest_fidelity_only
         self._callbacks = callbacks if callbacks is not None else []
 
@@ -188,7 +190,9 @@ class StoppingCallback(Callback):
             )
 
             # we are stopping once regret < incumbent statistical error (return false = do not continue optimization
-            continue_optimization = regret >= incumbent_statistical_error
+            continue_optimization = (
+                regret >= incumbent_statistical_error or np.abs(incumbent_statistical_error - regret) < self._epsilon
+            )
 
             for callback in self._callbacks:
                 callback.log(min_ucb, min_lcb, regret, incumbent_statistical_error, not continue_optimization)
