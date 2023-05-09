@@ -79,7 +79,7 @@ class MultiFidelitySearchSpaceShrinker(AbstractSearchSpaceModifier):
 
         clipped_total_shrinkage = min(total_shrinkage, self.max_shrinkage)
         # equally divide the reduction of shrinkage among all hyperparameters with this factor
-        factor = (clipped_total_shrinkage / total_shrinkage) ** (1 / len(hparams))
+        factor = (clipped_total_shrinkage / total_shrinkage) ** (1 / len(hparam_shrinkage))
 
         if clipped_total_shrinkage != total_shrinkage:
             logger.debug(

@@ -115,6 +115,8 @@ class StoppingCallback(Callback):
         if smbo.runhistory.submitted < self._wait_iterations:
             return True
 
+        max_budget: float = smbo.intensifier._max_budget  # type: ignore[attr-defined]
+
         # in the case of the highest fidelity only, check if the received config is on the highest fidelity and
         # if the model is trained on the highest fidelity
         if self._highest_fidelity_only:
@@ -164,7 +166,6 @@ class StoppingCallback(Callback):
             if not self._highest_fidelity_only:
                 configs = smbo.runhistory.get_configs(sort_by="cost")
             else:
-                max_budget: float = smbo.intensifier._max_budget  # type: ignore[attr-defined]
                 configs = self.get_configs_for_budget(smbo.runhistory, self._upper_bound_estimation_rate, max_budget)
 
             runhistory_encoder = smbo.intensifier.config_selector.runhistory_encoder
