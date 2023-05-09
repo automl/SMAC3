@@ -73,8 +73,12 @@ class SuccessiveHalving(AbstractIntensifier):
         Internal seed used for random events like shuffle seeds.
     early_stopping : MultiFidelityStoppingCallback, defaults to None
         Callback used to stop the single fidelities.
-    remove_stopped_fidelities_incrementally : bool, defaults to False
-        Whether to remove stopped fidelities incrementally or not at all (can revisit).
+    remove_stopped_fidelities_mode : str, defaults to None
+        Whether to remove stopped fidelities from the tracker or not. Can be set to:
+
+        - `incrementally`: Remove fidelities only if the previous fidelity has also been stopped.
+        - `single`: Any fidelity can be removed independently of the other fidelities.
+        - `cascade`: If a fidelity is stopped, all lower fidelities are also removed.
     only_go_to_next_fidelity_after_early_stopping : bool, defaults to False
         Whether to only go to the next fidelity after early stopping or not (essentially removes bracket size
         limitations).
@@ -93,7 +97,7 @@ class SuccessiveHalving(AbstractIntensifier):
         sample_brackets_at_once: bool = False,
         seed: int | None = None,
         early_stopping: MultiFidelityStoppingCallback | None = None,
-        remove_stopped_fidelities_incrementally: bool = False,
+        remove_stopped_fidelities_mode: str = None,
         only_go_to_next_fidelity_after_early_stopping: bool = False,
         modify_search_space_on_stop: AbstractSearchSpaceModifier = None,
     ):
@@ -110,7 +114,7 @@ class SuccessiveHalving(AbstractIntensifier):
         self._highest_observed_budget_only = False if incumbent_selection == "any_budget" else True
         self._sample_brackets_at_once = sample_brackets_at_once
         self._early_stopping = early_stopping
-        self._remove_stopped_fidelities_incrementally = remove_stopped_fidelities_incrementally
+        self._remove_stopped_fidelities_mode = remove_stopped_fidelities_mode
         self._only_go_to_next_fidelity_after_early_stopping = only_go_to_next_fidelity_after_early_stopping
         self._shrink_search_space_on_stop = modify_search_space_on_stop
 
@@ -195,7 +199,7 @@ class SuccessiveHalving(AbstractIntensifier):
 
         if (
             self._only_go_to_next_fidelity_after_early_stopping
-            or self._remove_stopped_fidelities_incrementally
+            or self._remove_stopped_fidelities_mode is not None
             and self._early_stopping is None
         ):
             raise ValueError(
@@ -574,7 +578,7 @@ class SuccessiveHalving(AbstractIntensifier):
             next_stage = 0
 
             # Incrementally check if the stage can still be opened, or the fidelity has already been closed
-            if self._remove_stopped_fidelities_incrementally:
+            if self._remove_stopped_fidelities_mode is not None:
                 while self._budgets_in_stage[next_bracket][next_stage] in self._stopped_fidelities:
                     next_stage += 1
 
@@ -754,7 +758,7 @@ class SuccessiveHalving(AbstractIntensifier):
         # no early stopping if no config evaluated or all already yielded (except in cases where skipping is beneficial
         # even when all configs already have been yielded)
         skip_last_config = (
-            self._only_go_to_next_fidelity_after_early_stopping or self._remove_stopped_fidelities_incrementally
+            self._only_go_to_next_fidelity_after_early_stopping or self._remove_stopped_fidelities_mode is not None
         )
         if stage_info.amount_configs_yielded == 0 or (stage_info.all_configs_yielded and (not skip_last_config)):
             return False
@@ -763,18 +767,30 @@ class SuccessiveHalving(AbstractIntensifier):
 
         # If stopped and either the stages' budget is the minimum budget or the previous fidelity has also been stopped,
         # we add the budget to the stopped fidelities
-        if self._remove_stopped_fidelities_incrementally:
-            is_min_budget = stage_info.budget == self._budgets_in_stage[0][0]
-            if is_min_budget:
-                previous_fidelity_stopped = False
-            else:
-                previous_fidelity_stopped = self._budgets_in_stage[0][stage_info.stage - 1] in self._stopped_fidelities
+        if stop and self._remove_stopped_fidelities_mode is not None:
+            fidelities_to_stop = []
 
-            if stop and (is_min_budget or previous_fidelity_stopped):
-                # track as stopped fidelity and close all current open stages using the budget
-                self._stopped_fidelities.add(stage_info.budget)
+            if self._remove_stopped_fidelities_mode == "single":
+                fidelities_to_stop = [stage_info.budget]
+            elif self._remove_stopped_fidelities_mode == "incrementally":
+                is_min_budget = stage_info.budget == self._budgets_in_stage[0][0]
+                previous_fidelity_stopped = self._budgets_in_stage[0][stage_info.stage - 1] in self._stopped_fidelities
+                if is_min_budget or previous_fidelity_stopped:
+                    fidelities_to_stop = [stage_info.budget]
+            elif self._remove_stopped_fidelities_mode == "cascade":
+                for budget in self._budgets_in_stage[0]:
+                    if budget > stage_info.budget:
+                        break
+                    fidelities_to_stop.append(budget)
+            else:
+                raise ValueError(f"Unknown remove_stopped_fidelities_mode: {self._remove_stopped_fidelities_mode}")
+
+            for fidelity in fidelities_to_stop:
+                self._stopped_fidelities.add(fidelity)
+
+                logger.info(f"Stopping fidelity {fidelity} due to early stopping.")
                 for stage in self._open_stages.values():
-                    if stage.budget == stage_info.budget:
+                    if stage.budget == fidelity:
                         stage.terminate()
 
         return stop

@@ -29,7 +29,7 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
         incumbent_selection: str = "highest_observed_budget",
         sample_brackets_at_once: bool = False,
         early_stopping: MultiFidelityStoppingCallback = None,
-        remove_stopped_fidelities_incrementally: bool = False,
+        remove_stopped_fidelities_mode: str = None,
         only_go_to_next_fidelity_after_early_stopping: bool = False,
         modify_search_space_on_stop: AbstractSearchSpaceModifier = None,
     ) -> Hyperband:
@@ -61,8 +61,8 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
             Whether to sample all brackets at once or one config at a time.
         early_stopping : MultiFidelityStoppingCallback, defaults to False
             Whether to stop the optimization early.
-        remove_stopped_fidelities_incrementally : bool, defaults to False
-            Whether to remove stopped fidelities incrementally or not remove them completely at all.
+        remove_stopped_fidelities_mode : str, defaults to None
+            How to handle the removal of fidelities when early stopping is used.
         only_go_to_next_fidelity_after_early_stopping : bool, defaults to False
             Whether to only go to the next fidelity after early stopping or not.
         modify_search_space_on_stop : AbstractSearchSpaceModifier, defaults to None
@@ -77,7 +77,7 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
             incumbent_selection=incumbent_selection,
             sample_brackets_at_once=sample_brackets_at_once,
             early_stopping=early_stopping,
-            remove_stopped_fidelities_incrementally=remove_stopped_fidelities_incrementally,
+            remove_stopped_fidelities_mode=remove_stopped_fidelities_mode,
             only_go_to_next_fidelity_after_early_stopping=only_go_to_next_fidelity_after_early_stopping,
             modify_search_space_on_stop=modify_search_space_on_stop,
         )
