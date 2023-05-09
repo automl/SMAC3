@@ -27,6 +27,7 @@ options = {
         "plot_gallery": True,
         "within_subsection_order": FileNameSortKey,
         "filename_pattern": "/",  # We want to execute all files in `examples`
+        "ignore_pattern": ".*7_parallelization_cluster.py$",
     },
 }
 
