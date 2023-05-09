@@ -19,11 +19,8 @@ See an example for obtaining the information via GitPython below:
 """
 
 import sys
-import platform
-from datetime import datetime
 from ConfigSpace import Configuration, ConfigurationSpace, Float
 
-import smac
 from smac import HyperparameterOptimizationFacade as HPOFacade
 from smac import Scenario
 from smac.callback.metadata_callback import MetadataCallback
@@ -68,9 +65,6 @@ if __name__ == "__main__":
                 branch="Name of Active Branch",
                 commit="Commit Hash",
                 command=" ".join(sys.argv),
-                utc_time=str(datetime.utcnow()),
-                smac_version=getattr(smac, "version"),
-                os=platform.platform(),
                 additional_information="Some Additional Information"
             )
         ],

@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import json
+import platform
+from datetime import datetime
 
+import smac
 from smac.callback.callback import Callback
 from smac.main.smbo import SMBO
 
@@ -17,7 +20,11 @@ class MetadataCallback(Callback):
     def on_start(self, smbo: SMBO) -> None:
         """Called before the optimization starts."""
         path = smbo._scenario.output_directory
-        meta_dict = {}
+        meta_dict = {
+            "utc_time": str(datetime.utcnow()),
+            "os": platform.platform(),
+            "smac_version": getattr(smac, "version"),
+        }
         for key, value in self.kwargs.items():
             meta_dict[key] = value
 
