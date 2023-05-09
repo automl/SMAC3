@@ -68,6 +68,7 @@ setuptools.setup(
         "scikit-learn>=1.1.2",
         "pyrfr>=0.9.0",
         "dask[distributed]",
+        "dask_jobqueue",
         "emcee>=3.0.0",
         "regex",
         "pyyaml",
