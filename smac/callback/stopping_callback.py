@@ -122,10 +122,7 @@ class StoppingCallback(Callback):
         if self._highest_fidelity_only:
             assert isinstance(smbo.intensifier, SuccessiveHalving)
             intensifier: SuccessiveHalving = smbo.intensifier
-            if (
-                info.budget != intensifier._max_budget
-                or intensifier.config_selector._model_trained_on_budget != intensifier._max_budget
-            ):
+            if info.budget != max_budget or intensifier.config_selector._model_trained_on_budget != max_budget:
                 return True
 
         # get statistical error of incumbent
@@ -142,7 +139,7 @@ class StoppingCallback(Callback):
         trial_info = trial_info_list[0]
 
         # check if the incumbent is on the highest fidelity
-        if self._highest_fidelity_only and trial_info.budget != intensifier._max_budget:
+        if self._highest_fidelity_only and trial_info.budget != max_budget:
             return True
 
         trial_value = smbo.runhistory[
