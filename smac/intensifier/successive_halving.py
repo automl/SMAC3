@@ -450,7 +450,10 @@ class SuccessiveHalving(AbstractIntensifier):
                 # --- yield configs if necessary
                 if not stage_info.all_configs_yielded and not stage_info.terminated:
                     # sample configs if necessary
-                    if not stage_info.all_configs_generated:
+                    if (
+                        stage_info.amount_configs_yielded >= len(stage_info.configs)
+                        and not stage_info.all_configs_generated
+                    ):
                         configs_to_sample = (
                             1 if not self._sample_brackets_at_once else stage_info.amount_configs_to_yield
                         )
@@ -465,6 +468,20 @@ class SuccessiveHalving(AbstractIntensifier):
                                 stage_info.add_config(config)
                             except StopIteration:
                                 logger.info(f"--- No more configs available in stage {stage}.")
+                                stage_info.terminate()
+                                if np.all(
+                                    [
+                                        open_stage.all_configs_yielded or open_stage.terminated
+                                        for open_stage in self._open_stages.values()
+                                    ]
+                                ):
+                                    return
+                                continue
+                            except IndexError:
+                                logger.info(
+                                    f"--- IndexError: No more configs available in stage {stage} due to search"
+                                    f"space shrinking."
+                                )
                                 stage_info.terminate()
                                 if np.all(
                                     [
