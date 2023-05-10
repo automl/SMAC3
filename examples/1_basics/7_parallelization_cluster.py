@@ -6,6 +6,17 @@ An example of applying SMAC to optimize Branin using parallelization via Dask cl
 SLURM cluster. If you do not want to use a cluster but your local machine, set dask_client
 to `None` and pass `n_workers` to the `Scenario`.
 
+:warning: On some clusters you cannot spawn new jobs when running a SLURMCluster inside a
+job instead of on the login node. No obvious errors might be raised but it can hang silently.
+
+Sometines you need to modify your launch command which can be done with
+`SLURMCluster.job_class.submit_command`. 
+
+```python
+cluster.job_cls.submit_command = submit_command
+cluster.job_cls.cancel_command = cancel_command
+```
+
 We use the black-box facade because it is designed for black-box function optimization.
 The black-box facade uses a :term:`Gaussian Process<GP>` as its surrogate model.
 The facade works best on a numerical hyperparameter configuration space and should not
