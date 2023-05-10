@@ -16,9 +16,8 @@ import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace, Float
 from dask.distributed import Client
 from dask_jobqueue import SLURMCluster
-from matplotlib import pyplot as plt
 
-from smac import BlackBoxFacade, RunHistory, Scenario
+from smac import BlackBoxFacade, Scenario
 
 __copyright__ = "Copyright 2022, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -81,7 +80,7 @@ if __name__ == "__main__":
         # Walltime limit for each worker. Ensure that your function evaluations
         # do not exceed this limit.
         # More tips on this here: https://jobqueue.dask.org/en/latest/advanced-tips-and-tricks.html#how-to-handle-job-queueing-system-walltime-killing-workers
-        walltime="00:30:00",
+        walltime="00:10:00",
         processes=1,
         log_directory="tmp/smac_dask_slurm",
     )
@@ -92,6 +91,8 @@ if __name__ == "__main__":
     client = Client(
         address=cluster,
     )
+    # Instead, you can also do
+    # client = cluster.get_client()
 
     # Now we use SMAC to find the best hyperparameters
     smac = BlackBoxFacade(
