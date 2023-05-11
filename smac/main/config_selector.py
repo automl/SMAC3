@@ -80,6 +80,7 @@ class ConfigSelector:
         # How often to retry receiving a new configuration
         # (counter increases if the received config was already returned before)
         self._retries = retries
+        self.retries_last_iteration = 0
 
         # Processed configurations should be stored here; this is important to not return the same configuration twice
         self._processed_configs: list[Configuration] = []
@@ -166,6 +167,7 @@ class ConfigSelector:
             if config not in self._processed_configs:
                 self._processed_configs.append(config)
                 self._call_callbacks_on_end(config)
+                self.retries_last_iteration = 0
                 yield config
                 self._call_callbacks_on_start()
 
@@ -191,6 +193,7 @@ class ConfigSelector:
 
                 config = self._scenario.configspace.sample_configuration(1)
                 self._call_callbacks_on_end(config)
+                self.retries_last_iteration = 0
                 yield config
                 self._call_callbacks_on_start()
 
@@ -238,6 +241,7 @@ class ConfigSelector:
                     counter += 1
                     self._processed_configs.append(config)
                     self._call_callbacks_on_end(config)
+                    self.retries_last_iteration = failed_counter
                     yield config
                     retrain = counter == self._retrain_after
                     self._call_callbacks_on_start()
@@ -254,6 +258,7 @@ class ConfigSelector:
                     # We exit the loop if we have tried to add the same configuration too often
                     if failed_counter == self._retries:
                         logger.warning(f"Could not return a new configuration after {self._retries} retries." "")
+                        self.retries_last_iteration = failed_counter
                         return
 
     def _call_callbacks_on_start(self) -> None:

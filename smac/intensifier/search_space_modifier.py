@@ -128,12 +128,18 @@ class MultiFidelitySearchSpaceShrinker(AbstractSearchSpaceModifier):
                     )
                     search_space._hyperparameters[hyperparameter] = new_hyperparameter
 
-            elif isinstance(search_space[hyperparameter], CategoricalHyperparameter):
-                choices = search_space[hyperparameter].sequence
+            elif isinstance(search_space[hyperparameter], CategoricalHyperparameter) or isinstance(
+                search_space[hyperparameter], OrdinalHyperparameter
+            ):
+                if not isinstance(search_space[hyperparameter], OrdinalHyperparameter):
+                    choices = search_space[hyperparameter].choices
+                else:
+                    choices = search_space[hyperparameter].sequence
                 amount_choice_chosen = {choice: 0 for choice in choices}
 
                 for config in selected_configs:
-                    amount_choice_chosen[config[hyperparameter]] += 1
+                    if config[hyperparameter] in amount_choice_chosen.keys():
+                        amount_choice_chosen[config[hyperparameter]] += 1
 
                 new_choices = []
                 for choice in choices:
@@ -144,11 +150,10 @@ class MultiFidelitySearchSpaceShrinker(AbstractSearchSpaceModifier):
                     continue
 
                 # don't shrink too much
-                if len(new_choices) == 0 or len(amount_choice_chosen) / len(new_choices) < self.max_shrinkage:
-                    num_additional_choices = int(len(amount_choice_chosen) * self.max_shrinkage) + 1 - len(new_choices)
+                if len(new_choices) == 0 or len(new_choices) / len(choices) < self.max_shrinkage:
+                    num_additional_choices = int(len(choices) * self.max_shrinkage) + 1 - len(new_choices)
 
-                    if isinstance(search_space[hyperparameter], OrdinalHyperparameter):
-
+                    if isinstance(search_space[hyperparameter], OrdinalHyperparameter) and len(new_choices) != 0:
                         # add choices that were not chosen
                         maximal_choice = choices.index(new_choices[-1])
                         minimal_choice = choices.index(new_choices[0])
@@ -159,9 +164,8 @@ class MultiFidelitySearchSpaceShrinker(AbstractSearchSpaceModifier):
                         percentage_upper_left_out = upper_left_out / (upper_left_out + lower_left_out)
                         percentage_lower_left_out = lower_left_out / (upper_left_out + lower_left_out)
 
-                        # add more choices to side where fewer choices were left out
-                        add_choices_bottom = round(num_additional_choices * (1 - percentage_lower_left_out))
-                        add_choices_top = round(num_additional_choices * (1 - percentage_upper_left_out))
+                        add_choices_bottom = round(num_additional_choices * percentage_lower_left_out)
+                        add_choices_top = round(num_additional_choices * percentage_upper_left_out)
 
                         # add choices
                         for i in range(add_choices_bottom):
@@ -169,13 +173,22 @@ class MultiFidelitySearchSpaceShrinker(AbstractSearchSpaceModifier):
 
                         for i in range(add_choices_top):
                             new_choices.append(choices[maximal_choice + i + 1])
-                    # only categorical, no order
+                    # only categorical, no order (or need to select randomly because none chosen for ordinal)
                     else:
                         # randomly select hyperparameter to add
                         left_out_choices = [choice for choice in choices if choice not in new_choices]
-                        new_choices.extend(
-                            self.random_state.choice(left_out_choices, replace=False, size=num_additional_choices)
-                        )
+                        # it has to be done this way otherwise numpy converts the types
+
+                        if isinstance(search_space[hyperparameter], CategoricalHyperparameter):
+                            new_choice_indices = self.random_state.choice(
+                                len(left_out_choices), replace=False, size=num_additional_choices
+                            )
+                        else:
+                            # generate a random starting point, and select as many as needed around it
+                            max_starting_point_index = len(left_out_choices) - num_additional_choices
+                            starting_index = self.random_state.randint(max_starting_point_index + 1)
+                            new_choice_indices = list(range(starting_index, starting_index + num_additional_choices))
+                        new_choices.extend(left_out_choices[i] for i in new_choice_indices)
 
                 new_hyperparameter = OrdinalHyperparameter(hyperparameter, new_choices)
                 search_space._hyperparameters[hyperparameter] = new_hyperparameter
