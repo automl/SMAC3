@@ -147,7 +147,7 @@ class StoppingCallback(Callback):
 
         trial_info = trial_info_list[0]
 
-        # check if the incumbent is on the highest fidelity
+        # only check for stopping for new trials on highest budget
         if self._highest_fidelity_only and trial_info.budget != max_budget:
             return True
 
@@ -172,7 +172,10 @@ class StoppingCallback(Callback):
             if not self._highest_fidelity_only:
                 configs = smbo.runhistory.get_configs(sort_by="cost")
             else:
-                configs = self.get_configs_for_budget(smbo.runhistory, self._upper_bound_estimation_rate, max_budget)
+                configs = self.get_configs_for_budget(smbo.runhistory, 1, max_budget)
+                # have at least that many evals on the highest budget
+                if len(configs) < self._wait_iterations:
+                    return True
 
             runhistory_encoder = smbo.intensifier.config_selector.runhistory_encoder
 
@@ -182,7 +185,7 @@ class StoppingCallback(Callback):
             self._ucb.update(model=model, num_data=num_data)
 
             # get pessimistic estimate of incumbent performance
-            configs = configs[: int(self._upper_bound_estimation_rate * num_data)]
+            configs = configs[: max(round(self._upper_bound_estimation_rate * num_data), 1)]
             min_lcb, min_ucb = self.compute_min_lcb_ucb(
                 self._ucb, self._lcb, self._n_points_lcb, configs, smbo.scenario.configspace, runhistory_encoder
             )

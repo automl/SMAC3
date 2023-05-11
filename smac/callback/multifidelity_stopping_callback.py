@@ -20,6 +20,7 @@ class MultiFidelityStoppingCallback:
         initial_beta: float = 0.1,
         update_beta: bool = True,
         upper_bound_estimation_rate: float = 0.5,
+        min_evaluations: int = 20,
         n_points_lcb: int = 1000,
         statistical_error_threshold: Optional[float] = None,
         statistical_error_field_name: Optional[str] = "statistical_error",
@@ -30,6 +31,7 @@ class MultiFidelityStoppingCallback:
     ):
         super().__init__()
         self._upper_bound_estimation_rate = upper_bound_estimation_rate
+        self._min_evaluations = min_evaluations
         self._n_points_lcb = n_points_lcb
         self._statistical_error_threshold = statistical_error_threshold
         self._statistical_error_field_name = statistical_error_field_name
@@ -96,6 +98,10 @@ class MultiFidelityStoppingCallback:
             stats.append((performance, error, config))
         # Sort the configs by their performance
         stats.sort(key=lambda trial: trial[0])
+
+        # not enough evaluations
+        if len(stats) < self._min_evaluations:
+            return False
 
         if self._statistical_error_estimation_only_incumbent:
             selected_amount = 1
