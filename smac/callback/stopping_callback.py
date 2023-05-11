@@ -1,6 +1,8 @@
 from abc import abstractmethod
 from typing import Optional, Union
 
+import time
+
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 
@@ -55,6 +57,7 @@ class AbstractStoppingCallbackCallback:
         regret: float,
         statistical_error: float,
         triggered: bool,
+        computation_time: float,
         **kwargs: dict,
     ) -> None:
         """Logs the stopping criterion values.
@@ -71,6 +74,8 @@ class AbstractStoppingCallbackCallback:
             Statistical error.
         triggered : bool
             Whether the stopping criterion was triggered.
+        computation_time : float
+            The time to compute the stopping.
         """
         raise NotImplementedError()
 
@@ -113,6 +118,8 @@ class StoppingCallback(Callback):
 
     def on_tell_end(self, smbo: SMBO, info: TrialInfo, value: TrialValue) -> bool:
         """Checks if the optimization should be stopped after the given trial."""
+        start_time = time.time()
+
         # do not trigger stopping criterion before wait_iterations
         if smbo.runhistory.submitted < self._wait_iterations:
             return True
@@ -194,8 +201,17 @@ class StoppingCallback(Callback):
                 regret >= incumbent_statistical_error or np.abs(incumbent_statistical_error - regret) < self._epsilon
             )
 
+            end_time = time.time()
+
             for callback in self._callbacks:
-                callback.log(min_ucb, min_lcb, regret, incumbent_statistical_error, not continue_optimization)
+                callback.log(
+                    min_ucb,
+                    min_lcb,
+                    regret,
+                    incumbent_statistical_error,
+                    not continue_optimization,
+                    end_time - start_time,
+                )
 
             info_str = (
                 f"triggered after {len(smbo.runhistory)} evaluations with regret "

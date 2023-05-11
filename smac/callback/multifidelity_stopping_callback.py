@@ -1,5 +1,7 @@
 from typing import Optional
 
+import time
+
 import numpy as np
 
 from smac import RunHistory, Scenario
@@ -56,6 +58,8 @@ class MultiFidelityStoppingCallback:
         # To skip a stage, get the incumbent(s) statistical error on that stage and compare it to the regret of the
         # model on that stage. If the regret is smaller than the statistical error, skip the stage.
         # Get the best configs statistical error
+        start_time = time.time()
+
         configs = stage_info.configs
         best_configs = []
         stats = []
@@ -140,6 +144,8 @@ class MultiFidelityStoppingCallback:
         regret = min_ucb - min_lcb
         stop = statistical_error >= regret or np.abs(statistical_error - regret) < self._epsilon
 
+        end_time = time.time()
+
         for callback in self._callbacks:
             callback.log(
                 min_ucb=min_ucb,
@@ -147,6 +153,7 @@ class MultiFidelityStoppingCallback:
                 statistical_error=statistical_error,
                 regret=regret,
                 triggered=stop,
+                computation_time=end_time - start_time,
                 stage_info=stage_info,
             )
 
