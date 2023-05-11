@@ -99,10 +99,6 @@ class MultiFidelityStoppingCallback:
         # Sort the configs by their performance
         stats.sort(key=lambda trial: trial[0])
 
-        # not enough evaluations
-        if len(stats) < self._min_evaluations:
-            return False
-
         if self._statistical_error_estimation_only_incumbent:
             selected_amount = 1
         else:
@@ -120,6 +116,10 @@ class MultiFidelityStoppingCallback:
         encoder = RunHistoryEncoder(scenario)
         encoder.runhistory = runhistory
         x, y = encoder.transform(budget_subset=[stage_info.budget])
+
+        # not enough evaluations
+        if len(x) < self._min_evaluations:
+            return False
 
         # Train model
         from smac.facade.blackbox_facade import BlackBoxFacade
