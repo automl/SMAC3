@@ -7,7 +7,7 @@ to a json file at the beginning of the SMAC run (arguments must be json serializ
 
 Instead of editing the Git-related information (repository, branch, commit) by hand each time they change,
 this information can also be added automatically using GitPython (install via "pip install GitPython").
-See an example for obtaining the information via GitPython below:
+There is an example for obtaining the information via GitPython below:
     from git import Repo
     repo = Repo(".", search_parent_directories=True)
     MetadataCallback(
