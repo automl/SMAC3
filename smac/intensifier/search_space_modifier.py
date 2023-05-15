@@ -9,8 +9,8 @@ from ConfigSpace.hyperparameters import (
     OrdinalHyperparameter,
 )
 
-from smac import RunHistory
 from smac.constants import VERY_SMALL_NUMBER
+from smac.runhistory.runhistory import RunHistory
 from smac.utils.logging import get_logger
 
 logger = get_logger(__name__)

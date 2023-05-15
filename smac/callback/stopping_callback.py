@@ -8,11 +8,11 @@ from ConfigSpace import Configuration, ConfigurationSpace
 
 from smac.acquisition.function import LCB, UCB
 from smac.acquisition.maximizer import LocalAndSortedRandomSearch
-from smac.callback import Callback
-from smac.intensifier import SuccessiveHalving
+from smac.callback.callback import Callback
+from smac.intensifier.successive_halving import SuccessiveHalving
 from smac.main.smbo import SMBO
-from smac.runhistory import RunHistory, TrialInfo, TrialKey, TrialValue
 from smac.runhistory.encoder import AbstractRunHistoryEncoder
+from smac.runhistory.runhistory import RunHistory, TrialInfo, TrialKey, TrialValue
 from smac.utils.logging import get_logger
 
 logger = get_logger(__name__)

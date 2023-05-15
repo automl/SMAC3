@@ -4,11 +4,11 @@ import time
 
 import numpy as np
 
-from smac import RunHistory, Scenario
 from smac.acquisition.function import LCB, UCB
 from smac.intensifier.stage_information import Stage
-from smac.runhistory import TrialKey
 from smac.runhistory.encoder import RunHistoryEncoder
+from smac.runhistory.runhistory import RunHistory, TrialKey
+from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
 logger = get_logger(__name__)
