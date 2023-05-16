@@ -10,6 +10,7 @@
 - Adjust amount of configurations in different stages of hyperband brackets to conform to the original paper.
 - Fix validation in smbo to use the seed in the scenario.
 - Change order of callbacks, intensifier callback for incumbent selection is now the first callback. 
+- intensifier.get_state() will now check if the configurations contained in the queue is stored in the runhistory (#997)  
 
 
 # 2.0.0
