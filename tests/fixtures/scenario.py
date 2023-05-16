@@ -20,6 +20,7 @@ def make_scenario() -> Callable:
         max_budget: int = 5,
         n_workers: int = 1,
         n_trials: int = 100,
+        use_default_config: bool = False,
     ) -> Scenario:
         objectives = "cost"
         if use_multi_objective:
@@ -50,6 +51,7 @@ def make_scenario() -> Callable:
             instance_features=instance_features,
             min_budget=min_budget,
             max_budget=max_budget,
+            use_default_config=use_default_config
         )
 
     return _make

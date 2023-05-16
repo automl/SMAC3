@@ -4,7 +4,7 @@ from ConfigSpace import Configuration
 
 import smac
 from smac import HyperparameterOptimizationFacade, Scenario
-from smac.callback import Callback
+from smac.callback.callback import Callback
 from smac.initial_design import DefaultInitialDesign
 from smac.intensifier.intensifier import Intensifier
 from smac.runhistory import TrialInfo, TrialValue

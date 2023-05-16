@@ -23,11 +23,7 @@ version = "2.0.0"
 
 
 try:
-    from smac.utils.logging import setup_logging
-
-    setup_logging(0)
-
-    from smac.callback import Callback
+    from smac.callback.callback import Callback
     from smac.facade import (
         AlgorithmConfigurationFacade,
         BlackBoxFacade,
