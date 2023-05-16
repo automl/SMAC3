@@ -13,7 +13,7 @@ from smac import HyperparameterOptimizationFacade as HPOFacade
 from smac import MultiFidelityFacade as MFFacade
 from smac import RandomFacade as RFacade
 from smac import Scenario
-from smac.callback import Callback
+from smac.callback.callback import Callback
 from smac.runhistory.dataclasses import TrialInfo, TrialValue
 
 FACADES = [BBFacade, HPOFacade, MFFacade, RFacade, HBFacade, ACFacade]

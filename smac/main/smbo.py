@@ -13,7 +13,7 @@ from numpy import ndarray
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.callback import Callback
+from smac.callback.callback import Callback
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.model.abstract_model import AbstractModel
 from smac.runhistory import StatusType, TrialInfo, TrialValue

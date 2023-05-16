@@ -4,6 +4,13 @@
 - Callbacks registration is now a public method of the optimizer and allows callbacks to be inserted at a specific position.
 - Adapt developer install instructions to include pre-commit installation
 - Add option to pass a dask client to the facade, e.g. enables running on a hpc cluster (#983).
+- Added scenario.use_default_config argument/attribute=False, that adds the user's configspace default configuration 
+  as an additional_config to the inital design if set to True. This adds one additional configuration to the number of configs 
+  originating from the initial design. Since n_trials is still respected, this results in one fewer BO steps
+- Adapt developer install instructions to include pre-commit installation.
+- Add option to pass a dask client to the facade, e.g. enables running on a hpc cluster (#983).
+- Add example for using a callback to log run metadata to a file (#996).
+- Move base callback and metadata callback files to own callback directory.
 
 ## Bugfixes
 - The ISB-pair differences over the incumbent's configurations are computed correctly now (#956).
@@ -13,12 +20,13 @@
 - intensifier.get_state() will now check if the configurations contained in the queue is stored in the runhistory (#997)  
 
 
+
 # 2.0.0
 
 ## Improvements
 - Clarify origin of configurations (#908).
 - Random forest with instances predicts the marginalized costs by using a C++ implementation in `pyrfr`, which is much faster (#903).
-- Add version to makefile to install correct test release version
+- Add version to makefile to install correct test release version.
 - Add option to disable logging by setting `logging_level=False`. (#947)
 
 ## Bugfixes

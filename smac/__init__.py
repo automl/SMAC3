@@ -23,7 +23,7 @@ version = "2.0.0"
 
 
 try:
-    from smac.callback import Callback
+    from smac.callback.callback import Callback
     from smac.facade import (
         AlgorithmConfigurationFacade,
         BlackBoxFacade,
