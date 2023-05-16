@@ -28,6 +28,19 @@ options = {
         "plot_gallery": True,
         "within_subsection_order": FileNameSortKey,
         "filename_pattern": "/",  # We want to execute all files in `examples`
+        "binder": {
+            # Required keys
+            "org": "automl",
+            "repo": "SMAC3",
+            "branch": "main",
+            "binderhub_url": "https://mybinder.org",
+            "dependencies": ["../.binder/apt.txt", "../.binder/requirements.txt"],
+            # "filepath_prefix": "<prefix>" # A prefix to prepend to any filepaths in Binder links.
+            # Jupyter notebooks for Binder will be copied to this directory (relative to built documentation root).
+            "notebooks_dir": "notebooks/",
+            "use_jupyter_lab": True,
+            # Whether Binder links should start Jupyter Lab instead of the Jupyter Notebook interface.
+        },
         "ignore_pattern": ".*7_parallelization_cluster.py$",
     },
 }
