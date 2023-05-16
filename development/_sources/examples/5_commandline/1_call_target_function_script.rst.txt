@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_examples_5_commandline_1_call_target_function_script.py>`
-        to download the full example code
+        to download the full example code or to run this example in your browser via Binder
 
 .. rst-class:: sphx-glr-example-title
 
@@ -115,7 +115,7 @@ This simple example shows how to call a script with the following content:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  5.471 seconds)
+   **Total running time of the script:** ( 0 minutes  5.130 seconds)
 
 
 .. _sphx_glr_download_examples_5_commandline_1_call_target_function_script.py:
@@ -124,6 +124,13 @@ This simple example shows how to call a script with the following content:
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+
+    .. container:: binder-badge
+
+      .. image:: images/binder_badge_logo.svg
+        :target: https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/5_commandline/1_call_target_function_script.ipynb
+        :alt: Launch binder
+        :width: 150 px
 
 
 

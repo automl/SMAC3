@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_examples_1_basics_5_continue.py>`
-        to download the full example code
+        to download the full example code or to run this example in your browser via Binder
 
 .. rst-class:: sphx-glr-example-title
 
@@ -173,7 +173,7 @@ function is continued. We use a custom callback, to artificially stop the first 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.832 seconds)
+   **Total running time of the script:** ( 0 minutes  0.858 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_5_continue.py:
@@ -182,6 +182,13 @@ function is continued. We use a custom callback, to artificially stop the first 
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+
+    .. container:: binder-badge
+
+      .. image:: images/binder_badge_logo.svg
+        :target: https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/5_continue.ipynb
+        :alt: Launch binder
+        :width: 150 px
 
 
 

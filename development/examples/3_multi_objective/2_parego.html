@@ -1022,7 +1022,7 @@
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
 <p><a class="reference internal" href="#sphx-glr-download-examples-3-multi-objective-2-parego-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code</p>
+to download the full example code or to run this example in your browser via Binder</p>
 </div>
 <section class="sphx-glr-example-title" id="parego">
 <span id="sphx-glr-examples-3-multi-objective-2-parego-py"></span><h1>ParEGO<a class="headerlink" href="#parego" title="Permalink to this heading">¶</a></h1>
@@ -1036,20 +1036,33 @@ mean accuracy and run-time of each configuration.</p>
 [INFO][abstract_intensifier.py:515] Added config 97ef22 as new incumbent because there are no incumbents yet.
 [INFO][abstract_intensifier.py:598] Config f88a6b is a new incumbent. Total number of incumbents: 2.
 [INFO][abstract_intensifier.py:598] Config d77b40 is a new incumbent. Total number of incumbents: 3.
-[INFO][abstract_intensifier.py:598] Config d2d477 is a new incumbent. Total number of incumbents: 3.
-[INFO][abstract_intensifier.py:598] Config 317d5f is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:598] Config aee647 is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:598] Config 3d6082 is a new incumbent. Total number of incumbents: 5.
+[INFO][abstract_intensifier.py:598] Config e63c52 is a new incumbent. Total number of incumbents: 6.
+[INFO][abstract_intensifier.py:590] Added config 58e5a3 and rejected config f88a6b as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][configspace.py:175] --- batch_size: 77 -&gt; 209
+[INFO][configspace.py:175] --- learning_rate_init: 0.000534923804864797 -&gt; 0.001244415480039115
+[INFO][configspace.py:175] --- n_neurons: 146 -&gt; 231
+[INFO][abstract_intensifier.py:598] Config 8d6e8c is a new incumbent. Total number of incumbents: 7.
+[INFO][abstract_intensifier.py:598] Config 616366 is a new incumbent. Total number of incumbents: 8.
+[INFO][abstract_intensifier.py:598] Config f03205 is a new incumbent. Total number of incumbents: 9.
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.5075609683990479
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.6975622177124023
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 172
+[INFO][smbo.py:330] --- Remaining trials: 173
 Validated costs from default config:
---- [0.60155834 0.24724472]
+--- [0.60155834 0.2153914 ]
 
 Validated costs from the Pareto front (incumbents):
---- [0.88924791 0.30281878]
---- [0.02616063 0.73300385]
---- [0.03952105 0.69087923]
---- [0.0253242  0.74936557]
+--- [0.88924791 0.25456238]
+--- [0.03561281 1.04682553]
+--- [0.03367069 1.1980207 ]
+--- [0.02309656 1.62082374]
+--- [0.02504488 1.32131147]
+--- [0.03756732 0.67635632]
+--- [0.05064299 0.56599855]
+--- [0.04312519 0.60518599]
+--- [0.10907923 0.51134431]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1223,8 +1236,11 @@ Validated costs from the Pareto front (incumbents):
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  36.195 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  46.969 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/3_multi_objective/2_parego.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo2.svg" width="150px" /></a>
+</div>
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0422a2b52bca2c17c0ab975a6ae7e8db/2_parego.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_parego.py</span></code></a></p>
 </div>

@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_examples_2_multi_fidelity_1_mlp_epochs.py>`
-        to download the full example code
+        to download the full example code or to run this example in your browser via Binder
 
 .. rst-class:: sphx-glr-example-title
 
@@ -66,30 +66,35 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     [INFO][smbo.py:319] Finished 0 trials.
     [INFO][smbo.py:319] Finished 0 trials.
     [INFO][smbo.py:319] Finished 0 trials.
-    [INFO][smbo.py:319] Finished 50 trials.
     [INFO][abstract_intensifier.py:515] Added config 8ea495 as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:590] Added config 704d44 and rejected config 8ea495 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- activation: 'tanh' -> 'logistic'
-    [INFO][configspace.py:175] --- batch_size: 214 -> 31
-    [INFO][configspace.py:175] --- learning_rate_init: 0.005599223654063347 -> 0.0038549874043245355
-    [INFO][configspace.py:175] --- n_layer: 4 -> 1
-    [INFO][configspace.py:175] --- n_neurons: 66 -> 87
-    [INFO][smbo.py:319] Finished 100 trials.
-    [INFO][abstract_intensifier.py:590] Added config 867bd1 and rejected config 704d44 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- batch_size: 31 -> 30
-    [INFO][configspace.py:175] --- learning_rate_init: 0.0038549874043245355 -> 0.004679235679993789
-    [INFO][configspace.py:175] --- n_neurons: 87 -> 179
+    [INFO][abstract_intensifier.py:590] Added config 8d6bce and rejected config 8ea495 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- activation: 'tanh' -> 'relu'
+    [INFO][configspace.py:175] --- batch_size: 214 -> 172
+    [INFO][configspace.py:175] --- learning_rate: None -> 'constant'
+    [INFO][configspace.py:175] --- learning_rate_init: 0.005599223654063347 -> 0.01642710176117276
+    [INFO][configspace.py:175] --- n_neurons: 66 -> 59
+    [INFO][configspace.py:175] --- solver: 'adam' -> 'sgd'
+    [INFO][abstract_intensifier.py:590] Added config 2fdad2 and rejected config 8d6bce as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- batch_size: 172 -> 120
+    [INFO][configspace.py:175] --- learning_rate_init: 0.01642710176117276 -> 0.016006513675418
+    [INFO][configspace.py:175] --- n_layer: 4 -> 5
+    [INFO][configspace.py:175] --- n_neurons: 59 -> 69
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -0.9512288570404053
+    [INFO][smbo.py:328] --- Remaining wallclock time: -1.1188886165618896
     [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 383
+    [INFO][smbo.py:330] --- Remaining trials: 399
+    [INFO][abstract_intensifier.py:590] Added config 1518bd and rejected config 2fdad2 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- batch_size: 120 -> 244
+    [INFO][configspace.py:175] --- learning_rate_init: 0.016006513675418 -> 0.004540507635127548
+    [INFO][configspace.py:175] --- n_layer: 5 -> 4
+    [INFO][configspace.py:175] --- n_neurons: 69 -> 200
     Default cost (SuccessiveHalving): 0.36672856700711853
-    Incumbent cost (SuccessiveHalving): 0.017254719900959392
+    Incumbent cost (SuccessiveHalving): 0.026159083874961353
     [INFO][abstract_initial_design.py:82] Using `n_configs` and ignoring `n_configs_per_hyperparameter`.
     [INFO][abstract_facade.py:198] Workers are reduced to 8.
     /opt/hostedtoolcache/Python/3.10.11/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
     Perhaps you already have a cluster running?
-    Hosting the HTTP server on port 35659 instead
+    Hosting the HTTP server on port 45691 instead
       warnings.warn(
     [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
     [INFO][successive_halving.py:164] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
@@ -109,31 +114,25 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     [INFO][smbo.py:319] Finished 0 trials.
     [INFO][smbo.py:319] Finished 0 trials.
     [INFO][smbo.py:319] Finished 0 trials.
-    [INFO][abstract_intensifier.py:515] Added config 15f702 as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:590] Added config 8ea495 and rejected config 15f702 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- activation: 'relu' -> 'tanh'
-    [INFO][configspace.py:175] --- batch_size: 202 -> 214
-    [INFO][configspace.py:175] --- learning_rate_init: 0.0020466650158121676 -> 0.005599223654063347
-    [INFO][configspace.py:175] --- n_neurons: 56 -> 66
+    [INFO][abstract_intensifier.py:515] Added config 3e854d as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:590] Added config e27357 and rejected config 3e854d as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- activation: 'relu' -> 'logistic'
+    [INFO][configspace.py:175] --- batch_size: None -> 103
+    [INFO][configspace.py:175] --- learning_rate_init: None -> 0.02113934324402315
+    [INFO][configspace.py:175] --- n_layer: 4 -> 1
+    [INFO][configspace.py:175] --- n_neurons: 9 -> 19
+    [INFO][configspace.py:175] --- solver: 'lbfgs' -> 'adam'
+    [INFO][abstract_intensifier.py:590] Added config 704d44 and rejected config e27357 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][configspace.py:175] --- batch_size: 103 -> 31
+    [INFO][configspace.py:175] --- learning_rate_init: 0.02113934324402315 -> 0.0038549874043245355
+    [INFO][configspace.py:175] --- n_neurons: 19 -> 87
+    [INFO][smbo.py:319] Finished 50 trials.
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -0.054112911224365234
+    [INFO][smbo.py:328] --- Remaining wallclock time: -0.5838074684143066
     [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 446
-    [INFO][abstract_intensifier.py:590] Added config 987522 and rejected config 8ea495 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- activation: 'tanh' -> 'relu'
-    [INFO][configspace.py:175] --- batch_size: 214 -> 200
-    [INFO][configspace.py:175] --- learning_rate: None -> 'constant'
-    [INFO][configspace.py:175] --- learning_rate_init: 0.005599223654063347 -> 0.002137678567522291
-    [INFO][configspace.py:175] --- n_layer: 4 -> 5
-    [INFO][configspace.py:175] --- n_neurons: 66 -> 135
-    [INFO][configspace.py:175] --- solver: 'adam' -> 'sgd'
-    [INFO][abstract_intensifier.py:590] Added config 1518bd and rejected config 987522 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- batch_size: 200 -> 244
-    [INFO][configspace.py:175] --- learning_rate_init: 0.002137678567522291 -> 0.004540507635127548
-    [INFO][configspace.py:175] --- n_layer: 5 -> 4
-    [INFO][configspace.py:175] --- n_neurons: 135 -> 200
+    [INFO][smbo.py:330] --- Remaining trials: 424
     Default cost (Hyperband): 0.36672856700711853
-    Incumbent cost (Hyperband): 0.026159083874961353
+    Incumbent cost (Hyperband): 0.0178087279480037
 
 
 
@@ -312,7 +311,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 2 minutes  39.316 seconds)
+   **Total running time of the script:** ( 2 minutes  54.079 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_1_mlp_epochs.py:
@@ -321,6 +320,13 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+
+    .. container:: binder-badge
+
+      .. image:: images/binder_badge_logo.svg
+        :target: https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/2_multi_fidelity/1_mlp_epochs.ipynb
+        :alt: Launch binder
+        :width: 150 px
 
 
 
