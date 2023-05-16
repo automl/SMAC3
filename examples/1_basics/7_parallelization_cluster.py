@@ -31,7 +31,7 @@ from dask_jobqueue import SLURMCluster
 
 from smac import BlackBoxFacade, Scenario
 
-__copyright__ = "Copyright 2022, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2023, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
