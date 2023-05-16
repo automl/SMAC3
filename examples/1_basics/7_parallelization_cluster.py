@@ -81,6 +81,8 @@ if __name__ == "__main__":
 
     # Create cluster
     n_workers = 4  # Use 4 workers on the cluster
+    # Please note that the number of workers is directly set in the
+    # cluster / client. `scenario.n_workers` is ignored in this case.
 
     cluster = SLURMCluster(
         # This is the partition of our slurm cluster.
