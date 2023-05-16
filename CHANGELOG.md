@@ -2,8 +2,10 @@
 
 ## Improvements
 - Callbacks registration is now a public method of the optimizer and allows callbacks to be inserted at a specific position.
-- Adapt developer install instructions to include pre-commit installation
+- Adapt developer install instructions to include pre-commit installation.
 - Add option to pass a dask client to the facade, e.g. enables running on a hpc cluster (#983).
+- Add example for using a callback to log run metadata to a file (#996).
+- Move base callback and metadata callback files to own callback directory.
 
 ## Bugfixes
 - The ISB-pair differences over the incumbent's configurations are computed correctly now (#956).
@@ -17,7 +19,7 @@
 ## Improvements
 - Clarify origin of configurations (#908).
 - Random forest with instances predicts the marginalized costs by using a C++ implementation in `pyrfr`, which is much faster (#903).
-- Add version to makefile to install correct test release version
+- Add version to makefile to install correct test release version.
 - Add option to disable logging by setting `logging_level=False`. (#947)
 
 ## Bugfixes
