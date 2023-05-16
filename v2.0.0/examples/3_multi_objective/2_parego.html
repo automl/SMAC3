@@ -1031,27 +1031,30 @@ a Pareto front. The red cross indicates the best configuration selected by SMAC.
 <p>In the optimization, SMAC evaluates the configurations on two different seeds. Therefore, the plot shows the
 mean accuracy and run-time of each configuration.</p>
 <img src="../../_images/sphx_glr_2_parego_001.png" srcset="../../_images/sphx_glr_2_parego_001.png" alt="Pareto-Front" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[WARNING][target_function_runner.py:71] The argument budget is not set by SMAC: Consider removing it from the target function.
-[INFO][abstract_initial_design.py:134] Using 5 initial design configurations and 0 additional configurations.
+[INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
 [INFO][abstract_intensifier.py:515] Added config 97ef22 as new incumbent because there are no incumbents yet.
 [INFO][abstract_intensifier.py:598] Config f88a6b is a new incumbent. Total number of incumbents: 2.
-[INFO][abstract_intensifier.py:598] Config d77b40 is a new incumbent. Total number of incumbents: 3.
-[INFO][abstract_intensifier.py:598] Config 26f3cc is a new incumbent. Total number of incumbents: 4.
-[INFO][abstract_intensifier.py:598] Config 637334 is a new incumbent. Total number of incumbents: 5.
-[INFO][abstract_intensifier.py:598] Config d19afa is a new incumbent. Total number of incumbents: 6.
+[INFO][abstract_intensifier.py:598] Config 8e1252 is a new incumbent. Total number of incumbents: 3.
+[INFO][abstract_intensifier.py:590] Added config 1fc8f6 and rejected config d77b40 as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][configspace.py:175] --- batch_size: 175 -&gt; 164
+[INFO][configspace.py:175] --- learning_rate_init: 0.004156370184967407 -&gt; 0.006125271341476042
+[INFO][configspace.py:175] --- n_neurons: 90 -&gt; 72
+[INFO][abstract_intensifier.py:598] Config c50b18 is a new incumbent. Total number of incumbents: 3.
+[INFO][abstract_intensifier.py:598] Config a47f38 is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:598] Config 68ebe4 is a new incumbent. Total number of incumbents: 5.
 [INFO][smbo.py:307] Configuration budget is exhausted:
-[INFO][smbo.py:308] --- Remaining wallclock time: -1.0325520038604736
+[INFO][smbo.py:308] --- Remaining wallclock time: -0.05751371383666992
 [INFO][smbo.py:309] --- Remaining cpu time: inf
-[INFO][smbo.py:310] --- Remaining trials: 182
+[INFO][smbo.py:310] --- Remaining trials: 181
 Validated costs from default config:
---- [0.60155834 0.37039828]
+--- [0.60155834 0.41883409]
 
 Validated costs from the Pareto front (incumbents):
---- [0.88924791 0.38462877]
---- [0.04813757 1.03455663]
---- [0.03561281 1.39810872]
---- [0.03645234 1.33002591]
---- [0.08235686 0.84570634]
---- [0.03060972 2.41590309]
+--- [0.88924791 0.41451836]
+--- [0.03005494 1.26737392]
+--- [0.03784277 0.86151063]
+--- [0.40402275 0.54683411]
+--- [0.10462086 0.56836987]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1225,7 +1228,7 @@ Validated costs from the Pareto front (incumbents):
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  46.840 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  38.495 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0422a2b52bca2c17c0ab975a6ae7e8db/2_parego.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_parego.py</span></code></a></p>

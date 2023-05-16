@@ -42,7 +42,7 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
 
  .. code-block:: none
 
-    [INFO][abstract_initial_design.py:134] Using 10 initial design configurations and 0 additional configurations.
+    [INFO][abstract_initial_design.py:147] Using 10 initial design configurations and 0 additional configurations.
     [INFO][abstract_intensifier.py:305] Using only one seed for deterministic scenario.
     [INFO][abstract_intensifier.py:515] Added config 3ce33d as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:590] Added config c53710 and rejected config 3ce33d as incumbent because it is not better than the incumbents on 1 instances:
@@ -167,7 +167,7 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.111 seconds)
+   **Total running time of the script:** ( 0 minutes  3.610 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_1_quadratic_function.py:

@@ -1033,7 +1033,7 @@ digit-2 vs digit-3.</p>
 <p>If we use instance as our fidelity, we need to initialize scenario with argument instance. In this case the argument
 budget is no longer required by the target function. But due to the scenario instance argument,
 the target function now is required to have an instance argument.</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:134] Using 40 initial design configurations and 0 additional configurations.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:147] Using 40 initial design configurations and 0 additional configurations.
 [INFO][successive_halving.py:164] Successive Halving uses budget type INSTANCES with eta 3, min budget 1, and max budget 45.
 [INFO][successive_halving.py:323] Number of configs in stage:
 [INFO][successive_halving.py:325] --- Bracket 0: [27, 9, 3, 1]
@@ -1065,9 +1065,9 @@ the target function now is required to have an instance argument.</p>
 [INFO][smbo.py:299] Finished 150 trials.
 [INFO][smbo.py:299] Finished 200 trials.
 [INFO][smbo.py:307] Configuration budget is exhausted:
-[INFO][smbo.py:308] --- Remaining wallclock time: -0.06760025024414062
+[INFO][smbo.py:308] --- Remaining wallclock time: -0.023495912551879883
 [INFO][smbo.py:309] --- Remaining cpu time: inf
-[INFO][smbo.py:310] --- Remaining trials: 4762
+[INFO][smbo.py:310] --- Remaining trials: 4770
 Default cost: 0.15489347419148672
 Incumbent cost: 0.006249006102246613
 </pre></div>
@@ -1201,7 +1201,7 @@ Incumbent cost: 0.006249006102246613
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  41.654 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  42.381 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-2-sgd-datasets-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/88e1c1ee9fc33236ebfa159898782a73/2_sgd_datasets.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_sgd_datasets.py</span></code></a></p>
