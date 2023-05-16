@@ -8,11 +8,12 @@ from pathlib import Path
 
 import numpy as np
 from ConfigSpace import Configuration
+from numpy import ndarray
 
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.callback import Callback
+from smac.callback.callback import Callback
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.model.abstract_model import AbstractModel
 from smac.runhistory import StatusType, TrialInfo, TrialValue
@@ -460,9 +461,19 @@ class SMBO:
                     logger.info("Cost threshold was reached. Abort is requested.")
                     self._stop = True
 
-    def _register_callback(self, callback: Callback) -> None:
-        """Registers a callback to be called before, in between, and after the Bayesian optimization loop."""
-        self._callbacks += [callback]
+    def register_callback(self, callback: Callback, index: int = -1) -> None:
+        """
+        Registers a callback to be called before, in between, and after the Bayesian optimization loop.
+
+
+        Parameters
+        ----------
+        callback : Callback
+            The callback to be registered.
+        index : int
+            The index at which the callback should be registered.
+        """
+        self._callbacks.insert(index, callback)
 
     def _initialize_state(self) -> None:
         """Detects whether the optimization is restored from a previous state."""
@@ -532,28 +543,27 @@ class SMBO:
         config: Configuration,
         *,
         seed: int | None = None,
-    ) -> float | list[float]:
+    ) -> float | ndarray[float]:
         """Validates a configuration on other seeds than the ones used in the optimization process and on the highest
-        budget (if budget type is real-valued).
+        budget (if budget type is real-valued). Does not exceed the maximum number of config calls or seeds as defined
+        in the scenario.
 
         Parameters
         ----------
         config : Configuration
             Configuration to validate
-        instances : list[str] | None, defaults to None
-            Which instances to validate. If None, all instances specified in the scenario are used.
             In case that the budget type is real-valued budget, this argument is ignored.
         seed : int | None, defaults to None
             If None, the seed from the scenario is used.
 
         Returns
         -------
-        cost : float | list[float]
+        cost : float | ndarray[float]
             The averaged cost of the configuration. In case of multi-fidelity, the cost of each objective is
             averaged.
         """
         if seed is None:
-            seed = 0
+            seed = self._scenario.seed
 
         costs = []
         for trial in self._intensifier.get_trials_of_interest(config, validate=True, seed=seed):

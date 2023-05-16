@@ -19,15 +19,11 @@ copyright = f"""
     Copyright {datetime.date.today().strftime('%Y')}, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter"""
-version = "2.0.0"
+version = "2.0.1"
 
 
 try:
-    from smac.utils.logging import setup_logging
-
-    setup_logging(0)
-
-    from smac.callback import Callback
+    from smac.callback.callback import Callback
     from smac.facade import (
         AlgorithmConfigurationFacade,
         BlackBoxFacade,

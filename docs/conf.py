@@ -12,6 +12,7 @@ options = {
     "version": version,
     "versions": {
         f"v{version}": "#",
+        "v2.0.0": "https://automl.github.io/SMAC3/v2.0.0/",
         "v2.0.0b1": "https://automl.github.io/SMAC3/v2.0.0b1/",
         "v2.0.0a2": "https://automl.github.io/SMAC3/v2.0.0a2/",
         "v2.0.0a1": "https://automl.github.io/SMAC3/v2.0.0a1/",
@@ -27,6 +28,7 @@ options = {
         "plot_gallery": True,
         "within_subsection_order": FileNameSortKey,
         "filename_pattern": "/",  # We want to execute all files in `examples`
+        "ignore_pattern": ".*7_parallelization_cluster.py$",
     },
 }
 

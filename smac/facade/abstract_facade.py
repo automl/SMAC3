@@ -7,6 +7,8 @@ from pathlib import Path
 
 import joblib
 from ConfigSpace import Configuration
+from dask.distributed import Client
+from typing_extensions import Literal
 
 import smac
 from smac.acquisition.function.abstract_acquisition_function import (
@@ -15,7 +17,7 @@ from smac.acquisition.function.abstract_acquisition_function import (
 from smac.acquisition.maximizer.abstract_acqusition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
-from smac.callback import Callback
+from smac.callback.callback import Callback
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.main.config_selector import ConfigSelector
@@ -81,15 +83,21 @@ class AbstractFacade:
         Based on the runhistory, the surrogate model is trained. However, the data first needs to be encoded, which
         is done by the runhistory encoder. For example, inactive hyperparameters need to be encoded or cost values
         can be log transformed.
-    logging_level: int | Path | None
+    logging_level: int | Path | Literal[False] | None
         The level of logging (the lowest level 0 indicates the debug level). If a path is passed, a yaml file is
         expected with the logging configuration. If nothing is passed, the default logging.yml from SMAC is used.
+        If False is passed, SMAC will not do any customization of the logging setup and the responsibility is left
+        to the user.
     callbacks: list[Callback], defaults to []
         Callbacks, which are incorporated into the optimization loop.
     overwrite: bool, defaults to False
         When True, overwrites the run results if a previous run is found that is
         inconsistent in the meta data with the current setup. If ``overwrite`` is set to False, the user is asked
         for the exact behaviour (overwrite completely, save old run, or use old results).
+    dask_client: Client | None, defaults to None
+        User-created dask client, which can be used to start a dask cluster and then attach SMAC to it. This will not
+        be closed automatically and will have to be closed manually if provided explicitly. If none is provided
+        (default), a local one will be created for you and closed upon completion.
     """
 
     def __init__(
@@ -106,9 +114,10 @@ class AbstractFacade:
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
         runhistory_encoder: AbstractRunHistoryEncoder | None = None,
         config_selector: ConfigSelector | None = None,
-        logging_level: int | Path | None = None,
+        logging_level: int | Path | Literal[False] | None = None,
         callbacks: list[Callback] = [],
         overwrite: bool = False,
+        dask_client: Client | None = None,
     ):
         setup_logging(logging_level)
 
@@ -178,14 +187,19 @@ class AbstractFacade:
             )
 
         # In case of multiple jobs, we need to wrap the runner again using DaskParallelRunner
-        if (n_workers := scenario.n_workers) > 1:
-            available_workers = joblib.cpu_count()
-            if n_workers > available_workers:
-                logger.info(f"Workers are reduced to {n_workers}.")
-                n_workers = available_workers
+        if (n_workers := scenario.n_workers) > 1 or dask_client is not None:
+            if dask_client is not None:
+                logger.warning(
+                    "Provided `dask_client`. Ignore `scenario.n_workers`, directly set `n_workers` in `dask_client`."
+                )
+            else:
+                available_workers = joblib.cpu_count()
+                if n_workers > available_workers:
+                    logger.info(f"Workers are reduced to {n_workers}.")
+                    n_workers = available_workers
 
             # We use a dask runner for parallelization
-            runner = DaskParallelRunner(single_worker=runner)
+            runner = DaskParallelRunner(single_worker=runner, dask_client=dask_client)
 
         # Set the runner to access it globally
         self._runner = runner
@@ -205,11 +219,11 @@ class AbstractFacade:
 
         # Register callbacks here
         for callback in callbacks:
-            self._optimizer._register_callback(callback)
+            self._optimizer.register_callback(callback)
 
         # Additionally, we register the runhistory callback from the intensifier to efficiently update our incumbent
         # every time new information are available
-        self._optimizer._register_callback(self._intensifier.get_callback())
+        self._optimizer.register_callback(self._intensifier.get_callback(), index=0)
 
     @property
     def scenario(self) -> Scenario:
