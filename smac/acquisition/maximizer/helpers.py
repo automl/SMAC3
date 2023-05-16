@@ -21,7 +21,7 @@ class ChallengerList(Iterator):
     configspace : ConfigurationSpace
     challenger_callback : Callable
         Callback function which returns a list of challengers (without interleaved random configurations, must a be a
-        closure: https://www.programiz.com/python-programming/closure)
+        python closure.
     random_design : AbstractRandomDesign | None, defaults to ModulusRandomDesign(modulus=2.0)
         Which random design should be used.
     """

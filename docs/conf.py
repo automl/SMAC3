@@ -40,6 +40,7 @@ options = {
             "use_jupyter_lab": True,
             # Whether Binder links should start Jupyter Lab instead of the Jupyter Notebook interface.
         },
+        "ignore_pattern": ".*7_parallelization_cluster.py$",
     },
 }
 
