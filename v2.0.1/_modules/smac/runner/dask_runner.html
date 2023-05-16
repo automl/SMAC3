@@ -1005,7 +1005,7 @@
   <h1>Source code for smac.runner.dask_runner</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterator</span>
 
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
@@ -1103,7 +1103,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="n">dask_client</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_close_client_at_del</span> <span class="o">=</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="DaskParallelRunner.submit_trial"><a class="viewcode-back" href="../../../api/smac.runner.dask_runner.html#smac.runner.DaskParallelRunner.submit_trial">[docs]</a>    <span class="k">def</span> <span class="nf">submit_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial_info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="DaskParallelRunner.submit_trial"><a class="viewcode-back" href="../../../api/smac.runner.dask_runner.html#smac.runner.DaskParallelRunner.submit_trial">[docs]</a>    <span class="k">def</span> <span class="nf">submit_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial_info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="o">**</span><span class="n">dask_data_to_scatter</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;This function submits a configuration embedded in a ``trial_info`` object, and uses one of</span>
 <span class="sd">        the workers to produce a result locally to each worker.</span>
 
@@ -1120,6 +1120,14 @@
 <span class="sd">        ----------</span>
 <span class="sd">        trial_info : TrialInfo</span>
 <span class="sd">            An object containing the configuration launched.</span>
+
+<span class="sd">        dask_data_to_scatter: dict[str, Any]</span>
+<span class="sd">            When a user scatters data from their local process to the distributed network,</span>
+<span class="sd">            this data is distributed in a round-robin fashion grouping by number of cores.</span>
+<span class="sd">            Roughly speaking, we can keep this data in memory and then we do not have to (de-)serialize the data</span>
+<span class="sd">            every time we would like to execute a target function with a big dataset.</span>
+<span class="sd">            For example, when your target function has a big dataset shared across all the target function,</span>
+<span class="sd">            this argument is very useful.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check for resources or block till one is available</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_available_workers</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
@@ -1138,7 +1146,7 @@
                 <span class="p">)</span>
 
         <span class="c1"># At this point we can submit the job</span>
-        <span class="n">trial</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_single_worker</span><span class="o">.</span><span class="n">run_wrapper</span><span class="p">,</span> <span class="n">trial_info</span><span class="o">=</span><span class="n">trial_info</span><span class="p">)</span>
+        <span class="n">trial</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_single_worker</span><span class="o">.</span><span class="n">run_wrapper</span><span class="p">,</span> <span class="n">trial_info</span><span class="o">=</span><span class="n">trial_info</span><span class="p">,</span> <span class="o">**</span><span class="n">dask_data_to_scatter</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_pending_trials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trial</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DaskParallelRunner.iter_results"><a class="viewcode-back" href="../../../api/smac.runner.dask_runner.html#smac.runner.DaskParallelRunner.iter_results">[docs]</a>    <span class="k">def</span> <span class="nf">iter_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]]:</span>  <span class="c1"># noqa: D102</span>
@@ -1159,8 +1167,11 @@
         <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">dask_data_to_scatter</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">StatusType</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_single_worker</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="n">budget</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_single_worker</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="n">budget</span><span class="p">,</span> <span class="o">**</span><span class="n">dask_data_to_scatter</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="DaskParallelRunner.count_available_workers"><a class="viewcode-back" href="../../../api/smac.runner.dask_runner.html#smac.runner.DaskParallelRunner.count_available_workers">[docs]</a>    <span class="k">def</span> <span class="nf">count_available_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Total number of workers available. This number is dynamic as more resources</span>

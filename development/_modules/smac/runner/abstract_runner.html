@@ -1081,7 +1081,9 @@
                 <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">crash_cost</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_crash_cost</span> <span class="o">=</span> <span class="p">[</span><span class="n">scenario</span><span class="o">.</span><span class="n">crash_cost</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span><span class="p">)]</span>
 
-<div class="viewcode-block" id="AbstractRunner.run_wrapper"><a class="viewcode-back" href="../../../api/smac.runner.abstract_runner.html#smac.runner.AbstractRunner.run_wrapper">[docs]</a>    <span class="k">def</span> <span class="nf">run_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial_info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]:</span>
+<div class="viewcode-block" id="AbstractRunner.run_wrapper"><a class="viewcode-back" href="../../../api/smac.runner.abstract_runner.html#smac.runner.AbstractRunner.run_wrapper">[docs]</a>    <span class="k">def</span> <span class="nf">run_wrapper</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">trial_info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="o">**</span><span class="n">dask_data_to_scatter</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrapper around run() to execute and check the execution of a given config.</span>
 <span class="sd">        This function encapsulates common</span>
 <span class="sd">        handling/processing, so that run() implementation is simplified.</span>
@@ -1090,6 +1092,13 @@
 <span class="sd">        ----------</span>
 <span class="sd">        trial_info : RunInfo</span>
 <span class="sd">            Object that contains enough information to execute a configuration run in isolation.</span>
+<span class="sd">        dask_data_to_scatter: dict[str, Any]</span>
+<span class="sd">            When a user scatters data from their local process to the distributed network,</span>
+<span class="sd">            this data is distributed in a round-robin fashion grouping by number of cores.</span>
+<span class="sd">            Roughly speaking, we can keep this data in memory and then we do not have to (de-)serialize the data</span>
+<span class="sd">            every time we would like to execute a target function with a big dataset.</span>
+<span class="sd">            For example, when your target function has a big dataset shared across all the target function,</span>
+<span class="sd">            this argument is very useful.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1106,6 +1115,7 @@
                 <span class="n">instance</span><span class="o">=</span><span class="n">trial_info</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span>
                 <span class="n">budget</span><span class="o">=</span><span class="n">trial_info</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span>
                 <span class="n">seed</span><span class="o">=</span><span class="n">trial_info</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">dask_data_to_scatter</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span>

@@ -49,7 +49,7 @@ This examples show how to use the Ask-and-Tell interface.
     [INFO][abstract_intensifier.py:590] Added config c89070 and rejected config 5db1de as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x0: 0.10138875906166067 -> 0.08653325483166885
     [INFO][configspace.py:175] --- x1: 0.10325090860241648 -> 0.08549815086526724
-    [INFO][smbo.py:299] Finished 50 trials.
+    [INFO][smbo.py:319] Finished 50 trials.
     [INFO][abstract_intensifier.py:590] Added config f3174e and rejected config c89070 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x0: 0.08653325483166885 -> 0.05367820946404134
     [INFO][configspace.py:175] --- x1: 0.08549815086526724 -> 0.07009655254860192
@@ -62,11 +62,11 @@ This examples show how to use the Ask-and-Tell interface.
     [INFO][abstract_intensifier.py:590] Added config 2b7962 and rejected config d95598 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x0: 0.08393076270018529 -> 0.07805927091208886
     [INFO][configspace.py:175] --- x1: 0.034451435520161944 -> 0.0059357711510132916
-    [INFO][smbo.py:299] Finished 100 trials.
-    [INFO][smbo.py:307] Configuration budget is exhausted:
-    [INFO][smbo.py:308] --- Remaining wallclock time: inf
-    [INFO][smbo.py:309] --- Remaining cpu time: inf
-    [INFO][smbo.py:310] --- Remaining trials: 0
+    [INFO][smbo.py:319] Finished 100 trials.
+    [INFO][smbo.py:327] Configuration budget is exhausted:
+    [INFO][smbo.py:328] --- Remaining wallclock time: inf
+    [INFO][smbo.py:329] --- Remaining cpu time: inf
+    [INFO][smbo.py:330] --- Remaining trials: 0
     Default cost: 16916.0
     Incumbent cost: 0.8499771879028607
 
@@ -158,7 +158,7 @@ This examples show how to use the Ask-and-Tell interface.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.842 seconds)
+   **Total running time of the script:** ( 0 minutes  3.022 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_3_ask_and_tell.py:

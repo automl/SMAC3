@@ -1125,7 +1125,7 @@ setting, the float value is replaced by a list of floats.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.target_function_runner.TargetFunctionRunner.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/target_function_runner.html#TargetFunctionRunner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.target_function_runner.TargetFunctionRunner.run" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">dask_data_to_scatter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/target_function_runner.html#TargetFunctionRunner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.target_function_runner.TargetFunctionRunner.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls the target function with pynisher if algorithm wall time limit or memory limit is
 set. Otherwise, the function is called directly.</p>
 <dl class="field-list simple">
@@ -1136,6 +1136,13 @@ set. Otherwise, the function is called directly.</p>
 <li><p><strong>budget</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – A positive, real-valued number representing an arbitrary limit to the target function
 handled by the target function internally.</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – </p></li>
+<li><p><strong>dask_data_to_scatter</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – This kwargs must be empty when we do not use dask! ()
+When a user scatters data from their local process to the distributed network,
+this data is distributed in a round-robin fashion grouping by number of cores.
+Roughly speaking, we can keep this data in memory and then we do not have to (de-)serialize the data
+every time we would like to execute a target function with a big dataset.
+For example, when your target function has a big dataset shared across all the target function,
+this argument is very useful.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>

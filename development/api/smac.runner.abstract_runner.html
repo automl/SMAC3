@@ -1245,13 +1245,21 @@ handled by the target function internally.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.abstract_runner.AbstractRunner.run_wrapper">
-<span class="sig-name descname"><span class="pre">run_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/abstract_runner.html#AbstractRunner.run_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.abstract_runner.AbstractRunner.run_wrapper" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">run_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial_info</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">dask_data_to_scatter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/abstract_runner.html#AbstractRunner.run_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.abstract_runner.AbstractRunner.run_wrapper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper around run() to execute and check the execution of a given config.
 This function encapsulates common
 handling/processing, so that run() implementation is simplified.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>trial_info</strong> (<em>RunInfo</em>) – Object that contains enough information to execute a configuration run in isolation.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trial_info</strong> (<em>RunInfo</em>) – Object that contains enough information to execute a configuration run in isolation.</p></li>
+<li><p><strong>dask_data_to_scatter</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – When a user scatters data from their local process to the distributed network,
+this data is distributed in a round-robin fashion grouping by number of cores.
+Roughly speaking, we can keep this data in memory and then we do not have to (de-)serialize the data
+every time we would like to execute a target function with a big dataset.
+For example, when your target function has a big dataset shared across all the target function,
+this argument is very useful.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.TrialInfo" title="smac.runhistory.dataclasses.TrialInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrialInfo</span></code></a>, <a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.TrialValue" title="smac.runhistory.dataclasses.TrialValue"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrialValue</span></code></a>]</p>

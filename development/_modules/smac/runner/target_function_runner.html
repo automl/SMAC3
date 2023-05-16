@@ -1103,6 +1103,7 @@
         <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">dask_data_to_scatter</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">StatusType</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls the target function with pynisher if algorithm wall time limit or memory limit is</span>
 <span class="sd">        set. Otherwise, the function is called directly.</span>
@@ -1117,6 +1118,14 @@
 <span class="sd">            A positive, real-valued number representing an arbitrary limit to the target function</span>
 <span class="sd">            handled by the target function internally.</span>
 <span class="sd">        seed : int, defaults to None</span>
+<span class="sd">        dask_data_to_scatter: dict[str, Any]</span>
+<span class="sd">            This kwargs must be empty when we do not use dask! ()</span>
+<span class="sd">            When a user scatters data from their local process to the distributed network,</span>
+<span class="sd">            this data is distributed in a round-robin fashion grouping by number of cores.</span>
+<span class="sd">            Roughly speaking, we can keep this data in memory and then we do not have to (de-)serialize the data</span>
+<span class="sd">            every time we would like to execute a target function with a big dataset.</span>
+<span class="sd">            For example, when your target function has a big dataset shared across all the target function,</span>
+<span class="sd">            this argument is very useful.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1131,6 +1140,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># The kwargs are passed to the target function.</span>
         <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">dask_data_to_scatter</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="s2">&quot;seed&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_required_arguments</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seed</span>

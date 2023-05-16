@@ -1318,14 +1318,22 @@ Checks all files that are created by the optimizer.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.main.smbo.SMBO.optimize">
-<span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/smbo.html#SMBO.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.smbo.SMBO.optimize" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_to_scatter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/smbo.html#SMBO.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.smbo.SMBO.optimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the Bayesian optimization loop.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>incumbent</strong> – The best found configuration.</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_to_scatter</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – When a user scatters data from their local process to the distributed network,
+this data is distributed in a round-robin fashion grouping by number of cores.
+Roughly speaking, we can keep this data in memory and then we do not have to (de-)serialize the data
+every time we would like to execute a target function with a big dataset.
+For example, when your target function has a big dataset shared across all the target function,
+this argument is very useful.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Configuration</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>incumbent</strong> – The best found configuration.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Configuration</p>
 </dd>
 </dl>
 </dd></dl>

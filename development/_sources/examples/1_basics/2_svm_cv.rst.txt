@@ -41,11 +41,11 @@ types as well as conditional hyperparameters.
     [INFO][configspace.py:175] --- C: 0.03992740880515713 -> 1.2760639488343621
     [INFO][configspace.py:175] --- kernel: 'rbf' -> 'linear'
     [INFO][configspace.py:175] --- shrinking: True -> False
-    [INFO][smbo.py:299] Finished 50 trials.
-    [INFO][smbo.py:307] Configuration budget is exhausted:
-    [INFO][smbo.py:308] --- Remaining wallclock time: inf
-    [INFO][smbo.py:309] --- Remaining cpu time: inf
-    [INFO][smbo.py:310] --- Remaining trials: 0
+    [INFO][smbo.py:319] Finished 50 trials.
+    [INFO][smbo.py:327] Configuration budget is exhausted:
+    [INFO][smbo.py:328] --- Remaining wallclock time: inf
+    [INFO][smbo.py:329] --- Remaining cpu time: inf
+    [INFO][smbo.py:330] --- Remaining trials: 0
     Default cost: 0.03333333333333344
     Incumbent cost: 0.013333333333333308
 
@@ -151,7 +151,7 @@ types as well as conditional hyperparameters.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.431 seconds)
+   **Total running time of the script:** ( 0 minutes  1.204 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_2_svm_cv.py:

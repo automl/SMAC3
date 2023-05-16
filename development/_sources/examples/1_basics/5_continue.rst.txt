@@ -42,10 +42,10 @@ function is continued. We use a custom callback, to artificially stop the first 
     [INFO][configspace.py:175] --- x: 2.1608731895685196 -> 0.4316552169620991
     [INFO][abstract_intensifier.py:590] Added config d16e41 and rejected config 50b580 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x: 0.4316552169620991 -> -0.3100988641381264
-    [INFO][smbo.py:223] A callback returned False. Abort is requested.
-    [INFO][smbo.py:312] Shutting down because the stop flag was set.
+    [INFO][smbo.py:224] A callback returned False. Abort is requested.
+    [INFO][smbo.py:332] Shutting down because the stop flag was set.
     [INFO][abstract_initial_design.py:147] Using 10 initial design configurations and 0 additional configurations.
-    [INFO][smbo.py:473] Continuing from previous run.
+    [INFO][smbo.py:493] Continuing from previous run.
     [INFO][abstract_intensifier.py:287] Added existing seed 209652396 from runhistory to the intensifier.
     [INFO][abstract_intensifier.py:305] Using only one seed for deterministic scenario.
     [INFO][abstract_intensifier.py:590] Added config 4dcc97 and rejected config d16e41 as incumbent because it is not better than the incumbents on 1 instances:
@@ -64,11 +64,11 @@ function is continued. We use a custom callback, to artificially stop the first 
     [INFO][configspace.py:175] --- x: 0.0029625967410442655 -> 0.0009114180407276962
     [INFO][abstract_intensifier.py:590] Added config 025ea5 and rejected config 4026d1 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][configspace.py:175] --- x: 0.0009114180407276962 -> -0.00032238773647641494
-    [INFO][smbo.py:299] Finished 50 trials.
-    [INFO][smbo.py:307] Configuration budget is exhausted:
-    [INFO][smbo.py:308] --- Remaining wallclock time: inf
-    [INFO][smbo.py:309] --- Remaining cpu time: inf
-    [INFO][smbo.py:310] --- Remaining trials: 0
+    [INFO][smbo.py:319] Finished 50 trials.
+    [INFO][smbo.py:327] Configuration budget is exhausted:
+    [INFO][smbo.py:328] --- Remaining wallclock time: inf
+    [INFO][smbo.py:329] --- Remaining cpu time: inf
+    [INFO][smbo.py:330] --- Remaining trials: 0
     [INFO][abstract_intensifier.py:305] Using only one seed for deterministic scenario.
     Default cost: 25.0
     Incumbent cost of first run: 0.09616130553975616
@@ -173,7 +173,7 @@ function is continued. We use a custom callback, to artificially stop the first 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.022 seconds)
+   **Total running time of the script:** ( 0 minutes  0.832 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_5_continue.py:
