@@ -152,3 +152,5 @@ publish: clean build
 	@echo
 	@echo "Once you have decided it works, publish to actual pypi with"
 	@echo "--- python -m twine upload dist/*"
+	@echo "After publishing via pypi, please also add a new release on Github and edit the version in the SMAC link \
+	on the SMAC Github page."
