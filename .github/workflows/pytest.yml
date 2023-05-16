@@ -15,6 +15,8 @@ on:
     types:
       - opened
       - synchronize
+      - reopened
+      - ready_for_review
     branches:
       - main
       - development
@@ -71,17 +73,17 @@ jobs:
       run: |
         echo "::set-output name=BEFORE::$(git status --porcelain -b)"
 
-      - name: Tests
-        run: |
-          if [[ "${{ github.event.pull_request.draft }}" == "true" ]]; then
-            echo "Running tests for draft pull request... (currently None)"
-            # Add your command to run specific tests for draft pull requests
-          else
-            echo "Running all tests..."
-            pytest ${{ env.pytest-args }} ${{ env.test-dir }}
-            # Post-hoc clean-up
-            make clean
-          fi
+    - name: Tests
+      run: |
+        if [[ ${{ github.event.pull_request.draft }} == true ]]; then
+          echo "Running tests for draft pull request... (currently None)"
+          # Add your command to run specific tests for draft pull requests
+        else
+          echo "Running all tests..."
+          pytest ${{ env.pytest-args }} ${{ env.test-dir }}
+          # Post-hoc clean-up
+          make clean
+        fi
 
     - name: Check for files left behind by test
       run: |
