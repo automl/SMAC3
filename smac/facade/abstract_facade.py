@@ -7,6 +7,7 @@ from pathlib import Path
 
 import joblib
 from ConfigSpace import Configuration
+from dask.distributed import Client
 from typing_extensions import Literal
 
 import smac
@@ -16,7 +17,7 @@ from smac.acquisition.function.abstract_acquisition_function import (
 from smac.acquisition.maximizer.abstract_acqusition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
-from smac.callback import Callback
+from smac.callback.callback import Callback
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.main.config_selector import ConfigSelector
@@ -93,6 +94,10 @@ class AbstractFacade:
         When True, overwrites the run results if a previous run is found that is
         inconsistent in the meta data with the current setup. If ``overwrite`` is set to False, the user is asked
         for the exact behaviour (overwrite completely, save old run, or use old results).
+    dask_client: Client | None, defaults to None
+        User-created dask client, which can be used to start a dask cluster and then attach SMAC to it. This will not
+        be closed automatically and will have to be closed manually if provided explicitly. If none is provided
+        (default), a local one will be created for you and closed upon completion.
     """
 
     def __init__(
@@ -112,6 +117,7 @@ class AbstractFacade:
         logging_level: int | Path | Literal[False] | None = None,
         callbacks: list[Callback] = [],
         overwrite: bool = False,
+        dask_client: Client | None = None,
     ):
         setup_logging(logging_level)
 
@@ -188,7 +194,7 @@ class AbstractFacade:
                 n_workers = available_workers
 
             # We use a dask runner for parallelization
-            runner = DaskParallelRunner(single_worker=runner)
+            runner = DaskParallelRunner(single_worker=runner, dask_client=dask_client)
 
         # Set the runner to access it globally
         self._runner = runner

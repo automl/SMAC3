@@ -5,26 +5,31 @@
 - Added scenario.use_default_config argument/attribute=False, that adds the user's configspace default configuration 
   as an additional_config to the inital design if set to True. This adds one additional configuration to the number of configs 
   originating from the initial design. Since n_trials is still respected, this results in one fewer BO steps
-- Adapt developer install instructions to include pre-commit installation
+- Adapt developer install instructions to include pre-commit installation.
+- Add option to pass a dask client to the facade, e.g. enables running on a hpc cluster (#983).
+- Add example for using a callback to log run metadata to a file (#996).
+- Move base callback and metadata callback files to own callback directory.
+
 
 
 ## Bugfixes
+- The ISB-pair differences over the incumbent's configurations are computed correctly now (#956).
 - Adjust amount of configurations in different stages of hyperband brackets to conform to the original paper.
 - Fix validation in smbo to use the seed in the scenario.
 - Change order of callbacks, intensifier callback for incumbent selection is now the first callback. 
+
 
 # 2.0.0
 
 ## Improvements
 - Clarify origin of configurations (#908).
 - Random forest with instances predicts the marginalized costs by using a C++ implementation in `pyrfr`, which is much faster (#903).
-- Add version to makefile to install correct test release version
+- Add version to makefile to install correct test release version.
 - Add option to disable logging by setting `logging_level=False`. (#947)
 
 ## Bugfixes
 - Continue run when setting incumbent selection to highest budget when using Successive Halving (#907).
 - If integer features are used, they are automatically converted to strings.
-- The ISB-pair differences over the incumbent's configurations are computed correctly now (#956).
 
 ## Workflows
 - Added workflow to update pre-commit versions (#874).
