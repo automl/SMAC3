@@ -1035,27 +1035,22 @@ mean accuracy and run-time of each configuration.</p>
 [INFO][abstract_intensifier.py:515] Added config 97ef22 as new incumbent because there are no incumbents yet.
 [INFO][abstract_intensifier.py:598] Config f88a6b is a new incumbent. Total number of incumbents: 2.
 [INFO][abstract_intensifier.py:598] Config d77b40 is a new incumbent. Total number of incumbents: 3.
-[INFO][abstract_intensifier.py:590] Added config f08f42 and rejected config d77b40 as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][configspace.py:175] --- activation: &#39;logistic&#39; -&gt; &#39;tanh&#39;
-[INFO][configspace.py:175] --- batch_size: 175 -&gt; 118
-[INFO][configspace.py:175] --- learning_rate_init: 0.004156370184967407 -&gt; 0.0025694050967575367
-[INFO][configspace.py:175] --- n_layer: 2 -&gt; 1
-[INFO][configspace.py:175] --- n_neurons: 90 -&gt; 201
-[INFO][abstract_intensifier.py:590] Added config 1edc1a and rejected config f88a6b as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][configspace.py:175] --- batch_size: 77 -&gt; 187
-[INFO][configspace.py:175] --- learning_rate_init: 0.000534923804864797 -&gt; 0.0009593239301609004
-[INFO][configspace.py:175] --- n_neurons: 146 -&gt; 183
+[INFO][abstract_intensifier.py:598] Config f73851 is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:598] Config 3ec7a0 is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:598] Config 89ba36 is a new incumbent. Total number of incumbents: 5.
 [INFO][smbo.py:307] Configuration budget is exhausted:
-[INFO][smbo.py:308] --- Remaining wallclock time: -0.8711967468261719
+[INFO][smbo.py:308] --- Remaining wallclock time: -0.21948838233947754
 [INFO][smbo.py:309] --- Remaining cpu time: inf
-[INFO][smbo.py:310] --- Remaining trials: 177
+[INFO][smbo.py:310] --- Remaining trials: 171
 Validated costs from default config:
---- [0.60155834 0.36748278]
+--- [0.60155834 0.23271406]
 
 Validated costs from the Pareto front (incumbents):
---- [0.88924791 0.43870711]
---- [0.0281074  1.31155753]
---- [0.04341071 1.02695835]
+--- [0.88924791 0.34685028]
+--- [0.03561281 0.98330927]
+--- [0.03673244 0.54174161]
+--- [0.073461   0.52596009]
+--- [0.05704813 0.54404533]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1229,7 +1224,7 @@ Validated costs from the Pareto front (incumbents):
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  37.455 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  36.776 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0422a2b52bca2c17c0ab975a6ae7e8db/2_parego.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_parego.py</span></code></a></p>
