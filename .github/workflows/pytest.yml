@@ -1,7 +1,7 @@
 name: tests
 
 on:
-  # Allow to manually trigger through github API
+  # Allow to manually trigger through GitHub API
   workflow_dispatch:
 
   # Triggers with push to main
@@ -12,6 +12,9 @@ on:
 
   # Triggers with push to a pr aimed at main
   pull_request:
+    types:
+      - opened
+      - synchronize
     branches:
       - main
       - development
@@ -68,12 +71,17 @@ jobs:
       run: |
         echo "::set-output name=BEFORE::$(git status --porcelain -b)"
 
-    - name: Tests
-      run: |
-        pytest ${{ env.pytest-args }} ${{ env.test-dir }}
-
-        # Post-hoc clean-up
-        make clean
+      - name: Tests
+        run: |
+          if [[ "${{ github.event.pull_request.draft }}" == "true" ]]; then
+            echo "Running tests for draft pull request... (currently None)"
+            # Add your command to run specific tests for draft pull requests
+          else
+            echo "Running all tests..."
+            pytest ${{ env.pytest-args }} ${{ env.test-dir }}
+            # Post-hoc clean-up
+            make clean
+          fi
 
     - name: Check for files left behind by test
       run: |
@@ -120,7 +128,14 @@ jobs:
 
     - name: Tests
       run: |
-          pytest ${{ env.pytest-args }} ${{ env.test-dir }}
+          if [[ "${{ github.event.pull_request.draft }}" == "true" ]]; then
+            echo "Running tests for draft pull request..."
+            # Add your command to run specific tests for draft pull requests
+          else
+            echo "Running all tests..."
+            pytest ${{ env.pytest-args }} ${{ env.test-dir }}
+          fi
+
 
   # Testing a dist install
   dist-test:
@@ -161,4 +176,10 @@ jobs:
 
     - name: Tests
       run: |
-        pytest ${{ env.pytest-args }} ${{ env.test-dir }}
+          if [[ "${{ github.event.pull_request.draft }}" == "true" ]]; then
+            echo "Running tests for draft pull request..."
+            # Add your command to run specific tests for draft pull requests
+          else
+            echo "Running all tests..."
+            pytest ${{ env.pytest-args }} ${{ env.test-dir }}
+          fi

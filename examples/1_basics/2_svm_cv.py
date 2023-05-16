@@ -72,7 +72,9 @@ if __name__ == "__main__":
     # Next, we create an object, holding general information about the run
     scenario = Scenario(
         classifier.configspace,
-        n_trials=50,  # We want to run max 50 trials (combination of config and seed)
+        n_trials=25,  # We want to run max 50 trials (combination of config and seed)
+        use_default_config=True,
+        deterministic=True,
     )
 
     # We want to run the facade's default initial design, but we want to change the number
@@ -88,6 +90,8 @@ if __name__ == "__main__":
     )
 
     incumbent = smac.optimize()
+    from collections import Counter
+    print(f'origins: {Counter([i.origin for i in smac.runhistory._ids_config.values()])}')
 
     # Get cost of default configuration
     default_cost = smac.validate(classifier.configspace.get_default_configuration())
