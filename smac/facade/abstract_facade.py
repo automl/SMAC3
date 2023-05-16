@@ -187,11 +187,16 @@ class AbstractFacade:
             )
 
         # In case of multiple jobs, we need to wrap the runner again using DaskParallelRunner
-        if (n_workers := scenario.n_workers) > 1:
-            available_workers = joblib.cpu_count()
-            if n_workers > available_workers:
-                logger.info(f"Workers are reduced to {n_workers}.")
-                n_workers = available_workers
+        if (n_workers := scenario.n_workers) > 1 or dask_client is not None:
+            if dask_client is not None:
+                logger.warning(
+                    "Provided `dask_client`. Ignore `scenario.n_workers`, directly set `n_workers` in `dask_client`."
+                )
+            else:
+                available_workers = joblib.cpu_count()
+                if n_workers > available_workers:
+                    logger.info(f"Workers are reduced to {n_workers}.")
+                    n_workers = available_workers
 
             # We use a dask runner for parallelization
             runner = DaskParallelRunner(single_worker=runner, dask_client=dask_client)
