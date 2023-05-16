@@ -397,7 +397,7 @@ class AbstractFacade:
         scenario: Scenario,
         *,
         retrain_after: int = 8,
-        retries: int = 1000,
+        retries: int = 16,
     ) -> ConfigSelector:
         """Returns the default configuration selector."""
         return ConfigSelector(scenario, retrain_after=retrain_after, retries=retries)
