@@ -1,0 +1,1 @@
+# This is a dummy script to test the Github PR workflow for draft prs.
