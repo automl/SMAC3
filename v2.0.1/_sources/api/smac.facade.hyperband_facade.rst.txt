@@ -1,0 +1,37 @@
+smac.facade.hyperband\_facade
+=============================
+
+.. automodule:: smac.facade.hyperband_facade
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      HyperbandFacade
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

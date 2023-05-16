@@ -1,0 +1,48 @@
+smac.runhistory.encoder
+=======================
+
+.. automodule:: smac.runhistory.encoder
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
+
+Modules
+^^^^^^^
+
+.. autosummary::
+   :template: module.rst
+   :toctree:
+   :recursive:
+
+   smac.runhistory.encoder.abstract_encoder
+   smac.runhistory.encoder.boing_encoder
+   smac.runhistory.encoder.eips_encoder
+   smac.runhistory.encoder.encoder
+   smac.runhistory.encoder.inverse_scaled_encoder
+   smac.runhistory.encoder.log_encoder
+   smac.runhistory.encoder.log_scaled_encoder
+   smac.runhistory.encoder.scaled_encoder
+   smac.runhistory.encoder.sqrt_scaled_encoder
+

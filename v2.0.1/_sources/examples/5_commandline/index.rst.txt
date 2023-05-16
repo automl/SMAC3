@@ -1,0 +1,42 @@
+
+
+.. _sphx_glr_examples_5_commandline:
+
+Command-Line Interface
+----------------------
+
+SMAC can call a target function from a script. This is useful if you want to optimize non-python code.
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This simple example shows how to call a script with the following content:">
+
+.. only:: html
+
+  .. image:: /examples/5_commandline/images/thumb/sphx_glr_1_call_target_function_script_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_5_commandline_1_call_target_function_script.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Call Target Function From Script</div>
+    </div>
+
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/5_commandline/1_call_target_function_script
+

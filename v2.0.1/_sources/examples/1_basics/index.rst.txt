@@ -1,0 +1,130 @@
+
+
+.. _sphx_glr_examples_1_basics:
+
+Basics
+------
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of applying SMAC to optimize a quadratic function.">
+
+.. only:: html
+
+  .. image:: /examples/1_basics/images/thumb/sphx_glr_1_quadratic_function_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_1_basics_1_quadratic_function.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Quadratic Function</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of optimizing a simple support vector machine on the IRIS dataset. We use the hyperp...">
+
+.. only:: html
+
+  .. image:: /examples/1_basics/images/thumb/sphx_glr_2_svm_cv_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_1_basics_2_svm_cv.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Support Vector Machine with Cross-Validation</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This examples show how to use the Ask-and-Tell interface.">
+
+.. only:: html
+
+  .. image:: /examples/1_basics/images/thumb/sphx_glr_3_ask_and_tell_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_1_basics_3_ask_and_tell.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Ask-and-Tell</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Using callbacks is the easieast way to integrate custom code inside the Bayesian optimization l...">
+
+.. only:: html
+
+  .. image:: /examples/1_basics/images/thumb/sphx_glr_4_callback_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_1_basics_4_callback.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Custom Callback</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="SMAC can also be continued. In this example, an optimization of a simple quadratic function is ...">
+
+.. only:: html
+
+  .. image:: /examples/1_basics/images/thumb/sphx_glr_5_continue_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_1_basics_5_continue.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Continue an Optimization</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Example for optimizing a Multi-Layer Perceptron (MLP) setting priors over the optimum on the hy...">
+
+.. only:: html
+
+  .. image:: /examples/1_basics/images/thumb/sphx_glr_6_priors_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_1_basics_6_priors.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">User Priors over the Optimum</div>
+    </div>
+
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/1_basics/1_quadratic_function
+   /examples/1_basics/2_svm_cv
+   /examples/1_basics/3_ask_and_tell
+   /examples/1_basics/4_callback
+   /examples/1_basics/5_continue
+   /examples/1_basics/6_priors
+
