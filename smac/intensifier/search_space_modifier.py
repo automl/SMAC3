@@ -40,6 +40,7 @@ class MultiFidelitySearchSpaceShrinker(AbstractSearchSpaceModifier):
     def modify_search_space(self, search_space: ConfigurationSpace, runhistory: RunHistory) -> None:  # noqa: D102
         # find best configurations
         configs = runhistory.get_configs(sort_by="cost")
+        # select all configs, the cost of each config being the highest observed budget-cost for the config
         selected_configs = configs[: int(len(configs) * self.percentage_configurations)]
 
         hparams = search_space.get_hyperparameter_names()
