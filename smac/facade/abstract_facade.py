@@ -289,9 +289,20 @@ class AbstractFacade:
         """
         return self._optimizer.tell(info, value, save=save)
 
-    def optimize(self) -> Configuration | list[Configuration]:
+    def optimize(self, *, data_to_scatter: dict[str, Any] | None = None) -> Configuration | list[Configuration]:
         """
         Optimizes the configuration of the algorithm.
+
+        Parameters
+        ----------
+        data_to_scatter: dict[str, Any] | None
+            We first note that this argument is valid only dask_runner!
+            When a user scatters data from their local process to the distributed network,
+            this data is distributed in a round-robin fashion grouping by number of cores.
+            Roughly speaking, we can keep this data in memory and then we do not have to (de-)serialize the data
+            every time we would like to execute a target function with a big dataset.
+            For example, when your target function has a big dataset shared across all the target function,
+            this argument is very useful.
 
         Returns
         -------
@@ -300,7 +311,7 @@ class AbstractFacade:
         """
         incumbents = None
         try:
-            incumbents = self._optimizer.optimize()
+            incumbents = self._optimizer.optimize(data_to_scatter=data_to_scatter)
         finally:
             self._optimizer.save()
 
