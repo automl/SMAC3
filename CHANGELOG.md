@@ -1,3 +1,6 @@
+# 2.0.1
+- Add a workaround to be able to pass a dataset via dask.scatter so that serialization/deserialization in Dask becomes much quicker (#993)
+
 # 2.0.0
 
 ## Improvements
