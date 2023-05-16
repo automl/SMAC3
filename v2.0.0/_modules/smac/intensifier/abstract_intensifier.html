@@ -935,10 +935,27 @@
      smac.scenario
     </a>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="../../../api/smac.callback.html">
      smac.callback
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" type="checkbox"/>
+    <label for="toctree-checkbox-25">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.callback.callback.html">
+       smac.callback.callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.callback.metadata_callback.html">
+       smac.callback.metadata_callback
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -999,7 +1016,7 @@
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 
 <span class="kn">import</span> <span class="nn">smac</span>
-<span class="kn">from</span> <span class="nn">smac.callback</span> <span class="kn">import</span> <span class="n">Callback</span>
+<span class="kn">from</span> <span class="nn">smac.callback.callback</span> <span class="kn">import</span> <span class="n">Callback</span>
 <span class="kn">from</span> <span class="nn">smac.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
 <span class="kn">from</span> <span class="nn">smac.main.config_selector</span> <span class="kn">import</span> <span class="n">ConfigSelector</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory</span> <span class="kn">import</span> <span class="n">TrialInfo</span>

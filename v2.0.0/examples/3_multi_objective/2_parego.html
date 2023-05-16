@@ -938,10 +938,27 @@
      smac.scenario
     </a>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="../../api/smac.callback.html">
      smac.callback
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" type="checkbox"/>
+    <label for="toctree-checkbox-25">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.callback.callback.html">
+       smac.callback.callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.callback.metadata_callback.html">
+       smac.callback.metadata_callback
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -1017,17 +1034,24 @@ mean accuracy and run-time of each configuration.</p>
 [INFO][abstract_initial_design.py:134] Using 5 initial design configurations and 0 additional configurations.
 [INFO][abstract_intensifier.py:515] Added config 97ef22 as new incumbent because there are no incumbents yet.
 [INFO][abstract_intensifier.py:598] Config f88a6b is a new incumbent. Total number of incumbents: 2.
-[INFO][abstract_intensifier.py:598] Config 8e1252 is a new incumbent. Total number of incumbents: 3.
+[INFO][abstract_intensifier.py:598] Config d77b40 is a new incumbent. Total number of incumbents: 3.
+[INFO][abstract_intensifier.py:598] Config 26f3cc is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:598] Config 637334 is a new incumbent. Total number of incumbents: 5.
+[INFO][abstract_intensifier.py:598] Config d19afa is a new incumbent. Total number of incumbents: 6.
 [INFO][smbo.py:307] Configuration budget is exhausted:
-[INFO][smbo.py:308] --- Remaining wallclock time: -0.15648150444030762
+[INFO][smbo.py:308] --- Remaining wallclock time: -1.0325520038604736
 [INFO][smbo.py:309] --- Remaining cpu time: inf
-[INFO][smbo.py:310] --- Remaining trials: 190
+[INFO][smbo.py:310] --- Remaining trials: 182
 Validated costs from default config:
---- [0.60155834 0.53531563]
+--- [0.60155834 0.37039828]
 
 Validated costs from the Pareto front (incumbents):
---- [0.88924791 0.57136393]
---- [0.03561281 1.82998335]
+--- [0.88924791 0.38462877]
+--- [0.04813757 1.03455663]
+--- [0.03561281 1.39810872]
+--- [0.03645234 1.33002591]
+--- [0.08235686 0.84570634]
+--- [0.03060972 2.41590309]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1201,7 +1225,7 @@ Validated costs from the Pareto front (incumbents):
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  36.370 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  46.840 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0422a2b52bca2c17c0ab975a6ae7e8db/2_parego.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_parego.py</span></code></a></p>

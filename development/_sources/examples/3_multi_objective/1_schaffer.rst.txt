@@ -180,158 +180,158 @@ SMAC prioritizes the second objective over the first one.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
     [INFO][abstract_intensifier.py:598] Config 1e8dd4 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 65dda4 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 05127f is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
     [INFO][abstract_intensifier.py:598] Config 7a4361 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 34e57d is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config e7fcea is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
     [INFO][abstract_intensifier.py:598] Config f8de06 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 27cdd9 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 549803 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
     [INFO][abstract_intensifier.py:598] Config 71481f is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 63da18 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 232333 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 8ffcf3 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 5cb077 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
     [INFO][abstract_intensifier.py:598] Config 6e86f8 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 364812 is a new incumbent. Total number of incumbents: 11.
-    [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 849b6c is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config b55ebe is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
     [INFO][abstract_intensifier.py:598] Config ce7af0 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 733cad is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 9718a3 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config b93e66 is a new incumbent. Total number of incumbents: 11.
-    [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config b7286a is a new incumbent. Total number of incumbents: 11.
-    [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 006028 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 981229 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
     [INFO][abstract_intensifier.py:598] Config 191e0a is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 4dc9a6 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 59c51b is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 302da4 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 0ffdff is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
+    [INFO][abstract_intensifier.py:598] Config 35d45b is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
+    [INFO][abstract_intensifier.py:598] Config a7ed9e is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
     [INFO][abstract_intensifier.py:598] Config 1bf099 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
     [INFO][abstract_intensifier.py:598] Config 4925ae is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config da64bb is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 445f11 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 1eeb25 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 181e78 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 319aac is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config f660f5 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config be79c5 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 8cb608 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 2cde21 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 25257b is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
+    [INFO][abstract_intensifier.py:598] Config 0c8f8e is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
     [INFO][smbo.py:299] Finished 100 trials.
-    [INFO][abstract_intensifier.py:598] Config e97e2f is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config d8ea27 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 626263 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config fceb3d is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 1a5612 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 20d65b is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 6d2c9d is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config cbca1d is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 20661c is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config f5155a is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 37bc3d is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config accc3c is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 52e1ac is a new incumbent. Total number of incumbents: 11.
-    [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config efbc00 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config ce9297 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
     [INFO][abstract_intensifier.py:598] Config 81b9ac is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config e59947 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 0c11a6 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
+    [INFO][abstract_intensifier.py:598] Config 5706ae is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
     [INFO][abstract_intensifier.py:598] Config c81c9a is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config b0fe9d is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config d14060 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config f003e3 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 481bd6 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config f4da54 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config d74a3e is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 945e7c is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config b80c96 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config b66458 is a new incumbent. Total number of incumbents: 11.
-    [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config dc7e51 is a new incumbent. Total number of incumbents: 11.
-    [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 086a94 is a new incumbent. Total number of incumbents: 11.
-    [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 8f46ab is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 4e664e is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
     [INFO][abstract_intensifier.py:598] Config cbcc66 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 262a13 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 5dc22c is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config f443b5 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 98c70e is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 8b16d8 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 206fc8 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 864341 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config cedbe5 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 1818cb is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 5ce981 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 6ce7a9 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 3bfad0 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 03dcbe is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 3b1777 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
     [INFO][abstract_intensifier.py:598] Config bd5424 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 4df99e is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config d710c6 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 6558ce is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 8f0869 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 33ceb0 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 2715ad is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 34c5dd is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 3bb3a3 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config f24959 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 18173d is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 508267 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config a3edd7 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 3d53cc is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 3132a2 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config f46040 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 86b17f is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 1b6c3c is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 9f4f72 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config b11dc7 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 63b5d0 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config b2d4a3 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 8c6c08 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 5240ea is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config ed3fe5 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config a3f245 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config f741ba is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 835dfe is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 860fa6 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 2dfd60 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 9c786d is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 8b2962 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config c75780 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 08ec04 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config c5167c is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config f55919 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 33cfef is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config ddecf0 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 854545 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 27e7fd is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 97176f is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config c85078 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config ccdc50 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][abstract_intensifier.py:598] Config 8f09b4 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:598] Config 33c795 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
+    [INFO][abstract_intensifier.py:598] Config f33294 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
+    [INFO][abstract_intensifier.py:598] Config 82d292 is a new incumbent. Total number of incumbents: 11.
+    [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
+    [INFO][abstract_intensifier.py:598] Config 70f1b6 is a new incumbent. Total number of incumbents: 11.
     [INFO][abstract_intensifier.py:623] Removed one incumbent using crowding distance because more than 10 are available.
     [INFO][smbo.py:299] Finished 150 trials.
     [INFO][smbo.py:307] Configuration budget is exhausted:
@@ -344,15 +344,15 @@ SMAC prioritizes the second objective over the first one.
 
     Validated costs from the Pareto front (incumbents):
     --- [0.01538581 3.51922763]
-    --- [3.98157338e+00 2.12703017e-05]
+    --- [3.81477017e+00 2.19551629e-03]
     --- [0.66494111 1.40318427]
-    --- [0.27572929 2.17533202]
-    --- [1.23793885 0.78743083]
+    --- [0.28063773 2.16162765]
+    --- [1.21948125 0.80227625]
     --- [0.09228592 2.87714199]
     --- [3.16368713 0.04898446]
-    --- [2.5425014  0.16441216]
-    --- [1.56462636 0.56122534]
-    --- [2.01575389 0.33666398]
+    --- [2.51598724 0.17124171]
+    --- [1.60303937 0.53859173]
+    --- [2.0255363  0.33268282]
 
 
 
@@ -464,7 +464,7 @@ SMAC prioritizes the second objective over the first one.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  17.953 seconds)
+   **Total running time of the script:** ( 0 minutes  13.033 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_1_schaffer.py:

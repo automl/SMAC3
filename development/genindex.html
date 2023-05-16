@@ -935,10 +935,27 @@
      smac.scenario
     </a>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="api/smac.callback.html">
      smac.callback
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" type="checkbox"/>
+    <label for="toctree-checkbox-25">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="api/smac.callback.callback.html">
+       smac.callback.callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="api/smac.callback.metadata_callback.html">
+       smac.callback.metadata_callback
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -1337,7 +1354,11 @@
       <li><a href="api/smac.utils.pareto_front.html#smac.utils.pareto_front.calculate_pareto_front">calculate_pareto_front() (in module smac.utils.pareto_front)</a>
 </li>
       <li><a href="api/smac.callback.html#smac.callback.Callback">Callback (class in smac.callback)</a>
+
+      <ul>
+        <li><a href="api/smac.callback.callback.html#smac.callback.callback.Callback">(class in smac.callback.callback)</a>
 </li>
+      </ul></li>
       <li><a href="api/smac.acquisition.maximizer.helpers.html#smac.acquisition.maximizer.helpers.ChallengerList">ChallengerList (class in smac.acquisition.maximizer.helpers)</a>
 </li>
       <li><a href="api/smac.random_design.abstract_random_design.html#smac.random_design.abstract_random_design.AbstractRandomDesign.check">check() (smac.random_design.abstract_random_design.AbstractRandomDesign method)</a>
@@ -1374,14 +1395,14 @@
         <li><a href="api/smac.runner.html#smac.runner.DaskParallelRunner.close">(smac.runner.DaskParallelRunner method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.intensifier.abstract_intensifier.html#smac.intensifier.abstract_intensifier.AbstractIntensifier.config_generator">config_generator (smac.intensifier.abstract_intensifier.AbstractIntensifier property)</a>
 
       <ul>
         <li><a href="api/smac.intensifier.html#smac.intensifier.AbstractIntensifier.config_generator">(smac.intensifier.AbstractIntensifier property)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.config_ids">config_ids (smac.runhistory.RunHistory property)</a>
 
       <ul>
@@ -2332,6 +2353,12 @@
         <li><a href="api/smac.scenario.html#smac.scenario.Scenario.meta">(smac.scenario.Scenario property)</a>
 </li>
       </ul></li>
+      <li><a href="api/smac.callback.html#smac.callback.MetadataCallback">MetadataCallback (class in smac.callback)</a>
+
+      <ul>
+        <li><a href="api/smac.callback.metadata_callback.html#smac.callback.metadata_callback.MetadataCallback">(class in smac.callback.metadata_callback)</a>
+</li>
+      </ul></li>
       <li><a href="7_glossary.html#term-MF"><strong>MF</strong></a>
 </li>
       <li><a href="api/smac.runhistory.html#smac.runhistory.RunHistory.min_cost">min_cost() (smac.runhistory.RunHistory method)</a>
@@ -2397,6 +2424,10 @@
         <li><a href="api/smac.acquisition.maximizer.random_search.html#module-smac.acquisition.maximizer.random_search">smac.acquisition.maximizer.random_search</a>
 </li>
         <li><a href="api/smac.callback.html#module-smac.callback">smac.callback</a>
+</li>
+        <li><a href="api/smac.callback.callback.html#module-smac.callback.callback">smac.callback.callback</a>
+</li>
+        <li><a href="api/smac.callback.metadata_callback.html#module-smac.callback.metadata_callback">smac.callback.metadata_callback</a>
 </li>
         <li><a href="api/smac.facade.html#module-smac.facade">smac.facade</a>
 </li>
@@ -2694,27 +2725,71 @@
 </li>
       </ul></li>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_ask_end">on_ask_end() (smac.callback.Callback method)</a>
+
+      <ul>
+        <li><a href="api/smac.callback.callback.html#smac.callback.callback.Callback.on_ask_end">(smac.callback.callback.Callback method)</a>
 </li>
+      </ul></li>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_ask_start">on_ask_start() (smac.callback.Callback method)</a>
+
+      <ul>
+        <li><a href="api/smac.callback.callback.html#smac.callback.callback.Callback.on_ask_start">(smac.callback.callback.Callback method)</a>
 </li>
+      </ul></li>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_end">on_end() (smac.callback.Callback method)</a>
+
+      <ul>
+        <li><a href="api/smac.callback.callback.html#smac.callback.callback.Callback.on_end">(smac.callback.callback.Callback method)</a>
 </li>
+      </ul></li>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_iteration_end">on_iteration_end() (smac.callback.Callback method)</a>
+
+      <ul>
+        <li><a href="api/smac.callback.callback.html#smac.callback.callback.Callback.on_iteration_end">(smac.callback.callback.Callback method)</a>
 </li>
+      </ul></li>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_iteration_start">on_iteration_start() (smac.callback.Callback method)</a>
+
+      <ul>
+        <li><a href="api/smac.callback.callback.html#smac.callback.callback.Callback.on_iteration_start">(smac.callback.callback.Callback method)</a>
 </li>
+      </ul></li>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_next_configurations_end">on_next_configurations_end() (smac.callback.Callback method)</a>
+
+      <ul>
+        <li><a href="api/smac.callback.callback.html#smac.callback.callback.Callback.on_next_configurations_end">(smac.callback.callback.Callback method)</a>
 </li>
+      </ul></li>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_next_configurations_start">on_next_configurations_start() (smac.callback.Callback method)</a>
+
+      <ul>
+        <li><a href="api/smac.callback.callback.html#smac.callback.callback.Callback.on_next_configurations_start">(smac.callback.callback.Callback method)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_start">on_start() (smac.callback.Callback method)</a>
+
+      <ul>
+        <li><a href="api/smac.callback.callback.html#smac.callback.callback.Callback.on_start">(smac.callback.callback.Callback method)</a>
 </li>
+        <li><a href="api/smac.callback.metadata_callback.html#smac.callback.metadata_callback.MetadataCallback.on_start">(smac.callback.metadata_callback.MetadataCallback method)</a>
+</li>
+        <li><a href="api/smac.callback.html#smac.callback.MetadataCallback.on_start">(smac.callback.MetadataCallback method)</a>
+</li>
+      </ul></li>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_tell_end">on_tell_end() (smac.callback.Callback method)</a>
+
+      <ul>
+        <li><a href="api/smac.callback.callback.html#smac.callback.callback.Callback.on_tell_end">(smac.callback.callback.Callback method)</a>
 </li>
+      </ul></li>
       <li><a href="api/smac.callback.html#smac.callback.Callback.on_tell_start">on_tell_start() (smac.callback.Callback method)</a>
+
+      <ul>
+        <li><a href="api/smac.callback.callback.html#smac.callback.callback.Callback.on_tell_start">(smac.callback.callback.Callback method)</a>
 </li>
+      </ul></li>
       <li><a href="api/smac.model.gaussian_process.kernels.html#smac.model.gaussian_process.kernels.AbstractKernel.operate_on">operate_on (smac.model.gaussian_process.kernels.AbstractKernel attribute)</a>
 
       <ul>
@@ -3169,6 +3244,20 @@
 </li>
       </ul></li>
       <li>
+    smac.callback.callback
+
+      <ul>
+        <li><a href="api/smac.callback.callback.html#module-smac.callback.callback">module</a>
+</li>
+      </ul></li>
+      <li>
+    smac.callback.metadata_callback
+
+      <ul>
+        <li><a href="api/smac.callback.metadata_callback.html#module-smac.callback.metadata_callback">module</a>
+</li>
+      </ul></li>
+      <li>
     smac.facade
 
       <ul>
@@ -3406,6 +3495,8 @@
         <li><a href="api/smac.model.gaussian_process.kernels.rbf_kernel.html#module-smac.model.gaussian_process.kernels.rbf_kernel">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.model.gaussian_process.kernels.white_kernel
 
@@ -3413,8 +3504,6 @@
         <li><a href="api/smac.model.gaussian_process.kernels.white_kernel.html#module-smac.model.gaussian_process.kernels.white_kernel">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.model.gaussian_process.mcmc_gaussian_process
 

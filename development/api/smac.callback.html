@@ -37,7 +37,7 @@
     <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="References" href="../6_references.html" />
+    <link rel="next" title="smac.callback.callback" href="smac.callback.callback.html" />
     <link rel="prev" title="smac.scenario" href="smac.scenario.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
@@ -938,10 +938,27 @@
      smac.scenario
     </a>
    </li>
-   <li class="toctree-l2 current active">
+   <li class="toctree-l2 current active has-children">
     <a class="current reference internal" href="#">
      smac.callback
     </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" type="checkbox"/>
+    <label for="toctree-checkbox-25">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.callback.callback.html">
+       smac.callback.callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.callback.metadata_callback.html">
+       smac.callback.metadata_callback
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -985,11 +1002,6 @@
 
 <nav id="bd-toc-nav">
     <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#classes">
-   Classes
-  </a>
- </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#interfaces">
    Interfaces
@@ -1096,7 +1108,32 @@
      </li>
     </ul>
    </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#smac.callback.MetadataCallback">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       MetadataCallback
+      </span>
+     </code>
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.callback.MetadataCallback.on_start">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         MetadataCallback.on_start()
+        </span>
+       </code>
+      </a>
+     </li>
+    </ul>
+   </li>
   </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#modules">
+   Modules
+  </a>
  </li>
 </ul>
 
@@ -1121,26 +1158,16 @@
                 
   <section id="module-smac.callback">
 <span id="smac-callback"></span><h1>smac.callback<a class="headerlink" href="#module-smac.callback" title="Permalink to this heading">¶</a></h1>
-<section id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
-<table class="autosummary longtable table autosummary">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.callback.Callback" title="smac.callback.Callback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Callback</span></code></a>()</p></td>
-<td><p>Callback interface with several methods that are called at different stages of the optimization process.</p></td>
-</tr>
-</tbody>
-</table>
-</section>
 <section id="interfaces">
 <h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.callback.Callback">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.callback.</span></span><span class="sig-name descname"><span class="pre">Callback</span></span><a class="reference internal" href="../_modules/smac/callback.html#Callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.callback.</span></span><span class="sig-name descname"><span class="pre">Callback</span></span><a class="reference internal" href="../_modules/smac/callback/callback.html#Callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Callback interface with several methods that are called at different stages of the optimization process.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.callback.Callback.on_ask_end">
-<span class="sig-name descname"><span class="pre">on_ask_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smbo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback.html#Callback.on_ask_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_ask_end" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">on_ask_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smbo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback/callback.html#Callback.on_ask_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_ask_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called after the intensifier is asked for the next trial.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1151,7 +1178,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.callback.Callback.on_ask_start">
-<span class="sig-name descname"><span class="pre">on_ask_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smbo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback.html#Callback.on_ask_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_ask_start" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">on_ask_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smbo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback/callback.html#Callback.on_ask_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_ask_start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called before the intensifier is asked for the next trial.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1162,7 +1189,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.callback.Callback.on_end">
-<span class="sig-name descname"><span class="pre">on_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smbo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback.html#Callback.on_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_end" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">on_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smbo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback/callback.html#Callback.on_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called after the optimization finished.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1173,7 +1200,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.callback.Callback.on_iteration_end">
-<span class="sig-name descname"><span class="pre">on_iteration_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smbo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback.html#Callback.on_iteration_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_iteration_end" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">on_iteration_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smbo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback/callback.html#Callback.on_iteration_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_iteration_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called after an iteration ended.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1184,7 +1211,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.callback.Callback.on_iteration_start">
-<span class="sig-name descname"><span class="pre">on_iteration_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smbo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback.html#Callback.on_iteration_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_iteration_start" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">on_iteration_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smbo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback/callback.html#Callback.on_iteration_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_iteration_start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called before the next run is sampled.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1195,7 +1222,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.callback.Callback.on_next_configurations_end">
-<span class="sig-name descname"><span class="pre">on_next_configurations_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_selector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback.html#Callback.on_next_configurations_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_next_configurations_end" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">on_next_configurations_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_selector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback/callback.html#Callback.on_next_configurations_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_next_configurations_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called after the intensification asks for new configurations. Essentially, this callback is called
 before the surrogate model is trained and before the acquisition function is called.</p>
 <dl class="field-list simple">
@@ -1207,7 +1234,7 @@ before the surrogate model is trained and before the acquisition function is cal
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.callback.Callback.on_next_configurations_start">
-<span class="sig-name descname"><span class="pre">on_next_configurations_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_selector</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback.html#Callback.on_next_configurations_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_next_configurations_start" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">on_next_configurations_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_selector</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback/callback.html#Callback.on_next_configurations_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_next_configurations_start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called before the intensification asks for new configurations. Essentially, this callback is called
 before the surrogate model is trained and before the acquisition function is called.</p>
 <dl class="field-list simple">
@@ -1219,7 +1246,7 @@ before the surrogate model is trained and before the acquisition function is cal
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.callback.Callback.on_start">
-<span class="sig-name descname"><span class="pre">on_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smbo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback.html#Callback.on_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_start" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">on_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smbo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback/callback.html#Callback.on_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called before the optimization starts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1230,7 +1257,7 @@ before the surrogate model is trained and before the acquisition function is cal
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.callback.Callback.on_tell_end">
-<span class="sig-name descname"><span class="pre">on_tell_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smbo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback.html#Callback.on_tell_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_tell_end" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">on_tell_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smbo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback/callback.html#Callback.on_tell_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_tell_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called after the stats are updated and the trial is added to the runhistory. Optionally, returns false
 to gracefully stop the optimization.</p>
 <dl class="field-list simple">
@@ -1242,7 +1269,7 @@ to gracefully stop the optimization.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.callback.Callback.on_tell_start">
-<span class="sig-name descname"><span class="pre">on_tell_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smbo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback.html#Callback.on_tell_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_tell_start" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">on_tell_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smbo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback/callback.html#Callback.on_tell_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.Callback.on_tell_start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called before the stats are updated and the trial is added to the runhistory. Optionally, returns false
 to gracefully stop the optimization.</p>
 <dl class="field-list simple">
@@ -1254,6 +1281,36 @@ to gracefully stop the optimization.</p>
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="smac.callback.MetadataCallback">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.callback.</span></span><span class="sig-name descname"><span class="pre">MetadataCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback/metadata_callback.html#MetadataCallback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.MetadataCallback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="smac.callback.callback.html#smac.callback.callback.Callback" title="smac.callback.callback.Callback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callback</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.callback.MetadataCallback.on_start">
+<span class="sig-name descname"><span class="pre">on_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smbo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/callback/metadata_callback.html#MetadataCallback.on_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.callback.MetadataCallback.on_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called before the optimization starts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="modules">
+<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this heading">¶</a></h2>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="smac.callback.callback.html#module-smac.callback.callback" title="smac.callback.callback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.callback.callback</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="smac.callback.metadata_callback.html#module-smac.callback.metadata_callback" title="smac.callback.metadata_callback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.callback.metadata_callback</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
 
@@ -1270,10 +1327,10 @@ to gracefully stop the optimization.</p>
             <p class="prev-next-title">smac.scenario</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="../6_references.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.callback.callback.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">References</p>
+        <p class="prev-next-title">smac.callback.callback</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

@@ -46,17 +46,24 @@ mean accuracy and run-time of each configuration.
     [INFO][abstract_initial_design.py:134] Using 5 initial design configurations and 0 additional configurations.
     [INFO][abstract_intensifier.py:515] Added config 97ef22 as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:598] Config f88a6b is a new incumbent. Total number of incumbents: 2.
-    [INFO][abstract_intensifier.py:598] Config 8e1252 is a new incumbent. Total number of incumbents: 3.
+    [INFO][abstract_intensifier.py:598] Config d77b40 is a new incumbent. Total number of incumbents: 3.
+    [INFO][abstract_intensifier.py:598] Config 26f3cc is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:598] Config 637334 is a new incumbent. Total number of incumbents: 5.
+    [INFO][abstract_intensifier.py:598] Config d19afa is a new incumbent. Total number of incumbents: 6.
     [INFO][smbo.py:307] Configuration budget is exhausted:
-    [INFO][smbo.py:308] --- Remaining wallclock time: -0.15648150444030762
+    [INFO][smbo.py:308] --- Remaining wallclock time: -1.0325520038604736
     [INFO][smbo.py:309] --- Remaining cpu time: inf
-    [INFO][smbo.py:310] --- Remaining trials: 190
+    [INFO][smbo.py:310] --- Remaining trials: 182
     Validated costs from default config: 
-    --- [0.60155834 0.53531563]
+    --- [0.60155834 0.37039828]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.88924791 0.57136393]
-    --- [0.03561281 1.82998335]
+    --- [0.88924791 0.38462877]
+    --- [0.04813757 1.03455663]
+    --- [0.03561281 1.39810872]
+    --- [0.03645234 1.33002591]
+    --- [0.08235686 0.84570634]
+    --- [0.03060972 2.41590309]
 
 
 
@@ -237,7 +244,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  36.370 seconds)
+   **Total running time of the script:** ( 0 minutes  46.840 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:

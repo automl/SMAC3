@@ -935,10 +935,27 @@
      smac.scenario
     </a>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="../../../api/smac.callback.html">
      smac.callback
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" type="checkbox"/>
+    <label for="toctree-checkbox-25">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.callback.callback.html">
+       smac.callback.callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.callback.metadata_callback.html">
+       smac.callback.metadata_callback
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -1000,7 +1017,7 @@
 <span class="kn">from</span> <span class="nn">smac.acquisition.function.abstract_acquisition_function</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">smac.callback</span> <span class="kn">import</span> <span class="n">Callback</span>
+<span class="kn">from</span> <span class="nn">smac.callback.callback</span> <span class="kn">import</span> <span class="n">Callback</span>
 <span class="kn">from</span> <span class="nn">smac.intensifier.abstract_intensifier</span> <span class="kn">import</span> <span class="n">AbstractIntensifier</span>
 <span class="kn">from</span> <span class="nn">smac.model.abstract_model</span> <span class="kn">import</span> <span class="n">AbstractModel</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory</span> <span class="kn">import</span> <span class="n">StatusType</span><span class="p">,</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="n">TrialValue</span>
