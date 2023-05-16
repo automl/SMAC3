@@ -33,7 +33,7 @@ options = {
             "repo": "SMAC3",
             "branch": "main",
             "binderhub_url": "https://mybinder.org",
-            "dependencies": ["../.binder/apt.txt"],
+            "dependencies": ["../.binder/apt.txt", "../.binder/requirements.txt"],
             # "filepath_prefix": "<prefix>" # A prefix to prepend to any filepaths in Binder links.
             # Jupyter notebooks for Binder will be copied to this directory (relative to built documentation root).
             "notebooks_dir": "notebooks/",
