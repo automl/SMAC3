@@ -81,7 +81,11 @@ class Intensifier(AbstractIntensifier):
 
     def get_state(self) -> dict[str, Any]:  # noqa: D102
         return {
-            "queue": [(self.runhistory.get_config_id(config), n) for config, n in self._queue],
+            "queue": [
+                (self.runhistory.get_config_id(config), n)
+                for config, n in self._queue
+                if self.runhistory.has_config(config)
+            ],
         }
 
     def set_state(self, state: dict[str, Any]) -> None:  # noqa: D102

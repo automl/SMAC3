@@ -2,6 +2,8 @@
 
 ## Improvements
 - Callbacks registration is now a public method of the optimizer and allows callbacks to be inserted at a specific position.
+- Adapt developer install instructions to include pre-commit installation
+- Add option to pass a dask client to the facade, e.g. enables running on a hpc cluster (#983).
 - Added scenario.use_default_config argument/attribute=False, that adds the user's configspace default configuration 
   as an additional_config to the inital design if set to True. This adds one additional configuration to the number of configs 
   originating from the initial design. Since n_trials is still respected, this results in one fewer BO steps
@@ -10,13 +12,13 @@
 - Add example for using a callback to log run metadata to a file (#996).
 - Move base callback and metadata callback files to own callback directory.
 
-
-
 ## Bugfixes
 - The ISB-pair differences over the incumbent's configurations are computed correctly now (#956).
 - Adjust amount of configurations in different stages of hyperband brackets to conform to the original paper.
 - Fix validation in smbo to use the seed in the scenario.
 - Change order of callbacks, intensifier callback for incumbent selection is now the first callback. 
+- intensifier.get_state() will now check if the configurations contained in the queue is stored in the runhistory (#997)  
+
 
 
 # 2.0.0
