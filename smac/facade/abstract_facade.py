@@ -189,7 +189,7 @@ class AbstractFacade:
         # In case of multiple jobs, we need to wrap the runner again using DaskParallelRunner
         if (n_workers := scenario.n_workers) > 1 or dask_client is not None:
             if dask_client is not None:
-                logger.info(
+                logger.warning(
                     "Provided `dask_client`. Ignore `scenario.n_workers`, directly set `n_workers` in `dask_client`."
                 )
             else:
